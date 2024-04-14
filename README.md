@@ -15,7 +15,7 @@
 # Ruins of Growsseth
 <a id="markdown-ruins-of-growsseth" name="ruins-of-growsseth"></a>
 
-<img src="./Mod/src/main/resources/assets/growsseth/icon.png" alt="alt text" width="250" height="250">
+<img src="./src/main/resources/assets/growsseth/icon.png" alt="alt text" width="250" height="250">
 
 Lunga vita a Re Lucio.
 
@@ -25,16 +25,16 @@ Lunga vita a Re Lucio.
 Versione del gioco: **1.20.2**, Mod loader: [**Fabric**](https://fabricmc.net/use/installer/) (almeno ver. 0.15.1)
 
 Dipendenze:
-- [**Fabric API**](https://modrinth.com/mod/fabric-api), almeno ver. 0.91.1 (di fatto già inclusa nel 99% dei casi in cui avete Fabric);
-- [**Fabric Language for Kotlin**](https://modrinth.com/mod/fabric-language-kotlin), almeno ver. 1.10.16;
-- Opzionale ma comodo: [*Mod Menu*](https://modrinth.com/mod/modmenu) (permette la configurazione in game).
+- [**Fabric API**](https://modrinth.com/fabric-api), almeno ver. 0.91.1 (di fatto già inclusa nel 99% dei casi in cui avete Fabric);
+- [**Fabric Language for Kotlin**](https://modrinth.com/fabric-language-kotlin), almeno ver. 1.10.16;
+- Opzionale ma comodo: [*Mod Menu*](https://modrinth.com/modmenu) (permette la configurazione in game).
 
 La mod si può scaricare da [***QUA***](https://github.com/filloax/ruins-of-growsseth/releases/latest).
 
 ## 2. Informazioni formato JSON dialoghi e altri
 <a id="markdown-informazioni-formato-json-dialoghi-e-altri" name="informazioni-formato-json-dialoghi-e-altri"></a>
 
-Si possono trovare [QUA](./JSON_FORMAT.md). Contengono info sul formato dei json stile datapack personalizzati usati dalla mod per dialoghi ecc.
+Si possono trovare [QUA](docs/JSON_FORMAT.md). Contengono info sul formato dei json stile datapack personalizzati usati dalla mod per dialoghi ecc.
 
 ## 3. Aggiornamento dati da sito
 <a id="markdown-aggiornamento-dati-da-sito" name="aggiornamento-dati-da-sito"></a>
@@ -120,7 +120,7 @@ Notifiche o dialoghi impostati in remoto. Sì, permettono anche di trollare Cydo
 - `event:toast/<NAMESPACE>/<ID_OGGETTO>/<TITOLO>`: come sopra, ma include nella notifica l'icona dell'oggetto specificato. Principalmente pensato per notifiche degli ender eye, nel qual caso l'uso sarebbe `event:toast/minecraft/end_portal_frame/<TITOLO>`;
 - `event:rdialogue/<ID>`: imposta un dialogo monouso che il ricercatore dirà la prossima volta che il giocatore (Cydo) vi si avvicina. L'Id (per esempio, `event:rdialogue/diag1`) viene usato per non ripeterlo. Il contenuto viene messo in "name" obbligatoriamente, separando più righe con "\n";
 - `event:rdiary/<TITOLO>`: imposta un diario che il ricercatore scriverà la prossima volta che il giocatore ci si avvicina. Richiede di impostare sia *name* che posizione (*x*, *y*, *z*). Il titolo è la parte dopo la barra nell'evento, le pagine sono dentro al campo name, separate dalla sequenza %PAGEBREAK%. X, y e z sono usate per distinguere diari con lo stesso titolo: viene usato come id per tracciare i diari già scritti \<titolo\>-\<x\>-\<y\>-\<z\>;
-- `event:structdiary/<NOMESTRUTTURA>/<TITOLO>`: come per rdiary, ma il diario invece di spawnare subito andrà a sostituire il diario che viene creato all'esplorazione della struttura in questione (se non è ancora stato creato). Il contenuto del diario va nel parametro "name", per il formato vedere [Libri e Diari](./JSON_FORMAT.md#libri-e-diari). Non richede pos non necessitando di id unici di conseguenza. Nota che NOMESTRUTTURA è il tag, non la singola struttura, e non include `growsseth:`: per esempio `event:structdiary/noteblock_lab/LOREM IPSUM`. Per nomi validi controllare [*src/main/resources/data/growsseth/growsseth_researcher_diary/it_it/structures*](./Mod/src/main/resources/data/growsseth/growsseth_researcher_diary/it_it/structures/) nella cartella del progetto e guardare i nomi dei file;
+- `event:structdiary/<NOMESTRUTTURA>/<TITOLO>`: come per rdiary, ma il diario invece di spawnare subito andrà a sostituire il diario che viene creato all'esplorazione della struttura in questione (se non è ancora stato creato). Il contenuto del diario va nel parametro "name", per il formato vedere [Libri e Diari](docs/JSON_FORMAT.md#libri-e-diari). Non richede pos non necessitando di id unici di conseguenza. Nota che NOMESTRUTTURA è il tag, non la singola struttura, e non include `growsseth:`: per esempio `event:structdiary/noteblock_lab/LOREM IPSUM`. Per nomi validi controllare [*src/main/resources/data/growsseth/growsseth_researcher_diary/it_it/structures*](./src/main/resources/data/growsseth/growsseth_researcher_diary/it_it/structures/) nella cartella del progetto e guardare i nomi dei file;
 
 Esempio di rdiary:
 ```Json
@@ -135,9 +135,9 @@ Esempio di rdiary:
 }
 ```
 
-- `event:structbook/<IDTEMPLATE>`: sostituisce i libri piazzati all'interno delle strutture. Vedere [Libri strutture](./JSON_FORMAT.md#libri-strutture) per altre informazioni. IDTEMPLATE deve essere l'id di un template libro usato nella mod (usare il comando custom `/booktemplate` per
-avere un elenco, o guardare nella [loro cartella](./Mod/src/main/resources/data/growsseth/growsseth_structure_books/it_it/) dove
-ogni file corrisponde a un template dallo stesso nome). Il contenuto dei libri è passato come stringa JSON dentro a "name", per il formato vedere [Libri e Diari](./JSON_FORMAT.md#libri-e-diari).
+- `event:structbook/<IDTEMPLATE>`: sostituisce i libri piazzati all'interno delle strutture. Vedere [Libri strutture](docs/JSON_FORMAT.md#libri-strutture) per altre informazioni. IDTEMPLATE deve essere l'id di un template libro usato nella mod (usare il comando custom `/booktemplate` per
+avere un elenco, o guardare nella [loro cartella](./src/main/resources/data/growsseth/growsseth_structure_books/it_it/) dove
+ogni file corrisponde a un template dallo stesso nome). Il contenuto dei libri è passato come stringa JSON dentro a "name", per il formato vedere [Libri e Diari](docs/JSON_FORMAT.md#libri-e-diari).
 
 ### Comandi di mercato
 <a id="markdown-comandi-di-mercato" name="comandi-di-mercato"></a>
@@ -153,7 +153,7 @@ Sbloccano altri scambi:
 - `event:sell_binobinooo`: vende il disco di Binobinoo (instrumental);
 - `event:sell_all_extras`: sblocca la vendita di tutti gli oggetti speciali della mod non sbloccati da subito, pensato per essere usato a fine quest finale. Non mostra notifica di nuovo scambio. Ogni item sbloccato è "gratuito" (1 pezzo di carta);
 - `event:sell_easter_egg_discs`: sblocca la vendita dei dischi "extra" (versioni vocal canzoni + alcune meme o tagliate), sempre aggratis;
-- `event:customTrade/<ID>`: permette di vendere oggetti arbitrari, totalmente personalizzabili nei trade. Per scambi semplici si può usare anche `sell` spiegato sotto. L'id è arbitrario e usato solo per avere entry diverse, dentro a *name* va inserito del testo JSON che rappresenta una entry di trade analoga a quelle inseribili nei JSON dati della mod, formato spiegato [qua](./JSON_FORMAT.md#scambi). Un esempio:
+- `event:customTrade/<ID>`: permette di vendere oggetti arbitrari, totalmente personalizzabili nei trade. Per scambi semplici si può usare anche `sell` spiegato sotto. L'id è arbitrario e usato solo per avere entry diverse, dentro a *name* va inserito del testo JSON che rappresenta una entry di trade analoga a quelle inseribili nei JSON dati della mod, formato spiegato [qua](docs/JSON_FORMAT.md#scambi). Un esempio:
 
     ```json
     {
@@ -195,7 +195,7 @@ La mod si connette al sito EgoBalego anche tramite Socket.io (URL e api Key conf
 
 - `reload`: forza una ricarica dei dati del sito indicati a [Formato dati da Sito](#4-formato-dati-da-sito), senza necessitare la ricarica del mondo o di aspettare 10 minuti. Non richiede contenuti specifici.
 
-- `rdialogue`: invia un dialogo che verrà immediatamente riprodotto dal Ricercatore se caricato e vicino al giocatore, o ignorato altrimenti. Nel contenuto va incluso un oggetto JSON che lo definisce; il formato è lo stesso dei file dei dialoghi, [specificato qua](./JSON_FORMAT.md#formato-dialogueentry). Si possono trascurare i campi indicati come non per messaggi remoti (includerli non porterà a errori, è semplicemente inutile).
+- `rdialogue`: invia un dialogo che verrà immediatamente riprodotto dal Ricercatore se caricato e vicino al giocatore, o ignorato altrimenti. Nel contenuto va incluso un oggetto JSON che lo definisce; il formato è lo stesso dei file dei dialoghi, [specificato qua](docs/JSON_FORMAT.md#formato-dialogueentry). Si possono trascurare i campi indicati come non per messaggi remoti (includerli non porterà a errori, è semplicemente inutile).
 
 - `toast`: invia una notifica, con o senza icona oggetto (sfondo nero con, blu senza). Il formato è JSON come segue:
 
@@ -227,4 +227,4 @@ La mod risponderà agli eventi con un oggetto JSON contenente i seguenti campi:
 
 ---
 
-![](./Mod/src/main/resources/assets/growsseth/textures/gui/advancements/backgrounds/advancements_background.png)
+![](./src/main/resources/assets/growsseth/textures/gui/advancements/backgrounds/advancements_background.png)
