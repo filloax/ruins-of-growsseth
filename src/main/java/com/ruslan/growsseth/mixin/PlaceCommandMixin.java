@@ -1,0 +1,96 @@
+package com.ruslan.growsseth.mixin;
+
+import com.filloax.fxlib.structure.tracking.CustomPlacedStructureTracker;
+import com.ruslan.growsseth.RuinsOfGrowsseth;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.server.commands.PlaceCommand;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.levelgen.structure.StructureStart;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+
+@Mixin(PlaceCommand.class)
+public abstract class PlaceCommandMixin {
+    // Track /place-placed structures, for testing
+    @Inject(at = @At("TAIL"), method = "placeStructure", locals = LocalCapture.CAPTURE_FAILHARD)
+    private static void placeStructureTriggerTracker(
+            CommandSourceStack source, Holder.Reference<Structure> structure, BlockPos pos, CallbackInfoReturnable<Integer> cir,
+            ServerLevel serverLevel, Structure structure2, ChunkGenerator chunkGenerator, StructureStart structureStart,
+            BoundingBox boundingBox, ChunkPos chunkPos, ChunkPos chunkPos2, String string
+    ) {
+        if (structure.key().location().getNamespace().equals(RuinsOfGrowsseth.MOD_ID)) {
+            CustomPlacedStructureTracker.get(serverLevel).registerStructure(structureStart, pos);
+        }
+    }
+
+    /*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+    /*       Target Class : net.minecraft.server.commands.PlaceCommand                                                                                                                                                                                                                                                                                   */
+    /*      Target Method : public int placeStructure(CommandSourceStack source, Holder$Reference structure, BlockPos pos)                                                                                                                                                                                                                               */
+    /*  Target Max LOCALS : 11                                                                                                                                                                                                                                                                                                                           */
+    /* Initial Frame Size : 3                                                                                                                                                                                                                                                                                                                            */
+    /*      Callback Name : placeStructureTriggerTracker                                                                                                                                                                                                                                                                                                 */
+    /*        Instruction : InjectionNode IRETURN                                                                                                                                                                                                                                                                                                        */
+    /*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+    /*   LOCAL                  TYPE  NAME                                                                                                                                                                                                                                                                                                               */
+    /*   [  0]    CommandSourceStack  source                                                                                                                                                                                                                                                                                                             */
+    /*   [  1]      Holder$Reference  structure                                                                                                                                                                                                                                                                                                          */
+    /*   [  2]              BlockPos  pos                                                                                                                                                                                                                                                                                                                */
+    /* > [  3]           ServerLevel  serverLevel                                        <capture>                                                                                                                                                                                                                                                       */
+    /*   [  4]             Structure  structure2                                         <capture>                                                                                                                                                                                                                                                       */
+    /*   [  5]        ChunkGenerator  chunkGenerator                                     <capture>                                                                                                                                                                                                                                                       */
+    /*   [  6]        StructureStart  structureStart                                     <capture>                                                                                                                                                                                                                                                       */
+    /*   [  7]           BoundingBox  boundingBox                                        <capture>                                                                                                                                                                                                                                                       */
+    /*   [  8]              ChunkPos  chunkPos                                           <capture>                                                                                                                                                                                                                                                       */
+    /*   [  9]              ChunkPos  chunkPos2                                          <capture>                                                                                                                                                                                                                                                       */
+    /*   [ 10]                String  string                                             <capture>                                                                                                                                                                                                                                                       */
+    /*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+    /*                                                                                                                                                                                                                                                                                                                                                   */
+    /* /**                                                                                                                                                                                                                                                                                                                                               */
+    /*  * Expected callback signature                                                                                                                                                                                                                                                                                                                    */
+    /*  * /                                                                                                                                                                                                                                                                                                                                              */
+    /* private void placeStructureTriggerTracker(CommandSourceStack source, Holder$Reference structure, BlockPos pos, CallbackInfoReturnable<Integer> cir, ServerLevel serverLevel, Structure structure2, ChunkGenerator chunkGenerator, StructureStart structureStart, BoundingBox boundingBox, ChunkPos chunkPos, ChunkPos chunkPos2, String string) { */
+    /*     // Method body                                                                                                                                                                                                                                                                                                                                */
+    /* }                                                                                                                                                                                                                                                                                                                                                 */
+    /*                                                                                                                                                                                                                                                                                                                                                   */
+    /*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+
+    /************************************************************************************************************************************************************************************************************************************/
+    /*       Target Class : net.minecraft.server.commands.PlaceCommand                                                                                                                                                                  */
+    /*      Target Method : public int placeStructure(CommandSourceStack source, Holder$Reference structure, BlockPos pos)                                                                                                              */
+    /*  Target Max LOCALS : 11                                                                                                                                                                                                          */
+    /* Initial Frame Size : 3                                                                                                                                                                                                           */
+    /*      Callback Name : placeStructureFixPosition                                                                                                                                                                                   */
+    /*        Instruction : InjectionNode INVOKEVIRTUAL                                                                                                                                                                                 */
+    /************************************************************************************************************************************************************************************************************************************/
+    /*   LOCAL                  TYPE  NAME                                                                                                                                                                                              */
+    /*   [  0]    CommandSourceStack  source                                                                                                                                                                                            */
+    /*   [  1]      Holder$Reference  structure                                                                                                                                                                                         */
+    /*   [  2]              BlockPos  pos                                                                                                                                                                                               */
+    /* > [  3]           ServerLevel  serverLevel                                        <capture>                                                                                                                                      */
+    /*   [  4]             Structure  structure2                                         <capture>                                                                                                                                      */
+    /*   [  5]        ChunkGenerator  chunkGenerator                                     <capture>                                                                                                                                      */
+    /*   [  6]                     -                                                                                                                                                                                                    */
+    /*   [  7]                     -                                                                                                                                                                                                    */
+    /*   [  8]                     -                                                                                                                                                                                                    */
+    /*   [  9]                     -                                                                                                                                                                                                    */
+    /*   [ 10]                     -                                                                                                                                                                                                    */
+    /************************************************************************************************************************************************************************************************************************************/
+    /*                                                                                                                                                                                                                                  */
+    /* /**                                                                                                                                                                                                                              */
+    /*  * Expected callback signature                                                                                                                                                                                                   */
+    /*  * /                                                                                                                                                                                                                             */
+    /* private void placeStructureFixPosition(CommandSourceStack source, Holder$Reference structure, BlockPos pos, CallbackInfoReturnable<Integer> cir, ServerLevel serverLevel, Structure structure2, ChunkGenerator chunkGenerator) { */
+    /*     // Method body                                                                                                                                                                                                               */
+    /* }                                                                                                                                                                                                                                */
+    /*                                                                                                                                                                                                                                  */
+    /************************************************************************************************************************************************************************************************************************************/
+}

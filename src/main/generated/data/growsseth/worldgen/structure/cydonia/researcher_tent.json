@@ -1,0 +1,8 @@
+{
+  "type": "growsseth:researcher_tent",
+  "biomes": "#growsseth:has_structure/none",
+  "force_pos_uses_y": false,
+  "spawn_overrides": {},
+  "step": "surface_structures",
+  "terrain_adaptation": "beard_thin"
+}

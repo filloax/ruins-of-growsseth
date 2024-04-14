@@ -1,0 +1,120 @@
+{
+  "disc_sega_di_niente": {
+    "sounds": [
+      {
+        "name": "growsseth:disc_sega_di_niente",
+        "stream": true
+      }
+    ]
+  },
+  "disc_giorgio_cubetti": {
+    "sounds": [
+      {
+        "name": "growsseth:disc_giorgio_cubetti",
+        "stream": true
+      }
+    ]
+  },
+  "disc_giorgio_lofi": {
+    "sounds": [
+      {
+        "name": "growsseth:disc_giorgio_lofi",
+        "stream": true
+      }
+    ]
+  },
+  "disc_giorgio_lofi_inst": {
+    "sounds": [
+      {
+        "name": "growsseth:disc_giorgio_lofi_inst",
+        "stream": true
+      }
+    ]
+  },
+  "disc_giorgio_finding_home": {
+    "sounds": [
+      {
+        "name": "growsseth:disc_giorgio_finding_home",
+        "stream": true
+      }
+    ]
+  },
+  "disc_binobinooo": {
+    "sounds": [
+      {
+        "name": "growsseth:disc_binobinooo",
+        "stream": true
+      }
+    ]
+  },
+  "disc_binobinooo_inst": {
+    "sounds": [
+      {
+        "name": "growsseth:disc_binobinooo_inst",
+        "stream": true
+      }
+    ]
+  },
+  "disc_padre_mammonk": {
+    "sounds": [
+      {
+        "name": "growsseth:disc_padre_mammonk",
+        "stream": true
+      }
+    ]
+  },
+  "disc_abbandonati": {
+    "sounds": [
+      {
+        "name": "growsseth:disc_abbandonati",
+        "stream": true
+      }
+    ]
+  },
+  "disc_missiva_nell_ombra": {
+    "sounds": [
+      {
+        "name": "growsseth:disc_missiva_nell_ombra",
+        "stream": true
+      }
+    ]
+  },
+  "disc_mice_on_venus": {
+    "sounds": [
+      {
+        "name": "growsseth:piano3_mono",
+        "stream": true
+      }
+    ]
+  },
+  "disc_infinite_amethyst": {
+    "sounds": [
+      {
+        "name": "growsseth:infinite_amethyst_mono",
+        "stream": true
+      }
+    ]
+  },
+  "disc_labyrinthine": {
+    "sounds": [
+      {
+        "name": "growsseth:labyrinthine_mono",
+        "stream": true
+      }
+    ]
+  },
+  "deflect_arrow_sound": {
+    "sounds": [
+      {
+        "name": "growsseth:deflect_arrow_sound"
+      }
+    ]
+  },
+  "researcher_horn_sound": {
+    "sounds": [
+      {
+        "name": "growsseth:researcher_horn_sound"
+      }
+    ]
+  }
+}

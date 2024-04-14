@@ -1,0 +1,23 @@
+{
+    "parent": "minecraft:recipes/root", 
+    "_comment": "For now, make impossible to unlock via mod when tent is spawned, in community ver simply unlock on starting a world with the mod installed (many mods do this). Also, parent being recipes hides it from tabs.",
+    "display": {
+        "title": {
+            "translate": "advancements.growsseth.start.title"
+        },
+        "description": {
+            "translate": "advancements.growsseth.start.description"
+        },
+        "icon": {
+            "item": "minecraft:spyglass"
+        },
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": true
+    },
+    "criteria": {
+        "requirement": {
+            "trigger": "minecraft:impossible"
+        }
+    }
+}

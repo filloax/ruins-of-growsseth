@@ -1,0 +1,423 @@
+{
+    "shared": [
+        // Used by more events (referenced by id)
+        {
+            "content": [
+                "First hello!",
+                //"What..? A person wandering these lands who isn't a merchant?",
+                //"Let me guess, you must be either an explorer or a researcher, a rare sight these days!",
+                //{
+                    //"content": "Hello! Let me introduce myself, I am... uh...",
+                    //"duration": 6
+                //},
+                //"I'm sorry, it's embarrassing, but for some reason, I just can't seem to remember my name... How strange... perhaps it's because I haven't spoken to anyone in a long time...",
+                //"Ahem, let's change the subject! Researcher or explorer, I am both, so I suppose that makes you my colleague. For this reason, I assume you might be interested in acquiring some knowledge or some particular item, right? Feel free to take a look!",
+            ],
+            "useLimit": 1,
+            "priority": 100,
+            "id": "researcher-first",
+            "requiresUntilQuestStage": "start"
+        },
+        {
+            "content": "Goodbye, it was a pleasure.",
+            "useLimit": 1,
+            "priority": 50,
+            "id": "researcher-first-leave",
+            "requiresUntilQuestStage": "start"
+        },
+        {
+            "content": "Hey, come back here! You need to put things back in place!",
+            "id": "goodbye-made-mess-1",
+            "priority": 60,
+            "data": {
+                "sound": "angry",
+                "madeMess": "true"
+            },
+            "afterCloseRepeatsMax": 1,
+            "requiresUntilQuestStage": "healed"
+        },
+        {
+            "content": "...",
+            "id": "goodbye-made-mess-2",
+            "priority": 60,
+            "data": {
+                "sound": "angry",
+                "madeMess": "true"
+            },
+            "afterCloseRepeatsMin": 2,
+            "requiresUntilQuestStage": "healed"
+        },
+        {
+            "content": "",
+            "id": "no-dialogue-mess",
+            "priority": 60,
+            "data": {
+                "madeMess": "true"
+            },
+            "requiresUntilQuestStage": "healed"
+        }
+    ],
+    "playerArrive": [
+        { "id": "researcher-first" },
+        { "id": "no-dialogue-mess" },
+        "Good morning, colleague.",
+        "Glad to see you're still alive, colleague.",
+        "...maybe, with that ingredient... Oh, hello colleague.",
+        "Good morning colleague, beautiful day today, isn't it?",
+        "...but of course, it makes sense now... Oh, hello, please go ahead.",
+        "Hello colleague, always on the move eh?"
+    ],
+    "playerArriveNight": [
+        { "id": "researcher-first" },
+        { "id": "no-dialogue-mess" },
+        {
+            "content": "Oh, non mi aspettavo di vederla a quest'ora, va tutto bene?",
+            "useLimit": 1,
+            "priority": 20,
+            "id": "researcher-dialogue-night-first"
+        },
+        "Oh, I didn't expect to see you at this hour, is everything okay?",
+        "Strange time for a visit, I hope you haven't attracted any of the night creatures here.",
+        "Hello colleague, are you enjoying the starry sky too?",
+        "Snore... AH! What are you doing here at this hour?",
+        "Colleague, are you getting enough sleep? Insomnia tends to attract trouble...",
+        {
+            "content": "Fearless as always I see, but please be careful not to attract any creepers.\n...Not that those pests have the courage to explode in my presence, of course.",
+            "useLimit": 1,
+            "id": "researcher-arrive-night-creeper"
+        }
+    ],
+    "playerArriveAfterKilled": [
+        {
+            "content": "Ah, colleague, you're back, I thought I saw a monster with your features earlier.\nLuckily, someone like you would never entertain such ideas... right?",
+            "useLimit": 1,
+            "priority": 20,
+            "id": "greet-player-after-first-kill"
+        },
+        "Hello colleague, is everything all right? You are making a weird expression.",
+    ],
+    "playerLeave": [
+        { "id": "researcher-first-leave" },
+        "Goodbye colleague.",
+        "Wishing you a good day, colleague.",
+        "Until your next visit!",
+        {
+            "id": "researcher-north-tip-force",
+            "content": "Goodbye, and always remember that on maps north is up!",
+            "useLimit": 1
+        },
+        { "id": "goodbye-made-mess-1" },
+        { "id": "goodbye-made-mess-2" },
+    ],
+    "playerLeaveNight": [
+        { "id": "researcher-first-leave" },
+        "Goodbye, and safe journey back home.",
+        "Watch out for monsters on your way back, colleague.",
+        "Stay away from demons, colleague.",
+        { "id": "goodbye-made-mess-1" },
+        { "id": "goodbye-made-mess-2" },
+    ],
+    "playerArriveLongTime": [
+        {
+            "content": "Long time no see! I wasn't sure you were still alive.",
+            "useLimit": 1,
+            "priority": 50,
+            "id": "researcher-arrive-long-time-first"
+        },
+        "Colleague...? Is that really you? Haven't seen you in a long time.",
+        "Colleague...? Back from a long adventure I assume, do you have anything interesting to share?",
+        "Long time no see, colleague.",
+        "Hello colleague. It's been a while since you've been away, how are you?"
+    ],
+    "playerArriveSoon": [
+        { "id": "no-dialogue-mess" },
+        "Back already?",
+        "Forgot something?",
+        "Oh, you're still here. Go ahead.",
+        "Do you need something else?",
+        "Did you want to tell me something else, colleague?",
+        "Oh, you're back already.",
+        "...Okay, now that they're gone... Oh! Hello again colleague.",
+        "Wow, that was quick, did you want to see me again?",
+        "...Let's see, now I should work on... Oh! You're still here colleague.",
+        {
+            "content": "Uhm... did you wash your hands with pee by any chance?",
+            "id": "arrive-soon-special",
+            "useLimit": 1
+        },
+        {
+            "content": "Colleague, are you teasing me by any chance? I'm not a child.",
+            "priority": 50,
+            "afterCloseRepeatsMin": 3,
+            "afterCloseRepeatsMax": 3,
+            "data": {
+                "sound": "angry"
+            }
+        },
+        {
+            "content": "...",
+            "priority": 50,
+            "afterCloseRepeatsMin": 4,
+            "data": {
+                "sound": "angry"
+            }
+        }
+    ],
+    "playerLeaveSoon": [
+        "See you soon!",
+        "Alright, see you soon!",
+        "Goodbye colleague, again.",
+        "Take care!",
+        {
+            "content": "",
+            "priority": 50,
+            "afterCloseRepeatsMin": 3
+        },
+        { "id": "goodbye-made-mess-1" },
+        { "id": "goodbye-made-mess-2" },
+    ],
+    "hitByPlayer": [
+        {
+            "content": "Hey!",
+            "priority": 50,
+            "afterCloseRepeatsMax": 1,
+            "immediate": true,
+            "data": {
+                "sound": "none"
+            }
+        },
+        {
+            "content": "What are you doing?! Are you out of your mind?",
+            "priority": 50,
+            "afterCloseRepeatsMin": 2,
+            "afterCloseRepeatsMax": 2,
+            "immediate": true,
+            "data": {
+                "sound": "none"
+            }
+        },
+        {
+            "content": "The plague must have taken over... I'm sorry, but it's for your own good!",
+            "afterCloseRepeatsMin": 3,
+            "afterCloseRepeatsMax": 3,
+            "priority": 50,
+            "immediate": true,
+            "data": {
+                "sound": "none"
+            }
+        }
+    ],
+    "hitByPlayerImmortal": [
+        {
+            "content": "Hey!",
+            "priority": 50,
+            "afterRepeatsMax": 1,
+            "immediate": true,
+            "data": {
+                "sound": "none"
+            }
+        },
+        {
+            "content": "Is there something wrong?",
+            "priority": 50,
+            "afterRepeatsMin": 3,
+            "afterRepeatsMax": 3,
+            "immediate": true,
+            "data": {
+                "sound": "none"
+            }
+        },
+        {
+            "content": "Ah, I see! You want to test my resilience, huh? Go ahead then.\nKnow that my body has been toughened by the cold of the icy lands of Polar'Hetty and countless encounters with enemies. I doubt you'll be able to scratch me!",
+            "useLimit": 1,
+            "afterRepeatsMin": 5,
+            "afterRepeatsMax": 5,
+            "priority": 50,
+            "id": "hit-excuse",
+            "immediate": true
+        }
+    ],
+    "killPlayer": [
+        {
+            "content": "Why did you do it...",
+            "immediate": true,
+            "useLimit": 1,
+            "priority": 20,
+            "data": {
+                "sound": "none"
+            },
+            "id": "first-player-kill"
+        },
+        "..."
+    ],
+    "playerCheats": [
+        {
+            "content": "I won't fall for these tricks!",
+            "immediate": true,
+            "afterCloseRepeatsMax": 1,
+            "data": {
+                "sound": "none"
+            }
+        }
+    ],
+    "lowHealth": [
+        {
+            "content": "Ugh... I can't... fail...",
+            "immediate": true,
+            "afterCloseRepeatsMax": 1,
+            "data": {
+                "sound": "none"
+            }
+        }
+    ],
+    "death": [
+        {
+            "content": "Maybe... this world isn't destined to change...",
+            "immediate": true,
+            "data": {
+                "sound": "none"
+            }
+        }
+    ],
+    "breakTent": [
+        {
+            "content": "Uh... alright go ahead, just don't touch the tools I work with.",
+            "afterRepeatsMax": 1,
+            "immediate": true
+        },
+        {
+            "content": "",
+            "afterRepeatsMin": 2
+        }
+    ],
+    "makeMess": [
+        {
+            "content": "Please keep your hands off my things, colleague. I can't afford to babysit both a donkey and a monkey.",
+            "immediate": true,
+            "data": {
+                "sound": "none"
+            }
+        },
+        {
+            "content": "Please...",
+            "priority": 50,
+            "afterRepeatsMin": 2,
+            "afterRepeatsMax": 2,
+            "immediate": true,
+            "data": {
+                "sound": "none"
+            }
+        },
+        {
+            "content": "Mmm...",
+            "priority": 50,
+            "afterRepeatsMin": 3,
+            "immediate": true,
+            "data": {
+                "sound": "none"
+            }
+        }
+    ],
+    "fixMess": [
+        "Thank you, I see there might still be some civilization left in this world after all.",
+        {
+            "content": "Good...",
+            "priority": 50,
+            "afterRepeatsMin": 2,
+            "afterRepeatsMax": 2
+        },
+        {
+            "content": "Mh...",
+            "priority": 50,
+            "afterRepeatsMin": 3
+        }
+    ],
+    "refuseTrade": [
+        {
+            "content": "I'm sorry, I'm finishing up some research and I don't have anything to offer yet. Try again later.",
+            "priority": -100,
+            "immediate": true
+        },
+        {
+            "content": "Brother.\nCousin.\nCompanion.\nPal.\nDo you think you can steal my things and then sell me your research?\nPut things back where they belong.",
+            "priority": 0,
+            "immediate": true,
+            "requiresEventParam": "angry",
+            "afterRepeatsMax": 1,
+            "data": {
+                "sound": "none"
+            }
+        },
+        {
+            "content": "You still have my work tools, remember? Put them back.",
+            "priority": 0,
+            "immediate": true,
+            "requiresEventParam": "angry",
+            "afterRepeatsMin": 2,
+            "data": {
+                "sound": "none"
+            }
+        }
+    ],
+    "playerAdvancement": [
+        {
+            "content": "Hey! What are you doing?",
+            "requiresEventParam": "growsseth:donkey/donkey_hurt_dialogue",
+            "immediate": true,
+            "id": "hit-donkey-first",
+            "useLimit": 1,
+            "priority": 50
+        },
+        {
+            "content": "Stop!",
+            "requiresEventParam": "growsseth:donkey/donkey_hurt_dialogue",
+            "immediate": true,
+            "id": "hit-donkey-second",
+            "useLimit": 1
+        }
+    ],
+    "borrowDonkey": [
+        {
+            "content": [
+                "Oh, do you need my donkey by any chance? Go ahead colleague, I don't plan on moving anytime soon.",
+                "But I'll have to charge you more until you bring it back safe and sound, think of it as a kind of deposit.",
+                "These lands are very dangerous after all, and you never know what might happen...",
+            ],
+            "immediate": true,
+            "id": "first-donkey-borrow",
+            "useLimit": 1,
+            "priority": 50
+        },
+        {
+            "content": "Oh, do you need my donkey again? Go ahead, you know the rules!",
+            "immediate": true
+        }
+    ],
+    "returnDonkey": [
+        "Thank you for bringing it back. I can now bring back my original prices!"
+    ],
+    "exploreCellar": [
+        {
+            "content": "Please, get out of there now.",
+            "id": "explore-cellar",
+            "useLimit": 1,
+            "priority": 50,
+            "immediate": true,
+            "requiresUntilQuestStage": "healed"
+        },
+        {
+            "content": "...",
+            "id": "explore-cellar",
+            "immediate": true,
+            "requiresUntilQuestStage": "healed"
+        }
+    ],
+    "exitCellar": [
+        {
+            "id": "exit-cellar",
+            "useLimit": 1,
+            "content": "I'm sorry, I know you must have many questions about it but I can't tell you anything, it's a personal matter...\nIf possible, I'd like you to pretend you didn't see anything, and not to speak of it to anyone.",
+            "requiresUntilQuestStage": "healed"
+        }
+    ]
+}

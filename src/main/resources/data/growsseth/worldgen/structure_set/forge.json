@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "growsseth:forge",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "salt": 156747281,
+    "spacing": 32,
+    "separation": 8,
+    "type": "minecraft:random_spread"
+  }
+}

@@ -1,0 +1,28 @@
+accessWidener	v1	named
+
+extendable  method net/minecraft/world/entity/monster/ZombieVillager finishConversion (Lnet/minecraft/server/level/ServerLevel;)V
+accessible field net/minecraft/world/entity/monster/ZombieVillager conversionStarter Ljava/util/UUID;
+accessible field net/minecraft/world/entity/monster/ZombieVillager villagerConversionTime I
+accessible field net/minecraft/world/level/levelgen/structure/pieces/StructurePiecesBuilder pieces Ljava/util/List;
+accessible field net/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplate palettes Ljava/util/List;
+accessible method net/minecraft/world/entity/Mob resetAmbientSoundTime ()V
+accessible class net/minecraft/server/level/ServerLevel$EntityCallbacks
+
+extendable class net/minecraft/world/level/levelgen/structure/structures/JigsawStructure
+accessible field net/minecraft/world/level/levelgen/structure/structures/JigsawStructure startPool Lnet/minecraft/core/Holder;
+accessible field net/minecraft/world/level/levelgen/structure/structures/JigsawStructure startJigsawName Ljava/util/Optional;
+accessible field net/minecraft/world/level/levelgen/structure/structures/JigsawStructure maxDepth I
+accessible field net/minecraft/world/level/levelgen/structure/structures/JigsawStructure startHeight Lnet/minecraft/world/level/levelgen/heightproviders/HeightProvider;
+accessible field net/minecraft/world/level/levelgen/structure/structures/JigsawStructure useExpansionHack Z
+accessible field net/minecraft/world/level/levelgen/structure/structures/JigsawStructure projectStartToHeightmap Ljava/util/Optional;
+accessible field net/minecraft/world/level/levelgen/structure/structures/JigsawStructure maxDistanceFromCenter I
+accessible method net/minecraft/world/level/levelgen/structure/structures/JigsawStructure verifyRange (Lnet/minecraft/world/level/levelgen/structure/structures/JigsawStructure;)Lcom/mojang/serialization/DataResult;
+
+accessible method net/minecraft/world/level/levelgen/structure/pools/JigsawPlacement getRandomNamedJigsaw (Lnet/minecraft/world/level/levelgen/structure/pools/StructurePoolElement;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/Rotation;Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplateManager;Lnet/minecraft/world/level/levelgen/WorldgenRandom;)Ljava/util/Optional;
+#accessible method net/minecraft/world/level/levelgen/structure/pools/JigsawPlacement addPieces (Lnet/minecraft/world/level/levelgen/RandomState;IZLnet/minecraft/world/level/chunk/ChunkGenerator;Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplateManager;Lnet/minecraft/world/level/LevelHeightAccessor;Lnet/minecraft/util/RandomSource;Lnet/minecraft/core/Registry;Lnet/minecraft/world/level/levelgen/structure/PoolElementStructurePiece;Ljava/util/List;Lnet/minecraft/world/phys/shapes/VoxelShape;)V
+
+accessible field net/minecraft/world/level/biome/MultiNoiseBiomeSource parameters Lcom/mojang/datafixers/util/Either;
+
+accessible field net/minecraft/world/level/levelgen/structure/pools/StructureTemplatePool templates Lit/unimi/dsi/fastutil/objects/ObjectArrayList;
+accessible field net/minecraft/world/level/levelgen/structure/pools/StructureTemplatePool rawTemplates Ljava/util/List;
+mutable field net/minecraft/world/level/levelgen/structure/pools/StructureTemplatePool rawTemplates Ljava/util/List;

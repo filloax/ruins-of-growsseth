@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "growsseth:conduit_ruins",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "salt": 34342168,
+    "spacing": 32,
+    "separation": 8,
+    "type": "minecraft:random_spread"
+  }
+}

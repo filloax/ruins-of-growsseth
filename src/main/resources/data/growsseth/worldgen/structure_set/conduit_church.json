@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "growsseth:conduit_church",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "salt": 43627282,
+    "spacing": 32,
+    "separation": 8,
+    "type": "minecraft:random_spread"
+  }
+}

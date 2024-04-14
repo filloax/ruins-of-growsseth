@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "growsseth:noteblock_lab",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "salt": 92543892,
+    "spacing": 32,
+    "separation": 8,
+    "type": "minecraft:random_spread"
+  }
+}

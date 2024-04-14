@@ -1,0 +1,7 @@
+{
+  "asset_id": "growsseth:growsseth",
+  "description": {
+    "translate": "trim_pattern.growsseth.growsseth"
+  },
+  "template_item": "growsseth:growsseth_trim_template"
+}

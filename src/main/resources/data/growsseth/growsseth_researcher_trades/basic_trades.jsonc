@@ -1,0 +1,31 @@
+{
+    "fixedTrades": [
+        // Trades initially different, so no fixed trades
+        // {
+        //     "gives": {
+        //         "id": "growsseth:growsseth_banner_pattern",
+        //         "amount": 1
+        //     },
+        //     "wants": [
+        //         {
+        //             "id": "minecraft:emerald",
+        //             "amount": 6
+        //         }
+        //     ],
+        //     "priority": 100 // high priority to appear after all the other trades
+        // },
+        // {
+        //     "gives": {
+        //         "id": "growsseth:disc_giorgio_lofi",
+        //         "amount": 1
+        //     },
+        //     "wants": [
+        //         {
+        //             "id": "minecraft:emerald",
+        //             "amount": 5
+        //         }
+        //     ],
+        //     "priority": 100
+        // }
+    ]
+}

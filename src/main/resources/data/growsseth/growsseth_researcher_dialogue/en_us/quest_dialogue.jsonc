@@ -1,0 +1,131 @@
+{
+    "shared": [
+        {
+            "content": [
+                "Oh... hello colleague. §o*yawn*§r uh... lately I've been feeling very sleepy, even though I'm sleeping more than usual.",
+                "Probably my relentless research is wearing me out more than usual. §o*yawn*§r",
+                "Tell me... have you found any information about the symptoms of the Plague? There are rumors going around that perhaps, and I repeat perhaps, there might be a cure. Not that I really believe it, haha!",
+                "Me? I'm doing great §o*yawn*§r ...don't worry, I'm following my intuition, but staying in a tent must have made me sick, after all, I'm getting old! Haha... §o*yawn*§r",
+            ],
+            "useLimit": 1,
+            "priority": 1000,
+            "id": "researcher-quest-start",
+            "requiresQuestStage": "start",
+            "requiresUntilQuestStage": "healed"
+        },
+        {
+            "content": [
+                "...pant... pant... Colleague? Is that you..? Are we... in my underground? What are you doing here? And what am I doing in my cage..?",
+                "Oh, I think I understand, in the end, I couldn't find that cursed ingredient...",
+                "Wait... this smell... this taste... §lNOW I UNDERSTAND!§r I can't believe it, for so long I've been blind to such an obvious solution!",
+                "Oh, sorry, I got carried away with emotion and didn't even thank you!",
+                "I thank you infinitely, colleague, I can never repay you enough but please, if you need any of my research, don't hesitate to ask, it's the least I can do.",
+                "I'll come back upstairs once I've fully recovered... I'd like to prepare some things.",
+            ],
+            "useLimit": 1,
+            "priority": 1050,
+            "id": "researcher-quest-cure",
+            "requiresQuestStage": "healed",
+            "requiresUntilQuestStage": "home"
+        },
+        {
+            "content": [
+                {
+                    "content": "Hello colleague.",
+                    "duration": 4
+                },
+                "You know, after what happened I thought maybe it was time for me to retire... I don't even know how long I've been wandering around this land without results.",
+                "I've reflected on it, and I've come to a conclusion... my journey isn't over yet. I'll go to distant places, bringing relief to anyone in need.",
+                "But don't be sad about my departure, colleague! Sooner or later we'll meet again, I'm sure of it.",
+                "Anyway, I wanted to thank you again. If it weren't for you, I wouldn't be here, standing, breathing, and above all, there wouldn't have been hope for a new world. For all this, thank you.",
+                "Ahem ahem, anyway, I'll be leaving soon, so if you want to ask me anything else, now's the right time.",
+            ],
+            "useLimit": 1,
+            "priority": 1100,
+            "id": "researcher-quest-end",
+            "requiresQuestStage": "home"
+        }
+    ],
+    "tickNearPlayer": [
+        {
+            "id": "researcher-quest-start"
+        },
+        {
+            "id": "researcher-quest-cure"
+        },
+        {
+            "id": "researcher-quest-end"
+        }
+    ],
+    "playerArrive": [
+        {
+            "id": "researcher-quest-start"
+        },
+        {
+            "id": "researcher-quest-cure"
+        },
+        {
+            "id": "researcher-quest-end"
+        }
+    ],
+    "playerArriveNight": [
+        {
+            "id": "researcher-quest-start"
+        },
+        {
+            "id": "researcher-quest-cure"
+        },
+        {
+            "id": "researcher-quest-end"
+        }
+    ],
+    "playerArriveSoon": [
+        {
+            "id": "researcher-quest-start"
+        },
+        {
+            "id": "researcher-quest-cure"
+        },
+        {
+            "id": "researcher-quest-end"
+        }
+    ],
+    "playerArriveLongTime": [
+        {
+            "id": "researcher-quest-start"
+        },
+        {
+            "id": "researcher-quest-cure"
+        },
+        {
+            "id": "researcher-quest-end"
+        }
+    ],
+    "playerLeave": [
+        {
+            "content": "Goodbye colleague, don't you dare become undead, huh!",
+            "priority": 1000,
+            "requiresQuestStage": "start",
+            "requiresUntilQuestStage": "healed"
+        },
+        {
+            "content": "Farewell colleague, I'll miss you.",
+            "priority": 1000,
+            "requiresQuestStage": "home"
+        }
+    ],
+    "playerLeaveSoon": [
+        {
+            "content": "Farewell colleague, I'll miss you.",
+            "priority": 1000,
+            "requiresQuestStage": "home"
+        }
+    ],
+    "playerLeaveNight": [
+        {
+            "content": "Farewell colleague, I'll miss you.",
+            "priority": 1000,
+            "requiresQuestStage": "home"
+        }
+    ]
+}

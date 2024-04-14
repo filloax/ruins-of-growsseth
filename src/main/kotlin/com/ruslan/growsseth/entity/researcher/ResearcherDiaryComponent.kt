@@ -1,0 +1,532 @@
+package com.ruslan.growsseth.entity.researcher
+
+import com.filloax.fxlib.*
+import com.filloax.fxlib.codec.mutableMapCodec
+import com.filloax.fxlib.codec.mutableSetCodec
+import com.filloax.fxlib.json.KotlinJsonResourceReloadListener
+import com.mojang.serialization.Codec
+import com.mojang.serialization.codecs.RecordCodecBuilder
+import com.ruslan.growsseth.Constants
+import com.ruslan.growsseth.GrowssethTags
+import com.ruslan.growsseth.RuinsOfGrowsseth
+import com.ruslan.growsseth.StructureAdvancements
+import com.ruslan.growsseth.config.GrowssethConfig
+import com.ruslan.growsseth.config.ResearcherConfig
+import com.ruslan.growsseth.http.ApiEvent
+import com.ruslan.growsseth.http.GrowssethApi
+import com.ruslan.growsseth.utils.*
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
+import net.minecraft.core.BlockPos
+import net.minecraft.core.Vec3i
+import net.minecraft.core.registries.Registries
+import net.minecraft.nbt.ByteTag
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.ListTag
+import net.minecraft.nbt.NbtOps
+import net.minecraft.nbt.StringTag
+import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceKey
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.server.packs.resources.ResourceManager
+import net.minecraft.tags.TagKey
+import net.minecraft.util.profiling.ProfilerFiller
+import net.minecraft.world.Container
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.ai.targeting.TargetingConditions
+import net.minecraft.world.entity.item.ItemEntity
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
+import net.minecraft.world.level.block.LecternBlock
+import net.minecraft.world.level.block.entity.ChestBlockEntity
+import net.minecraft.world.level.block.entity.LecternBlockEntity
+import net.minecraft.world.level.gameevent.GameEvent
+import net.minecraft.world.level.levelgen.structure.BoundingBox
+import net.minecraft.world.level.levelgen.structure.Structure
+import net.minecraft.world.phys.AABB
+
+
+/**
+ * Generate a diary in the researcher tent when a player has visited that tent.
+ * (Mostly meant for singleplayer)
+ * NOTE: uses structure tags instead of ids, make sure to set them. This is to allow
+ * diary to work on variants of same structure.
+ */
+class ResearcherDiaryComponent(val researcher: Researcher) {
+
+    companion object {
+        val PERSIST_CODEC: Codec<DiaryData> = RecordCodecBuilder.create { b ->
+            b.group(
+                mutableMapCodec(TagKey.codec(Registries.STRUCTURE), Codec.BOOL).fieldOf("recordedStructures").forGetter(DiaryData::recordedStructures),
+                mutableSetCodec(Codec.STRING).fieldOf("recordedEvents").forGetter(DiaryData::recordedEvents),
+            ).apply(b, ::DiaryData)
+        }
+
+        val structToTag = mutableMapOf<ServerLevel, Map<ResourceKey<Structure>, TagKey<Structure>>>()
+        val targetingConditions: TargetingConditions = TargetingConditions.forNonCombat().ignoreLineOfSight().ignoreInvisibilityTesting()
+
+        const val DEFAULT_LANGUAGE = "en_us"
+    }
+
+    val updatePeriod = secondsToTicks(1f)
+
+    var data = DiaryData()
+        private set
+
+    data class DiaryData(
+        val recordedStructures: MutableMap<TagKey<Structure>, Boolean> = mutableMapOf(),
+        val recordedEvents: MutableSet<String> = mutableSetOf(),
+    )
+
+    private val level = researcher.level() as ServerLevel
+    private var lecternBlockEntity: LecternBlockEntity? = null
+    private var previousDiariesChestBlockEntity: ChestBlockEntity? = null
+    private var didFirstStructSearch = false
+
+    fun aiStep() {
+        if (!ResearcherConfig.researcherWritesDiaries) return
+
+        if (researcher.tickCount % updatePeriod == 0) {
+            val anyNew = updateUnlockedStructures()
+
+            if (anyNew || !data.recordedStructures.values.all { it }) {
+                for ((structKey, alreadyRecorded) in data.recordedStructures) {
+                    if (!alreadyRecorded) {
+                        data.recordedStructures[structKey] = makeStructureDiary(structKey)
+                    }
+                }
+            }
+
+            // Custom event diaries
+            val newEvents = CustomRemoteDiaries.diaries.filter { it.key !in data.recordedEvents }
+            if (newEvents.isNotEmpty()) {
+                for ((id, diary) in newEvents) {
+                    makeEventDiary(diary)
+                    data.recordedEvents.add(id)
+                }
+            }
+        }
+    }
+
+    private fun makeEventDiary(customDiaryData: DiaryEntry): Boolean {
+        val success = makeDiary({ customDiaryData }, {
+            RuinsOfGrowsseth.LOGGER.info("Created custom remote diary (${it.name}), recording content...")
+        }) { book ->
+            book.orCreateTag.put(DiaryHelper.TAG_REMOVE_DIARIES_ON_PUSH, ByteTag.valueOf(true))
+        }
+        if (!success) {
+            RuinsOfGrowsseth.LOGGER.info("Failed in creating custom remote diary ${customDiaryData.name}")
+            return false
+        }
+        return true
+    }
+
+    private fun makeStructureDiary(forStructure: TagKey<Structure>): Boolean {
+        val languageDiaries = DiaryListener.DIARIES_BY_LANG[GrowssethConfig.serverLanguage] ?: DiaryListener.DIARIES_BY_LANG[DEFAULT_LANGUAGE]
+        val remoteDiaries = CustomRemoteDiaries.structureReplacementDiaries
+        val success = makeDiary({ remoteDiaries[forStructure] ?: languageDiaries?.structures?.get(forStructure) }) {
+            RuinsOfGrowsseth.LOGGER.info("Created diary for ${forStructure.location} (${it.name}), recording content...")
+        }
+        if (!success) {
+            RuinsOfGrowsseth.LOGGER.info("No diary for ${forStructure.location}")
+            return false
+        }
+        return true
+    }
+
+    private fun makeDiary(selector: () -> DiaryEntry?, done: (DiaryEntry) -> Unit): Boolean
+        = makeDiary(selector, done) {}
+
+    private fun makeDiary(selector: () -> DiaryEntry?, done: (DiaryEntry) -> Unit, doOnDiary: (ItemStack) -> Unit): Boolean {
+        val diaryData = selector() ?: return false
+        val name = Component.literal(diaryData.name)
+        val pages = diaryData.pages.map(Component::literal)
+        val book = createWrittenBook(name, researcher.name, pages)
+
+        done(diaryData)
+        doOnDiary(book)
+        pushDiaryToContainers(book)
+        return true
+    }
+
+    fun makeArbitraryDiary(name: String, content: String) {
+        val cname = Component.literal(name)
+        val pages = content.split("===").map(Component::literal)
+        val book = createWrittenBook(cname, researcher.name, pages)
+        RuinsOfGrowsseth.LOGGER.info("Created test diary $name, recording content...")
+        pushDiaryToContainers(book)
+    }
+
+    private fun pushDiaryToContainers(book: ItemStack) {
+        findBlockEntsIfNull()
+        DiaryHelper.pushDiaryToContainers(book, level, researcher, lecternBlockEntity, previousDiariesChestBlockEntity)
+    }
+
+    private val printedWarningFor = mutableSetOf<ResourceKey<Structure>>()
+
+    private fun updateUnlockedStructures(): Boolean {
+        val checkRange = 64.0
+        val possiblePlayers: List<ServerPlayer> = level.getNearbyPlayers(
+            targetingConditions,
+            researcher,
+            AABB.ofSize(researcher.position(), checkRange, checkRange / 2, checkRange)
+        ).map { it as ServerPlayer }
+
+        var found = false
+
+        val structToTagLevel = structToTag[level] ?: structToTag[level.server.overworld()]
+
+        if (structToTagLevel == null) {
+            RuinsOfGrowsseth.LOGGER.error("No structToTag initialized for level or overworld! Level is $level")
+            return false
+        }
+
+        possiblePlayers.forEach { player ->
+            val unlocked = StructureAdvancements.getPlayerFoundStructures(player)
+            val unlockedTags = unlocked.mapNotNull {
+                val tag = structToTagLevel[it]
+                if (tag == null && !printedWarningFor.contains(it)) {
+                    RuinsOfGrowsseth.LOGGER.warn("Structure $it doesn't have a corresponding tag defined in GrowssethTags!")
+                    printedWarningFor.add(it)
+                }
+                tag
+            }
+            val new: List<TagKey<Structure>> = unlockedTags.minus(data.recordedStructures.keys)
+            if (new.isNotEmpty()) {
+                found = true
+                data.recordedStructures.putAll(new.associateWith { false })
+            }
+        }
+
+        return found
+    }
+
+    private fun findBlockEntsIfNull() {
+        var findLectern = lecternBlockEntity == null || lecternBlockEntity?.isRemoved == true
+        var findChest = previousDiariesChestBlockEntity == null || previousDiariesChestBlockEntity?.isRemoved == true
+        val tent = researcher.tent
+        if (findLectern || findChest) {
+            if (tent == null) {
+                val searchRange = 10
+                val offset = Vec3i(searchRange, searchRange * 3 / 4, searchRange)
+                for (center in listOfNotNull(researcher.startingPos, researcher.blockPosition())) {
+                    val searchArea = BoundingBox.fromCorners(center.subtract(offset), center.offset(offset))
+                    for (pos in iterBlocks(searchArea)) {
+                        val found = checkBlockPosForEnt(pos, findLectern, findChest)
+                        findLectern = !found.first
+                        findChest = !found.second
+
+                        if (!findChest && !findLectern) {
+                            break
+                        }
+                    }
+                }
+            } else {
+                val boundingBoxWithoutCellar = tent.boundingBox.clip(minY = tent.cellarTrapdoorPos?.y ?: (tent.boundingBox.minY() + 11))
+                for (pos in iterBlocks(boundingBoxWithoutCellar)) {
+                    val found = checkBlockPosForEnt(pos, findLectern, findChest)
+                    findLectern = !found.first
+                    findChest = !found.second
+
+                    if (!findChest && !findLectern) {
+                        break
+                    }
+                }
+            }
+        }
+    }
+
+    private fun checkBlockPosForEnt(pos: BlockPos, findLectern: Boolean, findChest: Boolean): Pair<Boolean, Boolean> {
+        var foundLectern = false
+        var foundChest = false
+        if (findLectern) level.getBlockEntity(pos)?.let {
+            if (it is LecternBlockEntity) {
+                lecternBlockEntity = it
+                foundLectern = true
+            }
+        }
+        if (findChest) level.getBlockEntity(pos)?.let {
+            if (it is ChestBlockEntity) {
+                previousDiariesChestBlockEntity = it
+                foundChest = true
+            }
+        }
+        return Pair(foundLectern, foundChest)
+    }
+
+    fun writeNbt(tag: CompoundTag) {
+        tag.put("DiaryData", PERSIST_CODEC.encodeStart(NbtOps.INSTANCE, data).getOrThrow(false) {
+            RuinsOfGrowsseth.LOGGER.error("Error in encoding DiaryData: $it")
+        })
+    }
+
+    fun readNbt(tag: CompoundTag) {
+        tag.get("DiaryData")?.let { diaryData ->
+            data = PERSIST_CODEC.decode(NbtOps.INSTANCE, diaryData).getOrThrow(false) {
+                RuinsOfGrowsseth.LOGGER.error("Error in decoding DiaryData: $it")
+            }.first
+        }
+    }
+
+    object Callbacks {
+        fun onServerLevel(level: ServerLevel) {
+            // Probably not optimized? Oh. well
+            // Get only once instead of running for every player
+            // Run now for registry access reasons and to run only once
+            val registry = level.registryAccess().registryOrThrow(Registries.STRUCTURE)
+            structToTag[level] = GrowssethTags.StructTags.ALL.flatMap { tag ->
+                registry.getTagOrEmpty(tag).filter { it.unwrapKey().isPresent }.map { it.unwrapKey().get() to tag }
+            }.associate { it }
+        }
+    }
+}
+
+object DiaryHelper {
+    const val TAG_REMOVE_DIARIES_ON_PUSH = "RemoveOnResDiaryPush"
+
+    fun createMiscDiary(id: String, author: Component): ItemStack? {
+        val book = ItemStack(Items.WRITTEN_BOOK)
+        if (updateItemWithMiscDiary(book, id, author)) {
+            return book
+        }
+        return null
+    }
+    fun createMiscDiary(id: String, entity: Entity): ItemStack?
+        = createMiscDiary(id, entity.name)
+
+    fun hasCustomEndDiary(): Boolean {
+        return CustomRemoteDiaries.endDiary != null
+    }
+
+    fun getCustomEndDiary(author: Component): ItemStack? {
+        val book = ItemStack(Items.WRITTEN_BOOK)
+        val diaryData = CustomRemoteDiaries.endDiary ?: run {
+            RuinsOfGrowsseth.LOGGER.error("getCustomEndDiary: no end diary loaded!")
+            return null
+        }
+
+        val name = Component.literal(diaryData.name)
+        val pages = diaryData.pages.map(Component::literal)
+        RuinsOfGrowsseth.LOGGER.info("Created end diary ($name, ${pages.size} pages)")
+        setBookTags(book, name, author, pages)
+        return book
+    }
+
+    fun updateItemWithMiscDiary(itemStack: ItemStack, id: String, author: Component): Boolean {
+        if (!itemStack.`is`(Items.WRITTEN_BOOK) && !itemStack.`is`(Items.WRITABLE_BOOK)) {
+            RuinsOfGrowsseth.LOGGER.warn("Setting diary data in non book item $itemStack")
+        }
+
+        val languageDiaries = DiaryListener.DIARIES_BY_LANG[GrowssethConfig.serverLanguage] ?: DiaryListener.DIARIES_BY_LANG[ResearcherDiaryComponent.DEFAULT_LANGUAGE]
+        val diaryData = languageDiaries?.misc?.get(id)
+        if (diaryData == null) {
+            RuinsOfGrowsseth.LOGGER.info("No diary with id $id")
+            return false
+        }
+
+        val name = Component.literal(diaryData.name)
+        val pages = diaryData.pages.map(Component::literal)
+        RuinsOfGrowsseth.LOGGER.info("Created diary $id ($name)")
+        setBookTags(itemStack, name, author, pages)
+        return true
+    }
+
+    fun updateItemWithMiscDiary(itemStack: ItemStack, id: String, entity: Entity): Boolean
+        = updateItemWithMiscDiary(itemStack, id, entity.name)
+
+    fun pushDiaryToContainers(book: ItemStack, level: ServerLevel, entity: Entity, lectern: LecternBlockEntity?, chest: ChestBlockEntity?) {
+        var currentItem: ItemStack? = book
+
+        lectern?.let {
+            val state = level.getBlockState(it.blockPos)
+            if (!LecternBlock.tryPlaceBook(entity, level, it.blockPos, state, currentItem!!)) {
+                val prevBook = it.book
+                it.book = currentItem
+                it.setChanged()
+                level.gameEvent(GameEvent.BLOCK_CHANGE, it.blockPos, GameEvent.Context.of(entity, state))
+                currentItem = prevBook
+            }
+        }
+
+        // If item on lectern that is made by events etc, do not place in chest
+        if (currentItem?.orCreateTag?.contains(TAG_REMOVE_DIARIES_ON_PUSH) == true) {
+            currentItem = null
+        }
+
+        if (currentItem != null) {
+            chest?.let {
+                val success = addToContainer(it, currentItem!!)
+                if (success) {
+                    currentItem = null
+                }
+            }
+        }
+
+        if (currentItem != null) {
+            val itemEntity = ItemEntity(level, entity.x, entity.eyeY - 0.3F, entity.z, currentItem!!)
+            itemEntity.setPickUpDelay(20)
+            level.addFreshEntity(itemEntity)
+        }
+    }
+
+    private fun addToContainer(container: Container, stack: ItemStack): Boolean {
+        for (slot in 0 until container.containerSize) {
+            val slotStack = container.getItem(slot)
+            if (container.canPlaceItem(slot, stack)) {
+                if (slotStack.isEmpty) {
+                    container.setItem(slot, stack)
+                    return true
+                } else if (slotStack.count <= slotStack.maxStackSize - stack.count && ItemStack.isSameItemSameTags(
+                        stack, slotStack
+                    )
+                ) {
+                    slotStack.grow(stack.count)
+                    return true
+                }
+            }
+        }
+        return false
+    }
+}
+
+class DiaryListener : KotlinJsonResourceReloadListener(JSON, Constants.RESEARCHER_DIARY_DATA_FOLDER) {
+    companion object {
+        private val JSON = Json
+
+        val DIARIES_BY_LANG : MutableMap<String, Diaries> = mutableMapOf()
+    }
+
+    override fun apply(loader: Map<ResourceLocation, JsonElement>, manager: ResourceManager, profiler: ProfilerFiller) {
+        DIARIES_BY_LANG.clear()
+
+        loader.forEach { (fileIdentifier, jsonElement) ->
+            try {
+                val entry: DiaryEntry = JSON.decodeFromJsonElement(DiaryEntry.serializer(), jsonElement)
+                val split = fileIdentifier.path.split("/")
+                val langCode = split[0]
+                val folderOrName = split[1]
+                val diaries = DIARIES_BY_LANG.computeIfAbsent(langCode) { Diaries() }
+                val existing = when (folderOrName) {
+                    "structures" -> {
+                        val tagName = split[2]
+                        diaries.structures.put(TagKey.create(Registries.STRUCTURE, resLoc(tagName)), entry)
+                    }
+                    else -> {
+                        diaries.misc.put(folderOrName, entry)
+                    }
+                }
+                if (existing != null) {
+                    RuinsOfGrowsseth.LOGGER.warn("Diary for structure inserted but one already existed: $existing")
+                }
+            } catch (e: Exception) {
+                RuinsOfGrowsseth.LOGGER.error( "Growsseth: Couldn't parse diary file {}", fileIdentifier, e)
+            }
+        }
+    }
+
+    data class Diaries(
+        val structures: MutableMap<TagKey<Structure>, DiaryEntry> = mutableMapOf(),
+        val misc: MutableMap<String, DiaryEntry> = mutableMapOf(),
+    )
+}
+
+@Serializable
+data class DiaryEntry(
+    val name: String,
+    val pages: List<String>,
+)
+
+object CustomRemoteDiaries {
+    // Not language separated
+    val diaries = mutableMapOf<String, DiaryEntry>()
+    var endDiary: DiaryEntry? = null
+        private set
+    val structureReplacementDiaries = mutableMapOf<TagKey<Structure>, DiaryEntry>()
+
+    const val DIARY_EVENT_NAME = "rdiary"
+    const val DIARY_END_EVENT_NAME = "enddiary"
+    const val DIARY_STRUCT_EVENT_NAME = "structdiary"
+    const val PAGEBREAK = "%PAGEBREAK%"
+
+    private fun isDiaryEvent(event: ApiEvent): Boolean {
+        return event.name.split("/")[0] == DIARY_EVENT_NAME
+    }
+
+    private fun isEndDiaryEvent(event: ApiEvent): Boolean {
+        return event.name.split("/")[0] == DIARY_END_EVENT_NAME
+    }
+
+    private fun isStructDiaryEvent(event: ApiEvent): Boolean {
+        return event.name.split("/")[0] == DIARY_STRUCT_EVENT_NAME
+    }
+
+    private fun diaryFromEvent(event: ApiEvent): Pair<String, DiaryEntry>? {
+        val title = event.name.split("/").getOrNull(1) ?: run {
+            RuinsOfGrowsseth.LOGGER.warn("Event researcher diary: no slash, cannot find title: $event.name")
+            return null
+        }
+        val desc = event.desc ?: run {
+            RuinsOfGrowsseth.LOGGER.warn("Event researcher diary: no description, needed for pages")
+            return null
+        }
+        val pos = event.pos ?: run {
+            RuinsOfGrowsseth.LOGGER.warn("Event researcher diary: no pos, needed for id")
+            return null
+        }
+        val id = "$title-${pos.x}-${pos.y}-${pos.z}"
+
+        val pages = desc.split(PAGEBREAK)
+
+        val diary = DiaryEntry(title, pages)
+
+        return id to diary
+    }
+
+    private fun structDiaryFromEvent(event: ApiEvent): Pair<TagKey<Structure>, DiaryEntry>? {
+        val title = event.name.split("/").getOrNull(2) ?: run {
+            RuinsOfGrowsseth.LOGGER.warn("Event struct researcher diary: not enough slashes, cannot find title: ${event.name}")
+            return null
+        }
+        val structName = event.name.split("/").getOrNull(1) ?: run {
+            RuinsOfGrowsseth.LOGGER.warn("Event struct researcher diary: cannot find structName, unknown error: ${event.name}")
+            return null
+        }
+        val desc = event.desc ?: run {
+            RuinsOfGrowsseth.LOGGER.warn("Event struct researcher diary: no description, needed for pages")
+            return null
+        }
+        val id = TagKey.create(Registries.STRUCTURE, resLoc(structName))
+
+        val pages = desc.split(PAGEBREAK)
+
+        val diary = DiaryEntry(title, pages)
+
+        return id to diary
+    }
+
+    fun init() {
+        GrowssethApi.current.subscribe { api, server ->
+            diaries.clear()
+            diaries.putAll(api.events.filter{ isDiaryEvent(it) && it.active }.mapNotNull(this::diaryFromEvent))
+
+            structureReplacementDiaries.clear()
+            structureReplacementDiaries.putAll(api.events.filter { isStructDiaryEvent(it) && it.active }
+                .mapNotNull(this::structDiaryFromEvent)
+            )
+
+            api.events.find { isEndDiaryEvent(it) && it.active }?.let(this::diaryFromEvent)?.let { (_, endDiary) ->
+                this.endDiary = endDiary
+                RuinsOfGrowsseth.LOGGER.info("Prepared researcher end diary (${endDiary.name}, ${endDiary.pages.size} pages)")
+            }
+        }
+    }
+
+    fun onServerStopped() {
+        diaries.clear()
+        structureReplacementDiaries.clear()
+        endDiary = null
+    }
+}

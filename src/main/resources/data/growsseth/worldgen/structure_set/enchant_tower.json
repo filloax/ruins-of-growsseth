@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "growsseth:enchant_tower",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "salt": 1576980,
+    "spacing": 32,
+    "separation": 8,
+    "type": "minecraft:random_spread"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "growsseth:beekeeper_house",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "salt": 5245353,
+    "spacing": 32,
+    "separation": 8,
+    "type": "minecraft:random_spread"
+  }
+}

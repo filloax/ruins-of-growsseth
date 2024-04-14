@@ -1,0 +1,209 @@
+{
+    "parent": "growsseth:growsseth/root",
+    "display": {
+        "title": {
+            "translate": "advancements.growsseth.structures.golem_house.title"
+        },
+        "description": {
+            "translate": "advancements.growsseth.structures.golem_house.description"
+        },
+        "icon": {
+            "item": "minecraft:iron_block"
+        },
+        "hidden": true,
+        "show_toast": true
+    },
+    "criteria": {
+        "golem_house": {
+            "conditions": {
+                "player": [
+                    {
+                        "condition": "minecraft:entity_properties",
+                        "entity": "this",
+                        "predicate": {
+                            "location": {
+                                "structure": "growsseth:golem_house"
+                            }
+                        }
+                    }
+                ]
+            },
+            "trigger": "minecraft:location"
+        },
+        "desert_golem_house": {
+            "conditions": {
+                "player": [
+                    {
+                        "condition": "minecraft:entity_properties",
+                        "entity": "this",
+                        "predicate": {
+                            "location": {
+                                "structure": "growsseth:golem_variants/desert_golem_house"
+                            }
+                        }
+                    }
+                ]
+            },
+            "trigger": "minecraft:location"
+        },
+        "plains_golem_house": {
+            "conditions": {
+                "player": [
+                    {
+                        "condition": "minecraft:entity_properties",
+                        "entity": "this",
+                        "predicate": {
+                            "location": {
+                                "structure": "growsseth:golem_variants/plains_golem_house"
+                            }
+                        }
+                    }
+                ]
+            },
+            "trigger": "minecraft:location"
+        },
+        "savanna_golem_house": {
+            "conditions": {
+                "player": [
+                    {
+                        "condition": "minecraft:entity_properties",
+                        "entity": "this",
+                        "predicate": {
+                            "location": {
+                                "structure": "growsseth:golem_variants/savanna_golem_house"
+                            }
+                        }
+                    }
+                ]
+            },
+            "trigger": "minecraft:location"
+        },
+        "snowy_golem_house": {
+            "conditions": {
+                "player": [
+                    {
+                        "condition": "minecraft:entity_properties",
+                        "entity": "this",
+                        "predicate": {
+                            "location": {
+                                "structure": "growsseth:golem_variants/snowy_golem_house"
+                            }
+                        }
+                    }
+                ]
+            },
+            "trigger": "minecraft:location"
+        },
+        "taiga_golem_house": {
+            "conditions": {
+                "player": [
+                    {
+                        "condition": "minecraft:entity_properties",
+                        "entity": "this",
+                        "predicate": {
+                            "location": {
+                                "structure": "growsseth:golem_variants/taiga_golem_house"
+                            }
+                        }
+                    }
+                ]
+            },
+            "trigger": "minecraft:location"
+        },
+        "zombie_desert_golem_house": {
+            "conditions": {
+                "player": [
+                    {
+                        "condition": "minecraft:entity_properties",
+                        "entity": "this",
+                        "predicate": {
+                            "location": {
+                                "structure": "growsseth:golem_variants/zombie_desert_golem_house"
+                            }
+                        }
+                    }
+                ]
+            },
+            "trigger": "minecraft:location"
+        },
+        "zombie_plains_golem_house": {
+            "conditions": {
+                "player": [
+                    {
+                        "condition": "minecraft:entity_properties",
+                        "entity": "this",
+                        "predicate": {
+                            "location": {
+                                "structure": "growsseth:golem_variants/zombie_plains_golem_house"
+                            }
+                        }
+                    }
+                ]
+            },
+            "trigger": "minecraft:location"
+        },
+        "zombie_savanna_golem_house": {
+            "conditions": {
+                "player": [
+                    {
+                        "condition": "minecraft:entity_properties",
+                        "entity": "this",
+                        "predicate": {
+                            "location": {
+                                "structure": "growsseth:golem_variants/zombie_savanna_golem_house"
+                            }
+                        }
+                    }
+                ]
+            },
+            "trigger": "minecraft:location"
+        },
+        "zombie_snowy_golem_house": {
+            "conditions": {
+                "player": [
+                    {
+                        "condition": "minecraft:entity_properties",
+                        "entity": "this",
+                        "predicate": {
+                            "location": {
+                                "structure": "growsseth:golem_variants/zombie_snowy_golem_house"
+                            }
+                        }
+                    }
+                ]
+            },
+            "trigger": "minecraft:location"
+        },
+        "zombie_taiga_golem_house": {
+            "conditions": {
+                "player": [
+                    {
+                        "condition": "minecraft:entity_properties",
+                        "entity": "this",
+                        "predicate": {
+                            "location": {
+                                "structure": "growsseth:golem_variants/zombie_taiga_golem_house"
+                            }
+                        }
+                    }
+                ]
+            },
+            "trigger": "minecraft:location"
+        }
+    },
+    "requirements":[
+        [
+            "golem_house",
+            "desert_golem_house",
+            "plains_golem_house",
+            "savanna_golem_house",
+            "snowy_golem_house",
+            "taiga_golem_house",
+            "zombie_desert_golem_house",
+            "zombie_plains_golem_house",
+            "zombie_savanna_golem_house",
+            "zombie_snowy_golem_house",
+            "zombie_taiga_golem_house"
+        ]
+    ]
+}

@@ -1,0 +1,131 @@
+{
+    "shared": [
+        {
+            "content": [
+                "Oh... salve collega. §o*yawn*§r uh... ultimamente sono sempre assonnato, eppure sto dormendo più del solito.",
+                "Probabilmente le mie ricerche imperterrite mi stanno stancando più del solito. §o*yawn*§r",
+                "Ditemi un po'... non è che avete trovato informazioni riguardo i sintomi della Piaga? Ci sono voci in giro che dicono come forse, e ripeto forse, possa esistere una cura. Non che ci creda davvero, ahah!",
+                "Io? Sto benissimo §o*yawn*§r ...non si preoccupi, sto seguendo una mia intuizione, ma stando in una tenda mi sarò ammalato, ho comunque una certa età! Ahah... §o*yawn*§r",
+            ],
+            "useLimit": 1,
+            "priority": 1000,
+            "id": "researcher-quest-start",
+            "requiresQuestStage": "start",
+            "requiresUntilQuestStage": "healed"
+        },
+        {
+            "content": [
+                "§o...anf... anf...§r Collega? Sei tu..? Siamo... nel mio sotterraneo? Cosa ci fai qui? E cosa ci faccio io nella mia gabbia..?",
+                "Oh, credo di aver capito, alla fine non sono riuscito a trovare quel maledetto ingrediente...",
+                "Aspetta... questo odore... questo sapore... §lADESSO HO CAPITO!§r Non posso crederci, per così tanto tempo sono stato cieco ad una soluzione così ovvia!",
+                "Oh, scusami, mi sono fatto prendere dall'emozione e non ti ho nemmeno ringraziato!",
+                "Ti ringrazio infinitamente, collega, non potrò mai ripagarti abbastanza ma ti prego, se hai bisogno di qualche mia ricerca, non esitare a chiedere, è il minimo che possa fare.",
+                "Tornerò di sopra una volta che mi sarò ripreso del tutto... vorrei preparare alcune cose.",
+            ],
+            "useLimit": 1,
+            "priority": 1050,
+            "id": "researcher-quest-cure",
+            "requiresQuestStage": "healed",
+            "requiresUntilQuestStage": "home"
+        },
+        {
+            "content": [
+                {
+                    "content": "Salve collega.",
+                    "duration": 4
+                },
+                "Sai, dopo quello che è successo ho pensato che forse sarebbe arrivato per me il momento di ritirarmi... ormai non so più da quanto tempo girovago per questa landa senza risultati.",
+                "Ci ho riflettuto, e sono arrivato ad una conclusione... il mio viaggio non si è ancora concluso. Andrò in posti lontani, portando il palliativo a chiunque ne abbia bisogno.",
+                "Ma non essere triste per la mia dipartita, collega! Prima o poi ci rincontreremo, ne sono certo.",
+                "Comunque, volevo ringraziarti di nuovo. Se non ci fossi stato tu non sarei qui, in piedi, a respirare, e soprattutto non ci sarebbe stata la speranza di un mondo nuovo. Per tutto questo, grazie.",
+                "Ehm ehm, comunque, partirò a breve, quindi se vuoi chiedermi ancora qualcosa, questo è il momento giusto.",
+            ],
+            "useLimit": 1,
+            "priority": 1100,
+            "id": "researcher-quest-end",
+            "requiresQuestStage": "home"
+        }
+    ],
+    "tickNearPlayer": [
+        {
+            "id": "researcher-quest-start"
+        },
+        {
+            "id": "researcher-quest-cure"
+        },
+        {
+            "id": "researcher-quest-end"
+        }
+    ],
+    "playerArrive": [
+        {
+            "id": "researcher-quest-start"
+        },
+        {
+            "id": "researcher-quest-cure"
+        },
+        {
+            "id": "researcher-quest-end"
+        }
+    ],
+    "playerArriveNight": [
+        {
+            "id": "researcher-quest-start"
+        },
+        {
+            "id": "researcher-quest-cure"
+        },
+        {
+            "id": "researcher-quest-end"
+        }
+    ],
+    "playerArriveSoon": [
+        {
+            "id": "researcher-quest-start"
+        },
+        {
+            "id": "researcher-quest-cure"
+        },
+        {
+            "id": "researcher-quest-end"
+        }
+    ],
+    "playerArriveLongTime": [
+        {
+            "id": "researcher-quest-start"
+        },
+        {
+            "id": "researcher-quest-cure"
+        },
+        {
+            "id": "researcher-quest-end"
+        }
+    ],
+    "playerLeave": [
+        {
+            "content": "Arrivederci collega, non vi azzardate a diventare un non-morto eh!",
+            "priority": 1000,
+            "requiresQuestStage": "start",
+            "requiresUntilQuestStage": "healed"
+        },
+        {
+            "content": "Addio collega, mi mancherai.",
+            "priority": 1000,
+            "requiresQuestStage": "home"
+        }
+    ],
+    "playerLeaveSoon": [
+        {
+            "content": "Addio collega, mi mancherai.",
+            "priority": 1000,
+            "requiresQuestStage": "home"
+        }
+    ],
+    "playerLeaveNight": [
+        {
+            "content": "Addio collega, mi mancherai.",
+            "priority": 1000,
+            "requiresQuestStage": "home"
+        }
+    ]
+}

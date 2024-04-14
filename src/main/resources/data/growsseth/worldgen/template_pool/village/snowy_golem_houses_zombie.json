@@ -1,0 +1,14 @@
+{
+  "fallback": "minecraft:village/snowy/terminators",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "growsseth:village/snowy/snowy_golem_house_zombie",
+        "processors": "minecraft:mossify_10_percent",
+        "projection": "rigid"
+      }
+    }
+  ]
+}
