@@ -1,0 +1,83 @@
+<template id="communication-template">
+    <div class="row justify-content-center">
+        <div id="communication-card" class="card mt-3 bg-dark-subtle p-3" style="max-width: 550px;">
+
+            <input id="card-id" hidden/>
+
+            <div class="row card-title">
+                <div id="no-type-warning" class="col-auto text-danger">
+                    Tipo comunicazione non impostato
+                </div>
+
+                <div id="card-enabler" class="col-auto form-check form-switch ms-3" hidden>
+                    <input id="card-enabler-switch" class="form-check-input" type="checkbox" role="switch">
+                    <label id="card-enabler-label" class="form-check-label">
+                        Non attiva
+                    </label>
+                </div>
+
+                <div class="col text-end">
+                    <button id="delete-card-button" class="btn btn-sm btn-outline-secondary">
+                        {% include 'icons/trash-fill.html' %}
+                    </button>
+                </div>
+            </div>
+
+            <div class="card-body g-0">
+                <div class="row input-group g-0">
+                    <span class="input-group-text col-4">Tipologia</span>
+                    <select id="communication-type" class="form-select">
+                        <option value="none" selected></option>
+                        <option value="dialogue">Dialogo ricercatore</option>
+                        <option value="toast-simple">Notifica semplice</option>
+                        <option value="toast-with-icon">Notifica con icona</option>
+                        <option value="researcher-diary-new">Nuovo diario ricercatore</option>
+                        <option value="researcher-diary-replace">Sostituisci diario ricercatore</option>
+                        <option value="structure-book">Sostituisci diario struttura</option>
+                    </select>
+                </div>
+
+                <div id="researcher-diary-struct" class="row input-group g-0 mt-3" hidden>
+                    <span class="input-group-text col-4">Struttura</span>
+                    <select id="diary-structure" class="form-select">
+                        <option value="golem_house" selected>Casa del costruttore</option>
+                        <option value="enchant_tower">Torre in frantumi</option>
+                        <option value="noteblock_lab">Laboratorio musicale</option>
+                        <option value="beekeeper_house">Casa dell'apicoltore</option>
+                        <option value="conduit_church">Chiesa del condotto</option>
+                        <option value="quest_zombie">(Quest) Zombie</option>
+                        <option value="quest_good_ending">(Quest) Finale buono</option>
+                    </select>
+                </div>
+
+                <div id="structure-books" class="row input-group g-0 mt-3" hidden>
+                    <span class="input-group-text col-4">Struttura</span>
+                    <select id="book-structure" class="form-select">
+                        <option value="cave_camp" selected>Accampamento nella caverna</option>
+                        <option value="enchant_tower">Torre in frantumi</option>
+                        <option value="noteblock_lab">Laboratorio musicale</option>
+                        <option value="beekeeper_house">Casa dell'apicoltore</option>
+                        <option value="noteblock_ship">Nave della musica</option>
+                    </select>
+                </div>
+
+                <div id="toast-icon" class="row input-group g-0 mt-3" hidden>
+                    <span class="input-group-text col-4">Namespace</span>
+                    <input id="namespace" class="form-control" value="minecraft">
+                    <span class="input-group-text col-auto">Id</span>
+                    <input id="item-id" class="form-control" value="stone">
+                </div>
+
+                <div id="title" class="row input-group g-0 mt-3" hidden>
+                    <span class="input-group-text col-4">Titolo</span>
+                    <input id="title-text" class="form-control">
+                </div>
+
+                <div id="content" class="form-floating mt-3" hidden>
+                    <textarea id="content-text" class="form-control" style="height: 100px"></textarea>
+                    <label>Contenuto</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

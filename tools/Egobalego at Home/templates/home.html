@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="it">
+    {% include 'shared/head.html' %}
+    <body>
+        {% include 'shared/header.html' %}
+        <main>
+            <div>
+                <h2 class="text-center">
+                    Salve, Game Master!
+                </h2>
+                <h4 class="text-center">
+                    Clicca su una delle sezioni sopra per iniziare
+                </h4>
+            </div>
+            <img class="mt-5" style="height: 200px; image-rendering: pixelated;" src="{{ url_for('static', filename='img/favicon.png') }}">
+        </main>
+    </body>
+</html>

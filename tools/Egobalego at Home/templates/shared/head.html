@@ -1,0 +1,17 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Krozzzt, with the help of some friends">
+
+    <title>Egobalego at Home</title>
+
+    <link rel="icon" href="{{ url_for('static', filename='img/favicon.png') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" />
+    {% if name == 'home' %}
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/home-style.css') }}" />
+    {% endif %}
+
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}" defer></script>
+</head>

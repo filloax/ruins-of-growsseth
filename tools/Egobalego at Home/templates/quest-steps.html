@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="it">
+    {% include 'shared/head.html' %}
+    <body>
+        {% include 'shared/header.html' %}
+        <main class="container my-4">
+            <div class="row row-cols-lg-3 mx-lg-5">
+                {% include 'cards/quest-steps-cards.html' %}
+            </div>
+            {% include 'modals/quest-help.html' %}
+        </main>
+    </body>
+    <script src="{{ url_for('static', filename='js/quest-steps.js') }}" defer></script>
+</html>

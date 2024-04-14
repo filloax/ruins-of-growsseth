@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="it">
+    {% include 'shared/head.html' %}
+    <body>
+        {% include 'shared/header.html' %}
+        <main class="container my-3">
+            <div class="row justify-content-center">
+                <button id="add-card-button" type="button" class="col-auto btn btn-primary">
+                    {% include 'icons/plus-circle.html' %} Aggiungi scambio
+                </button>
+                <div id="card-container"></div>
+            </div>
+            {% include 'cards/trades-card.html' %}
+            {% include 'modals/confirm-deletion.html' %}
+            {% include 'modals/trades-help.html' %}
+        </main>
+    </body>
+    <script src="{{ url_for('static', filename='js/trades.js') }}" defer></script>
+</html>

@@ -1,0 +1,23 @@
+<header class="sticky-top bg-white">
+    <div class="container-fluid">
+        <div class="row justify-content-center pb-2">
+            <div class="col-1"></div>
+            <div class="col text-center">
+                <a href="/" class="title-font text-decoration-none text-black">EGOBALEGO AT HOME</a>
+            </div>
+            <div class="col-1 d-flex justify-content-end align-items-end">
+                <button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#modal-help" {% if name == "home" %}hidden{% endif %}>
+                    {% include 'icons/question-circle.html' %}
+                </button>
+            </div>
+        </div>
+
+        <div class="row btn-group d-flex">
+            <a href="/structures.html" class="col-6 col-lg-2 btn btn-dark rounded-0 {% if name == 'structures' %}active{% endif %}">STRUTTURE</a>
+            <a href="/quest-steps.html" class="col-6 col-lg-2 btn btn-dark {% if name == 'quest-steps' %}active{% endif %}">QUEST</a>
+            <a href="/communications.html" class="col-4 col-lg-2 btn btn-dark {% if name == 'communications' %}active{% endif %}">COMUNICAZIONI</a>
+            <a href="/trades.html" class="col-4 col-lg-2 btn btn-dark {% if name == 'trades' %}active{% endif %}">SCAMBI</a>
+            <a href="/commands.html" class="col-4 col-lg-2 btn btn-dark rounded-0 {% if name == 'commands' %}active{% endif %}">COMANDI</a>
+        </div>
+    </div>
+</header>

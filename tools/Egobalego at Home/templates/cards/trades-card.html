@@ -1,0 +1,59 @@
+<template id="trade-template">
+    <div class="row justify-content-center">
+        <div id="trade-card" class="card mt-3 bg-dark-subtle p-3" style="max-width: 550px;">
+
+            <input id="card-id" hidden/>
+
+            <div class="row card-title">
+                <div id="no-type-warning" class="col-auto text-danger">
+                    Tipo scambio non impostato
+                </div>
+
+                <div id="card-enabler" class="col-auto form-check form-switch ms-3" hidden>
+                    <input id="card-enabler-switch" class="form-check-input" type="checkbox" role="switch">
+                    <label id="card-enabler-label" class="form-check-label">
+                        Non attivo
+                    </label>
+                </div>
+
+                <div class="col text-end">
+                    <button id="delete-card-button" class="btn btn-sm btn-outline-secondary">
+                        {% include 'icons/trash-fill.html' %}
+                    </button>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="row input-group g-0">
+                    <span class="input-group-text col-4">Tipologia</span>
+                    <select id="trade-type" class="form-select">
+                        <option value="none" selected></option>
+                        <option value="preset">Preimpostato</option>
+                        <option value="custom">Personalizzato</option>
+                    </select>
+                </div>
+
+                <div id="preset" class="row input-group g-0 mt-3" hidden>
+                    <span class="input-group-text col-4">Scambio</span>
+                    <select id="preset-name" class="form-select">
+                        <option value="sell_default" selected>Default</option>
+                        <option value="sell_beginning">Stendardo per due zuppe</option>
+                        <option value="sell_sherd">Coccio di Growsseth</option>
+                        <option value="sell_trim_template">Trim per armature</option>
+                        <option value="sell_enchant_dictionary">Dizionario degli enchant</option>
+                        <option value="sell_giorgio_lofi">Disco Giorgio Lofi</option>
+                        <option value="sell_giorgio_finding_home">Disco Giorgio Finding Home</option>
+                        <option value="sell_binobinooo">Disco Binobinooo</option>
+                        <option value="sell_all_extras">Tutti gli scambi extra</option>
+                        <option value="sell_easter_egg_discs">Dischi con vocals</option>
+                    </select>
+                </div>
+
+                <div id="advanced-trade-content" class="form-floating mt-3" hidden>
+                    <textarea id="content-text" class="form-control" style="height: 100px"></textarea>
+                    <label>JSON dello scambio</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
