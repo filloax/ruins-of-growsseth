@@ -95,6 +95,11 @@ object DataRemoteSync {
             return CompletableFuture.completedFuture(false)
         }
 
+        if (url.isBlank()) {
+            RuinsOfGrowsseth.LOGGER.warn("Data sync url is empty, won't run")
+            return CompletableFuture.completedFuture(false)
+        }
+
         lastUpdateTime = LocalTime.now()
         val future = CompletableFuture<Boolean>()
         val successes = mutableMapOf<String, Boolean>()
