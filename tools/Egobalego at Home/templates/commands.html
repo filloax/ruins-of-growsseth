@@ -12,7 +12,9 @@
             </div>
             {% include 'cards/commands-card.html' %}
             {% include 'modals/confirm-deletion.html' %}
-            {% include 'modals/commands-help.html' %}
+            {% with title=help_title, content=help_content %}
+                {% include 'modals/modal-help.html' %}
+            {% endwith %}
         </main>
     </body>
     <script src="{{ url_for('static', filename='js/commands.js') }}" defer></script>

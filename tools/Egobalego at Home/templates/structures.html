@@ -12,7 +12,9 @@
             </div>
             {% include 'cards/structures-card.html' %}
             {% include 'modals/confirm-deletion.html' %}
-            {% include 'modals/structures-help.html' %}
+            {% with title=help_title, content=help_content %}
+                {% include 'modals/modal-help.html' %}
+            {% endwith %}
         </main>
     </body>
     <script defer> var defaultPreview = "{{url_for('static', filename='img/structure/none.png')}}" </script>
