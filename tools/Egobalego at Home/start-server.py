@@ -3,8 +3,7 @@ from flask import Flask, render_template, request
 import json
 import argparse
 import webbrowser
-from markupsafe import Markup
-from mistune import HTMLRenderer, create_markdown
+from mistune import create_markdown
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--open", action='store_true', help="Open browser page on start")
@@ -123,9 +122,8 @@ def md_content(name: str):
         return markdown_to_html(f.read())
 
 def markdown_to_html(markdown_text):
-    renderer = HTMLRenderer()
-    markdown = create_markdown(renderer=renderer)
-    return Markup(markdown(markdown_text))
+    parser = create_markdown(escape=False, plugins=['strikethrough', 'footnotes', 'table'])
+    return parser(markdown_text)
 
 server_data = []
 last_id = 0
