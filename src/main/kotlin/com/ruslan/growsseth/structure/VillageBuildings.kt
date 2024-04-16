@@ -10,24 +10,30 @@ import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
 import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement
-import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList
 import com.mojang.datafixers.util.Pair;
 
 
 object VillageBuildings {
-    private val houseEntries = mutableMapOf<String, MutableList<VillageEntry>>()
+    val houseEntries = mutableMapOf<String, MutableList<VillageEntry>>()
 
-    const val CATEGORY_GOLEM = "golem"
+    const val CATEGORY_GOLEM_STREET = "golem_street" // added to pool
+    const val CATEGORY_GOLEM_HOUSE = "golem_house" // already in pool referenced by street, used by advancements
 
     const val GOLEM_WEIGHT = 1
 
-    val DESERT_GOLEM    = register("desert_golem_street", CATEGORY_GOLEM, "desert", "streets", GOLEM_WEIGHT)
-    val PLAINS_GOLEM    = register("plains_golem_street", CATEGORY_GOLEM, "plains", "streets", GOLEM_WEIGHT)
-    val TAIGA_GOLEM     = register("taiga_golem_street",  CATEGORY_GOLEM, "taiga", "streets", GOLEM_WEIGHT)
-    val SAVANNA_GOLEM   = register("savanna_golem_street", CATEGORY_GOLEM, "savanna", "streets", GOLEM_WEIGHT)
-    val SNOWY_GOLEM     = register("snowy_golem_street", CATEGORY_GOLEM, "snowy", "streets", GOLEM_WEIGHT)
+    val DESERT_GOLEM_STREET    = register("desert_golem_street", CATEGORY_GOLEM_STREET, "desert", "streets", GOLEM_WEIGHT)
+    val PLAINS_GOLEM_STREET    = register("plains_golem_street", CATEGORY_GOLEM_STREET, "plains", "streets", GOLEM_WEIGHT)
+    val TAIGA_GOLEM_STREET     = register("taiga_golem_street",  CATEGORY_GOLEM_STREET, "taiga", "streets", GOLEM_WEIGHT)
+    val SAVANNA_GOLEM_STREET   = register("savanna_golem_street", CATEGORY_GOLEM_STREET, "savanna", "streets", GOLEM_WEIGHT)
+    val SNOWY_GOLEM_STREET     = register("snowy_golem_street", CATEGORY_GOLEM_STREET, "snowy", "streets", GOLEM_WEIGHT)
+
+    val DESERT_GOLEM    = register("desert_golem_street", CATEGORY_GOLEM_HOUSE, "desert", "house", GOLEM_WEIGHT)
+    val PLAINS_GOLEM    = register("plains_golem_street", CATEGORY_GOLEM_HOUSE, "plains", "house", GOLEM_WEIGHT)
+    val TAIGA_GOLEM     = register("taiga_golem_street",  CATEGORY_GOLEM_HOUSE, "taiga", "house", GOLEM_WEIGHT)
+    val SAVANNA_GOLEM   = register("savanna_golem_street", CATEGORY_GOLEM_HOUSE, "savanna", "house", GOLEM_WEIGHT)
+    val SNOWY_GOLEM     = register("snowy_golem_street", CATEGORY_GOLEM_HOUSE, "snowy", "house", GOLEM_WEIGHT)
 
     fun onServerStarted(server: MinecraftServer) {
         val shouldAddBuildings = StructureConfig.golemHouseEnabled
@@ -38,7 +44,7 @@ object VillageBuildings {
         val templatePools: Registry<StructureTemplatePool> = server.registryAccess().registry(Registries.TEMPLATE_POOL) .get()
         val processorLists: Registry<StructureProcessorList> = server.registryAccess().registry(Registries.PROCESSOR_LIST).get()
 
-        houseEntries[CATEGORY_GOLEM]!!.forEach { entry ->
+        houseEntries[CATEGORY_GOLEM_STREET]!!.forEach { entry ->
             addBuildingToPool(templatePools, processorLists, entry.pool, entry.normal, entry.weight)
             addBuildingToPool(templatePools, processorLists, entry.zombiePool, entry.zombie, entry.weight)
         }

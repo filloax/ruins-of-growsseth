@@ -1,9 +1,8 @@
 package com.ruslan.growsseth
 
 import com.filloax.fxlib.fabric.FabricReloadListener
+import com.ruslan.growsseth.advancements.GrowssethCriterions
 import com.ruslan.growsseth.config.GrowssethConfigHandler
-import com.ruslan.growsseth.config.WebConfig
-import com.ruslan.growsseth.dialogues.BasicDialoguesComponent
 import com.ruslan.growsseth.dialogues.ResearcherDialogueApiListener
 import com.ruslan.growsseth.dialogues.ResearcherDialogueListener
 import com.ruslan.growsseth.effect.GrowssethEffects
@@ -11,30 +10,21 @@ import com.ruslan.growsseth.entity.GrowssethEntities
 import com.ruslan.growsseth.entity.researcher.*
 import com.ruslan.growsseth.entity.researcher.trades.ResearcherTrades
 import com.ruslan.growsseth.entity.researcher.trades.TradesListener
-import com.ruslan.growsseth.events.*
 import com.ruslan.growsseth.http.*
 import com.ruslan.growsseth.item.GrowssethCreativeModeTabs
 import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.maps.GrowssethMapDecorations
-import com.ruslan.growsseth.quests.QuestComponentEvents
 import com.ruslan.growsseth.structure.*
-import com.ruslan.growsseth.utils.AsyncLocator
-import com.ruslan.growsseth.utils.MixinHelpers
 import com.ruslan.growsseth.utils.resLoc
-import com.ruslan.growsseth.worldgen.worldpreset.GrowssethWorldPreset
 import com.ruslan.growsseth.worldgen.worldpreset.LocationNotifListener
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
-import net.fabricmc.fabric.api.event.lifecycle.v1.*
-import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents
-import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents.ModifyEntries
-import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper
 import net.fabricmc.loader.api.FabricLoader
+import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
-import net.minecraft.core.registries.Registries
 import net.minecraft.server.packs.PackType
 import net.minecraft.world.item.CreativeModeTabs
 import net.minecraft.world.item.Items
@@ -52,17 +42,10 @@ object RuinsOfGrowsseth : ModInitializer {
     override fun onInitialize() {
         log(Level.INFO, "Initializing")
 
-        initEvents()
+        FabricEvents.initEvents()
 
         GrowssethApi.current.init()
-        GrowssethBannerPatterns.registerAll(BuiltInRegistries.BANNER_PATTERN)
-        GrowssethCreativeModeTabs.registerCreativeModeTabs()
-        GrowssethItems.registerAll(BuiltInRegistries.ITEM)
-        GrowssethItems.Instruments.registerAll(BuiltInRegistries.INSTRUMENT)
-        GrowssethEffects.registerAll(BuiltInRegistries.MOB_EFFECT)
-        GrowssethEntities.init(BuiltInRegistries.ENTITY_TYPE)
-        GrowssethStructurePieceTypes.registerAll(BuiltInRegistries.STRUCTURE_PIECE)
-        GrowssethStructures.init(BuiltInRegistries.STRUCTURE_TYPE)
+        initRegistries()
         RemoteStructures.init()
         CustomRemoteDiaries.init()
         RemoteStructureBooks.init()
@@ -80,6 +63,18 @@ object RuinsOfGrowsseth : ModInitializer {
 
         log(Level.INFO, "Initialized! :saidogPipo: :saidogRitto: :saidogMax:")
         log(Level.DEBUG, "In log debug mode!")
+    }
+
+    private fun initRegistries() {
+        GrowssethBannerPatterns.registerBannerPatterns{ id, value -> Registry.register(BuiltInRegistries.BANNER_PATTERN, id, value) }
+        GrowssethCreativeModeTabs.registerCreativeModeTabs()
+        GrowssethItems.registerItems{ id, value -> Registry.register(BuiltInRegistries.ITEM, id, value) }
+        GrowssethItems.Instruments.registerInstruments{ id, value -> Registry.register(BuiltInRegistries.INSTRUMENT, id, value) }
+        GrowssethEffects.registerEffects{ id, value -> Registry.register(BuiltInRegistries.MOB_EFFECT, id, value) }
+        GrowssethEntities.registerEntityTypes{ id, value -> Registry.register(BuiltInRegistries.ENTITY_TYPE, id, value) }
+        GrowssethStructurePieceTypes.registerStructurePieces{ id, value -> Registry.register(BuiltInRegistries.STRUCTURE_PIECE, id, value) }
+        GrowssethStructures.registerStructureTypes{ id, value -> Registry.register(BuiltInRegistries.STRUCTURE_TYPE, id, value) }
+        GrowssethCriterions.registerCriterions { id, value -> Registry.register(BuiltInRegistries.TRIGGER_TYPES, id, value) }
     }
 
     private fun initItemGroups() {
@@ -117,88 +112,6 @@ object RuinsOfGrowsseth : ModInitializer {
 
                 it.addAfter(Items.GOAT_HORN, GrowssethItems.RESEARCHER_HORN)
             })
-    }
-
-    private fun initEvents() {
-        ServerLifecycleEvents.SERVER_STARTING.register { server ->
-            AsyncLocator.handleServerAboutToStartEvent()
-            DataRemoteSync.handleServerAboutToStartEvent(server)
-            Researcher.initServer(server)
-            DataRemoteSync.doSync(WebConfig.dataSyncUrl, server)
-            MixinHelpers.serverInit(server)
-            LiveUpdatesConnection.serverStart(server)
-        }
-        ServerLifecycleEvents.SERVER_STARTED.register { server ->
-            GrowssethWorldPreset.Callbacks.onServerStarted(server)
-            VillageBuildings.onServerStarted(server)
-        }
-        ServerWorldEvents.LOAD.register { server, level ->
-            DataRemoteSync.handleWorldLoaded(server, level)
-            ResearcherDiaryComponent.Callbacks.onServerLevel(level)
-        }
-        ServerLifecycleEvents.SERVER_STOPPING.register { server ->
-            AsyncLocator.handleServerStoppingEvent()
-            DataRemoteSync.handleServerStoppingEvent()
-            GrowssethApiV1.Callbacks.onServerStop(server)
-            ResearcherTrades.onServerStop(server)
-            LiveUpdatesConnection.serverStop(server)
-            GrowssethExtraEvents.onServerStop()
-            CustomRemoteDiaries.onServerStopped()
-            RemoteStructureBooks.onServerStopped()
-        }
-        ServerLifecycleEvents.SERVER_STOPPED.register { server ->
-            LocationNotifListener.Callbacks.onServerStopped(server)
-        }
-        ServerTickEvents.START_SERVER_TICK.register { server ->
-            DataRemoteSync.checkTickSync(WebConfig.dataSyncUrl, server)
-            GrowssethAdvancements.onServerTick(server)
-        }
-
-        ServerChunkEvents.CHUNK_LOAD.register { level, chunk ->
-            GrowssethExtraEvents.Callbacks.onLoadChunk(level, chunk)
-        }
-
-        ServerEntityEvents.ENTITY_LOAD.register { entity, level ->
-            QuestComponentEvents.onLoadEntity(entity)
-        }
-        ServerEntityEvents.ENTITY_UNLOAD.register { entity, level ->
-//            QuestComponentEvents.onUnloadEntity(entity, level)
-        }
-        ServerEntityLifecycleEvents.ENTITY_DESTROYED.register { entity, level ->
-            Researcher.Callbacks.onEntityDestroyed(entity, level)
-        }
-
-        PlayerBlockBreakEvents.AFTER.register { level, player, pos, state, entity ->
-            ResearcherDialoguesComponent.Callbacks.onBlockBreak(level, player, pos, state, entity)
-        }
-        PlaceBlockEvent.AFTER.register { player, world, pos, placeContext, blockState, item ->
-            ResearcherDialoguesComponent.Callbacks.onPlaceBlock(player, world, pos, placeContext, blockState, item)
-        }
-
-        ServerPlayConnectionEvents.JOIN.register { handler, sender, server ->
-            ResearcherTrades.onServerPlayerJoin(handler, sender, server)
-            GrowssethExtraEvents.onServerPlayerJoin(handler, sender, server)
-            GrowssethWorldPreset.Callbacks.onServerPlayerJoin(handler, sender, server)
-        }
-
-        PlayerAdvancementEvent.EVENT.register { player, advancement, criterionString ->
-            BasicDialoguesComponent.Callbacks.onAdvancement(player, advancement, criterionString)
-        }
-
-        LeashEvents.FENCE_LEASH.register { mob, pos, player ->
-            Researcher.Callbacks.onFenceLeash(mob, pos, player)
-        }
-        LeashEvents.FENCE_UNLEASH.register { mob, pos ->
-            Researcher.Callbacks.onFenceUnleash(mob, pos)
-        }
-
-        // Register singularly because returns
-        NameTagRenameEvent.BEFORE.register(Researcher.Callbacks::nameTagRename)
-        //AttackEntityCallback.EVENT.register(BasicDialoguesComponent.Callbacks::onAttack)
-
-        DisableStructuresEvents.STRUCTURE_GENERATE.register { level, structure, _, _, _, _, _, _, _, _ ->
-            StructureDisabler.Callbacks.shouldDisableStructure(structure, level)
-        }
     }
 
     private fun registerResourceListeners() {

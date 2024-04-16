@@ -189,9 +189,69 @@
                 ]
             },
             "trigger": "minecraft:location"
+        },
+        "jigsaw_plains": {
+            "conditions": {
+                "jigsawPiecePredicate": {
+                    "jigsawPieceIds": [
+                        "growsseth:village/plains/plains_golem_street",
+                        "growsseth:village/plains/plains_golem_street_zombie"
+                    ],
+                    "structure": "minecraft:village_plains"
+                }
+            },
+            "trigger": "growsseth:jigsaw_piece"
+        },
+        "jigsaw_desert": {
+            "conditions": {
+                "jigsawPiecePredicate": {
+                    "jigsawPieceIds": [
+                        "growsseth:village/desert/desert_golem_street",
+                        "growsseth:village/desert/desert_golem_street_zombie"
+                    ],
+                    "structure": "minecraft:village_desert"
+                }
+            },
+            "trigger": "growsseth:jigsaw_piece"
+        },
+        "jigsaw_savanna": {
+            "conditions": {
+                "jigsawPiecePredicate": {
+                    "jigsawPieceIds": [
+                        "growsseth:village/savanna/savanna_golem_street",
+                        "growsseth:village/savanna/savanna_golem_street_zombie"
+                    ],
+                    "structure": "minecraft:village_savanna"
+                }
+            },
+            "trigger": "growsseth:jigsaw_piece"
+        },
+        "jigsaw_snowy": {
+            "conditions": {
+                "jigsawPiecePredicate": {
+                    "jigsawPieceIds": [
+                        "growsseth:village/snowy/snowy_golem_street",
+                        "growsseth:village/snowy/snowy_golem_street_zombie"
+                    ],
+                    "structure": "minecraft:village_snowy"
+                }
+            },
+            "trigger": "growsseth:jigsaw_piece"
+        },
+        "jigsaw_taiga": {
+            "conditions": {
+                "jigsawPiecePredicate": {
+                    "jigsawPieceIds": [
+                        "growsseth:village/taiga/taiga_golem_street",
+                        "growsseth:village/taiga/taiga_golem_street_zombie"
+                    ],
+                    "structure": "minecraft:village_taiga"
+                }
+            },
+            "trigger": "growsseth:jigsaw_piece"
         }
     },
-    "requirements":[
+    "requirements": [
         [
             "golem_house",
             "desert_golem_house",
@@ -203,7 +263,12 @@
             "zombie_plains_golem_house",
             "zombie_savanna_golem_house",
             "zombie_snowy_golem_house",
-            "zombie_taiga_golem_house"
+            "zombie_taiga_golem_house",
+            "jigsaw_plains",
+            "jigsaw_desert",
+            "jigsaw_savanna",
+            "jigsaw_snowy",
+            "jigsaw_taiga"
         ]
     ]
 }

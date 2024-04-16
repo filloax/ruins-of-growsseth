@@ -6,13 +6,10 @@ import com.filloax.fxlib.entity.getPersistData
 import com.filloax.fxlib.nbt.getListOrNull
 import com.filloax.fxlib.nbt.loadField
 import com.filloax.fxlib.nbt.saveField
-import com.filloax.fxlib.structure.FixedStructureGeneration
 import com.mojang.datafixers.util.Either
 import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.RuinsOfGrowsseth
-import com.ruslan.growsseth.StructureAdvancements
-import com.ruslan.growsseth.config.GrowssethConfig
-import com.ruslan.growsseth.config.ResearcherConfig
+import com.ruslan.growsseth.advancements.StructureAdvancements
 import com.ruslan.growsseth.entity.researcher.Researcher
 import com.ruslan.growsseth.http.ApiEvent
 import com.ruslan.growsseth.http.ApiQuestData

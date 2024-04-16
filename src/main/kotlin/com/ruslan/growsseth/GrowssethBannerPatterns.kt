@@ -2,8 +2,8 @@ package com.ruslan.growsseth
 
 import com.ruslan.growsseth.utils.resLoc
 import net.minecraft.world.level.block.entity.BannerPattern
-import net.minecraft.core.Registry
 import net.minecraft.core.registries.Registries
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.TagKey
 
 object GrowssethBannerPatterns {
@@ -20,9 +20,9 @@ object GrowssethBannerPatterns {
         return data
     }
 
-    fun registerAll(registry: Registry<BannerPattern>) {
+    fun registerBannerPatterns(registrator: (ResourceLocation, BannerPattern) -> Unit) {
         all.forEach{
-            Registry.register(registry, resLoc(it.name), it.bannerPattern)
+            registrator(resLoc(it.name), it.bannerPattern)
         }
     }
 

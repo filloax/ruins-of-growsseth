@@ -3,7 +3,7 @@ package com.ruslan.growsseth.data
 import com.ruslan.growsseth.GrowssethLootTables
 import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.RuinsOfGrowsseth
-import com.ruslan.growsseth.StructureAdvancements
+import com.ruslan.growsseth.advancements.StructureAdvancements
 import com.ruslan.growsseth.entity.GrowssethEntities
 import com.ruslan.growsseth.entity.researcher.ZombieResearcher
 import com.ruslan.growsseth.item.GrowssethItems

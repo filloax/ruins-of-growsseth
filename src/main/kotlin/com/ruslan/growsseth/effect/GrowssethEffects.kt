@@ -21,9 +21,9 @@ object GrowssethEffects {
         return effect
     }
 
-    fun registerAll(registry: Registry<MobEffect>) {
+    fun registerEffects(registrator: (ResourceLocation, MobEffect) -> Unit) {
         all.forEach{
-            Registry.register(registry, it.key, it.value)
+            registrator(it.key, it.value)
         }
     }
 }

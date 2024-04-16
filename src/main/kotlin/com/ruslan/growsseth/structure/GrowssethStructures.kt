@@ -96,9 +96,9 @@ object GrowssethStructures {
         }
     }
 
-    fun init(registry: Registry<StructureType<*>>) {
+    fun registerStructureTypes(registrator: (ResourceLocation, StructureType<*>) -> Unit) {
         Types.all.forEach{
-            Registry.register(registry, it.key, it.value)
+            registrator(it.key, it.value)
         }
     }
 

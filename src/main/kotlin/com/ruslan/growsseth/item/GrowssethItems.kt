@@ -76,9 +76,9 @@ object GrowssethItems {
 		return item
 	}
 
-	fun registerAll(registry: Registry<Item>) {
+	fun registerItems(registrator: (ResourceLocation, Item) -> Unit) {
 		all.forEach{
-			Registry.register(registry, it.key, it.value)
+			registrator(it.key, it.value)
 		}
 		SherdPatterns.registerSherds()
 	}
@@ -112,9 +112,9 @@ object GrowssethItems {
 			return Pair(loc, item)
 		}
 
-		fun registerAll(registry: Registry<Instrument>) {
+		fun registerInstruments(registrator: (ResourceLocation, Instrument) -> Unit) {
 			all.forEach{
-				Registry.register(registry, it.key, it.value)
+				registrator(it.key, it.value)
 			}
 		}
 	}

@@ -33,9 +33,9 @@ object GrowssethEntities {
         return entityType
     }
 
-    fun init(registry: Registry<EntityType<*>>) {
+    fun registerEntityTypes(registrator: (ResourceLocation, EntityType<*>) -> Unit) {
         all.forEach {
-            Registry.register(registry, it.key, it.value)
+            registrator(it.key, it.value)
         }
     }
 }

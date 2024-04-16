@@ -19,9 +19,9 @@ object GrowssethStructurePieceTypes {
         return structurePieceType
     }
 
-    fun registerAll(registry: Registry<StructurePieceType>) {
+    fun registerStructurePieces(registrator: (ResourceLocation, StructurePieceType) -> Unit) {
         all.forEach{
-            Registry.register(registry, it.key, it.value)
+            registrator(it.key, it.value)
         }
     }
 }

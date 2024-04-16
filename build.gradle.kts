@@ -56,7 +56,9 @@ dependencies {
 	//mappings("net.fabricmc:yarn:${property("yarnMappings")}:v2")
 	mappings(loom.layered() {
 		officialMojangMappings()
-		parchment("org.parchmentmc.data:parchment-${property("minecraft_version")}:${property("parchment_version")}@zip")
+		if ((property("parchment_version") as String).isNotBlank()) {
+			parchment("org.parchmentmc.data:parchment-${property("minecraft_version")}:${property("parchment_version")}@zip")
+		}
 	})
 
 	implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5")

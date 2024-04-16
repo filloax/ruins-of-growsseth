@@ -9,7 +9,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.RuinsOfGrowsseth
-import com.ruslan.growsseth.StructureAdvancements
+import com.ruslan.growsseth.advancements.StructureAdvancements
 import com.ruslan.growsseth.config.GrowssethConfig
 import com.ruslan.growsseth.config.ResearcherConfig
 import com.ruslan.growsseth.http.ApiEvent
@@ -23,9 +23,7 @@ import net.minecraft.core.Vec3i
 import net.minecraft.core.registries.Registries
 import net.minecraft.nbt.ByteTag
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.NbtOps
-import net.minecraft.nbt.StringTag
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation

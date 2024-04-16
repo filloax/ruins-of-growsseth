@@ -1,0 +1,23 @@
+{
+  "parent": "growsseth:growsseth/root",
+  "criteria": {
+    "in_structure_piece": {
+      "conditions": {
+        "jigsawPiecePredicate": {
+          "jigsawPieceIds": [
+            "growsseth:village/taiga/taiga_golem_street",
+            "growsseth:village/taiga/taiga_golem_street_zombie"
+          ],
+          "structure": "minecraft:village_taiga"
+        }
+      },
+      "trigger": "growsseth:jigsaw_piece"
+    }
+  },
+  "requirements": [
+    [
+      "in_structure_piece"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

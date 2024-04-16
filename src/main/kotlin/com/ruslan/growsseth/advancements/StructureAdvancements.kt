@@ -1,8 +1,11 @@
-package com.ruslan.growsseth
+package com.ruslan.growsseth.advancements
 
 import com.mojang.datafixers.util.Either
+import com.ruslan.growsseth.RuinsOfGrowsseth
+import com.ruslan.growsseth.advancements.criterion.JigsawPiecePredicate
+import com.ruslan.growsseth.advancements.criterion.JigsawPieceTrigger
 import com.ruslan.growsseth.structure.GrowssethStructures
-import com.ruslan.growsseth.structure.RemoteStructures
+import com.ruslan.growsseth.structure.VillageBuildings
 import com.ruslan.growsseth.utils.resLoc
 import net.minecraft.advancements.Advancement
 import net.minecraft.advancements.AdvancementHolder
@@ -13,64 +16,19 @@ import net.minecraft.advancements.critereon.PlayerTrigger
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
-import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.tags.TagKey
 import net.minecraft.world.level.levelgen.structure.Structure
-import java.lang.IllegalArgumentException
 import java.util.*
 import java.util.function.Consumer
-import kotlin.collections.HashSet
 import kotlin.jvm.optionals.getOrNull
 
-object GrowssethAdvancements {
-    @JvmStatic
-    val all = HashSet<ResourceLocation>()
-
-    @JvmField
-    val TABS_WITH_SINGLE_BACKGROUND = mutableSetOf<String>(
-        "growsseth",
-    )
-
-    // Defined via data or datagen
-
-    val ROOT = make("root")
-    val START = make("start")
-
-    val FOR_STRUCTURES: Map<ResourceKey<Structure>, ResourceLocation> by lazy {
-        GrowssethStructures.all.associateWith { StructureAdvancements.getStructureAdvancementId(it) }
-    }
-
-    fun make(name: String, folder: String = "growsseth"): ResourceLocation {
-        val res = resLoc("$folder/" + name)
-        all.add(res)
-        return res
-    }
-
-    fun onServerTick(server: MinecraftServer) {
-        // Check every 2 seconds for lag prevention
-        if (server.tickCount % 40 == 0) {
-            val spawningTent = RemoteStructures.STRUCTS_TO_SPAWN_BY_ID.values.any { it.structure == GrowssethStructures.RESEARCHER_TENT.location() }
-            val advancement = server.advancements.get(START)
-            if (advancement == null) {
-                RuinsOfGrowsseth.LOGGER.warn("No $START advancement!")
-                return
-            }
-            if (spawningTent)
-                server.playerList.players.forEach { player ->
-                    if (!player.advancements.getOrStartProgress(advancement).isDone)
-                        player.advancements.award(advancement, "requirement")
-                }
-        }
-    }
-}
 
 object StructureAdvancements {
-    private val structToAdvancement = mutableMapOf<ResourceKey<Structure>, Advancement>()
-
-    fun initServer(server: MinecraftServer) {
-
-    }
+    // Structures that are also considered "found" if a village house is found
+    private val villageHouseStructures = mapOf(
+        GrowssethStructures.GOLEM_HOUSE to getHousesOfVillageCategory(VillageBuildings.CATEGORY_GOLEM_HOUSE)
+    )
 
     // To use with getStructTagOrKey (in utils)
     fun playerHasFoundStructure(player: ServerPlayer, structId: Either<TagKey<Structure>, ResourceKey<Structure>>, failHard: Boolean = false): Boolean {
@@ -93,9 +51,14 @@ object StructureAdvancements {
 
 
     fun playerHasFoundStructure(player: ServerPlayer, structKey: ResourceKey<Structure>): Boolean {
-        val advancement = player.server.advancements.get(getStructureAdvancementId(structKey)) ?:
+        val advancements = listOfNotNull(
+            player.server.advancements.get(getStructureAdvancementId(structKey)),
+        ) + villageHouseStructures.mapNotNull { player.server.advancements.get(getStructureJigsawAdvancementId(it.key, structKey)) }
+        if (advancements.isEmpty()) {
             throw IllegalArgumentException("Unknown advancement key $structKey")
-        return player.advancements.getOrStartProgress(advancement).isDone
+        }
+
+        return advancements.any { player.advancements.getOrStartProgress(it).isDone }
     }
 
     fun playerHasFoundStructure(player: ServerPlayer, structTag: TagKey<Structure>): Boolean {
@@ -125,16 +88,28 @@ object StructureAdvancements {
         return resLoc("growsseth/found_${structKey.location().path}")
     }
 
+    fun getStructureJigsawAdvancementId(structKey: ResourceKey<Structure>, target: ResourceKey<Structure>): ResourceLocation {
+        return resLoc("growsseth/found_jigsaw/${structKey.location().namespace}/${structKey.location().path}/${target.location().path}")
+    }
+
     fun generateForStructureDetection(consumer: Consumer<AdvancementHolder>) {
         // Root dummy so that the one defined in datagen can be referred to
         val rootDummy = Advancement(
             Optional.of(GrowssethAdvancements.ROOT), Optional.empty(), AdvancementRewards.EMPTY,
             mapOf(), AdvancementRequirements.EMPTY, false
         )
+        val rootHolder = AdvancementHolder(GrowssethAdvancements.ROOT, rootDummy)
 
         GrowssethStructures.all
             .minus(GrowssethStructures.RESEARCHER_TENT)
-            .forEach { createStructureDetectionAdvancement(consumer, it, AdvancementHolder(GrowssethAdvancements.ROOT, rootDummy)) }
+            .forEach { createStructureDetectionAdvancement(consumer, it, rootHolder) }
+
+        villageHouseStructures.forEach { (struct, villageHouses) ->
+            villageHouses.forEach { (villageStructId, housePaths) ->
+                val name = getStructureJigsawAdvancementId(villageStructId, struct)
+                createJigsawDetectionAdvancement(consumer, villageStructId, housePaths, rootHolder, name.toString())
+            }
+        }
     }
 
     private fun createStructureDetectionAdvancement(consumer: Consumer<AdvancementHolder>, structKey: ResourceKey<Structure>, root: AdvancementHolder): AdvancementHolder {
@@ -156,4 +131,30 @@ object StructureAdvancements {
             .save(consumer, getStructureAdvancementId(structKey).toString())
     }
 
+    private fun createJigsawDetectionAdvancement(
+        consumer: Consumer<AdvancementHolder>,
+        structKey: ResourceKey<Structure>,
+        pieceIds: List<ResourceLocation>,
+        root: AdvancementHolder,
+        name: String = pieceIds.joinToString("_") { it.path.replace("/", "_") },
+    ): AdvancementHolder {
+        return Advancement.Builder.advancement()
+            .parent(root)
+            .addCriterion("in_structure_piece", GrowssethCriterions.JIGSAW_PIECE.createCriterion(JigsawPieceTrigger.Instance(
+                Optional.empty(),
+                Optional.of(JigsawPiecePredicate(
+                    structKey,
+                    pieceIds,
+                )),
+            )))
+            .save(consumer, name)
+    }
+
+    private fun getHousesOfVillageCategory(category: String): Map<ResourceKey<Structure>, List<ResourceLocation>> {
+        val entries = VillageBuildings.houseEntries[category] ?: throw IllegalArgumentException("Village category $category not found")
+        return entries
+            .groupBy{ it.kind }
+            .mapKeys { ResourceKey.create(Registries.STRUCTURE, ResourceLocation("minecraft", "village_${it.key}")) }
+            .mapValues { e -> e.value.flatMap { listOf(it.normal, it.zombie) } }
+    }
 }
