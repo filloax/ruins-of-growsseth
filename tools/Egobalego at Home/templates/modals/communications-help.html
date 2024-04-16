@@ -6,7 +6,66 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                Guida comunicazioni.
+                <p>
+                    Questa è la sezione delle comunicazioni, le quali si dividono in tre categorie principali: <b>notifiche</b>, <b>dialoghi</b> del ricercatore e <b>diari / libri</b> del ricercatore / delle strutture.
+                </p>
+
+                <p>
+                    Le <b>notifiche</b> sono le più semplici: hanno un <b>titolo</b>, un'<b>icona</b> (se si seleziona la tipologia corrispondente) e un <b>testo</b>. Titolo e testo sono autoesplicativi, mentre l'icona è indicata dall'id dell'item che si vuole usare preceduto dal suo namespace, quindi si possono utilizzare anche item di altre mod se si vuole.
+                    <br>
+                    <u>Nota</u>: le notifiche con icona hanno uno sfondo nero come gli obiettivi, mentre quelle senza hanno uno sfondo blu come gli avvisi della chat non sicura.
+                </p>
+
+                <p>
+                    Con i <b>dialoghi</b> si può decidere cosa si vuole che dica il ricercatore in chat quando ci si avvicina. Per un dialogo semplice basta scrivere il suo contenuto separandolo in più messaggi con gli <b>"\n"</b> (il simbolo per le andate a capo), come in questo esempio:
+                </p>
+
+<pre><code>Salve collega, bla bla bla...\nA proposito, ha sentito di...</code></pre>
+
+                <p>
+                    Il gioco decide automaticamente la durata per cui un messaggio blocca l'apparizione del successivo, ma è possibile deciderla manualmente per messaggi specifici se si ha una conoscenza di base della sintassi <b>JSON</b>.
+                    <br>
+                    Per impostare una durata bisogna separare in una lista i messaggi, e inserire quello che si vuole controllare in un oggetto JSON con il contenuto e la durata in secondi, in questo modo:
+                </p>
+
+<pre><code>[
+    "Salve collega, sa dirmi che ore sono?",
+    {
+        "content": "§lMmm...§r",
+        "duration": 3.0
+    }
+    "Ah giusto, non posso leggere la chat.",
+]</code></pre>
+
+                <p>
+                    <u>Nota:</u> come  hai visto sopra puoi usare i codici di formattazione di Minecraft per corsivo, grassetto ecc. (quelli che racchiudono il testo con §lettera). Inoltre ricorda che cambiare la durata di un messaggio non influisce su quanto rimane a schermo prima di sfumare, ma solo dopo quanto tempo può apparire il successivo!
+                </p>
+
+                <p>
+                    Infine si arriva alla categoria dei <b>diari / libri</b>, che include tre diverse azioni:
+                    <ul>
+                        <li>
+                            Far scrivere al ricercatore un <b>nuovo diario</b> quando il giocatore si avvicina;
+                        </li>
+                        <li>
+                            <b>Sostituire uno dei diari</b> che scrive il ricercatore quando ci si avvicina dopo aver esplorato una struttura (quelli sulle sue avventure nella struttura in questione);
+                        </li>
+                        <li>
+                            <b>Sostituire uno dei libri</b> che si trovano nelle strutture.
+                        </li>
+                    </ul>
+                    Negli ultimi due casi, oltre a titolo e contenuto, bisognerà anche scegliere a quale struttura ci si riferisce.
+                </p>
+
+                <p>
+                    Il contenuto è quello delle pagine, per le quali puoi usare <b>"\n"</b> per andare a capo e <b>"%PAGEBREAK%"</b> per andare alla pagina successiva, come in questo esempio:
+                </p>
+
+<pre><code>Caro diario.\n\nOggi ho visto un creeper.%PAGEBREAK%Era molto §overde§r.",</code></pre>
+
+                <p>
+                    <u>Nota</u>: Come per i dialoghi puoi usare le regole di formattazione del gioco.
+                </p>
             </div>
         </div>
     </div>
