@@ -19,10 +19,7 @@ if (!(Test-Path $venv)) {
 "$venv\Scripts\Activate.ps1"
 
 # Install Flask if it's not already installed
-if (!(pip show Flask)) {
-    Write-Host "Flask is not installed. Installing now."
-    pip install Flask
-}
+pip install -r "$PSScriptRoot\requirements.txt"
 
 $script = $PSScriptRoot + "\start-server.py"
 

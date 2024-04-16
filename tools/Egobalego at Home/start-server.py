@@ -1,7 +1,10 @@
+import os
 from flask import Flask, render_template, request
 import json
 import argparse
 import webbrowser
+from markupsafe import Markup
+from mistune import HTMLRenderer, create_markdown
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--open", action='store_true', help="Open browser page on start")
@@ -12,27 +15,51 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return render_template('home.html', name="home")
+    return render_template(
+        'home.html', name="home", 
+        help_title="Aiuto",
+        help_content=md_content("help_home"),
+    )
 
 @app.route('/commands.html')
 def commands():
-    return render_template('commands.html', name="commands")
+    return render_template(
+        'commands.html', name="commands",
+        help_title="Aiuto comandi",
+        help_content=md_content("help_commands"),
+    )
 
 @app.route('/trades.html')
 def trades():
-    return render_template('trades.html', name="trades")
+    return render_template(
+        'trades.html', name="trades",
+        help_title="Aiuto scambi",
+        help_content=md_content("help_trades"),
+    )
 
 @app.route('/communications.html')
 def messages():
-    return render_template('communications.html', name="communications")
+    return render_template(
+        'communications.html', name="communications",
+        help_title="Aiuto comunicazioni",
+        help_content=md_content("help_communications"),
+    )
 
 @app.route('/quest-steps.html')
 def quest_steps():
-    return render_template('quest-steps.html', name="quest-steps")
+    return render_template(
+        'quest-steps.html', name="quest-steps",
+        help_title="Aiuto quest",
+        help_content=md_content("help_quest"),
+    )
 
 @app.route('/structures.html')
 def structures():
-    return render_template('structures.html', name="structures")
+    return render_template(
+        'structures.html', name="structures",
+        help_title="Aiuto strutture",
+        help_content=md_content("help_structures"),
+    )
 
 
 @app.route('/data_receiver', methods=['POST'])
@@ -89,6 +116,16 @@ def update_database():
     with open('server_data.json', 'w') as f:
         json.dump(server_data, f, indent=4)
 
+dirname = os.path.dirname(__file__)
+
+def md_content(name: str):
+    with open(os.path.join(dirname, "templates", "content", f'{name}.md'), 'r', encoding='UTF-8') as f:
+        return markdown_to_html(f.read())
+
+def markdown_to_html(markdown_text):
+    renderer = HTMLRenderer()
+    markdown = create_markdown(renderer=renderer)
+    return Markup(markdown(markdown_text))
 
 server_data = []
 last_id = 0

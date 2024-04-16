@@ -12,7 +12,9 @@
             </div>
             {% include 'cards/trades-card.html' %}
             {% include 'modals/confirm-deletion.html' %}
-            {% include 'modals/trades-help.html' %}
+            {% with title=help_title, content=help_content %}
+                {% include 'modals/modal-help.html' %}
+            {% endwith %}
         </main>
     </body>
     <script src="{{ url_for('static', filename='js/trades.js') }}" defer></script>

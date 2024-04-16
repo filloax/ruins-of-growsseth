@@ -19,7 +19,9 @@
                 </p>
             </div>
             <img class="mt-4" style="height: 200px; image-rendering: pixelated;" src="{{ url_for('static', filename='img/favicon.png') }}">
-            {% include 'modals/home-help.html' %}
+            {% with title=help_title, content=help_content %}
+                {% include 'modals/modal-help.html' %}
+            {% endwith %}
         </main>
     </body>
 </html>
