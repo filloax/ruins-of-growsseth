@@ -23,10 +23,11 @@ async function updateServer(card, action) {
     var active = card.querySelector("#card-enabler-switch").checked;
 
     var formattedStructure = structure;
-    if (structure === "growsseth:golem_house") {
-        formattedStructure = structure + "/" + golemVariant;
+    if (structure === "growsseth:golem_variants") {
         if (golemZombie)
-            formattedStructure = formattedStructure + "-zombie";
+            formattedStructure = formattedStructure + "/zombie_" + golemVariant;
+        else
+            formattedStructure = formattedStructure + "/" + golemVariant;
     }
     var structureData = {
         "id": id,
@@ -97,11 +98,11 @@ function addStructureCard(isNew, item) {
     else {
         id.value = item.id;
         structureSelect.value = item.structure;
-        if (item.structure.includes("growsseth:golem_house")) {
+        if (item.structure.includes("growsseth:golem_variants")) {
             structureSelect.value = item.structure.split("/")[0];
             var golemVariant = item.structure.split("/")[1]
-            golemVariantSelect.value = golemVariant.replace("-zombie", "");
-            golemZombieSwitch.checked = item.structure.endsWith("-zombie");
+            golemVariantSelect.value = golemVariant.replace("zombie_", "");
+            golemZombieSwitch.checked = item.structure.includes("/zombie_");
         }
         x.value = item.x;
         y.value = item.y;
@@ -131,7 +132,7 @@ function addStructureCard(isNew, item) {
     });
 
     golemVariantSelect.addEventListener("change", function () {
-        updatePreview("growsseth:golem_house")
+        updatePreview("growsseth:golem_variants")
     });
 
     golemZombieSwitch.addEventListener("change", function () {
@@ -173,7 +174,7 @@ function addStructureCard(isNew, item) {
     function enableCard(selectedStructure) {
         warningDiv.hidden = true;
         cardEnablerDiv.hidden = false;
-        golemVariantDiv.hidden = (selectedStructure !== "growsseth:golem_house");
+        golemVariantDiv.hidden = (selectedStructure !== "growsseth:golem_variants");
         coordinatesDiv.hidden = false;
         rotationDiv.hidden = false;
     }
@@ -189,8 +190,8 @@ function addStructureCard(isNew, item) {
     function updatePreview(selectedStructure) {
         selectedStructure = selectedStructure.split(":")[1]
         selectedPreview = defaultPreview;
-        if (selectedStructure === "golem_house")
-            selectedPreview = selectedPreview.replace("none", "golem_house/" + golemVariantSelect.value);
+        if (selectedStructure === "golem_variants")
+            selectedPreview = selectedPreview.replace("none", "golem_variants/" + golemVariantSelect.value);
         else
             selectedPreview = selectedPreview.replace("none", selectedStructure);
         structurePreview.src = selectedPreview;
@@ -198,7 +199,7 @@ function addStructureCard(isNew, item) {
     }
 
     function zombieImgFilter() {
-        if (structureSelect.value === "growsseth:golem_house" && golemZombieSwitch.checked)
+        if (structureSelect.value === "growsseth:golem_variants" && golemZombieSwitch.checked)
             structurePreview.style.filter = "sepia(100%)";
         else
             structurePreview.style.filter = "none";

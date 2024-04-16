@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const responseForServerData = await fetch("/server_data");
         var serverData = await responseForServerData.json();
         serverData.forEach(item => {
-            if (item.type === "quest_step")
+            if (item.type === "questStep")
                 if (item.id === "quest-step-1") {
                     step1Switch.checked = true;
                     changeColor(step1Card, step1Label, true);
@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function updateServer(step, action) {
         const dataTemplate = {
             "id": "",
-            "type": "quest_step",
+            "type": "questStep",
             "name": "",
             "active": true
         };
