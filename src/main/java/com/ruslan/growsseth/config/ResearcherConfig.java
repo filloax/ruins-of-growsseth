@@ -1,6 +1,7 @@
 package com.ruslan.growsseth.config;
 
 import com.teamresourceful.resourcefulconfig.api.annotations.Category;
+import com.teamresourceful.resourcefulconfig.api.annotations.Comment;
 import com.teamresourceful.resourcefulconfig.api.annotations.ConfigEntry;
 import com.teamresourceful.resourcefulconfig.api.types.options.EntryType;
 
@@ -10,6 +11,10 @@ import static com.ruslan.growsseth.config.GrowssethConfig.T_PREF;
 public final class ResearcherConfig {
     @ConfigEntry(id = "immortalResearcher", type = EntryType.BOOLEAN, translation = T_PREF + "immortalResearcher.name")
     public static boolean immortalResearcher = false;
+    @Comment(
+        value = "Researcher teleports back to original position, and avoids interacting with nether portals to prevent cheese",
+        translation = T_PREF + "researcherTeleports.comment"
+    )
     @ConfigEntry(id = "researcherTeleports", type = EntryType.BOOLEAN, translation = T_PREF + "researcherTeleports.name")
     public static boolean researcherTeleports = true;
     @ConfigEntry(id = "researcherAntiCheat", type = EntryType.BOOLEAN, translation = T_PREF + "researcherAntiCheat.name")

@@ -2,6 +2,7 @@ package com.ruslan.growsseth.entity.researcher
 
 import com.filloax.fxlib.EventUtil
 import com.filloax.fxlib.entity.delegate
+import com.filloax.fxlib.entity.fixedChangeDimension
 import com.filloax.fxlib.entity.getPersistData
 import com.filloax.fxlib.getStructTagOrKey
 import com.filloax.fxlib.nbt.getCompoundOrNull
@@ -21,6 +22,8 @@ import com.ruslan.growsseth.dialogues.NpcDialoguesComponent
 import com.ruslan.growsseth.effect.GrowssethEffects
 import com.ruslan.growsseth.entity.RefreshableMerchant
 import com.ruslan.growsseth.entity.SpawnTimeTracker
+import com.ruslan.growsseth.entity.researcher.ResearcherCombatComponent.Companion.distanceForUnjustifiedAggression
+import com.ruslan.growsseth.entity.researcher.ResearcherCombatComponent.ResearcherAttackGoal
 import com.ruslan.growsseth.entity.researcher.trades.ResearcherTrades
 import com.ruslan.growsseth.http.GrowssethExtraEvents
 import com.ruslan.growsseth.item.GrowssethItems
@@ -84,11 +87,14 @@ import net.minecraft.world.item.trading.MerchantOffer
 import net.minecraft.world.item.trading.MerchantOffers
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
+import net.minecraft.world.level.dimension.DimensionType
 import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.level.levelgen.structure.BoundingBox
 import net.minecraft.world.level.levelgen.structure.Structure
 import net.minecraft.world.level.levelgen.structure.StructureStart
+import net.minecraft.world.level.portal.PortalInfo
 import net.minecraft.world.phys.AABB
+import net.minecraft.world.phys.Vec3
 import org.apache.commons.lang3.mutable.MutableInt
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
@@ -117,6 +123,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         const val PERSIST_ID_TAG = "ResearcherPersistId"    // Separate from data as used to load it
         const val SPAWN_TIME_TAG = "ResearcherSpawnTime"
         const val STARTING_POS_TAG = "ResearcherStartingPos"
+        const val STARTING_DIM_TAG = "ResearcherStartingDim"
         const val TELEPORT_COUNTER_TAG = "ResearcherTPCounter"
 
         val RENAME_BLACKLIST = mutableMapOf(
@@ -216,6 +223,8 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     // No lateinit for these three, too many points of failure with Minecraft
     var startingPos: BlockPos? = null
         private set
+    var startingDimension: ResourceKey<Level> = Level.OVERWORLD
+        private set
     var persistId: Int? = null
         private set
     var metPlayer: Boolean = false
@@ -232,15 +241,15 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     var showArrowDeflectParticles: Boolean by entityData.delegate(DATA_DEFLECT_ARROW_PARTICLES)
     var showTeleportParticles: Boolean by entityData.delegate(DATA_TELEPORT_PARTICLES)
 
+    val combat = ResearcherCombatComponent(this)
     val storedMapLocations = mutableMapOf<String, MapMemory>()
     val diary = if (!this.level().isClientSide()) ResearcherDiaryComponent(this) else null
-    override val dialogues = if (!this.level().isClientSide()) NpcDialoguesComponent.get(this, random) else null
+    override val dialogues = if (!this.level().isClientSide()) ResearcherDialoguesComponent(this, random, combat) else null
     override val quest = if (!this.level().isClientSide()) {
         // Set to not active, so it doesn't get loaded when the zombie villager loads this in
         // on conversion end, before it applies the data
         ResearcherQuestComponent(this).also { it.data.active = false }
     } else null
-    val combat = ResearcherCombatComponent(this)
 
     // World time the researcher was spawned first at
     // (used in clearoldresearchers remote command)
@@ -312,11 +321,24 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
     override fun registerGoals() {
         goalSelector.addGoal(1, FloatGoal(this))
+        goalSelector.addGoal(2, ResearcherAttackGoal(this, 0.7, true))
         goalSelector.addGoal(3, MoveTowardsRestrictionGoal(this, 0.6))
         goalSelector.addGoal(4, ResearcherRandomStrollGoal(this, 0.6))
         goalSelector.addGoal(5, ResearcherLookAtPlayerGoal(this, 8f, 0.1f))
 
-        combat.addCombatGoals(goalSelector, targetSelector)
+
+        targetSelector.addGoal(1, NearestAttackableTargetGoal(this, Player::class.java, 5, true, true)
+            { player -> combat.wantsToKillPlayer((player as Player)) })
+        if (ResearcherConfig.researcherInteractsWithMobs) {
+            targetSelector.addGoal(2, ResearcherHurtByTargetGoal(this))
+            targetSelector.addGoal(3, NearestAttackableTargetGoal(this, Mob::class.java, 5, false, true)
+            { livingEntity: LivingEntity? -> livingEntity is Mob && livingEntity.target == this })
+            if (ResearcherConfig.researcherStrikesFirst)
+                targetSelector.addGoal(3, NearestAttackableTargetGoal(this, Mob::class.java, 5, true, true)
+                { livingEntity: LivingEntity? -> ( (livingEntity != null && this.distanceTo(livingEntity) < distanceForUnjustifiedAggression) &&
+                        (livingEntity is Raider || livingEntity is Vex || livingEntity is Zombie || livingEntity is AbstractSkeleton) ) }
+                )
+        }
     }
 
     // NOTE: Ran only once at first spawn
@@ -338,6 +360,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
         quest?.data?.active = true
         this.startingPos = blockPosition()
+        this.startingDimension = level.level.dimension()
 
         if (savedData != null) {
             startTrackingDonkey()
@@ -405,104 +428,122 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         }
 
         if (!level().isClientSide && isAlive) {
-            if (isUsingItem) {
-                if (!isSilent && itemUsingTime == (offhandItem.useDuration / 4)) {    // play drinking sound when item is halfway consumed
-                    val itemStack = offhandItem
-                    if (itemStack.`is`(Items.POTION))
-                        level().playSound(null, x, y, z, SoundEvents.GENERIC_DRINK, soundSource, 1.0f, 0.8f + random.nextFloat() * 0.4f)
-                    else if (itemStack.`is`(Items.HONEY_BOTTLE))
-                        level().playSound(null, x, y, z, SoundEvents.HONEY_DRINK, soundSource, 1.0f, 0.8f + random.nextFloat() * 0.4f)
-                    else if (itemStack.`is`(Items.ENDER_PEARL))
-                        level().playSound(null, x, y, z, SoundEvents.ENDERMAN_TELEPORT, soundSource, 1.0f, 0.8f + random.nextFloat() * 0.4f)
-                }
+            handleItems()
 
-                if (itemUsingTime-- <= 0) {
-                    isUsingItem = false
-                    val itemStack = offhandItem
-                    setItemSlot(EquipmentSlot.OFFHAND, ItemStack.EMPTY)
-
-                    if (itemStack.`is`(Items.POTION)) {
-                        val list = PotionUtils.getMobEffects(itemStack)
-                        if (list != null)
-                            for (mobEffectInstance in list)
-                                addEffect(MobEffectInstance(mobEffectInstance))
-                        gameEvent(GameEvent.DRINK)
-                    }
-                    else if (itemStack.`is`(Items.HONEY_BOTTLE)) {
-                        removeEffect(MobEffects.POISON)
-                        gameEvent(GameEvent.DRINK)
-                    }
-                    else if (itemStack.`is`(Items.ENDER_PEARL)) {
-                        stopRiding()
-                        showTeleportParticles = true
-                        needsToTpBack = false
-                        secondsAwayFromTent = 0
-                        teleportTo(startingPos!!.x.toDouble(), startingPos!!.y.toDouble(), startingPos!!.z.toDouble())
-                        gameEvent(GameEvent.TELEPORT)
-                    }
-
-                    getAttribute(Attributes.MOVEMENT_SPEED)!!.removeModifier(SPEED_MODIFIER_DRINKING.id)
-                }
-            }
-            else {
-                var potion: Potion? = null
-                var item: Item? = null
-
-                if (needsToTpBack)
-                    item = Items.ENDER_PEARL
-
-                if (needsJumpBoost && !hasEffect(MobEffects.JUMP))
-                    potion = Potions.STRONG_LEAPING
-
-                else if (       // trying to counter cheese attempts
-                    ResearcherConfig.researcherAntiCheat &&
-                    stuckCounter >= maxStuckCounter &&
-                    ((!hasEffect(MobEffects.DAMAGE_RESISTANCE) || !hasEffect(MobEffects.MOVEMENT_SLOWDOWN)) ||
-                            (hasEffect(MobEffects.DAMAGE_RESISTANCE) && hasEffect(MobEffects.MOVEMENT_SLOWDOWN)
-                                    && getEffect(MobEffects.DAMAGE_RESISTANCE)?.endsWithin(40) == true))
-                ) {
-                    if (target is ServerPlayer) {
-                        isStuck = true
-                        showAngryParticles = true
-                        dialogues?.triggerDialogue(target as ServerPlayer, ResearcherDialoguesComponent.PLAYER_CHEATS)
-                    }
-                    potion = Potions.STRONG_TURTLE_MASTER
-                }
-
-                else if (lastDamageSource != null && lastDamageSource!!.`is`(DamageTypeTags.IS_DROWNING) && !hasEffect(MobEffects.WATER_BREATHING))
-                    potion = Potions.WATER_BREATHING
-
-                else if ((isOnFire || lastDamageSource != null && lastDamageSource!!.`is`(DamageTypeTags.IS_FIRE)) && !hasEffect(MobEffects.FIRE_RESISTANCE))
-                    potion = Potions.FIRE_RESISTANCE
-
-                else if (health < maxHealth && !hasEffect(MobEffects.REGENERATION) && (isAggressive || hasEffect(MobEffects.POISON) || random.nextFloat() < 0.05f))
-                    potion = Potions.STRONG_REGENERATION        // if not aggressive random chance to drink to make it seem natural
-
-                else if (hasEffect(MobEffects.POISON))
-                    item = Items.HONEY_BOTTLE
-
-                if (potion != null || item != null) {
-                    if (item != null)
-                        setItemSlot(EquipmentSlot.OFFHAND, ItemStack(item))
-                    if (potion != null)
-                        setItemSlot(EquipmentSlot.OFFHAND, PotionUtils.setPotion(ItemStack(Items.POTION), potion))
-
-                    itemUsingTime = if (offhandItem.`is`(Items.ENDER_PEARL))
-                        secondsToTicks(1f)
-                    else
-                        offhandItem.useDuration / 2
-                    isUsingItem = true
-
-                    val attributeInstance = getAttribute(Attributes.MOVEMENT_SPEED)
-                    attributeInstance!!.removeModifier(SPEED_MODIFIER_DRINKING.id)
-                    attributeInstance.addTransientModifier(SPEED_MODIFIER_DRINKING)
-                }
-            }
-
-            if (random.nextFloat() < 7.5E-4f)
-                level().broadcastEntityEvent(this, 15.toByte())
+            // witch stuff
+//            if (random.nextFloat() < 7.5E-4f)
+//                level().broadcastEntityEvent(this, 15.toByte())
         }
         super.aiStep()
+    }
+
+    // Server side only
+    private fun handleItems() {
+        if (isUsingItem) {
+            if (!isSilent && itemUsingTime == (offhandItem.useDuration / 4)) {    // play drinking sound when item is halfway consumed
+                val itemStack = offhandItem
+
+                val sound = when (itemStack.item) {
+                    Items.POTION -> SoundEvents.GENERIC_DRINK
+                    Items.HONEY_BOTTLE -> SoundEvents.HONEY_DRINK
+                    Items.ENDER_PEARL -> SoundEvents.ENDERMAN_TELEPORT
+                    else -> null
+                }
+
+                if (sound != null) {
+                    level().playSound(null, x, y, z, sound, soundSource, 1.0f, 0.8f + random.nextFloat() * 0.4f)
+                }
+            }
+
+            itemUsingTime--
+            if (itemUsingTime <= 0) {
+                isUsingItem = false
+                val itemStack = offhandItem
+                setItemSlot(EquipmentSlot.OFFHAND, ItemStack.EMPTY)
+
+                if (itemStack.`is`(Items.POTION)) {
+                    val list = PotionUtils.getMobEffects(itemStack)
+                    if (list != null)
+                        for (mobEffectInstance in list)
+                            addEffect(MobEffectInstance(mobEffectInstance))
+                    gameEvent(GameEvent.DRINK)
+                }
+                else if (itemStack.`is`(Items.HONEY_BOTTLE)) {
+                    removeEffect(MobEffects.POISON)
+                    gameEvent(GameEvent.DRINK)
+                }
+                else if (itemStack.`is`(Items.ENDER_PEARL)) {
+                    stopRiding()
+                    showTeleportParticles = true
+                    needsToTpBack = false
+                    secondsAwayFromTent = 0
+
+                    val targetLevel = server?.getLevel(startingDimension) ?:
+                        throw IllegalStateException("Unkown level when researcher teleporting to start dimension $startingDimension")
+
+                    fixedChangeDimension(targetLevel, PortalInfo(
+                        startingPos!!.center, Vec3.ZERO, yRot, xRot
+                    ))
+                    gameEvent(GameEvent.TELEPORT)
+                }
+
+                getAttribute(Attributes.MOVEMENT_SPEED)!!.removeModifier(SPEED_MODIFIER_DRINKING.id)
+            }
+        }
+        else {
+            var potion: Potion? = null
+            var item: Item? = null
+
+            if (needsToTpBack)
+                item = Items.ENDER_PEARL
+
+            if (needsJumpBoost && !hasEffect(MobEffects.JUMP))
+                potion = Potions.STRONG_LEAPING
+
+            else if (       // trying to counter cheese attempts
+                ResearcherConfig.researcherAntiCheat &&
+                stuckCounter >= maxStuckCounter &&
+                ((!hasEffect(MobEffects.DAMAGE_RESISTANCE) || !hasEffect(MobEffects.MOVEMENT_SLOWDOWN)) ||
+                        (hasEffect(MobEffects.DAMAGE_RESISTANCE) && hasEffect(MobEffects.MOVEMENT_SLOWDOWN)
+                                && getEffect(MobEffects.DAMAGE_RESISTANCE)?.endsWithin(40) == true))
+            ) {
+                if (target is ServerPlayer) {
+                    isStuck = true
+                    showAngryParticles = true
+                    dialogues?.triggerDialogue(target as ServerPlayer, ResearcherDialoguesComponent.PLAYER_CHEATS)
+                }
+                potion = Potions.STRONG_TURTLE_MASTER
+            }
+
+            else if (lastDamageSource != null && lastDamageSource!!.`is`(DamageTypeTags.IS_DROWNING) && !hasEffect(MobEffects.WATER_BREATHING))
+                potion = Potions.WATER_BREATHING
+
+            else if ((isOnFire || lastDamageSource != null && lastDamageSource!!.`is`(DamageTypeTags.IS_FIRE)) && !hasEffect(MobEffects.FIRE_RESISTANCE))
+                potion = Potions.FIRE_RESISTANCE
+
+            else if (health < maxHealth && !hasEffect(MobEffects.REGENERATION) && (isAggressive || hasEffect(MobEffects.POISON) || random.nextFloat() < 0.05f))
+                potion = Potions.STRONG_REGENERATION        // if not aggressive random chance to drink to make it seem natural
+
+            else if (hasEffect(MobEffects.POISON))
+                item = Items.HONEY_BOTTLE
+
+            if (potion != null || item != null) {
+                if (item != null)
+                    setItemSlot(EquipmentSlot.OFFHAND, ItemStack(item))
+                if (potion != null)
+                    setItemSlot(EquipmentSlot.OFFHAND, PotionUtils.setPotion(ItemStack(Items.POTION), potion))
+
+                itemUsingTime = if (offhandItem.`is`(Items.ENDER_PEARL))
+                    secondsToTicks(1f)
+                else
+                    offhandItem.useDuration / 2
+                isUsingItem = true
+
+                val attributeInstance = getAttribute(Attributes.MOVEMENT_SPEED)
+                attributeInstance!!.removeModifier(SPEED_MODIFIER_DRINKING.id)
+                attributeInstance.addTransientModifier(SPEED_MODIFIER_DRINKING)
+            }
+        }
     }
 
     override fun customServerAiStep() {
@@ -728,6 +769,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         // Save separately from data as specific to single researcher
         compoundTag.saveField(TELEPORT_COUNTER_TAG, Codec.INT, ::secondsAwayFromTent)
         compoundTag.saveField(STARTING_POS_TAG, BlockPos.CODEC, ::startingPos)
+        compoundTag.saveField(STARTING_DIM_TAG, ResourceKey.codec(Registries.DIMENSION), ::startingDimension)
     }
 
     override fun readAdditionalSaveData(compoundTag: CompoundTag) {
@@ -754,6 +796,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
         compoundTag.loadField(TELEPORT_COUNTER_TAG, Codec.INT) { secondsAwayFromTent = it }
         compoundTag.loadField(STARTING_POS_TAG, BlockPos.CODEC) { startingPos = it }
+        compoundTag.loadField(STARTING_DIM_TAG, ResourceKey.codec(Registries.DIMENSION)) { startingDimension = it }
     }
 
     fun saveWorldData() {
@@ -938,6 +981,12 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             dagger.enchant(Enchantments.SMITE, 5)       // smite only on drop to prevent exploits
         })
         level().addFreshEntity(itemEntity)
+    }
+
+    override fun handleNetherPortal() {
+        if (ResearcherConfig.researcherTeleports) {
+            return // prevent nether portal interaction
+        }
     }
 
     internal fun jumpFromGroundAccess() {

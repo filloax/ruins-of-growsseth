@@ -71,7 +71,7 @@ open class BasicDialoguesComponent(
     /** Set to 0 to disable "long time" events: */
     var secondsForArriveLongTime = 6 * 3600 // 6 hours
     var secondsForCloseRepeat = 60
-    open var secondsForAttackRepeat = 10
+    var secondsForAttackRepeat = 10
     var maxCloseHitsForDialogues = 3
     /** Set to 0 to have no wait: */
     var dialogueDelayMaxSeconds = 0.6f

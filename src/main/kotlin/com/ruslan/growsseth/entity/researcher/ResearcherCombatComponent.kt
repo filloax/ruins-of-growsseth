@@ -46,7 +46,7 @@ class ResearcherCombatComponent(
 
     companion object {
         // distance for attacking mobs that are not going after him (if option is active)
-        private val distanceForUnjustifiedAggression: Int = 10
+        val distanceForUnjustifiedAggression: Int = 10
     }
 
     private val dialogues = owner.dialogues
@@ -64,20 +64,7 @@ class ResearcherCombatComponent(
     }
 
     fun addCombatGoals(goalSelector: GoalSelector, targetSelector: GoalSelector) {
-        goalSelector.addGoal(2, ResearcherAttackGoal(owner, 0.7, true))
 
-        targetSelector.addGoal(1, NearestAttackableTargetGoal(owner, Player::class.java, 5, true, true)
-        { player -> wantsToKillPlayer((player as Player)) })
-        if (ResearcherConfig.researcherInteractsWithMobs) {
-            targetSelector.addGoal(2, ResearcherHurtByTargetGoal(owner))
-            targetSelector.addGoal(3, NearestAttackableTargetGoal(owner, Mob::class.java, 5, false, true)
-            { livingEntity: LivingEntity? -> livingEntity is Mob && livingEntity.target == owner })
-            if (ResearcherConfig.researcherStrikesFirst)
-                targetSelector.addGoal(3, NearestAttackableTargetGoal(owner, Mob::class.java, 5, true, true)
-                { livingEntity: LivingEntity? -> ( (livingEntity != null && owner.distanceTo(livingEntity) < distanceForUnjustifiedAggression) &&
-                        (livingEntity is Raider || livingEntity is Vex || livingEntity is Zombie || livingEntity is AbstractSkeleton) ) }
-                )
-        }
     }
 
     fun hurt(source: DamageSource, amount: Float, superHurt: (DamageSource, Float) -> Boolean): Boolean? {

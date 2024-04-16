@@ -32,6 +32,7 @@ import java.util.*
 
 class ResearcherDialoguesComponent(
     val researcher: Researcher, random: RandomSource,
+    private val combat: ResearcherCombatComponent,
 ) : BasicDialoguesComponent(researcher, random) {
     companion object {
         // Stuff to persist in NBT (using DataFixerUpper because shorter to write even if complicated af to read)
@@ -61,14 +62,14 @@ class ResearcherDialoguesComponent(
         )
     }
 
-    private val combat = researcher.combat
-
     // NBT data
     // First key is player UUID
     private var playersMadeMess: MutableSet<UUID> = mutableSetOf()
     private var playersInCellar: MutableSet<UUID> = mutableSetOf()
 
-    override var secondsForAttackRepeat = combat.timeToCalmDown / 20
+    init {
+        secondsForAttackRepeat = combat.timeToCalmDown / 20
+    }
 
     override fun triggerDialogue(
         player: ServerPlayer,

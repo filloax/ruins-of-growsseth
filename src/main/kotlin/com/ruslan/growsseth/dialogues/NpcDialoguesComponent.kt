@@ -15,15 +15,6 @@ import net.minecraft.world.phys.AABB
  * with various triggers
  */
 interface NpcDialoguesComponent {
-    companion object {
-        fun get(entity: LivingEntity, random: RandomSource): NpcDialoguesComponent {
-            return when(entity) {
-                is Researcher -> ResearcherDialoguesComponent(entity, random)
-                else -> BasicDialoguesComponent(entity, random)
-            }
-        }
-    }
-
     /**
      * Send a dialogue to a player, as a chat message,
      * some sort of ui popup, etc.
