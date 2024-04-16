@@ -4,15 +4,22 @@
     <body>
         {% include 'shared/header.html' %}
         <main>
-            <div>
-                <h2 class="text-center">
+            <div class="text-center">
+                <h2>
                     Salve, Game Master!
                 </h2>
-                <h4 class="text-center">
+                <h4>
                     Clicca su una delle sezioni sopra per iniziare
                 </h4>
+                <p>
+                    Se non lo hai già fatto, leggi prima la 
+                    <a class="link-opacity-100" href="#" data-bs-toggle="modal" data-bs-target="#modal-help">
+                        guida!
+                    </a>
+                </p>
             </div>
-            <img class="mt-5" style="height: 200px; image-rendering: pixelated;" src="{{ url_for('static', filename='img/favicon.png') }}">
+            <img class="mt-4" style="height: 200px; image-rendering: pixelated;" src="{{ url_for('static', filename='img/favicon.png') }}">
+            {% include 'modals/home-help.html' %}
         </main>
     </body>
 </html>
