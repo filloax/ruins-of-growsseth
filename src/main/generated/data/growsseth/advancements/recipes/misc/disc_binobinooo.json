@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_disc_binobinooo_inst": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "growsseth:disc_binobinooo_inst"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "growsseth:disc_binobinooo"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_disc_binobinooo_inst"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "growsseth:disc_binobinooo"
+    ]
+  }
+}

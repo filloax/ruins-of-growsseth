@@ -54,6 +54,11 @@ object GrowssethItems {
 	val DISC_MISSIVA_NELL_OMBRA = make("disc_missiva_nell_ombra",
 		RecordItem(6, GrowssethSounds.DISC_MISSIVA_NELL_OMBRA, FabricItemSettings().maxCount(1), 329))
 
+	val discsToVocals = mutableMapOf(
+		DISC_GIORGIO_LOFI_INST to DISC_GIORGIO_LOFI,
+		DISC_BINOBINOOO_INST to DISC_BINOBINOOO,
+	)
+
 	// Vanilla ambience discs
 	val DISC_MICE_ON_VENUS = make("disc_mice_on_venus",
 		RecordItem(6, GrowssethSounds.MUSIC_MICE_ON_VENUS, FabricItemSettings().maxCount(1), 280))
@@ -64,7 +69,7 @@ object GrowssethItems {
 
 	val RUINS_MAP = make("ruins_map", MapItem(defaultBuilder().stacksTo(1)), autoGenerateJson = false)
 
-	private fun make(hashName: String, item: Item, autoGenerateJson: Boolean = true): Item {
+	private fun <T:Item> make(hashName: String, item: T, autoGenerateJson: Boolean = true): T {
 		val resourceLocation = resLoc(hashName)
 		if (all.containsKey(resourceLocation)) {
 			throw IllegalArgumentException("Item $hashName already registered!")

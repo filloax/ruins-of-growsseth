@@ -13,12 +13,9 @@ import com.ruslan.growsseth.worldgen.worldpreset.GrowssethWorldPreset
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider
+import net.fabricmc.fabric.api.datagen.v1.provider.*
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider.BlockTagProvider
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider.ItemTagProvider
-import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableProvider
 import net.minecraft.advancements.AdvancementHolder
 import net.minecraft.core.HolderLookup
 import net.minecraft.core.RegistrySetBuilder
@@ -29,11 +26,18 @@ import net.minecraft.data.loot.LootTableSubProvider
 import net.minecraft.data.models.BlockModelGenerators
 import net.minecraft.data.models.ItemModelGenerators
 import net.minecraft.data.models.model.ModelTemplates
+import net.minecraft.data.recipes.RecipeCategory
+import net.minecraft.data.recipes.RecipeOutput
+import net.minecraft.data.recipes.RecipeProvider
+import net.minecraft.data.recipes.ShapedRecipeBuilder
+import net.minecraft.data.recipes.packs.VanillaRecipeProvider.TrimTemplate
 import net.minecraft.data.tags.InstrumentTagsProvider
 import net.minecraft.data.tags.WorldPresetTagsProvider
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.ItemTags
 import net.minecraft.tags.WorldPresetTags
+import net.minecraft.world.item.Items
+import net.minecraft.world.level.ItemLike
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.storage.loot.LootPool
 import net.minecraft.world.level.storage.loot.LootTable
@@ -52,6 +56,7 @@ class DataGeneration : DataGeneratorEntrypoint {
         val pack = fabricDataGenerator.createPack()
 
         pack.addProvider(::RegistriesProvider)
+        pack.addProvider(::RecipesProvider)
         pack.addProvider(::AdvancementsProvider)
         pack.addProvider(::TagProviderBlocks)
         pack.addProvider(::TagProviderItems)
@@ -81,6 +86,31 @@ class RegistriesProvider(output: FabricDataOutput, registries: CompletableFuture
     }
 }
 
+class RecipesProvider(output: FabricDataOutput) : FabricRecipeProvider(output) {
+    override fun buildRecipes(exporter: RecipeOutput) {
+        RecipeProvider.copySmithingTemplate(exporter, GrowssethItems.GROWSSETH_ARMOR_TRIM, Items.COBBLED_DEEPSLATE)
+        listOf(
+            GrowssethItems.GROWSSETH_ARMOR_TRIM,
+        ).forEach {
+            val trimTemplate = TrimTemplate(it, ResourceLocation(getItemName(it) + "_smithing_trim"))
+            RecipeProvider.trimSmithing(exporter, trimTemplate.template, trimTemplate.id)
+        }
+
+        GrowssethItems.discsToVocals.forEach { vocalsDiscRecipe(exporter, it.key, it.value) }
+    }
+
+    private fun vocalsDiscRecipe(exporter: RecipeOutput, baseDisc: ItemLike, vocalsDisc: ItemLike) {
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, vocalsDisc)
+            .define('A', Items.AMETHYST_SHARD)
+            .define('O', baseDisc)
+            .pattern("AAA")
+            .pattern("AOA")
+            .pattern("AAA")
+            .showNotification(true)
+            .unlockedBy(RecipeProvider.getHasName(baseDisc), RecipeProvider.has(baseDisc))
+            .save(exporter)
+    }
+}
 
 class AdvancementsProvider(output: FabricDataOutput) :
     FabricAdvancementProvider(output) {
