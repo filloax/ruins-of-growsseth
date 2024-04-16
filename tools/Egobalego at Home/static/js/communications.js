@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     lastId = parseInt(await responseForLastId.text());
     const responseForServerData = await fetch("/server_data");
     var serverData = await responseForServerData.json();
-    var communication_types = ["dialogue", "toast", "researcher_diary", "structure_book"]
+    var communication_types = ["dialogue", "toast", "researcherDiary", "structureBook"]
     serverData.forEach(item => {
         if (communication_types.includes(item.type))
             addCommCard(false, item);
@@ -42,13 +42,13 @@ async function updateServer(card, action) {
             break;
         case "researcher-diary-new":
         case "researcher-diary-replace":
-            commData["type"] = "researcher_diary"
+            commData["type"] = "researcherDiary"
             if (typeSpecific === "researcher-diary-replace")
                 commData["structure"] = diaryStructure
             commData["title"] = title
             break;
         case "structure-book":
-            commData["type"] = "structure_book"
+            commData["type"] = "structureBook"
             commData["structure"] = bookStructure
             commData["title"] = title
             break;
@@ -125,13 +125,13 @@ function addCommCard(isNew, item) {
                 }
                 title.value = item.title;
                 break;
-            case "researcher_diary":
+            case "researcherDiary":
                 commSelect.value = item.structure ? "researcher-diary-replace" : "researcher-diary-new"
                 if (item.structure)
                     diaryStructure.value = item.structure
                 title.value = item.title;
                 break;
-            case "structure_book":
+            case "structureBook":
                 commSelect.value = "structure-book"
                 bookStructure.value = item.structure
                 title.value = item.title;

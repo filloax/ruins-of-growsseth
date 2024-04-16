@@ -85,3 +85,5 @@ Per concludere, ecco un esempio di scambio in cui si offrono 15 TNT per 3 baston
         ],
         "priority":100
     }
+
+Nota: gli scambi del ricercatore (a differenza di altri eventi che vengono attivati una volta sola) vengono caricati nel gioco ogni volta che la mod riceve i dati dal sito, quindi una volta attivati non andrebbero toccati finché non si decide di modificarli o disattivarli.

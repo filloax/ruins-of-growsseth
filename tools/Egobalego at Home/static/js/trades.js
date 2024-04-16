@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     lastId = parseInt(await responseForLastId.text());
     const responseForServerData = await fetch("/server_data");
     var serverData = await responseForServerData.json();
-    var trade_types = ["trade_preset", "trade_custom"]
+    var trade_types = ["tradePreset", "tradeCustom"]
     serverData.forEach(item => {
         if (trade_types.includes(item.type))
             addTradeCard(false, item);
@@ -21,10 +21,10 @@ async function updateServer(card, action) {
 
     var tradeData = {
         "id": id,
-        "type": type === "preset" ? "trade_preset" : "trade_custom",
+        "type": type,
         "active": active
     };
-    if (type === "preset")
+    if (type === "tradePreset")
         tradeData["name"] = preset;
     else
         tradeData["content"] = content;
@@ -76,14 +76,13 @@ function addTradeCard(isNew, item) {
     }
     else {
         id.value = item.id;
+        tradeSelect.value = item.type;
         switch (item.type) {
-            case "trade_preset":
-                tradeSelect.value = "preset";
+            case "tradePreset":
                 tradePresetDiv.hidden = false;
                 tradePreset.value = item.name;
                 break;
-            case "trade_custom":
-                tradeSelect.value = "custom";
+            case "tradeCustom":
                 tradeContentDiv.hidden = false;
                 tradeContent.value = item.content;
                 break;
@@ -119,11 +118,11 @@ function addTradeCard(isNew, item) {
             cardEnablerSwitch.checked = false;
             changeColorAndLabel(false);
             switch (selectedTrade) {
-                case "preset":
+                case "tradePreset":
                     showElements(tradePresetDiv);
                     hideElements(tradeContentDiv);
                     break;
-                case "custom":
+                case "tradeCustom":
                     showElements(tradeContentDiv);
                     hideElements(tradePresetDiv);
                     break;
