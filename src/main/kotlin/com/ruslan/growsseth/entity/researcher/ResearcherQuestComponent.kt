@@ -189,7 +189,7 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
                 tent.remove(level, replaceUndergroundEntrance = true)
             }
             if (!entity.donkeyWasBorrowed) {
-                Researcher.removeDonkey(entity, entity.level() as ServerLevel)
+                ResearcherDonkey.removeDonkey(entity, entity.level() as ServerLevel)
             }
             entity.discard()
         }

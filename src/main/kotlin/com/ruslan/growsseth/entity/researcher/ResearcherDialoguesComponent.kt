@@ -61,12 +61,14 @@ class ResearcherDialoguesComponent(
         )
     }
 
+    private val combat = researcher.combat
+
     // NBT data
     // First key is player UUID
     private var playersMadeMess: MutableSet<UUID> = mutableSetOf()
     private var playersInCellar: MutableSet<UUID> = mutableSetOf()
 
-    override var secondsForAttackRepeat = researcher.timeToCalmDown / 20
+    override var secondsForAttackRepeat = combat.timeToCalmDown / 20
 
     override fun triggerDialogue(
         player: ServerPlayer,
@@ -79,7 +81,7 @@ class ResearcherDialoguesComponent(
                 val dialoguesForWhenAggressive =
                     listOf(BasicDialogueEvents.DEATH, BasicDialogueEvents.LOW_HEALTH, PLAYER_CHEATS, KILL_PLAYER, BasicDialogueEvents.HIT_BY_PLAYER)
                 if (dialoguesForWhenAggressive.all{ it != dialogueEvent } ||
-                    (dialogueEvent == BasicDialogueEvents.HIT_BY_PLAYER && researcher.wantsToKillPlayer(player)))
+                    (dialogueEvent == BasicDialogueEvents.HIT_BY_PLAYER && combat.wantsToKillPlayer(player)))
                     return false
             }
         return super.triggerDialogue(player, *dialogueEvents, eventParam=eventParam, ignoreEventConditions=ignoreEventConditions)
@@ -134,7 +136,7 @@ class ResearcherDialoguesComponent(
         if (event == BasicDialogueEvents.HIT_BY_PLAYER) {
             eventLastTriggerTime[event] = entity.level().gameTime
             eventTriggerCount[event] = eventTriggerCount.getOrDefault(event, 0) + 1
-            eventCloseTriggerCount[event] = researcher.hitCounter.getOrDefault(player, 0).toInt() + 1       // + 1 because can't put 0 in afterCloseRepeatsMax
+            eventCloseTriggerCount[event] = combat.hitCounter.getOrDefault(player, 0).toInt() + 1       // + 1 because can't put 0 in afterCloseRepeatsMax
             RuinsOfGrowsseth.logDev(org.apache.logging.log4j.Level.INFO, "Triggered $event ${eventTriggerCount[event]} times (close ${eventCloseTriggerCount[event] ?: 0})")
         }
         else
@@ -165,9 +167,9 @@ class ResearcherDialoguesComponent(
     }
 
     override fun onPlayerArrive(player: ServerPlayer) {
-        if (researcher.lastKilledPlayers.contains(player)) {
+        if (combat.lastKilledPlayers.contains(player)) {
             triggerDialogue(player, PLAYER_ARRIVE_LAST_KILLED)
-            researcher.lastKilledPlayers.remove(player)
+            combat.lastKilledPlayers.remove(player)
         }
         else
             super.onPlayerArrive(player)

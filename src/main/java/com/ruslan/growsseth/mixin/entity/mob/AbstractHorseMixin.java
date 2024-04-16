@@ -1,7 +1,7 @@
 package com.ruslan.growsseth.mixin.entity.mob;
 
 import com.ruslan.growsseth.Constants;
-import com.ruslan.growsseth.entity.researcher.Researcher.ResearcherDonkey;
+import com.ruslan.growsseth.entity.researcher.ResearcherDonkey;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;

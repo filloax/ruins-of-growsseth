@@ -9,6 +9,7 @@ import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.entity.GrowssethEntities
 import com.ruslan.growsseth.entity.SpawnTimeTracker
 import com.ruslan.growsseth.entity.researcher.Researcher
+import com.ruslan.growsseth.entity.researcher.ResearcherDonkey
 import com.ruslan.growsseth.entity.researcher.ResearcherQuestComponent
 import com.ruslan.growsseth.structure.pieces.ResearcherTent
 import com.ruslan.growsseth.networking.CustomToastPacket
@@ -317,7 +318,7 @@ object GrowssethExtraEvents {
                 }
 
                 // Remove donkey but only if close to tent
-                Researcher.removeDonkey(0, server.overworld()) {
+                ResearcherDonkey.removeDonkey(0, server.overworld()) {
                     it.position().distanceTo(tent.boundingBox.center.center) < 40.0
                 }
 
@@ -372,7 +373,7 @@ object GrowssethExtraEvents {
                 tent.remove(level, replaceUndergroundEntrance = true)
             }
             if (!researcher.donkeyWasBorrowed) {
-                Researcher.removeDonkey(researcher, level)
+                ResearcherDonkey.removeDonkey(researcher, level)
             }
             researcher.discard()
 

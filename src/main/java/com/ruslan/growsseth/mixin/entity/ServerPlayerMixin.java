@@ -17,6 +17,6 @@ public class ServerPlayerMixin {
     @Inject(at = @At("HEAD"), method = "die")
     private void killedByResearcher(DamageSource damageSource, CallbackInfo ci){
         if (damageSource.getEntity() instanceof Researcher researcher)
-            researcher.onPlayerKilled(player);
+            researcher.getCombat().onPlayerKilled(player);
     }
 }

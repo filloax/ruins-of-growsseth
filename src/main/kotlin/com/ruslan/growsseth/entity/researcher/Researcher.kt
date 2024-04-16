@@ -1,6 +1,7 @@
 package com.ruslan.growsseth.entity.researcher
 
 import com.filloax.fxlib.EventUtil
+import com.filloax.fxlib.entity.delegate
 import com.filloax.fxlib.entity.getPersistData
 import com.filloax.fxlib.getStructTagOrKey
 import com.filloax.fxlib.nbt.getCompoundOrNull
@@ -145,11 +146,12 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             "dinnerbone" to false
         )
 
+        val SPEED_MODIFIER_DRINKING = AttributeModifier(UUID.randomUUID(), "Researcher drinking speed penalty", -0.2, AttributeModifier.Operation.MULTIPLY_TOTAL)
+        // Used when fighting someone that is not running away (using this instead of sprinting for control over amount):
+        val SPEED_MODIFIER_FIGHTING = AttributeModifier(UUID.randomUUID(), "Researcher fighting speed boost", 0.5, AttributeModifier.Operation.MULTIPLY_TOTAL)
+
         // Used for drinking potions:
         private val DATA_USING_ITEM: EntityDataAccessor<Boolean> = SynchedEntityData.defineId(Researcher::class.java, EntityDataSerializers.BOOLEAN)
-        private val SPEED_MODIFIER_DRINKING = AttributeModifier(UUID.randomUUID(), "Researcher drinking speed penalty", -0.2, AttributeModifier.Operation.MULTIPLY_TOTAL)
-        // Used when fighting someone that is not running away (using this instead of sprinting for control over amount):
-        private val SPEED_MODIFIER_FIGHTING = AttributeModifier(UUID.randomUUID(), "Researcher fighting speed boost", 0.5, AttributeModifier.Operation.MULTIPLY_TOTAL)
 
         private val DATA_UNHAPPY_COUNTER = SynchedEntityData.defineId(Researcher::class.java, EntityDataSerializers.INT)
         // Next three need to be synched due to trade offers being both on client and server:
@@ -202,59 +204,14 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             }
             return tentStart
         }
-
-        fun removeDonkey(entity: Researcher, level: ServerLevel, predicate: ((Entity) -> Boolean)? = null) {
-            removeDonkey(entity.persistId ?: throw IllegalStateException("Researcher has no persist id $entity"), level)
-        }
-
-        fun removeDonkey(persistId: Int, level: ServerLevel, predicate: ((Entity) -> Boolean)? = null) {
-            val worldData = ResearcherSavedData.get(level.server, persistId)
-            worldData?.donkeyUuid?.let{ uuid ->
-                EventUtil.runOnEntityWhenPossible(level, uuid) {
-                    if (predicate == null || predicate(it)) {
-                        it.discard()
-                        RuinsOfGrowsseth.logDev(org.apache.logging.log4j.Level.INFO, "Removed donkey $uuid")
-                    }
-                }
-            } ?: RuinsOfGrowsseth.LOGGER.warn("Couldn't find donkey to remove!")
-        }
     }
 
 
     /* VARIABLES SECTION */
 
-    private val researcherDagger: ItemStack = ItemStack(GrowssethItems.RESEARCHER_DAGGER)
-
-    private var itemUsingTime = 0
 
     val armPose : IllagerArmPose
         get() = if (this.isAggressive || this.isUsingItem) IllagerArmPose.ATTACKING else IllagerArmPose.CROSSED
-
-    // For teleporting back to tent
-    private var secondsAwayFromTent = 0
-    private val maxSecondsAwayFromTent = 60 * 5
-    private val maxDistanceFromStartingPos = 20
-    private var needsToTpBack = false
-
-    // For cheese prevention
-    private var isStuck: Boolean = false
-    private var stuckCounter: Int = 0
-    private val maxStuckCounter: Int = secondsToTicks(2.0f)
-    private var lastCheckStuckPosition: BlockPos? = blockPosition()
-    private var needsJumpBoost = false
-
-    // For player aggro management
-    var hitCounter: MutableMap<Player, MutableInt> = mutableMapOf()
-    private var angerBuildupTimer: MutableMap<Player, MutableInt> = mutableMapOf()
-    val timeToCalmDown: Int = secondsToTicks(10F)
-    private val maxHitCounter = 3
-    var lastKilledPlayers: MutableList<Player> = mutableListOf()
-
-    private val lowHealthCondition: Boolean
-        get() = health <= maxHealth / 3
-
-    // distance for attacking mobs that are not going after him (if option is active)
-    private val distanceForUnjustifiedAggression: Int = 10
 
     // No lateinit for these three, too many points of failure with Minecraft
     var startingPos: BlockPos? = null
@@ -267,27 +224,13 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     /* If the donkey was borrowed by any player, do not check for specific player
        as there is only one donkey anyway and atm the penalty is shared
        (Treat is as if in multiplayer the researcher treats players as a group) */
-    var donkeyWasBorrowed: Boolean
-        get() = entityData.get(DATA_DONKEY_BORROWED)
-        set(value) = entityData.set(DATA_DONKEY_BORROWED, value)
-    var angryForMess: Boolean
-        get() = entityData.get(DATA_ANGRY_FOR_MESS)
-        set(value) = entityData.set(DATA_ANGRY_FOR_MESS, value)
-    var unhappyCounter: Int
-        get() = entityData.get(DATA_UNHAPPY_COUNTER)
-        set(value) = entityData.set(DATA_UNHAPPY_COUNTER, value)
-    var healed: Boolean
-        get() = entityData.get(DATA_HEALED)
-        set(value) = entityData.set(DATA_HEALED, value)
-    private var showAngryParticles: Boolean
-        get() = entityData.get(DATA_ANGRY_PARTICLES)
-        set(value) = entityData.set(DATA_ANGRY_PARTICLES, value)
-    private var showArrowDeflectParticles: Boolean
-        get() = entityData.get(DATA_DEFLECT_ARROW_PARTICLES)
-        set(value) = entityData.set(DATA_DEFLECT_ARROW_PARTICLES, value)
-    private var showTeleportParticles: Boolean
-        get() = entityData.get(DATA_TELEPORT_PARTICLES)
-        set(value) = entityData.set(DATA_TELEPORT_PARTICLES, value)
+    var donkeyWasBorrowed: Boolean by entityData.delegate(DATA_DONKEY_BORROWED)
+    var angryForMess: Boolean by entityData.delegate(DATA_ANGRY_FOR_MESS)
+    var unhappyCounter: Int by entityData.delegate(DATA_UNHAPPY_COUNTER)
+    var healed: Boolean by entityData.delegate(DATA_HEALED)
+    var showAngryParticles: Boolean by entityData.delegate(DATA_ANGRY_PARTICLES)
+    var showArrowDeflectParticles: Boolean by entityData.delegate(DATA_DEFLECT_ARROW_PARTICLES)
+    var showTeleportParticles: Boolean by entityData.delegate(DATA_TELEPORT_PARTICLES)
 
     val storedMapLocations = mutableMapOf<String, MapMemory>()
     val diary = if (!this.level().isClientSide()) ResearcherDiaryComponent(this) else null
@@ -297,6 +240,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         // on conversion end, before it applies the data
         ResearcherQuestComponent(this).also { it.data.active = false }
     } else null
+    val combat = ResearcherCombatComponent(this)
 
     // World time the researcher was spawned first at
     // (used in clearoldresearchers remote command)
@@ -309,17 +253,14 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         }
     private var _spawnTime: Long? = null
 
-    private val tentStructureStart: StructureStart?
-        get() {
-            tentCache?.let { return it.getOrNull() }
-            val tent = findTent()
-            tentCache = Optional.ofNullable(tent)
-            return tent
-        }
-
     val tent: ResearcherTent?
         get() {
-            val firstPiece = tentStructureStart?.pieces?.get(0)
+            // Only search once
+            val start = tentCache?.getOrNull()
+                ?: findTent()
+            tentCache = Optional.ofNullable(start)
+
+            val firstPiece = start?.pieces?.get(0)
             if (firstPiece is ResearcherTent?) {
                 return  firstPiece
             } else {
@@ -339,11 +280,20 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     private var tentCache: Optional<StructureStart>? = null
     private var lastRefusedTradeTimer: Int = 0
 
-    data class MapMemory(
-        val pos: BlockPos,
-        val struct: Either<TagKey<Structure>, ResourceKey<Structure>>,
-        val mapId: Int,
-    )
+    private var itemUsingTime = 0
+
+    // For teleporting back to tent
+    private var secondsAwayFromTent = 0
+    private val maxSecondsAwayFromTent = 60 * 5
+    private val maxDistanceFromStartingPos = 20
+    private var needsToTpBack = false
+
+    // For cheese prevention
+    internal var isStuck: Boolean = false
+    internal var stuckCounter: Int = 0
+    internal val maxStuckCounter: Int = secondsToTicks(2.0f)
+    internal var lastCheckStuckPosition: BlockPos? = blockPosition()
+    internal var needsJumpBoost = false
 
 
     /* METHODS SECTION */
@@ -362,23 +312,11 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
     override fun registerGoals() {
         goalSelector.addGoal(1, FloatGoal(this))
-        goalSelector.addGoal(2, ResearcherAttackGoal(this, 0.7, true))
         goalSelector.addGoal(3, MoveTowardsRestrictionGoal(this, 0.6))
         goalSelector.addGoal(4, ResearcherRandomStrollGoal(this, 0.6))
         goalSelector.addGoal(5, ResearcherLookAtPlayerGoal(this, 8f, 0.1f))
 
-        targetSelector.addGoal(1, NearestAttackableTargetGoal(this, Player::class.java, 5, true, true)
-            { player -> wantsToKillPlayer((player as Player)) })
-        if (ResearcherConfig.researcherInteractsWithMobs) {
-            targetSelector.addGoal(2, ResearcherHurtByTargetGoal(this))
-            targetSelector.addGoal(3, NearestAttackableTargetGoal(this, Mob::class.java, 5, false, true)
-                { livingEntity: LivingEntity? -> livingEntity is Mob && livingEntity.target == this })
-            if (ResearcherConfig.researcherStrikesFirst)
-                targetSelector.addGoal(3, NearestAttackableTargetGoal(this, Mob::class.java, 5, true, true)
-                    { livingEntity: LivingEntity? -> ( (livingEntity != null && distanceTo(livingEntity) < distanceForUnjustifiedAggression) &&
-                        (livingEntity is Raider || livingEntity is Vex || livingEntity is Zombie || livingEntity is AbstractSkeleton) ) }
-                )
-        }
+        combat.addCombatGoals(goalSelector, targetSelector)
     }
 
     // NOTE: Ran only once at first spawn
@@ -401,29 +339,8 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         quest?.data?.active = true
         this.startingPos = blockPosition()
 
-        // Set donkey uuid to saved data (replacing old one if tent was placed again),
-        // and read saved data if present from old researchers
         if (savedData != null) {
-            val serverLevel = level() as ServerLevel
-            // Tent is saved to server after spawn
-            EventUtil.runAtServerTickEnd { _ ->
-                val savedData2 = ResearcherSavedData.get(serverLevel.server, id)
-                    ?: run {
-                        RuinsOfGrowsseth.LOGGER.error("Saved data not present after tick end for researcher (id $id)")
-                        return@runAtServerTickEnd
-                    }
-                tent?.let {
-                    val donkey = it.initDonkeyUuid?.let { serverLevel.getEntity(it) }
-                    // In case donkey was removed (researcher spawned later in testing manually, etc.)
-                        ?: serverLevel.getEntitiesOfClass(Donkey::class.java, AABB.ofSize(position(), 25.0, 10.0, 25.0))
-                            .firstOrNull { it.tags.contains(Constants.TAG_RESEARCHER_DONKEY) }
-                    if (donkey != null) {
-                        savedData2.donkeyUuid = donkey.uuid
-                        savedData2.setDirty()
-                        donkey.getPersistData().putInt(Constants.DATA_DONKEY_RESEARCHER_ID, id)
-                    }
-                } ?: RuinsOfGrowsseth.LOGGER.warn("No tent found on researcher spawn")
-            }
+            startTrackingDonkey()
 
             if (savedData.data.allKeys.isNotEmpty()) {
                 readSavedData(savedData)
@@ -444,6 +361,31 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         this.populateDefaultEquipmentSlots(randomSource, difficulty)    // for equipping dagger
 
         return spawnGroupData
+    }
+
+    // Set donkey uuid to saved data (replacing old one if tent was placed again),
+    // and read saved data if present from old researchers
+    private fun startTrackingDonkey() {
+        val serverLevel = level() as ServerLevel
+        // Tent is saved to server after spawn
+        EventUtil.runAtServerTickEnd { _ ->
+            val savedData2 = ResearcherSavedData.get(serverLevel.server, id)
+                ?: run {
+                    RuinsOfGrowsseth.LOGGER.error("Saved data not present after tick end for researcher (id $id)")
+                    return@runAtServerTickEnd
+                }
+            tent?.let {
+                val donkey = it.initDonkeyUuid?.let { serverLevel.getEntity(it) }
+                // In case donkey was removed (researcher spawned later in testing manually, etc.)
+                    ?: serverLevel.getEntitiesOfClass(Donkey::class.java, AABB.ofSize(position(), 25.0, 10.0, 25.0))
+                        .firstOrNull { it.tags.contains(Constants.TAG_RESEARCHER_DONKEY) }
+                if (donkey != null) {
+                    savedData2.donkeyUuid = donkey.uuid
+                    savedData2.setDirty()
+                    donkey.getPersistData().putInt(Constants.DATA_DONKEY_RESEARCHER_ID, id)
+                }
+            } ?: RuinsOfGrowsseth.LOGGER.warn("No tent found on researcher spawn")
+        }
     }
 
     override fun aiStep() {
@@ -624,72 +566,10 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             }
         }
 
-        aggressiveAiStep()
+        combat.aggressiveAiStep()
 
         if (lastRefusedTradeTimer > 0)
             lastRefusedTradeTimer--
-    }
-
-    // Everything that needs to be checked every tick (or less) related to aggressiveness
-    private fun aggressiveAiStep() {
-        if (isAggressive) {
-            if (this.tickCount % 10 == 0) {
-                if (hasEffect(GrowssethEffects.SERENITY))
-                    removeEffect(GrowssethEffects.SERENITY)
-                if (target !is WitherBoss)
-                    addEffect(MobEffectInstance(GrowssethEffects.FIGHTING_SPIRIT, 15, 0, false, false))
-
-                // Hardcoded regen when fighting mobs and being cheesed by the player:
-                if ((!ResearcherConfig.immortalResearcher && ResearcherConfig.researcherAntiCheat &&
-                    hasEffect(MobEffects.DAMAGE_RESISTANCE) && hasEffect(MobEffects.MOVEMENT_SLOWDOWN))
-                    || (target !is Player && target !is WitherBoss)) {
-                    addEffect(MobEffectInstance(GrowssethEffects.JUSTICE, 15, 0, false, false))
-                }
-            }
-
-            if (target != null && target!!.y >= y + 2 && distanceTo(target!!) < 4) {
-                needsJumpBoost = true
-                if (onGround())
-                    jumpFromGround()
-            } else
-                needsJumpBoost = false
-
-            // Used for cheese prevention:
-            if (ResearcherConfig.researcherAntiCheat) {
-                if (stuckCounter < maxStuckCounter &&
-                    tickCount - lastHurtByMobTimestamp < secondsToTicks(2.0f) &&
-                    tickCount - lastHurtMobTimestamp > secondsToTicks(5.0f) &&
-                    blockPosition().distSqr(lastCheckStuckPosition!!) < 4
-                )
-                    stuckCounter++
-                else {
-                    lastCheckStuckPosition = blockPosition()
-                    stuckCounter = 0
-                    isStuck = false
-                }
-            }
-        }
-
-        val attributeInstance = getAttribute(Attributes.MOVEMENT_SPEED)
-        if (isAggressive && (tickCount - lastHurtByMobTimestamp) in 0..secondsToTicks(3.0f)) {
-            // if enemy is fighting speed up (to avoid keeping him back by attacking constantly)
-            attributeInstance!!.removeModifier(SPEED_MODIFIER_FIGHTING.id)
-            attributeInstance.addTransientModifier(SPEED_MODIFIER_FIGHTING)
-        }
-        else
-            attributeInstance!!.removeModifier(SPEED_MODIFIER_FIGHTING.id)
-
-        angerBuildupTimer.forEach { (key, value) ->
-            if (value.toInt() > 0 && !isAggressive)
-                // Slowly forgive players when not aggressive:
-                angerBuildupTimer[key]!!.decrement()
-            if (value.toInt() == 0) {       // using if (and not else if) since the timer decreases in the tick after the attack
-                hitCounter[key]!!.decrement()
-                angerBuildupTimer[key] =
-                    if (hitCounter[key]!!.toInt() > 0) MutableInt(timeToCalmDown)
-                    else MutableInt(-1)
-            }
-        }
     }
 
     override fun tick() {
@@ -700,39 +580,17 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
     override fun hurt(source: DamageSource, amount: Float): Boolean {
         val attacker = source.entity
-        if (attacker is WitherBoss)
-            return super.hurt(source, amount * 2)
 
-        if (attacker is Player && !attacker.isCreative) {
-            if (level().difficulty != Difficulty.PEACEFUL) {
-                if (lowHealthCondition)
-                    dialogues?.triggerDialogue(attacker as ServerPlayer, BasicDialogueEvents.LOW_HEALTH)
-                else
-                    dialogues?.triggerDialogue(attacker as ServerPlayer, BasicDialogueEvents.HIT_BY_PLAYER)
+        if (attacker is Player && (ResearcherConfig.immortalResearcher || level().difficulty == Difficulty.PEACEFUL))
+            dialogues?.triggerDialogue(attacker as ServerPlayer, ResearcherDialoguesComponent.HIT_BY_PLAYER_IMMORTAL)
 
-                if (!hitCounter.contains(attacker))
-                    hitCounter[attacker] = MutableInt(0)
-                if (!wantsToKillPlayer(attacker)) {
-                    hitCounter[attacker]?.increment()
-                    angerBuildupTimer[attacker] = MutableInt(timeToCalmDown)
-                }
-            }
-            else if (ResearcherConfig.immortalResearcher || level().difficulty == Difficulty.PEACEFUL)
-                dialogues?.triggerDialogue(attacker as ServerPlayer, ResearcherDialoguesComponent.HIT_BY_PLAYER_IMMORTAL)
-        }
+        val combatRet = combat.hurt(source, amount) { s, a -> super.hurt(s, a) }
 
-        if (isAggressive && source.directEntity is AbstractArrow)
-            if (deflectArrow(source)) {
-                showArrowDeflectParticles = true
-                playSound(GrowssethSounds.DEFLECT_ARROW_SOUND)
-                return false
-            }
-
-        return super.hurt(source, amount)
+        return combatRet ?: super.hurt(source, amount)
     }
 
     override fun mobInteract(player: Player, interactionHand: InteractionHand): InteractionResult? {
-        if (wantsToKillPlayer(player))      // to avoid interaction while fighting
+        if (combat.wantsToKillPlayer(player))      // to avoid interaction while fighting
             return InteractionResult.FAIL
 
         if (this.isAlive && !this.isTrading() && !this.isAggressive) {
@@ -756,7 +614,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
             if (!level().isClientSide) {
                 setTradingPlayer(player)
-                openTradingScreen(player, this.displayName, 1)
+                openTradingScreen(player, this.displayName ?: this.name, 1)
             }
 
             return InteractionResult.sidedSuccess(level().isClientSide)
@@ -981,6 +839,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
     fun renameCheck(newName: String, player: ServerPlayer): InteractionResult {
         if (isAggressive) return InteractionResult.FAIL
+
         val newNameToCheck = newName.trim().lowercase()
         val newNameNoWhitespace = newNameToCheck.replace(Regex("\\s"), "")
         for ((blocklisted, containsCheck) in RENAME_BLACKLIST) {
@@ -997,23 +856,6 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         }
         dialogues?.triggerDialogue(player, BasicDialogueEvents.RENAME, eventParam = newNameNoWhitespace)
         return InteractionResult.PASS
-    }
-
-    fun wantsToKillPlayer(player: Player): Boolean {
-        return (hitCounter.getOrDefault(player, 0).toInt() == maxHitCounter)
-    }
-
-    fun onPlayerKilled(player: ServerPlayer) {
-        hitCounter[player]!!.setValue(0)
-        lastKilledPlayers.add(player)
-        dialogues?.triggerDialogue(player, ResearcherDialoguesComponent.KILL_PLAYER)
-    }
-
-    private fun deflectArrow(source: DamageSource) : Boolean {
-        val arrow = source.directEntity as AbstractArrow
-        val directionToArrow = arrow.position().subtract(position()).normalize()
-        val dotProduct = directionToArrow.dot(lookAngle.normalize())
-        return dotProduct > 0.5
     }
 
     private fun addParticlesAroundSelf(particleOption: ParticleOptions, minCount: Int, maxCount: Int, yOffset: Double) {
@@ -1088,74 +930,19 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     }
 
     override fun populateDefaultEquipmentSlots(random: RandomSource, difficulty: DifficultyInstance) {
-        researcherDagger.enchant(Enchantments.UNBREAKING, 3)
-        researcherDagger.enchant(Enchantments.MENDING, 1)
-        this.setItemSlot(EquipmentSlot.MAINHAND, researcherDagger)
+        this.setItemSlot(EquipmentSlot.MAINHAND, combat.createWeapon())
     }
 
     override fun dropCustomDeathLoot(damageSource: DamageSource, looting: Int, hitByPlayer: Boolean) {
-        researcherDagger.enchant(Enchantments.SMITE, 5)       // smite only on drop to prevent exploits
-        researcherDagger.damageValue = 0
-        val itemEntity = ItemEntity(level(), position().x, position().y, position().z, researcherDagger)
+        val itemEntity = ItemEntity(level(), position().x, position().y, position().z, ItemStack(GrowssethItems.RESEARCHER_DAGGER).also { dagger ->
+            dagger.enchant(Enchantments.SMITE, 5)       // smite only on drop to prevent exploits
+        })
         level().addFreshEntity(itemEntity)
     }
 
-
-    /* Goal methods */
-
-    class ResearcherRandomStrollGoal(private val researcher: Researcher, speedModifier: Double)  :
-        WaterAvoidingRandomStrollGoal(researcher, speedModifier) {
-        override fun canUse(): Boolean {
-            if (!researcher.metPlayer || researcher.isTrading() || researcher.dialogues?.nearbyPlayers()?.isNotEmpty() != false) {
-                return false
-            }
-            return super.canUse()
-        }
-
-        override fun start() {
-            // 0 accuracy to reduce chance of spinning
-            mob.navigation.moveTo(mob.navigation.createPath(wantedX, wantedY, wantedZ, 0), speedModifier)
-        }
+    internal fun jumpFromGroundAccess() {
+        jumpFromGround()
     }
-
-    class ResearcherLookAtPlayerGoal(private val researcher: Researcher, lookDistance: Float, lookChance: Float) :
-        LookAtPlayerGoal(researcher, Player::class.java, lookDistance, lookChance) {
-        override fun canUse(): Boolean {
-            if (researcher.isTrading()) {
-                lookAt = researcher.tradingPlayer
-                return true
-            }
-            return super.canUse()
-        }
-    }
-
-    class ResearcherAttackGoal(mob: Researcher, speedModifier: Double, private val followingTargetEvenIfNotSeen: Boolean) :
-        MeleeAttackGoal(mob, speedModifier, followingTargetEvenIfNotSeen) {
-
-        override fun canContinueToUse(): Boolean {
-            val livingEntity = mob.target
-            return if (livingEntity == null) {
-                false
-            } else if (!livingEntity.isAlive) {
-                false
-            } else if (!followingTargetEvenIfNotSeen) {
-                !mob.navigation.isDone
-            // Removed the check for being away from the restriction
-            } else {
-                livingEntity !is Player || !livingEntity.isSpectator() && !livingEntity.isCreative
-            }
-        }
-    }
-
-    class ResearcherHurtByTargetGoal(mob: PathfinderMob, vararg toIgnoreDamage: Class<*>?):
-        HurtByTargetGoal(mob, *toIgnoreDamage) {
-        override fun canUse(): Boolean {
-            if (mob.lastHurtByMob is Player)    // players are treated separately
-                return false
-            return super.canUse()
-        }
-    }
-
 
     /* OBJECTS */
 
@@ -1245,26 +1032,9 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         }
     }
 
-    object ResearcherDonkey {
-        @JvmStatic
-        fun shouldProtectDonkey(level: Level, entity: Entity): Boolean {
-            if (!level.isClientSide()) {
-                val pos = entity.blockPosition()
-                val serverLevel = level as ServerLevel
-                val structures = serverLevel.structureManager()
-
-                // Check if position or nearby positions (only checking corners for simplicity) are inside tent
-                val checkArea = BoundingBox(pos.x - 3, pos.y - 2, pos.z - 3, pos.x + 3, pos.y + 2, pos.z + 3)
-                val checkPoints = mutableListOf(pos).also { checkArea.forAllCorners(it::add) }
-
-                for (checkPos in checkPoints) {
-                    if (structures.getStructureAt(checkPos, TENT_STRUCTURE).isValid) {
-                        return true
-                    }
-                }
-            }
-            return false
-        }
-    }
-
+    data class MapMemory(
+        val pos: BlockPos,
+        val struct: Either<TagKey<Structure>, ResourceKey<Structure>>,
+        val mapId: Int,
+    )
 }
