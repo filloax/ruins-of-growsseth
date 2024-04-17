@@ -23,7 +23,7 @@ In **"gives"** va l'item che si vuole dare con lo scambio (vedere sotto per il f
 *   **"noNotification"** (se impostato a _true_) non mostra la notifica in gioco quando lo scambio viene creato;
 *   **"replace"** (se impostato a _true_) sostituisce altri scambi a priorità più bassa che offrono lo stesso oggetto.
 
-Al posto dei commenti con "TradeItemEntry" bisogna inserire un oggetto JSON con questo formato:
+Al posto dei commenti con "<u>TradeItemEntry</u>" bisogna inserire un oggetto JSON con questo formato:
 
     {
         "id": "minecraft:stick",
@@ -32,7 +32,7 @@ Al posto dei commenti con "TradeItemEntry" bisogna inserire un oggetto JSON con 
 
 In **"id"** va l'id dell'item che si vuole dare con lo scambio, mentre in **"amount"** va la quantità offerta (se l'item sta in "gives") o richiesta (se l'item sta in "wants").
 
-Nota 1: se l'oggetto venduto è una mappa del tesoro (per strutture vanilla o della mod), bisogna aggiungere ai valori dell'item un elemento "map" con questo formato:
+<u>Nota 1</u>: se l'oggetto venduto è una mappa del tesoro (per strutture vanilla o della mod), bisogna aggiungere ai valori dell'item un elemento "map" con questo formato:
 
         "map": {
             "name": "Mappa per la fortezza",
@@ -60,7 +60,7 @@ I seguenti campi sono invece opzionali:
 *   **"description"** è la descrizione dell'oggetto (quello che appare sotto il nome quando si passa il mouse sopra) e può essere composta da più righe (se si vuole usare una riga sola si può anche usare una stringa al posto della lista);
 *   **"scale"** è lo zoom della mappa, più il valore è alto e più ampia sarà l'area mostrata. Va da 1 a 4 come per le mappe vanilla.
 
-Nota 2: se si vuole vendere uno dei **diari del ricercatore** presenti nella mod si deve aggiungere ai valore dell'item questo elemento:
+<u>Nota 2</u>: se si vuole vendere uno dei **diari del ricercatore** presenti nella mod si deve aggiungere ai valore dell'item questo elemento:
 
         "diaryId": "enchantment_dictionary"
 
@@ -86,4 +86,4 @@ Per concludere, ecco un esempio di scambio in cui si offrono 15 TNT per 3 baston
         "priority":100
     }
 
-Nota: gli scambi del ricercatore (a differenza di altri eventi che vengono attivati una volta sola) vengono caricati nel gioco ogni volta che la mod riceve i dati dal sito, quindi una volta attivati non andrebbero toccati finché non si decide di modificarli o disattivarli.
+<u>Nota</u>: gli scambi del ricercatore (a differenza di altri eventi che vengono attivati una volta sola) vengono caricati nel gioco ogni volta che la mod riceve i dati dal sito, quindi una volta attivati non andrebbero toccati finché non si decide di modificarli o disattivarli.
