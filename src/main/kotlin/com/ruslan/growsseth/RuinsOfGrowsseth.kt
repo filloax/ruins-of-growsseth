@@ -96,7 +96,7 @@ object RuinsOfGrowsseth : ModInitializer {
             })
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES)
             .register(ModifyEntries {
-                it.addAfter(Items.MUSIC_DISC_RELIC, GrowssethItems.DISC_SEGA_DI_NIENTE)
+                it.addAfter(Items.MUSIC_DISC_PIGSTEP, GrowssethItems.DISC_SEGA_DI_NIENTE)
                 it.addAfter(GrowssethItems.DISC_SEGA_DI_NIENTE, GrowssethItems.DISC_GIORGIO_CUBETTI)
                 it.addAfter(GrowssethItems.DISC_GIORGIO_CUBETTI, GrowssethItems.DISC_GIORGIO_LOFI)
                 it.addAfter(GrowssethItems.DISC_GIORGIO_LOFI, GrowssethItems.DISC_GIORGIO_LOFI_INST)
