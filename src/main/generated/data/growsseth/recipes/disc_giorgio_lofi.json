@@ -1,18 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "minecraft:crafting_shapeless",
   "category": "misc",
-  "key": {
-    "A": {
+  "ingredients": [
+    {
       "item": "minecraft:amethyst_shard"
     },
-    "O": {
+    {
       "item": "growsseth:disc_giorgio_lofi_inst"
     }
-  },
-  "pattern": [
-    "AAA",
-    "AOA",
-    "AAA"
   ],
   "result": {
     "item": "growsseth:disc_giorgio_lofi"

@@ -29,7 +29,7 @@ import net.minecraft.data.models.model.ModelTemplates
 import net.minecraft.data.recipes.RecipeCategory
 import net.minecraft.data.recipes.RecipeOutput
 import net.minecraft.data.recipes.RecipeProvider
-import net.minecraft.data.recipes.ShapedRecipeBuilder
+import net.minecraft.data.recipes.ShapelessRecipeBuilder
 import net.minecraft.data.recipes.packs.VanillaRecipeProvider.TrimTemplate
 import net.minecraft.data.tags.InstrumentTagsProvider
 import net.minecraft.data.tags.WorldPresetTagsProvider
@@ -100,13 +100,9 @@ class RecipesProvider(output: FabricDataOutput) : FabricRecipeProvider(output) {
     }
 
     private fun vocalsDiscRecipe(exporter: RecipeOutput, baseDisc: ItemLike, vocalsDisc: ItemLike) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, vocalsDisc)
-            .define('A', Items.AMETHYST_SHARD)
-            .define('O', baseDisc)
-            .pattern("AAA")
-            .pattern("AOA")
-            .pattern("AAA")
-            .showNotification(true)
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, vocalsDisc)
+            .requires(Items.AMETHYST_SHARD)
+            .requires(baseDisc)
             .unlockedBy(RecipeProvider.getHasName(baseDisc), RecipeProvider.has(baseDisc))
             .save(exporter)
     }
