@@ -149,7 +149,7 @@ class ResearcherTent : GrTemplateStructurePiece {
             "donkey" -> {
                 level.level.setBlockAndUpdate(pos, DEFAULT_FENCE.defaultBlockState())
 
-                val donkeyPos = pos.relative(placeSettings().rotation.rotate(Direction.SOUTH)) //hard coded, to improve
+                val donkeyPos = pos.relative(placeSettings().rotation.rotate(Direction.SOUTH))
                 placeEntity(EntityType.DONKEY, donkeyPos, level) { donkey ->
                     leashToBlock(level.level, donkey, pos)
                     donkey.setChest(true)
