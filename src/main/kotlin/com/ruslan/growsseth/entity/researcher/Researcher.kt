@@ -327,16 +327,16 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         goalSelector.addGoal(5, ResearcherLookAtPlayerGoal(this, 8f, 0.1f))
 
 
-        targetSelector.addGoal(1, NearestAttackableTargetGoal(this, Player::class.java, 5, true, true)
+        targetSelector.addGoal(1, NearestAttackableTargetGoal(this, Player::class.java, 0, true, true)
             { player -> combat.wantsToKillPlayer((player as Player)) })
         if (ResearcherConfig.researcherInteractsWithMobs) {
-            targetSelector.addGoal(2, ResearcherHurtByTargetGoal(this))
-            targetSelector.addGoal(3, NearestAttackableTargetGoal(this, Mob::class.java, 5, false, true)
-            { livingEntity: LivingEntity? -> livingEntity is Mob && livingEntity.target == this })
+            targetSelector.addGoal(2, NearestAttackableTargetGoal(this, Mob::class.java, 0, false, true)
+                { livingEntity: LivingEntity? -> livingEntity is Mob && livingEntity.target == this })
+            targetSelector.addGoal(3, ResearcherHurtByTargetGoal(this))
             if (ResearcherConfig.researcherStrikesFirst)
-                targetSelector.addGoal(3, NearestAttackableTargetGoal(this, Mob::class.java, 5, true, true)
-                { livingEntity: LivingEntity? -> ( (livingEntity != null && this.distanceTo(livingEntity) < distanceForUnjustifiedAggression) &&
-                        (livingEntity is Raider || livingEntity is Vex || livingEntity is Zombie || livingEntity is AbstractSkeleton) ) }
+                targetSelector.addGoal(3, NearestAttackableTargetGoal(this, Mob::class.java, 0, true, true)
+                    { livingEntity: LivingEntity? -> ( (livingEntity != null && this.distanceTo(livingEntity) < distanceForUnjustifiedAggression) &&
+                            (livingEntity is Raider || livingEntity is Vex || livingEntity is Zombie || livingEntity is AbstractSkeleton) ) }
                 )
         }
     }
