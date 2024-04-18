@@ -364,19 +364,7 @@ object GrowssethExtraEvents {
         val server = level.server
         val savedData = EventsSavedData.get(server)
         if (!savedData.alreadyRan.contains(id)) {
-            researcher.tent?.let { tent ->
-                // Default to center pos in case of bugs
-                val giftPos = tent.researcherPos ?: tent.boundingBox.center
-
-                ResearcherQuestComponent.spawnRewardChest(level, giftPos, researcher.persistId)
-
-                tent.remove(level, replaceUndergroundEntrance = true)
-            }
-            if (!researcher.donkeyWasBorrowed) {
-                ResearcherDonkey.removeDonkey(researcher, level)
-            }
-            researcher.discard()
-
+            ResearcherQuestComponent.removeTentAndResearcher(researcher)
             savedData.alreadyRan.add(id)
             savedData.setDirty()
         } else {

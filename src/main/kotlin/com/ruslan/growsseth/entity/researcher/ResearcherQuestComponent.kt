@@ -178,27 +178,26 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
             .and(EventTrigger(QuestUpdateEvent.LOAD))
 
         override fun onActivated(entity: Researcher) {
-            entity.tent?.let { tent ->
-                val level = entity.level() as ServerLevel
-
-                // Default to center pos in case of bugs
-                var giftPos = tent.researcherPos ?: tent.boundingBox.center
-
-                spawnRewardChest(level, giftPos, entity.persistId)
-
-                tent.remove(level, replaceUndergroundEntrance = true)
-            }
-            if (!entity.donkeyWasBorrowed) {
-                ResearcherDonkey.removeDonkey(entity, entity.level() as ServerLevel)
-            }
-            entity.discard()
+            removeTentAndResearcher(entity)
         }
     }
 
     companion object {
+        fun removeTentAndResearcher(researcher: Researcher) {
+            val level = researcher.level() as ServerLevel
+            researcher.tent?.let { tent ->
+                val giftPos = tent.boundingBox.center
+                spawnRewardChest(level, giftPos, researcher.persistId)
+                tent.remove(level, replaceUndergroundEntrance = true)
+            }
+            if (!researcher.donkeyWasBorrowed) {
+                ResearcherDonkey.removeDonkey(researcher, level)
+            }
+            researcher.discard()
+        }
+
         fun spawnRewardChest(level: ServerLevel, pos: BlockPos, persistId: Int?) {
-            // The chest is rotated for Cydo's version, otherwise it would be facing in the opposite direction when approached:
-            val chestState: BlockState = Blocks.CHEST.defaultBlockState().rotate(Rotation.CLOCKWISE_180)
+            val chestState: BlockState = Blocks.CHEST.defaultBlockState()
             level.setBlock(pos, chestState, SetBlockFlag.or(
                 SetBlockFlag.NOTIFY_CLIENTS,
                 SetBlockFlag.NO_NEIGHBOR_REACTIONS,
