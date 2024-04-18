@@ -14,11 +14,9 @@ import com.mojang.datafixers.util.Either
 import com.mojang.serialization.Codec
 import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.RuinsOfGrowsseth
-import com.ruslan.growsseth.config.GrowssethConfig
 import com.ruslan.growsseth.config.ResearcherConfig
 import com.ruslan.growsseth.dialogues.BasicDialogueEvents
 import com.ruslan.growsseth.dialogues.DialoguesNpc
-import com.ruslan.growsseth.dialogues.NpcDialoguesComponent
 import com.ruslan.growsseth.effect.GrowssethEffects
 import com.ruslan.growsseth.entity.RefreshableMerchant
 import com.ruslan.growsseth.entity.SpawnTimeTracker
@@ -28,10 +26,8 @@ import com.ruslan.growsseth.entity.researcher.trades.ResearcherTrades
 import com.ruslan.growsseth.http.GrowssethExtraEvents
 import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.quests.QuestOwner
-import com.ruslan.growsseth.sound.GrowssethSounds
 import com.ruslan.growsseth.structure.GrowssethStructures
 import com.ruslan.growsseth.structure.pieces.ResearcherTent
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.core.particles.ParticleTypes
@@ -59,13 +55,12 @@ import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
-import net.minecraft.world.entity.ai.goal.*
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal
+import net.minecraft.world.entity.ai.goal.FloatGoal
+import net.minecraft.world.entity.ai.goal.MoveTowardsRestrictionGoal
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.ai.navigation.PathNavigation
 import net.minecraft.world.entity.ai.navigation.WallClimberNavigation
 import net.minecraft.world.entity.animal.horse.Donkey
-import net.minecraft.world.entity.boss.wither.WitherBoss
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.entity.monster.AbstractIllager.IllagerArmPose
 import net.minecraft.world.entity.monster.AbstractSkeleton
@@ -74,7 +69,6 @@ import net.minecraft.world.entity.monster.Zombie
 import net.minecraft.world.entity.npc.InventoryCarrier
 import net.minecraft.world.entity.npc.Npc
 import net.minecraft.world.entity.player.Player
-import net.minecraft.world.entity.projectile.AbstractArrow
 import net.minecraft.world.entity.raid.Raider
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
@@ -87,19 +81,14 @@ import net.minecraft.world.item.trading.MerchantOffer
 import net.minecraft.world.item.trading.MerchantOffers
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
-import net.minecraft.world.level.dimension.DimensionType
 import net.minecraft.world.level.gameevent.GameEvent
-import net.minecraft.world.level.levelgen.structure.BoundingBox
 import net.minecraft.world.level.levelgen.structure.Structure
 import net.minecraft.world.level.levelgen.structure.StructureStart
 import net.minecraft.world.level.portal.PortalInfo
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
-import org.apache.commons.lang3.mutable.MutableInt
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
-import kotlin.math.max
-import kotlin.math.min
 
 
 class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderMob(entityType, level),
@@ -117,7 +106,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         const val RESEARCHER_XP = 25
         const val WALK_LIMIT_DISTANCE = 15
         const val WALK_LIMIT_DISTANCE_NIGHT = 3
-        const val RESEARCHER_ATTACK_REACH = 0.5     // instead of 0,828 like all other mobs
+        const val RESEARCHER_ATTACK_REACH = 0.7         // default attack reach is 0,828
 
         const val DATA_TAG = "ResearcherData"
         const val PERSIST_ID_TAG = "ResearcherPersistId"    // Separate from data as used to load it
@@ -954,16 +943,9 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     override fun getExperienceReward(): Int { return RESEARCHER_XP }
     override fun canDisableShield(): Boolean { return true }
 
-    override fun getAttackBoundingBox(): AABB? {
-        val entity = this.vehicle
-        val aABB3: AABB
-        if (entity != null) {
-            val aABB = entity.boundingBox
-            val aABB2 = this.boundingBox
-            aABB3 = AABB(min(aABB2.minX, aABB.minX), aABB2.minY, min(aABB2.minZ, aABB.minZ),
-                max(aABB2.maxX, aABB.maxX), aABB2.maxY, max(aABB2.maxZ, aABB.maxZ))
-        } else
-            aABB3 = this.boundingBox
+    override fun getAttackBoundingBox(): AABB {
+        val aABB3: AABB = super.getAttackBoundingBox()
+        aABB3.deflate(0.828, 0.0, 0.828)        // reverting vanilla inflation (approximation)
         return aABB3.inflate(RESEARCHER_ATTACK_REACH, 0.0, RESEARCHER_ATTACK_REACH)
     }
 
