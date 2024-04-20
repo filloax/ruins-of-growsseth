@@ -1,16 +1,7 @@
 {
   "replace": false,
   "values": [
-    "minecraft:savanna",
-    "minecraft:plains",
-    "minecraft:sunflower_plains",
-    "minecraft:birch_forest",
-    "minecraft:dark_forest",
-    "minecraft:forest",
-    "minecraft:taiga",
-    "minecraft:old_growth_birch_forest",
-    "minecraft:meadow",
-    "minecraft:cherry_grove",
-    "minecraft:sparse_jungle"
+    "minecraft:frozen_peaks",
+    "minecraft:stony_peaks"
   ]
 }
