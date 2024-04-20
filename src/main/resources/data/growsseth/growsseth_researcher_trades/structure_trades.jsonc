@@ -367,15 +367,15 @@
                 ]
             }
         ],
-        "forge": [  // unused
+        "abandoned_forge": [
             {
                 "gives": {
                     "id": "growsseth:ruins_map",
                     "amount": 1,
                     "map": {
-                        "structure": "growsseth:forge",
-                        "name": "structure.growsseth.forge.map.name",
-                        "fixedStructureId": "growsseth:forge"
+                        "structure": "growsseth:abandoned_forge",
+                        "name": "structure.growsseth.abandoned_forge.map.name",
+                        "fixedStructureId": "growsseth:abandoned_forge"
                     }
                 },
                 "wants": [

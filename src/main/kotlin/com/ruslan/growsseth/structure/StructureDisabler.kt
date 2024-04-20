@@ -23,7 +23,7 @@ object StructureDisabler {
         GrowssethStructures.BEEKEEPER_HOUSE to StructureConfig::beekeeperHouseEnabled,
         GrowssethStructures.CONDUIT_RUINS to StructureConfig::conduitChurchEnabled,
         GrowssethStructures.ENCHANT_TOWER to StructureConfig::enchantTowerEnabled,
-        GrowssethStructures.FORGE to StructureConfig::forgeEnabled,
+        GrowssethStructures.ABANDONED_FORGE to StructureConfig::forgeEnabled,
         // Doesn't spawn as standalone structure naturally, but also check here
         GrowssethStructures.GOLEM_HOUSE to StructureConfig::golemHouseEnabled,
         GrowssethStructures.NOTEBLOCK_LAB to StructureConfig::noteblockLabEnabled,

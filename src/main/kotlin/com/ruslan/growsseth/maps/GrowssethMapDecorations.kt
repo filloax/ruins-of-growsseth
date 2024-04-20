@@ -26,9 +26,9 @@ object GrowssethMapDecorations {
         "icon_enchant_tower", "textures/map/icon_enchant_tower.png",
         GrowssethStructures.ENCHANT_TOWER,
     )
-    val FORGE = make(
+    val ABANDONED_FORGE = make(
         "icon_forge", "textures/map/icon_forge.png",
-        GrowssethStructures.FORGE,
+        GrowssethStructures.ABANDONED_FORGE,
     )
     val CONDUIT_RUINS = make(
         "icon_conduit_ruins", "textures/map/icon_conduit_ruins.png",

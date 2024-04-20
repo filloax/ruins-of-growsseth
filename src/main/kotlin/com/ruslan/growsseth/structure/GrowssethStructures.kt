@@ -4,7 +4,6 @@ import com.filloax.fxlib.structure.ForcePosJigsawStructure
 import com.ruslan.growsseth.structure.pieces.ResearcherTent
 import com.ruslan.growsseth.structure.structure.ResearcherTentStructure
 import com.ruslan.growsseth.utils.resLoc
-import net.minecraft.core.Registry
 import net.minecraft.core.registries.Registries
 import net.minecraft.data.worldgen.BootstapContext
 import net.minecraft.resources.ResourceKey
@@ -30,7 +29,7 @@ object GrowssethStructures {
     @JvmField
     val ENCHANT_TOWER = key("enchant_tower")
     @JvmField
-    val FORGE = key("forge")    // originally unused
+    val ABANDONED_FORGE = key("abandoned_forge")
     @JvmField
     val CONDUIT_RUINS = key("conduit_ruins")
     @JvmField
