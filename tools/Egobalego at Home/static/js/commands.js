@@ -1,11 +1,11 @@
-var lastId;
+let lastId;
 
 document.addEventListener("DOMContentLoaded", async function () {
     const responseForLastId = await fetch("/last_id");
     lastId = parseInt(await responseForLastId.text());
     const responseForServerData = await fetch("/server_data");
-    var serverData = await responseForServerData.json();
-    var command_types = ["command", "operation"]
+    let serverData = await responseForServerData.json();
+    let command_types = ["command", "operation"]
     serverData.forEach(item => {
         if (command_types.includes(item.type))
             addCommandCard(false, item);
@@ -13,15 +13,15 @@ document.addEventListener("DOMContentLoaded", async function () {
 });
 
 async function updateServer(card, action) {
-    var id = card.querySelector("#card-id").value;
-    var type = card.querySelector("#command-type").value;
-    var content = card.querySelector("#command-content").value;
-    var x = card.querySelector("#x-coord").value;
-    var y = card.querySelector("#y-coord").value;
-    var z = card.querySelector("#z-coord").value;
-    var active = card.querySelector("#card-enabler-switch").checked;
+    let id = card.querySelector("#card-id").value;
+    let type = card.querySelector("#command-type").value;
+    let content = card.querySelector("#command-content").value;
+    let x = card.querySelector("#x-coord").value;
+    let y = card.querySelector("#y-coord").value;
+    let z = card.querySelector("#z-coord").value;
+    let active = card.querySelector("#card-enabler-switch").checked;
 
-    var commandData = {
+    let commandData = {
         "id": id,
         "type": type === "manual" ? "command" : "operation",
         "active": active
@@ -38,7 +38,7 @@ async function updateServer(card, action) {
     }
     commandData = { [action]: [commandData] };
 
-    var xhr = new XMLHttpRequest();
+    let xhr = new XMLHttpRequest();
     xhr.open("POST", "/data_receiver");
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(JSON.stringify(commandData));
@@ -50,35 +50,35 @@ document.getElementById("add-card-button").addEventListener("click", function ()
 
 function addCommandCard(isNew, item) {
     // Add template to top of container
-    var template = document.querySelector("#command-template").content.cloneNode(true);
-    var cardContainer = document.getElementById("card-container");
+    let template = document.querySelector("#command-template").content.cloneNode(true);
+    let cardContainer = document.getElementById("card-container");
     cardContainer.insertBefore(template, cardContainer.firstChild);
 
     // Get template elements
-    var thisCard = document.getElementById("command-card");
+    let thisCard = document.getElementById("command-card");
 
-    var id = thisCard.querySelector("#card-id");
+    let id = thisCard.querySelector("#card-id");
 
-    var warningDiv = thisCard.querySelector("#no-type-warning");
+    let warningDiv = thisCard.querySelector("#no-type-warning");
 
-    var cardEnablerDiv = thisCard.querySelector("#card-enabler");
-    var cardEnablerSwitch = cardEnablerDiv.querySelector("#card-enabler-switch");
-    var cardEnablerLabel = cardEnablerDiv.querySelector("#card-enabler-label");
+    let cardEnablerDiv = thisCard.querySelector("#card-enabler");
+    let cardEnablerSwitch = cardEnablerDiv.querySelector("#card-enabler-switch");
+    let cardEnablerLabel = cardEnablerDiv.querySelector("#card-enabler-label");
 
-    var deleteCardButton = thisCard.querySelector("#delete-card-button");
+    let deleteCardButton = thisCard.querySelector("#delete-card-button");
 
-    var confirmDeletionModal = document.getElementById("modal-confirm-deletion");
-    var deleteButtonModal = document.getElementById("delete-button-modal");
+    let confirmDeletionModal = document.getElementById("modal-confirm-deletion");
+    let deleteButtonModal = document.getElementById("delete-button-modal");
 
-    var commandSelect = thisCard.querySelector("#command-type");
+    let commandSelect = thisCard.querySelector("#command-type");
 
-    var manualCommandDiv = thisCard.querySelector("#manual-command");
-    var commandContent = manualCommandDiv.querySelector("#command-content");
+    let manualCommandDiv = thisCard.querySelector("#manual-command");
+    let commandContent = manualCommandDiv.querySelector("#command-content");
 
-    var coordinatesDiv = thisCard.querySelector("#coordinates");
-    var x = coordinatesDiv.querySelector("#x-coord");
-    var y = coordinatesDiv.querySelector("#y-coord");
-    var z = coordinatesDiv.querySelector("#z-coord");
+    let coordinatesDiv = thisCard.querySelector("#coordinates");
+    let x = coordinatesDiv.querySelector("#x-coord");
+    let y = coordinatesDiv.querySelector("#y-coord");
+    let z = coordinatesDiv.querySelector("#z-coord");
 
     if (isNew) {
         id.value = "command-" + (lastId + 1);
@@ -126,7 +126,7 @@ function addCommandCard(isNew, item) {
     });
 
     commandSelect.addEventListener("change", function () {
-        var selectedCommand = commandSelect.value;
+        let selectedCommand = commandSelect.value;
         if (selectedCommand !== "none") {
             warningDiv.hidden = true;
             cardEnablerDiv.hidden = false;
@@ -172,13 +172,13 @@ function addCommandCard(isNew, item) {
     }
 
     function showElements(...divs) {
-        for (var div of divs) {
+        for (let div of divs) {
             div.hidden = false;
         }
     }
 
     function hideElements(...divs) {
-        for (var div of divs) {
+        for (let div of divs) {
             div.hidden = true;
         }
     }
