@@ -1,11 +1,11 @@
-var lastId;
+let lastId;
 
 document.addEventListener("DOMContentLoaded", async function () {
     const responseForLastId = await fetch("/last_id");
     lastId = parseInt(await responseForLastId.text());
     const responseForServerData = await fetch("/server_data");
-    var serverData = await responseForServerData.json();
-    var communication_types = ["dialogue", "toast", "researcherDiary", "structureBook"]
+    let serverData = await responseForServerData.json();
+    let communication_types = ["dialogue", "toast", "researcherDiary", "structureBook"]
     serverData.forEach(item => {
         if (communication_types.includes(item.type))
             addCommCard(false, item);
@@ -13,17 +13,17 @@ document.addEventListener("DOMContentLoaded", async function () {
 });
 
 async function updateServer(card, action) {
-    var id = card.querySelector("#card-id").value
-    var typeSpecific = card.querySelector("#communication-type").value;
-    var diaryStructure = card.querySelector("#diary-structure").value;
-    var bookStructure = card.querySelector("#book-structure").value;
-    var iconNamespace = card.querySelector("#namespace").value;
-    var iconItemId = card.querySelector("#item-id").value;
-    var title = card.querySelector("#title-text").value;
-    var content = card.querySelector("#content-text").value;
-    var active = card.querySelector("#card-enabler-switch").checked;
+    let id = card.querySelector("#card-id").value
+    let typeSpecific = card.querySelector("#communication-type").value;
+    let diaryStructure = card.querySelector("#diary-structure").value;
+    let bookStructure = card.querySelector("#book-structure").value;
+    let iconNamespace = card.querySelector("#namespace").value;
+    let iconItemId = card.querySelector("#item-id").value;
+    let title = card.querySelector("#title-text").value;
+    let content = card.querySelector("#content-text").value;
+    let active = card.querySelector("#card-enabler-switch").checked;
 
-    var commData = {
+    let commData = {
         "id": id,
         "type": "",
         "content": content,
@@ -55,7 +55,7 @@ async function updateServer(card, action) {
     }
     commData = { [action]: [commData] };
 
-    var xhr = new XMLHttpRequest();
+    let xhr = new XMLHttpRequest();
     xhr.open("POST", "/data_receiver");
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(JSON.stringify(commData));
@@ -67,43 +67,43 @@ document.getElementById("add-card-button").addEventListener("click", function ()
 
 function addCommCard(isNew, item) {
     // Add template to top of container
-    var template = document.querySelector("#communication-template").content.cloneNode(true);
-    var cardContainer = document.getElementById("card-container");
+    let template = document.querySelector("#communication-template").content.cloneNode(true);
+    let cardContainer = document.getElementById("card-container");
     cardContainer.insertBefore(template, cardContainer.firstChild);
 
     // Get template elements
-    var thisCard = document.getElementById("communication-card");
+    let thisCard = document.getElementById("communication-card");
 
-    var id = thisCard.querySelector("#card-id");
+    let id = thisCard.querySelector("#card-id");
 
-    var warningDiv = thisCard.querySelector("#no-type-warning");
+    let warningDiv = thisCard.querySelector("#no-type-warning");
 
-    var cardEnablerDiv = thisCard.querySelector("#card-enabler");
-    var cardEnablerSwitch = cardEnablerDiv.querySelector("#card-enabler-switch");
-    var cardEnablerLabel = cardEnablerDiv.querySelector("#card-enabler-label");
+    let cardEnablerDiv = thisCard.querySelector("#card-enabler");
+    let cardEnablerSwitch = cardEnablerDiv.querySelector("#card-enabler-switch");
+    let cardEnablerLabel = cardEnablerDiv.querySelector("#card-enabler-label");
 
-    var deleteCardButton = thisCard.querySelector("#delete-card-button");
+    let deleteCardButton = thisCard.querySelector("#delete-card-button");
 
-    var confirmDeletionModal = document.getElementById("modal-confirm-deletion");
-    var deleteButtonModal = document.getElementById("delete-button-modal");
+    let confirmDeletionModal = document.getElementById("modal-confirm-deletion");
+    let deleteButtonModal = document.getElementById("delete-button-modal");
 
-    var commSelect = thisCard.querySelector("#communication-type");
+    let commSelect = thisCard.querySelector("#communication-type");
 
-    var researcherStructDiv = thisCard.querySelector("#researcher-diary-struct");
-    var diaryStructure = researcherStructDiv.querySelector("#diary-structure");
+    let researcherStructDiv = thisCard.querySelector("#researcher-diary-struct");
+    let diaryStructure = researcherStructDiv.querySelector("#diary-structure");
 
-    var bookStructDiv = thisCard.querySelector("#structure-books");
-    var bookStructure = bookStructDiv.querySelector("#book-structure");
+    let bookStructDiv = thisCard.querySelector("#structure-books");
+    let bookStructure = bookStructDiv.querySelector("#book-structure");
 
-    var toastIconDiv = thisCard.querySelector("#toast-icon");
-    var iconNamespace = toastIconDiv.querySelector("#namespace");
-    var iconItemId = toastIconDiv.querySelector("#item-id");
+    let toastIconDiv = thisCard.querySelector("#toast-icon");
+    let iconNamespace = toastIconDiv.querySelector("#namespace");
+    let iconItemId = toastIconDiv.querySelector("#item-id");
 
-    var commTitleDiv = thisCard.querySelector("#title");
-    var title = commTitleDiv.querySelector("#title-text");
+    let commTitleDiv = thisCard.querySelector("#title");
+    let title = commTitleDiv.querySelector("#title-text");
 
-    var contentDiv = thisCard.querySelector("#content");
-    var content = contentDiv.querySelector("#content-text");
+    let contentDiv = thisCard.querySelector("#content");
+    let content = contentDiv.querySelector("#content-text");
 
     // Setting card
     if (isNew) {
@@ -160,7 +160,7 @@ function addCommCard(isNew, item) {
     });
 
     commSelect.addEventListener("change", function () {
-        var selectedComm = commSelect.value;
+        let selectedComm = commSelect.value;
         if (selectedComm !== "none") {
             enableCard(selectedComm);
             cardEnablerSwitch.checked = false;
@@ -222,13 +222,13 @@ function addCommCard(isNew, item) {
     }
 
     function showElements(...divs) {
-        for (var div of divs) {
+        for (let div of divs) {
             div.hidden = false;
         }
     }
 
     function hideElements(...divs) {
-        for (var div of divs) {
+        for (let div of divs) {
             div.hidden = true;
         }
     }

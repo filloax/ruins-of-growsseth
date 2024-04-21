@@ -1,10 +1,10 @@
-var lastId;
+let lastId;
 
 document.addEventListener("DOMContentLoaded", async function () {
     const responseForLastId = await fetch("/last_id");
     lastId = parseInt(await responseForLastId.text());
     const responseForServerData = await fetch("/server_data");
-    var serverData = await responseForServerData.json();
+    let serverData = await responseForServerData.json();
     serverData.forEach(item => {
         if (item.type === "structure")
             addStructureCard(false, item);
@@ -12,24 +12,24 @@ document.addEventListener("DOMContentLoaded", async function () {
 });
 
 async function updateServer(card, action) {
-    var id = card.querySelector("#card-id").value;
-    var structure = card.querySelector("#structure-type").value;
-    var golemVariant = card.querySelector("#golem-select").value;
-    var golemZombie = card.querySelector("#golem-zombie-switch").checked;
-    var x = card.querySelector("#x-coord").value;
-    var y = card.querySelector("#y-coord").value;
-    var z = card.querySelector("#z-coord").value;
-    var rotation = card.querySelector("#rotation-select").value;
-    var active = card.querySelector("#card-enabler-switch").checked;
+    let id = card.querySelector("#card-id").value;
+    let structure = card.querySelector("#structure-type").value;
+    let golemVariant = card.querySelector("#golem-select").value;
+    let golemZombie = card.querySelector("#golem-zombie-switch").checked;
+    let x = card.querySelector("#x-coord").value;
+    let y = card.querySelector("#y-coord").value;
+    let z = card.querySelector("#z-coord").value;
+    let rotation = card.querySelector("#rotation-select").value;
+    let active = card.querySelector("#card-enabler-switch").checked;
 
-    var formattedStructure = structure;
+    let formattedStructure = structure;
     if (structure === "growsseth:golem_variants") {
         if (golemZombie)
             formattedStructure = formattedStructure + "/zombie_" + golemVariant;
         else
             formattedStructure = formattedStructure + "/" + golemVariant;
     }
-    var structureData = {
+    let structureData = {
         "id": id,
         "type": "structure",
         "structure": formattedStructure,
@@ -42,7 +42,7 @@ async function updateServer(card, action) {
         structureData["rotation"] = rotation;
     structureData = { [action]: [structureData] };
 
-    var xhr = new XMLHttpRequest();
+    let xhr = new XMLHttpRequest();
     xhr.open("POST", "/data_receiver");
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(JSON.stringify(structureData));
@@ -54,41 +54,41 @@ document.getElementById("add-card-button").addEventListener("click", function ()
 
 function addStructureCard(isNew, item) {
     // Add template to top of container
-    var template = document.querySelector("#structure-template").content.cloneNode(true);
-    var cardContainer = document.getElementById("card-container");
+    let template = document.querySelector("#structure-template").content.cloneNode(true);
+    let cardContainer = document.getElementById("card-container");
     cardContainer.insertBefore(template, cardContainer.firstChild);
 
     // Get template elements
-    var thisCard = document.getElementById("structure-card");
+    let thisCard = document.getElementById("structure-card");
 
-    var id = thisCard.querySelector("#card-id");
+    let id = thisCard.querySelector("#card-id");
 
-    var warningDiv = thisCard.querySelector("#no-type-warning");
+    let warningDiv = thisCard.querySelector("#no-type-warning");
 
-    var cardEnablerDiv = thisCard.querySelector("#card-enabler");
-    var cardEnablerSwitch = cardEnablerDiv.querySelector("#card-enabler-switch");
-    var cardEnablerLabel = cardEnablerDiv.querySelector("#card-enabler-label");
+    let cardEnablerDiv = thisCard.querySelector("#card-enabler");
+    let cardEnablerSwitch = cardEnablerDiv.querySelector("#card-enabler-switch");
+    let cardEnablerLabel = cardEnablerDiv.querySelector("#card-enabler-label");
 
-    var deleteCardButton = thisCard.querySelector("#delete-card-button");
+    let deleteCardButton = thisCard.querySelector("#delete-card-button");
 
-    var confirmDeletionModal = document.getElementById("modal-confirm-deletion");
-    var deleteButtonModal = document.getElementById("delete-button-modal");
+    let confirmDeletionModal = document.getElementById("modal-confirm-deletion");
+    let deleteButtonModal = document.getElementById("delete-button-modal");
 
-    var structurePreview = thisCard.querySelector("#structure-preview");
+    let structurePreview = thisCard.querySelector("#structure-preview");
 
-    var structureSelect = thisCard.querySelector("#structure-type");
+    let structureSelect = thisCard.querySelector("#structure-type");
 
-    var golemVariantDiv = thisCard.querySelector("#golem-variant");
-    var golemVariantSelect = golemVariantDiv.querySelector("#golem-select");
-    var golemZombieSwitch = golemVariantDiv.querySelector("#golem-zombie-switch");
+    let golemVariantDiv = thisCard.querySelector("#golem-variant");
+    let golemVariantSelect = golemVariantDiv.querySelector("#golem-select");
+    let golemZombieSwitch = golemVariantDiv.querySelector("#golem-zombie-switch");
 
-    var coordinatesDiv = thisCard.querySelector("#coordinates");
-    var x = coordinatesDiv.querySelector("#x-coord");
-    var y = coordinatesDiv.querySelector("#y-coord");
-    var z = coordinatesDiv.querySelector("#z-coord");
+    let coordinatesDiv = thisCard.querySelector("#coordinates");
+    let x = coordinatesDiv.querySelector("#x-coord");
+    let y = coordinatesDiv.querySelector("#y-coord");
+    let z = coordinatesDiv.querySelector("#z-coord");
 
-    var rotationDiv = thisCard.querySelector("#rotation");
-    var rotation = rotationDiv.querySelector("#rotation-select");
+    let rotationDiv = thisCard.querySelector("#rotation");
+    let rotation = rotationDiv.querySelector("#rotation-select");
 
     // Setting card
     if (isNew) {
@@ -100,7 +100,7 @@ function addStructureCard(isNew, item) {
         structureSelect.value = item.structure;
         if (item.structure.includes("growsseth:golem_variants")) {
             structureSelect.value = item.structure.split("/")[0];
-            var golemVariant = item.structure.split("/")[1]
+            let golemVariant = item.structure.split("/")[1]
             golemVariantSelect.value = golemVariant.replace("zombie_", "");
             golemZombieSwitch.checked = item.structure.includes("/zombie_");
         }
@@ -116,7 +116,7 @@ function addStructureCard(isNew, item) {
     }
 
     structureSelect.addEventListener("change", function () {
-        var selectedStructure = structureSelect.value;
+        let selectedStructure = structureSelect.value;
         if (selectedStructure !== "growsseth:none") {
             enableCard(selectedStructure)
             cardEnablerSwitch.checked = false;

@@ -1,11 +1,11 @@
-var lastId;
+let lastId;
 
 document.addEventListener("DOMContentLoaded", async function () {
     const responseForLastId = await fetch("/last_id");
     lastId = parseInt(await responseForLastId.text());
     const responseForServerData = await fetch("/server_data");
-    var serverData = await responseForServerData.json();
-    var trade_types = ["tradePreset", "tradeCustom"]
+    let serverData = await responseForServerData.json();
+    let trade_types = ["tradePreset", "tradeCustom"]
     serverData.forEach(item => {
         if (trade_types.includes(item.type))
             addTradeCard(false, item);
@@ -13,13 +13,13 @@ document.addEventListener("DOMContentLoaded", async function () {
 });
 
 async function updateServer(card, action) {
-    var id = card.querySelector("#card-id").value;
-    var type = card.querySelector("#trade-type").value;
-    var preset = card.querySelector("#preset-name").value;
-    var content = card.querySelector("#content-text").value;
-    var active = card.querySelector("#card-enabler-switch").checked;
+    let id = card.querySelector("#card-id").value;
+    let type = card.querySelector("#trade-type").value;
+    let preset = card.querySelector("#preset-name").value;
+    let content = card.querySelector("#content-text").value;
+    let active = card.querySelector("#card-enabler-switch").checked;
 
-    var tradeData = {
+    let tradeData = {
         "id": id,
         "type": type,
         "active": active
@@ -30,7 +30,7 @@ async function updateServer(card, action) {
         tradeData["content"] = content;
     tradeData = { [action]: [tradeData] };
 
-    var xhr = new XMLHttpRequest();
+    let xhr = new XMLHttpRequest();
     xhr.open("POST", "/data_receiver");
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(JSON.stringify(tradeData));
@@ -42,33 +42,33 @@ document.getElementById("add-card-button").addEventListener("click", function ()
 
 function addTradeCard(isNew, item) {
     // Add template to top of container
-    var template = document.querySelector("#trade-template").content.cloneNode(true);
-    var cardContainer = document.getElementById("card-container");
+    let template = document.querySelector("#trade-template").content.cloneNode(true);
+    let cardContainer = document.getElementById("card-container");
     cardContainer.insertBefore(template, cardContainer.firstChild);
 
     // Get template elements
-    var thisCard = document.getElementById("trade-card");
+    let thisCard = document.getElementById("trade-card");
 
-    var id = thisCard.querySelector("#card-id");
+    let id = thisCard.querySelector("#card-id");
 
-    var warningDiv = thisCard.querySelector("#no-type-warning");
+    let warningDiv = thisCard.querySelector("#no-type-warning");
 
-    var cardEnablerDiv = thisCard.querySelector("#card-enabler");
-    var cardEnablerSwitch = cardEnablerDiv.querySelector("#card-enabler-switch");
-    var cardEnablerLabel = cardEnablerDiv.querySelector("#card-enabler-label");
+    let cardEnablerDiv = thisCard.querySelector("#card-enabler");
+    let cardEnablerSwitch = cardEnablerDiv.querySelector("#card-enabler-switch");
+    let cardEnablerLabel = cardEnablerDiv.querySelector("#card-enabler-label");
 
-    var deleteCardButton = thisCard.querySelector("#delete-card-button");
+    let deleteCardButton = thisCard.querySelector("#delete-card-button");
 
-    var confirmDeletionModal = document.getElementById("modal-confirm-deletion");
-    var deleteButtonModal = document.getElementById("delete-button-modal");
+    let confirmDeletionModal = document.getElementById("modal-confirm-deletion");
+    let deleteButtonModal = document.getElementById("delete-button-modal");
 
-    var tradeSelect = thisCard.querySelector("#trade-type");
+    let tradeSelect = thisCard.querySelector("#trade-type");
 
-    var tradePresetDiv = thisCard.querySelector("#preset");
-    var tradePreset = tradePresetDiv.querySelector("#preset-name");
+    let tradePresetDiv = thisCard.querySelector("#preset");
+    let tradePreset = tradePresetDiv.querySelector("#preset-name");
 
-    var tradeContentDiv = thisCard.querySelector("#advanced-trade-content");
-    var tradeContent = tradeContentDiv.querySelector("#content-text");
+    let tradeContentDiv = thisCard.querySelector("#advanced-trade-content");
+    let tradeContent = tradeContentDiv.querySelector("#content-text");
 
     if (isNew) {
         id.value = "trade-" + (lastId + 1);
@@ -111,7 +111,7 @@ function addTradeCard(isNew, item) {
     });
 
     tradeSelect.addEventListener("change", function () {
-        var selectedTrade = tradeSelect.value;
+        let selectedTrade = tradeSelect.value;
         if (selectedTrade !== "none") {
             warningDiv.hidden = true;
             cardEnablerDiv.hidden = false;
@@ -152,13 +152,13 @@ function addTradeCard(isNew, item) {
     }
 
     function showElements(...divs) {
-        for (var div of divs) {
+        for (let div of divs) {
             div.hidden = false;
         }
     }
 
     function hideElements(...divs) {
-        for (var div of divs) {
+        for (let div of divs) {
             div.hidden = true;
         }
     }
