@@ -1,6 +1,7 @@
 package com.ruslan.growsseth.advancements
 
 import com.mojang.datafixers.util.Either
+import com.ruslan.growsseth.ModEvents
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.advancements.criterion.JigsawPiecePredicate
 import com.ruslan.growsseth.advancements.criterion.JigsawPieceTrigger
@@ -92,6 +93,26 @@ object StructureAdvancements {
         return resLoc("growsseth/found_jigsaw/${structKey.location().namespace}/${structKey.location().path}/${target.location().path}")
     }
 
+    private val structureKeyAdvancementRegex = Regex("^growsseth/found_(.+)$")
+    private val structureJigsawPieceAdvancementRegex = Regex("^growsseth/found_jigsaw/([^/]+)/([^/]+)/(.+)$")
+
+    fun getStructureKeyFromAdvancementId(id: ResourceLocation): ResourceKey<Structure>? {
+        if (id.namespace != RuinsOfGrowsseth.MOD_ID) return null
+
+        return structureKeyAdvancementRegex.matchEntire(id.path)?.groupValues?.get(1)?.let { ResourceKey.create(Registries.STRUCTURE, resLoc(it)) }
+    }
+
+    fun getStructureJigsawPieceIdFromAdvancementId(id: ResourceLocation): Pair<ResourceKey<Structure>, ResourceLocation>? {
+        if (id.namespace != RuinsOfGrowsseth.MOD_ID) return null
+
+        val match = structureJigsawPieceAdvancementRegex.matchEntire(id.path)
+        return match?.let { m -> Pair(
+            ResourceKey.create(Registries.STRUCTURE, ResourceLocation(m.groupValues[1], m.groupValues[2])),
+            resLoc(m.groupValues[3]),
+        ) }
+    }
+
+
     fun generateForStructureDetection(consumer: Consumer<AdvancementHolder>) {
         // Root dummy so that the one defined in datagen can be referred to
         val rootDummy = Advancement(
@@ -156,5 +177,22 @@ object StructureAdvancements {
             .groupBy{ it.kind }
             .mapKeys { ResourceKey.create(Registries.STRUCTURE, ResourceLocation("minecraft", "village_${it.key}")) }
             .mapValues { e -> e.value.flatMap { listOf(it.normal, it.zombie) } }
+    }
+
+    object Callbacks {
+        fun onAdvancement(player: ServerPlayer, advancement: AdvancementHolder, criterionString: String) {
+            val (structureId, isJigsaw) = getStructureKeyFromAdvancementId(advancement.id)?.let {
+                Pair(it, false)
+            } ?: getStructureJigsawPieceIdFromAdvancementId(advancement.id)?.let { (structId, pieceId) ->
+                for ((targetStructId, structureHouses) in villageHouseStructures.entries) {
+                    if (structureHouses[structId]?.contains(pieceId) == true) {
+                        return@let Pair(targetStructId, true)
+                    }
+                }
+                return
+            } ?: return
+
+            ModEvents.get().triggerOnStructureFound(player, structureId, isJigsaw)
+        }
     }
 }

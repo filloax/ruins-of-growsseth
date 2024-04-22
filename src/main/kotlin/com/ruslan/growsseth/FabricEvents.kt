@@ -1,6 +1,8 @@
 package com.ruslan.growsseth
 
+import com.filloax.fxlib.platform.ServerEvent
 import com.ruslan.growsseth.advancements.GrowssethAdvancements
+import com.ruslan.growsseth.advancements.StructureAdvancements
 import com.ruslan.growsseth.advancements.criterion.JigsawPieceTrigger
 import com.ruslan.growsseth.config.WebConfig
 import com.ruslan.growsseth.dialogues.BasicDialoguesComponent
@@ -8,7 +10,6 @@ import com.ruslan.growsseth.entity.researcher.CustomRemoteDiaries
 import com.ruslan.growsseth.entity.researcher.Researcher
 import com.ruslan.growsseth.entity.researcher.ResearcherDialoguesComponent
 import com.ruslan.growsseth.entity.researcher.ResearcherDiaryComponent
-import com.ruslan.growsseth.entity.researcher.trades.GameMasterResearcherTradesProvider
 import com.ruslan.growsseth.entity.researcher.trades.GlobalResearcherTradesProvider
 import com.ruslan.growsseth.events.*
 import com.ruslan.growsseth.http.DataRemoteSync
@@ -25,97 +26,79 @@ import com.ruslan.growsseth.worldgen.worldpreset.GrowssethWorldPreset
 import com.ruslan.growsseth.worldgen.worldpreset.LocationNotifListener
 import net.fabricmc.fabric.api.event.lifecycle.v1.*
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents
+import net.fabricmc.fabric.api.networking.v1.PacketSender
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
+import net.minecraft.advancements.AdvancementHolder
+import net.minecraft.core.BlockPos
+import net.minecraft.core.Holder
+import net.minecraft.core.RegistryAccess
+import net.minecraft.core.SectionPos
+import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceKey
+import net.minecraft.server.MinecraftServer
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.server.network.ServerGamePacketListenerImpl
+import net.minecraft.world.InteractionHand
+import net.minecraft.world.InteractionResult
+import net.minecraft.world.InteractionResultHolder
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.Mob
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.BlockItem
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.context.BlockPlaceContext
+import net.minecraft.world.level.ChunkPos
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.StructureManager
+import net.minecraft.world.level.block.entity.BlockEntity
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.chunk.ChunkAccess
+import net.minecraft.world.level.chunk.LevelChunk
+import net.minecraft.world.level.levelgen.RandomState
+import net.minecraft.world.level.levelgen.structure.Structure
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager
 
-object FabricEvents {
-    fun initEvents() {
-        ServerLifecycleEvents.SERVER_STARTING.register { server ->
-            AsyncLocator.handleServerAboutToStartEvent()
-            DataRemoteSync.handleServerAboutToStartEvent(server)
-            Researcher.initServer(server)
-            DataRemoteSync.doSync(WebConfig.dataSyncUrl, server)
-            MixinHelpers.serverInit(server)
-            LiveUpdatesConnection.serverStart(server)
-        }
-        ServerLifecycleEvents.SERVER_STARTED.register { server ->
-            GrowssethWorldPreset.Callbacks.onServerStarted(server)
-            VillageBuildings.onServerStarted(server)
-        }
-        ServerWorldEvents.LOAD.register { server, level ->
-            DataRemoteSync.handleWorldLoaded(server, level)
-            ResearcherDiaryComponent.Callbacks.onServerLevel(level)
-        }
-        ServerLifecycleEvents.SERVER_STOPPING.register { server ->
-            AsyncLocator.handleServerStoppingEvent()
-            DataRemoteSync.handleServerStoppingEvent()
-            GrowssethApiV1.Callbacks.onServerStop(server)
-            GlobalResearcherTradesProvider.Callbacks.onServerStop(server)
-            LiveUpdatesConnection.serverStop(server)
-            GrowssethExtraEvents.onServerStop()
-            CustomRemoteDiaries.onServerStopped()
-            RemoteStructureBooks.onServerStopped()
-        }
-        ServerLifecycleEvents.SERVER_STOPPED.register { server ->
-            LocationNotifListener.Callbacks.onServerStopped(server)
-        }
-        ServerTickEvents.START_SERVER_TICK.register { server ->
-            DataRemoteSync.checkTickSync(WebConfig.dataSyncUrl, server)
-            GrowssethAdvancements.Callbacks.onServerTick(server)
-        }
+object FabricEvents : ModEvents() {
+    override fun onServerStarting(event: ServerEvent) = ServerLifecycleEvents.SERVER_STARTING.register(event)
 
-        ServerTickEvents.END_WORLD_TICK.register { level ->
-            level.players().forEach(::onServerPlayerTick)
-        }
+    override fun onServerStarted(event: ServerEvent) = ServerLifecycleEvents.SERVER_STARTED.register(event)
 
-        ServerChunkEvents.CHUNK_LOAD.register { level, chunk ->
-            GrowssethExtraEvents.Callbacks.onLoadChunk(level, chunk)
-        }
+    override fun onServerStopping(event: ServerEvent) = ServerLifecycleEvents.SERVER_STOPPING.register(event)
 
-        ServerEntityEvents.ENTITY_LOAD.register { entity, level ->
-            QuestComponentEvents.onLoadEntity(entity)
-        }
-        ServerEntityEvents.ENTITY_UNLOAD.register { entity, level ->
-//            QuestComponentEvents.onUnloadEntity(entity, level)
-        }
-        ServerEntityLifecycleEvents.ENTITY_DESTROYED.register { entity, level ->
-            Researcher.Callbacks.onEntityDestroyed(entity, level)
-        }
+    override fun onServerStopped(event: ServerEvent) = ServerLifecycleEvents.SERVER_STOPPED.register(event)
 
-        PlayerBlockBreakEvents.AFTER.register { level, player, pos, state, entity ->
-            ResearcherDialoguesComponent.Callbacks.onBlockBreak(level, player, pos, state, entity)
-        }
-        PlaceBlockEvent.AFTER.register { player, world, pos, placeContext, blockState, item ->
-            ResearcherDialoguesComponent.Callbacks.onPlaceBlock(player, world, pos, placeContext, blockState, item)
-        }
+    override fun onServerLevelLoad(event: (MinecraftServer, ServerLevel) -> Unit) = ServerWorldEvents.LOAD.register(event)
 
-        ServerPlayConnectionEvents.JOIN.register { handler, sender, server ->
-            GlobalResearcherTradesProvider.Callbacks.onServerPlayerJoin(handler, sender, server)
-            GrowssethExtraEvents.onServerPlayerJoin(handler, sender, server)
-            GrowssethWorldPreset.Callbacks.onServerPlayerJoin(handler, sender, server)
-        }
+    override fun onStartServerTick(event: ServerEvent) = ServerTickEvents.START_SERVER_TICK.register(event)
 
-        PlayerAdvancementEvent.EVENT.register { player, advancement, criterionString ->
-            BasicDialoguesComponent.Callbacks.onAdvancement(player, advancement, criterionString)
-        }
+    override fun onEndServerLevelTick(event: (ServerLevel) -> Unit) = ServerTickEvents.END_WORLD_TICK.register(event)
 
-        LeashEvents.FENCE_LEASH.register { mob, pos, player ->
-            Researcher.Callbacks.onFenceLeash(mob, pos, player)
-        }
-        LeashEvents.FENCE_UNLEASH.register { mob, pos ->
-            Researcher.Callbacks.onFenceUnleash(mob, pos)
-        }
+    override fun onLoadChunk(event: (level: ServerLevel, chunk: LevelChunk) -> Unit) = ServerChunkEvents.CHUNK_LOAD.register(event)
 
-        // Register singularly because returns
-        NameTagRenameEvent.BEFORE.register(Researcher.Callbacks::nameTagRename)
-        //AttackEntityCallback.EVENT.register(BasicDialoguesComponent.Callbacks::onAttack)
+    override fun onEntityLoad(event: (entity: Entity, level: ServerLevel) -> Unit) = ServerEntityEvents.ENTITY_LOAD.register(event)
 
-        DisableStructuresEvents.STRUCTURE_GENERATE.register { level, structure, _, _, _, _, _, _, _, _ ->
-            StructureDisabler.Callbacks.shouldDisableStructure(structure, level)
-        }
-    }
+    override fun onEntityUnload(event: (entity: Entity, level: ServerLevel) -> Unit) = ServerEntityEvents.ENTITY_UNLOAD.register(event)
 
-    private fun onServerPlayerTick(player: ServerPlayer) {
-        JigsawPieceTrigger.Callbacks.onServerPlayerTick(player)
-    }
+    override fun onEntityDestroyed(event: (entity: Entity, level: ServerLevel) -> Unit) = ServerEntityLifecycleEvents.ENTITY_DESTROYED.register(event)
+
+    override fun afterPlayerBlockBreak(event: (Level, Player, BlockPos, BlockState, BlockEntity?) -> Unit) = PlayerBlockBreakEvents.AFTER.register(event)
+
+    override fun afterPlayerPlaceBlock(event: (Player, Level, BlockPos, BlockPlaceContext, BlockState, BlockItem) -> Unit) = PlaceBlockEvent.AFTER.register(event)
+
+    override fun onPlayerServerJoin(event: (handler: ServerGamePacketListenerImpl, PacketSender, MinecraftServer) -> Unit) = ServerPlayConnectionEvents.JOIN.register(event)
+
+    override fun onPlayerAdvancement(event: (ServerPlayer, AdvancementHolder, criterionString: String) -> Unit) = PlayerAdvancementEvent.EVENT.register(event)
+
+    override fun onFenceLeash(event: (Mob, BlockPos, ServerPlayer) -> Unit) = LeashEvents.FENCE_LEASH.register(event)
+
+    override fun onFenceUnleash(event: (Mob, BlockPos) -> Unit) = LeashEvents.FENCE_UNLEASH.register(event)
+
+    override fun beforeNameTagRename(event: (target: LivingEntity, Component, ServerPlayer, ItemStack, InteractionHand) -> InteractionResultHolder<ItemStack>) = NameTagRenameEvent.BEFORE.register(event)
+
+    /**
+     * Returns true if structure should not spawn
+     */
+    override fun beforeStructureGenerate(event: (ServerLevel, structure: Holder<Structure>, StructureManager, RegistryAccess, RandomState, StructureTemplateManager, seed: Long, ChunkAccess, ChunkPos, SectionPos) -> Boolean) = DisableStructuresEvents.STRUCTURE_GENERATE.register(event)
 }
