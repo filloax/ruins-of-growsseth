@@ -1,7 +1,7 @@
 {
   "biomes": "#growsseth:has_structure/cave_camp",
   "spawn_overrides": {},
-  "type": "growsseth:jigsaw_forced_pos",
+  "type": "fxlib:jigsaw_forced_pos",
   "start_pool": "growsseth:misc/cave_camp",
   "size": 7,
   "step": "underground_structures",

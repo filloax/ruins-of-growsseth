@@ -1,7 +1,7 @@
 {
   "biomes": "#growsseth:has_structure/noteblock_lab",
   "spawn_overrides": {},
-  "type": "growsseth:jigsaw_forced_pos",
+  "type": "fxlib:jigsaw_forced_pos",
   "start_pool": "growsseth:cydonia/ruins/noteblock_lab/house",
   "size": 7,
   "step": "surface_structures",
