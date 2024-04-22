@@ -1,7 +1,7 @@
 {
   "biomes": "#growsseth:has_structure/none",
   "spawn_overrides": {},
-  "type": "growsseth:jigsaw_forced_pos",
+  "type": "fxlib:jigsaw_forced_pos",
   "start_pool": "growsseth:village/snowy_golem_houses",
   "size": 6,
   "step": "surface_structures",

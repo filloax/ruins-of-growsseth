@@ -1,7 +1,7 @@
 {
   "biomes": "#growsseth:has_structure/abandoned_forge",
   "spawn_overrides": {},
-  "type": "growsseth:jigsaw_forced_pos",
+  "type": "fxlib:jigsaw_forced_pos",
   "start_pool": "growsseth:ruins/abandoned_forge/base",
   "size": 7,
   "step": "surface_structures",
