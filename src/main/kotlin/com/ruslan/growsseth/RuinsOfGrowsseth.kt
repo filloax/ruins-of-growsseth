@@ -42,7 +42,7 @@ object RuinsOfGrowsseth : ModInitializer {
     override fun onInitialize() {
         log(Level.INFO, "Initializing")
 
-        FabricEvents.initEvents()
+        ModEvents.get().initCallbacks()
 
         GrowssethApi.current.init()
         initRegistries()

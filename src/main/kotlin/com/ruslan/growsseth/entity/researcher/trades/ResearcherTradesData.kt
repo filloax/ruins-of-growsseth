@@ -12,6 +12,9 @@ import net.minecraft.world.level.levelgen.structure.Structure
 class ResearcherTradesData (
     var mode: ResearcherTradeMode,
     randomTrades: List<ResearcherTradeEntry>? = null,
+    // Note: trades are generated globally and structures are tracked in the provider,
+    // this is to track last structures the researcher entity remembers in case we need
+    // to do something else there (remove if unused)
     val foundStructures: MutableSet<ResourceKey<Structure>> = mutableSetOf(),
 ) {
     var randomTrades: List<ResearcherTradeEntry>? = randomTrades

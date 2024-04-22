@@ -1,5 +1,119 @@
 {
   "fixedTradesWhenRandom": [],
+  "progressAfterStructure": {},
+  "progressAfterStructureRandom": {
+    "noteblock_lab": [
+      {
+        "gives": {
+          "id": "growsseth:disc_sega_di_niente"
+        },
+        "randomWeight": 0.11111111,
+        "wants": [
+          {
+            "amount": 5,
+            "id": "minecraft:emerald"
+          }
+        ]
+      },
+      {
+        "gives": {
+          "id": "growsseth:disc_giorgio_finding_home"
+        },
+        "randomWeight": 0.11111111,
+        "wants": [
+          {
+            "amount": 5,
+            "id": "minecraft:emerald"
+          }
+        ]
+      },
+      {
+        "gives": {
+          "id": "growsseth:disc_binobinooo_inst"
+        },
+        "randomWeight": 0.11111111,
+        "wants": [
+          {
+            "amount": 5,
+            "id": "minecraft:emerald"
+          }
+        ]
+      },
+      {
+        "gives": {
+          "id": "growsseth:disc_padre_mammonk"
+        },
+        "randomWeight": 0.11111111,
+        "wants": [
+          {
+            "amount": 5,
+            "id": "minecraft:emerald"
+          }
+        ]
+      },
+      {
+        "gives": {
+          "id": "growsseth:disc_abbandonati"
+        },
+        "randomWeight": 0.11111111,
+        "wants": [
+          {
+            "amount": 5,
+            "id": "minecraft:emerald"
+          }
+        ]
+      },
+      {
+        "gives": {
+          "id": "growsseth:disc_missiva_nell_ombra"
+        },
+        "randomWeight": 0.11111111,
+        "wants": [
+          {
+            "amount": 5,
+            "id": "minecraft:emerald"
+          }
+        ]
+      },
+      {
+        "gives": {
+          "id": "growsseth:disc_mice_on_venus"
+        },
+        "randomWeight": 0.11111111,
+        "wants": [
+          {
+            "amount": 5,
+            "id": "minecraft:emerald"
+          }
+        ]
+      },
+      {
+        "gives": {
+          "id": "growsseth:disc_infinite_amethyst"
+        },
+        "randomWeight": 0.11111111,
+        "wants": [
+          {
+            "amount": 5,
+            "id": "minecraft:emerald"
+          }
+        ]
+      },
+      {
+        "gives": {
+          "id": "growsseth:disc_labyrinthine"
+        },
+        "randomWeight": 0.11111111,
+        "wants": [
+          {
+            "amount": 5,
+            "id": "minecraft:emerald"
+          }
+        ]
+      }
+    ]
+  },
+  "progressBeforeStructure": {},
   "randomPool": [
     {
       "gives": {
@@ -134,6 +248,6 @@
       ]
     }
   ],
-  "unlockableByEvent": {},
-  "unlockableByStructure": {}
+  "unlockableByRemoteEvent": {},
+  "unlockableByRemoteStructure": {}
 }

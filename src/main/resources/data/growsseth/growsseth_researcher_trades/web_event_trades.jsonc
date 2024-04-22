@@ -1,5 +1,5 @@
 {
-    "unlockableByEvent": {
+    "unlockableByRemoteEvent": {
         "sell_beginning": [
             {
                 "gives": {

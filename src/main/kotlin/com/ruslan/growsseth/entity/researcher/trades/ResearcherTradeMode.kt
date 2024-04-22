@@ -6,6 +6,7 @@ import com.mojang.serialization.Keyable
 import com.ruslan.growsseth.config.ResearcherConfig
 import com.ruslan.growsseth.config.WebConfig
 import com.ruslan.growsseth.entity.researcher.Researcher
+import com.ruslan.growsseth.structure.GrowssethStructures
 import com.ruslan.growsseth.worldgen.worldpreset.GrowssethWorldPreset
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
@@ -29,16 +30,15 @@ enum class ResearcherTradeMode(val id: String) : StringRepresentable {
         val PROVIDERS = mapOf(
             RANDOM to RandomResearcherTradesProvider,
             GAME_MASTER to GameMasterResearcherTradesProvider,
-            PROGRESS to object : AbstractResearcherTradesProvider() {
-                override fun getOffersImpl(researcher: Researcher, tradesData: ResearcherTradesData, player: ServerPlayer): MerchantOffers { TODO("NYI") }
-
-                override val mode: ResearcherTradeMode = PROGRESS
-            },
-            GROWSSETH_PROGRESS to object : AbstractResearcherTradesProvider() {
-                override fun getOffersImpl(researcher: Researcher, tradesData: ResearcherTradesData, player: ServerPlayer): MerchantOffers { TODO("NYI") }
-
-                override val mode: ResearcherTradeMode = PROGRESS
-            },
+            PROGRESS to ProgressResearcherTradesProvider(),
+            GROWSSETH_PROGRESS to ProgressResearcherTradesProvider(listOf(
+                GrowssethStructures.CAVE_CAMP,
+                GrowssethStructures.GOLEM_HOUSE,
+                GrowssethStructures.ENCHANT_TOWER,
+                GrowssethStructures.NOTEBLOCK_LAB,
+                GrowssethStructures.BEEKEEPER_HOUSE,
+                GrowssethStructures.CONDUIT_RUINS,
+            )),
         )
 
         fun getFromSettings(server: MinecraftServer) = if (WebConfig.webDataSync && ResearcherConfig.webTrades) {

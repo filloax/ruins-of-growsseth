@@ -185,7 +185,7 @@
         "id": 92,
         "structureID": "event:sell_cave_camp_for_emeralds",
         "name": "...",
-        "active": false
+        "active": true
     },
     {
         "id": 93,
@@ -293,7 +293,7 @@
         "x": 0,
         "y": 0,
         "z": 0,
-        "active": false
+        "active": true
     },
     {
         "id": 24,
@@ -302,7 +302,7 @@
         "x": 0,
         "y": 0,
         "z": 0,
-        "active": false
+        "active": true
     },
     {
         "id": 25,

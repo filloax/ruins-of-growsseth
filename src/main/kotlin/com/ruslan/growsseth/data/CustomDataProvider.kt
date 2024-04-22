@@ -6,6 +6,7 @@ import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.entity.researcher.trades.ResearcherTradeObj
 import com.ruslan.growsseth.entity.researcher.trades.TradesListener
 import com.ruslan.growsseth.item.GrowssethItems
+import com.ruslan.growsseth.structure.GrowssethStructures
 import kotlinx.serialization.json.Json
 import net.minecraft.data.CachedOutput
 import net.minecraft.data.DataProvider
@@ -31,7 +32,10 @@ class CustomDataProvider(private val output: PackOutput) : DataProvider {
             generateResearcherTradesFixedWhenRandom(),
             generateResearcherTradesByStructure(),
             generateResearcherTradesByEvent(),
-            generateResearcherTradesRandomTrades()
+            generateResearcherTradesProgressBeforeStruct(),
+            generateResearcherTradesProgressAfterStruct(),
+            generateResearcherTradesProgressAfterStructRandom(),
+            generateResearcherTradesRandomTrades(),
         )
 
         val outputFolder = output.getOutputFolder(PackOutput.Target.DATA_PACK)
@@ -56,9 +60,29 @@ class CustomDataProvider(private val output: PackOutput) : DataProvider {
         return out
     }
 
+    private fun generateResearcherTradesProgressAfterStructRandom(): Map<String, List<ResearcherTradeObj>> {
+        val discTrades = mutableListOf<ResearcherTradeObj>()
+        val validDiscs = GrowssethItems.all.filterValues { it is RecordItem && !GrowssethItems.DISCS_TO_VOCALS.values.contains(it) }
+            // discs already in guaranteed trade
+            .filterValues { it != GrowssethItems.DISC_GIORGIO_LOFI_INST && it != GrowssethItems.DISC_GIORGIO_CUBETTI }
+        discTrades.addAll(validDiscs.map {
+            ResearcherTradeObj(
+                ResearcherTradeObj.tradeIdemEntryObj(it.key, 1),
+                listOf(ResearcherTradeObj.tradeIdemEntryObj(Items.EMERALD, 5)),
+                randomWeight = 1f / validDiscs.size
+            )
+        })
+
+        return mapOf(
+            GrowssethStructures.NOTEBLOCK_LAB.location().path to discTrades
+        )
+    }
+
     private fun generateResearcherTradesFixedWhenRandom() = listOf<ResearcherTradeObj>()
     private fun generateResearcherTradesByStructure() = mapOf<String, List<ResearcherTradeObj>>()
     private fun generateResearcherTradesByEvent() = mapOf<String, List<ResearcherTradeObj>>()
+    private fun generateResearcherTradesProgressBeforeStruct() = mapOf<String, List<ResearcherTradeObj>>()
+    private fun generateResearcherTradesProgressAfterStruct() = mapOf<String, List<ResearcherTradeObj>>()
 
     /**
      * Gets a name for this provider, to use in logging.
