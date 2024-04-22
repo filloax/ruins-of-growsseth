@@ -27,6 +27,12 @@ public final class ResearcherConfig {
             translation = T_PREF + "singleResearcherRandomTrades.comment"
     )
     public static boolean singleResearcherProgressTrades = false;
+    @ConfigEntry(id = "webTrades", type = EntryType.BOOLEAN, translation = T_PREF + "webTrades.name")
+    @Comment(
+            value = "Whether to apply gamemaster-controlled trades when webConfig.webDataSync is enabled.",
+            translation = T_PREF + "webTrades.comment"
+    )
+    public static boolean webTrades = true;
     @ConfigEntry(id = "randomTradeNumMaps", type = EntryType.OBJECT, translation = T_PREF + "randomTradeNumMaps.name")
     @Comment(
             value = "Max map amount the Researcher sells. Used only when singleResearcher is false or singleResearcherProgressTrades is false.",

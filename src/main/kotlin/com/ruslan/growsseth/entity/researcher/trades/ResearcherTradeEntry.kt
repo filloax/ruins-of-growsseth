@@ -5,6 +5,7 @@ import com.filloax.fxlib.nbt.*
 import com.filloax.fxlib.codec.*
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.config.ResearcherConfig
 import com.ruslan.growsseth.entity.SerializableItemListing
 import com.ruslan.growsseth.entity.researcher.DiaryHelper
@@ -78,6 +79,8 @@ class ResearcherItemListing(
             // No donkey penalty while healed
             if (trader.donkeyWasBorrowed && !trader.healed) costMultiplier *= ResearcherConfig.researcherBorrowPenalty
             if (trader.healed) costMultiplier *= ResearcherConfig.researcherCuredDiscount
+        } else {
+            RuinsOfGrowsseth.LOGGER.warn("ResearcherTradeEntry used for non-Researcher!")
         }
         // Do not use priceMultiplier field as that is related to demand updating
 
@@ -86,9 +89,9 @@ class ResearcherItemListing(
         offer.addToSpecialPriceDiff((offer.costA.count * (costMultiplier - 1)).roundToInt())
 
         mapInfo?.let { map ->
-            if (!trader.level().isClientSide && !gives.getOrCreateTag().contains(SET_MAP_TAG)) {
+            if (!trader.level().isClientSide && !gives.getOrCreateTag().contains(SET_MAP_TAG) && trader is Researcher) {
                 gives.getOrCreateTag().putBoolean(SET_MAP_TAG, true)
-                GameMasterResearcherTradesProvider.setTradeMapTarget(trader, gives, map, offer)
+                ResearcherTradeUtils.setTradeMapTarget(trader, gives, map, offer)
             }
         }
 
@@ -98,6 +101,9 @@ class ResearcherItemListing(
 
         return offer
     }
+
+    fun looselyMatches(other: ResearcherItemListing) =
+        ItemStack.matches(gives, other.gives) && mapInfo == other.mapInfo
 }
 
 /**

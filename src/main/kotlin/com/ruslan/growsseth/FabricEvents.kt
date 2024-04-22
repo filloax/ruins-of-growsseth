@@ -9,6 +9,7 @@ import com.ruslan.growsseth.entity.researcher.Researcher
 import com.ruslan.growsseth.entity.researcher.ResearcherDialoguesComponent
 import com.ruslan.growsseth.entity.researcher.ResearcherDiaryComponent
 import com.ruslan.growsseth.entity.researcher.trades.GameMasterResearcherTradesProvider
+import com.ruslan.growsseth.entity.researcher.trades.GlobalResearcherTradesProvider
 import com.ruslan.growsseth.events.*
 import com.ruslan.growsseth.http.DataRemoteSync
 import com.ruslan.growsseth.http.GrowssethApiV1
@@ -49,7 +50,7 @@ object FabricEvents {
             AsyncLocator.handleServerStoppingEvent()
             DataRemoteSync.handleServerStoppingEvent()
             GrowssethApiV1.Callbacks.onServerStop(server)
-            GameMasterResearcherTradesProvider.Callbacks.onServerStop(server)
+            GlobalResearcherTradesProvider.Callbacks.onServerStop(server)
             LiveUpdatesConnection.serverStop(server)
             GrowssethExtraEvents.onServerStop()
             CustomRemoteDiaries.onServerStopped()
@@ -89,7 +90,7 @@ object FabricEvents {
         }
 
         ServerPlayConnectionEvents.JOIN.register { handler, sender, server ->
-            GameMasterResearcherTradesProvider.Callbacks.onServerPlayerJoin(handler, sender, server)
+            GlobalResearcherTradesProvider.Callbacks.onServerPlayerJoin(handler, sender, server)
             GrowssethExtraEvents.onServerPlayerJoin(handler, sender, server)
             GrowssethWorldPreset.Callbacks.onServerPlayerJoin(handler, sender, server)
         }

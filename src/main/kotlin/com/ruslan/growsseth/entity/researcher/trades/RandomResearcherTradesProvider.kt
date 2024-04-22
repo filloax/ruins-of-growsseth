@@ -17,9 +17,10 @@ object RandomResearcherTradesProvider : AbstractResearcherTradesProvider() {
             tradesData.randomTrades = out
             out
         }
+        val filteredTrades = processTrades(trades)
 
         return MerchantOffers().apply {
-            addAll(trades.map { it.itemListing.getOffer(researcher, researcher.random) })
+            addAll(filteredTrades.map { it.itemListing.getOffer(researcher, researcher.random) })
         }
     }
 
