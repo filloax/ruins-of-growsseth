@@ -20,24 +20,24 @@ import static com.ruslan.growsseth.config.GrowssethConfig.T_PREF;
 @Category("worldpreset")
 public class WorldPresetConfig {
     public static final Map<ResourceKey<Structure>, PosPreset> PRESET_ORIGINAL = Map.of(
-            GrowssethStructures.CydoniaVersion.RESEARCHER_TENT, new PosPreset(1374, 0, 162, Rotation.NONE),
+            GrowssethStructures.CydoniaVersion.RESEARCHER_TENT, new PosPreset(1374, 75, 162, Rotation.NONE),
             GrowssethStructures.CydoniaVersion.CAVE_CAMP,       new PosPreset(934, 38, 340, Rotation.NONE),
             GrowssethStructures.CydoniaVersion.MARKER,          new PosPreset(940, 68, 347, Rotation.NONE),
             GrowssethStructures.CydoniaVersion.ENCHANT_TOWER,   new PosPreset(-1276, 123, 743, Rotation.CLOCKWISE_180),
             GrowssethStructures.CydoniaVersion.GOLEM_HOUSE,     new PosPreset(171, 144, 861, Rotation.COUNTERCLOCKWISE_90),
             GrowssethStructures.CydoniaVersion.BEEKEEPER_HOUSE, new PosPreset(3086, 72, 989, Rotation.COUNTERCLOCKWISE_90),
             GrowssethStructures.CydoniaVersion.NOTEBLOCK_LAB,   new PosPreset(2260, 69, -1674, Rotation.NONE),
-            GrowssethStructures.CydoniaVersion.CONDUIT_RUINS,   new PosPreset(-1553, 39, 2527, Rotation.CLOCKWISE_180)
+            GrowssethStructures.CydoniaVersion.CONDUIT_CHURCH,  new PosPreset(-1553, 39, 2527, Rotation.CLOCKWISE_180)
     );
     public static final Map<ResourceKey<Structure>, PosPreset> PRESET_UPDATED = Map.of(
-        GrowssethStructures.CydoniaVersion.RESEARCHER_TENT, new PosPreset(1374, 0, 162, Rotation.NONE),
+        GrowssethStructures.CydoniaVersion.RESEARCHER_TENT, new PosPreset(1374, 75, 162, Rotation.NONE),
         GrowssethStructures.CydoniaVersion.CAVE_CAMP,       new PosPreset(934, 38, 340, Rotation.NONE),
         GrowssethStructures.CydoniaVersion.MARKER,          new PosPreset(940, 68, 347, Rotation.NONE),
         GrowssethStructures.CydoniaVersion.ENCHANT_TOWER,   new PosPreset(-1276, 123, 743, Rotation.NONE), // tower changes
         GrowssethStructures.CydoniaVersion.GOLEM_HOUSE,     new PosPreset(171, 144, 861, Rotation.COUNTERCLOCKWISE_90),
         GrowssethStructures.CydoniaVersion.BEEKEEPER_HOUSE, new PosPreset(3086, 72, 989, Rotation.COUNTERCLOCKWISE_90),
         GrowssethStructures.CydoniaVersion.NOTEBLOCK_LAB,   new PosPreset(2260, 69, -1674, Rotation.NONE),
-        GrowssethStructures.CydoniaVersion.CONDUIT_RUINS,   new PosPreset(-1553, 39, 2527, Rotation.CLOCKWISE_180)
+        GrowssethStructures.CydoniaVersion.CONDUIT_CHURCH,  new PosPreset(-1553, 39, 2527, Rotation.CLOCKWISE_180)
     );
 
     @ConfigButton(text = "Updated preset", target = "researcherTent", translation = T_PREF + ".buttons.updatedPreset", position = Position.BEFORE)
@@ -58,7 +58,7 @@ public class WorldPresetConfig {
         golemHouse.assign(new StructureInWorldConfig(GrowssethStructures.CydoniaVersion.GOLEM_HOUSE, preset));
         beekeeperHouse.assign(new StructureInWorldConfig(GrowssethStructures.CydoniaVersion.BEEKEEPER_HOUSE, preset));
         noteblockLab.assign(new StructureInWorldConfig(GrowssethStructures.CydoniaVersion.NOTEBLOCK_LAB, preset));
-        conduitRuins.assign(new StructureInWorldConfig(GrowssethStructures.CydoniaVersion.CONDUIT_RUINS, preset));
+        conduitRuins.assign(new StructureInWorldConfig(GrowssethStructures.CydoniaVersion.CONDUIT_CHURCH, preset));
     }
 
     @ConfigEntry(id = "researcherTent", type = EntryType.OBJECT, translation = T_PREF + ".gworld.researcherTent")
@@ -83,7 +83,7 @@ public class WorldPresetConfig {
     public static final StructureInWorldConfig noteblockLab = new StructureInWorldConfig(GrowssethStructures.CydoniaVersion.NOTEBLOCK_LAB);
 
     @ConfigEntry(id = "conduitRuins", type = EntryType.OBJECT, translation = T_PREF + ".gworld.conduitRuins")
-    public static final StructureInWorldConfig conduitRuins = new StructureInWorldConfig(GrowssethStructures.CydoniaVersion.CONDUIT_RUINS);
+    public static final StructureInWorldConfig conduitRuins = new StructureInWorldConfig(GrowssethStructures.CydoniaVersion.CONDUIT_CHURCH);
 
     public static List<StructureInWorldConfig> getAll() {
         return List.of(
@@ -157,6 +157,6 @@ public class WorldPresetConfig {
         }
     }
 
-    private record PosPreset(int x, int y, int z, Rotation rotation) {
+    public record PosPreset(int x, int y, int z, Rotation rotation) {
     }
 }

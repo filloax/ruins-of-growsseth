@@ -2,6 +2,7 @@ package com.ruslan.growsseth.entity.researcher.trades
 
 import com.filloax.fxlib.ScheduledServerTask
 import com.filloax.fxlib.codec.decodeNbt
+import com.filloax.fxlib.codec.decodeNbtNullable
 import com.filloax.fxlib.codec.encodeNbt
 import com.filloax.fxlib.entity.getPersistData
 import com.filloax.fxlib.nbt.getListOrNull
@@ -31,7 +32,7 @@ abstract class GlobalResearcherTradesProvider protected constructor(
 ) : AbstractResearcherTradesProvider() {
     protected var loaded = false
         private set
-    protected var trades = listOf<ResearcherItemListing>()
+    protected var trades = listOf<ResearcherTradeEntry>()
         private set
 
     fun init() {
@@ -43,20 +44,22 @@ abstract class GlobalResearcherTradesProvider protected constructor(
         private val instances = mutableListOf<GlobalResearcherTradesProvider>()
     }
 
-    override fun getOffersImpl(
+    final override fun getOffersImpl(
         researcher: Researcher,
         tradesData: ResearcherTradesData,
         player: ServerPlayer
     ): MerchantOffers {
         val offers = MerchantOffers()
-        offers.addAll(getAllTrades()
-            .filter { isValidTradeForPlayer(it, player, researcher) }
-            .map { it.getOffer(researcher, researcher.random) }
+        val trades = getAllTrades() + getExtraPlayerTrades(player, researcher, tradesData)
+        offers.addAll(processTrades(trades) // reprocess trades after adding extra player trades
+            .filter { isValidTradeForPlayer(it.itemListing, player, researcher, tradesData) }
+            .map { it.itemListing.getOffer(researcher, researcher.random) }
         )
+
         return offers
     }
 
-    fun getAllTrades(): List<ResearcherItemListing> {
+    fun getAllTrades(): List<ResearcherTradeEntry> {
         return if (loaded) {
             trades
         } else {
@@ -65,8 +68,12 @@ abstract class GlobalResearcherTradesProvider protected constructor(
         }
     }
 
-    protected open fun isValidTradeForPlayer(trade: ResearcherItemListing, player: Player, entity: Researcher): Boolean {
+    protected open fun isValidTradeForPlayer(trade: ResearcherItemListing, player: ServerPlayer, researcher: Researcher, data: ResearcherTradesData): Boolean {
         return true
+    }
+
+    protected open fun getExtraPlayerTrades(player: ServerPlayer, researcher: Researcher, data: ResearcherTradesData): List<ResearcherTradeEntry> {
+        return listOf()
     }
 
     /**
@@ -74,7 +81,7 @@ abstract class GlobalResearcherTradesProvider protected constructor(
      */
     protected fun applyUpdatedTrades(server: MinecraftServer, newTrades: List<ResearcherTradeEntry>) {
         val processedTrades = processTrades(newTrades)
-        trades = processedTrades.map(ResearcherTradeEntry::itemListing)
+        trades = processedTrades
         loaded = true
 
         val savedTrades = GlobalTradesSavedData.getGlobalTrades(server)
@@ -83,7 +90,7 @@ abstract class GlobalResearcherTradesProvider protected constructor(
         val removedTrades = savedTrades.filter { trades.none{ it2 -> it.looselyMatches(it2) } }
 
         if (addedTrades.isNotEmpty()) {
-            onNewTrades(server, addedTrades)
+            onNewTrades(server, addedTrades.map{it.itemListing})
         }
 
         savedTrades.clear()
@@ -96,7 +103,7 @@ abstract class GlobalResearcherTradesProvider protected constructor(
     protected open fun onNewTrades(server: MinecraftServer, newTrades: List<ResearcherItemListing>) {
         if (!isEnabled(server)) return
 
-        val dataList: Tag = ResearcherItemListing.LIST_CODEC.encodeNbt(GameMasterResearcherTradesProvider.trades).get().map({it}, { ListTag() })
+        val dataList: Tag = ResearcherTradeEntry.LIST_CODEC.encodeNbt(GameMasterResearcherTradesProvider.trades).get().map({it}, { ListTag() })
         server.playerList.players.forEach { player ->
             val metResearcher = player.getPersistData().getBoolean(Constants.DATA_PLAYER_MET_RESEARCHER)
             if (metResearcher) notifyPlayer(player, newTrades, {
@@ -134,22 +141,24 @@ abstract class GlobalResearcherTradesProvider protected constructor(
         val player = handler.player
         val data = player.getPersistData()
         val metResearcher = player.getPersistData().getBoolean(Constants.DATA_PLAYER_MET_RESEARCHER)
-        val dataList: Tag = ResearcherItemListing.LIST_CODEC.encodeNbt(trades).get().map({it}, { ListTag() })
-        if (metResearcher) data.getListOrNull("ResearcherTradeMemory", Tag.TAG_COMPOUND)?.let { dataListKnown ->
-            val savedTrades: List<ResearcherItemListing> = ResearcherItemListing.LIST_CODEC.decodeNbt(dataListKnown).get().map({it.first}, { listOf() })
-            val newTrades = trades.filter { savedTrades.none{ it2 -> it.looselyMatches(it2) } }
+        val itemListingTrades by lazy { trades.map{ it.itemListing } }
+        val dataList by lazy { ResearcherItemListing.LIST_CODEC.encodeNbt(itemListingTrades).get().map({it}, { ListTag() }) }
+        if (metResearcher)
+            data.getListOrNull("ResearcherTradeMemory", Tag.TAG_COMPOUND)?.let { dataListKnown ->
+                val savedTrades = ResearcherItemListing.LIST_CODEC.decodeNbtNullable(dataListKnown) ?: listOf()
+                val newTrades = itemListingTrades.filter { savedTrades.none{ it2 -> it.looselyMatches(it2) } }
 
-            if (newTrades.isNotEmpty()) {
-                RuinsOfGrowsseth.LOGGER.info("Sending trade notification to player on login (has ${newTrades.size} new)")
-                ScheduledServerTask.schedule(server, 40) {
-                    notifyPlayer(player, newTrades, sender=sender, after={
-                        data.put("ResearcherTradeMemory", dataList)
-                    })
+                if (newTrades.isNotEmpty()) {
+                    RuinsOfGrowsseth.LOGGER.info("Sending trade notification to player on login (has ${newTrades.size} new)")
+                    ScheduledServerTask.schedule(server, 40) {
+                        notifyPlayer(player, newTrades, sender=sender, after={
+                            data.put("ResearcherTradeMemory", dataList)
+                        })
+                    }
                 }
+            } ?: run {
+                data.put("ResearcherTradeMemory", dataList)
             }
-        } else {
-            data.put("ResearcherTradeMemory", dataList)
-        }
     }
 
     // Save data for all researcher trades directly in world save, to make notifying for new ones easier
@@ -157,13 +166,13 @@ abstract class GlobalResearcherTradesProvider protected constructor(
     // trading mode change which might actually be desired
     // (Commented out is a version with separate data for modes in case that becomes more desirable)
     private class GlobalTradesSavedData(
-        val trades: MutableList<ResearcherItemListing> = mutableListOf(),
+        val trades: MutableList<ResearcherTradeEntry> = mutableListOf(),
 //        val trades: Map<ResearcherTradeMode, MutableList<ResearcherItemListing>> =
 //            ResearcherTradeMode.entries.toTypedArray().associateWith { mutableListOf() }
     ) : FxSavedData<GlobalTradesSavedData>(CODEC) {
         companion object {
             val CODEC: Codec<GlobalTradesSavedData> = RecordCodecBuilder.create { builder -> builder.group(
-                ResearcherItemListing.MLIST_CODEC.fieldOf("trades").forGetter(GlobalTradesSavedData::trades),
+                ResearcherTradeEntry.MLIST_CODEC.fieldOf("trades").forGetter(GlobalTradesSavedData::trades),
 //                Codec.unboundedMap(ResearcherTradeMode.CODEC, ResearcherItemListing.MLIST_CODEC)
 //                    .fieldOf("trades").forGetter(GlobalTradesSavedData::trades)
             ).apply(builder, ::GlobalTradesSavedData) }

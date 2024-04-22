@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "growsseth:golem_house",
+      "required": false
+    },
+    {
+      "id": "growsseth:cydonia/golem_house",
+      "required": false
+    }
+  ]
+}

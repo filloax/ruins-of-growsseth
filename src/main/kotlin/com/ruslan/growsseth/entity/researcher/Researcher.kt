@@ -223,7 +223,6 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         private set
     var metPlayer: Boolean = false
         private set
-    var tradeMode = server?.let { ResearcherTradeMode.getFromSettings(it) }
 
     /* If the donkey was borrowed by any player, do not check for specific player
        as there is only one donkey anyway and atm the penalty is shared
@@ -276,7 +275,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     private val inventory = SimpleContainer(8)
     private var tradingPlayer: Player? = null
     private val offersByPlayer = mutableMapOf<UUID, MerchantOffers>()
-    private val tradesData = tradeMode?.let { ResearcherTradesData(it) }
+    private var tradesData = server?.let { ResearcherTradesData(ResearcherTradeMode.getFromSettings(it)) }
     private var tentCache: Optional<StructureStart>? = null
     private var lastRefusedTradeTimer: Int = 0
 
@@ -688,8 +687,8 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         researcherData.putBoolean("AngryForMess", angryForMess)
         researcherData.putBoolean("DonkeyBorrowed", donkeyWasBorrowed)
         researcherData.putBoolean("MetPlayer", metPlayer)
-        researcherData.saveField("CurrentTradeMode", ResearcherTradeMode.CODEC, ::tradeMode)
         researcherData.saveField("PlayerOffers", mutableMapCodec(UUIDUtil.STRING_CODEC, GrowssethCodecs.MERCHANT_OFFERS_CODEC), ::offersByPlayer)
+        researcherData.saveField("TradesData", ResearcherTradesData.CODEC) { tradesData() }
 
         dialogues?.writeNbt(researcherData)
         diary?.writeNbt(researcherData)
@@ -723,8 +722,8 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             metPlayer = researcherData.getBoolean("MetPlayer")
         }
 
-        researcherData.loadField("CurrentTradeMode", ResearcherTradeMode.CODEC) { tradeMode = it }
         researcherData.loadField("PlayerOffers", mutableMapCodec(UUIDUtil.STRING_CODEC, GrowssethCodecs.MERCHANT_OFFERS_CODEC)) { offersByPlayer.putAll(it) }
+        researcherData.loadField("TradesData", ResearcherTradesData.CODEC) { tradesData = it }
 
         dialogues?.readNbt(researcherData)
         diary?.readNbt(researcherData)
@@ -823,13 +822,19 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     fun getOffers(player: ServerPlayer): MerchantOffers {
         val server = player.server
         val currentProvider = ResearcherTradeMode.providerFromSettings(server)
+        val tradesData = tradesData()
+
+        if (currentProvider.mode != tradesData.mode) {
+            tradesData.resetRandomTrades()
+        }
+
         var offers = offersByPlayer[player.uuid]
         val updatedOffers = currentProvider.getOffers(this, tradesData(), player)
 
-        if (currentProvider.mode != tradeMode || offers == null || !offersMatch(offers, updatedOffers)) {
+        if (currentProvider.mode != tradesData.mode || offers == null || !offersMatch(offers, updatedOffers)) {
             // Refresh offers
             offers = updatedOffers
-            tradeMode = currentProvider.mode
+            tradesData.mode = currentProvider.mode
         }
         offersByPlayer[player.uuid] = offers
 

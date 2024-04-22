@@ -30,8 +30,7 @@ enum class ResearcherTradeMode(val id: String) : StringRepresentable {
         val PROVIDERS = mapOf(
             RANDOM to RandomResearcherTradesProvider,
             GAME_MASTER to GameMasterResearcherTradesProvider,
-            PROGRESS to ProgressResearcherTradesProvider(),
-            GROWSSETH_PROGRESS to ProgressResearcherTradesProvider(listOf(
+            PROGRESS to ProgressResearcherTradesProvider(listOf(
                 GrowssethStructures.CAVE_CAMP,
                 GrowssethStructures.GOLEM_HOUSE,
                 GrowssethStructures.ENCHANT_TOWER,
@@ -39,6 +38,14 @@ enum class ResearcherTradeMode(val id: String) : StringRepresentable {
                 GrowssethStructures.BEEKEEPER_HOUSE,
                 GrowssethStructures.CONDUIT_RUINS,
             )),
+            GROWSSETH_PROGRESS to ProgressResearcherTradesProvider(listOf(
+                GrowssethStructures.CAVE_CAMP,
+                GrowssethStructures.GOLEM_HOUSE,
+                GrowssethStructures.ENCHANT_TOWER,
+                GrowssethStructures.NOTEBLOCK_LAB,
+                GrowssethStructures.BEEKEEPER_HOUSE,
+                GrowssethStructures.CONDUIT_RUINS,
+            ), inOrder = true),
         )
 
         fun getFromSettings(server: MinecraftServer) = if (WebConfig.webDataSync && ResearcherConfig.webTrades) {
