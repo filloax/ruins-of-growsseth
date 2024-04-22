@@ -22,9 +22,12 @@ run/
 
 #datagen
 .cache
-gradle/wrapper/gradle-wrapper.jar
 
 #misc
 temp/**
-Live-Update-Server/update.ps1
-.venv/**
+tools/Live-Update-Server/update.ps1
+**/.venv/**
+
+#egobalego
+*/Egobalego at Home/last_id.txt
+*/Egobalego at Home/server_data.json
