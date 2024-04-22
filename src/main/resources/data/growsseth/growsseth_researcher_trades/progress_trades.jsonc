@@ -1,0 +1,256 @@
+{
+    "progressBeforeStructure": {
+        "cave_camp": [
+            {
+                "gives": {
+                    "id": "growsseth:ruins_map",
+                    "amount": 1,
+                    "map": {
+                        "structure": "growsseth:cave_camp",
+                        "name": "structure.growsseth.cave_camp.map.name",
+                        "fixedStructureId": "growsseth:cave_camp",
+                        "scale": 1
+                    }
+                },
+                "wants": [
+                    // wants map for initial quest
+                    {
+                        "id": "minecraft:map",
+                        "amount": 1
+                    }
+                ]
+            }
+        ],
+        "enchant_tower": [
+            {
+                "gives": {
+                    "id": "growsseth:ruins_map",
+                    "amount": 1,
+                    "map": {
+                        "structure": "growsseth:enchant_tower",
+                        "name": "structure.growsseth.enchant_tower.map.name",
+                        "fixedStructureId": "growsseth:enchant_tower",
+                    }
+                },
+                "wants": [
+                    {
+                        "id": "minecraft:emerald",
+                        "amount": 10
+                    },
+                    {
+                        "id": "minecraft:map",
+                        "amount": 1
+                    }
+                ]
+            }
+        ],
+        "beekeeper_house": [
+            {
+                "gives": {
+                    "id": "growsseth:ruins_map",
+                    "amount": 1,
+                    "map": {
+                        "structure": "growsseth:beekeeper_house",
+                        "name": "structure.growsseth.beekeeper_house.map.name",
+                        "fixedStructureId": "growsseth:beekeeper_house"
+                    }
+                },
+                "wants": [
+                    {
+                        "id": "minecraft:emerald",
+                        "amount": 4
+                    },
+                    {
+                        "id": "minecraft:map",
+                        "amount": 1
+                    }
+                ]
+            }
+        ],
+        "noteblock_lab": [
+            {
+                "gives": {
+                    "id": "growsseth:ruins_map",
+                    "amount": 1,
+                    "map": {
+                        "structure": "growsseth:noteblock_lab",
+                        "name": "structure.growsseth.noteblock_lab.map.name",
+                        "fixedStructureId": "growsseth:noteblock_lab"
+                    }
+                },
+                "wants": [
+                    {
+                        "id": "minecraft:emerald",
+                        "amount": 4
+                    },
+                    {
+                        "id": "minecraft:map",
+                        "amount": 1
+                    }
+                ]
+            }
+        ],
+        "conduit_ruins": [
+            {
+                "gives": {
+                    "id": "growsseth:ruins_map",
+                    "amount": 1,
+                    "map": {
+                        "structure": "growsseth:conduit_ruins",
+                        "name": "structure.growsseth.conduit_ruins.map.name",
+                        "fixedStructureId": "growsseth:conduit_ruins",
+                        "scale": 4
+                    }
+                },
+                "wants": [
+                    {
+                        "id": "minecraft:emerald",
+                        "amount": 10
+                    },
+                    {
+                        "id": "minecraft:map",
+                        "amount": 1
+                    }
+                ],
+            },
+            {
+                "gives": {
+                    "id": "minecraft:written_book",
+                    "amount": 1,
+                    "diaryId": "enchantment_dictionary",
+                },
+                "wants": [
+                    {
+                        "id": "minecraft:book",
+                        "amount": 1
+                    },
+                ],
+                "priority": -100,
+            },
+        ],
+        "golem_house": [
+            // Placeholder for now, as cannot make map for village with specific house
+            {
+                "gives": {
+                    "id": "minecraft:written_book",
+                    "amount": 1,
+                    "diaryId": "golem_house_guide_placeholder",
+                },
+                "wants": [
+                    {
+                        "id": "minecraft:book",
+                        "amount": 1
+                    },
+                ]
+            },
+        ],
+        "abandoned_forge": [
+            {
+                "gives": {
+                    "id": "growsseth:ruins_map",
+                    "amount": 1,
+                    "map": {
+                        "structure": "growsseth:abandoned_forge",
+                        "name": "structure.growsseth.abandoned_forge.map.name",
+                        "fixedStructureId": "growsseth:abandoned_forge"
+                    }
+                },
+                "wants": [
+                    {
+                        "id": "minecraft:emerald",
+                        "amount": 4
+                    },
+                    {
+                        "id": "minecraft:map",
+                        "amount": 1
+                    }
+                ]
+            }
+        ]
+    },
+    "progressAfterStructure": {
+        "noteblock_lab": [
+            {
+                "gives": {
+                    "id": "growsseth:disc_giorgio_cubetti",
+                    "amount": 1
+                },
+                "wants": [
+                    {
+                        "id": "minecraft:emerald",
+                        "amount": 5
+                    },
+                ],
+                "priority": 50,
+            },
+            {
+                "gives": {
+                    "id": "growsseth:disc_giorgio_lofi_inst",
+                    "amount": 1
+                },
+                "wants": [
+                    {
+                        "id": "minecraft:emerald",
+                        "amount": 5
+                    },
+                ],
+                "priority": -80,
+            },
+        ],
+    },
+    "progressAfterStructureRandom": {
+        "researcher_tent": [
+            {
+                "gives": {
+                    "id": "growsseth:growsseth_banner_pattern",
+                    "amount": 1
+                },
+                "wants": [
+                    {
+                        "id": "minecraft:emerald",
+                        "amount": 1
+                    }
+                ],
+                "priority": 20,
+                "noNotification": true,
+            },
+        ],
+        "conduit_ruins": [
+            {
+                "gives": {
+                    "id": "growsseth:growsseth_pottery_sherd",
+                    "amount": 1
+                },
+                "wants": [
+                    {
+                        "id": "minecraft:emerald",
+                        "amount": 6
+                    }
+                ],
+                "priority": 20,
+                "noNotification": true
+            }
+        ],
+        "enchant_tower": [
+            {
+                "gives": {
+                    "id": "growsseth:growsseth_trim_template",
+                    "amount": 1
+                },
+                "wants": [
+                    {
+                        "id": "minecraft:emerald",
+                        "amount": 6
+                    },
+                    {
+                        "id": "minecraft:diamond",
+                        "amount": 8
+                    }
+                ],
+                "priority": 20,
+                "randomWeight": 0.2,
+                "noNotification": true
+            },
+        ]
+    },
+}

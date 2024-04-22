@@ -16,6 +16,7 @@ import net.minecraft.util.profiling.ProfilerFiller
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
+import kotlin.reflect.KProperty0
 
 // Instanced in init class RuinsOfGrowsseth
 class TradesListener : KotlinJsonResourceReloadListener(JSON, Constants.TRADES_DATA_FOLDER) {
@@ -28,6 +29,9 @@ class TradesListener : KotlinJsonResourceReloadListener(JSON, Constants.TRADES_D
         val RANDOM_TRADES_POOL = mutableListOf<ResearcherTradeEntry>()
         val UNLOCKABLE_TRADES_BY_STRUCT = mutableMapOf<String, MutableList<ResearcherTradeEntry>>()
         val UNLOCKABLE_TRADES_BY_EVENT = mutableMapOf<String, MutableList<ResearcherTradeEntry>>()
+        val TRADES_PROGRESS_BEFORE_STRUCTURE = mutableMapOf<String, MutableList<ResearcherTradeEntry>>()
+        val TRADES_PROGRESS_AFTER_STRUCTURE = mutableMapOf<String, MutableList<ResearcherTradeEntry>>()
+        val TRADES_PROGRESS_AFTER_STRUCTURE_RANDOM = mutableMapOf<String, MutableList<ResearcherTradeEntry>>()
     }
 
     override fun apply(loader: Map<ResourceLocation, JsonElement>, manager: ResourceManager, profiler: ProfilerFiller) {
@@ -35,22 +39,39 @@ class TradesListener : KotlinJsonResourceReloadListener(JSON, Constants.TRADES_D
         UNLOCKABLE_TRADES_BY_STRUCT.clear()
         UNLOCKABLE_TRADES_BY_EVENT.clear()
         RANDOM_TRADES_POOL.clear()
+        TRADES_PROGRESS_BEFORE_STRUCTURE.clear()
+        TRADES_PROGRESS_AFTER_STRUCTURE.clear()
+        TRADES_PROGRESS_AFTER_STRUCTURE_RANDOM.clear()
         loader.forEach { (fileIdentifier, jsonElement) ->
             RuinsOfGrowsseth.LOGGER.debug("Read json trades file {}", fileIdentifier)
             val entries = JSON.decodeFromJsonElement(TradesObj.serializer(), jsonElement)
-            entries.fixedTradesWhenRandom?.let { trades -> FIXED_TRADES_WHEN_RANDOM.addAll(trades.map{ it.decode() }) }
-            entries.unlockableByStructure?.let { trades -> UNLOCKABLE_TRADES_BY_STRUCT.putAll(trades.mapValues { e -> e.value.map { it.decode() }.toMutableList() }) }
-            entries.unlockableByEvent?.let { trades -> UNLOCKABLE_TRADES_BY_EVENT.putAll(trades.mapValues { e -> e.value.map { it.decode() }.toMutableList() }) }
-            entries.randomPool?.let { trades -> RANDOM_TRADES_POOL.addAll(trades.map { it.decode() }) }
+            addAllTo(entries.fixedTradesWhenRandom, ::FIXED_TRADES_WHEN_RANDOM)
+            addAllTo(entries.unlockableByRemoteStructure, ::UNLOCKABLE_TRADES_BY_STRUCT)
+            addAllTo(entries.unlockableByRemoteStructure, ::UNLOCKABLE_TRADES_BY_STRUCT)
+            addAllTo(entries.unlockableByRemoteEvent, ::UNLOCKABLE_TRADES_BY_EVENT)
+            addAllTo(entries.randomPool, ::RANDOM_TRADES_POOL)
+            addAllTo(entries.progressBeforeStructure, ::TRADES_PROGRESS_BEFORE_STRUCTURE)
+            addAllTo(entries.progressAfterStructure, ::TRADES_PROGRESS_AFTER_STRUCTURE)
+            addAllTo(entries.progressAfterStructureRandom, ::TRADES_PROGRESS_AFTER_STRUCTURE_RANDOM)
         }
         ready = true
+    }
+
+    private fun addAllTo(from: Map<String, List<ResearcherTradeObj>>?, to: KProperty0<MutableMap<String, MutableList<ResearcherTradeEntry>>>) {
+        from?.let { trades -> to.get().putAll(trades.mapValues { e -> e.value.map { it.decode() }.toMutableList() }) }
+    }
+    private fun addAllTo(from: List<ResearcherTradeObj>?, to: KProperty0<MutableList<ResearcherTradeEntry>>) {
+        from?.let { trades -> to.get().addAll(trades.map{ it.decode() }) }
     }
 
     @Serializable
     data class TradesObj(
         val fixedTradesWhenRandom: List<ResearcherTradeObj>? = null,
-        val unlockableByStructure: Map<String, List<ResearcherTradeObj>>? = null,
-        val unlockableByEvent: Map<String, List<ResearcherTradeObj>>? = null,
+        val unlockableByRemoteStructure: Map<String, List<ResearcherTradeObj>>? = null,
+        val unlockableByRemoteEvent: Map<String, List<ResearcherTradeObj>>? = null,
+        val progressBeforeStructure: Map<String, List<ResearcherTradeObj>>? = null,
+        val progressAfterStructure: Map<String, List<ResearcherTradeObj>>? = null,
+        val progressAfterStructureRandom: Map<String, List<ResearcherTradeObj>>? = null,
         val randomPool: List<ResearcherTradeObj>? = null,
     )
 }

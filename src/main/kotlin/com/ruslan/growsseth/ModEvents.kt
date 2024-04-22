@@ -11,6 +11,7 @@ import com.ruslan.growsseth.entity.researcher.Researcher
 import com.ruslan.growsseth.entity.researcher.ResearcherDialoguesComponent
 import com.ruslan.growsseth.entity.researcher.ResearcherDiaryComponent
 import com.ruslan.growsseth.entity.researcher.trades.GlobalResearcherTradesProvider
+import com.ruslan.growsseth.entity.researcher.trades.ProgressResearcherTradesProvider
 import com.ruslan.growsseth.http.DataRemoteSync
 import com.ruslan.growsseth.http.GrowssethApiV1
 import com.ruslan.growsseth.http.GrowssethExtraEvents
@@ -72,6 +73,7 @@ abstract class ModEvents {
         onServerStarted { server ->
             GrowssethWorldPreset.Callbacks.onServerStarted(server)
             VillageBuildings.onServerStarted(server)
+            ProgressResearcherTradesProvider.Callbacks.onServerStarted(server)
         }
         onServerStopping { server ->
             AsyncLocator.handleServerStoppingEvent()
@@ -151,7 +153,7 @@ abstract class ModEvents {
     }
 
     fun triggerOnStructureFound(player: ServerPlayer, structId: ResourceKey<Structure>, isJigsawPart: Boolean) {
-
+        ProgressResearcherTradesProvider.Callbacks.onStructureFound(player, structId, isJigsawPart)
     }
     
     abstract fun onServerStarting(event: ServerEvent)
