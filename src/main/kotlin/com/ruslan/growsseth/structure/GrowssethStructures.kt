@@ -33,6 +33,8 @@ object GrowssethStructures {
     @JvmField
     val CONDUIT_RUINS = key("conduit_ruins")
     @JvmField
+    val CONDUIT_CHURCH = key("conduit_church")
+    @JvmField
     val NOTEBLOCK_LAB = key("noteblock_lab")
     @JvmField
     val NOTEBLOCK_SHIP = key("noteblock_ship")
@@ -86,7 +88,6 @@ object GrowssethStructures {
 
         val RESEARCHER_TENT = registerType("researcher_tent") { ResearcherTentStructure.CODEC }
 //        val RESEARCHER_TENT_CELLAR = registerType("researcher_tent_cellar") { ResearcherTentStructure.CODEC }
-        val JIGSAW_FORCE_POS = registerType("jigsaw_forced_pos") { ForcePosJigsawStructure.CODEC }
 
         private fun <T : Structure> registerType(name: String, type: StructureType<T>): StructureType<T> {
             val id = resLoc(name)
