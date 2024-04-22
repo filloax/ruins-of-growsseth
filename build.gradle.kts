@@ -93,7 +93,7 @@ dependencies {
 		modImplementation("com.github.filloax:fx-lib:v${property("fxLibVersion")}-fabric")
 	} else {
 		println("Loading FX-Lib from local Maven...")
-		modImplementation("com.filloax.fxlib:fxlib-fabric-${property("minecraft_version")}:${property("fxLibVersion")}")
+		modImplementation("com.filloax.fxlib:fx-lib:${property("fxLibVersion")}-fabric")
 	}
     implementation(kotlin("stdlib-jdk8"))
 }
