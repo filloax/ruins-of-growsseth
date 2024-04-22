@@ -8,7 +8,7 @@ import com.ruslan.growsseth.dialogues.ResearcherDialogueListener
 import com.ruslan.growsseth.effect.GrowssethEffects
 import com.ruslan.growsseth.entity.GrowssethEntities
 import com.ruslan.growsseth.entity.researcher.*
-import com.ruslan.growsseth.entity.researcher.trades.ResearcherTrades
+import com.ruslan.growsseth.entity.researcher.trades.GameMasterResearcherTradesProvider
 import com.ruslan.growsseth.entity.researcher.trades.TradesListener
 import com.ruslan.growsseth.http.*
 import com.ruslan.growsseth.item.GrowssethCreativeModeTabs
@@ -49,7 +49,7 @@ object RuinsOfGrowsseth : ModInitializer {
         RemoteStructures.init()
         CustomRemoteDiaries.init()
         RemoteStructureBooks.init()
-        ResearcherTrades.init()
+        GameMasterResearcherTradesProvider.init()
         GrowssethExtraEvents.init()
         ResearcherDialogueApiListener.init()
         GrowssethMapDecorations.init()
