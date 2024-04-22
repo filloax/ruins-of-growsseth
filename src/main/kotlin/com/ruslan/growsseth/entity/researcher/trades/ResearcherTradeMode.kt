@@ -1,6 +1,8 @@
 package com.ruslan.growsseth.entity.researcher.trades
 
 import com.mojang.serialization.Codec
+import com.mojang.serialization.DynamicOps
+import com.mojang.serialization.Keyable
 import com.ruslan.growsseth.config.ResearcherConfig
 import com.ruslan.growsseth.config.WebConfig
 import com.ruslan.growsseth.entity.researcher.Researcher
@@ -9,6 +11,7 @@ import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.util.StringRepresentable
 import net.minecraft.world.item.trading.MerchantOffers
+import java.util.stream.Stream
 
 enum class ResearcherTradeMode(val id: String) : StringRepresentable {
     // single researcher on AND random trades off
@@ -17,7 +20,7 @@ enum class ResearcherTradeMode(val id: String) : StringRepresentable {
     RANDOM("random"),
     // regardless of prev settings, in growsseth world gen
     GROWSSETH_PROGRESS("growsseth_progress"),
-    // regardless of any setting, when game master mode is on (data sync)
+    // regardless of any setting, when game master mode is on (data sync) and webTrades on
     GAME_MASTER("game_master"),
     ;
 
@@ -38,7 +41,7 @@ enum class ResearcherTradeMode(val id: String) : StringRepresentable {
             },
         )
 
-        fun getFromSettings(server: MinecraftServer) = if (WebConfig.webDataSync) {
+        fun getFromSettings(server: MinecraftServer) = if (WebConfig.webDataSync && ResearcherConfig.webTrades) {
                 GAME_MASTER
             } else if (GrowssethWorldPreset.isGrowssethPreset(server)) {
                 GROWSSETH_PROGRESS

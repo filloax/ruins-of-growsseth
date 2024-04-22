@@ -49,7 +49,7 @@ object RuinsOfGrowsseth : ModInitializer {
         RemoteStructures.init()
         CustomRemoteDiaries.init()
         RemoteStructureBooks.init()
-        GameMasterResearcherTradesProvider.init()
+        GameMasterResearcherTradesProvider.subscribe()
         GrowssethExtraEvents.init()
         ResearcherDialogueApiListener.init()
         GrowssethMapDecorations.init()
