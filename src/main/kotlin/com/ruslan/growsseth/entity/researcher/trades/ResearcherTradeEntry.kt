@@ -32,7 +32,12 @@ data class ResearcherTradeEntry(
             Codec.INT.fieldOf("priority").forGetter(ResearcherTradeEntry::priority),
             Codec.BOOL.fieldOf("replace").forGetter(ResearcherTradeEntry::replace),
         ).apply(b, ::ResearcherTradeEntry) }
+
+        val LIST_CODEC = CODEC.listOf()
+        val MLIST_CODEC = mutableListCodec(CODEC)
     }
+
+    fun looselyMatches(other: ResearcherTradeEntry) = this.itemListing.looselyMatches(other.itemListing)
 }
 
 /**

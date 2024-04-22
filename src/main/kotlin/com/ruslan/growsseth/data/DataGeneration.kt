@@ -32,9 +32,11 @@ import net.minecraft.data.recipes.RecipeProvider
 import net.minecraft.data.recipes.ShapelessRecipeBuilder
 import net.minecraft.data.recipes.packs.VanillaRecipeProvider.TrimTemplate
 import net.minecraft.data.tags.InstrumentTagsProvider
+import net.minecraft.data.tags.StructureTagsProvider
 import net.minecraft.data.tags.WorldPresetTagsProvider
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.ItemTags
+import net.minecraft.tags.TagEntry
 import net.minecraft.tags.WorldPresetTags
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.ItemLike
@@ -62,6 +64,7 @@ class DataGeneration : DataGeneratorEntrypoint {
         pack.addProvider(::TagProviderBlocks)
         pack.addProvider(::TagProviderItems)
         pack.addProvider(::TagProviderInstruments)
+        pack.addProvider(::TagProviderStructures)
         pack.addProvider(::TagProviderWorldPresets)
         pack.addProvider(::EntityLootTableProvider)
         pack.addProvider(::MiscLootTableProvider)
@@ -166,6 +169,24 @@ class TagProviderItems(output: FabricDataOutput, registries: CompletableFuture<H
     override fun addTags(arg: HolderLookup.Provider) {
         getOrCreateTagBuilder(ItemTags.DECORATED_POT_SHERDS)
             .add(GrowssethItems.GROWSSETH_POTTERY_SHERD)
+    }
+}
+
+class TagProviderStructures(output: FabricDataOutput, registries: CompletableFuture<HolderLookup.Provider>): StructureTagsProvider(output, registries) {
+    override fun addTags(arg: HolderLookup.Provider) {
+        GrowssethStructures.info.values.groupBy { it.tag }.forEach { (tag, infos) ->
+            tag(tag).also { b ->
+//                infos.forEach { b.addOptional(it.key.location()) }
+                // uglier version in output: use optionals for non-datagenned structures thus not available here
+                infos.forEach { (key, _) ->
+                    if (arg.lookupOrThrow(Registries.STRUCTURE).get(key).isPresent) {
+                        b.add(key)
+                    } else {
+                        b.addOptional(key.location())
+                    }
+                }
+            }
+        }
     }
 }
 

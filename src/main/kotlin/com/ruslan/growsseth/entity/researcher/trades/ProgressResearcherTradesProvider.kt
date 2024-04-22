@@ -6,7 +6,10 @@ import com.filloax.fxlib.codec.mutableSetCodec
 import com.filloax.fxlib.savedata.FxSavedData
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.RuinsOfGrowsseth
+import com.ruslan.growsseth.config.ResearcherConfig
+import com.ruslan.growsseth.entity.researcher.Researcher
 import com.ruslan.growsseth.structure.GrowssethStructures
 import com.ruslan.growsseth.utils.resLoc
 import net.minecraft.core.registries.Registries
@@ -15,6 +18,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.level.levelgen.structure.Structure
+import kotlin.math.min
 import kotlin.random.Random
 
 /**
@@ -24,9 +28,10 @@ import kotlin.random.Random
  * one being tied to world preset).
  */
 class ProgressResearcherTradesProvider(
-    private val order: List<ResourceKey<Structure>>? = null,
+    private val structures: List<ResourceKey<Structure>>,
+    private val inOrder: Boolean = false,
 ) : GlobalResearcherTradesProvider() {
-    override val mode: ResearcherTradeMode = if (order != null)  ResearcherTradeMode.GROWSSETH_PROGRESS else ResearcherTradeMode.PROGRESS
+    override val mode: ResearcherTradeMode = if (inOrder)  ResearcherTradeMode.GROWSSETH_PROGRESS else ResearcherTradeMode.PROGRESS
 
     init {
         this.init()
@@ -46,13 +51,27 @@ class ProgressResearcherTradesProvider(
         checkAndSetCurrentStructure(server, data)
 
         val fixedTrades = genFixedTrades(server, data)
-        // TODO: random trades (likely on single researcher?)
         applyUpdatedTrades(server, fixedTrades)
+    }
+
+    override fun getExtraPlayerTrades(player: ServerPlayer, researcher: Researcher, data: ResearcherTradesData): List<ResearcherTradeEntry> {
+        val time = researcher.level().gameTime
+        var randomTrades = data.randomTrades
+        if (randomTrades == null || data.lastRandomTradeChangeTime < 0 || time - data.lastRandomTradeChangeTime > Constants.DAY_TICKS_DURATION) {
+            data.lastRandomTradeChangeTime = time
+            randomTrades = genRandomTrades(player, researcher, data)
+        }
+
+        data.randomTrades = randomTrades
+        return randomTrades
     }
 
     private fun checkAndSetCurrentStructure(server: MinecraftServer, data: ProgressTradesSavedData) {
         var currentStructure = data.currentStructure
-        if (currentStructure != null && data.foundStructures.contains(currentStructure)) {
+        if (
+            currentStructure != null && data.foundStructures.contains(currentStructure)
+            || currentStructure == null && data.foundStructures.isEmpty()
+        ) {
             currentStructure = getNewTargetStructure(server, data)
             data.currentStructure = currentStructure
             data.setDirty()
@@ -60,23 +79,15 @@ class ProgressResearcherTradesProvider(
     }
 
     private fun getNewTargetStructure(server: MinecraftServer, data: ProgressTradesSavedData): ResourceKey<Structure>? {
-        if (order != null) {
-            for (structId in order) {
+        if (inOrder) {
+            for (structId in structures) {
                 if (structId !in data.foundStructures) {
                     return structId
                 }
             }
             return null
         } else {
-            val possibleStructures = listOf(
-                GrowssethStructures.ABANDONED_FORGE,
-                GrowssethStructures.BEEKEEPER_HOUSE,
-                GrowssethStructures.CAVE_CAMP,
-                GrowssethStructures.CONDUIT_RUINS,
-                GrowssethStructures.NOTEBLOCK_LAB,
-                GrowssethStructures.GOLEM_HOUSE,
-                GrowssethStructures.ENCHANT_TOWER,
-            ).minus(data.foundStructures)
+            val possibleStructures = structures.minus(data.foundStructures)
             return possibleStructures.randomOrNull(Random(server.overworld().seed))
         }
     }
@@ -101,6 +112,25 @@ class ProgressResearcherTradesProvider(
             }
         }
         return changedMapPriority
+    }
+
+    private fun genRandomTrades(player: ServerPlayer, researcher: Researcher, tradesData: ResearcherTradesData): List<ResearcherTradeEntry> {
+        val data = ProgressTradesSavedData.get(player.server)
+        val daysOffset = (researcher.level().gameTime % Constants.DAY_TICKS_DURATION) * 1323
+        val random = Random(player.server.overworld().seed + (researcher.persistId ?: 1) * 10 + daysOffset)
+        val possibleTrades = TradesListener.TRADES_PROGRESS_AFTER_STRUCTURE_RANDOM.filterKeys {
+            val key = ResourceKey.create(Registries.STRUCTURE, resLoc(it))
+            data.currentStructure == key || data.foundStructures.contains(key)
+        }.values.flatten()
+        val amount = IntRange(
+            min(ResearcherConfig.randomTradeNumItems.min, possibleTrades.size),
+            min(ResearcherConfig.randomTradeNumItems.max, possibleTrades.size),
+        ).random(random)
+
+        if (amount > 0)
+            return possibleTrades.shuffled(random).subList(0, amount)
+        else
+            return listOf()
     }
 
     companion object {

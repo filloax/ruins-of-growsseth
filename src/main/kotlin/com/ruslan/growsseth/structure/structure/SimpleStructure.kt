@@ -15,14 +15,20 @@ import net.minecraft.world.level.levelgen.structure.StructurePiece
 import java.util.*
 
 // Source for some of this: Twilight Forest Fabric
-abstract class SimpleStructure(structureSettings: StructureSettings) : Structure(structureSettings), FixablePosition,
+abstract class SimpleStructure(
+    structureSettings: StructureSettings,
+    val defaultForcePosUsesY: Boolean = true,
+) : Structure(structureSettings), FixablePosition,
     FixableRotation {
+    private var forcePosUsesY = defaultForcePosUsesY
     private var nextPlacePos: BlockPos? = null
     private var nextPlaceRotation: Rotation? = null
 
     override fun findGenerationPoint(context: GenerationContext): Optional<GenerationStub> {
         val chunkPos = context.chunkPos()
         val curNextPlaceRotation = nextPlaceRotation
+        val curForcePosUsesY = forcePosUsesY
+        forcePosUsesY = defaultForcePosUsesY
 
         if (nextPlacePos?.let { !isBlockPosInChunk(chunkPos, it) } == true) {
             RuinsOfGrowsseth.LOGGER.error("Error: fixed position $nextPlacePos not in chunk at $chunkPos")
@@ -31,7 +37,7 @@ abstract class SimpleStructure(structureSettings: StructureSettings) : Structure
 
         val x = nextPlacePos?.x ?: ((chunkPos.x shl 4) + 7)
         val z = nextPlacePos?.z ?: ((chunkPos.z shl 4) + 7)
-        val y = if (nextPlaceUseY && nextPlacePos != null) nextPlacePos!!.y else this.adjustForTerrain(context, x, z)
+        val y = if (curForcePosUsesY && nextPlacePos != null) nextPlacePos!!.y else this.adjustForTerrain(context, x, z)
         val pos = BlockPos(x, y, z)
 
         val rand = RandomSource.create(context.seed() + chunkPos.x * 25117L + chunkPos.z * 151121L)
@@ -63,8 +69,9 @@ abstract class SimpleStructure(structureSettings: StructureSettings) : Structure
 
     protected open fun shouldAdjustToTerrain(): Boolean = true
 
-    override fun setNextPlacePosition(pos: BlockPos) {
+    override fun setNextPlacePosition(pos: BlockPos, useY: Boolean?) {
         nextPlacePos = pos
+        forcePosUsesY = useY ?: defaultForcePosUsesY
     }
     override val nextPlaceUseY: Boolean = false
 

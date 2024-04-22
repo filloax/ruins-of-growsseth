@@ -41,7 +41,7 @@ public final class ResearcherConfig {
     public static final RangeConfig randomTradeNumMaps = new RangeConfig(2, 2);
     @ConfigEntry(id = "randomTradeNumItems", type = EntryType.OBJECT, translation = T_PREF + "randomTradeNumItems.name")
     @Comment(
-            value = "Max misc item amount the Researcher sells. Used only when singleResearcher is false or singleResearcherProgressTrades is false.",
+            value = "Max misc item amount the Researcher sells. Used for random trades included in all trade modes except web (limited by progress for progress modes).",
             translation = T_PREF + "randomTradeNumItems.comment"
     )
     public static final RangeConfig randomTradeNumItems = new RangeConfig(2, 2);

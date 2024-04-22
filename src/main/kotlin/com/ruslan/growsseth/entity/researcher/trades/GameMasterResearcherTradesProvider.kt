@@ -29,10 +29,10 @@ object GameMasterResearcherTradesProvider : GlobalResearcherTradesProvider() {
         }
     }
 
-    override fun isValidTradeForPlayer(trade: ResearcherItemListing, player: Player, entity: Researcher): Boolean {
+    override fun isValidTradeForPlayer(trade: ResearcherItemListing, player: ServerPlayer, entity: Researcher, data: ResearcherTradesData): Boolean {
         trade.mapInfo?.let { mapInfo ->
             val structId = getStructTagOrKey(mapInfo.structure)
-            if (player is ServerPlayer && StructureAdvancements.playerHasFoundStructure(player, structId)) {
+            if (StructureAdvancements.playerHasFoundStructure(player, structId)) {
                 return false
             }
         }

@@ -1,8 +1,13 @@
 package com.ruslan.growsseth.entity.researcher.trades
 
+import com.filloax.fxlib.codec.forNullableGetter
+import com.mojang.serialization.Codec
+import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.resources.ResourceKey
 import net.minecraft.world.item.trading.MerchantOffers
 import net.minecraft.world.level.levelgen.structure.Structure
+import java.util.*
+import kotlin.jvm.optionals.getOrNull
 
 /**
  * Contains data for researcher trades with the various options,
@@ -11,21 +16,23 @@ import net.minecraft.world.level.levelgen.structure.Structure
  */
 class ResearcherTradesData (
     var mode: ResearcherTradeMode,
-    randomTrades: List<ResearcherTradeEntry>? = null,
-    // Note: trades are generated globally and structures are tracked in the provider,
-    // this is to track last structures the researcher entity remembers in case we need
-    // to do something else there (remove if unused)
-    val foundStructures: MutableSet<ResourceKey<Structure>> = mutableSetOf(),
+    randomTrades: Optional<List<ResearcherTradeEntry>> = Optional.empty(),
+    // Used to refresh trade uses
+    // In ticks (remember 24000 is 1 day (or equivalent with daytime off))
+    var lastTradeRefreshTime: Long = -1L,
+    // Used to change random trades when enabled by mode or setting, in ticks
+    var lastRandomTradeChangeTime: Long = -1L,
 ) {
-    var randomTrades: List<ResearcherTradeEntry>? = randomTrades
-        set(value) {
-            if (field != null) {
-                throw IllegalStateException("Cannot set randomTrades once initialized from null")
-            }
-            field = value
-        }
+    var randomTrades: List<ResearcherTradeEntry>? = randomTrades.getOrNull()
 
     companion object {
-
+        val CODEC: Codec<ResearcherTradesData> = RecordCodecBuilder.create { builder -> builder.group(
+            ResearcherTradeMode.CODEC.fieldOf("mode").forGetter(ResearcherTradesData::mode),
+            ResearcherTradeEntry.CODEC.listOf().optionalFieldOf("randomTrades").forNullableGetter(ResearcherTradesData::randomTrades),
+            Codec.LONG.optionalFieldOf("lastTradeRefreshTime", -1L).forGetter(ResearcherTradesData::lastTradeRefreshTime),
+            Codec.LONG.optionalFieldOf("lastRandomTradeChangeTime", -1L).forGetter(ResearcherTradesData::lastRandomTradeChangeTime),
+        ).apply(builder, ::ResearcherTradesData) }
     }
+
+    fun resetRandomTrades() { lastRandomTradeChangeTime = -1 }
 }
