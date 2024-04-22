@@ -65,6 +65,7 @@ class ResearcherItemListing(
             Codec.INT.fieldOf("xp").forGetter(ResearcherItemListing::xp),
             Codec.FLOAT.fieldOf("priceMul").forGetter(ResearcherItemListing::priceMul),
             Codec.BOOL.fieldOf("noNotification").forGetter(ResearcherItemListing::noNotification),
+            Codec.FLOAT.fieldOf("randomWeight").forGetter(ResearcherItemListing::randomWeight),
         ).apply(b, constructorWithOptionals(ResearcherItemListing::class)::newInstance) }
 
         val MLIST_CODEC: Codec<MutableList<ResearcherItemListing>> = mutableListCodec(CODEC)

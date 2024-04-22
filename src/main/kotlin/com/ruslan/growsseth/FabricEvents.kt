@@ -115,7 +115,7 @@ object FabricEvents {
         }
     }
 
-    fun onServerPlayerTick(player: ServerPlayer) {
+    private fun onServerPlayerTick(player: ServerPlayer) {
         JigsawPieceTrigger.Callbacks.onServerPlayerTick(player)
     }
 }
