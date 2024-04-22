@@ -15,8 +15,9 @@ class NewTradeToast(newTrades: List<ResearcherItemListing>) : Toast {
 
     companion object {
         private const val DISPLAY_TIME = 5000.0
-        private val TITLE_TEXT: Component = Component.translatable("growsseth.notif.researcher_updated.toast.title")
-        private val DESCRIPTION_TEXT: Component = Component.translatable("growsseth.notif.researcher_updated.toast.description")
+        private val TITLE_TEXT = Component.translatable("growsseth.notif.researcher_updated.toast.title")
+        private val DESCRIPTION_TEXT = Component.translatable("growsseth.notif.researcher_updated.toast.description")
+        private val BACKGROUND_SPRITE = ResourceLocation("toast/recipe")
 
         fun ToastComponent.updateNewTradeToast(trades: List<ResearcherItemListing>) {
             val tradeToast = getToast(NewTradeToast::class.java, Toast.NO_TOKEN)
@@ -36,7 +37,8 @@ class NewTradeToast(newTrades: List<ResearcherItemListing>) : Toast {
         return if (trades.isEmpty()) {
             Toast.Visibility.HIDE
         } else {
-            guiGraphics.blit(ResourceLocation("toast/recipe"), 0, 0, 0, 32, width(), height())
+            guiGraphics.blitSprite(BACKGROUND_SPRITE, 0, 0, width(), height())
+
             guiGraphics.drawString(toastComponent.minecraft.font, TITLE_TEXT, 30, 7, -11534256, false)
             guiGraphics.drawString(toastComponent.minecraft.font, DESCRIPTION_TEXT, 30, 18, -16777216, false)
             val idx = (timeSinceLastVisible
