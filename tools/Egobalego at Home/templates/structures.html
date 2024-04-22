@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="it">
+    {% include 'shared/head.html' %}
+    <body>
+        {% include 'shared/header.html' %}
+        <main class="container my-3">
+            <div class="row justify-content-center">
+                <button id="add-card-button" class="col-auto btn btn-primary">
+                    {% include 'icons/plus-circle.html' %} Aggiungi struttura
+                </button>
+                <div id="card-container"></div>
+            </div>
+            {% include 'cards/structures-card.html' %}
+            {% include 'modals/confirm-deletion.html' %}
+            {% with title=help_title, content=help_content %}
+                {% include 'modals/modal-help.html' %}
+            {% endwith %}
+        </main>
+    </body>
+    <script defer> var defaultPreview = "{{url_for('static', filename='img/structure/none.png')}}" </script>
+    <script src="{{ url_for('static', filename='js/structures.js') }}" defer></script>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="it">
+    {% include 'shared/head.html' %}
+    <body>
+        {% include 'shared/header.html' %}
+        <main class="container my-3">
+            <div class="row justify-content-center">
+                <button id="add-card-button" type="button" class="col-auto btn btn-primary">
+                    {% include 'icons/plus-circle.html' %} Aggiungi comando
+                </button>
+                <div id="card-container"></div>
+            </div>
+            {% include 'cards/commands-card.html' %}
+            {% include 'modals/confirm-deletion.html' %}
+            {% with title=help_title, content=help_content %}
+                {% include 'modals/modal-help.html' %}
+            {% endwith %}
+        </main>
+    </body>
+    <script src="{{ url_for('static', filename='js/commands.js') }}" defer></script>
+</html>
