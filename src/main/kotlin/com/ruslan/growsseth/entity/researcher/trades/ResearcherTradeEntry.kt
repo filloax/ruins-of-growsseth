@@ -5,7 +5,6 @@ import com.filloax.fxlib.nbt.*
 import com.filloax.fxlib.codec.*
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import com.ruslan.growsseth.config.GrowssethConfig
 import com.ruslan.growsseth.config.ResearcherConfig
 import com.ruslan.growsseth.entity.SerializableItemListing
 import com.ruslan.growsseth.entity.researcher.DiaryHelper
@@ -14,6 +13,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.*
 import net.minecraft.util.RandomSource
+import net.minecraft.util.random.Weight
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.trading.MerchantOffer
@@ -52,6 +52,7 @@ class ResearcherItemListing(
     xp: Int = 0,
     priceMul: Float = 1f,
     val noNotification: Boolean = false,
+    val randomWeight: Float = 0f,
 ) : SerializableItemListing(gives, wants, maxUses, xp, priceMul) {
     companion object {
         val CODEC: Codec<ResearcherItemListing> = RecordCodecBuilder.create { b -> b.group(
@@ -87,7 +88,7 @@ class ResearcherItemListing(
         mapInfo?.let { map ->
             if (!trader.level().isClientSide && !gives.getOrCreateTag().contains(SET_MAP_TAG)) {
                 gives.getOrCreateTag().putBoolean(SET_MAP_TAG, true)
-                ResearcherTrades.setTradeMapTarget(trader, gives, map, offer)
+                GameMasterResearcherTradesProvider.setTradeMapTarget(trader, gives, map, offer)
             }
         }
 

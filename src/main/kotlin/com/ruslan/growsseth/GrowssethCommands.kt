@@ -98,7 +98,7 @@ object GrowssethCommands {
         //greset: reset researcher
         dispatcher.register(literal("greset").requires{ it.hasPermission(2) }
             .executes { ctx ->
-                if (ResearcherConfig.persistentResearcher) {
+                if (ResearcherConfig.singleResearcher) {
                     val savedData = ResearcherSavedData.getContainer(ctx.source.server)
                     val data = savedData.items
                     val num = data.size

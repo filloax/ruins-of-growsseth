@@ -44,6 +44,7 @@ import net.minecraft.world.level.storage.loot.LootTable
 import net.minecraft.world.level.storage.loot.entries.LootItem
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue
+import java.nio.file.Paths
 import java.util.concurrent.CompletableFuture
 import java.util.function.BiConsumer
 import java.util.function.Consumer
@@ -65,6 +66,7 @@ class DataGeneration : DataGeneratorEntrypoint {
         pack.addProvider(::EntityLootTableProvider)
         pack.addProvider(::MiscLootTableProvider)
         pack.addProvider(::ModelGenerator)
+        pack.addProvider(::CustomDataProvider)
     }
 
     override fun buildRegistry(registryBuilder: RegistrySetBuilder) {
@@ -96,7 +98,7 @@ class RecipesProvider(output: FabricDataOutput) : FabricRecipeProvider(output) {
             RecipeProvider.trimSmithing(exporter, trimTemplate.template, trimTemplate.id)
         }
 
-        GrowssethItems.discsToVocals.forEach { vocalsDiscRecipe(exporter, it.key, it.value) }
+        GrowssethItems.DISCS_TO_VOCALS.forEach { vocalsDiscRecipe(exporter, it.key, it.value) }
     }
 
     private fun vocalsDiscRecipe(exporter: RecipeOutput, baseDisc: ItemLike, vocalsDisc: ItemLike) {

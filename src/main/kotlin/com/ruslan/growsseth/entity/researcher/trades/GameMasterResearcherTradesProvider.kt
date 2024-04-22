@@ -12,7 +12,6 @@ import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.advancements.StructureAdvancements
 import com.ruslan.growsseth.entity.researcher.Researcher
 import com.ruslan.growsseth.http.ApiEvent
-import com.ruslan.growsseth.http.ApiQuestData
 import com.ruslan.growsseth.http.GrowssethApi
 import com.ruslan.growsseth.maps.DestinationType
 import com.ruslan.growsseth.maps.updateMapToPos
@@ -38,13 +37,12 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.Items
 import net.minecraft.world.item.MapItem
 import net.minecraft.world.item.trading.MerchantOffer
 import net.minecraft.world.item.trading.MerchantOffers
 import net.minecraft.world.level.saveddata.SavedData
 
-object ResearcherTrades {
+object GameMasterResearcherTradesProvider : AbstractResearcherTradesProvider() {
     private var loaded = false
     private var trades = listOf<ResearcherItemListing>()
     private val JSON = Json { isLenient = true }
@@ -59,33 +57,65 @@ object ResearcherTrades {
         }
     }
 
-    private fun updateTrades(server: MinecraftServer, api: GrowssethApi = GrowssethApi.current) {
-        val workingList = mutableListOf<ResearcherTradeEntry>()
-        workingList.addAll(TradesListener.FIXED_TRADES)
-        workingList.addAll(getUnlockedTradesByStruct())
-        workingList.addAll(getUnlockedTradesByQuest(api.quests))
-        workingList.addAll(getUnlockedTradesByEvent(api.events))
-        workingList.addAll(getCustomTrades(api.events))
-        workingList.addAll(getSimpleEventTrades(api.events))
-        filterReplaces(workingList)
-        workingList.sortBy { it.priority }
+    override val mode: ResearcherTradeMode = ResearcherTradeMode.GAME_MASTER
 
-        trades = workingList.map(ResearcherTradeEntry::itemListing)
+    override fun getOffersImpl(
+        researcher: Researcher,
+        tradesData: ResearcherTradesData,
+        player: ServerPlayer
+    ): MerchantOffers {
+        val offers = MerchantOffers()
+        offers.addAll(getAllTrades()
+            .filter { isValidTradeForPlayer(it, player, researcher) }
+            .map { it.getOffer(researcher, researcher.random) }
+        )
+        return offers
+    }
 
-        val savedTrades = TradesSavedData.get(server)
+    fun getAllTrades(): List<ResearcherItemListing> {
+        return if (loaded) {
+            trades
+        } else {
+            RuinsOfGrowsseth.LOGGER.warn("Tried to load reasearcher trades before they were properly loaded!")
+            listOf()
+        }
+    }
 
-        val newTrades = trades.filter { savedTrades.none{ it2 -> sameTrade(it, it2) } }
-        val removedTrades = savedTrades.filter { trades.none{ it2 -> sameTrade(it, it2) } }
+    object Callbacks {
+        fun onServerStop(server: MinecraftServer) {
+            if (server.overworld() != null) {
+                val savedTrades = TradesSavedData.get(server)
+                savedTrades.clear()
+                savedTrades.addAll(trades)
+                TradesSavedData.setDirty(server)
+            }
 
-        if (newTrades.isNotEmpty()) {
-            onNewTrades(server, newTrades)
+            // clear trades list
+            trades = listOf()
+            loaded = false
         }
 
-        savedTrades.clear()
-        savedTrades.addAll(trades)
-        TradesSavedData.setDirty(server)
+        fun onServerPlayerJoin(handler: ServerGamePacketListenerImpl, sender: PacketSender, server: MinecraftServer) {
+            val player = handler.player
+            val data = player.getPersistData()
+            val metResearcher = player.getPersistData().getBoolean(Constants.DATA_PLAYER_MET_RESEARCHER)
+            val dataList: Tag = ResearcherItemListing.LIST_CODEC.encodeNbt(trades).get().map({it}, { ListTag() })
+            if (metResearcher) data.getListOrNull("ResearcherTradeMemory", Tag.TAG_COMPOUND)?.let { dataListKnown ->
+                val savedTrades: List<ResearcherItemListing> = ResearcherItemListing.LIST_CODEC.decodeNbt(dataListKnown).get().map({it.first}, { listOf() })
+                val newTrades = trades.filter { savedTrades.none{ it2 -> sameTrade(it, it2) } }
 
-        RuinsOfGrowsseth.LOGGER.info("Updated global researcher trades! Now has ${trades.size} (${newTrades.size} new, ${removedTrades.size} removed)")
+                if (newTrades.isNotEmpty()) {
+                    RuinsOfGrowsseth.LOGGER.info("Sending trade notification to player on login (has ${newTrades.size} new)")
+                    ScheduledServerTask.schedule(server, 40) {
+                        notifyPlayer(player, newTrades, sender=sender, after={
+                            data.put("ResearcherTradeMemory", dataList)
+                        })
+                    }
+                }
+            } else {
+                data.put("ResearcherTradeMemory", dataList)
+            }
+        }
     }
 
     /** Apply the replaces parameter, on-place */
@@ -105,19 +135,6 @@ object ResearcherTrades {
 
         list.clear()
         list.addAll(valueToItemMap.values.flatten())
-    }
-
-    fun onServerStop(server: MinecraftServer) {
-        if (server.overworld() != null) {
-            val savedTrades = TradesSavedData.get(server)
-            savedTrades.clear()
-            savedTrades.addAll(trades)
-            TradesSavedData.setDirty(server)
-        }
-
-        // clear trades list
-        trades = listOf()
-        loaded = false
     }
 
     private fun sameTrade(listing1: ResearcherItemListing, listing2: ResearcherItemListing): Boolean {
@@ -143,43 +160,6 @@ object ResearcherTrades {
         sender.sendPacket(ResearcherTradesNotifPacket(notifiableNewTrades)) { after() }
     }
 
-    fun onServerPlayerJoin(handler: ServerGamePacketListenerImpl, sender: PacketSender, server: MinecraftServer) {
-        val player = handler.player
-        val data = player.getPersistData()
-        val metResearcher =player.getPersistData().getBoolean(Constants.DATA_PLAYER_MET_RESEARCHER)
-        val dataList: Tag = ResearcherItemListing.LIST_CODEC.encodeNbt(trades).get().map({it}, { ListTag() })
-        if (metResearcher) data.getListOrNull("ResearcherTradeMemory", Tag.TAG_COMPOUND)?.let { dataListKnown ->
-            val savedTrades: List<ResearcherItemListing> = ResearcherItemListing.LIST_CODEC.decodeNbt(dataListKnown).get().map({it.first}, { listOf() })
-            val newTrades = trades.filter { savedTrades.none{ it2 -> sameTrade(it, it2) } }
-
-            if (newTrades.isNotEmpty()) {
-                RuinsOfGrowsseth.LOGGER.info("Sending trade notification to player on login (has ${newTrades.size} new)")
-                ScheduledServerTask.schedule(server, 40) {
-                    notifyPlayer(player, newTrades, sender=sender, after={
-                        data.put("ResearcherTradeMemory", dataList)
-                    })
-                }
-            }
-        } else {
-            data.put("ResearcherTradeMemory", dataList)
-        }
-    }
-
-    @JvmStatic
-    fun getOffers(entity: Researcher): MerchantOffers {
-        val offers = MerchantOffers()
-        val player = entity.offersPlayer
-        offers.addAll(
-            getAllTrades()
-                .filter { player?.let{ p -> isValidTradeForPlayer(it, p, entity)} ?: run {
-                    RuinsOfGrowsseth.LOGGER.warn("Player null when getting researcher trades")
-                    true
-                }  }
-                .map { it.getOffer(entity, (entity as EntityAccessor).random) }
-        )
-        return offers
-    }
-
     private fun isValidTradeForPlayer(trade: ResearcherItemListing, player: Player, entity: Researcher): Boolean {
         trade.mapInfo?.let { mapInfo ->
             val structId = getStructTagOrKey(mapInfo.structure)
@@ -190,16 +170,33 @@ object ResearcherTrades {
         return true
     }
 
-    fun getAllTrades(): List<ResearcherItemListing> {
-        return if (loaded) {
-            trades
-        } else {
-            RuinsOfGrowsseth.LOGGER.warn("Tried to load reasearcher trades before they were properly loaded, will return only fixed trades")
-            TradesListener.FIXED_TRADES.map(ResearcherTradeEntry::itemListing)
+    private fun updateTrades(server: MinecraftServer, api: GrowssethApi = GrowssethApi.current) {
+        val workingList = mutableListOf<ResearcherTradeEntry>()
+        workingList.addAll(getUnlockedTradesByRemoteStruct())
+        workingList.addAll(getUnlockedTradesByRemoteEvent(api.events))
+        workingList.addAll(getRemoteCustomTrades(api.events))
+        filterReplaces(workingList)
+        workingList.sortBy { it.priority }
+
+        trades = workingList.map(ResearcherTradeEntry::itemListing)
+
+        val savedTrades = TradesSavedData.get(server)
+
+        val newTrades = trades.filter { savedTrades.none{ it2 -> sameTrade(it, it2) } }
+        val removedTrades = savedTrades.filter { trades.none{ it2 -> sameTrade(it, it2) } }
+
+        if (newTrades.isNotEmpty()) {
+            onNewTrades(server, newTrades)
         }
+
+        savedTrades.clear()
+        savedTrades.addAll(trades)
+        TradesSavedData.setDirty(server)
+
+        RuinsOfGrowsseth.LOGGER.info("Updated global researcher trades! Now has ${trades.size} (${newTrades.size} new, ${removedTrades.size} removed)")
     }
 
-    private fun getUnlockedTradesByStruct(): List<ResearcherTradeEntry> {
+    private fun getUnlockedTradesByRemoteStruct(): List<ResearcherTradeEntry> {
         val spawnsById = RemoteStructures.STRUCTS_TO_SPAWN_BY_ID
         val unlockableTrades = TradesListener.UNLOCKABLE_TRADES_BY_STRUCT
         return unlockableTrades.filter { (id, _) -> spawnsById.any { (spawnId, structureSpawn) ->
@@ -207,45 +204,14 @@ object ResearcherTrades {
         } }.flatMap { it.value }
     }
 
-    private fun getUnlockedTradesByEvent(events: List<ApiEvent>): List<ResearcherTradeEntry> {
+    private fun getUnlockedTradesByRemoteEvent(events: List<ApiEvent>): List<ResearcherTradeEntry> {
         val unlockableTrades = TradesListener.UNLOCKABLE_TRADES_BY_EVENT
         return unlockableTrades.filter { (name, trades) -> events.any { event ->
             event.active && event.name == name
         } }.flatMap { it.value }
     }
 
-    // Translate events named like event:sell/growsseth/growsseth_banner_pattern/5 (sell/<namespace>/<item id>/<emerald cost>)
-    // Deprecated (JSON-side): use custom trades instead [getCustomTrades]
-    private fun getSimpleEventTrades(events: List<ApiEvent>): List<ResearcherTradeEntry> {
-        val eventTradeInfos = events.mapNotNull { tradeEvent ->
-            if (tradeEvent.name.contains("sell/") && tradeEvent.active) {
-                if (tradeEvent.name.matches(Regex("sell/\\w+/\\w+/\\d+(/\\w+)?"))) {
-                    val split = tradeEvent.name.replace("sell/", "").split("/")
-                    val item = itemFromId(ResourceLocation(split[0], split[1]))
-                    val flags = split.getOrNull(3)
-                    Triple(item, split[2].toInt(), flags)
-                } else {
-                    RuinsOfGrowsseth.LOGGER.error("Trade event ${tradeEvent.name} wrongly formatted")
-                    null
-                }
-            } else {
-                null
-            }
-        }
-
-        return eventTradeInfos.map { (item, price, flags) ->
-            val hideNotif = flags?.contains('h') == true
-            ResearcherTradeEntry(
-                ResearcherItemListing(
-                    ItemStack(item, 1), listOf(ItemStack(Items.EMERALD, price)), 99,
-                    noNotification = hideNotif,
-                ),
-                100,
-            )
-        }
-    }
-
-    private fun getCustomTrades(events: List<ApiEvent>): List<ResearcherTradeEntry> {
+    private fun getRemoteCustomTrades(events: List<ApiEvent>): List<ResearcherTradeEntry> {
         val eventTradeInfos = events.filter { event -> event.name.startsWith("customTrade/") && event.active }
         return eventTradeInfos.mapNotNull { tradeEvent ->
             val desc = tradeEvent.desc ?: run {
@@ -260,13 +226,6 @@ object ResearcherTrades {
                 null
             }
         }
-    }
-
-    fun getUnlockedTradesByQuest(quests: List<ApiQuestData>): List<ResearcherTradeEntry> {
-        val unlockableTrades = TradesListener.UNLOCKABLE_TRADES_BY_QUEST
-        return unlockableTrades.filter { (id, trades) -> quests.any { quest ->
-            quest.unlocked && quest.id == id
-        } }.flatMap { it.value }
     }
 
     // Should be ran once per item stack

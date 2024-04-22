@@ -1,6 +1,7 @@
 package com.ruslan.growsseth.entity.researcher
 
 import com.filloax.fxlib.EventUtil
+import com.filloax.fxlib.codec.mutableMapCodec
 import com.filloax.fxlib.entity.delegate
 import com.filloax.fxlib.entity.fixedChangeDimension
 import com.filloax.fxlib.entity.getPersistData
@@ -22,13 +23,17 @@ import com.ruslan.growsseth.entity.RefreshableMerchant
 import com.ruslan.growsseth.entity.SpawnTimeTracker
 import com.ruslan.growsseth.entity.researcher.ResearcherCombatComponent.Companion.distanceForUnjustifiedAggression
 import com.ruslan.growsseth.entity.researcher.ResearcherCombatComponent.ResearcherAttackGoal
-import com.ruslan.growsseth.entity.researcher.trades.ResearcherTrades
+import com.ruslan.growsseth.entity.researcher.trades.GameMasterResearcherTradesProvider
+import com.ruslan.growsseth.entity.researcher.trades.ResearcherTradeMode
+import com.ruslan.growsseth.entity.researcher.trades.ResearcherTradesData
 import com.ruslan.growsseth.http.GrowssethExtraEvents
 import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.quests.QuestOwner
 import com.ruslan.growsseth.structure.GrowssethStructures
 import com.ruslan.growsseth.structure.pieces.ResearcherTent
+import com.ruslan.growsseth.utils.GrowssethCodecs
 import net.minecraft.core.BlockPos
+import net.minecraft.core.UUIDUtil
 import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.core.registries.Registries
@@ -46,6 +51,7 @@ import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.tags.DamageTypeTags
 import net.minecraft.tags.TagKey
+import net.minecraft.util.ExtraCodecs
 import net.minecraft.util.RandomSource
 import net.minecraft.world.*
 import net.minecraft.world.damagesource.DamageSource
@@ -55,8 +61,7 @@ import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
-import net.minecraft.world.entity.ai.goal.FloatGoal
-import net.minecraft.world.entity.ai.goal.MoveTowardsRestrictionGoal
+import net.minecraft.world.entity.ai.goal.*
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.ai.navigation.PathNavigation
 import net.minecraft.world.entity.ai.navigation.WallClimberNavigation
@@ -218,6 +223,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         private set
     var metPlayer: Boolean = false
         private set
+    var tradeMode = server?.let { ResearcherTradeMode.getFromSettings(it) }
 
     /* If the donkey was borrowed by any player, do not check for specific player
        as there is only one donkey anyway and atm the penalty is shared
@@ -267,14 +273,10 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             }
         }
 
-    // Used to determine if specific player should have a trade available, as merchant interface
-    // has no player arg in getOffers and tradingPlayer shouldn't be initialized when offers are get
-    var offersPlayer : Player? = null
-        private set
-
     private val inventory = SimpleContainer(8)
     private var tradingPlayer: Player? = null
-    private var offers: MerchantOffers? = null
+    private val offersByPlayer = mutableMapOf<UUID, MerchantOffers>()
+    private val tradesData = tradeMode?.let { ResearcherTradesData(it) }
     private var tentCache: Optional<StructureStart>? = null
     private var lastRefusedTradeTimer: Int = 0
 
@@ -334,7 +336,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     override fun finalizeSpawn(level: ServerLevelAccessor, difficulty: DifficultyInstance, mobSpawnType: MobSpawnType, spawnGroupData: SpawnGroupData?, compoundTag: CompoundTag?): SpawnGroupData? {
         val (savedData, id) = if (!level().isClientSide()) {
             // Load data from previous researchers
-            if (ResearcherConfig.persistentResearcher) {
+            if (ResearcherConfig.singleResearcher) {
                 Pair(ResearcherSavedData.getOrCreate(server!!, 0), 0)
             } else {
                 /* Make a new ID for the saved data as with maps, if persistent
@@ -627,22 +629,20 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             RuinsOfGrowsseth.LOGGER.info("Start interaction with researcher $this")
             player.getPersistData().putBoolean(Constants.DATA_PLAYER_MET_RESEARCHER, true)
 
-            val offers = getOffersFor(player)
-            val blockTrades = angryForMess && !healed
-            if (offers.isEmpty() || blockTrades) {
-                if (lastRefusedTradeTimer == 0) {
-                    lastRefusedTradeTimer = 40
-                    setUnhappy()
-                    if (player is ServerPlayer) {
+            if (player is ServerPlayer) {
+                val offers = getOffers(player)
+                val blockTrades = angryForMess && !healed
+                if (offers.isEmpty() || blockTrades) {
+                    if (lastRefusedTradeTimer == 0) {
+                        lastRefusedTradeTimer = 40
+                        setUnhappy()
                         val reason = if (blockTrades) "angry" else "noTrades"
                         dialogues?.triggerDialogue(player, ResearcherDialoguesComponent.EV_REFUSE_TRADE, eventParam = reason)
-                    }
-                    return InteractionResult.sidedSuccess(level().isClientSide)
-                } else
-                    return InteractionResult.FAIL
-            }
+                        return InteractionResult.sidedSuccess(level().isClientSide)
+                    } else
+                        return InteractionResult.FAIL
+                }
 
-            if (!level().isClientSide) {
                 setTradingPlayer(player)
                 openTradingScreen(player, this.displayName ?: this.name, 1)
             }
@@ -688,6 +688,8 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         researcherData.putBoolean("AngryForMess", angryForMess)
         researcherData.putBoolean("DonkeyBorrowed", donkeyWasBorrowed)
         researcherData.putBoolean("MetPlayer", metPlayer)
+        researcherData.saveField("CurrentTradeMode", ResearcherTradeMode.CODEC, ::tradeMode)
+        researcherData.saveField("PlayerOffers", mutableMapCodec(UUIDUtil.STRING_CODEC, GrowssethCodecs.MERCHANT_OFFERS_CODEC), ::offersByPlayer)
 
         dialogues?.writeNbt(researcherData)
         diary?.writeNbt(researcherData)
@@ -720,6 +722,9 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         if (researcherData.contains("MetPlayer")) {
             metPlayer = researcherData.getBoolean("MetPlayer")
         }
+
+        researcherData.loadField("CurrentTradeMode", ResearcherTradeMode.CODEC) { tradeMode = it }
+        researcherData.loadField("PlayerOffers", mutableMapCodec(UUIDUtil.STRING_CODEC, GrowssethCodecs.MERCHANT_OFFERS_CODEC)) { offersByPlayer.putAll(it) }
 
         dialogues?.readNbt(researcherData)
         diary?.readNbt(researcherData)
@@ -806,28 +811,47 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
     fun isTrading(): Boolean { return tradingPlayer != null }
 
+    private fun tradesData() = tradesData ?: throw IllegalStateException("Accessed tradesData in client!")
+
     override fun getOffers(): MerchantOffers {
-        val offers = ResearcherTrades.getOffers(this)
-        this.offers = offers
+        return server?.let { serv ->
+            val provider = ResearcherTradeMode.providerFromSettings(serv)
+            provider.getOffers(this, tradesData())
+        } ?: MerchantOffers()
+    }
+
+    fun getOffers(player: ServerPlayer): MerchantOffers {
+        val server = player.server
+        val currentProvider = ResearcherTradeMode.providerFromSettings(server)
+        var offers = offersByPlayer[player.uuid]
+        val updatedOffers = currentProvider.getOffers(this, tradesData(), player)
+
+        if (currentProvider.mode != tradeMode || offers == null || !offersMatch(offers, updatedOffers)) {
+            // Refresh offers
+            offers = updatedOffers
+            tradeMode = currentProvider.mode
+        }
+        offersByPlayer[player.uuid] = offers
+
         return offers
     }
 
-    private fun getOffersFor(player: Player): MerchantOffers {
-        // Set trade offer player to be used in researcher trades class
-        offersPlayer = player
-        return getOffers()
-    }
+    private fun offersMatch(offersA: MerchantOffers, offersB: MerchantOffers): Boolean {
+        if (offersA.size != offersB.size) return false
 
-    // Leftover from previous trade generation code, leaving as might be useful later
-    private fun getOffersDirect(): MerchantOffers {
-        return offers ?: throw java.lang.NullPointerException("Accessed Researcher offers before they were set!")
+        for (i in offersA.indices) {
+            if (!offersA[i].equals(offersB[i])) return false
+        }
+
+        return true
     }
 
     override fun refreshCurrentTrades() {
         assert(!this.level().isClientSide) { "Refreshing trades from client side" }
+        val offersCurrent = this.offers ?: throw IllegalStateException("Refreshing offers when not set yet on server")
         tradingPlayer?.let {
             it.sendMerchantOffers(
-                it.containerMenu.containerId,getOffersDirect(),1,0,false,true,
+                it.containerMenu.containerId, offersCurrent,1,0,false,true,
             )
         }
     }
