@@ -1,20 +1,6 @@
 {
   "replace": false,
   "values": [
-    "growsseth:disc_infinite_amethyst",
-    "growsseth:disc_mice_on_venus",
-    "growsseth:disc_labyrinthine",
-
-    "growsseth:disc_giorgio_cubetti",
-    "growsseth:disc_giorgio_lofi_inst",
-    "growsseth:disc_giorgio_finding_home",
-    "growsseth:disc_binobinooo_inst",
-
-    "growsseth:disc_sega_di_niente",
-    "growsseth:disc_giorgio_lofi",
-    "growsseth:disc_binobinooo",
-    "growsseth:disc_padre_mammonk",
-    "growsseth:disc_abbandonati",
-    "growsseth:disc_missiva_nell_ombra"
+    "#growsseth:music_discs"
   ]
 }

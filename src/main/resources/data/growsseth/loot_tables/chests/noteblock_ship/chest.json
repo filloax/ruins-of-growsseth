@@ -7,8 +7,9 @@
       },
       "entries": [
         {
-          "type": "minecraft:item",
-          "name": "minecraft:music_disc_11"
+          "type": "minecraft:tag",
+          "expand": true,
+          "name": "growsseth:music_discs"
         }
       ]
     },
