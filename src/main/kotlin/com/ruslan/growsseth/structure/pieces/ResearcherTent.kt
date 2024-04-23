@@ -143,8 +143,7 @@ class ResearcherTent : GrTemplateStructurePiece {
         when (name) {
             "researcher" -> {
                 researcherPos = pos
-                placeEntity(GrowssethEntities.RESEARCHER, pos, level) { researcher ->
-                }
+                placeEntity(GrowssethEntities.RESEARCHER, pos, level) { researcher -> }
             }
             "donkey" -> {
                 level.level.setBlockAndUpdate(pos, DEFAULT_FENCE.defaultBlockState())
@@ -161,8 +160,14 @@ class ResearcherTent : GrTemplateStructurePiece {
                 jailPos = pos
                 level.setBlock(pos, Blocks.AIR.defaultBlockState(), SetBlockFlag.NOTIFY_CLIENTS.flag)
             }
-            "cellarCorner1" -> cellarPos1 = pos
-            "cellarCorner2" -> cellarPos2 = pos
+            "cellarCorner1" -> {
+                cellarPos1 = pos
+                level.setBlock(pos, Blocks.STONE.defaultBlockState(), SetBlockFlag.NOTIFY_CLIENTS.flag)
+            }
+            "cellarCorner2" -> {
+                cellarPos2 = pos
+                level.setBlock(pos, Blocks.STONE.defaultBlockState(), SetBlockFlag.NOTIFY_CLIENTS.flag)
+            }
         }
     }
 
