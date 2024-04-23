@@ -57,6 +57,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.goal.FloatGoal
 import net.minecraft.world.entity.ai.goal.MoveTowardsRestrictionGoal
+import net.minecraft.world.entity.ai.goal.OpenDoorGoal
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.ai.navigation.PathNavigation
 import net.minecraft.world.entity.ai.navigation.WallClimberNavigation
@@ -309,21 +310,22 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     }
 
     override fun registerGoals() {
-        goalSelector.addGoal(1, FloatGoal(this))
+        goalSelector.addGoal(0, FloatGoal(this))
+        goalSelector.addGoal(1, OpenDoorGoal(this, true))
         goalSelector.addGoal(2, ResearcherAttackGoal(this, 0.7, true))
         goalSelector.addGoal(3, MoveTowardsRestrictionGoal(this, 0.6))
         goalSelector.addGoal(4, ResearcherRandomStrollGoal(this, 0.6))
         goalSelector.addGoal(5, ResearcherLookAtPlayerGoal(this, 8f, 0.1f))
 
 
-        targetSelector.addGoal(1, NearestAttackableTargetGoal(this, Player::class.java, 0, true, true)
+        targetSelector.addGoal(0, NearestAttackableTargetGoal(this, Player::class.java, 0, true, true)
             { player -> combat.wantsToKillPlayer((player as Player)) })
         if (ResearcherConfig.researcherInteractsWithMobs) {
-            targetSelector.addGoal(2, NearestAttackableTargetGoal(this, Mob::class.java, 0, false, true)
+            targetSelector.addGoal(1, NearestAttackableTargetGoal(this, Mob::class.java, 0, false, true)
                 { livingEntity: LivingEntity? -> livingEntity is Mob && livingEntity.target == this })
-            targetSelector.addGoal(3, ResearcherHurtByTargetGoal(this))
+            targetSelector.addGoal(2, ResearcherHurtByTargetGoal(this))
             if (ResearcherConfig.researcherStrikesFirst)
-                targetSelector.addGoal(3, NearestAttackableTargetGoal(this, Mob::class.java, 0, true, true)
+                targetSelector.addGoal(2, NearestAttackableTargetGoal(this, Mob::class.java, 0, true, true)
                     { livingEntity: LivingEntity? -> ( (livingEntity != null && this.distanceTo(livingEntity) < distanceForUnjustifiedAggression) &&
                             (livingEntity is Raider || livingEntity is Vex || livingEntity is Zombie || livingEntity is AbstractSkeleton) ) }
                 )
@@ -951,7 +953,9 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
     override fun createNavigation(level: Level): PathNavigation {
         // He won't climb walls, but will try to jump over two blocks heights
-        return WallClimberNavigation(this, level)
+        val wallClimberNavigation = WallClimberNavigation(this, level)
+        wallClimberNavigation.setCanOpenDoors(true)
+        return wallClimberNavigation
     }
 
     override fun populateDefaultEquipmentSlots(random: RandomSource, difficulty: DifficultyInstance) {
