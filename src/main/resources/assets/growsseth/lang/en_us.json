@@ -114,6 +114,7 @@
     "growsseth.config.category.web": "Web Interactions",
     "growsseth.config.category.quest": "Quests",
     "growsseth.config.serverLanguage.name": "Server language (en_us / it_it)",
+    "growsseth.config.modLootInVanillaStructures.name": "Mod items can be found in vanilla structures",
     "growsseth.config.immortalResearcher.name": "Immortal researcher",
     "growsseth.config.researcherTeleports.name": "Researcher teleports back to tent after some time away",
     "growsseth.config.researcherAntiCheat.name": "Researcher does not let people cheese him",
