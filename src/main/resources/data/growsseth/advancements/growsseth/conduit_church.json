@@ -23,7 +23,23 @@
                         "entity": "this",
                         "predicate": {
                             "location": {
-                                "structure": "growsseth:conduit_ruins"
+                                "structure": "growsseth:conduit_church"
+                            }
+                        }
+                    }
+                ]
+            },
+            "trigger": "minecraft:location"
+        },
+        "in_structure_cydonia": {
+            "conditions": {
+                "player": [
+                    {
+                        "condition": "minecraft:entity_properties",
+                        "entity": "this",
+                        "predicate": {
+                            "location": {
+                                "structure": "growsseth:cydonia/conduit_church"
                             }
                         }
                     }
@@ -31,5 +47,11 @@
             },
             "trigger": "minecraft:location"
         }
-    }
+    },
+    "requirements": [
+        [
+            "in_structure",
+            "in_structure_cydonia"
+        ]
+    ]
 }

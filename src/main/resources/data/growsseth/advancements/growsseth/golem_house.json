@@ -30,6 +30,22 @@
             },
             "trigger": "minecraft:location"
         },
+        "cydonia_golem_house": {
+            "conditions": {
+                "player": [
+                    {
+                        "condition": "minecraft:entity_properties",
+                        "entity": "this",
+                        "predicate": {
+                            "location": {
+                                "structure": "growsseth:cydonia/golem_house"
+                            }
+                        }
+                    }
+                ]
+            },
+            "trigger": "minecraft:location"
+        },
         "desert_golem_house": {
             "conditions": {
                 "player": [
@@ -254,6 +270,7 @@
     "requirements": [
         [
             "golem_house",
+            "cydonia_golem_house",
             "desert_golem_house",
             "plains_golem_house",
             "savanna_golem_house",
