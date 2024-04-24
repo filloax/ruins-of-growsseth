@@ -36,6 +36,7 @@ object FabricEvents {
             DataRemoteSync.doSync(WebConfig.dataSyncUrl, server)
             MixinHelpers.serverInit(server)
             LiveUpdatesConnection.serverStart(server)
+            ModifyLootTableEvents.init()
         }
         ServerLifecycleEvents.SERVER_STARTED.register { server ->
             GrowssethWorldPreset.Callbacks.onServerStarted(server)

@@ -1,6 +1,8 @@
 {
     "growsseth.creative_tab": "Oggetti di Growsseth",
 
+    "generator.growsseth.growsseth": "Growsseth",
+
     "item.growsseth.growsseth_banner_pattern": "Banner Pattern (Rimpiazzato da codice)",
     "item.growsseth.growsseth_banner_pattern.desc": "Egida di un regno perduto",
     "block.minecraft.banner.growsseth.growsseth.black": "Egida di un regno perduto nero",
@@ -112,6 +114,7 @@
     "growsseth.config.category.web": "Interazione Web",
     "growsseth.config.category.quest": "Quest",
     "growsseth.config.serverLanguage.name": "Lingua del server (it_it / en_us)",
+    "growsseth.config.modLootInVanillaStructures.name": "Oggetti della mod ottenibili dalle strutture vanilla",
     "growsseth.config.immortalResearcher.name": "Ricercatore immortale",
     "growsseth.config.researcherTeleports.name": "Ricercatore si teletrasporta alla tenda se via per molto",
     "growsseth.config.researcherAntiCheat.name": "Ricercatore non si lascia cheesare",

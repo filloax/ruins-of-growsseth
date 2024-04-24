@@ -21,4 +21,7 @@ public final class GrowssethConfig {
 
     @ConfigEntry(id = "serverLanguage", type = EntryType.STRING, translation = T_PREF + "serverLanguage.name")
     public static String serverLanguage = "it_it";
+
+    @ConfigEntry(id = "modLootInVanillaStructures", type = EntryType.BOOLEAN, translation = T_PREF + "modLootInVanillaStructures.name")
+    public static boolean modLootInVanillaStructures = false;
 }
