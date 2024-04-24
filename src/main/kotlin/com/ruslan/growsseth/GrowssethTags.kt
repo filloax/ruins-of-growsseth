@@ -23,7 +23,7 @@ object GrowssethTags {
         val CAVE_CAMP: TagKey<Structure> = create("cave_camp")
         val MARKER: TagKey<Structure> = create("marker")
         val CONDUIT_RUINS: TagKey<Structure> = create("conduit_ruins")
-        val CONDUIT_CHURCH: TagKey<Structure> = create("conduit_ruins")
+        val CONDUIT_CHURCH: TagKey<Structure> = create("conduit_church")
         val ENCHANT_TOWER: TagKey<Structure> = create("enchant_tower")
         val ABANDONED_FORGE: TagKey<Structure> = create("abandoned_forge")
         val GOLEM_HOUSE: TagKey<Structure> = create("golem_house")

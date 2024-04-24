@@ -34,6 +34,10 @@ object GrowssethMapDecorations {
         "icon_conduit_ruins", "textures/map/icon_conduit_ruins.png",
         GrowssethStructures.CONDUIT_RUINS,
     )
+    val CONDUIT_CHURCH = make(
+        "icon_conduit_church", "textures/map/icon_conduit_ruins.png",
+        GrowssethStructures.CONDUIT_CHURCH,
+    )
     val NOTEBLOCK_LAB = make(
         "icon_noteblock_lab", "textures/map/icon_noteblock_lab.png",
         GrowssethStructures.NOTEBLOCK_LAB,
