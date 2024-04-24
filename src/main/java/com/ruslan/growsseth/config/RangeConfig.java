@@ -3,6 +3,7 @@ package com.ruslan.growsseth.config;
 import com.teamresourceful.resourcefulconfig.api.annotations.ConfigEntry;
 import com.teamresourceful.resourcefulconfig.api.annotations.ConfigObject;
 import com.teamresourceful.resourcefulconfig.api.types.options.EntryType;
+import kotlin.ranges.IntRange;
 
 import static com.ruslan.growsseth.config.GrowssethConfig.T_PREF;
 
@@ -16,5 +17,9 @@ public class RangeConfig {
     public RangeConfig(int min, int max) {
         this.min = min;
         this.max = max;
+    }
+
+    public IntRange range() {
+        return new IntRange(min, max);
     }
 }

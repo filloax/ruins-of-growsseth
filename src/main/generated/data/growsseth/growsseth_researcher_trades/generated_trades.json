@@ -49,9 +49,9 @@
         "gives": {
           "id": "growsseth:ruins_map",
           "map": {
-            "fixedStructureId": "#growsseth:conduit_ruins",
+            "fixedStructureId": "#growsseth:conduit_church",
             "name": "structure.growsseth.conduit_church.map.name",
-            "structure": "#growsseth:conduit_ruins"
+            "structure": "#growsseth:conduit_church"
           }
         },
         "priority": -50,

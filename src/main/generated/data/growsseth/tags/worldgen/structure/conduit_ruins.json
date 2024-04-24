@@ -4,14 +4,6 @@
     {
       "id": "growsseth:conduit_ruins",
       "required": false
-    },
-    {
-      "id": "growsseth:conduit_church",
-      "required": false
-    },
-    {
-      "id": "growsseth:cydonia/conduit_ruins",
-      "required": false
     }
   ]
 }

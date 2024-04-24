@@ -105,7 +105,7 @@ object GrowssethStructures {
         @JvmField
         val ENCHANT_TOWER = makeCydonia("enchant_tower", GrowssethStructures.ENCHANT_TOWER)
         @JvmField
-        val CONDUIT_CHURCH = makeCydonia("conduit_ruins", GrowssethStructures.CONDUIT_CHURCH)
+        val CONDUIT_CHURCH = makeCydonia("conduit_church", GrowssethStructures.CONDUIT_CHURCH)
         @JvmField
         val NOTEBLOCK_LAB = makeCydonia("noteblock_lab", GrowssethStructures.NOTEBLOCK_LAB)
     }
