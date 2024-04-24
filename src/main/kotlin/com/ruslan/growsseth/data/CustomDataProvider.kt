@@ -4,6 +4,7 @@ import com.filloax.fxlib.json.saveStable
 import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.entity.researcher.trades.ResearcherTradeObj
+import com.ruslan.growsseth.entity.researcher.trades.TradeItemMapInfo
 import com.ruslan.growsseth.entity.researcher.trades.TradesListener
 import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.structure.GrowssethStructures
@@ -32,15 +33,15 @@ class CustomDataProvider(private val output: PackOutput) : DataProvider {
             generateResearcherTradesFixedWhenRandom(),
             generateResearcherTradesByStructure(),
             generateResearcherTradesByEvent(),
-            generateResearcherTradesProgressBeforeStruct(),
+            generateResearcherTradesBeforeStruct(),
             generateResearcherTradesProgressAfterStruct(),
             generateResearcherTradesProgressAfterStructRandom(),
             generateResearcherTradesRandomTrades(),
         )
 
         val outputFolder = output.getOutputFolder(PackOutput.Target.DATA_PACK)
-            .resolve(Constants.TRADES_DATA_FOLDER)
             .resolve(RuinsOfGrowsseth.MOD_ID)
+            .resolve(Constants.TRADES_DATA_FOLDER)
         outputFolder.createDirectories()
 
         val filename = "generated_trades.json"
@@ -57,6 +58,31 @@ class CustomDataProvider(private val output: PackOutput) : DataProvider {
                 randomWeight = 1f / validDiscs.size
             )
         })
+        return out
+    }
+
+    private fun generateResearcherTradesBeforeStruct(): Map<String, List<ResearcherTradeObj>> {
+        val out = mutableMapOf<String, List<ResearcherTradeObj>>()
+        GrowssethStructures.ORIGINAL_STRUCTURES
+            // Remove golem house as currently no way to map to village house
+            .forEach { key ->
+            val info = GrowssethStructures.info[key]!!
+            val tagString = "#${info.tag.location.toString()}"
+            out[key.location().path] = listOf(
+                ResearcherTradeObj(
+                    ResearcherTradeObj.tradeIdemEntryObj(GrowssethItems.RUINS_MAP, map = TradeItemMapInfo.JsonDesc(
+                        structure = tagString,
+                        name = "structure.${key.location().toLanguageKey()}.map.name",
+                        fixedStructureId = tagString,
+                    )),
+                    listOf(
+                        ResearcherTradeObj.tradeIdemEntryObj(Items.MAP),
+                        ResearcherTradeObj.tradeIdemEntryObj(Items.EMERALD, info.emeraldCost),
+                    ),
+                    priority = -50,
+                )
+            )
+        }
         return out
     }
 
@@ -81,7 +107,6 @@ class CustomDataProvider(private val output: PackOutput) : DataProvider {
     private fun generateResearcherTradesFixedWhenRandom() = listOf<ResearcherTradeObj>()
     private fun generateResearcherTradesByStructure() = mapOf<String, List<ResearcherTradeObj>>()
     private fun generateResearcherTradesByEvent() = mapOf<String, List<ResearcherTradeObj>>()
-    private fun generateResearcherTradesProgressBeforeStruct() = mapOf<String, List<ResearcherTradeObj>>()
     private fun generateResearcherTradesProgressAfterStruct() = mapOf<String, List<ResearcherTradeObj>>()
 
     /**

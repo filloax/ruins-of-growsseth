@@ -6,9 +6,9 @@
                     "id": "growsseth:ruins_map",
                     "amount": 1,
                     "map": {
-                        "structure": "growsseth:cave_camp",
+                        "structure": "#growsseth:cave_camp",
                         "name": "structure.growsseth.cave_camp.map.name",
-                        "fixedStructureId": "growsseth:cave_camp",
+                        "fixedStructureId": "#growsseth:cave_camp",
                         "scale": 1
                     }
                 },
@@ -27,9 +27,9 @@
                     "id": "growsseth:ruins_map",
                     "amount": 1,
                     "map": {
-                        "structure": "growsseth:enchant_tower",
+                        "structure": "#growsseth:enchant_tower",
                         "name": "structure.growsseth.enchant_tower.map.name",
-                        "fixedStructureId": "growsseth:enchant_tower",
+                        "fixedStructureId": "#growsseth:enchant_tower",
                     }
                 },
                 "wants": [
@@ -50,9 +50,9 @@
                     "id": "growsseth:ruins_map",
                     "amount": 1,
                     "map": {
-                        "structure": "growsseth:beekeeper_house",
+                        "structure": "#growsseth:beekeeper_house",
                         "name": "structure.growsseth.beekeeper_house.map.name",
-                        "fixedStructureId": "growsseth:beekeeper_house"
+                        "fixedStructureId": "#growsseth:beekeeper_house"
                     }
                 },
                 "wants": [
@@ -73,9 +73,9 @@
                     "id": "growsseth:ruins_map",
                     "amount": 1,
                     "map": {
-                        "structure": "growsseth:noteblock_lab",
+                        "structure": "#growsseth:noteblock_lab",
                         "name": "structure.growsseth.noteblock_lab.map.name",
-                        "fixedStructureId": "growsseth:noteblock_lab"
+                        "fixedStructureId": "#growsseth:noteblock_lab"
                     }
                 },
                 "wants": [
@@ -90,15 +90,15 @@
                 ]
             }
         ],
-        "conduit_ruins": [
+        "conduit_church": [
             {
                 "gives": {
                     "id": "growsseth:ruins_map",
                     "amount": 1,
                     "map": {
-                        "structure": "growsseth:conduit_ruins",
+                        "structure": "#growsseth:conduit_ruins",
                         "name": "structure.growsseth.conduit_ruins.map.name",
-                        "fixedStructureId": "growsseth:conduit_ruins",
+                        "fixedStructureId": "#growsseth:conduit_ruins",
                         "scale": 4
                     }
                 },
@@ -120,9 +120,9 @@
                     "id": "growsseth:ruins_map",
                     "amount": 1,
                     "map": {
-                        "structure": "growsseth:golem_house",
+                        "structure": "#growsseth:golem_house",
                         "name": "structure.growsseth.golem_house.map.name",
-                        "fixedStructureId": "growsseth:golem_house"
+                        "fixedStructureId": "#growsseth:golem_house"
                     }
                 },
                 "wants": [
@@ -143,9 +143,9 @@
                     "id": "growsseth:ruins_map",
                     "amount": 1,
                     "map": {
-                        "structure": "growsseth:golem_variants/desert_golem_house",
+                        "structure": "#growsseth:golem_house",
                         "name": "structure.growsseth.golem_house.map.name",
-                        "fixedStructureId": "growsseth:golem_variants/desert_golem_house"
+                        "fixedStructureId": "#growsseth:golem_variants/desert_golem_house"
                     }
                 },
                 "wants": [
@@ -166,9 +166,9 @@
                     "id": "growsseth:ruins_map",
                     "amount": 1,
                     "map": {
-                        "structure": "growsseth:golem_variants/plains_golem_house",
+                        "structure": "#growsseth:golem_house",
                         "name": "structure.growsseth.golem_house.map.name",
-                        "fixedStructureId": "growsseth:golem_variants/plains_golem_house"
+                        "fixedStructureId": "#growsseth:golem_variants/plains_golem_house"
                     }
                 },
                 "wants": [
@@ -189,9 +189,9 @@
                     "id": "growsseth:ruins_map",
                     "amount": 1,
                     "map": {
-                        "structure": "growsseth:golem_variants/savanna_golem_house",
+                        "structure": "#growsseth:golem_house",
                         "name": "structure.growsseth.golem_house.map.name",
-                        "fixedStructureId": "growsseth:golem_variants/savanna_golem_house"
+                        "fixedStructureId": "#growsseth:golem_variants/savanna_golem_house"
                     }
                 },
                 "wants": [
@@ -212,9 +212,9 @@
                     "id": "growsseth:ruins_map",
                     "amount": 1,
                     "map": {
-                        "structure": "growsseth:golem_variants/snowy_golem_house",
+                        "structure": "#growsseth:golem_house",
                         "name": "structure.growsseth.golem_house.map.name",
-                        "fixedStructureId": "growsseth:golem_variants/snowy_golem_house"
+                        "fixedStructureId": "#growsseth:golem_variants/snowy_golem_house"
                     }
                 },
                 "wants": [
@@ -235,9 +235,9 @@
                     "id": "growsseth:ruins_map",
                     "amount": 1,
                     "map": {
-                        "structure": "growsseth:golem_variants/taiga_golem_house",
+                        "structure": "#growsseth:golem_house",
                         "name": "structure.growsseth.golem_house.map.name",
-                        "fixedStructureId": "growsseth:golem_variants/taiga_golem_house"
+                        "fixedStructureId": "#growsseth:golem_variants/taiga_golem_house"
                     }
                 },
                 "wants": [
@@ -258,9 +258,9 @@
                     "id": "growsseth:ruins_map",
                     "amount": 1,
                     "map": {
-                        "structure": "growsseth:golem_variants/zombie_desert_golem_house",
+                        "structure": "#growsseth:golem_house",
                         "name": "structure.growsseth.golem_house.map.name",
-                        "fixedStructureId": "growsseth:golem_variants/zombie_desert_golem_house"
+                        "fixedStructureId": "#growsseth:golem_variants/zombie_desert_golem_house"
                     }
                 },
                 "wants": [
@@ -281,9 +281,9 @@
                     "id": "growsseth:ruins_map",
                     "amount": 1,
                     "map": {
-                        "structure": "growsseth:golem_variants/zombie_plains_golem_house",
+                        "structure": "#growsseth:golem_house",
                         "name": "structure.growsseth.golem_house.map.name",
-                        "fixedStructureId": "growsseth:golem_variants/zombie_plains_golem_house"
+                        "fixedStructureId": "#growsseth:golem_variants/zombie_plains_golem_house"
                     }
                 },
                 "wants": [
@@ -304,9 +304,9 @@
                     "id": "growsseth:ruins_map",
                     "amount": 1,
                     "map": {
-                        "structure": "growsseth:golem_variants/zombie_savanna_golem_house",
+                        "structure": "#growsseth:golem_house",
                         "name": "structure.growsseth.golem_house.map.name",
-                        "fixedStructureId": "growsseth:golem_variants/zombie_savanna_golem_house"
+                        "fixedStructureId": "#growsseth:golem_variants/zombie_savanna_golem_house"
                     }
                 },
                 "wants": [
@@ -327,9 +327,9 @@
                     "id": "growsseth:ruins_map",
                     "amount": 1,
                     "map": {
-                        "structure": "growsseth:golem_variants/zombie_snowy_golem_house",
+                        "structure": "#growsseth:golem_house",
                         "name": "structure.growsseth.golem_house.map.name",
-                        "fixedStructureId": "growsseth:golem_variants/zombie_snowy_golem_house"
+                        "fixedStructureId": "#growsseth:golem_variants/zombie_snowy_golem_house"
                     }
                 },
                 "wants": [
@@ -350,9 +350,9 @@
                     "id": "growsseth:ruins_map",
                     "amount": 1,
                     "map": {
-                        "structure": "growsseth:golem_variants/zombie_taiga_golem_house",
+                        "structure": "#growsseth:golem_house",
                         "name": "structure.growsseth.golem_house.map.name",
-                        "fixedStructureId": "growsseth:golem_variants/zombie_taiga_golem_house"
+                        "fixedStructureId": "#growsseth:golem_variants/zombie_taiga_golem_house"
                     }
                 },
                 "wants": [
@@ -373,9 +373,9 @@
                     "id": "growsseth:ruins_map",
                     "amount": 1,
                     "map": {
-                        "structure": "growsseth:abandoned_forge",
+                        "structure": "#growsseth:abandoned_forge",
                         "name": "structure.growsseth.abandoned_forge.map.name",
-                        "fixedStructureId": "growsseth:abandoned_forge"
+                        "fixedStructureId": "#growsseth:abandoned_forge"
                     }
                 },
                 "wants": [
