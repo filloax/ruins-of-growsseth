@@ -1,8 +1,15 @@
 package com.ruslan.growsseth.entity.researcher
 
+import com.filloax.fxlib.codec.constructorWithOptionals
+import com.filloax.fxlib.codec.forNullableGetter
+import com.filloax.fxlib.codec.mutableMapCodec
 import com.filloax.fxlib.nbt.getCompoundOrNull
 import com.filloax.fxlib.nbt.loadField
 import com.filloax.fxlib.nbt.saveField
+import com.filloax.fxlib.savedata.FxSavedData
+import com.filloax.fxlib.savedata.FxSavedData.Companion.loadData
+import com.mojang.serialization.Codec
+import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import net.minecraft.core.UUIDUtil
 import net.minecraft.nbt.CompoundTag
@@ -13,6 +20,7 @@ import net.minecraft.util.ExtraCodecs
 import net.minecraft.util.datafix.DataFixTypes
 import net.minecraft.world.level.saveddata.SavedData
 import java.util.*
+import javax.xml.crypto.Data
 
 /**
  * Save researcher data in the level to allow it to persist even if he gets respawned.
@@ -22,14 +30,24 @@ class ResearcherSavedData private constructor (
     var data: CompoundTag,
     var name: Component?,
     var donkeyUuid: UUID?,
-    private var masterData: SavedData,
-) : SavedData() {
+) : FxSavedData<ResearcherSavedData>(CODEC) {
+    private lateinit var masterData: SavedData
+
     companion object {
+        val CODEC: Codec<ResearcherSavedData> = RecordCodecBuilder.create { builder -> builder.group(
+            CompoundTag.CODEC.fieldOf("data").forGetter(ResearcherSavedData::data),
+            ComponentSerialization.CODEC.optionalFieldOf("name").forNullableGetter(ResearcherSavedData::name),
+            UUIDUtil.STRING_CODEC.optionalFieldOf("donkeyUuid").forNullableGetter(ResearcherSavedData::donkeyUuid),
+        ).apply(builder, constructorWithOptionals(ResearcherSavedData::class)::newInstance) }
+
+        // Crashes with non-string key codec
+        val CONTAINER_CODEC: Codec<DataMap> = mutableMapCodec(Codec.STRING, CODEC)
+            .xmap({ map -> DataMap(map.mapKeys { it.key.toInt() }) }, { obj -> obj.items.mapKeys { it.key.toString() }.toMutableMap() })
+
+        private val DEF = define("researcher_data", {DataMap()}, CONTAINER_CODEC)
+
         fun getContainer(server: MinecraftServer): DataMap {
-            return server.overworld().dataStorage.computeIfAbsent(Factory({
-                RuinsOfGrowsseth.LOGGER.info("Creating new researcher data...")
-                DataMap()
-            }, ::loadMap, DataFixTypes.STRUCTURE ), "researcher_data")
+            return server.loadData(DEF)
         }
 
         @JvmStatic
@@ -49,41 +67,21 @@ class ResearcherSavedData private constructor (
 
         @JvmStatic
         fun getFreeId(server: MinecraftServer): Int {
-            return getContainer(server).items.keys.max() + 1
+            return (getContainer(server).items.keys.maxOrNull() ?: -1) + 1
         }
 
         @JvmStatic
         fun createNew(server: MinecraftServer, id: Int): ResearcherSavedData {
             val container = getContainer(server)
-            val new = ResearcherSavedData(CompoundTag(), Component.empty(), null, container)
+            val new = ResearcherSavedData(CompoundTag(), Component.empty(), null).initParent(container)
             container.items[id] = new
             return new
         }
-
-        private fun load(compoundTag: CompoundTag, parent: SavedData): ResearcherSavedData {
-            return ResearcherSavedData(
-                compoundTag.getCompoundOrNull("data") ?:
-                     throw IllegalStateException("Researcher world data doesn't have entity data set!")
-                ,
-                compoundTag.loadField("name", ComponentSerialization.CODEC),
-                compoundTag.loadField("donkeyId", UUIDUtil.STRING_CODEC),
-                parent,
-            )
-        }
-
-        private fun loadMap(compoundTag: CompoundTag): DataMap {
-            val out = DataMap()
-            val mapTag = compoundTag.getCompound("researcherData")
-            out.items.putAll(mapTag.allKeys.associate { id -> id.toInt() to load(mapTag.getCompound(id), out) })
-            return out
-        }
     }
 
-    override fun save(compoundTag: CompoundTag): CompoundTag {
-        compoundTag.put("data", data)
-        compoundTag.saveField("name", ComponentSerialization.CODEC, this::name)
-        compoundTag.saveField("donkeyId", UUIDUtil.STRING_CODEC, this::donkeyUuid)
-        return compoundTag
+    fun initParent(masterData: SavedData): ResearcherSavedData {
+        this.masterData = masterData
+        return this
     }
 
     override fun setDirty() {
@@ -98,16 +96,9 @@ class ResearcherSavedData private constructor (
         }
     }
 
-    class DataMap : SavedData() {
-        val items = mutableMapOf<Int, ResearcherSavedData>()
-
-        override fun save(compoundTag: CompoundTag): CompoundTag {
-            compoundTag.put("researcherData", CompoundTag().also {
-                items.forEach { (id, data) ->
-                    it.put(id.toString(), data.save(CompoundTag()))
-                }
-            })
-            return compoundTag
+    class DataMap(initialItems: Map<Int, ResearcherSavedData> = mapOf()) : FxSavedData<DataMap>(CONTAINER_CODEC) {
+        val items = mutableMapOf<Int, ResearcherSavedData>().also {
+            it.putAll(initialItems)
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.ruslan.growsseth.structure.pieces
 
+import com.ruslan.growsseth.RuinsOfGrowsseth
 import net.minecraft.core.BlockPos
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.resources.ResourceLocation
@@ -35,12 +36,16 @@ abstract class GrTemplateStructurePiece : TemplateStructurePiece {
         : super(structurePieceType, compoundTag, ctx.structureTemplateManager, { settings })
 
     protected fun <T : Mob> placeEntity(entityType: EntityType<T>, pos: BlockPos, levelAccessor: ServerLevelAccessor, after: (T) -> Unit = {}) {
-        val mob = entityType.create(levelAccessor.level) ?: return
-        mob.setPersistenceRequired()
-        mob.moveTo(pos.x + .5, pos.y + .0, pos.z + .5, 0.0f, 0.0f)
-        mob.finalizeSpawn(levelAccessor, levelAccessor.getCurrentDifficultyAt(pos), MobSpawnType.STRUCTURE, null, null)
-        levelAccessor.addFreshEntityWithPassengers(mob)
-        levelAccessor.setBlock(pos, Blocks.AIR.defaultBlockState(), 2)
-        after(mob)
+        try {
+            val mob = entityType.create(levelAccessor.level) ?: return
+            mob.setPersistenceRequired()
+            mob.moveTo(pos.x + .5, pos.y + .0, pos.z + .5, 0.0f, 0.0f)
+            mob.finalizeSpawn(levelAccessor, levelAccessor.getCurrentDifficultyAt(pos), MobSpawnType.STRUCTURE, null, null)
+            levelAccessor.addFreshEntityWithPassengers(mob)
+            levelAccessor.setBlock(pos, Blocks.AIR.defaultBlockState(), 2)
+            after(mob)
+        } catch (e: Exception) {
+            RuinsOfGrowsseth.LOGGER.error(e)
+        }
     }
 }
