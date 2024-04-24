@@ -1,4 +1,138 @@
 {
+  "beforeStructure": {
+    "beekeeper_house": [
+      {
+        "gives": {
+          "id": "growsseth:ruins_map",
+          "map": {
+            "fixedStructureId": "#growsseth:beekeeper_house",
+            "name": "structure.growsseth.beekeeper_house.map.name",
+            "structure": "#growsseth:beekeeper_house"
+          }
+        },
+        "priority": -50,
+        "wants": [
+          {
+            "id": "minecraft:map"
+          },
+          {
+            "amount": 5,
+            "id": "minecraft:emerald"
+          }
+        ]
+      }
+    ],
+    "cave_camp": [
+      {
+        "gives": {
+          "id": "growsseth:ruins_map",
+          "map": {
+            "fixedStructureId": "#growsseth:cave_camp",
+            "name": "structure.growsseth.cave_camp.map.name",
+            "structure": "#growsseth:cave_camp"
+          }
+        },
+        "priority": -50,
+        "wants": [
+          {
+            "id": "minecraft:map"
+          },
+          {
+            "amount": 0,
+            "id": "minecraft:emerald"
+          }
+        ]
+      }
+    ],
+    "conduit_church": [
+      {
+        "gives": {
+          "id": "growsseth:ruins_map",
+          "map": {
+            "fixedStructureId": "#growsseth:conduit_ruins",
+            "name": "structure.growsseth.conduit_church.map.name",
+            "structure": "#growsseth:conduit_ruins"
+          }
+        },
+        "priority": -50,
+        "wants": [
+          {
+            "id": "minecraft:map"
+          },
+          {
+            "amount": 7,
+            "id": "minecraft:emerald"
+          }
+        ]
+      }
+    ],
+    "enchant_tower": [
+      {
+        "gives": {
+          "id": "growsseth:ruins_map",
+          "map": {
+            "fixedStructureId": "#growsseth:enchant_tower",
+            "name": "structure.growsseth.enchant_tower.map.name",
+            "structure": "#growsseth:enchant_tower"
+          }
+        },
+        "priority": -50,
+        "wants": [
+          {
+            "id": "minecraft:map"
+          },
+          {
+            "amount": 7,
+            "id": "minecraft:emerald"
+          }
+        ]
+      }
+    ],
+    "golem_house": [
+      {
+        "gives": {
+          "id": "growsseth:ruins_map",
+          "map": {
+            "fixedStructureId": "#growsseth:golem_house",
+            "name": "structure.growsseth.golem_house.map.name",
+            "structure": "#growsseth:golem_house"
+          }
+        },
+        "priority": -50,
+        "wants": [
+          {
+            "id": "minecraft:map"
+          },
+          {
+            "amount": 5,
+            "id": "minecraft:emerald"
+          }
+        ]
+      }
+    ],
+    "noteblock_lab": [
+      {
+        "gives": {
+          "id": "growsseth:ruins_map",
+          "map": {
+            "fixedStructureId": "#growsseth:noteblock_lab",
+            "name": "structure.growsseth.noteblock_lab.map.name",
+            "structure": "#growsseth:noteblock_lab"
+          }
+        },
+        "priority": -50,
+        "wants": [
+          {
+            "id": "minecraft:map"
+          },
+          {
+            "amount": 5,
+            "id": "minecraft:emerald"
+          }
+        ]
+      }
+    ]
+  },
   "fixedTradesWhenRandom": [],
   "progressAfterStructure": {},
   "progressAfterStructureRandom": {
@@ -113,7 +247,6 @@
       }
     ]
   },
-  "progressBeforeStructure": {},
   "randomPool": [
     {
       "gives": {

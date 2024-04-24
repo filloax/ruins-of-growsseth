@@ -11,20 +11,35 @@ import com.ruslan.growsseth.maps.updateMapToPos
 import com.ruslan.growsseth.maps.updateMapToStruct
 import com.ruslan.growsseth.mixin.item.mapitem.MapItemAccessor
 import net.minecraft.core.BlockPos
+import net.minecraft.core.RegistryAccess
+import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.MapItem
 import net.minecraft.world.item.trading.MerchantOffer
+import kotlin.jvm.optionals.getOrNull
 
 object ResearcherTradeUtils {
     private val fixedStructureGeneration = FxLibServices.fixedStructureGeneration
 
     private fun getServer(researcher: Researcher) = researcher.server ?: throw IllegalStateException("Cannot access TradeProvider from client!")
 
+    fun getMatchingStructures(registryAccess: RegistryAccess, tagOrId: String): List<ResourceLocation> {
+        val tagOrKey = getStructTagOrKey(tagOrId)
+        return tagOrKey.map({ tag ->
+            registryAccess
+                .registryOrThrow(Registries.STRUCTURE).getOrCreateTag(tag)
+                .mapNotNull { h -> h.unwrapKey().map { it.location() }.getOrNull() }
+        }, { key ->
+            listOf(key.location())
+        })
+    }
+
     // Should be ran once per item stack
     fun setTradeMapTarget(researcher: Researcher, itemStack: ItemStack, mapData: TradeItemMapInfo, offer: MerchantOffer) {
         val server = getServer(researcher)
+        val level = researcher.level() as ServerLevel
         val scale = mapData.scale ?: 3
         var known = false
 
@@ -37,7 +52,7 @@ object ResearcherTradeUtils {
                 })
                 updateMapToPos(
                     itemStack,
-                    researcher.level() as ServerLevel,
+                    level,
                     mapMemory.pos,
                     scale,
                     destinationType = destinationType,
@@ -59,11 +74,11 @@ object ResearcherTradeUtils {
         if (!known) {
             var pos: BlockPos? = null
             if (mapData.x != null && mapData.z != null) {
-                pos = BlockPos(mapData.x, getYAtXZ(researcher.level() as ServerLevel, mapData.x, mapData.z), mapData.z)
+                pos = BlockPos(mapData.x, getYAtXZ(level, mapData.x, mapData.z), mapData.z)
             } else if (mapData.fixedStructureId != null) {
-                val id = ResourceLocation(mapData.fixedStructureId)
+                val matchingStructures = getMatchingStructures(level.registryAccess(), mapData.fixedStructureId)
                 val spawnData = fixedStructureGeneration.registeredStructureSpawns.values
-                    .filter { it.structure == id }
+                    .filter { matchingStructures.contains(it.structure) }
                     .minByOrNull { it.pos.distManhattan(researcher.blockPosition()) }
                 if (spawnData != null) {
                     pos = spawnData.pos
@@ -81,7 +96,7 @@ object ResearcherTradeUtils {
 
                 updateMapToPos(
                     itemStack,
-                    researcher.level() as ServerLevel,
+                    level,
                     pos,
                     scale,
                     destinationType = destinationType,
@@ -105,7 +120,7 @@ object ResearcherTradeUtils {
             // For community version (locate map functionality)
             updateMapToStruct(
                 itemStack,
-                researcher.level() as ServerLevel,
+                level,
                 mapData.structure,
                 researcher.blockPosition(),
                 scale,

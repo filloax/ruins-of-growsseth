@@ -26,9 +26,9 @@
                     "id": "growsseth:ruins_map",
                     "amount": 1,
                     "map": {
-                        "structure": "growsseth:cave_camp",
+                        "structure": "#growsseth:cave_camp",
                         "name": "structure.growsseth.cave_camp.map.name",
-                        "fixedStructureId": "growsseth:cave_camp",
+                        "fixedStructureId": "#growsseth:cave_camp",
                         "scale": 1
                     }
                 },

@@ -18,6 +18,8 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.level.levelgen.structure.Structure
+import java.lang.IllegalArgumentException
+import kotlin.jvm.optionals.getOrNull
 import kotlin.math.min
 import kotlin.random.Random
 
@@ -32,6 +34,8 @@ class ProgressResearcherTradesProvider(
     private val inOrder: Boolean = false,
 ) : GlobalResearcherTradesProvider() {
     override val mode: ResearcherTradeMode = if (inOrder)  ResearcherTradeMode.GROWSSETH_PROGRESS else ResearcherTradeMode.PROGRESS
+
+    private val structByTags = structures.associateBy { GrowssethStructures.info[it]!!.tag }
 
     init {
         this.init()
@@ -93,7 +97,7 @@ class ProgressResearcherTradesProvider(
     }
 
     private fun genFixedTrades(server: MinecraftServer, data: ProgressTradesSavedData): List<ResearcherTradeEntry> {
-        val tradesBefore = TradesListener.TRADES_PROGRESS_BEFORE_STRUCTURE.filterKeys {
+        val tradesBefore = TradesListener.TRADES_BEFORE_STRUCTURE.filterKeys {
             val key = ResourceKey.create(Registries.STRUCTURE, resLoc(it))
             data.currentStructure == key || data.foundStructures.contains(key)
         }.values.flatten()
@@ -102,13 +106,14 @@ class ProgressResearcherTradesProvider(
             data.foundStructures.contains(key)
         }.values.flatten()
         val allTrades = tradesBefore + tradesAfter
-        val changedMapPriority = allTrades.map {
-            val toStruct = it.itemListing.mapInfo?.structure ?: it.itemListing.mapInfo?.fixedStructureId
-            if (toStruct != null && ResourceLocation(toStruct) != data.currentStructure?.location()) {
+        val changedMapPriority = allTrades.map { trade ->
+            val toStruct = trade.itemListing.mapInfo?.structure ?: trade.itemListing.mapInfo?.fixedStructureId ?: return@map trade
+            val matchingStructures = ResearcherTradeUtils.getMatchingStructures(server.registryAccess(), toStruct)
+            if (!matchingStructures.contains(data.currentStructure?.location())) {
                 // Increase priority for maps of not current structure to reduce clogging of UI
-                it.copy(priority = it.priority + 1000)
+                trade.copy(priority = trade.priority + 1000)
             } else {
-                it
+                trade
             }
         }
         return changedMapPriority
@@ -116,21 +121,26 @@ class ProgressResearcherTradesProvider(
 
     private fun genRandomTrades(player: ServerPlayer, researcher: Researcher, tradesData: ResearcherTradesData): List<ResearcherTradeEntry> {
         val data = ProgressTradesSavedData.get(player.server)
-        val daysOffset = (researcher.level().gameTime % Constants.DAY_TICKS_DURATION) * 1323
+        val daysOffset = researcher.level().gameTime * 1323
         val random = Random(player.server.overworld().seed + (researcher.persistId ?: 1) * 10 + daysOffset)
         val possibleTrades = TradesListener.TRADES_PROGRESS_AFTER_STRUCTURE_RANDOM.filterKeys {
             val key = ResourceKey.create(Registries.STRUCTURE, resLoc(it))
-            data.currentStructure == key || data.foundStructures.contains(key)
+            data.foundStructures.contains(key)
         }.values.flatten()
         val amount = IntRange(
             min(ResearcherConfig.randomTradeNumItems.min, possibleTrades.size),
             min(ResearcherConfig.randomTradeNumItems.max, possibleTrades.size),
         ).random(random)
 
-        if (amount > 0)
-            return possibleTrades.shuffled(random).subList(0, amount)
+        return if (amount > 0)
+            possibleTrades.shuffled(random).subList(0, amount)
         else
-            return listOf()
+            listOf()
+    }
+
+    private fun getReferenceStructure(structId: ResourceKey<Structure>): ResourceKey<Structure>? {
+        val tag = GrowssethStructures.info[structId]!!.tag
+        return structByTags[tag]
     }
 
     companion object {
@@ -155,6 +165,15 @@ class ProgressResearcherTradesProvider(
             fun get(server: MinecraftServer) = server.loadData(DEF)
             fun setDirty(server: MinecraftServer) = server.loadData(DEF).setDirty()
         }
+
+        // Check if struct matches
+        fun alreadyFoundStructure(server: MinecraftServer, structId: ResourceKey<Structure>): Boolean {
+            val tags = foundStructures.map { GrowssethStructures.info[it]!!.tag }
+            val matchingStructures = tags.flatMap { tag ->
+                server.registryAccess().registryOrThrow(Registries.STRUCTURE).getTagOrEmpty(tag).mapNotNull{it.unwrapKey().getOrNull()}
+            }
+            return matchingStructures.contains(structId)
+        }
     }
 
     object Callbacks {
@@ -169,12 +188,14 @@ class ProgressResearcherTradesProvider(
 
             val server = player.server
             val prov = getCurrent(server) ?: return
+
+            if (prov.getReferenceStructure(structId) == null) return
             if (!prov.isEnabled(server)) return
 
-            val foundStructures = ProgressTradesSavedData.get(server).foundStructures
-            if (foundStructures.contains(structId)) return
+            val data = ProgressTradesSavedData.get(server)
+            if (data.alreadyFoundStructure(player.server, structId)) return
 
-            foundStructures.add(structId)
+            data.foundStructures.add(prov.getReferenceStructure(structId)!!)
             ProgressTradesSavedData.setDirty(server)
             prov.regenTrades(server)
         }

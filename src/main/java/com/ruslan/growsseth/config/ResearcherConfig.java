@@ -33,6 +33,12 @@ public final class ResearcherConfig {
             translation = T_PREF + "webTrades.comment"
     )
     public static boolean webTrades = true;
+    @ConfigEntry(id = "tradesRestockTime", type = EntryType.FLOAT, translation = T_PREF + "tradesRestockTime.name")
+    @Comment(
+            value = "If >0, time (in fraction of ingame days) it takes for the Researcher to refresh his trade uses.",
+            translation = T_PREF + "tradesRestockTime.comment"
+    )
+    public static float tradesRestockTime = 1;
     @ConfigEntry(id = "randomTradeNumMaps", type = EntryType.OBJECT, translation = T_PREF + "randomTradeNumMaps.name")
     @Comment(
             value = "Max map amount the Researcher sells. Used only when singleResearcher is false or singleResearcherProgressTrades is false.",
@@ -45,6 +51,12 @@ public final class ResearcherConfig {
             translation = T_PREF + "randomTradeNumItems.comment"
     )
     public static final RangeConfig randomTradeNumItems = new RangeConfig(2, 2);
+    @ConfigEntry(id = "randomTradesRefreshTime", type = EntryType.FLOAT, translation = T_PREF + "randomTradesRefreshTime.name")
+    @Comment(
+            value = "If >0, time (in fraction of ingame days) it takes for the Researcher to change his random trades when singleResearcher is false or singleResearcherProgressTrades is false.",
+            translation = T_PREF + "randomTradesRefreshTime.comment"
+    )
+    public static float randomTradesRefreshTime = 0;
     @ConfigEntry(id = "immortalResearcher", type = EntryType.BOOLEAN, translation = T_PREF + "immortalResearcher.name")
     public static boolean immortalResearcher = false;
     @Comment(

@@ -1,118 +1,7 @@
 {
-    "progressBeforeStructure": {
-        "cave_camp": [
-            {
-                "gives": {
-                    "id": "growsseth:ruins_map",
-                    "amount": 1,
-                    "map": {
-                        "structure": "growsseth:cave_camp",
-                        "name": "structure.growsseth.cave_camp.map.name",
-                        "fixedStructureId": "growsseth:cave_camp",
-                        "scale": 1
-                    }
-                },
-                "wants": [
-                    // wants map for initial quest
-                    {
-                        "id": "minecraft:map",
-                        "amount": 1
-                    }
-                ]
-            }
-        ],
-        "enchant_tower": [
-            {
-                "gives": {
-                    "id": "growsseth:ruins_map",
-                    "amount": 1,
-                    "map": {
-                        "structure": "growsseth:enchant_tower",
-                        "name": "structure.growsseth.enchant_tower.map.name",
-                        "fixedStructureId": "growsseth:enchant_tower",
-                    }
-                },
-                "wants": [
-                    {
-                        "id": "minecraft:emerald",
-                        "amount": 10
-                    },
-                    {
-                        "id": "minecraft:map",
-                        "amount": 1
-                    }
-                ]
-            }
-        ],
-        "beekeeper_house": [
-            {
-                "gives": {
-                    "id": "growsseth:ruins_map",
-                    "amount": 1,
-                    "map": {
-                        "structure": "growsseth:beekeeper_house",
-                        "name": "structure.growsseth.beekeeper_house.map.name",
-                        "fixedStructureId": "growsseth:beekeeper_house"
-                    }
-                },
-                "wants": [
-                    {
-                        "id": "minecraft:emerald",
-                        "amount": 4
-                    },
-                    {
-                        "id": "minecraft:map",
-                        "amount": 1
-                    }
-                ]
-            }
-        ],
-        "noteblock_lab": [
-            {
-                "gives": {
-                    "id": "growsseth:ruins_map",
-                    "amount": 1,
-                    "map": {
-                        "structure": "growsseth:noteblock_lab",
-                        "name": "structure.growsseth.noteblock_lab.map.name",
-                        "fixedStructureId": "growsseth:noteblock_lab"
-                    }
-                },
-                "wants": [
-                    {
-                        "id": "minecraft:emerald",
-                        "amount": 4
-                    },
-                    {
-                        "id": "minecraft:map",
-                        "amount": 1
-                    }
-                ]
-            }
-        ],
-        "conduit_ruins": [
-            {
-                "gives": {
-                    "id": "growsseth:ruins_map",
-                    "amount": 1,
-                    "map": {
-                        "structure": "growsseth:conduit_ruins",
-                        "name": "structure.growsseth.conduit_ruins.map.name",
-                        "fixedStructureId": "growsseth:conduit_ruins",
-                        "scale": 4
-                    }
-                },
-                "wants": [
-                    {
-                        "id": "minecraft:emerald",
-                        "amount": 10
-                    },
-                    {
-                        "id": "minecraft:map",
-                        "amount": 1
-                    }
-                ],
-            },
+    "beforeStructure": {
+        // maps are generated
+        "conduit_church": [
             {
                 "gives": {
                     "id": "minecraft:written_book",
@@ -144,29 +33,6 @@
                 ]
             },
         ],
-        "abandoned_forge": [
-            {
-                "gives": {
-                    "id": "growsseth:ruins_map",
-                    "amount": 1,
-                    "map": {
-                        "structure": "growsseth:abandoned_forge",
-                        "name": "structure.growsseth.abandoned_forge.map.name",
-                        "fixedStructureId": "growsseth:abandoned_forge"
-                    }
-                },
-                "wants": [
-                    {
-                        "id": "minecraft:emerald",
-                        "amount": 4
-                    },
-                    {
-                        "id": "minecraft:map",
-                        "amount": 1
-                    }
-                ]
-            }
-        ]
     },
     "progressAfterStructure": {
         "noteblock_lab": [
@@ -194,7 +60,7 @@
                         "amount": 5
                     },
                 ],
-                "priority": -80,
+                "priority": 50,
             },
         ],
     },
@@ -215,7 +81,7 @@
                 "noNotification": true,
             },
         ],
-        "conduit_ruins": [
+        "conduit_church": [
             {
                 "gives": {
                     "id": "growsseth:growsseth_pottery_sherd",
