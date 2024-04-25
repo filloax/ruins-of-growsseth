@@ -26,9 +26,9 @@ import java.util.*
 class ResearcherTentStructure(
     structureSettings: StructureSettings,
     val templatePath: ResourceLocation = ResearcherTent.DEFAULT_ID,
-    val offsetY: Int = -11,     // makes it spawn under feet of player when using /place
+    val offsetY: Int = -BASEMENT_HEIGHT, // centered on floor height
     forcePosUseY: Boolean = true,
-) : SimpleStructure(structureSettings) {
+) : SimpleStructure(structureSettings, forcePosUseY) {
     companion object {
         @JvmStatic
         val CODEC: Codec<ResearcherTentStructure> = ExtraCodecs.validate(

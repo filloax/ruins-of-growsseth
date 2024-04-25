@@ -53,6 +53,17 @@ open class EventTrigger<E: LivingEntity>(vararg val forEvents: QuestUpdateEvent)
     }
 }
 
+class TimeTrigger<E : LivingEntity>(
+    private val questComponent: QuestComponent<E>,
+    val requiredTime: Long,
+) : QuestStageTrigger<E> {
+    override fun isActive(entity: E, event: QuestUpdateEvent): Boolean {
+        val time = entity.level().gameTime
+        return questComponent.data.currentStageTriggerTime < 0
+                || time - questComponent.data.currentStageTriggerTime >= requiredTime
+    }
+}
+
 private class AndTrigger<E: LivingEntity>(val parts: List<QuestStageTrigger<E>>): QuestStageTrigger<E> {
     override fun isActive(entity: E, event: QuestUpdateEvent): Boolean {
         val out = parts.all {

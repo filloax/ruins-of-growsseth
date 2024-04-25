@@ -21,6 +21,7 @@ import net.minecraft.util.datafix.DataFixTypes
 import net.minecraft.world.level.saveddata.SavedData
 import java.util.*
 import javax.xml.crypto.Data
+import kotlin.jvm.optionals.getOrNull
 
 /**
  * Save researcher data in the level to allow it to persist even if he gets respawned.
@@ -31,14 +32,16 @@ class ResearcherSavedData private constructor (
     var name: Component?,
     var donkeyUuid: UUID?,
 ) : FxSavedData<ResearcherSavedData>(CODEC) {
-    private lateinit var masterData: SavedData
+    private var masterData: SavedData? = null
 
     companion object {
         val CODEC: Codec<ResearcherSavedData> = RecordCodecBuilder.create { builder -> builder.group(
             CompoundTag.CODEC.fieldOf("data").forGetter(ResearcherSavedData::data),
             ComponentSerialization.CODEC.optionalFieldOf("name").forNullableGetter(ResearcherSavedData::name),
             UUIDUtil.STRING_CODEC.optionalFieldOf("donkeyUuid").forNullableGetter(ResearcherSavedData::donkeyUuid),
-        ).apply(builder, constructorWithOptionals(ResearcherSavedData::class)::newInstance) }
+        ).apply(builder) { data, name, donkeyUuid ->
+            ResearcherSavedData(data, name.getOrNull(), donkeyUuid.getOrNull())
+        } }
 
         // Crashes with non-string key codec
         val CONTAINER_CODEC: Codec<DataMap> = mutableMapCodec(Codec.STRING, CODEC)
@@ -86,17 +89,21 @@ class ResearcherSavedData private constructor (
 
     override fun setDirty() {
         super.setDirty()
-        masterData.setDirty()
+        masterData?.setDirty() ?: RuinsOfGrowsseth.LOGGER.error("Tried setting reseracher data as dirty before finalizing")
     }
 
     override fun setDirty(dirty: Boolean) {
         super.setDirty(dirty)
         if (dirty) {
-            masterData.isDirty = dirty
+            masterData?.let { it.isDirty = dirty } ?: RuinsOfGrowsseth.LOGGER.error("Tried setting reseracher data as dirty before finalizing")
         }
     }
 
     class DataMap(initialItems: Map<Int, ResearcherSavedData> = mapOf()) : FxSavedData<DataMap>(CONTAINER_CODEC) {
+        init {
+            initialItems.values.forEach { it.initParent(this) }
+        }
+
         val items = mutableMapOf<Int, ResearcherSavedData>().also {
             it.putAll(initialItems)
         }

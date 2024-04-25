@@ -7,10 +7,12 @@ import com.ruslan.growsseth.dialogues.ResearcherDialogueApiListener
 import com.ruslan.growsseth.dialogues.ResearcherDialogueListener
 import com.ruslan.growsseth.effect.GrowssethEffects
 import com.ruslan.growsseth.entity.GrowssethEntities
-import com.ruslan.growsseth.entity.researcher.*
-import com.ruslan.growsseth.entity.researcher.trades.ResearcherTrades
+import com.ruslan.growsseth.entity.researcher.CustomRemoteDiaries
+import com.ruslan.growsseth.entity.researcher.DiaryListener
+import com.ruslan.growsseth.entity.researcher.trades.GameMasterResearcherTradesProvider
 import com.ruslan.growsseth.entity.researcher.trades.TradesListener
-import com.ruslan.growsseth.http.*
+import com.ruslan.growsseth.http.GrowssethApi
+import com.ruslan.growsseth.http.GrowssethExtraEvents
 import com.ruslan.growsseth.item.GrowssethCreativeModeTabs
 import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.maps.GrowssethMapDecorations
@@ -42,14 +44,14 @@ object RuinsOfGrowsseth : ModInitializer {
     override fun onInitialize() {
         log(Level.INFO, "Initializing")
 
-        FabricEvents.initEvents()
+        ModEvents.get().initCallbacks()
 
         GrowssethApi.current.init()
         initRegistries()
         RemoteStructures.init()
         CustomRemoteDiaries.init()
         RemoteStructureBooks.init()
-        ResearcherTrades.init()
+        GameMasterResearcherTradesProvider.subscribe()
         GrowssethExtraEvents.init()
         ResearcherDialogueApiListener.init()
         GrowssethMapDecorations.init()
@@ -75,6 +77,7 @@ object RuinsOfGrowsseth : ModInitializer {
         GrowssethStructurePieceTypes.registerStructurePieces{ id, value -> Registry.register(BuiltInRegistries.STRUCTURE_PIECE, id, value) }
         GrowssethStructures.registerStructureTypes{ id, value -> Registry.register(BuiltInRegistries.STRUCTURE_TYPE, id, value) }
         GrowssethCriterions.registerCriterions { id, value -> Registry.register(BuiltInRegistries.TRIGGER_TYPES, id, value) }
+        GrowssethCommands.ArgumentTypes.registerArgumentTypes(BuiltInRegistries.COMMAND_ARGUMENT_TYPE)
     }
 
     private fun initItemGroups() {

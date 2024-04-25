@@ -1,35 +1,57 @@
 {
-  "parent": "growsseth:growsseth/root",
-  "display": {
-    "title": {
-      "translate": "advancements.growsseth.structures.enchant_tower.title"
+    "parent": "growsseth:growsseth/root",
+    "display": {
+        "title": {
+            "translate": "advancements.growsseth.structures.enchant_tower.title"
+        },
+        "description": {
+            "translate": "advancements.growsseth.structures.enchant_tower.description"
+        },
+        "icon": {
+            "item": "minecraft:enchanting_table"
+        },
+        "hidden": true,
+        "show_toast": true,
+        "frame": "goal"
     },
-    "description": {
-      "translate": "advancements.growsseth.structures.enchant_tower.description"
+    "criteria": {
+        "in_structure": {
+            "conditions": {
+                "player": [
+                    {
+                        "condition": "minecraft:entity_properties",
+                        "entity": "this",
+                        "predicate": {
+                            "location": {
+                                "structure": "growsseth:enchant_tower"
+                            }
+                        }
+                    }
+                ]
+            },
+            "trigger": "minecraft:location"
+        },
+        "in_structure_cydonia": {
+            "conditions": {
+                "player": [
+                    {
+                        "condition": "minecraft:entity_properties",
+                        "entity": "this",
+                        "predicate": {
+                            "location": {
+                                "structure": "growsseth:cydonia/enchant_tower"
+                            }
+                        }
+                    }
+                ]
+            },
+            "trigger": "minecraft:location"
+        }
     },
-    "icon": {
-      "item": "minecraft:enchanting_table"
-    },
-    "hidden": true,
-    "show_toast": true,
-    "frame": "goal"
-  },
-  "criteria": {
-    "in_structure": {
-      "conditions": {
-        "player": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "location": {
-                "structure": "growsseth:enchant_tower"
-              }
-            }
-          }
+    "requirements": [
+        [
+            "in_structure",
+            "in_structure_cydonia"
         ]
-      },
-      "trigger": "minecraft:location"
-    }
-  }
+    ]
 }

@@ -122,7 +122,14 @@ class ResearcherDiaryComponent(val researcher: Researcher) {
         return true
     }
 
+    private fun hasStructureDiary(forStructure: TagKey<Structure>): Boolean {
+        val languageDiaries = DiaryListener.DIARIES_BY_LANG[GrowssethConfig.serverLanguage] ?: DiaryListener.DIARIES_BY_LANG[DEFAULT_LANGUAGE]
+        return languageDiaries?.structures?.containsKey(forStructure) == true
+    }
+
     private fun makeStructureDiary(forStructure: TagKey<Structure>): Boolean {
+        if (!hasStructureDiary(forStructure)) return false
+
         val languageDiaries = DiaryListener.DIARIES_BY_LANG[GrowssethConfig.serverLanguage] ?: DiaryListener.DIARIES_BY_LANG[DEFAULT_LANGUAGE]
         val remoteDiaries = CustomRemoteDiaries.structureReplacementDiaries
         val success = makeDiary({ remoteDiaries[forStructure] ?: languageDiaries?.structures?.get(forStructure) }) {
@@ -191,7 +198,7 @@ class ResearcherDiaryComponent(val researcher: Researcher) {
                     printedWarningFor.add(it)
                 }
                 tag
-            }
+            }.filter(this::hasStructureDiary)
             val new: List<TagKey<Structure>> = unlockedTags.minus(data.recordedStructures.keys)
             if (new.isNotEmpty()) {
                 found = true

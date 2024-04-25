@@ -4,9 +4,11 @@ import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.structure.GrowssethStructures
 import com.ruslan.growsseth.structure.RemoteStructures
 import com.ruslan.growsseth.utils.resLoc
+import net.minecraft.advancements.AdvancementHolder
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.level.levelgen.structure.Structure
 
 object GrowssethAdvancements {

@@ -1,0 +1,122 @@
+{
+    "beforeStructure": {
+        // maps are generated
+        "conduit_church": [
+            {
+                "gives": {
+                    "id": "minecraft:written_book",
+                    "amount": 1,
+                    "diaryId": "enchantment_dictionary",
+                },
+                "wants": [
+                    {
+                        "id": "minecraft:book",
+                        "amount": 1
+                    },
+                ],
+                "priority": -100,
+            },
+        ],
+        "golem_house": [
+            // Placeholder for now, as cannot make map for village with specific house
+            {
+                "gives": {
+                    "id": "minecraft:written_book",
+                    "amount": 1,
+                    "diaryId": "golem_house_guide_placeholder",
+                },
+                "wants": [
+                    {
+                        "id": "minecraft:book",
+                        "amount": 1
+                    },
+                ]
+            },
+        ],
+    },
+    "progressAfterStructure": {
+        "noteblock_lab": [
+            {
+                "gives": {
+                    "id": "growsseth:disc_giorgio_cubetti",
+                    "amount": 1
+                },
+                "wants": [
+                    {
+                        "id": "minecraft:emerald",
+                        "amount": 5
+                    },
+                ],
+                "priority": 50,
+            },
+            {
+                "gives": {
+                    "id": "growsseth:disc_giorgio_lofi_inst",
+                    "amount": 1
+                },
+                "wants": [
+                    {
+                        "id": "minecraft:emerald",
+                        "amount": 5
+                    },
+                ],
+                "priority": 50,
+            },
+        ],
+    },
+    "progressAfterStructureRandom": {
+        "researcher_tent": [
+            {
+                "gives": {
+                    "id": "growsseth:growsseth_banner_pattern",
+                    "amount": 1
+                },
+                "wants": [
+                    {
+                        "id": "minecraft:emerald",
+                        "amount": 1
+                    }
+                ],
+                "priority": 20,
+                "noNotification": true,
+            },
+        ],
+        "conduit_church": [
+            {
+                "gives": {
+                    "id": "growsseth:growsseth_pottery_sherd",
+                    "amount": 1
+                },
+                "wants": [
+                    {
+                        "id": "minecraft:emerald",
+                        "amount": 6
+                    }
+                ],
+                "priority": 20,
+                "noNotification": true
+            }
+        ],
+        "enchant_tower": [
+            {
+                "gives": {
+                    "id": "growsseth:growsseth_trim_template",
+                    "amount": 1
+                },
+                "wants": [
+                    {
+                        "id": "minecraft:emerald",
+                        "amount": 6
+                    },
+                    {
+                        "id": "minecraft:diamond",
+                        "amount": 8
+                    }
+                ],
+                "priority": 20,
+                "randomWeight": 0.2,
+                "noNotification": true
+            },
+        ]
+    },
+}

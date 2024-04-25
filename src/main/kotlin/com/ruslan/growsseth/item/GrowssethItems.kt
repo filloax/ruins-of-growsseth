@@ -7,7 +7,6 @@ import com.ruslan.growsseth.sound.GrowssethSounds
 import com.ruslan.growsseth.utils.resLoc
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings
 import net.minecraft.core.Holder
-import net.minecraft.core.Registry
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
@@ -54,7 +53,7 @@ object GrowssethItems {
 	val DISC_MISSIVA_NELL_OMBRA = make("disc_missiva_nell_ombra",
 		RecordItem(6, GrowssethSounds.DISC_MISSIVA_NELL_OMBRA, FabricItemSettings().maxCount(1), 329))
 
-	val discsToVocals = mutableMapOf(
+	val DISCS_TO_VOCALS = mutableMapOf(
 		DISC_GIORGIO_LOFI_INST to DISC_GIORGIO_LOFI,
 		DISC_BINOBINOOO_INST to DISC_BINOBINOOO,
 	)

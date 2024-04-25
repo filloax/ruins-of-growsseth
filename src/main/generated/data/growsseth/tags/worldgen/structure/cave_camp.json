@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "growsseth:cave_camp",
+      "required": false
+    },
+    {
+      "id": "growsseth:cydonia/cave_camp",
+      "required": false
+    }
+  ]
+}

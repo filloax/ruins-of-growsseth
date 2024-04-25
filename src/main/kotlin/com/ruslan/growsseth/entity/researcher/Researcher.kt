@@ -1,6 +1,7 @@
 package com.ruslan.growsseth.entity.researcher
 
 import com.filloax.fxlib.EventUtil
+import com.filloax.fxlib.codec.mutableMapCodec
 import com.filloax.fxlib.entity.delegate
 import com.filloax.fxlib.entity.fixedChangeDimension
 import com.filloax.fxlib.entity.getPersistData
@@ -13,6 +14,7 @@ import com.filloax.fxlib.structure.tracking.CustomPlacedStructureTracker
 import com.mojang.datafixers.util.Either
 import com.mojang.serialization.Codec
 import com.ruslan.growsseth.Constants
+import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.config.ResearcherConfig
 import com.ruslan.growsseth.dialogues.BasicDialogueEvents
@@ -22,13 +24,18 @@ import com.ruslan.growsseth.entity.RefreshableMerchant
 import com.ruslan.growsseth.entity.SpawnTimeTracker
 import com.ruslan.growsseth.entity.researcher.ResearcherCombatComponent.Companion.distanceForUnjustifiedAggression
 import com.ruslan.growsseth.entity.researcher.ResearcherCombatComponent.ResearcherAttackGoal
-import com.ruslan.growsseth.entity.researcher.trades.ResearcherTrades
+import com.ruslan.growsseth.entity.researcher.trades.GameMasterResearcherTradesProvider
+import com.ruslan.growsseth.entity.researcher.trades.ResearcherTradeMode
+import com.ruslan.growsseth.entity.researcher.trades.ResearcherTradesData
 import com.ruslan.growsseth.http.GrowssethExtraEvents
 import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.quests.QuestOwner
 import com.ruslan.growsseth.structure.GrowssethStructures
 import com.ruslan.growsseth.structure.pieces.ResearcherTent
+import com.ruslan.growsseth.structure.structure.ResearcherTentStructure
+import com.ruslan.growsseth.utils.GrowssethCodecs
 import net.minecraft.core.BlockPos
+import net.minecraft.core.UUIDUtil
 import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.core.registries.Registries
@@ -46,6 +53,7 @@ import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.tags.DamageTypeTags
 import net.minecraft.tags.TagKey
+import net.minecraft.util.ExtraCodecs
 import net.minecraft.util.RandomSource
 import net.minecraft.world.*
 import net.minecraft.world.damagesource.DamageSource
@@ -55,9 +63,7 @@ import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
-import net.minecraft.world.entity.ai.goal.FloatGoal
-import net.minecraft.world.entity.ai.goal.MoveTowardsRestrictionGoal
-import net.minecraft.world.entity.ai.goal.OpenDoorGoal
+import net.minecraft.world.entity.ai.goal.*
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.ai.navigation.PathNavigation
 import net.minecraft.world.entity.ai.navigation.WallClimberNavigation
@@ -160,27 +166,30 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         private val DATA_DEFLECT_ARROW_PARTICLES = SynchedEntityData.defineId(Researcher::class.java, EntityDataSerializers.BOOLEAN)
         private val DATA_TELEPORT_PARTICLES = SynchedEntityData.defineId(Researcher::class.java, EntityDataSerializers.BOOLEAN)
 
-        lateinit var TENT_STRUCTURE: Structure
-            private set
-
-        fun initServer(server: MinecraftServer) {
-            val registryAccess = server.registryAccess()
-            TENT_STRUCTURE = registryAccess.registryOrThrow(Registries.STRUCTURE).get(GrowssethStructures.RESEARCHER_TENT)!!
-        }
+//        private var tentStructures: List<Structure>? = null
 
         fun findTent(level: ServerLevel, startingPos: BlockPos, currentPos: BlockPos? = null): StructureStart? {
             val structureManager = level.structureManager()
             var tentStart: StructureStart? = null
+//
+//            val validStructures = tentStructures ?: run {
+//                val structures = level.registryAccess().registryOrThrow(Registries.STRUCTURE).holders().filter {
+//                    it.value() is ResearcherTentStructure
+//                }.map{ it.value() }.toList()
+//                tentStructures = structures
+//                structures
+//            }
 
             // First try in starting pos, then less likely current pos
             for (pos in listOfNotNull(startingPos, currentPos)) {
                 if (tentStart != null) break
 
-                tentStart = structureManager.getStructureAt(pos, TENT_STRUCTURE)
+//                tentStart = validStructures.firstNotNullOfOrNull { structureManager.getStructureAt(pos, it) }
+                tentStart = structureManager.getStructureWithPieceAt(pos, GrowssethTags.StructTags.RESEARCHER_TENT)
 
                 // Error in the fixed structures mixin? Just incase, given usecase of mod (streaming)
                 // we have to avoid all avoidable crashes
-                if (tentStart?.isValid == true && tentStart.structure != TENT_STRUCTURE) {
+                if (tentStart?.isValid == true && tentStart.structure !is ResearcherTentStructure) {
                     RuinsOfGrowsseth.LOGGER.error("Found wrong structure when searching tent, is ${tentStart.structure} in $tentStart")
                     tentStart = StructureStart.INVALID_START
                 }
@@ -193,7 +202,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
                 // just in case (mainly for streaming version)
                 if (tentStart == null) {
                     val tracker = CustomPlacedStructureTracker.get(level)
-                    tentStart = tracker.getByPos(pos).find { it.structure == TENT_STRUCTURE }?.structureStart
+                    tentStart = tracker.getByPos(pos).find { it.structure is ResearcherTentStructure }?.structureStart
                     if (tentStart != null) {
                         RuinsOfGrowsseth.LOGGER.warn("Couldn't find tent via mixin, found with structure tracker (at $pos)")
                     }
@@ -268,14 +277,10 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             }
         }
 
-    // Used to determine if specific player should have a trade available, as merchant interface
-    // has no player arg in getOffers and tradingPlayer shouldn't be initialized when offers are get
-    var offersPlayer : Player? = null
-        private set
-
     private val inventory = SimpleContainer(8)
     private var tradingPlayer: Player? = null
-    private var offers: MerchantOffers? = null
+    private val offersByPlayer = mutableMapOf<UUID, MerchantOffers>()
+    private var tradesData = server?.let { ResearcherTradesData(ResearcherTradeMode.getFromSettings(it)) }
     private var tentCache: Optional<StructureStart>? = null
     private var lastRefusedTradeTimer: Int = 0
 
@@ -336,7 +341,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     override fun finalizeSpawn(level: ServerLevelAccessor, difficulty: DifficultyInstance, mobSpawnType: MobSpawnType, spawnGroupData: SpawnGroupData?, compoundTag: CompoundTag?): SpawnGroupData? {
         val (savedData, id) = if (!level().isClientSide()) {
             // Load data from previous researchers
-            if (ResearcherConfig.persistentResearcher) {
+            if (ResearcherConfig.singleResearcher) {
                 Pair(ResearcherSavedData.getOrCreate(server!!, 0), 0)
             } else {
                 /* Make a new ID for the saved data as with maps, if persistent
@@ -629,22 +634,20 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             RuinsOfGrowsseth.LOGGER.info("Start interaction with researcher $this")
             player.getPersistData().putBoolean(Constants.DATA_PLAYER_MET_RESEARCHER, true)
 
-            val offers = getOffersFor(player)
-            val blockTrades = angryForMess && !healed
-            if (offers.isEmpty() || blockTrades) {
-                if (lastRefusedTradeTimer == 0) {
-                    lastRefusedTradeTimer = 40
-                    setUnhappy()
-                    if (player is ServerPlayer) {
+            if (player is ServerPlayer) {
+                val offers = getOffers(player)
+                val blockTrades = angryForMess && !healed
+                if (offers.isEmpty() || blockTrades) {
+                    if (lastRefusedTradeTimer == 0) {
+                        lastRefusedTradeTimer = 40
+                        setUnhappy()
                         val reason = if (blockTrades) "angry" else "noTrades"
                         dialogues?.triggerDialogue(player, ResearcherDialoguesComponent.EV_REFUSE_TRADE, eventParam = reason)
-                    }
-                    return InteractionResult.sidedSuccess(level().isClientSide)
-                } else
-                    return InteractionResult.FAIL
-            }
+                        return InteractionResult.sidedSuccess(level().isClientSide)
+                    } else
+                        return InteractionResult.FAIL
+                }
 
-            if (!level().isClientSide) {
                 setTradingPlayer(player)
                 openTradingScreen(player, this.displayName ?: this.name, 1)
             }
@@ -690,6 +693,8 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         researcherData.putBoolean("AngryForMess", angryForMess)
         researcherData.putBoolean("DonkeyBorrowed", donkeyWasBorrowed)
         researcherData.putBoolean("MetPlayer", metPlayer)
+        researcherData.saveField("PlayerOffers", mutableMapCodec(UUIDUtil.STRING_CODEC, GrowssethCodecs.MERCHANT_OFFERS_CODEC), ::offersByPlayer)
+        researcherData.saveField("TradesData", ResearcherTradesData.CODEC) { tradesData() }
 
         dialogues?.writeNbt(researcherData)
         diary?.writeNbt(researcherData)
@@ -722,6 +727,9 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         if (researcherData.contains("MetPlayer")) {
             metPlayer = researcherData.getBoolean("MetPlayer")
         }
+
+        researcherData.loadField("PlayerOffers", mutableMapCodec(UUIDUtil.STRING_CODEC, GrowssethCodecs.MERCHANT_OFFERS_CODEC)) { offersByPlayer.putAll(it) }
+        researcherData.loadField("TradesData", ResearcherTradesData.CODEC) { tradesData = it }
 
         dialogues?.readNbt(researcherData)
         diary?.readNbt(researcherData)
@@ -808,28 +816,53 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
     fun isTrading(): Boolean { return tradingPlayer != null }
 
+    private fun tradesData() = tradesData ?: throw IllegalStateException("Accessed tradesData in client!")
+
     override fun getOffers(): MerchantOffers {
-        val offers = ResearcherTrades.getOffers(this)
-        this.offers = offers
+        return server?.let { serv ->
+            val provider = ResearcherTradeMode.providerFromSettings(serv)
+            provider.getOffers(this, tradesData())
+        } ?: MerchantOffers()
+    }
+
+    fun getOffers(player: ServerPlayer): MerchantOffers {
+        val server = player.server
+        val currentProvider = ResearcherTradeMode.providerFromSettings(server)
+        val tradesData = tradesData()
+
+        if (currentProvider.mode != tradesData.mode) {
+            tradesData.resetRandomTrades()
+        }
+
+        var offers = offersByPlayer[player.uuid]
+        val updatedOffers = currentProvider.getOffers(this, tradesData(), player)
+
+        if (currentProvider.mode != tradesData.mode || offers == null || !offersMatch(offers, updatedOffers)) {
+            // Refresh offers
+            offers = updatedOffers
+            tradesData.mode = currentProvider.mode
+        }
+        offersByPlayer[player.uuid] = offers
+
         return offers
     }
 
-    private fun getOffersFor(player: Player): MerchantOffers {
-        // Set trade offer player to be used in researcher trades class
-        offersPlayer = player
-        return getOffers()
-    }
+    private fun offersMatch(offersA: MerchantOffers, offersB: MerchantOffers): Boolean {
+        if (offersA.size != offersB.size) return false
 
-    // Leftover from previous trade generation code, leaving as might be useful later
-    private fun getOffersDirect(): MerchantOffers {
-        return offers ?: throw java.lang.NullPointerException("Accessed Researcher offers before they were set!")
+        for (i in offersA.indices) {
+            if (!offersA[i].equals(offersB[i])) return false
+        }
+
+        return true
     }
 
     override fun refreshCurrentTrades() {
         assert(!this.level().isClientSide) { "Refreshing trades from client side" }
+        val offersCurrent = this.offers ?: throw IllegalStateException("Refreshing offers when not set yet on server")
         tradingPlayer?.let {
             it.sendMerchantOffers(
-                it.containerMenu.containerId,getOffersDirect(),1,0,false,true,
+                it.containerMenu.containerId, offersCurrent,1,0,false,true,
             )
         }
     }

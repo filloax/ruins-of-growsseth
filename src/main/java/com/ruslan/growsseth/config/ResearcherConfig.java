@@ -9,6 +9,54 @@ import static com.ruslan.growsseth.config.GrowssethConfig.T_PREF;
 
 @Category("researcher")
 public final class ResearcherConfig {
+    @ConfigEntry(id = "singleResearcher", type = EntryType.BOOLEAN, translation = T_PREF + "singleResearcher.name")
+    @Comment(
+            value = "Share memory between all researcher entities (narratively assume it's the 'same' Researcher moving around)"
+                + "which is the case by default."
+                + "Will affect dialogues and trades (multiple researchers will always have a random selection of trades that to not change)."
+                + "In Growsseth world preset, this will always be true.",
+            translation = T_PREF + "singleResearcher.comment"
+    )
+    public static boolean singleResearcher = true;
+    @ConfigEntry(id = "singleResearcherProgressTrades", type = EntryType.BOOLEAN, translation = T_PREF + "singleResearcherRandomTrades.name")
+    @Comment(
+            value = "True by default, ignored if singleResearcher is false. If enabled, the researcher will initially only sell one kind of map, "
+                    + "and unlock more structures as you return to him after finding the previous one. In this mode, the researcher's 'quest' will automatically progress (see quest config section)."
+                    + "if disabled, each instance of the researcher will have up to N random maps (see randomTradeMaxMaps) for sale, with no quest progress."
+                    + "Always true with a fixed order in Growsseth world preset.",
+            translation = T_PREF + "singleResearcherRandomTrades.comment"
+    )
+    public static boolean singleResearcherProgressTrades = false;
+    @ConfigEntry(id = "webTrades", type = EntryType.BOOLEAN, translation = T_PREF + "webTrades.name")
+    @Comment(
+            value = "Whether to apply gamemaster-controlled trades when webConfig.webDataSync is enabled.",
+            translation = T_PREF + "webTrades.comment"
+    )
+    public static boolean webTrades = true;
+    @ConfigEntry(id = "tradesRestockTime", type = EntryType.FLOAT, translation = T_PREF + "tradesRestockTime.name")
+    @Comment(
+            value = "If >0, time (in fraction of ingame days) it takes for the Researcher to refresh his trade uses.",
+            translation = T_PREF + "tradesRestockTime.comment"
+    )
+    public static float tradesRestockTime = 1;
+    @ConfigEntry(id = "randomTradeNumMaps", type = EntryType.OBJECT, translation = T_PREF + "randomTradeNumMaps.name")
+    @Comment(
+            value = "Max map amount the Researcher sells. Used only when singleResearcher is false or singleResearcherProgressTrades is false.",
+            translation = T_PREF + "randomTradeNumMaps.comment"
+    )
+    public static final RangeConfig randomTradeNumMaps = new RangeConfig(2, 2);
+    @ConfigEntry(id = "randomTradeNumItems", type = EntryType.OBJECT, translation = T_PREF + "randomTradeNumItems.name")
+    @Comment(
+            value = "Max misc item amount the Researcher sells. Used for random trades included in all trade modes except web (limited by progress for progress modes).",
+            translation = T_PREF + "randomTradeNumItems.comment"
+    )
+    public static final RangeConfig randomTradeNumItems = new RangeConfig(2, 2);
+    @ConfigEntry(id = "randomTradesRefreshTime", type = EntryType.FLOAT, translation = T_PREF + "randomTradesRefreshTime.name")
+    @Comment(
+            value = "If >0, time (in fraction of ingame days) it takes for the Researcher to change his random trades when singleResearcher is false or singleResearcherProgressTrades is false.",
+            translation = T_PREF + "randomTradesRefreshTime.comment"
+    )
+    public static float randomTradesRefreshTime = 0;
     @ConfigEntry(id = "immortalResearcher", type = EntryType.BOOLEAN, translation = T_PREF + "immortalResearcher.name")
     public static boolean immortalResearcher = false;
     @Comment(
@@ -25,8 +73,6 @@ public final class ResearcherConfig {
     public static boolean researcherStrikesFirst = false;
     @ConfigEntry(id = "researcherWritesDiaries", type = EntryType.BOOLEAN, translation = T_PREF + "researcherWritesDiaries.name")
     public static boolean researcherWritesDiaries = true;
-    @ConfigEntry(id = "persistentResearcher", type = EntryType.BOOLEAN, translation = T_PREF + "persistentResearcher.name")
-    public static boolean persistentResearcher = true;   // makes all researcher share the same memory
     @ConfigEntry(id = "researcherBorrowPenalty", type = EntryType.FLOAT, translation = T_PREF + "researcherBorrowPenalty.name")
     public static float researcherBorrowPenalty = 2f;
     @ConfigEntry(id = "disableNpcDialogues", type = EntryType.BOOLEAN, translation = T_PREF + "disableNpcDialogues.name")
