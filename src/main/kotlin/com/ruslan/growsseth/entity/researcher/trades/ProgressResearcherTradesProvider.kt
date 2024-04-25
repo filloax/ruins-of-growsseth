@@ -45,6 +45,10 @@ class ProgressResearcherTradesProvider(
         }
     }
 
+    fun onlyOneLeft(server: MinecraftServer) = ProgressTradesSavedData.get(server).let {
+        it.currentStructure != null && it.foundStructures.size == structures.size - 1
+    }
+
     fun isFinished(server: MinecraftServer) = ProgressTradesSavedData.get(server).let {
         it.currentStructure == null && it.foundStructures.isNotEmpty()
     }

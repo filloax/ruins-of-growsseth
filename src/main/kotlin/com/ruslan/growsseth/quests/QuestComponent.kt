@@ -32,6 +32,7 @@ open class QuestComponent<E : LivingEntity>(val entity: E, val name: String) {
                 Codec.STRING.fieldOf("currentStageId").forGetter(QuestData::currentStageId),
                 mutableListCodec(Codec.STRING).fieldOf("stageHistory").forGetter(QuestData::stageHistory),
                 Codec.BOOL.fieldOf("active").forGetter(QuestData::active),
+                Codec.LONG.optionalFieldOf("currentStageTriggerTime", -1).forGetter(QuestData::currentStageTriggerTime),
             ).apply(builder, ::QuestData)
         }
 
@@ -44,6 +45,7 @@ open class QuestComponent<E : LivingEntity>(val entity: E, val name: String) {
     private val stagesGraph = QuestNodeImpl(QuestStage.blank<E>(), INIT_STAGE_ID)
     private val stagesMap = mutableMapOf<String, QuestNodeImpl<E>>("init" to stagesGraph)
     private var triggeredFirst = false
+    val server = entity.server ?: throw IllegalStateException("Initialized ResearcherQuestComponent in client!")
     val serverLevel
         get() = entity.level() as ServerLevel
 
@@ -55,6 +57,7 @@ open class QuestComponent<E : LivingEntity>(val entity: E, val name: String) {
         var currentStageId: String = INIT_STAGE_ID,
         var stageHistory: MutableList<String> = mutableListOf(INIT_STAGE_ID),
         var active: Boolean = true,
+        var currentStageTriggerTime: Long = -1,
     )
 
     /**
@@ -145,6 +148,7 @@ open class QuestComponent<E : LivingEntity>(val entity: E, val name: String) {
     ): QuestNode<E> {
         data.currentStageId = id
         data.stageHistory += id
+        data.currentStageTriggerTime = entity.level().gameTime
         RuinsOfGrowsseth.LOGGER.info("Triggered stage ${node.id}${event?.let{" [$it]"} ?: ""}\n\t$this")
         node.stage.onActivated(entity)
 
