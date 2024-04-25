@@ -26,6 +26,8 @@ import com.ruslan.growsseth.worldgen.worldpreset.GrowssethWorldPreset
 import com.ruslan.growsseth.worldgen.worldpreset.LocationNotifListener
 import net.fabricmc.fabric.api.event.lifecycle.v1.*
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents
+import net.fabricmc.fabric.api.loot.v2.LootTableEvents
+import net.fabricmc.fabric.api.loot.v2.LootTableSource
 import net.fabricmc.fabric.api.networking.v1.PacketSender
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.minecraft.advancements.AdvancementHolder
@@ -35,10 +37,12 @@ import net.minecraft.core.RegistryAccess
 import net.minecraft.core.SectionPos
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.network.ServerGamePacketListenerImpl
+import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.InteractionResultHolder
@@ -59,6 +63,8 @@ import net.minecraft.world.level.chunk.LevelChunk
 import net.minecraft.world.level.levelgen.RandomState
 import net.minecraft.world.level.levelgen.structure.Structure
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager
+import net.minecraft.world.level.storage.loot.LootDataManager
+import net.minecraft.world.level.storage.loot.LootTable
 
 object FabricEvents : ModEvents() {
     override fun onServerStarting(event: ServerEvent) = ServerLifecycleEvents.SERVER_STARTING.register(event)
@@ -96,6 +102,8 @@ object FabricEvents : ModEvents() {
     override fun onFenceUnleash(event: (Mob, BlockPos) -> Unit) = LeashEvents.FENCE_UNLEASH.register(event)
 
     override fun beforeNameTagRename(event: (target: LivingEntity, Component, ServerPlayer, ItemStack, InteractionHand) -> InteractionResultHolder<ItemStack>) = NameTagRenameEvent.BEFORE.register(event)
+
+    override fun onLootTableModify(event: (resourceManager: ResourceManager, lootManager: LootDataManager, id: ResourceLocation, tableBuilder: LootTable.Builder, source: LootTableSource) -> Unit) = LootTableEvents.MODIFY.register(event)
 
     /**
      * Returns true if structure should not spawn
