@@ -4,6 +4,7 @@ import com.filloax.fxlib.codec.CodecUtils
 import com.filloax.fxlib.nbt.loadField
 import com.filloax.fxlib.nbt.saveField
 import com.mojang.serialization.Codec
+import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.GrowssethTags.RESEARCHER_MESS_TRIGGER
 import com.ruslan.growsseth.GrowssethTags.TENT_MATERIALS_WHITELIST
 import com.ruslan.growsseth.RuinsOfGrowsseth
@@ -92,7 +93,7 @@ class ResearcherDialoguesComponent(
         val structureManager = (entity.level() as ServerLevel).structureManager()
 
         farPlayers.removeIf {
-            val struct = structureManager.getStructureAt(it.blockPosition(), Researcher.TENT_STRUCTURE)
+            val struct = structureManager.getStructureWithPieceAt(it.blockPosition(), GrowssethTags.StructTags.RESEARCHER_TENT)
             // Note: bounding box is inflated for this kind of structure by vanilla game, so de-inflate it
             if (struct.isValid) {
                 struct.boundingBox.inflatedBy(-12).isInside(it.blockPosition())
@@ -258,7 +259,7 @@ class ResearcherDialoguesComponent(
         private fun getResearchersNearTentAt(level: ServerLevel, pos: BlockPos): List<Researcher>? {
             val structureManager = level.structureManager()
 
-            val structureStart = structureManager.getStructureAt(pos, Researcher.TENT_STRUCTURE)
+            val structureStart = structureManager.getStructureWithPieceAt(pos, GrowssethTags.StructTags.RESEARCHER_TENT)
             if (structureStart.isValid) {
                 val bbox = structureStart.boundingBox
                 return level.getEntitiesOfClass(

@@ -16,4 +16,6 @@ object Constants {
 
     const val MIN_HEIGHT = -64
     const val MAX_HEIGHT = 310
+
+    const val DAY_TICKS_DURATION = 24000L
 }

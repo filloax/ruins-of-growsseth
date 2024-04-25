@@ -1,0 +1,386 @@
+{
+  "beforeStructure": {
+    "beekeeper_house": [
+      {
+        "gives": {
+          "id": "growsseth:ruins_map",
+          "map": {
+            "fixedStructureId": "#growsseth:beekeeper_house",
+            "name": "structure.growsseth.beekeeper_house.map.name",
+            "structure": "#growsseth:beekeeper_house"
+          }
+        },
+        "priority": -50,
+        "wants": [
+          {
+            "id": "minecraft:map"
+          },
+          {
+            "amount": 5,
+            "id": "minecraft:emerald"
+          }
+        ]
+      }
+    ],
+    "cave_camp": [
+      {
+        "gives": {
+          "id": "growsseth:ruins_map",
+          "map": {
+            "fixedStructureId": "#growsseth:cave_camp",
+            "name": "structure.growsseth.cave_camp.map.name",
+            "structure": "#growsseth:cave_camp"
+          }
+        },
+        "priority": -50,
+        "wants": [
+          {
+            "id": "minecraft:map"
+          },
+          {
+            "amount": 0,
+            "id": "minecraft:emerald"
+          }
+        ]
+      }
+    ],
+    "conduit_church": [
+      {
+        "gives": {
+          "id": "growsseth:ruins_map",
+          "map": {
+            "fixedStructureId": "#growsseth:conduit_church",
+            "name": "structure.growsseth.conduit_church.map.name",
+            "structure": "#growsseth:conduit_church"
+          }
+        },
+        "priority": -50,
+        "wants": [
+          {
+            "id": "minecraft:map"
+          },
+          {
+            "amount": 7,
+            "id": "minecraft:emerald"
+          }
+        ]
+      }
+    ],
+    "enchant_tower": [
+      {
+        "gives": {
+          "id": "growsseth:ruins_map",
+          "map": {
+            "fixedStructureId": "#growsseth:enchant_tower",
+            "name": "structure.growsseth.enchant_tower.map.name",
+            "structure": "#growsseth:enchant_tower"
+          }
+        },
+        "priority": -50,
+        "wants": [
+          {
+            "id": "minecraft:map"
+          },
+          {
+            "amount": 7,
+            "id": "minecraft:emerald"
+          }
+        ]
+      }
+    ],
+    "golem_house": [
+      {
+        "gives": {
+          "id": "growsseth:ruins_map",
+          "map": {
+            "fixedStructureId": "#growsseth:golem_house",
+            "name": "structure.growsseth.golem_house.map.name",
+            "structure": "#growsseth:golem_house"
+          }
+        },
+        "priority": -50,
+        "wants": [
+          {
+            "id": "minecraft:map"
+          },
+          {
+            "amount": 5,
+            "id": "minecraft:emerald"
+          }
+        ]
+      }
+    ],
+    "noteblock_lab": [
+      {
+        "gives": {
+          "id": "growsseth:ruins_map",
+          "map": {
+            "fixedStructureId": "#growsseth:noteblock_lab",
+            "name": "structure.growsseth.noteblock_lab.map.name",
+            "structure": "#growsseth:noteblock_lab"
+          }
+        },
+        "priority": -50,
+        "wants": [
+          {
+            "id": "minecraft:map"
+          },
+          {
+            "amount": 5,
+            "id": "minecraft:emerald"
+          }
+        ]
+      }
+    ]
+  },
+  "fixedTradesWhenRandom": [],
+  "progressAfterStructure": {},
+  "progressAfterStructureRandom": {
+    "noteblock_lab": [
+      {
+        "gives": {
+          "id": "growsseth:disc_sega_di_niente"
+        },
+        "randomWeight": 0.11111111,
+        "wants": [
+          {
+            "amount": 5,
+            "id": "minecraft:emerald"
+          }
+        ]
+      },
+      {
+        "gives": {
+          "id": "growsseth:disc_giorgio_finding_home"
+        },
+        "randomWeight": 0.11111111,
+        "wants": [
+          {
+            "amount": 5,
+            "id": "minecraft:emerald"
+          }
+        ]
+      },
+      {
+        "gives": {
+          "id": "growsseth:disc_binobinooo_inst"
+        },
+        "randomWeight": 0.11111111,
+        "wants": [
+          {
+            "amount": 5,
+            "id": "minecraft:emerald"
+          }
+        ]
+      },
+      {
+        "gives": {
+          "id": "growsseth:disc_padre_mammonk"
+        },
+        "randomWeight": 0.11111111,
+        "wants": [
+          {
+            "amount": 5,
+            "id": "minecraft:emerald"
+          }
+        ]
+      },
+      {
+        "gives": {
+          "id": "growsseth:disc_abbandonati"
+        },
+        "randomWeight": 0.11111111,
+        "wants": [
+          {
+            "amount": 5,
+            "id": "minecraft:emerald"
+          }
+        ]
+      },
+      {
+        "gives": {
+          "id": "growsseth:disc_missiva_nell_ombra"
+        },
+        "randomWeight": 0.11111111,
+        "wants": [
+          {
+            "amount": 5,
+            "id": "minecraft:emerald"
+          }
+        ]
+      },
+      {
+        "gives": {
+          "id": "growsseth:disc_mice_on_venus"
+        },
+        "randomWeight": 0.11111111,
+        "wants": [
+          {
+            "amount": 5,
+            "id": "minecraft:emerald"
+          }
+        ]
+      },
+      {
+        "gives": {
+          "id": "growsseth:disc_infinite_amethyst"
+        },
+        "randomWeight": 0.11111111,
+        "wants": [
+          {
+            "amount": 5,
+            "id": "minecraft:emerald"
+          }
+        ]
+      },
+      {
+        "gives": {
+          "id": "growsseth:disc_labyrinthine"
+        },
+        "randomWeight": 0.11111111,
+        "wants": [
+          {
+            "amount": 5,
+            "id": "minecraft:emerald"
+          }
+        ]
+      }
+    ]
+  },
+  "randomPool": [
+    {
+      "gives": {
+        "id": "growsseth:disc_sega_di_niente"
+      },
+      "randomWeight": 0.09090909,
+      "wants": [
+        {
+          "amount": 5,
+          "id": "minecraft:emerald"
+        }
+      ]
+    },
+    {
+      "gives": {
+        "id": "growsseth:disc_giorgio_cubetti"
+      },
+      "randomWeight": 0.09090909,
+      "wants": [
+        {
+          "amount": 5,
+          "id": "minecraft:emerald"
+        }
+      ]
+    },
+    {
+      "gives": {
+        "id": "growsseth:disc_giorgio_lofi_inst"
+      },
+      "randomWeight": 0.09090909,
+      "wants": [
+        {
+          "amount": 5,
+          "id": "minecraft:emerald"
+        }
+      ]
+    },
+    {
+      "gives": {
+        "id": "growsseth:disc_giorgio_finding_home"
+      },
+      "randomWeight": 0.09090909,
+      "wants": [
+        {
+          "amount": 5,
+          "id": "minecraft:emerald"
+        }
+      ]
+    },
+    {
+      "gives": {
+        "id": "growsseth:disc_binobinooo_inst"
+      },
+      "randomWeight": 0.09090909,
+      "wants": [
+        {
+          "amount": 5,
+          "id": "minecraft:emerald"
+        }
+      ]
+    },
+    {
+      "gives": {
+        "id": "growsseth:disc_padre_mammonk"
+      },
+      "randomWeight": 0.09090909,
+      "wants": [
+        {
+          "amount": 5,
+          "id": "minecraft:emerald"
+        }
+      ]
+    },
+    {
+      "gives": {
+        "id": "growsseth:disc_abbandonati"
+      },
+      "randomWeight": 0.09090909,
+      "wants": [
+        {
+          "amount": 5,
+          "id": "minecraft:emerald"
+        }
+      ]
+    },
+    {
+      "gives": {
+        "id": "growsseth:disc_missiva_nell_ombra"
+      },
+      "randomWeight": 0.09090909,
+      "wants": [
+        {
+          "amount": 5,
+          "id": "minecraft:emerald"
+        }
+      ]
+    },
+    {
+      "gives": {
+        "id": "growsseth:disc_mice_on_venus"
+      },
+      "randomWeight": 0.09090909,
+      "wants": [
+        {
+          "amount": 5,
+          "id": "minecraft:emerald"
+        }
+      ]
+    },
+    {
+      "gives": {
+        "id": "growsseth:disc_infinite_amethyst"
+      },
+      "randomWeight": 0.09090909,
+      "wants": [
+        {
+          "amount": 5,
+          "id": "minecraft:emerald"
+        }
+      ]
+    },
+    {
+      "gives": {
+        "id": "growsseth:disc_labyrinthine"
+      },
+      "randomWeight": 0.09090909,
+      "wants": [
+        {
+          "amount": 5,
+          "id": "minecraft:emerald"
+        }
+      ]
+    }
+  ],
+  "unlockableByRemoteEvent": {},
+  "unlockableByRemoteStructure": {}
+}

@@ -5,7 +5,7 @@ import com.filloax.fxlib.nbt.*
 import com.filloax.fxlib.codec.*
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import com.ruslan.growsseth.config.GrowssethConfig
+import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.config.ResearcherConfig
 import com.ruslan.growsseth.entity.SerializableItemListing
 import com.ruslan.growsseth.entity.researcher.DiaryHelper
@@ -14,6 +14,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.*
 import net.minecraft.util.RandomSource
+import net.minecraft.util.random.Weight
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.trading.MerchantOffer
@@ -31,7 +32,12 @@ data class ResearcherTradeEntry(
             Codec.INT.fieldOf("priority").forGetter(ResearcherTradeEntry::priority),
             Codec.BOOL.fieldOf("replace").forGetter(ResearcherTradeEntry::replace),
         ).apply(b, ::ResearcherTradeEntry) }
+
+        val LIST_CODEC = CODEC.listOf()
+        val MLIST_CODEC = mutableListCodec(CODEC)
     }
+
+    fun looselyMatches(other: ResearcherTradeEntry) = this.itemListing.looselyMatches(other.itemListing)
 }
 
 /**
@@ -52,6 +58,7 @@ class ResearcherItemListing(
     xp: Int = 0,
     priceMul: Float = 1f,
     val noNotification: Boolean = false,
+    val randomWeight: Float = 0f,
 ) : SerializableItemListing(gives, wants, maxUses, xp, priceMul) {
     companion object {
         val CODEC: Codec<ResearcherItemListing> = RecordCodecBuilder.create { b -> b.group(
@@ -63,6 +70,7 @@ class ResearcherItemListing(
             Codec.INT.fieldOf("xp").forGetter(ResearcherItemListing::xp),
             Codec.FLOAT.fieldOf("priceMul").forGetter(ResearcherItemListing::priceMul),
             Codec.BOOL.fieldOf("noNotification").forGetter(ResearcherItemListing::noNotification),
+            Codec.FLOAT.fieldOf("randomWeight").forGetter(ResearcherItemListing::randomWeight),
         ).apply(b, constructorWithOptionals(ResearcherItemListing::class)::newInstance) }
 
         val MLIST_CODEC: Codec<MutableList<ResearcherItemListing>> = mutableListCodec(CODEC)
@@ -77,6 +85,8 @@ class ResearcherItemListing(
             // No donkey penalty while healed
             if (trader.donkeyWasBorrowed && !trader.healed) costMultiplier *= ResearcherConfig.researcherBorrowPenalty
             if (trader.healed) costMultiplier *= ResearcherConfig.researcherCuredDiscount
+        } else {
+            RuinsOfGrowsseth.LOGGER.warn("ResearcherTradeEntry used for non-Researcher!")
         }
         // Do not use priceMultiplier field as that is related to demand updating
 
@@ -85,9 +95,9 @@ class ResearcherItemListing(
         offer.addToSpecialPriceDiff((offer.costA.count * (costMultiplier - 1)).roundToInt())
 
         mapInfo?.let { map ->
-            if (!trader.level().isClientSide && !gives.getOrCreateTag().contains(SET_MAP_TAG)) {
+            if (!trader.level().isClientSide && !gives.getOrCreateTag().contains(SET_MAP_TAG) && trader is Researcher) {
                 gives.getOrCreateTag().putBoolean(SET_MAP_TAG, true)
-                ResearcherTrades.setTradeMapTarget(trader, gives, map, offer)
+                ResearcherTradeUtils.setTradeMapTarget(trader, gives, map, offer)
             }
         }
 
@@ -97,6 +107,9 @@ class ResearcherItemListing(
 
         return offer
     }
+
+    fun looselyMatches(other: ResearcherItemListing) =
+        ItemStack.matches(gives, other.gives) && mapInfo == other.mapInfo
 }
 
 /**

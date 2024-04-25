@@ -8,12 +8,15 @@ import com.ruslan.growsseth.RuinsOfGrowsseth
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
+import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.util.profiling.ProfilerFiller
+import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
+import kotlin.reflect.KProperty0
 
 // Instanced in init class RuinsOfGrowsseth
 class TradesListener : KotlinJsonResourceReloadListener(JSON, Constants.TRADES_DATA_FOLDER) {
@@ -22,42 +25,63 @@ class TradesListener : KotlinJsonResourceReloadListener(JSON, Constants.TRADES_D
         var ready = false
             private set
 
-        val FIXED_TRADES = mutableListOf<ResearcherTradeEntry>()
+        val FIXED_TRADES_WHEN_RANDOM = mutableListOf<ResearcherTradeEntry>()
+        val RANDOM_TRADES_POOL = mutableListOf<ResearcherTradeEntry>()
         val UNLOCKABLE_TRADES_BY_STRUCT = mutableMapOf<String, MutableList<ResearcherTradeEntry>>()
-        val UNLOCKABLE_TRADES_BY_QUEST = mutableMapOf<Int, MutableList<ResearcherTradeEntry>>()
         val UNLOCKABLE_TRADES_BY_EVENT = mutableMapOf<String, MutableList<ResearcherTradeEntry>>()
+        val TRADES_BEFORE_STRUCTURE = mutableMapOf<String, MutableList<ResearcherTradeEntry>>()
+        val TRADES_PROGRESS_AFTER_STRUCTURE = mutableMapOf<String, MutableList<ResearcherTradeEntry>>()
+        val TRADES_PROGRESS_AFTER_STRUCTURE_RANDOM = mutableMapOf<String, MutableList<ResearcherTradeEntry>>()
     }
 
     override fun apply(loader: Map<ResourceLocation, JsonElement>, manager: ResourceManager, profiler: ProfilerFiller) {
-        FIXED_TRADES.clear()
+        FIXED_TRADES_WHEN_RANDOM.clear()
         UNLOCKABLE_TRADES_BY_STRUCT.clear()
-        UNLOCKABLE_TRADES_BY_QUEST.clear()
         UNLOCKABLE_TRADES_BY_EVENT.clear()
+        RANDOM_TRADES_POOL.clear()
+        TRADES_BEFORE_STRUCTURE.clear()
+        TRADES_PROGRESS_AFTER_STRUCTURE.clear()
+        TRADES_PROGRESS_AFTER_STRUCTURE_RANDOM.clear()
         loader.forEach { (fileIdentifier, jsonElement) ->
-            try {
-                RuinsOfGrowsseth.LOGGER.debug("Read json trades file {}", fileIdentifier)
-                val entries = JSON.decodeFromJsonElement(TradesObj.serializer(), jsonElement)
-                entries.fixedTrades?.let { trades -> FIXED_TRADES.addAll(trades.map{ it.decode() }) }
-                entries.unlockableByStructure?.let { trades -> UNLOCKABLE_TRADES_BY_STRUCT.putAll(trades.mapValues { e -> e.value.map { it.decode() }.toMutableList() }) }
-                entries.unlockableByEvent?.let { trades -> UNLOCKABLE_TRADES_BY_EVENT.putAll(trades.mapValues { e -> e.value.map { it.decode() }.toMutableList() }) }
-                entries.unlockableByQuest?.let { trades -> UNLOCKABLE_TRADES_BY_QUEST.putAll(
-                    trades.mapValues { e -> e.value.map { it.decode() }.toMutableList() }
-                        .mapKeys { k -> k.key.toInt() }
-                )}
-
-            } catch (e: Exception) {
-                RuinsOfGrowsseth.LOGGER.error( "Growsseth: Couldn't parse trades file {}", fileIdentifier, e)
-            }
+            RuinsOfGrowsseth.LOGGER.debug("Read json trades file {}", fileIdentifier)
+            val entries = JSON.decodeFromJsonElement(TradesObj.serializer(), jsonElement)
+            addAllTo(entries.fixedTradesWhenRandom, FIXED_TRADES_WHEN_RANDOM)
+            addAllTo(entries.unlockableByRemoteStructure, UNLOCKABLE_TRADES_BY_STRUCT)
+            addAllTo(entries.unlockableByRemoteStructure, UNLOCKABLE_TRADES_BY_STRUCT)
+            addAllTo(entries.unlockableByRemoteEvent, UNLOCKABLE_TRADES_BY_EVENT)
+            addAllTo(entries.randomPool, RANDOM_TRADES_POOL)
+            addAllTo(entries.beforeStructure, TRADES_BEFORE_STRUCTURE)
+            addAllTo(entries.progressAfterStructure, TRADES_PROGRESS_AFTER_STRUCTURE)
+            addAllTo(entries.progressAfterStructureRandom, TRADES_PROGRESS_AFTER_STRUCTURE_RANDOM)
         }
         ready = true
     }
 
+    private fun addAllTo(from: Map<String, List<ResearcherTradeObj>>?, to: MutableMap<String, MutableList<ResearcherTradeEntry>>) {
+        from?.let { trades -> to.mergeAll(trades.mapValues { e -> e.value.map { it.decode() } }) }
+    }
+    private fun addAllTo(from: List<ResearcherTradeObj>?, to: MutableList<ResearcherTradeEntry>) {
+        from?.let { trades -> to.addAll(trades.map{ it.decode() }) }
+    }
+    private fun <K, V> MutableMap<K, MutableList<V>>.mergeAll(other: Map<K, List<V>>) {
+        forEach { (key, list) ->
+            other[key]?.let { list.addAll(it) }
+        }
+        other.forEach { (key, list) ->
+            if (!containsKey(key))
+                this[key] = list.toMutableList()
+        }
+    }
+
     @Serializable
     data class TradesObj(
-        val fixedTrades: List<ResearcherTradeObj>? = null,
-        val unlockableByStructure: Map<String, List<ResearcherTradeObj>>? = null,
-        val unlockableByQuest: Map<String, List<ResearcherTradeObj>>? = null,
-        val unlockableByEvent: Map<String, List<ResearcherTradeObj>>? = null,
+        val fixedTradesWhenRandom: List<ResearcherTradeObj>? = null,
+        val unlockableByRemoteStructure: Map<String, List<ResearcherTradeObj>>? = null,
+        val unlockableByRemoteEvent: Map<String, List<ResearcherTradeObj>>? = null,
+        val beforeStructure: Map<String, List<ResearcherTradeObj>>? = null,
+        val progressAfterStructure: Map<String, List<ResearcherTradeObj>>? = null,
+        val progressAfterStructureRandom: Map<String, List<ResearcherTradeObj>>? = null,
+        val randomPool: List<ResearcherTradeObj>? = null,
     )
 }
 
@@ -71,6 +95,7 @@ data class ResearcherTradeObj(
     val priority: Int = 0,
     val noNotification: Boolean = false,
     val replace: Boolean = false,
+    val randomWeight: Float = 0f,
 ) {
     init {
         assert(wants.size in 1..2) { "Size of wants wrong (must be 1 or 2)" }
@@ -86,6 +111,7 @@ data class ResearcherTradeObj(
                 gives.map?.unwrap(),
                 gives.diaryId,
                 noNotification = noNotification,
+                randomWeight = randomWeight,
             ),
             priority = priority,
             replace = replace,
@@ -106,4 +132,14 @@ data class ResearcherTradeObj(
             return itemStack
         }
     }
+
+    companion object {
+        fun tradeIdemEntryObj(id: ResourceLocation, amount: Int = 1, map: TradeItemMapInfo.JsonDesc? = null, diaryId: String? = null) = TradeItemEntryObj(
+            id.toString(), amount, map, diaryId
+        )
+        fun tradeIdemEntryObj(item: Item, amount: Int = 1, map: TradeItemMapInfo.JsonDesc? = null, diaryId: String? = null) = tradeIdemEntryObj(
+            BuiltInRegistries.ITEM.getKey(item), amount, map, diaryId
+        )
+    }
 }
+

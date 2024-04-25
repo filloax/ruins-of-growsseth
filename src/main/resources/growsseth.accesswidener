@@ -30,3 +30,5 @@ mutable field net/minecraft/world/level/levelgen/structure/pools/StructureTempla
 accessible class net/minecraft/advancements/critereon/LocationPredicate$PositionPredicate
 accessible field net/minecraft/world/level/levelgen/structure/pools/SinglePoolElement template Lcom/mojang/datafixers/util/Either;
 accessible field net/minecraft/world/level/levelgen/structure/pools/ListPoolElement elements Ljava/util/List;
+
+accessible field net/minecraft/world/item/trading/MerchantOffer rewardExp Z

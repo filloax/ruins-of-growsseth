@@ -3,11 +3,15 @@ package com.ruslan.growsseth.entity.researcher
 import com.filloax.fxlib.EventUtil
 import com.filloax.fxlib.SetBlockFlag
 import com.filloax.fxlib.iterBlocks
+import com.mojang.datafixers.kinds.Const
+import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.config.GrowssethConfig
 import com.ruslan.growsseth.config.QuestConfig
 import com.ruslan.growsseth.entity.GrowssethEntities
+import com.ruslan.growsseth.entity.researcher.trades.ProgressResearcherTradesProvider
+import com.ruslan.growsseth.entity.researcher.trades.ResearcherTradeMode
 import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.quests.*
 import com.ruslan.growsseth.structure.pieces.ResearcherTent
@@ -19,6 +23,7 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
+import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.item.InstrumentItem
@@ -41,17 +46,29 @@ import net.minecraft.world.level.block.state.BlockState
  * ending: Chunk reloaded: vanish
  */
 class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Researcher>(researcher, "researcherIllness") {
-    init {
-        addStage("start", StartStage())
-        // can skip start
-        addStage("zombie", ZombieStage(), "start", INIT_STAGE_ID, priority = -10, blockSiblingStages = true)
-        addStage("healed", HealedStage(), "zombie")
-        addStage("home", MoveBackToTentStage(), "healed", blockNextStages = true)
-        addStage("ending", EndingStage(), "home")
+    object Stages {
+        const val START = "start"
+        const val ZOMBIE = "zombie"
+        const val HEALED = "healed"
+        const val HOME = "home"
+        const val WAIT = "wait"
+        const val ENDING = "ending"
     }
 
-    class StartStage : QuestStage<Researcher> {
-        override val trigger = ApiEventTrigger<Researcher>(QuestConfig.finalQuestStartName)
+    init {
+        addStage(Stages.START, StartStage())
+        // can skip start
+        addStage(Stages.ZOMBIE, ZombieStage(), Stages.START, INIT_STAGE_ID, priority = -10, blockSiblingStages = true)
+        addStage(Stages.HEALED, HealedStage(), Stages.ZOMBIE)
+        addStage(Stages.HOME, LastDialogueStage(), Stages.HEALED, blockNextStages = true)
+        addStage(Stages.WAIT, WaitBeforeLeaveStage(), Stages.HOME, blockNextStages = true)
+        addStage(Stages.ENDING, EndingStage(), Stages.WAIT)
+    }
+
+    inner class StartStage : QuestStage<Researcher> {
+        override val trigger = ProgressTradesTrigger(server, onlyOne = true)
+            .or(ApiEventTrigger(QuestConfig.finalQuestStartName))
+
 
         override fun onActivated(entity: Researcher) {
             entity.dialogues?.resetNearbyPlayers()
@@ -59,7 +76,8 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
     }
 
     inner class ZombieStage : QuestStage<Researcher> {
-        override val trigger = ApiEventTrigger<Researcher>(QuestConfig.finalQuestZombieName)
+        override val trigger = ProgressTradesTrigger(server, onlyOne = false)
+            .or(ApiEventTrigger<Researcher>(QuestConfig.finalQuestZombieName))
 
         override fun onActivated(entity: Researcher) {
             val tent = entity.tent
@@ -161,7 +179,9 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
         }
     }
 
-    class MoveBackToTentStage: QuestStage<Researcher> {
+    // Separate stage for last dialogue, so we can in next stage count
+    // time only after dialogue of this quest triggered
+    class LastDialogueStage: QuestStage<Researcher> {
         // Automatically trigger as soon as healed (and quests work again)
         override val trigger = EventTrigger<Researcher>(QuestUpdateEvent.LOAD)
             // You can find the dialogue in the quest dialogues json
@@ -173,12 +193,28 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
         }
     }
 
-    class EndingStage: QuestStage<Researcher> {
-        override val trigger: QuestStageTrigger<Researcher> = ApiEventTrigger<Researcher>(QuestConfig.finalQuestLeaveName)
-            .and(EventTrigger(QuestUpdateEvent.LOAD))
+    class WaitBeforeLeaveStage : QuestStage<Researcher> {
+        override val trigger = DialogueTrigger<Researcher>("researcher-quest-end")
+    }
+
+    inner class EndingStage: QuestStage<Researcher> {
+        override val trigger: QuestStageTrigger<Researcher> = EventTrigger<Researcher>(QuestUpdateEvent.LOAD)
+            .and(TimeTrigger(this@ResearcherQuestComponent, Constants.DAY_TICKS_DURATION)
+                .or(ApiEventTrigger(QuestConfig.finalQuestLeaveName))
+            )
 
         override fun onActivated(entity: Researcher) {
             removeTentAndResearcher(entity)
+        }
+    }
+
+    class ProgressTradesTrigger(val server: MinecraftServer, val onlyOne: Boolean = false) : QuestStageTrigger<Researcher> {
+        override fun isActive(entity: Researcher, event: QuestUpdateEvent): Boolean {
+            val tradesProvider = ResearcherTradeMode.providerFromSettings(server)
+            if (tradesProvider !is ProgressResearcherTradesProvider) return false
+
+            return if (onlyOne) tradesProvider.onlyOneLeft(server)
+                else tradesProvider.isFinished(server)
         }
     }
 
