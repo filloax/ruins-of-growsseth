@@ -12,10 +12,12 @@ import com.ruslan.growsseth.entity.researcher.ResearcherDialoguesComponent
 import com.ruslan.growsseth.entity.researcher.ResearcherDiaryComponent
 import com.ruslan.growsseth.entity.researcher.trades.GlobalResearcherTradesProvider
 import com.ruslan.growsseth.entity.researcher.trades.ProgressResearcherTradesProvider
+import com.ruslan.growsseth.events.ModifyLootTableEvents
 import com.ruslan.growsseth.http.DataRemoteSync
 import com.ruslan.growsseth.http.GrowssethApiV1
 import com.ruslan.growsseth.http.GrowssethExtraEvents
 import com.ruslan.growsseth.http.LiveUpdatesConnection
+import com.ruslan.growsseth.loot.VanillaStructureLoot
 import com.ruslan.growsseth.quests.QuestComponentEvents
 import com.ruslan.growsseth.structure.RemoteStructureBooks
 import com.ruslan.growsseth.structure.StructureDisabler
@@ -24,6 +26,7 @@ import com.ruslan.growsseth.utils.AsyncLocator
 import com.ruslan.growsseth.utils.MixinHelpers
 import com.ruslan.growsseth.worldgen.worldpreset.GrowssethWorldPreset
 import com.ruslan.growsseth.worldgen.worldpreset.LocationNotifListener
+import net.fabricmc.fabric.api.loot.v2.LootTableSource
 import net.fabricmc.fabric.api.networking.v1.PacketSender
 import net.minecraft.advancements.AdvancementHolder
 import net.minecraft.core.BlockPos
@@ -32,10 +35,12 @@ import net.minecraft.core.RegistryAccess
 import net.minecraft.core.SectionPos
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.network.ServerGamePacketListenerImpl
+import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.entity.Entity
@@ -55,6 +60,8 @@ import net.minecraft.world.level.chunk.LevelChunk
 import net.minecraft.world.level.levelgen.RandomState
 import net.minecraft.world.level.levelgen.structure.Structure
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager
+import net.minecraft.world.level.storage.loot.LootDataManager
+import net.minecraft.world.level.storage.loot.LootTable
 
 abstract class ModEvents {
     companion object {
@@ -68,6 +75,7 @@ abstract class ModEvents {
             DataRemoteSync.doSync(WebConfig.dataSyncUrl, server)
             MixinHelpers.serverInit(server)
             LiveUpdatesConnection.serverStart(server)
+            ModifyLootTableEvents.init()
         }
         onServerStarted { server ->
             GrowssethWorldPreset.Callbacks.onServerStarted(server)
@@ -145,6 +153,10 @@ abstract class ModEvents {
         beforeStructureGenerate { level, structure, _, _, _, _, _, _, _, _ ->
             StructureDisabler.Callbacks.shouldDisableStructure(structure, level)
         }
+
+        onLootTableModify { resourceManager, lootManager, id, tableBuilder, source ->
+            VanillaStructureLoot.onModifyLootTables(resourceManager, lootManager, id, tableBuilder, source)
+        }
     }
 
     private fun onServerPlayerTick(player: ServerPlayer) {
@@ -173,6 +185,8 @@ abstract class ModEvents {
     abstract fun onFenceLeash(event: (Mob, BlockPos, ServerPlayer) -> Unit)
     abstract fun onFenceUnleash(event: (Mob, BlockPos) -> Unit)
     abstract fun beforeNameTagRename(event: (target: LivingEntity, Component, ServerPlayer, ItemStack, InteractionHand) -> InteractionResultHolder<ItemStack>)
+    abstract fun onLootTableModify(event: (resourceManager: ResourceManager, lootManager: LootDataManager, id: ResourceLocation, tableBuilder: LootTable.Builder, source: LootTableSource) -> Unit)
+
     /**
      * Returns true if structure should not spawn
      */
@@ -181,4 +195,23 @@ abstract class ModEvents {
         RandomState, StructureTemplateManager, seed: Long,
         ChunkAccess, ChunkPos, SectionPos
     ) -> Boolean)
+}
+
+interface Modify {
+    /**
+     * Called when a loot table is loading to modify loot tables.
+     *
+     * @param resourceManager the server resource manager
+     * @param lootManager     the loot manager
+     * @param id              the loot table ID
+     * @param tableBuilder    a builder of the loot table being loaded
+     * @param source          the source of the loot table
+     */
+    fun modifyLootTable(
+        resourceManager: ResourceManager?,
+        lootManager: LootDataManager?,
+        id: ResourceLocation?,
+        tableBuilder: LootTable.Builder?,
+        source: LootTableSource?
+    )
 }
