@@ -65,7 +65,6 @@ abstract class ModEvents {
         onServerStarting { server ->
             AsyncLocator.handleServerAboutToStartEvent()
             DataRemoteSync.handleServerAboutToStartEvent(server)
-            Researcher.initServer(server)
             DataRemoteSync.doSync(WebConfig.dataSyncUrl, server)
             MixinHelpers.serverInit(server)
             LiveUpdatesConnection.serverStart(server)

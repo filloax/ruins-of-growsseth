@@ -1,8 +1,8 @@
 package com.ruslan.growsseth.entity.researcher
 
 import com.filloax.fxlib.EventUtil
+import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.RuinsOfGrowsseth
-import com.ruslan.growsseth.entity.researcher.Researcher.Companion.TENT_STRUCTURE
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.Level
@@ -22,7 +22,7 @@ object ResearcherDonkey {
             val checkPoints = mutableListOf(pos).also { checkArea.forAllCorners(it::add) }
 
             for (checkPos in checkPoints) {
-                if (structures.getStructureAt(checkPos, TENT_STRUCTURE).isValid) {
+                if (structures.getStructureWithPieceAt(checkPos, GrowssethTags.StructTags.RESEARCHER_TENT).isValid) {
                     return true
                 }
             }

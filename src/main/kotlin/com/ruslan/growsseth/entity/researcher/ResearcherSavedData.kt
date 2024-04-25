@@ -32,7 +32,7 @@ class ResearcherSavedData private constructor (
     var name: Component?,
     var donkeyUuid: UUID?,
 ) : FxSavedData<ResearcherSavedData>(CODEC) {
-    private lateinit var masterData: SavedData
+    private var masterData: SavedData? = null
 
     companion object {
         val CODEC: Codec<ResearcherSavedData> = RecordCodecBuilder.create { builder -> builder.group(
@@ -89,17 +89,21 @@ class ResearcherSavedData private constructor (
 
     override fun setDirty() {
         super.setDirty()
-        masterData.setDirty()
+        masterData?.setDirty() ?: RuinsOfGrowsseth.LOGGER.error("Tried setting reseracher data as dirty before finalizing")
     }
 
     override fun setDirty(dirty: Boolean) {
         super.setDirty(dirty)
         if (dirty) {
-            masterData.isDirty = dirty
+            masterData?.let { it.isDirty = dirty } ?: RuinsOfGrowsseth.LOGGER.error("Tried setting reseracher data as dirty before finalizing")
         }
     }
 
     class DataMap(initialItems: Map<Int, ResearcherSavedData> = mapOf()) : FxSavedData<DataMap>(CONTAINER_CODEC) {
+        init {
+            initialItems.values.forEach { it.initParent(this) }
+        }
+
         val items = mutableMapOf<Int, ResearcherSavedData>().also {
             it.putAll(initialItems)
         }

@@ -122,7 +122,6 @@ object StructureAdvancements {
         val rootHolder = AdvancementHolder(GrowssethAdvancements.ROOT, rootDummy)
 
         GrowssethStructures.all
-            .minus(GrowssethStructures.RESEARCHER_TENT)
             .forEach { createStructureDetectionAdvancement(consumer, it, rootHolder) }
 
         villageHouseStructures.forEach { (struct, villageHouses) ->
