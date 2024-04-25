@@ -14,6 +14,7 @@ import com.filloax.fxlib.structure.tracking.CustomPlacedStructureTracker
 import com.mojang.datafixers.util.Either
 import com.mojang.serialization.Codec
 import com.ruslan.growsseth.Constants
+import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.config.ResearcherConfig
 import com.ruslan.growsseth.dialogues.BasicDialogueEvents
@@ -31,6 +32,7 @@ import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.quests.QuestOwner
 import com.ruslan.growsseth.structure.GrowssethStructures
 import com.ruslan.growsseth.structure.pieces.ResearcherTent
+import com.ruslan.growsseth.structure.structure.ResearcherTentStructure
 import com.ruslan.growsseth.utils.GrowssethCodecs
 import net.minecraft.core.BlockPos
 import net.minecraft.core.UUIDUtil
@@ -164,27 +166,30 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         private val DATA_DEFLECT_ARROW_PARTICLES = SynchedEntityData.defineId(Researcher::class.java, EntityDataSerializers.BOOLEAN)
         private val DATA_TELEPORT_PARTICLES = SynchedEntityData.defineId(Researcher::class.java, EntityDataSerializers.BOOLEAN)
 
-        lateinit var TENT_STRUCTURE: Structure
-            private set
-
-        fun initServer(server: MinecraftServer) {
-            val registryAccess = server.registryAccess()
-            TENT_STRUCTURE = registryAccess.registryOrThrow(Registries.STRUCTURE).get(GrowssethStructures.RESEARCHER_TENT)!!
-        }
+//        private var tentStructures: List<Structure>? = null
 
         fun findTent(level: ServerLevel, startingPos: BlockPos, currentPos: BlockPos? = null): StructureStart? {
             val structureManager = level.structureManager()
             var tentStart: StructureStart? = null
+//
+//            val validStructures = tentStructures ?: run {
+//                val structures = level.registryAccess().registryOrThrow(Registries.STRUCTURE).holders().filter {
+//                    it.value() is ResearcherTentStructure
+//                }.map{ it.value() }.toList()
+//                tentStructures = structures
+//                structures
+//            }
 
             // First try in starting pos, then less likely current pos
             for (pos in listOfNotNull(startingPos, currentPos)) {
                 if (tentStart != null) break
 
-                tentStart = structureManager.getStructureAt(pos, TENT_STRUCTURE)
+//                tentStart = validStructures.firstNotNullOfOrNull { structureManager.getStructureAt(pos, it) }
+                tentStart = structureManager.getStructureWithPieceAt(pos, GrowssethTags.StructTags.RESEARCHER_TENT)
 
                 // Error in the fixed structures mixin? Just incase, given usecase of mod (streaming)
                 // we have to avoid all avoidable crashes
-                if (tentStart?.isValid == true && tentStart.structure != TENT_STRUCTURE) {
+                if (tentStart?.isValid == true && tentStart.structure !is ResearcherTentStructure) {
                     RuinsOfGrowsseth.LOGGER.error("Found wrong structure when searching tent, is ${tentStart.structure} in $tentStart")
                     tentStart = StructureStart.INVALID_START
                 }
@@ -197,7 +202,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
                 // just in case (mainly for streaming version)
                 if (tentStart == null) {
                     val tracker = CustomPlacedStructureTracker.get(level)
-                    tentStart = tracker.getByPos(pos).find { it.structure == TENT_STRUCTURE }?.structureStart
+                    tentStart = tracker.getByPos(pos).find { it.structure is ResearcherTentStructure }?.structureStart
                     if (tentStart != null) {
                         RuinsOfGrowsseth.LOGGER.warn("Couldn't find tent via mixin, found with structure tracker (at $pos)")
                     }

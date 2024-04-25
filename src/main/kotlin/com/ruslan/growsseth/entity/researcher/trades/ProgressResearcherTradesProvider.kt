@@ -8,15 +8,19 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.RuinsOfGrowsseth
+import com.ruslan.growsseth.advancements.StructureAdvancements
 import com.ruslan.growsseth.config.ResearcherConfig
 import com.ruslan.growsseth.entity.researcher.Researcher
+import com.ruslan.growsseth.entity.researcher.ResearcherQuestComponent
 import com.ruslan.growsseth.structure.GrowssethStructures
 import com.ruslan.growsseth.utils.resLoc
+import net.minecraft.core.Holder
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.item.Item
 import net.minecraft.world.level.levelgen.structure.Structure
 import java.lang.IllegalArgumentException
 import kotlin.jvm.optionals.getOrNull
@@ -63,15 +67,38 @@ class ProgressResearcherTradesProvider(
     }
 
     override fun getExtraPlayerTrades(player: ServerPlayer, researcher: Researcher, data: ResearcherTradesData): List<ResearcherTradeEntry> {
+        val finishedQuest = researcher.quest!!.passedStage(ResearcherQuestComponent.Stages.HOME)
+        val possibleTrades = getPossibleRandomTrades(player, researcher)
+        val possibleTradesItems = possibleTrades.map { it.itemListing.gives.itemHolder }
+        val tradesChanged = tradesDiffer(data.lastAvailableRandomTrades, possibleTradesItems)
+
         val time = researcher.level().gameTime
         var randomTrades = data.randomTrades
-        if (randomTrades == null || data.lastRandomTradeChangeTime < 0 || time - data.lastRandomTradeChangeTime > Constants.DAY_TICKS_DURATION) {
+        if (
+            randomTrades == null
+            || tradesChanged
+            || data.lastRandomTradeChangeTime < 0 || time - data.lastRandomTradeChangeTime > Constants.DAY_TICKS_DURATION
+            || finishedQuest
+        ) {
             data.lastRandomTradeChangeTime = time
-            randomTrades = genRandomTrades(player, researcher, data)
+            data.lastAvailableRandomTrades.clear()
+            data.lastAvailableRandomTrades.addAll(possibleTradesItems)
+            randomTrades = genRandomTrades(player, researcher, possibleTrades, finishedQuest)
         }
 
         data.randomTrades = randomTrades
         return randomTrades
+    }
+
+    private fun tradesDiffer(tradesOld: List<Holder<Item>>, tradesNew: List<Holder<Item>>): Boolean {
+        if (tradesNew.size != tradesOld.size) return true
+
+        for (i in tradesNew.indices) {
+            if (tradesOld[i].value() != tradesNew[i].value())
+                return true
+        }
+
+        return false
     }
 
     private fun checkAndSetCurrentStructure(server: MinecraftServer, data: ProgressTradesSavedData) {
@@ -123,23 +150,30 @@ class ProgressResearcherTradesProvider(
         return changedMapPriority
     }
 
-    private fun genRandomTrades(player: ServerPlayer, researcher: Researcher, tradesData: ResearcherTradesData): List<ResearcherTradeEntry> {
-        val data = ProgressTradesSavedData.get(player.server)
+    private fun getPossibleRandomTrades(player: ServerPlayer, researcher: Researcher): List<ResearcherTradeEntry> {
+        return TradesListener.TRADES_PROGRESS_AFTER_STRUCTURE_RANDOM.filterKeys {
+            val key = ResourceKey.create(Registries.STRUCTURE, resLoc(it))
+            val tag = GrowssethStructures.info[key]!!.tag
+            StructureAdvancements.playerHasFoundStructure(player, tag)
+        }.values.flatten()
+    }
+
+    private fun genRandomTrades(player: ServerPlayer, researcher: Researcher, possibleTrades: List<ResearcherTradeEntry>, allTrades: Boolean = false): List<ResearcherTradeEntry> {
         val daysOffset = researcher.level().gameTime * 1323
         val random = Random(player.server.overworld().seed + (researcher.persistId ?: 1) * 10 + daysOffset)
-        val possibleTrades = TradesListener.TRADES_PROGRESS_AFTER_STRUCTURE_RANDOM.filterKeys {
-            val key = ResourceKey.create(Registries.STRUCTURE, resLoc(it))
-            data.foundStructures.contains(key)
-        }.values.flatten()
-        val amount = IntRange(
-            min(ResearcherConfig.randomTradeNumItems.min, possibleTrades.size),
-            min(ResearcherConfig.randomTradeNumItems.max, possibleTrades.size),
-        ).random(random)
+        return if (allTrades) {
+            possibleTrades
+        } else {
+            val amount = IntRange(
+                min(ResearcherConfig.randomTradeNumItems.min, possibleTrades.size),
+                min(ResearcherConfig.randomTradeNumItems.max, possibleTrades.size),
+            ).random(random)
 
-        return if (amount > 0)
-            possibleTrades.shuffled(random).subList(0, amount)
-        else
-            listOf()
+            return if (amount > 0)
+                possibleTrades.shuffled(random).subList(0, amount)
+            else
+                listOf()
+        }
     }
 
     private fun getReferenceStructure(structId: ResourceKey<Structure>): ResourceKey<Structure>? {

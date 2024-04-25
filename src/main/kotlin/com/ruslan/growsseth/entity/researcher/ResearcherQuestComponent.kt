@@ -46,14 +46,23 @@ import net.minecraft.world.level.block.state.BlockState
  * ending: Chunk reloaded: vanish
  */
 class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Researcher>(researcher, "researcherIllness") {
+    object Stages {
+        const val START = "start"
+        const val ZOMBIE = "zombie"
+        const val HEALED = "healed"
+        const val HOME = "home"
+        const val WAIT = "wait"
+        const val ENDING = "ending"
+    }
+
     init {
-        addStage("start", StartStage())
+        addStage(Stages.START, StartStage())
         // can skip start
-        addStage("zombie", ZombieStage(), "start", INIT_STAGE_ID, priority = -10, blockSiblingStages = true)
-        addStage("healed", HealedStage(), "zombie")
-        addStage("home", LastDialogueStage(), "healed", blockNextStages = true)
-        addStage("wait", WaitBeforeLeaveStage(), "home", blockNextStages = true)
-        addStage("ending", EndingStage(), "wait")
+        addStage(Stages.ZOMBIE, ZombieStage(), Stages.START, INIT_STAGE_ID, priority = -10, blockSiblingStages = true)
+        addStage(Stages.HEALED, HealedStage(), Stages.ZOMBIE)
+        addStage(Stages.HOME, LastDialogueStage(), Stages.HEALED, blockNextStages = true)
+        addStage(Stages.WAIT, WaitBeforeLeaveStage(), Stages.HOME, blockNextStages = true)
+        addStage(Stages.ENDING, EndingStage(), Stages.WAIT)
     }
 
     inner class StartStage : QuestStage<Researcher> {
@@ -189,9 +198,10 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
     }
 
     inner class EndingStage: QuestStage<Researcher> {
-        override val trigger: QuestStageTrigger<Researcher> = TimeTrigger(this@ResearcherQuestComponent, Constants.DAY_TICKS_DURATION)
-            .or(ApiEventTrigger(QuestConfig.finalQuestLeaveName))
-            .and(EventTrigger(QuestUpdateEvent.LOAD))
+        override val trigger: QuestStageTrigger<Researcher> = EventTrigger<Researcher>(QuestUpdateEvent.LOAD)
+            .and(TimeTrigger(this@ResearcherQuestComponent, Constants.DAY_TICKS_DURATION)
+                .or(ApiEventTrigger(QuestConfig.finalQuestLeaveName))
+            )
 
         override fun onActivated(entity: Researcher) {
             removeTentAndResearcher(entity)
