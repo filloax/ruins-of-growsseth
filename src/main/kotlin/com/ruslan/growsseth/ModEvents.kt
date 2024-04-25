@@ -12,7 +12,6 @@ import com.ruslan.growsseth.entity.researcher.ResearcherDialoguesComponent
 import com.ruslan.growsseth.entity.researcher.ResearcherDiaryComponent
 import com.ruslan.growsseth.entity.researcher.trades.GlobalResearcherTradesProvider
 import com.ruslan.growsseth.entity.researcher.trades.ProgressResearcherTradesProvider
-import com.ruslan.growsseth.events.ModifyLootTableEvents
 import com.ruslan.growsseth.http.DataRemoteSync
 import com.ruslan.growsseth.http.GrowssethApiV1
 import com.ruslan.growsseth.http.GrowssethExtraEvents
@@ -75,7 +74,6 @@ abstract class ModEvents {
             DataRemoteSync.doSync(WebConfig.dataSyncUrl, server)
             MixinHelpers.serverInit(server)
             LiveUpdatesConnection.serverStart(server)
-            ModifyLootTableEvents.init()
         }
         onServerStarted { server ->
             GrowssethWorldPreset.Callbacks.onServerStarted(server)
