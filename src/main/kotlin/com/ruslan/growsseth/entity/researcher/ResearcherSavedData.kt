@@ -21,6 +21,7 @@ import net.minecraft.util.datafix.DataFixTypes
 import net.minecraft.world.level.saveddata.SavedData
 import java.util.*
 import javax.xml.crypto.Data
+import kotlin.jvm.optionals.getOrNull
 
 /**
  * Save researcher data in the level to allow it to persist even if he gets respawned.
@@ -38,7 +39,9 @@ class ResearcherSavedData private constructor (
             CompoundTag.CODEC.fieldOf("data").forGetter(ResearcherSavedData::data),
             ComponentSerialization.CODEC.optionalFieldOf("name").forNullableGetter(ResearcherSavedData::name),
             UUIDUtil.STRING_CODEC.optionalFieldOf("donkeyUuid").forNullableGetter(ResearcherSavedData::donkeyUuid),
-        ).apply(builder, constructorWithOptionals(ResearcherSavedData::class)::newInstance) }
+        ).apply(builder) { data, name, donkeyUuid ->
+            ResearcherSavedData(data, name.getOrNull(), donkeyUuid.getOrNull())
+        } }
 
         // Crashes with non-string key codec
         val CONTAINER_CODEC: Codec<DataMap> = mutableMapCodec(Codec.STRING, CODEC)
