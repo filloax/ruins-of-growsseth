@@ -16,7 +16,6 @@ import net.minecraft.util.profiling.ProfilerFiller
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
-import kotlin.reflect.KProperty0
 
 // Instanced in init class RuinsOfGrowsseth
 class TradesListener : KotlinJsonResourceReloadListener(JSON, Constants.TRADES_DATA_FOLDER) {
@@ -25,10 +24,12 @@ class TradesListener : KotlinJsonResourceReloadListener(JSON, Constants.TRADES_D
         var ready = false
             private set
 
+        private val INFINITE_MAX_USES = 99999
+
         val FIXED_TRADES_WHEN_RANDOM = mutableListOf<ResearcherTradeEntry>()
         val RANDOM_TRADES_POOL = mutableListOf<ResearcherTradeEntry>()
-        val UNLOCKABLE_TRADES_BY_STRUCT = mutableMapOf<String, MutableList<ResearcherTradeEntry>>()
-        val UNLOCKABLE_TRADES_BY_EVENT = mutableMapOf<String, MutableList<ResearcherTradeEntry>>()
+        val WEB_UNLOCKABLE_TRADES_BY_STRUCT = mutableMapOf<String, MutableList<ResearcherTradeEntry>>()
+        val WEB_UNLOCKABLE_TRADES_BY_EVENT = mutableMapOf<String, MutableList<ResearcherTradeEntry>>()
         val TRADES_BEFORE_STRUCTURE = mutableMapOf<String, MutableList<ResearcherTradeEntry>>()
         val TRADES_PROGRESS_AFTER_STRUCTURE = mutableMapOf<String, MutableList<ResearcherTradeEntry>>()
         val TRADES_PROGRESS_AFTER_STRUCTURE_RANDOM = mutableMapOf<String, MutableList<ResearcherTradeEntry>>()
@@ -36,8 +37,8 @@ class TradesListener : KotlinJsonResourceReloadListener(JSON, Constants.TRADES_D
 
     override fun apply(loader: Map<ResourceLocation, JsonElement>, manager: ResourceManager, profiler: ProfilerFiller) {
         FIXED_TRADES_WHEN_RANDOM.clear()
-        UNLOCKABLE_TRADES_BY_STRUCT.clear()
-        UNLOCKABLE_TRADES_BY_EVENT.clear()
+        WEB_UNLOCKABLE_TRADES_BY_STRUCT.clear()
+        WEB_UNLOCKABLE_TRADES_BY_EVENT.clear()
         RANDOM_TRADES_POOL.clear()
         TRADES_BEFORE_STRUCTURE.clear()
         TRADES_PROGRESS_AFTER_STRUCTURE.clear()
@@ -46,9 +47,8 @@ class TradesListener : KotlinJsonResourceReloadListener(JSON, Constants.TRADES_D
             RuinsOfGrowsseth.LOGGER.debug("Read json trades file {}", fileIdentifier)
             val entries = JSON.decodeFromJsonElement(TradesObj.serializer(), jsonElement)
             addAllTo(entries.fixedTradesWhenRandom, FIXED_TRADES_WHEN_RANDOM)
-            addAllTo(entries.unlockableByRemoteStructure, UNLOCKABLE_TRADES_BY_STRUCT)
-            addAllTo(entries.unlockableByRemoteStructure, UNLOCKABLE_TRADES_BY_STRUCT)
-            addAllTo(entries.unlockableByRemoteEvent, UNLOCKABLE_TRADES_BY_EVENT)
+            addAllTo(entries.unlockableByRemoteStructure?.modifyForWebTrades(), WEB_UNLOCKABLE_TRADES_BY_STRUCT)
+            addAllTo(entries.unlockableByRemoteEvent?.modifyForWebTrades(), WEB_UNLOCKABLE_TRADES_BY_EVENT)
             addAllTo(entries.randomPool, RANDOM_TRADES_POOL)
             addAllTo(entries.beforeStructure, TRADES_BEFORE_STRUCTURE)
             addAllTo(entries.progressAfterStructure, TRADES_PROGRESS_AFTER_STRUCTURE)
@@ -72,6 +72,7 @@ class TradesListener : KotlinJsonResourceReloadListener(JSON, Constants.TRADES_D
                 this[key] = list.toMutableList()
         }
     }
+    private fun Map<String, List<ResearcherTradeObj>>.modifyForWebTrades() = mapValues { e -> e.value.map { it.copy(maxUses = INFINITE_MAX_USES) } }
 
     @Serializable
     data class TradesObj(
@@ -96,6 +97,7 @@ data class ResearcherTradeObj(
     val noNotification: Boolean = false,
     val replace: Boolean = false,
     val randomWeight: Float = 0f,
+    val maxUses: Int = 1,
 ) {
     init {
         assert(wants.size in 1..2) { "Size of wants wrong (must be 1 or 2)" }
@@ -107,7 +109,7 @@ data class ResearcherTradeObj(
             itemListing = ResearcherItemListing(
                 gives.toItemStack(),
                 wants.map { it.toItemStack() },
-                99,
+                maxUses,
                 gives.map?.unwrap(),
                 gives.diaryId,
                 noNotification = noNotification,

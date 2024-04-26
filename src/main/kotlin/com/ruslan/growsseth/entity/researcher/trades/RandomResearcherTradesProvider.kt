@@ -16,7 +16,7 @@ object RandomResearcherTradesProvider : AbstractResearcherTradesProvider() {
         val time = researcher.level().gameTime
         val redoTrades = data.randomTrades == null
                 || data.lastRandomTradeChangeTime < 0
-                || ResearcherConfig.randomTradesRefreshTime > 0 && time - data.lastRandomTradeChangeTime > ResearcherConfig.randomTradesRefreshTime
+                || ResearcherConfig.randomTradesRefreshTime > 0 && time - data.lastRandomTradeChangeTime > ResearcherConfig.randomTradesRefreshTime * Constants.DAY_TICKS_DURATION
         val trades = if (redoTrades) {
             val out = pickTrades(researcher, player)
             data.randomTrades = out

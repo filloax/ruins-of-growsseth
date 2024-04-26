@@ -93,6 +93,7 @@
                         "amount": 6
                     }
                 ],
+                "maxUses": 12,
                 "priority": 20,
                 "noNotification": true
             }
