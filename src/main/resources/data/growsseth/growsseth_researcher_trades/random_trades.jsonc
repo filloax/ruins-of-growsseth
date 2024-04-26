@@ -26,6 +26,7 @@
                     "amount": 2
                 }
             ],
+            "maxUses": 12
         },
         {
             "gives": {

@@ -829,18 +829,25 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         val server = player.server
         val currentProvider = ResearcherTradeMode.providerFromSettings(server)
         val tradesData = tradesData()
+        val time = level().gameTime
 
         if (currentProvider.mode != tradesData.mode) {
             tradesData.resetRandomTrades()
         }
 
         var offers = offersByPlayer[player.uuid]
-        val updatedOffers = currentProvider.getOffers(this, tradesData(), player)
+        val updatedOffers = currentProvider.getOffers(this, tradesData, player)
 
-        if (currentProvider.mode != tradesData.mode || offers == null || !offersMatch(offers, updatedOffers)) {
+        if (
+            currentProvider.mode != tradesData.mode
+            || offers == null
+            || ResearcherConfig.tradesRestockTime > 0 && time - tradesData.lastTradeRefreshTime > ResearcherConfig.tradesRestockTime * Constants.DAY_TICKS_DURATION
+            || !offersMatch(offers, updatedOffers)
+        ) {
             // Refresh offers
             offers = updatedOffers
             tradesData.mode = currentProvider.mode
+            tradesData.lastTradeRefreshTime = time
         }
         offersByPlayer[player.uuid] = offers
 
