@@ -10,7 +10,6 @@ import com.ruslan.growsseth.structure.RemoteStructures
 import kotlinx.serialization.json.Json
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
-import net.minecraft.world.entity.player.Player
 
 object GameMasterResearcherTradesProvider : GlobalResearcherTradesProvider() {
     private val JSON = Json { isLenient = true }
@@ -50,14 +49,14 @@ object GameMasterResearcherTradesProvider : GlobalResearcherTradesProvider() {
 
     private fun getUnlockedTradesByRemoteStruct(): List<ResearcherTradeEntry> {
         val spawnsById = RemoteStructures.STRUCTS_TO_SPAWN_BY_ID
-        val unlockableTrades = TradesListener.UNLOCKABLE_TRADES_BY_STRUCT
+        val unlockableTrades = TradesListener.WEB_UNLOCKABLE_TRADES_BY_STRUCT
         return unlockableTrades.filter { (id, _) -> spawnsById.any { (spawnId, structureSpawn) ->
             structureSpawn.structure.path == id && fixedStructureGeneration.spawnedQueuedStructure(spawnId) == false
         } }.flatMap { it.value }
     }
 
     private fun getUnlockedTradesByRemoteEvent(events: List<ApiEvent>): List<ResearcherTradeEntry> {
-        val unlockableTrades = TradesListener.UNLOCKABLE_TRADES_BY_EVENT
+        val unlockableTrades = TradesListener.WEB_UNLOCKABLE_TRADES_BY_EVENT
         return unlockableTrades.filter { (name, trades) -> events.any { event ->
             event.active && event.name == name
         } }.flatMap { it.value }
@@ -71,7 +70,7 @@ object GameMasterResearcherTradesProvider : GlobalResearcherTradesProvider() {
                 return@mapNotNull null
             }
             try {
-                JSON.decodeFromString(ResearcherTradeObj.serializer(), desc).decode()
+                JSON.decodeFromString(ResearcherTradeObj.serializer(), desc).copy(maxUses = 999).decode()
             } catch (e: Exception) {
                 e.printStackTrace()
                 RuinsOfGrowsseth.LOGGER.error("Custom trade event $tradeEvent has wrongly formatted JSON trade data")
