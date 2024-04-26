@@ -49,7 +49,7 @@ object VanillaStructureLoot {
         .minus(SKULK_DISCS)
 
     fun onModifyLootTables(resourceManager: ResourceManager, lootManager: LootDataManager, id: ResourceLocation, tableBuilder: LootTable.Builder, source: LootTableSource) {
-        if (GrowssethConfig.modLootInVanillaStructures && source.isBuiltin) {
+        if (GrowssethConfig.modLootInVanillaStructures) {
             val poolBuilder = LootPool.lootPool()
             if (STRONGHOLD_LOOT == id) {
                 getDiscs().forEach { poolBuilder.add(LootItem.lootTableItem(it)) }
