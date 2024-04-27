@@ -109,6 +109,10 @@
     "advancements.growsseth.horn.title": "Dono d'addio",
     "advancements.growsseth.horn.description": "Ricevi il misterioso corno del ricercatore",
 
+    "growsseth.notif.researcher_updated": "Il ricercatore ha qualcosa di nuovo per te.",
+    "growsseth.notif.researcher_updated.toast.title": "Nuove scoperte!",
+    "growsseth.notif.researcher_updated.toast.description": "Il ricercatore ti aspetta.",
+
     "growsseth.config.title": "Ruins of Growsseth",
     "growsseth.config.category.researcher": "Ricercatore",
     "growsseth.config.category.web": "Interazione Web",
@@ -121,7 +125,6 @@
     "growsseth.config.researcherInteractsWithMobs.name": "Ricercatore interagisce con altri mob (richiede riaprire il mondo)",
     "growsseth.config.researcherStrikesFirst.name": "Ricercatore attacca mob verso cui è ostile anche se non lo stanno attaccando",
     "growsseth.config.researcherWritesDiaries.name": "Generazione diari del ricercatore",
-    "growsseth.config.persistentResearcher.name": "Memoria ricercatore persistente (si applica al primo spawn o con /greset)",
     "growsseth.config.researcherBorrowPenalty.name": "Penalità per il prestito dell'asino",
     "growsseth.config.newTradeNotifications.name": "Notifiche per lo sblocco di nuovi scambi",
     "growsseth.config.disableNpcDialogues.name": "Disabilita dialoghi NPC (per debug)",
@@ -136,9 +139,5 @@
     "growsseth.config.finalQuestStartName.name": "Nome evento per l'inizio della quest finale",
     "growsseth.config.finalQuestZombieName.name": "Nome evento per la zombificazione del ricercatore",
     "growsseth.config.finalQuestLeaveName.name": "Nome evento per far andare via il ricercatore",
-    "growsseth.config.researcherCuredDiscount.name": "Sconto per la cura del ricercatore",
-
-    "growsseth.notif.researcher_updated": "Il ricercatore ha qualcosa di nuovo per te.",
-    "growsseth.notif.researcher_updated.toast.title": "Nuove scoperte!",
-    "growsseth.notif.researcher_updated.toast.description": "Il ricercatore ti aspetta."
+    "growsseth.config.researcherCuredDiscount.name": "Sconto per la cura del ricercatore"
 }

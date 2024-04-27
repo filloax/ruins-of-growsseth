@@ -9,10 +9,17 @@ import static com.ruslan.growsseth.config.GrowssethConfig.T_PREF;
 
 @Category("client")
 public class ClientConfig {
-    @Comment(value = "Enable location titles shown in Growsseth world preset", translation = T_PREF + ".enableLocationTitles.comment")
-    @ConfigEntry(id = "enableLocationTitles", type = EntryType.BOOLEAN, translation = T_PREF + ".enableLocationTitles.name")
+    @ConfigEntry(id = "enableLocationTitles", type = EntryType.BOOLEAN, translation = T_PREF + "enableLocationTitles.name")
+    @Comment(
+            value = "Shows the title of the places you are visiting when exploring the Growsseth world preset.",
+            translation = T_PREF + "enableLocationTitles.comment"
+    )
     public static boolean enableLocationTitles = true;
 
     @ConfigEntry(id = "newTradeNotifications", type = EntryType.BOOLEAN, translation = T_PREF + "newTradeNotifications.name")
+    @Comment(
+            value = "Shows a small toast when the researcher unlocks new trades. Works only for web and progress trades.",
+            translation = T_PREF + "newTradeNotifications.comment"
+    )
     public static boolean newTradeNotifications = true;
 }
