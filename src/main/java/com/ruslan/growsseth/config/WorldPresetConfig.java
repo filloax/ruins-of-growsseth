@@ -58,7 +58,7 @@ public class WorldPresetConfig {
         golemHouse.assign(new StructureInWorldConfig(GrowssethStructures.CydoniaVersion.GOLEM_HOUSE, preset));
         beekeeperHouse.assign(new StructureInWorldConfig(GrowssethStructures.CydoniaVersion.BEEKEEPER_HOUSE, preset));
         noteblockLab.assign(new StructureInWorldConfig(GrowssethStructures.CydoniaVersion.NOTEBLOCK_LAB, preset));
-        conduitRuins.assign(new StructureInWorldConfig(GrowssethStructures.CydoniaVersion.CONDUIT_CHURCH, preset));
+        conduitChurch.assign(new StructureInWorldConfig(GrowssethStructures.CydoniaVersion.CONDUIT_CHURCH, preset));
     }
 
     @ConfigEntry(id = "researcherTent", type = EntryType.OBJECT, translation = T_PREF + "researcherTent.name")
@@ -82,8 +82,8 @@ public class WorldPresetConfig {
     @ConfigEntry(id = "noteblockLab", type = EntryType.OBJECT, translation = T_PREF + "noteblockLab.name")
     public static final StructureInWorldConfig noteblockLab = new StructureInWorldConfig(GrowssethStructures.CydoniaVersion.NOTEBLOCK_LAB);
 
-    @ConfigEntry(id = "conduitRuins", type = EntryType.OBJECT, translation = T_PREF + "conduitRuins.name")
-    public static final StructureInWorldConfig conduitRuins = new StructureInWorldConfig(GrowssethStructures.CydoniaVersion.CONDUIT_CHURCH);
+    @ConfigEntry(id = "conduitChurch", type = EntryType.OBJECT, translation = T_PREF + "conduitChurch.name")
+    public static final StructureInWorldConfig conduitChurch = new StructureInWorldConfig(GrowssethStructures.CydoniaVersion.CONDUIT_CHURCH);
 
     public static List<StructureInWorldConfig> getAll() {
         return List.of(
@@ -94,7 +94,7 @@ public class WorldPresetConfig {
             golemHouse,
             beekeeperHouse,
             noteblockLab,
-            conduitRuins
+            conduitChurch
         );
     }
 

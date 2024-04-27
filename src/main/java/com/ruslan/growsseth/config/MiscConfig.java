@@ -13,6 +13,6 @@ public class MiscConfig {
     public static boolean modLootInVanillaStructures = false;
 
     @ConfigEntry(id = "disableNpcDialogues", type = EntryType.BOOLEAN, translation = T_PREF + "disableNpcDialogues.name")
-    @Comment(value = "Useful for debugging", translation = T_PREF + "disableNpcDialogues.comment")
+    @Comment(value = "Useful for debugging.", translation = T_PREF + "disableNpcDialogues.comment")
     public static boolean disableNpcDialogues = false;
 }

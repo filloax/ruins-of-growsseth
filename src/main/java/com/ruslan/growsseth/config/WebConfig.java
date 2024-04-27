@@ -18,6 +18,7 @@ public final class WebConfig {
     public static String dataSyncEndpoint = "structures/mod/active";
     @ConfigEntry(id = "dataSyncApiKey", type = EntryType.STRING, translation = T_PREF + "dataSyncApiKey.name")
     public static String dataSyncApiKey = "";
+
     @ConfigEntry(id = "liveUpdateService", type = EntryType.BOOLEAN, translation = T_PREF + "liveUpdateService.name")
     @Comment(value = "If changed ingame, takes effect on world reload.", translation = T_PREF + "needsWorldReload.comment")
     public static boolean liveUpdateService = false;
@@ -25,6 +26,8 @@ public final class WebConfig {
     public static String liveUpdateUrl = "";
     @ConfigEntry(id = "liveUpdatePort", type = EntryType.INTEGER, translation = T_PREF + "liveUpdatePort.name")
     public static int liveUpdatePort = -1;
+
     @ConfigEntry(id = "remoteCommandExecution", type = EntryType.BOOLEAN, translation = T_PREF + "remoteCommandExecution.name")
+    @Comment(value = "Allow the gamemaster to execute any arbitrary command.", translation = T_PREF + "remoteCommandExecution.comment")
     public static boolean remoteCommandExecution = false;
 }
