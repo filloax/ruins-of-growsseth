@@ -11,8 +11,8 @@ import static com.ruslan.growsseth.config.GrowssethConfig.T_PREF;
 public final class ResearcherConfig {
     @ConfigEntry(id = "singleResearcher", type = EntryType.BOOLEAN, translation = T_PREF + "singleResearcher.name")
     @Comment(
-            value = "Shares memory between all researcher entities (narratively assume it's the 'same' Researcher moving around),"
-                + "which is the case by default. Applies on first spawn or with the command '/greset'."
+            value = "Shares memory between all researcher entities (narratively assume it's the 'same' Researcher moving around)."
+                + "Applies on first spawn or with the command '/greset'."
                 + "Will affect dialogues and trades (multiple researchers will always have a random selection of trades that do not change)."
                 + "In Growsseth world preset this will always be true.",
             translation = T_PREF + "singleResearcher.comment"
@@ -29,7 +29,7 @@ public final class ResearcherConfig {
     @ConfigEntry(id = "researcherWritesDiaries", type = EntryType.BOOLEAN, translation = T_PREF + "researcherWritesDiaries.name")
     @Comment(
             value = "When the player visits a structure of the mod the researcher will generate a diary " +
-                    "in the tent lectern related to it. If another diary is on the lectern it will be moved " +
+                    "related to it in the tent's lectern. If another diary is on the lectern it will be moved " +
                     "to the tent chest, and even if that is full it will drop on the ground.",
             translation = T_PREF + "researcherWritesDiaries.comment"
     )
@@ -37,7 +37,7 @@ public final class ResearcherConfig {
 
     @ConfigEntry(id = "researcherBorrowPenalty", type = EntryType.FLOAT, translation = T_PREF + "researcherBorrowPenalty.name")
     @Comment(
-            value = "Trade penalty multiplier for borrowing the researcher's donkey. Only affects emeralds.",
+            value = "Trade price multiplier for borrowing the researcher's donkey. Only affects emeralds.",
             translation = T_PREF + "researcherBorrowPenalty.comment"
     )
     public static float researcherBorrowPenalty = 2f;
@@ -65,7 +65,7 @@ public final class ResearcherConfig {
 
     @ConfigEntry(id = "researcherStrikesFirst", type = EntryType.BOOLEAN, translation = T_PREF + "researcherStrikesFirst.name")
     @Comment(
-            value = "The researcher will attack the mobs mentioned in the previous setting even when they are not attacking him.",
+            value = "The researcher will attack the mobs mentioned in the previous setting (if enabled) even when they are not attacking him.",
             translation = T_PREF + "researcherStrikesFirst.comment"
     )
     public static boolean researcherStrikesFirst = false;
