@@ -9,9 +9,9 @@ import static com.ruslan.growsseth.config.GrowssethConfig.T_PREF;
 
 @ConfigObject
 public class RangeConfig {
-    @ConfigEntry(id = "min", type = EntryType.INTEGER, translation = T_PREF + ".rangeMin")
+    @ConfigEntry(id = "min", type = EntryType.INTEGER, translation = T_PREF + "rangeMin")
     public int min;
-    @ConfigEntry(id = "max", type = EntryType.INTEGER, translation = T_PREF + ".rangeMax")
+    @ConfigEntry(id = "max", type = EntryType.INTEGER, translation = T_PREF + "rangeMax")
     public int max;
 
     public RangeConfig(int min, int max) {

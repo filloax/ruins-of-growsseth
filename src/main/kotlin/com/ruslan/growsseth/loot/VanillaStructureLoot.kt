@@ -1,20 +1,10 @@
 package com.ruslan.growsseth.loot
 
 import com.ruslan.growsseth.config.GrowssethConfig
+import com.ruslan.growsseth.config.MiscConfig
 import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.item.GrowssethItems.DISC_ABBANDONATI
-import com.ruslan.growsseth.item.GrowssethItems.DISC_BINOBINOOO
-import com.ruslan.growsseth.item.GrowssethItems.DISC_BINOBINOOO_INST
-import com.ruslan.growsseth.item.GrowssethItems.DISC_GIORGIO_CUBETTI
-import com.ruslan.growsseth.item.GrowssethItems.DISC_GIORGIO_FINDING_HOME
-import com.ruslan.growsseth.item.GrowssethItems.DISC_GIORGIO_LOFI
-import com.ruslan.growsseth.item.GrowssethItems.DISC_GIORGIO_LOFI_INST
-import com.ruslan.growsseth.item.GrowssethItems.DISC_INFINITE_AMETHYST
-import com.ruslan.growsseth.item.GrowssethItems.DISC_LABYRINTHINE
-import com.ruslan.growsseth.item.GrowssethItems.DISC_MICE_ON_VENUS
 import com.ruslan.growsseth.item.GrowssethItems.DISC_MISSIVA_NELL_OMBRA
-import com.ruslan.growsseth.item.GrowssethItems.DISC_PADRE_MAMMONK
-import com.ruslan.growsseth.item.GrowssethItems.DISC_SEGA_DI_NIENTE
 import com.ruslan.growsseth.item.GrowssethItems.GROWSSETH_ARMOR_TRIM
 import com.ruslan.growsseth.item.GrowssethItems.GROWSSETH_BANNER_PATTERN
 import com.ruslan.growsseth.item.GrowssethItems.GROWSSETH_POTTERY_SHERD
@@ -49,7 +39,7 @@ object VanillaStructureLoot {
         .minus(SKULK_DISCS)
 
     fun onModifyLootTables(resourceManager: ResourceManager, lootManager: LootDataManager, id: ResourceLocation, tableBuilder: LootTable.Builder, source: LootTableSource) {
-        if (GrowssethConfig.modLootInVanillaStructures) {
+        if (MiscConfig.modLootInVanillaStructures) {
             val poolBuilder = LootPool.lootPool()
             if (STRONGHOLD_LOOT == id) {
                 getDiscs().forEach { poolBuilder.add(LootItem.lootTableItem(it)) }

@@ -6,6 +6,7 @@ import com.filloax.fxlib.codec.*
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.ruslan.growsseth.RuinsOfGrowsseth
+import com.ruslan.growsseth.config.QuestConfig
 import com.ruslan.growsseth.config.ResearcherConfig
 import com.ruslan.growsseth.entity.SerializableItemListing
 import com.ruslan.growsseth.entity.researcher.DiaryHelper
@@ -84,7 +85,7 @@ class ResearcherItemListing(
         if (trader is Researcher) {
             // No donkey penalty while healed
             if (trader.donkeyWasBorrowed && !trader.healed) costMultiplier *= ResearcherConfig.researcherBorrowPenalty
-            if (trader.healed) costMultiplier *= ResearcherConfig.researcherCuredDiscount
+            if (trader.healed) costMultiplier *= QuestConfig.researcherCuredDiscount
         } else {
             RuinsOfGrowsseth.LOGGER.warn("ResearcherTradeEntry used for non-Researcher!")
         }

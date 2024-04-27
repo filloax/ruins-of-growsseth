@@ -5,8 +5,7 @@ import com.filloax.fxlib.nbt.*
 import com.filloax.fxlib.codec.*
 import com.mojang.serialization.Codec
 import com.ruslan.growsseth.RuinsOfGrowsseth
-import com.ruslan.growsseth.config.GrowssethConfig
-import com.ruslan.growsseth.config.ResearcherConfig
+import com.ruslan.growsseth.config.MiscConfig
 import com.ruslan.growsseth.dialogues.BasicDialogueEvents
 import com.ruslan.growsseth.dialogues.DialoguesNpc.Companion.getDialogueNpcs
 import com.ruslan.growsseth.quests.QuestOwner
@@ -295,7 +294,7 @@ open class BasicDialoguesComponent(
     ) : Boolean {
         val (event, dialogueOptions) = getDialoguesAndEvent(player, dialogueEvents, ignoreEventConditions, ignoreEmptyOptionsWarning) ?: return false
 
-        if (ResearcherConfig.disableNpcDialogues && event != Events.TICK_NEAR_PLAYER) {
+        if (MiscConfig.disableNpcDialogues && event != Events.TICK_NEAR_PLAYER) {
             RuinsOfGrowsseth.LOGGER.info("Dialogue for $event was not triggered because \"Disable NPC dialogues\" is on")
             return false
         }

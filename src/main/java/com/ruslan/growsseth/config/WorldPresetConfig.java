@@ -40,12 +40,12 @@ public class WorldPresetConfig {
         GrowssethStructures.CydoniaVersion.CONDUIT_CHURCH,  new PosPreset(-1553, 39, 2527, Rotation.CLOCKWISE_180)
     );
 
-    @ConfigButton(text = "Updated preset", target = "researcherTent", translation = T_PREF + ".buttons.updatedPreset", position = Position.BEFORE)
+    @ConfigButton(text = "Apply updated preset", target = "researcherTent", translation = T_PREF + "buttons.updatedPreset", position = Position.BEFORE)
     public static void useUpdatedPreset() {
         usePreset(PRESET_UPDATED);
     }
 
-    @ConfigButton(text = "Original preset", target = "researcherTent", translation = T_PREF + ".buttons.originalPreset", position = Position.BEFORE)
+    @ConfigButton(text = "Apply original preset", target = "researcherTent", translation = T_PREF + "buttons.originalPreset", position = Position.BEFORE)
     public static void useOriginalPreset() {
         usePreset(PRESET_ORIGINAL);
     }
@@ -61,28 +61,28 @@ public class WorldPresetConfig {
         conduitRuins.assign(new StructureInWorldConfig(GrowssethStructures.CydoniaVersion.CONDUIT_CHURCH, preset));
     }
 
-    @ConfigEntry(id = "researcherTent", type = EntryType.OBJECT, translation = T_PREF + ".gworld.researcherTent")
+    @ConfigEntry(id = "researcherTent", type = EntryType.OBJECT, translation = T_PREF + "researcherTent.name")
     public static final StructureInWorldConfig researcherTent = new StructureInWorldConfig(GrowssethStructures.CydoniaVersion.RESEARCHER_TENT);
 
-    @ConfigEntry(id = "caveCamp", type = EntryType.OBJECT, translation = T_PREF + ".gworld.caveCamp")
+    @ConfigEntry(id = "caveCamp", type = EntryType.OBJECT, translation = T_PREF + "caveCamp.name")
     public static final StructureInWorldConfig caveCamp = new StructureInWorldConfig(GrowssethStructures.CydoniaVersion.CAVE_CAMP);
 
-    @ConfigEntry(id = "caveCampMarker", type = EntryType.OBJECT, translation = T_PREF + ".gworld.caveCampMarker")
+    @ConfigEntry(id = "caveCampMarker", type = EntryType.OBJECT, translation = T_PREF + "caveCampMarker.name")
     public static final StructureInWorldConfig caveCampMarker = new StructureInWorldConfig(GrowssethStructures.CydoniaVersion.MARKER);
 
-    @ConfigEntry(id = "enchantTower", type = EntryType.OBJECT, translation = T_PREF + ".gworld.enchantTower")
+    @ConfigEntry(id = "enchantTower", type = EntryType.OBJECT, translation = T_PREF + "enchantTower.name")
     public static final StructureInWorldConfig enchantTower = new StructureInWorldConfig(GrowssethStructures.CydoniaVersion.ENCHANT_TOWER);
 
-    @ConfigEntry(id = "golemHouse", type = EntryType.OBJECT, translation = T_PREF + ".gworld.golemHouse")
+    @ConfigEntry(id = "golemHouse", type = EntryType.OBJECT, translation = T_PREF + "golemHouse.name")
     public static final StructureInWorldConfig golemHouse = new StructureInWorldConfig(GrowssethStructures.CydoniaVersion.GOLEM_HOUSE);
 
-    @ConfigEntry(id = "beekeeperHouse", type = EntryType.OBJECT, translation = T_PREF + ".gworld.beekeeperHouse")
+    @ConfigEntry(id = "beekeeperHouse", type = EntryType.OBJECT, translation = T_PREF + "beekeeperHouse.name")
     public static final StructureInWorldConfig beekeeperHouse = new StructureInWorldConfig(GrowssethStructures.CydoniaVersion.BEEKEEPER_HOUSE);
 
-    @ConfigEntry(id = "noteblockLab", type = EntryType.OBJECT, translation = T_PREF + ".gworld.noteblockLab")
+    @ConfigEntry(id = "noteblockLab", type = EntryType.OBJECT, translation = T_PREF + "noteblockLab.name")
     public static final StructureInWorldConfig noteblockLab = new StructureInWorldConfig(GrowssethStructures.CydoniaVersion.NOTEBLOCK_LAB);
 
-    @ConfigEntry(id = "conduitRuins", type = EntryType.OBJECT, translation = T_PREF + ".gworld.conduitRuins")
+    @ConfigEntry(id = "conduitRuins", type = EntryType.OBJECT, translation = T_PREF + "conduitRuins.name")
     public static final StructureInWorldConfig conduitRuins = new StructureInWorldConfig(GrowssethStructures.CydoniaVersion.CONDUIT_CHURCH);
 
     public static List<StructureInWorldConfig> getAll() {
@@ -100,17 +100,17 @@ public class WorldPresetConfig {
 
     @ConfigObject
     public static class StructureInWorldConfig {
-        @ConfigEntry(id = "structureId", type = EntryType.STRING, translation = T_PREF + ".structId")
+        @ConfigEntry(id = "structureId", type = EntryType.STRING, translation = T_PREF + "structId.name")
         public String structureId;
-        @ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = T_PREF + ".enabled")
+        @ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = T_PREF + "enabled.name")
         public boolean enabled;
-        @ConfigEntry(id = "x", type = EntryType.INTEGER, translation = T_PREF + ".structX")
+        @ConfigEntry(id = "x", type = EntryType.INTEGER, translation = T_PREF + "structX.name")
         public int x;
-        @ConfigEntry(id = "y", type = EntryType.INTEGER, translation = T_PREF + ".structY")
+        @ConfigEntry(id = "y", type = EntryType.INTEGER, translation = T_PREF + "structY.name")
         public int y;
-        @ConfigEntry(id = "z", type = EntryType.INTEGER, translation = T_PREF + ".structZ")
+        @ConfigEntry(id = "z", type = EntryType.INTEGER, translation = T_PREF + "structZ.name")
         public int z;
-        @ConfigEntry(id = "rotation", type = EntryType.ENUM, translation = T_PREF + ".rotation")
+        @ConfigEntry(id = "rotation", type = EntryType.ENUM, translation = T_PREF + "rotation.name")
         public Rotation rotation;
 
         public ResourceLocation structureId() {
@@ -157,6 +157,5 @@ public class WorldPresetConfig {
         }
     }
 
-    public record PosPreset(int x, int y, int z, Rotation rotation) {
-    }
+    public record PosPreset(int x, int y, int z, Rotation rotation) { }
 }
