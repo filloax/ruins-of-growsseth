@@ -6,8 +6,9 @@
     "defaultRequire": 1
   },
   "client": [
-    "MapRendererInstanceMixin",
     "AdvancementTabMixin",
+    "EasterEggMixinClient$AbstractZombieRendererMixin",
+    "MapRendererInstanceMixin",
     "MultiPlayerGameModeMixin",
     "VillagerModelMixin",
     "custommapitem.CartographyTableScreenMixin",

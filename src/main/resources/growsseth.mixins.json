@@ -3,6 +3,7 @@
   "package": "com.ruslan.growsseth.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "EasterEggMixin$ZombieMixin",
     "LoomMenuMixin",
     "PlaceCommandMixin",
     "PlayerAdvancementsMixin",
