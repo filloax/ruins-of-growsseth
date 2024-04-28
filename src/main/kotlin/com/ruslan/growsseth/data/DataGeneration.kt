@@ -66,7 +66,7 @@ class DataGeneration : DataGeneratorEntrypoint {
         pack.addProvider(::TagProviderInstruments)
         pack.addProvider(::TagProviderStructures)
         pack.addProvider(::TagProviderWorldPresets)
-        pack.addProvider(::EntityLootTableProvider)
+        //pack.addProvider(::EntityLootTableProvider)
         pack.addProvider(::MiscLootTableProvider)
         pack.addProvider(::ModelGenerator)
         pack.addProvider(::CustomDataProvider)
@@ -197,6 +197,7 @@ class TagProviderWorldPresets(output: FabricDataOutput, registries: CompletableF
     }
 }
 
+/* // Not needed, it's set in the zombie's class (maybe will be used later for allowing loot customization)
 class EntityLootTableProvider(output: FabricDataOutput) : SimpleFabricLootTableProvider(output, LootContextParamSets.ENTITY) {
     override fun generate(consumer: BiConsumer<ResourceLocation, LootTable.Builder>) {
         consumer.accept(GrowssethEntities.ZOMBIE_RESEARCHER.defaultLootTable, ZombieResearcher.getLootTable())
@@ -207,6 +208,7 @@ class EntityLootTableProvider(output: FabricDataOutput) : SimpleFabricLootTableP
      */
     override fun getName(): String = "GrowssethEntityLootTable"
 }
+*/
 
 class MiscLootTableProvider(output: PackOutput): LootTableProvider(output, setOf(), mutableListOf(
     SubProviderEntry({
