@@ -12,6 +12,9 @@ public class MiscConfig {
     @ConfigEntry(id = "modLootInVanillaStructures", type = EntryType.BOOLEAN, translation = T_PREF + "modLootInVanillaStructures.name")
     public static boolean modLootInVanillaStructures = false;
 
+    @ConfigEntry(id = "zombieGuberSpawnChance", type = EntryType.FLOAT, translation = T_PREF + "zombieGuberSpawnChance.name")
+    public static float zombieGuberSpawnChance = 0.2f;
+
     @ConfigEntry(id = "disableNpcDialogues", type = EntryType.BOOLEAN, translation = T_PREF + "disableNpcDialogues.name")
     @Comment(value = "Useful for debugging.", translation = T_PREF + "disableNpcDialogues.comment")
     public static boolean disableNpcDialogues = false;

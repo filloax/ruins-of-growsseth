@@ -128,6 +128,7 @@
     "growsseth.config.serverLanguage.comment": "Choose between 'en_us' and 'it_it'. Used for npc dialogues, researcher diaries and structure books.",
 
     "growsseth.config.modLootInVanillaStructures.name": "Generate mod loot in vanilla structures",
+    "growsseth.config.zombieGuberSpawnChance.name": "Zombie Guber spawn chance (%)",
     "growsseth.config.disableNpcDialogues.name": "Disable NPC dialogues",
     "growsseth.config.disableNpcDialogues.comment": "Useful for debugging.",
 
