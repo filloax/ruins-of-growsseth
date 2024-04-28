@@ -1,6 +1,6 @@
 package com.ruslan.growsseth.mixin;
 
-import com.ruslan.growsseth.Constants;
+import com.ruslan.growsseth.config.MiscConfig;
 import com.ruslan.growsseth.interfaces.ZombieWithEasterEgg;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -14,9 +14,7 @@ import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -67,7 +65,7 @@ public class EasterEggMixin {
         )
         private void onFinalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType reason, SpawnGroupData spawnData, CompoundTag dataTag, CallbackInfoReturnable<SpawnGroupData> cir) {
             float value = random.nextFloat();
-            if (value < Constants.ZOMBIE_GUBER_CHANCE) {
+            if (value < MiscConfig.zombieGuberSpawnChance / 100) {
                 setIsGuber(true);
             }
         }

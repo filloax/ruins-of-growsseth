@@ -1,7 +1,5 @@
 package com.ruslan.growsseth
 
-import com.ruslan.growsseth.utils.resLoc
-
 object Constants {
     const val TRADES_DATA_FOLDER = "growsseth_researcher_trades"
     const val RESEARCHER_DIALOGUE_DATA_FOLDER = "growsseth_researcher_dialogue"
@@ -18,6 +16,4 @@ object Constants {
     const val MAX_HEIGHT = 310
 
     const val DAY_TICKS_DURATION = 24000L
-
-    const val ZOMBIE_GUBER_CHANCE = 0.5 //0.2/100
 }
