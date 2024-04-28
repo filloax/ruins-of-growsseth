@@ -67,7 +67,7 @@ class DataGeneration : DataGeneratorEntrypoint {
         pack.addProvider(::TagProviderStructures)
         pack.addProvider(::TagProviderWorldPresets)
         //pack.addProvider(::EntityLootTableProvider)
-        pack.addProvider(::MiscLootTableProvider)
+        //pack.addProvider(::MiscLootTableProvider)
         pack.addProvider(::ModelGenerator)
         pack.addProvider(::CustomDataProvider)
     }
@@ -197,7 +197,7 @@ class TagProviderWorldPresets(output: FabricDataOutput, registries: CompletableF
     }
 }
 
-/* // Not needed, it's set in the zombie's class (maybe will be used later for allowing loot customization)
+/* // Not needed for now, since it's set in the zombie's class (might be used in the future to allow loot customization)
 class EntityLootTableProvider(output: FabricDataOutput) : SimpleFabricLootTableProvider(output, LootContextParamSets.ENTITY) {
     override fun generate(consumer: BiConsumer<ResourceLocation, LootTable.Builder>) {
         consumer.accept(GrowssethEntities.ZOMBIE_RESEARCHER.defaultLootTable, ZombieResearcher.getLootTable())
@@ -210,6 +210,7 @@ class EntityLootTableProvider(output: FabricDataOutput) : SimpleFabricLootTableP
 }
 */
 
+/* // Put aside for now to use manual method, might be used in the future
 class MiscLootTableProvider(output: PackOutput): LootTableProvider(output, setOf(), mutableListOf(
     SubProviderEntry({
         LootTableSubProvider { builder ->
@@ -225,7 +226,7 @@ class MiscLootTableProvider(output: PackOutput): LootTableProvider(output, setOf
         }
     }, LootContextParamSets.ARCHAEOLOGY)
 ))
-
+*/
 
 class ModelGenerator constructor(generator: FabricDataOutput) : FabricModelProvider(generator) {
     override fun generateBlockStateModels(blockStateModelGenerator: BlockModelGenerators?) {
