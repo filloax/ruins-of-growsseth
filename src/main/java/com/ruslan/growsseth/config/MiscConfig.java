@@ -10,6 +10,7 @@ import static com.ruslan.growsseth.config.GrowssethConfig.T_PREF;
 @Category("misc")
 public class MiscConfig {
     @ConfigEntry(id = "modLootInVanillaStructures", type = EntryType.BOOLEAN, translation = T_PREF + "modLootInVanillaStructures.name")
+    @Comment(value = "If changed ingame, takes effect on world reload", translation = T_PREF + "needsWorldReload.comment")
     public static boolean modLootInVanillaStructures = false;
 
     @ConfigEntry(id = "zombieGuberSpawnChance", type = EntryType.FLOAT, translation = T_PREF + "zombieGuberSpawnChance.name")
