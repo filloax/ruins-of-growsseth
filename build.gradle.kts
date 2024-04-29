@@ -86,17 +86,29 @@ dependencies {
 	implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion")
 
 	modImplementation("net.fabricmc:fabric-loader:${property("loader_version")}")
-	modImplementation("net.fabricmc:fabric-language-kotlin:${property("fabric_kotlin_version")}")
-	// include("net.fabricmc:fabric-language-kotlin:${property("fabricKotlinVersion")}")
+
+	"net.fabricmc:fabric-language-kotlin:${property("fabric_kotlin_version")}".let{
+		modImplementation(it)
+		include(it)
+	}
 
 	modImplementation("net.fabricmc.fabric-api:fabric-api:${property("fabric_api_version")}") {
 		exclude(module = "fabric-api-deprecated")
 	}
-	modImplementation("com.terraformersmc:modmenu:${property("mod_menu_version")}")
-	modImplementation("com.teamresourceful.resourcefulconfig:resourcefulconfig-fabric-${property("rconfig_version")}")
+	"com.terraformersmc:modmenu:${property("mod_menu_version")}".let{
+		modImplementation(it)
+		include(it)
+	}
+	"com.teamresourceful.resourcefulconfig:resourcefulconfig-fabric-${property("rconfig_version")}".let{
+		modImplementation(it)
+		include(it)
+	}
 
-	if (!useLocalFxLib) {
-		modImplementation("com.github.filloax:fx-lib:v${property("fxLibVersion")}-fabric")
+	if (!tryUseLocalFXLib) {
+		"com.github.filloax:fx-lib:v${property("fxLibVersion")}-fabric".let{
+			modImplementation(it)
+			include(it)
+		}
 	} else {
 		println("Loading FX-Lib from local Maven...")
 		modImplementation("com.filloax.fxlib:fx-lib:${property("fxLibVersion")}-fabric")
