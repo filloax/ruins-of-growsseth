@@ -75,6 +75,7 @@ class ResearcherTent : GrTemplateStructurePiece {
 
     companion object {
         val DEFAULT_ID = resLoc("misc/researcher_tent")
+        val SIMPLE_ID = resLoc("misc/researcher_tent_simple")
         val CYDONIA_ID = resLoc("cydonia/misc/researcher_tent")
         const val GEN_DEPTH = 0
 

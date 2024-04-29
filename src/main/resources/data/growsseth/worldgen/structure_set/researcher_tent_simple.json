@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "growsseth:researcher_tent_simple",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "salt": 1364758395,
+    "spacing": 32,
+    "separation": 16,
+    "type": "minecraft:random_spread"
+  }
+}

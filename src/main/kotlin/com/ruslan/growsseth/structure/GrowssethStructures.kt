@@ -6,20 +6,11 @@ import com.ruslan.growsseth.structure.structure.ResearcherTentStructure
 import com.ruslan.growsseth.utils.resLoc
 import net.minecraft.core.registries.Registries
 import net.minecraft.data.worldgen.BootstapContext
-import net.minecraft.data.worldgen.PlainVillagePools
-import net.minecraft.data.worldgen.Structures
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
-import net.minecraft.tags.BiomeTags
 import net.minecraft.tags.TagKey
-import net.minecraft.world.level.levelgen.Heightmap
-import net.minecraft.world.level.levelgen.VerticalAnchor
-import net.minecraft.world.level.levelgen.heightproviders.ConstantHeight
-import net.minecraft.world.level.levelgen.structure.BuiltinStructures
 import net.minecraft.world.level.levelgen.structure.Structure
 import net.minecraft.world.level.levelgen.structure.StructureType
-import net.minecraft.world.level.levelgen.structure.TerrainAdjustment
-import net.minecraft.world.level.levelgen.structure.structures.JigsawStructure
 
 object GrowssethStructures {
     @JvmStatic
@@ -31,6 +22,8 @@ object GrowssethStructures {
     // Defined via data, here for reference
     @JvmField
     val RESEARCHER_TENT = make("researcher_tent", StructTags.RESEARCHER_TENT)
+    @JvmField
+    val RESEARCHER_TENT_SIMPLE = make("researcher_tent_simple", StructTags.RESEARCHER_TENT)
     @JvmField
     val BEEKEEPER_HOUSE = make("beekeeper_house", StructTags.BEEKEEPER_HOUSE)
     @JvmField
@@ -115,7 +108,6 @@ object GrowssethStructures {
         val all = mutableMapOf<ResourceLocation, StructureType<*>>()
 
         val RESEARCHER_TENT = registerType("researcher_tent") { ResearcherTentStructure.CODEC }
-//        val RESEARCHER_TENT_CELLAR = registerType("researcher_tent_cellar") { ResearcherTentStructure.CODEC }
 
         private fun <T : Structure> registerType(name: String, type: StructureType<T>): StructureType<T> {
             val id = resLoc(name)
@@ -158,6 +150,7 @@ object GrowssethStructures {
 
         private fun registerTents() {
             ctx.register(RESEARCHER_TENT, ResearcherTentStructure.build(ctx))
+            ctx.register(RESEARCHER_TENT_SIMPLE, ResearcherTentStructure.build(ctx, ResearcherTent.SIMPLE_ID))
             ctx.register(CydoniaVersion.RESEARCHER_TENT, ResearcherTentStructure.build(ctx, ResearcherTent.CYDONIA_ID))
         }
 
