@@ -8,6 +8,7 @@ import com.ruslan.growsseth.entity.GrowssethEntities
 import com.ruslan.growsseth.entity.researcher.ZombieResearcher
 import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.structure.GrowssethStructures
+import com.ruslan.growsseth.utils.resLoc
 import com.ruslan.growsseth.worldgen.GrowssethModWorldPresets
 import com.ruslan.growsseth.worldgen.worldpreset.GrowssethWorldPreset
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint
@@ -25,6 +26,7 @@ import net.minecraft.data.loot.LootTableProvider
 import net.minecraft.data.loot.LootTableSubProvider
 import net.minecraft.data.models.BlockModelGenerators
 import net.minecraft.data.models.ItemModelGenerators
+import net.minecraft.data.models.model.ModelLocationUtils
 import net.minecraft.data.models.model.ModelTemplates
 import net.minecraft.data.recipes.RecipeCategory
 import net.minecraft.data.recipes.RecipeOutput
@@ -235,7 +237,18 @@ class ModelGenerator constructor(generator: FabricDataOutput) : FabricModelProvi
     override fun generateItemModels(itemModelGenerator: ItemModelGenerators?) {
         GrowssethItems.all.forEach { (key, item) ->
             if (item !in GrowssethItems.noAutogenerateItems) {
-                itemModelGenerator!!.generateFlatItem(item, ModelTemplates.FLAT_ITEM)
+                val model = ModelLocationUtils.getModelLocation(item)
+                val discsLayer1 = resLoc("item/music_discs/$item")
+                when (item) {
+                    in GrowssethItems.DISCS_WITH_VOCALS ->
+                        itemModelGenerator!!.generateLayeredItem(model, resLoc("item/disc_with_vocals"), discsLayer1)
+                    in GrowssethItems.DISCS_INSTRUMENTAL ->
+                        itemModelGenerator!!.generateLayeredItem(model, resLoc("item/disc_instrumental"), discsLayer1)
+                    in GrowssethItems.DISCS_VANILLA ->
+                        itemModelGenerator!!.generateLayeredItem(model, resLoc("item/disc_vanilla"), discsLayer1)
+                    else ->
+                        itemModelGenerator!!.generateFlatItem(item, ModelTemplates.FLAT_ITEM)
+                }
             }
         }
     }

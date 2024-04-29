@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "growsseth:item/disc_binobinooo"
+    "layer0": "growsseth:item/disc_with_vocals",
+    "layer1": "growsseth:item/music_discs/disc_binobinooo"
   }
 }
