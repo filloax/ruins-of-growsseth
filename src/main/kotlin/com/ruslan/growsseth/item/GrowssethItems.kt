@@ -53,11 +53,6 @@ object GrowssethItems {
 	val DISC_MISSIVA_NELL_OMBRA = make("disc_missiva_nell_ombra",
 		RecordItem(6, GrowssethSounds.DISC_MISSIVA_NELL_OMBRA, FabricItemSettings().maxCount(1), 329))
 
-	val DISCS_TO_VOCALS = mutableMapOf(
-		DISC_GIORGIO_LOFI_INST to DISC_GIORGIO_LOFI,
-		DISC_BINOBINOOO_INST to DISC_BINOBINOOO,
-	)
-
 	// Vanilla ambience discs
 	val DISC_MICE_ON_VENUS = make("disc_mice_on_venus",
 		RecordItem(6, GrowssethSounds.MUSIC_MICE_ON_VENUS, FabricItemSettings().maxCount(1), 280))
@@ -65,6 +60,33 @@ object GrowssethItems {
 		RecordItem(6, GrowssethSounds.MUSIC_INFINITE_AMETHYST, FabricItemSettings().maxCount(1), 271))
 	val DISC_LABYRINTHINE = make("disc_labyrinthine",
 		RecordItem(6, GrowssethSounds.MUSIC_LABYRINTHINE, FabricItemSettings().maxCount(1), 324))
+
+	val DISCS_TO_VOCALS = mutableMapOf(
+		DISC_GIORGIO_LOFI_INST to DISC_GIORGIO_LOFI,
+		DISC_BINOBINOOO_INST to DISC_BINOBINOOO,
+	)
+
+	val DISCS_WITH_VOCALS = listOf(
+		DISC_ABBANDONATI,
+		DISC_BINOBINOOO,
+		DISC_GIORGIO_CUBETTI,
+		DISC_GIORGIO_LOFI,
+		DISC_MISSIVA_NELL_OMBRA,
+		DISC_PADRE_MAMMONK,
+		DISC_SEGA_DI_NIENTE
+	)
+
+	val DISCS_INSTRUMENTAL = listOf(
+		DISC_BINOBINOOO_INST,
+		DISC_GIORGIO_FINDING_HOME,
+		DISC_GIORGIO_LOFI_INST
+	)
+
+	val DISCS_VANILLA = listOf(
+		DISC_MICE_ON_VENUS,
+		DISC_INFINITE_AMETHYST,
+		DISC_LABYRINTHINE
+	)
 
 	val RUINS_MAP = make("ruins_map", MapItem(defaultBuilder().stacksTo(1)), autoGenerateJson = false)
 
