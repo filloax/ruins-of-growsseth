@@ -217,6 +217,8 @@ Gli scambi del ricercatore sono anche essi definiti tramite JSON. Trovate gli es
     "priority": 50, // opzionale, default 0, più è alto e più va in alto
     "noNotification": false, // opzionale, default false, se true non notifica il nuovo scambio
     "replace": false, // opzionale, default false, se true sostituisce altri scambi a priorità più bassa che offrono lo stesso oggetto
+    "maxUses": 1, // opzionale, default 1, massimo uso di usi per questo scambio, refreshati in base a impostazioni (ignorato e sempre infiniti per scambi fatti tramite game-master/web)
+    "randomWeight": 1.0, // "peso" dello scambio se presente in una lista di scambi scelti casualmente (più alto = più probabile)
 }
 //TradeItemEntry
 {

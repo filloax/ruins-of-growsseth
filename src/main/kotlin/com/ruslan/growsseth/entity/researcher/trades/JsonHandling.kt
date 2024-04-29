@@ -96,7 +96,7 @@ data class ResearcherTradeObj(
     val priority: Int = 0,
     val noNotification: Boolean = false,
     val replace: Boolean = false,
-    val randomWeight: Float = 0f,
+    val randomWeight: Float = 1f,
     val maxUses: Int = 1,
 ) {
     init {
