@@ -28,7 +28,7 @@ interface GrowssethApi {
 
     companion object {
         val current: GrowssethApi
-            get() = GrowssethApiV1
+            get() = GrowssethApiV2
     }
 }
 

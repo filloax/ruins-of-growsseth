@@ -15,7 +15,7 @@ public final class WebConfig {
     @ConfigEntry(id = "dataSyncUrl", type = EntryType.STRING, translation = T_PREF + "dataSyncUrl.name")
     public static String dataSyncUrl = "http://localhost:5000";
     @ConfigEntry(id = "dataSyncEndpoint", type = EntryType.STRING, translation = T_PREF + "dataSyncEndpoint.name")
-    public static String dataSyncEndpoint = "structures/mod/active";
+    public static String dataSyncEndpoint = "server_data";
     @ConfigEntry(id = "dataSyncApiKey", type = EntryType.STRING, translation = T_PREF + "dataSyncApiKey.name")
     public static String dataSyncApiKey = "";
 

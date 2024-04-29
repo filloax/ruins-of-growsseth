@@ -10,7 +10,7 @@ import com.ruslan.growsseth.entity.researcher.*
 import com.ruslan.growsseth.entity.researcher.trades.GlobalResearcherTradesProvider
 import com.ruslan.growsseth.entity.researcher.trades.ProgressResearcherTradesProvider
 import com.ruslan.growsseth.http.DataRemoteSync
-import com.ruslan.growsseth.http.GrowssethApiV1
+import com.ruslan.growsseth.http.GrowssethApiV2
 import com.ruslan.growsseth.http.GrowssethExtraEvents
 import com.ruslan.growsseth.http.LiveUpdatesConnection
 import com.ruslan.growsseth.loot.VanillaStructureLoot
@@ -80,7 +80,7 @@ abstract class ModEvents {
         onServerStopping { server ->
             AsyncLocator.handleServerStoppingEvent()
             DataRemoteSync.handleServerStoppingEvent()
-            GrowssethApiV1.Callbacks.onServerStop(server)
+            GrowssethApiV2.Callbacks.onServerStop(server)
             GlobalResearcherTradesProvider.Callbacks.onServerStop(server)
             LiveUpdatesConnection.serverStop(server)
             GrowssethExtraEvents.onServerStop()
