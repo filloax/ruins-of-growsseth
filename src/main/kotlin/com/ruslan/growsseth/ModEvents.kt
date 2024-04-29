@@ -6,10 +6,7 @@ import com.ruslan.growsseth.advancements.StructureAdvancements
 import com.ruslan.growsseth.advancements.criterion.JigsawPieceTrigger
 import com.ruslan.growsseth.config.WebConfig
 import com.ruslan.growsseth.dialogues.BasicDialoguesComponent
-import com.ruslan.growsseth.entity.researcher.CustomRemoteDiaries
-import com.ruslan.growsseth.entity.researcher.Researcher
-import com.ruslan.growsseth.entity.researcher.ResearcherDialoguesComponent
-import com.ruslan.growsseth.entity.researcher.ResearcherDiaryComponent
+import com.ruslan.growsseth.entity.researcher.*
 import com.ruslan.growsseth.entity.researcher.trades.GlobalResearcherTradesProvider
 import com.ruslan.growsseth.entity.researcher.trades.ProgressResearcherTradesProvider
 import com.ruslan.growsseth.http.DataRemoteSync
@@ -117,7 +114,6 @@ abstract class ModEvents {
 //            QuestComponentEvents.onUnloadEntity(entity, level)
         }
         onEntityDestroyed { entity, level ->
-            Researcher.Callbacks.onEntityDestroyed(entity, level)
         }
 
         afterPlayerBlockBreak { level, player, pos, state, entity ->
@@ -139,10 +135,10 @@ abstract class ModEvents {
         }
 
         onFenceLeash { mob, pos, player ->
-            Researcher.Callbacks.onFenceLeash(mob, pos, player)
+            ResearcherDonkey.onFenceLeash(mob, pos, player)
         }
         onFenceUnleash { mob, pos ->
-            Researcher.Callbacks.onFenceUnleash(mob, pos)
+            ResearcherDonkey.onFenceUnleash(mob, pos)
         }
 
         // Register singularly because returns

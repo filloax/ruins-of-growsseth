@@ -10,7 +10,6 @@ object Constants {
 
     const val DATA_PLAYER_MET_RESEARCHER = "metResearcher"
     const val TAG_RESEARCHER_DONKEY = "researcher_donkey"
-    const val DATA_DONKEY_RESEARCHER_ID = "researcherDataId"
 
     const val MIN_HEIGHT = -64
     const val MAX_HEIGHT = 310

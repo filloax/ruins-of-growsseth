@@ -24,13 +24,11 @@ import com.ruslan.growsseth.entity.RefreshableMerchant
 import com.ruslan.growsseth.entity.SpawnTimeTracker
 import com.ruslan.growsseth.entity.researcher.ResearcherCombatComponent.Companion.distanceForUnjustifiedAggression
 import com.ruslan.growsseth.entity.researcher.ResearcherCombatComponent.ResearcherAttackGoal
-import com.ruslan.growsseth.entity.researcher.trades.GameMasterResearcherTradesProvider
 import com.ruslan.growsseth.entity.researcher.trades.ResearcherTradeMode
 import com.ruslan.growsseth.entity.researcher.trades.ResearcherTradesData
 import com.ruslan.growsseth.http.GrowssethExtraEvents
 import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.quests.QuestOwner
-import com.ruslan.growsseth.structure.GrowssethStructures
 import com.ruslan.growsseth.structure.pieces.ResearcherTent
 import com.ruslan.growsseth.structure.structure.ResearcherTentStructure
 import com.ruslan.growsseth.utils.GrowssethCodecs
@@ -46,14 +44,12 @@ import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.resources.ResourceKey
-import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.tags.DamageTypeTags
 import net.minecraft.tags.TagKey
-import net.minecraft.util.ExtraCodecs
 import net.minecraft.util.RandomSource
 import net.minecraft.world.*
 import net.minecraft.world.damagesource.DamageSource
@@ -358,12 +354,8 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         this.startingPos = blockPosition()
         this.startingDimension = level.level.dimension()
 
-        if (savedData != null) {
-            startTrackingDonkey()
-
-            if (savedData.data.allKeys.isNotEmpty()) {
-                readSavedData(savedData)
-            }
+        if (savedData != null && savedData.data.allKeys.isNotEmpty()) {
+            readSavedData(savedData)
         }
 
         // Set savedData if it was just created (and so nbt empty)
@@ -380,31 +372,6 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         this.populateDefaultEquipmentSlots(randomSource, difficulty)    // for equipping dagger
 
         return spawnGroupData
-    }
-
-    // Set donkey uuid to saved data (replacing old one if tent was placed again),
-    // and read saved data if present from old researchers
-    private fun startTrackingDonkey() {
-        val serverLevel = level() as ServerLevel
-        // Tent is saved to server after spawn
-        EventUtil.runAtServerTickEnd { _ ->
-            val savedData2 = ResearcherSavedData.get(serverLevel.server, id)
-                ?: run {
-                    RuinsOfGrowsseth.LOGGER.error("Saved data not present after tick end for researcher (id $id)")
-                    return@runAtServerTickEnd
-                }
-            tent?.let {
-                val donkey = it.initDonkeyUuid?.let { serverLevel.getEntity(it) }
-                // In case donkey was removed (researcher spawned later in testing manually, etc.)
-                    ?: serverLevel.getEntitiesOfClass(Donkey::class.java, AABB.ofSize(position(), 25.0, 10.0, 25.0))
-                        .firstOrNull { it.tags.contains(Constants.TAG_RESEARCHER_DONKEY) }
-                if (donkey != null) {
-                    savedData2.donkeyUuid = donkey.uuid
-                    savedData2.setDirty()
-                    donkey.getPersistData().putInt(Constants.DATA_DONKEY_RESEARCHER_ID, id)
-                }
-            } ?: RuinsOfGrowsseth.LOGGER.warn("No tent found on researcher spawn")
-        }
     }
 
     override fun aiStep() {
@@ -729,7 +696,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         }
 
         researcherData.loadField("PlayerOffers", mutableMapCodec(UUIDUtil.STRING_CODEC, GrowssethCodecs.MERCHANT_OFFERS_CODEC)) { offersByPlayer.putAll(it) }
-        researcherData.loadField("TradesData", ResearcherTradesData.CODEC) { tradesData = it }
+        researcherData.loadField("TradesData", ResearcherTradesData.CODEC) {tradesData = it}
 
         dialogues?.readNbt(researcherData)
         diary?.readNbt(researcherData)
@@ -793,9 +760,9 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             spawnTime = compoundTag.getLong(SPAWN_TIME_TAG)
         }
 
-        compoundTag.loadField(TELEPORT_COUNTER_TAG, Codec.INT) { secondsAwayFromTent = it }
-        compoundTag.loadField(STARTING_POS_TAG, BlockPos.CODEC) { startingPos = it }
-        compoundTag.loadField(STARTING_DIM_TAG, ResourceKey.codec(Registries.DIMENSION)) { startingDimension = it }
+        compoundTag.loadField(TELEPORT_COUNTER_TAG, Codec.INT, ::secondsAwayFromTent)
+        compoundTag.loadField(STARTING_POS_TAG, BlockPos.CODEC, ::startingPos)
+        compoundTag.loadField(STARTING_DIM_TAG, ResourceKey.codec(Registries.DIMENSION), ::startingDimension)
     }
 
     fun saveWorldData() {
@@ -1027,83 +994,6 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
                 return InteractionResultHolder(target.renameCheck(name.string, player), stack)
             }
             return InteractionResultHolder.pass(stack)
-        }
-
-        fun onFenceUnleash(mob: Mob, pos: BlockPos) {
-            if (!(mob is Donkey && mob.tags.contains(Constants.TAG_RESEARCHER_DONKEY))) return
-
-            val playerRadius = 15.0
-            // Yes, we're getting the player, as no easy way to make this event return it
-            val player = (mob.level() as ServerLevel).getNearestPlayer(mob, playerRadius) as ServerPlayer?
-                ?: return
-            val searchRadius = 80.0
-            val searchArea = AABB.ofSize(player.position(), searchRadius, searchRadius, searchRadius)
-            val researchers = player.level().getEntitiesOfClass(Researcher::class.java, searchArea)
-
-            researchers.forEach { researcher ->
-                val resWorldData = researcher.persistId?.let { ResearcherSavedData.get(player.server, it) }
-                if (resWorldData == null) {
-                    RuinsOfGrowsseth.LOGGER.error("On unleash: world data not present or id null (id ${researcher.persistId})")
-                    return@forEach
-                }
-                if (resWorldData.donkeyUuid == mob.uuid && !researcher.donkeyWasBorrowed) {
-                    researcher.donkeyWasBorrowed = true
-                    researcher.dialogues?.triggerDialogue(player, ResearcherDialoguesComponent.EV_BORROW_DONKEY)
-                }
-            }
-        }
-
-        fun onFenceLeash(mob: Mob, pos: BlockPos, player: ServerPlayer) {
-            if (mob !is Donkey) return
-
-            player.serverLevel().getEntity(mob.uuid)
-            val searchRadius = 80.0
-            val searchArea = AABB.ofSize(player.position(), searchRadius, searchRadius, searchRadius)
-            val researchers = player.level().getEntitiesOfClass(Researcher::class.java, searchArea)
-
-            researchers.forEach { researcher ->
-                val persistId = researcher.persistId
-                val resWorldData = persistId?.let { ResearcherSavedData.get(player.server, it) }
-                if (resWorldData == null) {
-                    RuinsOfGrowsseth.LOGGER.error("On leash: invalid world data or id for researcher $researcher (id is ${researcher.persistId})")
-                    return@forEach
-                }
-                if (resWorldData.donkeyUuid == null) {
-                    RuinsOfGrowsseth.LOGGER.info("Brought new researcher donkey as old one was dead (now is ${mob.uuid})")
-                    val data = mob.getPersistData()
-                    mob.tags.add(Constants.TAG_RESEARCHER_DONKEY)
-                    data.putInt(Constants.DATA_DONKEY_RESEARCHER_ID, persistId)
-                    resWorldData.donkeyUuid = mob.uuid
-                    resWorldData.setDirty()
-                }
-                if (resWorldData.donkeyUuid == mob.uuid && researcher.donkeyWasBorrowed) {
-                    researcher.donkeyWasBorrowed = false
-                    researcher.dialogues?.triggerDialogue(player, ResearcherDialoguesComponent.EV_RETURN_DONKEY)
-                }
-            }
-        }
-
-        fun onEntityDestroyed(entity: Entity, level: ServerLevel) {
-            if (!(entity is Donkey && entity.tags.contains(Constants.TAG_RESEARCHER_DONKEY))) return
-
-            val data = entity.getPersistData()
-            if (data.contains(Constants.DATA_DONKEY_RESEARCHER_ID)) {
-                val id = data.getInt(Constants.DATA_DONKEY_RESEARCHER_ID)
-                val resWorldData = ResearcherSavedData.get(level.server, id)
-                if (resWorldData == null) {
-                    RuinsOfGrowsseth.LOGGER.warn("Dead researcher donkey has wrong id set: $id")
-                    return
-                }
-                if (resWorldData.donkeyUuid == entity.uuid) {
-                    resWorldData.donkeyUuid = null
-                    resWorldData.setDirty()
-                    RuinsOfGrowsseth.LOGGER.info("Researcher donkey dead (was ${entity.uuid})")
-                } else {
-                    RuinsOfGrowsseth.LOGGER.warn("Dead researcher donkey of id $id no longer set as its donkey (is ${resWorldData.donkeyUuid})")
-                }
-            } else {
-                RuinsOfGrowsseth.LOGGER.warn("Dead researcher donkey doesn't have id set!")
-            }
         }
     }
 
