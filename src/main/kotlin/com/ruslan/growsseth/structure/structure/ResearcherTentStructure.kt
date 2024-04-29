@@ -36,12 +36,14 @@ class ResearcherTentStructure(
                 builder.group(
                     settingsCodec(builder),
                     Codec.BOOL.optionalFieldOf("force_pos_uses_y").forGetter{ Optional.of(it.nextPlaceUseY) },
-                ).apply(builder) {
-                        structureSettings, forcePosUseY,
-                    ->
+                    ResourceLocation.CODEC.optionalFieldOf("templatePath", ResearcherTent.DEFAULT_ID).forGetter{ it.templatePath },
+                    Codec.INT.optionalFieldOf("offsetY", -BASEMENT_HEIGHT).forGetter{ it.offsetY },
+                ).apply(builder) { structureSettings, forcePosUseY, templatePath, offsetY ->
                     ResearcherTentStructure(
                         structureSettings,
-                        forcePosUseY = forcePosUseY.orElse(false),
+                        templatePath,
+                        offsetY,
+                        forcePosUseY.orElse(false),
                     )
                 }
             }) { structure -> DataResult.success(structure) }.codec()

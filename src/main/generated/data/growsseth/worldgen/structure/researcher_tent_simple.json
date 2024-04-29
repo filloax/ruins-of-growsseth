@@ -2,7 +2,9 @@
   "type": "growsseth:researcher_tent",
   "biomes": "#growsseth:has_structure/none",
   "force_pos_uses_y": true,
+  "offsetY": 0,
   "spawn_overrides": {},
   "step": "surface_structures",
+  "templatePath": "growsseth:misc/researcher_tent_simple",
   "terrain_adaptation": "beard_thin"
 }
