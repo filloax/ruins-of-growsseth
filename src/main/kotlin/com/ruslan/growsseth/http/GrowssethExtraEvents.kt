@@ -314,12 +314,12 @@ object GrowssethExtraEvents {
                 tent.pieces.forEach { piece ->
                     if (piece is ResearcherTent) {
                         piece.remove(level, replaceUndergroundEntrance = true)
-                    }
-                }
 
-                // Remove donkey but only if close to tent
-                ResearcherDonkey.removeDonkey(0, server.overworld()) {
-                    it.position().distanceTo(tent.boundingBox.center.center) < 40.0
+                        // Remove donkey but only if close to tent
+                        ResearcherDonkey.removeDonkey(piece, server.overworld()) {
+                            it.position().distanceTo(tent.boundingBox.center.center) < 40.0
+                        }
+                    }
                 }
 
                 savedData.alreadyRan.add(id)

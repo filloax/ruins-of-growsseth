@@ -30,7 +30,6 @@ import kotlin.jvm.optionals.getOrNull
 class ResearcherSavedData private constructor (
     var data: CompoundTag,
     var name: Component?,
-    var donkeyUuid: UUID?,
 ) : FxSavedData<ResearcherSavedData>(CODEC) {
     private var masterData: SavedData? = null
 
@@ -38,9 +37,8 @@ class ResearcherSavedData private constructor (
         val CODEC: Codec<ResearcherSavedData> = RecordCodecBuilder.create { builder -> builder.group(
             CompoundTag.CODEC.fieldOf("data").forGetter(ResearcherSavedData::data),
             ComponentSerialization.CODEC.optionalFieldOf("name").forNullableGetter(ResearcherSavedData::name),
-            UUIDUtil.STRING_CODEC.optionalFieldOf("donkeyUuid").forNullableGetter(ResearcherSavedData::donkeyUuid),
-        ).apply(builder) { data, name, donkeyUuid ->
-            ResearcherSavedData(data, name.getOrNull(), donkeyUuid.getOrNull())
+        ).apply(builder) { data, name ->
+            ResearcherSavedData(data, name.getOrNull())
         } }
 
         // Crashes with non-string key codec
@@ -76,7 +74,7 @@ class ResearcherSavedData private constructor (
         @JvmStatic
         fun createNew(server: MinecraftServer, id: Int): ResearcherSavedData {
             val container = getContainer(server)
-            val new = ResearcherSavedData(CompoundTag(), Component.empty(), null).initParent(container)
+            val new = ResearcherSavedData(CompoundTag(), Component.empty()).initParent(container)
             container.items[id] = new
             return new
         }
