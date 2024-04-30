@@ -14,14 +14,16 @@ Seguono questo template:
         // OPTIONALS:
         "priority": 0,
         "noNotification": false,
-        "replace": false
+        "replace": false,
+        "maxUses": 1
     }
 
 In **"gives"** va l'item che si vuole dare con lo scambio (vedere sotto per il formato degli item), mentre in **"wants"** vanno gli item che si vuole che il ricercatore chieda in cambio (massimo due, come per i villici vanilla). I seguenti campi sono opzionali:
 
 *   **"priority"** indica quanto il nuovo scambio deve andare in alto nel menu del ricercatore (tutti gli scambi sono ordinati tramite questo valore, è consigliato studiarsi il datapack per capirlo);
 *   **"noNotification"** (se impostato a _true_) non mostra la notifica in gioco quando lo scambio viene creato;
-*   **"replace"** (se impostato a _true_) sostituisce altri scambi a priorità più bassa che offrono lo stesso oggetto.
+*   **"replace"** (se impostato a _true_) sostituisce altri scambi a priorità più bassa che offrono lo stesso oggetto;
+*   **"maxUses"** indica il massimo numero di volte che si può acquistare l'oggetto dello scambio.
 
 Al posto dei commenti con "<u>TradeItemEntry</u>" bisogna inserire un oggetto JSON con questo formato:
 
