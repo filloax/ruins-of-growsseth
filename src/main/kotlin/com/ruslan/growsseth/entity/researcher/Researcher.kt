@@ -760,9 +760,9 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             spawnTime = compoundTag.getLong(SPAWN_TIME_TAG)
         }
 
-        compoundTag.loadField(TELEPORT_COUNTER_TAG, Codec.INT, ::secondsAwayFromTent)
-        compoundTag.loadField(STARTING_POS_TAG, BlockPos.CODEC, ::startingPos)
-        compoundTag.loadField(STARTING_DIM_TAG, ResourceKey.codec(Registries.DIMENSION), ::startingDimension)
+        compoundTag.loadField(TELEPORT_COUNTER_TAG, Codec.INT, ::secondsAwayFromTent.setter)
+        compoundTag.loadField(STARTING_POS_TAG, BlockPos.CODEC, ::startingPos.setter)
+        compoundTag.loadField(STARTING_DIM_TAG, ResourceKey.codec(Registries.DIMENSION), ::startingDimension.setter)
     }
 
     fun saveWorldData() {
