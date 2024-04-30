@@ -8,10 +8,13 @@ plugins {
 }
 
 val kotlinVersion: String by project
-val tryUseLocalFXLib = (property("tryUseLocalFXLib")!! as String).toBoolean()
+val alwaysUseLocalFXLib = (property("alwaysUseLocalFXLib")!! as String).toBoolean()
 version = property("mod_version")!! as String
 group = property("maven_group")!! as String
 val modid: String by project
+val fxLibVersion: String by project
+
+val useLocalFxLib = alwaysUseLocalFXLib || fxLibVersion.contains(Regex("rev\\d+"))
 
 base {
 	archivesName.set(property("archivesBaseName") as String)
@@ -89,7 +92,7 @@ dependencies {
 	modImplementation("com.terraformersmc:modmenu:${property("mod_menu_version")}")
 	modImplementation("com.teamresourceful.resourcefulconfig:resourcefulconfig-fabric-${property("minecraft_version")}:${property("rconfig_version")}")
 
-	if (!tryUseLocalFXLib) {
+	if (!useLocalFxLib) {
 		modImplementation("com.github.filloax:fx-lib:v${property("fxLibVersion")}-fabric")
 	} else {
 		println("Loading FX-Lib from local Maven...")
