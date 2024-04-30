@@ -27,7 +27,7 @@ Infine si arriva alla categoria dei **diari / libri**, che include tre diverse a
 *   **Sostituire uno dei diari** che scrive il ricercatore quando ci si avvicina dopo aver esplorato una struttura (quelli sulle sue avventure nella struttura in questione);
 *   **Sostituire uno dei libri** che si trovano nelle strutture.
 
-Negli ultimi due casi, oltre a titolo e contenuto, bisognerà anche scegliere a quale struttura ci si riferisce.
+Negli ultimi due casi, oltre a titolo, autore (solo per i libri delle strutture) e contenuto, bisognerà anche scegliere a quale struttura ci si riferisce.
 
 Il contenuto è quello delle pagine, per le quali puoi usare **\\n** per andare a capo e **%PAGEBREAK%** per andare alla pagina successiva, come in questo esempio:
 

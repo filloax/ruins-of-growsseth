@@ -19,6 +19,7 @@ async function updateServer(card, action) {
     let bookStructure = card.querySelector("#book-structure").value;
     let iconNamespace = card.querySelector("#namespace").value;
     let iconItemId = card.querySelector("#item-id").value;
+    let author = card.querySelector("#author-text").value;
     let title = card.querySelector("#title-text").value;
     let content = card.querySelector("#content-text").value;
     let active = card.querySelector("#card-enabler-switch").checked;
@@ -50,7 +51,11 @@ async function updateServer(card, action) {
         case "structure-book":
             commData["type"] = "structureBook"
             commData["structure"] = bookStructure
-            commData["title"] = title
+            commData["content"] = JSON.stringify({
+                "author": author,
+                "name": title,
+                "pages": [content]
+            })
             break;
     }
     commData = { [action]: [commData] };
@@ -99,6 +104,9 @@ function addCommCard(isNew, item) {
     let iconNamespace = toastIconDiv.querySelector("#namespace");
     let iconItemId = toastIconDiv.querySelector("#item-id");
 
+    let bookAuthorDiv = thisCard.querySelector("#author");
+    let author = bookAuthorDiv.querySelector("#author-text");
+
     let commTitleDiv = thisCard.querySelector("#title");
     let title = commTitleDiv.querySelector("#title-text");
 
@@ -134,7 +142,10 @@ function addCommCard(isNew, item) {
             case "structureBook":
                 commSelect.value = "structure-book"
                 bookStructure.value = item.structure
-                title.value = item.title;
+                bookContent = JSON.parse(item.content)
+                author.value = bookContent.author
+                title.value = bookContent.name
+                content.value = bookContent.pages
                 break;
         }
         cardEnablerSwitch.checked = item.active
@@ -171,7 +182,7 @@ function addCommCard(isNew, item) {
             cardEnablerDiv.hidden = true;
             thisCard.classList.remove("bg-danger-subtle", "bg-success-subtle");
             thisCard.classList.add("bg-dark-subtle");
-            hideElements(commTitleDiv, toastIconDiv, researcherStructDiv, bookStructDiv, contentDiv);
+            hideElements(bookAuthorDiv, commTitleDiv, toastIconDiv, researcherStructDiv, bookStructDiv, contentDiv);
         }
     });
 
@@ -196,26 +207,26 @@ function addCommCard(isNew, item) {
         switch (selectedComm) {
             case 'dialogue':
                 showElements(contentDiv);
-                hideElements(commTitleDiv, toastIconDiv, researcherStructDiv, bookStructDiv);
+                hideElements(bookAuthorDiv, commTitleDiv, toastIconDiv, researcherStructDiv, bookStructDiv);
                 break;
             case 'toast-simple':
                 showElements(commTitleDiv, contentDiv);
-                hideElements(toastIconDiv, researcherStructDiv, bookStructDiv);
+                hideElements(bookAuthorDiv, toastIconDiv, researcherStructDiv, bookStructDiv);
                 break;
             case 'toast-with-icon':
                 showElements(commTitleDiv, toastIconDiv, contentDiv);
-                hideElements(researcherStructDiv, bookStructDiv);
+                hideElements(bookAuthorDiv, researcherStructDiv, bookStructDiv);
                 break;
             case 'researcher-diary-new':
                 showElements(commTitleDiv, contentDiv);
-                hideElements(toastIconDiv, researcherStructDiv, bookStructDiv);
+                hideElements(bookAuthorDiv, toastIconDiv, researcherStructDiv, bookStructDiv);
                 break;
             case 'researcher-diary-replace':
                 showElements(commTitleDiv, researcherStructDiv, contentDiv);
-                hideElements(toastIconDiv, bookStructDiv);
+                hideElements(bookAuthorDiv, toastIconDiv, bookStructDiv);
                 break;
             case 'structure-book':
-                showElements(commTitleDiv, bookStructDiv, contentDiv);
+                showElements(bookAuthorDiv, commTitleDiv, bookStructDiv, contentDiv);
                 hideElements(toastIconDiv, researcherStructDiv);
                 break;
         }

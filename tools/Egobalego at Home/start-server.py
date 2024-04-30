@@ -69,12 +69,24 @@ def receive_data():
 
 @app.route('/server_data', methods=['GET'])
 def send_data():
+    load_data()
     return server_data
 
 @app.route('/last_id', methods=['GET'])
 def send_last_id():
     return str(last_id)
 
+
+def load_data():
+    global server_data
+    try:
+        with open('server_data.json', 'r') as f:
+            data = f.read()
+            server_data = json.loads(data)
+    except FileNotFoundError:
+        print("Could not find the file server_data.json, it will be created the first time you add something.")
+    except Exception as e:
+        print("Server data could not be loaded and was reset, changes will apply on the next edit:", e)
 
 def update_data():
     received_data = request.json
@@ -115,6 +127,7 @@ def update_database():
     with open('server_data.json', 'w') as f:
         json.dump(server_data, f, indent=4)
 
+
 dirname = os.path.dirname(__file__)
 
 def md_content(name: str):
@@ -124,6 +137,7 @@ def md_content(name: str):
 def markdown_to_html(markdown_text):
     parser = create_markdown(escape=False, plugins=['strikethrough', 'footnotes', 'table'])
     return parser(markdown_text)
+
 
 server_data = []
 last_id = 0
@@ -135,15 +149,8 @@ if __name__ == '__main__':
     args_port: int = args.port
     args_debug: bool = args.debug
     
-    try:
-        with open('server_data.json', 'r') as f:
-            data = f.read()
-            server_data = json.loads(data)
-    except FileNotFoundError:
-        print("Could not find the file server_data.json, it will be created the first time you add something.")
-    except Exception as e:
-        print("Server data could not be loaded and was reset, changes will apply on the next edit:", e)
-
+    load_data()
+    
     try:
         with open("last_id.txt", "r") as f:
             try:
