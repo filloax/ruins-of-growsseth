@@ -15,6 +15,7 @@ import com.ruslan.growsseth.config.ResearcherConfig
 import com.ruslan.growsseth.http.ApiEvent
 import com.ruslan.growsseth.http.GrowssethApi
 import com.ruslan.growsseth.utils.*
+import com.ruslan.growsseth.worldgen.worldpreset.GrowssethWorldPreset.isGrowssethPreset
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
@@ -129,6 +130,8 @@ class ResearcherDiaryComponent(val researcher: Researcher) {
 
     private fun makeStructureDiary(forStructure: TagKey<Structure>): Boolean {
         if (!hasStructureDiary(forStructure)) return false
+        if (isGrowssethPreset(level.server) && forStructure == GrowssethTags.StructTags.BEEKEEPER_HOUSE)
+            return false    // since cydo's beekeeper is a different character with a different diary
 
         val languageDiaries = DiaryListener.DIARIES_BY_LANG[GrowssethConfig.serverLanguage] ?: DiaryListener.DIARIES_BY_LANG[DEFAULT_LANGUAGE]
         val remoteDiaries = CustomRemoteDiaries.structureReplacementDiaries
