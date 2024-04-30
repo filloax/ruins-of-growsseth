@@ -59,7 +59,8 @@ object GrowssethApiV2 : AbstractGrowssethApi() {
         DataRemoteSync.endpointParams(WebConfig.dataSyncEndpoint).headers["apiKey"] = WebConfig.dataSyncApiKey
 
         DataRemoteSync.subscribe(WebConfig.dataSyncEndpoint, ListSerializer(Entry.serializer())) { list, server ->
-            val (events, structSpawns) = list.partition { it.type in EVENT_TYPES }
+            val validEntries = list.filter(Entry::checkValid)
+            val (events, structSpawns) = validEntries.partition { it.type in EVENT_TYPES }
 
             structSpawnsList.clear()
             structSpawnsMap.clear()
@@ -143,6 +144,57 @@ object GrowssethApiV2 : AbstractGrowssethApi() {
         val title: String? = null,
         val quest: Quest? = null,
     ) {
+        fun checkValid(): Boolean {
+            if (id == "") {
+                RuinsOfGrowsseth.LOGGER.error("There are some entries with no id in web sync data!")
+                return false
+            }
+            if (type != "structure" && type !in EVENT_TYPES) {
+                RuinsOfGrowsseth.LOGGER.error("Web sync entry with id $id has type $type, which is not supported!")
+                return false
+            }
+            val missingFields = mutableListOf<String>()
+            when (type) {
+                "structure" -> {
+                    if (structure == null)
+                        missingFields.add(::structure.name)
+                    if (x == null)
+                        missingFields.add(::x.name)
+                    if (y == null)
+                        missingFields.add(::y.name)
+                    if (z == null)
+                        missingFields.add(::z.name)
+                }
+                "questStep", "tradePreset", "operation" -> {
+                    if (name == null)
+                        missingFields.add(::name.name)
+                }
+                "tradeCustom", "dialogue", "command" -> {
+                    if (content == null)
+                        missingFields.add(::content.name)
+                }
+                "toast", "researcherDiary" -> {
+                    if (title == null)
+                        missingFields.add(::title.name)
+                    if (content == null)
+                        missingFields.add(::content.name)
+                }
+                "structureBook" -> {
+                    if (structure == null)
+                        missingFields.add(::structure.name)
+                    if (content == null)
+                        missingFields.add(::content.name)
+                }
+            }
+            if (missingFields.size > 0) {
+                RuinsOfGrowsseth.LOGGER.error(
+                    "Web sync entry with id '$id' has type '$type', but is missing the following keys: $missingFields"
+                )
+                return false
+            }
+            return true
+        }
+
         fun toStructureSpawn(): StructureSpawn = StructureSpawn (
             id = Integer.parseInt(id.split("-").last()),
             structureID = structure!!,
@@ -160,8 +212,10 @@ object GrowssethApiV2 : AbstractGrowssethApi() {
             var eventDesc = ""
             var eventPos = BlockPos(0,0,0)
             when (type) {
-                "questStep" -> eventName = name!!
-                "tradePreset" -> eventName = name!!
+                "questStep" ->
+                    eventName = name!!
+                "tradePreset" ->
+                    eventName = name!!
                 "tradeCustom" -> {
                     eventName = "customTrade/$id"
                     eventDesc = content!!
@@ -196,7 +250,7 @@ object GrowssethApiV2 : AbstractGrowssethApi() {
                     eventName = name!!
                     eventDesc = id
                     if (x != null && y != null && z != null)
-                        eventPos = BlockPos(x,y,z)
+                        eventPos = BlockPos(x, y, z)
                 }
             }
             return Event (
