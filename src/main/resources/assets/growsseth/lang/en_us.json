@@ -125,7 +125,7 @@
     "growsseth.config.needsWorldReload.comment": "If changed ingame, takes effect on world reload.",
 
     "growsseth.config.serverLanguage.name": "Server language",
-    "growsseth.config.serverLanguage.comment": "Choose between 'en_us' and 'it_it'. Used for npc dialogues, researcher diaries and structure books.",
+    "growsseth.config.serverLanguage.comment": "Choose between 'en_us' and 'it_it'. Used for npc dialogues, researcher diaries and structure books. Defaults to 'client', which will autoselect the language depending on client language on first launch, or default to en_us in servers. Additional languages may be added via datapack.",
 
     "growsseth.config.modLootInVanillaStructures.name": "Generate mod loot in vanilla structures",
     "growsseth.config.zombieGuberSpawnChance.name": "Zombie Guber spawn chance (%)",
