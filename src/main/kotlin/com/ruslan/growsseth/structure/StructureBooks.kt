@@ -81,7 +81,7 @@ object StructureBooks {
             book
         }
 
-        setBookTags(fixedBook, bookData.name, bookData.author ?: "???", bookData.pagesComponents)
+        fixedBook.setBookTags(bookData.name, bookData.author ?: "???", bookData.pagesComponents)
         RuinsOfGrowsseth.LOGGER.info("Loaded book template $templateId in structure gen")
         return fixedBook
     }

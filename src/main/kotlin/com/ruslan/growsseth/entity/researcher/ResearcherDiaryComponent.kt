@@ -37,6 +37,7 @@ import net.minecraft.world.Container
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.ai.targeting.TargetingConditions
 import net.minecraft.world.entity.item.ItemEntity
+import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.block.LecternBlock
@@ -170,7 +171,7 @@ class ResearcherDiaryComponent(val researcher: Researcher) {
 
     private fun pushDiaryToContainers(book: ItemStack) {
         findBlockEntsIfNull()
-        DiaryHelper.pushDiaryToContainers(book, level, researcher, lecternBlockEntity, previousDiariesChestBlockEntity)
+        DiaryHelper.pushDiaryToContainers(book, level, researcher, lecternBlockEntity, previousDiariesChestBlockEntity, skipExisting=true)
     }
 
     private val printedWarningFor = mutableSetOf<ResourceKey<Structure>>()
@@ -319,7 +320,7 @@ object DiaryHelper {
         val name = Component.literal(diaryData.name)
         val pages = diaryData.pages.map(Component::literal)
         RuinsOfGrowsseth.LOGGER.info("Created end diary ($name, ${pages.size} pages)")
-        setBookTags(book, name, author, pages)
+        book.setBookTags(name, author, pages)
         return book
     }
 
@@ -338,18 +339,37 @@ object DiaryHelper {
         val name = Component.literal(diaryData.name)
         val pages = diaryData.pages.map(Component::literal)
         RuinsOfGrowsseth.LOGGER.info("Created diary $id ($name)")
-        setBookTags(itemStack, name, author, pages)
+        itemStack.setBookTags(name, author, pages)
         return true
     }
 
     fun updateItemWithMiscDiary(itemStack: ItemStack, id: String, entity: Entity): Boolean
         = updateItemWithMiscDiary(itemStack, id, entity.name)
 
-    fun pushDiaryToContainers(book: ItemStack, level: ServerLevel, entity: Entity, lectern: LecternBlockEntity?, chest: ChestBlockEntity?) {
+    private fun diaryMatches(book1: ItemStack, book2: ItemStack): Boolean {
+        val text1 = book1.getBookText()
+        val text2 = book2.getBookText()
+        if (!(book1.item == book2.item
+                && (!book1.`is`(Items.WRITTEN_BOOK) || book1.getBookTitle() == book2.getBookTitle())
+                && (!book1.`is`(Items.WRITTEN_BOOK) || book1.getBookAuthor() == book2.getBookAuthor())
+                && text1.size == text2.size
+        )) return false
+
+        for (i in text1.indices) {
+            if (text1[i].string != text2[i].string)
+                return false
+        }
+        return true
+    }
+
+    fun pushDiaryToContainers(book: ItemStack, level: ServerLevel, entity: Entity, lectern: LecternBlockEntity?, chest: ChestBlockEntity?, skipExisting: Boolean = false) {
         var currentItem: ItemStack? = book
 
         lectern?.let {
             val state = level.getBlockState(it.blockPos)
+            if (skipExisting && !it.book.isEmpty && diaryMatches(it.book, currentItem!!)) {
+                return
+            }
             if (!LecternBlock.tryPlaceBook(entity, level, it.blockPos, state, currentItem!!)) {
                 val prevBook = it.book
                 it.book = currentItem
@@ -358,6 +378,7 @@ object DiaryHelper {
                 currentItem = prevBook
             }
         }
+        if (currentItem?.isEmpty == true) currentItem = null
 
         // If item on lectern that is made by events etc, do not place in chest
         if (currentItem?.orCreateTag?.contains(TAG_REMOVE_DIARIES_ON_PUSH) == true) {
@@ -366,12 +387,21 @@ object DiaryHelper {
 
         if (currentItem != null) {
             chest?.let {
+                if (skipExisting) {
+                    for (slot in 0 until it.containerSize) {
+                        val item = it.getItem(slot)
+                        if (!item.isEmpty && diaryMatches(item, currentItem!!)) {
+                            return
+                        }
+                    }
+                }
                 val success = addToContainer(it, currentItem!!)
                 if (success) {
                     currentItem = null
                 }
             }
         }
+        if (currentItem?.isEmpty == true) currentItem = null
 
         if (currentItem != null) {
             val itemEntity = ItemEntity(level, entity.x, entity.eyeY - 0.3F, entity.z, currentItem!!)
