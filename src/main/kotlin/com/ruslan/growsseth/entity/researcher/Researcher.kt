@@ -530,7 +530,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         if (!metPlayer && dialogues?.nearbyPlayers()?.isNotEmpty() == true)
             metPlayer = true
 
-        if (level().isNight)
+        if (level().isNight || !metPlayer)
             restrictTo(this.startingPos!!, WALK_LIMIT_DISTANCE_NIGHT)
         else
             restrictTo(this.startingPos!!, WALK_LIMIT_DISTANCE)

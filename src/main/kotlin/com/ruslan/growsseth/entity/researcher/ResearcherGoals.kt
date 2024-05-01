@@ -9,7 +9,7 @@ import net.minecraft.world.entity.player.Player
 class ResearcherRandomStrollGoal(private val researcher: Researcher, speedModifier: Double)  :
     WaterAvoidingRandomStrollGoal(researcher, speedModifier) {
     override fun canUse(): Boolean {
-        if (!researcher.metPlayer || researcher.isTrading() || researcher.dialogues?.nearbyPlayers()?.isNotEmpty() != false) {
+        if (researcher.isTrading() || researcher.dialogues?.nearbyPlayers()?.isNotEmpty() != false) {
             return false
         }
         return super.canUse()
