@@ -22,6 +22,7 @@ public final class GrowssethConfig {
 
     @ConfigEntry(id = "serverLanguage", type = EntryType.STRING, translation = T_PREF + "serverLanguage.name")
     @Comment(
+            // Different from the translated string, since the 'client' info is needed only for those who edit the json directly
             value = "Choose between 'en_us' and 'it_it'. Used for npc dialogues, researcher diaries and structure books. "
                 + "Defaults to 'client', which will autoselect the language depending on client language on first launch, or default to en_us in servers. "
                 + "Additional languages may be added via datapack.",

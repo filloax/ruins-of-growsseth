@@ -20,7 +20,7 @@ import static com.ruslan.growsseth.config.GrowssethConfig.T_PREF;
 @Category("worldpreset")
 public class WorldPresetConfig {
     public static final Map<ResourceKey<Structure>, PosPreset> PRESET_ORIGINAL = Map.of(
-            GrowssethStructures.CydoniaVersion.RESEARCHER_TENT, new PosPreset(1374, 75, 162, Rotation.NONE),
+            GrowssethStructures.CydoniaVersion.RESEARCHER_TENT, new PosPreset(1374, 75, 162, Rotation.CLOCKWISE_180),
             GrowssethStructures.CydoniaVersion.CAVE_CAMP,       new PosPreset(934, 38, 340, Rotation.NONE),
             GrowssethStructures.CydoniaVersion.MARKER,          new PosPreset(940, 68, 347, Rotation.NONE),
             GrowssethStructures.CydoniaVersion.ENCHANT_TOWER,   new PosPreset(-1276, 123, 743, Rotation.CLOCKWISE_180),
@@ -30,7 +30,7 @@ public class WorldPresetConfig {
             GrowssethStructures.CydoniaVersion.CONDUIT_CHURCH,  new PosPreset(-1553, 39, 2527, Rotation.CLOCKWISE_180)
     );
     public static final Map<ResourceKey<Structure>, PosPreset> PRESET_UPDATED = Map.of(
-        GrowssethStructures.CydoniaVersion.RESEARCHER_TENT, new PosPreset(1374, 75, 162, Rotation.NONE),
+        GrowssethStructures.CydoniaVersion.RESEARCHER_TENT, new PosPreset(1374, 75, 162, Rotation.CLOCKWISE_180),
         GrowssethStructures.CydoniaVersion.CAVE_CAMP,       new PosPreset(934, 38, 340, Rotation.NONE),
         GrowssethStructures.CydoniaVersion.MARKER,          new PosPreset(940, 68, 347, Rotation.NONE),
         GrowssethStructures.CydoniaVersion.ENCHANT_TOWER,   new PosPreset(-1276, 123, 743, Rotation.NONE), // tower changes
