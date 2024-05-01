@@ -1,13 +1,13 @@
 {
     "rename": [
         {
-            "content": "Mh..? Quella è una targhetta?\nUn regalo piuttosto... uhm... singolare, collega. Le è rimasto a cuore il fatto che non ricordi il mio nome, presumo.\nDi certo non inizierò ad indossare un guinzaglio con questa attaccata, però va bene, mi chiami pure come vuole.",
+            "content": "Mh..? Quella è una targhetta?\nUn regalo piuttosto... uhm... singolare, collega. Ti è rimasto a cuore il fatto che non ricordi il mio nome, presumo.\nDi certo non inizierò ad indossare un guinzaglio con questa attaccata, però va bene, chiamami pure come vuoi.",
             "id": "rename-first",
             "useLimit": 1,
             "priority": -100
         },
         {
-            "content": "Un'altra targhetta? Ha un modo molto particolare di comunicarmi che vuole chiamarmi in un altro modo, collega.\nVa bene, tanto a me non fa alcuna differenza.",
+            "content": "Un'altra targhetta? Hai un modo molto particolare di comunicarmi che vuoi chiamarmi in un altro modo, collega.\nVa bene, tanto a me non fa alcuna differenza.",
             "priority": -500
         },
         {
@@ -115,7 +115,7 @@
             "requiresEventParam": "johnny"
         },
         {
-            "content": "Questo nome... Manfredo, Manfredo... Mi ricorda qualcosa, ma non riesco a ricordare cosa...\nChe fosse il mio vecchio nome? No, non è possibile, che razza di nome è Manfredo?\n...E va bene, lo accetto.",
+            "content": "Il nome su questa targhetta... È così... familiare...\nManfredo, Manfredo... ripeterlo mi dà una strana sensazione... Che fosse il mio vecchio nome? Dannazione, non riesco a ricordare...\nOh, scusa, stavo blaterando tra me e me.\nLo accetto volentieri, non mi dispiace come nome.",
             "requiresEventParam": "manfredo"
         }
     ]
