@@ -5,13 +5,13 @@
             "content": [
                 "Primo saluto!",
                 //"Cosa..? Una persona che vaga per queste terre e non è un mercante?",
-                //"Mi lasci indovinare, lei è per forza o un esploratore o un ricercatore, una vista rara di questi tempi!",
-                //{
-                    //"content": "Salve! Mi presento, sono... uh...",
-                    //"duration": 6
-                //},
-                //"Mi scusi, è imbarazzante, ma per qualche motivo non riesco proprio a ricordare il mio nome... Che strano... sarà dovuto al fatto che non converso da molto con qualcuno...",
-                //"Ehm, cambiamo argomento! Ricercatore o esploratore, io sono entrambe le cose, quindi suppongo che ciò faccia di lei un mio collega. Per questo motivo immagino che possa essere interessato ad acquistare della conoscenza o qualche oggetto particolare, no? Dia pure un'occhiata!",
+                //"Non può essere... senta, non è che lei è per caso un ricercatore, o comunque un esploratore?",
+                //"Quindi è davvero così, incredibile... Lasci che mi spieghi, io sono entrambe le cose, ricercatore ED esploratore. Vago da anni per queste terre, ma non ho mai incontrato nessuno della mia professione. Sa, quello che è successo dopo la Piaga... Pensavo che non esistessero più persone come me.",
+                //"Oh, mi scusi! Sono rimasto così spiazzato che ho dimenticato di presentarmi... Piacere, sono... uh...",
+                //"Non capisco... per qualche motivo non riesco proprio a ricordare il mio nome... Che strano... sarà dovuto al fatto che non converso da molto con qualcuno...",
+                //"Ehm, cambiamo argomento! Ricercatore o esploratore che sia, suppongo che possiamo considerarci colleghi, quindi ti dispiace se ti dò del tu?",
+                //"Io? Personalmente non appartengo ad una branca specifica. Prima della piaga ero un alchimista, ma poi il spostarmi continuamente e dover sopravvivere da solo in mezzo alla natura mi ha plasmato in una sorta di 'tuttologo'. Immagino che valga lo stesso anche per te, hai l'aria di essere una persona curiosa!",
+                //"Sai, durante le mie esplorazioni mi è capitato spesso di scoprire luoghi e oggetti del regno ormai caduto. In quanto collega presumo che la faccenda ti interessi, vero? Normalmente non mi separerei dalle mie scoperte, neanche sotto pagamento, ma credo che collaborare tra noi possa portare ad un vantaggio reciproco, dai pure un'occhiata!"
             ],
             "useLimit": 1,
             "priority": 100,
@@ -19,7 +19,7 @@
             "requiresUntilQuestStage": "start"
         },
         {
-            "content": "Arrivederci, è stato un piacere.",
+            "content": "Arrivederci, è stato un piacere!",
             "useLimit": 1,
             "priority": 50,
             "id": "researcher-first-leave",
@@ -61,48 +61,48 @@
         { "id": "researcher-first" },
         { "id": "no-dialogue-mess" },
         "Buongiorno, collega.",
-        "Lieto di vederla ancora in vita, collega.",
+        "Lieto di vederti ancora in vita, collega.",
         "...forse, con quell'ingrediente... Oh, salve collega.",
         "Buongiorno collega, bella giornata oggi, vero?",
-        "...ma certo, ora ha senso... Oh, salve, ditemi pure.",
+        "...ma certo, ora ha senso... Oh, salve, dimmi pure.",
         "Salve collega, sempre in movimento eh?",
     ],
     "playerArriveNight": [
         { "id": "researcher-first" },
         { "id": "no-dialogue-mess" },
         {
-            "content": "Oh, non mi aspettavo di vederla a quest'ora, va tutto bene?",
+            "content": "Oh, non mi aspettavo di vederti a quest'ora, va tutto bene?",
             "useLimit": 1,
             "priority": 20,
             "id": "researcher-dialogue-night-first"
         },
-        "Strano momento per una visita, spero che non abbiate attirato qui qualche creatura della notte.",
-        "Salve collega, si sta godendo il cielo stellato anche lei?",
-        "Ronf... AH! Ma che ci fa qui a quest'ora?",
-        "Collega, starete dormendo abbastanza? L'insonnia tende ad attirare guai...",
+        "Strano momento per una visita, spero tu non abbia attirato qui qualche creatura della notte.",
+        "Salve collega, anche tu ti stai godendo il cielo stellato?",
+        "Ronf... AH! Ma che ci fai qui a quest'ora?",
+        "Collega, ma starai dormendo abbastanza? L'insonnia tende ad attirare guai...",
         {
-            "content": "Senza paura come sempre vedo, mi raccomando però, facciate attenzione a non attirare dei creeper.\n...Non che quelle pesti abbiano il coraggio di esplodere in mia presenza, sia ovvio.",
+            "content": "Senza paura come sempre vedo, mi raccomando però, fai attenzione a non attirare dei creeper.\n...Non che quelle pesti abbiano il coraggio di esplodere in mia presenza, sia ovvio.",
             "useLimit": 1,
             "id": "researcher-arrive-night-creeper"
         }
     ],
     "playerArriveAfterKilled": [
         {
-            "content": "Ah collega, siete di ritorno, credevo di aver visto un mostro con le vostre sembianze prima.\nFortuna che a qualcuno come voi non verrebbero mai certe idee... giusto?",
+            "content": "Ah collega, sei di ritorno, credevo di aver visto un mostro con le tue sembianze prima.\nFortuna che a qualcuno come te non verrebbero mai certe idee... giusto?",
             "useLimit": 1,
             "priority": 20,
             "id": "greet-player-after-first-kill"
         },
-        "Salve collega, va tutto bene? Avete una strana espressione in viso."
+        "Salve collega, c'è qualcosa che non va? Hai una strana espressione in viso."
     ],
     "playerLeave": [
         { "id": "researcher-first-leave" },
         "Arrivederci collega.",
-        "Le auguro una buona giornata, collega.",
-        "Alla sua prossima visita!",
+        "Ti auguro una buona giornata, collega.",
+        "Alla tua prossima visita!",
         {
             "id": "researcher-north-tip-force",
-            "content": "Arrivederci, e si ricordi sempre che nelle mappe il nord è in alto!",
+            "content": "Arrivederci, e ricordati sempre che nelle mappe il nord è in alto!",
             "useLimit": 1,
             "priority": 30,
             "afterRepeatsMin": 3,
@@ -113,41 +113,43 @@
     "playerLeaveNight": [
         { "id": "researcher-first-leave" },
         "Arrivederci, e buon rientro a casa.",
-        "Faccia attenzione ai mostri sulla strada del ritorno, collega.",
-        "Mi raccomando, stia alla larga dai demoni, collega.",
+        "Fai attenzione ai mostri sulla strada del ritorno, collega.",
+        "Mi raccomando, stai alla larga dallo sguardo dei demoni!",
+        "Arrivederci, e buonanotte!",
         { "id": "goodbye-made-mess-1" },
         { "id": "goodbye-made-mess-2" },
     ],
     "playerArriveLongTime": [
         {
-            "content": "Da quanto tempo! Ormai non ero più sicuro che foste ancora in vita.",
+            "content": "Da quanto tempo! Ormai non ero più sicuro che fossi ancora in vita.",
             "useLimit": 1,
             "priority": 50,
             "id": "researcher-arrive-long-time-first"
         },
-        "Collega...? È davvero lei? Non la vedevo da molto tempo.",
-        "Collega...? Siete di ritorno da una lunga avventura immagino, avete qualcosa di interessante da condividere?",
+        "Collega...? Sei davvero tu? Non ti vedevo da molto tempo.",
+        "Collega...? Sei di ritorno da una lunga avventura immagino, hai qualcosa di interessante da condividere?",
         "Da quanto tempo che non ci si vede, collega.",
-        "Salve collega. È da tanto che siete via, come state?"
+        "Salve collega, è da tanto che sei via, come stai?"
     ],
     "playerArriveSoon": [
         { "id": "no-dialogue-mess" },
         "Già di ritorno?",
         "Dimenticato qualcosa?",
-        "Oh, siete ancora qui. Ditemi pure.",
-        "Avete bisogno ancora di qualcosa?",
-        "Volevate dirmi ancora qualcosa, collega?",
-        "Oh, siete già di ritorno.",
+        "Oh, sei ancora qui. Dimmi pure.",
+        "Hai bisogno ancora di qualcosa?",
+        "Volevi dirmi ancora qualcosa, collega?",
+        "Oh, sei già di ritorno.",
         "...Ok, ora che se n'è anda... Oh! Salve di nuovo collega.",
-        "Wow, che velocità, volevate rivedermi per caso?",
-        "...Vediamo, ora dovrei lavorare a... Oh! Siete ancora quì collega.",
+        "Wow, che velocità, volevi rivedermi per caso?",
+        "...Vediamo, ora dovrei lavorare a... Oh! Sei ancora quì collega.",
         {
-            "content": "Uhm... avete mica lavato le mani col piscio?",
+            "content": "Uhm... ti sei mica lavato le mani col piscio?",
             "id": "arrive-soon-special",
+            "afterRepeatsMin": 2,
             "useLimit": 1
         },
         {
-            "content": "Collega, mi state per caso prendendo in giro? Non sono un bambino.",
+            "content": "Collega, mi stai per caso prendendo in giro? Non sono un bambino.",
             "priority": 50,
             "afterCloseRepeatsMin": 3,
             "afterCloseRepeatsMax": 3,
@@ -188,7 +190,7 @@
             }
         },
         {
-            "content": "Ma che fate?! Siete fuori di testa?",
+            "content": "Ma che fai?! Sei fuori di testa?",
             "priority": 50,
             "afterCloseRepeatsMin": 2,
             "afterCloseRepeatsMax": 2,
@@ -198,7 +200,7 @@
             }
         },
         {
-            "content": "La piaga deve aver preso il sopravvento... Mi dispiace, ma è per il vostro bene!",
+            "content": "La piaga deve aver preso il sopravvento... Mi dispiace, ma è per il tuo bene!",
             "afterCloseRepeatsMin": 3,
             "afterCloseRepeatsMax": 3,
             "priority": 50,
@@ -229,7 +231,7 @@
             }
         },
         {
-            "content": "Ooh, capisco! Volete testare le mie capacità di resilienza, eh eh. Fate pure allora.\nSappiate che il mio corpo è stato temprato dal freddo delle gelide lande di Polar'Hetty e dallo scontro con innumerevoli nemici, dubito riuscirete a scalfirmi!",
+            "content": "Ooh, capisco! Vuoi testare le mie capacità di resilienza, eh eh. Fai pure allora.\nSappi però che il mio corpo è stato temprato dal freddo delle gelide lande di Polar'Hetty e dallo scontro con innumerevoli nemici, dubito riuscirai a scalfirmi!",
             "useLimit": 1,
             "afterRepeatsMin": 5,
             "afterRepeatsMax": 5,
@@ -240,7 +242,7 @@
     ],
     "killPlayer": [
         {
-            "content": "Perché lo avete fatto...",
+            "content": "Perché... Non doveva finire così...",
             "immediate": true,
             "useLimit": 1,
             "priority": 20,
@@ -282,7 +284,7 @@
     ],
     "breakTent": [
         {
-            "content": "Uhm... va bene fate pure, basta che non tocchiate gli strumenti con cui lavoro.",
+            "content": "Uhm... va bene fai pure, basta che non tocchi gli strumenti con cui lavoro.",
             "afterRepeatsMax": 1,
             "immediate": true
         },
@@ -293,7 +295,7 @@
     ],
     "makeMess": [
         {
-            "content": "La prego di tenere giù le mani dalle mie cose, collega. Non posso permettermi di badare sia a un asino che a una scimmia.",
+            "content": "Ti prego di tenere giù le mani dalle mie cose, collega. Non posso permettermi di badare sia a un asino che a una scimmia.",
             "immediate": true,
             "data": {
                 "sound": "none"
@@ -335,7 +337,7 @@
     ],
     "refuseTrade": [
         {
-            "content": "Mi dispiace, sto finendo alcune ricerche e non ho ancora niente da offrirle. Provate a ripassare più tardi.",
+            "content": "Mi dispiace, sto finendo alcune ricerche e non ho ancora niente da offrirti. Prova a ripassare più tardi.",
             "priority": -100,
             "immediate": true
         },
@@ -362,7 +364,7 @@
     ],
     "playerAdvancement": [
         {
-            "content": "Hey! Che stai facendo?",
+            "content": "Hey! Cosa stai facendo?",
             "requiresEventParam": "growsseth:donkey/donkey_hurt_dialogue",
             "immediate": true,
             "id": "hit-donkey-first",
@@ -380,8 +382,8 @@
     "borrowDonkey": [
         {
             "content": [
-                "Oh, vi serve il mio asino per caso? Fate pure collega, tanto non ho intenzione di trasferirmi presto.",
-                "Però dovrò farvi pagare di più finché non lo riportate sano e salvo, vedetela come una specie di cauzione.",
+                "Oh, ti serve il mio asino per caso? Fai pure, tanto non ho intenzione di trasferirmi presto.",
+                "Però dovrò farti pagare di più finché non lo riporti sano e salvo, vedila come una specie di cauzione.",
                 "Queste terre sono molto pericolose dopo tutto, e non si sa mai cosa possa accadere...",
             ],
             "immediate": true,
@@ -390,16 +392,16 @@
             "priority": 50
         },
         {
-            "content": "Oh, vi serve di nuovo il mio asino? Fate pure, le regole le conoscete!",
+            "content": "Oh, ti serve di nuovo il mio asino? Fai pure, le regole le conosci!",
             "immediate": true
         }
     ],
     "returnDonkey": [
-        "Grazie per avermelo riportato. Posso tornare a farle i prezzi originali adesso!"
+        "Grazie per avermelo riportato. Ti farò di nuovo i prezzi originali!"
     ],
     "exploreCellar": [
         {
-            "content": "Per favore, uscite immediatamente da lì.",
+            "content": "Per favore, esci immediatamente da lì.",
             "id": "explore-cellar",
             "useLimit": 1,
             "priority": 50,
@@ -417,7 +419,7 @@
         {
             "id": "exit-cellar",
             "useLimit": 1,
-            "content": "Mi dispiace, so che avrete molte domande a riguardo ma non posso dirvi niente, riguarda una faccenda personale...\nSe possibile vorrei che faceste finta di non aver visto nulla, e di non farne parola con nessuno.",
+            "content": "Mi dispiace, so che avrai molte domande a riguardo ma non posso dirti niente, riguarda una faccenda personale...\nSe possibile vorrei che facessi finta di non aver visto nulla, e di non farne parola con nessuno... Grazie.",
             "requiresUntilQuestStage": "healed"
         }
     ]

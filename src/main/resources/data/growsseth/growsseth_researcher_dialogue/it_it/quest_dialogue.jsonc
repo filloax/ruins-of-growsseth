@@ -4,8 +4,8 @@
             "content": [
                 "Oh... salve collega. §o*yawn*§r uh... ultimamente sono sempre assonnato, eppure sto dormendo più del solito.",
                 "Probabilmente le mie ricerche imperterrite mi stanno stancando più del solito. §o*yawn*§r",
-                "Ditemi un po'... non è che avete trovato informazioni riguardo i sintomi della Piaga? Ci sono voci in giro che dicono come forse, e ripeto forse, possa esistere una cura. Non che ci creda davvero, ahah!",
-                "Io? Sto benissimo §o*yawn*§r ...non si preoccupi, sto seguendo una mia intuizione, ma stando in una tenda mi sarò ammalato, ho comunque una certa età! Ahah... §o*yawn*§r",
+                "Dimmi un po'... non è che hai trovato informazioni riguardo i sintomi della Piaga per caso? Ci sono voci in giro che dicono che forse, e ripeto forse, possa esistere una cura. Non che ci creda davvero, ahah!",
+                "Io? Sto benissimo §o*yawn*§r ...non preoccuparti, sto seguendo una mia intuizione, ma stando in una tenda mi sarò ammalato, ho comunque una certa età! Ahah... §o*yawn*§r",
             ],
             "useLimit": 1,
             "priority": 1000,
@@ -103,7 +103,7 @@
     ],
     "playerLeave": [
         {
-            "content": "Arrivederci collega, non vi azzardate a diventare un non-morto eh!",
+            "content": "Arrivederci collega, non ti azzardare a diventare un non-morto eh!",
             "priority": 1000,
             "requiresQuestStage": "start",
             "requiresUntilQuestStage": "healed"
