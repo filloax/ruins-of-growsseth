@@ -25,6 +25,7 @@ Infine si arriva alla categoria dei **diari / libri**, che include tre diverse a
 
 *   Far scrivere al ricercatore un **nuovo diario** quando il giocatore si avvicina;
 *   **Sostituire uno dei diari** che scrive il ricercatore quando ci si avvicina dopo aver esplorato una struttura (quelli sulle sue avventure nella struttura in questione);
+*   **Sostituire il diario di addio** che scrive il ricercatore quando se ne va una volta finita la quest (quello che si trova nella cassa con il corno);
 *   **Sostituire uno dei libri** che si trovano nelle strutture.
 
 Negli ultimi due casi, oltre a titolo, autore (solo per i libri delle strutture) e contenuto, bisognerà anche scegliere a quale struttura ci si riferisce.

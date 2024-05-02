@@ -30,7 +30,7 @@ async function updateServer(card, action) {
         commandData["content"] = content;
     else {
         commandData["name"] = type;
-        if (type !== "rmResearcher") {
+        if (type !== "rmResearcher" || type !== "rmTentWithGift") {
             commandData["x"] = parseInt(x) || 0;
             commandData["y"] = parseInt(y) || 0;
             commandData["z"] = parseInt(z) || 0;
@@ -94,7 +94,7 @@ function addCommandCard(isNew, item) {
                 break;
             case "operation":
                 commandSelect.value = item.name;
-                if (item.name !== "rmResearcher") {
+                if (item.name !== "rmResearcher" || item.name !== "rmTentWithGift") {
                     coordinatesDiv.hidden = false;
                     x.value = item.x;
                     y.value = item.y;
@@ -138,6 +138,7 @@ function addCommandCard(isNew, item) {
                     hideElements(coordinatesDiv);
                     break;
                 case "rmResearcher":
+                case "rmTentWithGift":
                     hideElements(manualCommandDiv, coordinatesDiv);
                     break;
                 case "tpResearcher":

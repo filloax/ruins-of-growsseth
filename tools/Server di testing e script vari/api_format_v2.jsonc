@@ -80,7 +80,7 @@
         "id": "7",
         "type": "researcherDiary",
         "structure": "namespace:structure_id",  // OPZIONALE: La struttura per cui si vuole sostituire il diario (altrimenti verrà creato come nuovo)
-        "title": "",            // Il titolo del diario
+        "title": "",            // Il titolo del diario, se finisce con /endDiary sostituisce quello di fine quest
         "content": "",          // Il contenuto del diario (usare "\n per le andate a capo e %PAGEBREAK% per cambiare pagina")
         "active": false
     },
