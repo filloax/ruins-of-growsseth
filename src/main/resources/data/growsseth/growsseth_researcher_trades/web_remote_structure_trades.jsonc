@@ -13,10 +13,9 @@
                     }
                 },
                 "wants": [
-                    // wants map for initial quest
                     {
-                        "id": "minecraft:map",
-                        "amount": 1
+                        "id": "minecraft:emerald",
+                        "amount": 2
                     }
                 ]
             }
@@ -36,10 +35,6 @@
                     {
                         "id": "minecraft:emerald",
                         "amount": 10
-                    },
-                    {
-                        "id": "minecraft:map",
-                        "amount": 1
                     }
                 ]
             }
@@ -59,10 +54,6 @@
                     {
                         "id": "minecraft:emerald",
                         "amount": 4
-                    },
-                    {
-                        "id": "minecraft:map",
-                        "amount": 1
                     }
                 ]
             }
@@ -82,10 +73,6 @@
                     {
                         "id": "minecraft:emerald",
                         "amount": 4
-                    },
-                    {
-                        "id": "minecraft:map",
-                        "amount": 1
                     }
                 ]
             }
@@ -106,10 +93,6 @@
                     {
                         "id": "minecraft:emerald",
                         "amount": 10
-                    },
-                    {
-                        "id": "minecraft:map",
-                        "amount": 1
                     }
                 ]
             }
@@ -129,10 +112,6 @@
                     {
                         "id": "minecraft:emerald",
                         "amount": 4
-                    },
-                    {
-                        "id": "minecraft:map",
-                        "amount": 1
                     }
                 ]
             }
@@ -152,10 +131,6 @@
                     {
                         "id": "minecraft:emerald",
                         "amount": 4
-                    },
-                    {
-                        "id": "minecraft:map",
-                        "amount": 1
                     }
                 ]
             }
@@ -175,10 +150,6 @@
                     {
                         "id": "minecraft:emerald",
                         "amount": 4
-                    },
-                    {
-                        "id": "minecraft:map",
-                        "amount": 1
                     }
                 ]
             }
@@ -198,10 +169,6 @@
                     {
                         "id": "minecraft:emerald",
                         "amount": 4
-                    },
-                    {
-                        "id": "minecraft:map",
-                        "amount": 1
                     }
                 ]
             }
@@ -221,10 +188,6 @@
                     {
                         "id": "minecraft:emerald",
                         "amount": 4
-                    },
-                    {
-                        "id": "minecraft:map",
-                        "amount": 1
                     }
                 ]
             }
@@ -244,10 +207,6 @@
                     {
                         "id": "minecraft:emerald",
                         "amount": 4
-                    },
-                    {
-                        "id": "minecraft:map",
-                        "amount": 1
                     }
                 ]
             }
@@ -267,10 +226,6 @@
                     {
                         "id": "minecraft:emerald",
                         "amount": 4
-                    },
-                    {
-                        "id": "minecraft:map",
-                        "amount": 1
                     }
                 ]
             }
@@ -290,10 +245,6 @@
                     {
                         "id": "minecraft:emerald",
                         "amount": 4
-                    },
-                    {
-                        "id": "minecraft:map",
-                        "amount": 1
                     }
                 ]
             }
@@ -313,10 +264,6 @@
                     {
                         "id": "minecraft:emerald",
                         "amount": 4
-                    },
-                    {
-                        "id": "minecraft:map",
-                        "amount": 1
                     }
                 ]
             }
@@ -336,10 +283,6 @@
                     {
                         "id": "minecraft:emerald",
                         "amount": 4
-                    },
-                    {
-                        "id": "minecraft:map",
-                        "amount": 1
                     }
                 ]
             }
@@ -359,10 +302,6 @@
                     {
                         "id": "minecraft:emerald",
                         "amount": 4
-                    },
-                    {
-                        "id": "minecraft:map",
-                        "amount": 1
                     }
                 ]
             }
@@ -382,10 +321,6 @@
                     {
                         "id": "minecraft:emerald",
                         "amount": 4
-                    },
-                    {
-                        "id": "minecraft:map",
-                        "amount": 1
                     }
                 ]
             }

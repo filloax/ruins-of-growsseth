@@ -152,7 +152,7 @@
     "growsseth.config.researcherInteractsWithMobs.name": "Researcher interacts with other mobs",
     "growsseth.config.researcherInteractsWithMobs.comment": "Zombies, skeletons, raiders and vexes will be hostile towards the researcher, and he will react to them and other mobs who attack him. If changed ingame, takes effect on world reload.",
     "growsseth.config.researcherStrikesFirst.name": "Researcher strikes first",
-    "growsseth.config.researcherStrikesFirst.comment": "The researcher will attack the mobs mentioned in the previous setting (if enabled) even when they are not attacking him.",
+    "growsseth.config.researcherStrikesFirst.comment": "The researcher will attack the mobs mentioned in the previous setting (if enabled) even when they are not attacking him. If changed ingame, takes effect on world reload.",
 
     "growsseth.config.singleResearcherProgressTrades.name": "Trade progress for single researcher",
     "growsseth.config.singleResearcherProgressTrades.comment": "Ignored if single researcher is false. If enabled, the researcher will initially only sell one kind of map, and unlock more structures as you return to him after finding the previous one. In this mode, the researcher's 'quest' will automatically progress (see quest config section). If disabled, each instance of the researcher will have up to N random maps (see randomTradeMaxMaps) for sale, with no quest progress. Always true with a fixed order in Growsseth world preset.",

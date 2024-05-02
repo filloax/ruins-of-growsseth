@@ -13,9 +13,6 @@
         "priority": -50,
         "wants": [
           {
-            "id": "minecraft:map"
-          },
-          {
             "amount": 5,
             "id": "minecraft:emerald"
           }
@@ -35,10 +32,7 @@
         "priority": -50,
         "wants": [
           {
-            "id": "minecraft:map"
-          },
-          {
-            "amount": 0,
+            "amount": 3,
             "id": "minecraft:emerald"
           }
         ]
@@ -56,9 +50,6 @@
         },
         "priority": -50,
         "wants": [
-          {
-            "id": "minecraft:map"
-          },
           {
             "amount": 7,
             "id": "minecraft:emerald"
@@ -79,9 +70,6 @@
         "priority": -50,
         "wants": [
           {
-            "id": "minecraft:map"
-          },
-          {
             "amount": 7,
             "id": "minecraft:emerald"
           }
@@ -101,9 +89,6 @@
         "priority": -50,
         "wants": [
           {
-            "id": "minecraft:map"
-          },
-          {
             "amount": 5,
             "id": "minecraft:emerald"
           }
@@ -122,9 +107,6 @@
         },
         "priority": -50,
         "wants": [
-          {
-            "id": "minecraft:map"
-          },
           {
             "amount": 5,
             "id": "minecraft:emerald"
