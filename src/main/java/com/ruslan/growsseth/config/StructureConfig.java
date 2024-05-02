@@ -33,4 +33,9 @@ public class StructureConfig {
     @ConfigEntry(id = "researcherTentSimpleEnabled", type = EntryType.BOOLEAN, translation = T_PREF + "researcherTentSimpleEnabled.name")
     @Comment(value = "Warning: with this version the final quest might work incorrectly. It's also recommended to enable only one variant.",translation = T_PREF + "researcherTentSimpleEnabled.comment")
     public static boolean researcherTentSimpleEnabled = false;
+
+
+    @ConfigEntry(id = "debugMode", type = EntryType.BOOLEAN)
+    @Comment(value = "Make structures wildly more likely, for dev usage")
+    public static boolean debugMode = false;
 }
