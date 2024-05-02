@@ -184,6 +184,7 @@
     "growsseth.config.researcherCuredDiscount.comment": "Moltiplicatore del prezzo degli scambi del ricercatore una volta curato. Influenza solo gli smeraldi.",
 
     "growsseth.config.researcherTentEnabled.name": "Abilita spawn della tenda del ricercatore",
+    "growsseth.config.researcherTentSimpleEnabled.name": "Abilita spawn della tenda del ricercatore (no scantinato)",
     "growsseth.config.caveCampEnabled.name": "Abilita spawn dell'accampamento nella caverna'",
     "growsseth.config.beekeeperHouseEnabled.name": "Abilita spawn della casa dell'apicoltore",
     "growsseth.config.conduitChurchEnabled.name": "Abilita spawn della chiesa del condotto",

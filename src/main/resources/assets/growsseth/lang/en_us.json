@@ -184,6 +184,7 @@
     "growsseth.config.researcherCuredDiscount.comment": "Price multiplier for the researcher's trades after curing him. Only affects emeralds.",
 
     "growsseth.config.researcherTentEnabled.name": "Enable spawn of the researcher's tent",
+    "growsseth.config.researcherTentSimpleEnabled.name": "Enable spawn of the researcher's tent (no cellar)",
     "growsseth.config.caveCampEnabled.name": "Enable spawn of the camp in the cave",
     "growsseth.config.beekeeperHouseEnabled.name": "Enable spawn of the beekeeper's house",
     "growsseth.config.conduitChurchEnabled.name": "Enable spawn of the conduit church",

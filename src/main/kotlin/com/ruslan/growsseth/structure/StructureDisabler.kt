@@ -1,5 +1,6 @@
 package com.ruslan.growsseth.structure
 
+import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.config.StructureConfig
 import net.minecraft.core.Holder
 import net.minecraft.resources.ResourceKey
@@ -18,6 +19,7 @@ object StructureDisabler {
 
     private val structToConfigMap = mapOf<ResourceKey<Structure>, () -> Boolean>(
         GrowssethStructures.RESEARCHER_TENT to StructureConfig::researcherTentEnabled,
+        GrowssethStructures.RESEARCHER_TENT_SIMPLE to StructureConfig::researcherTentSimpleEnabled,
         GrowssethStructures.CAVE_CAMP to StructureConfig::caveCampEnabled,
         GrowssethStructures.MARKER to StructureConfig::caveCampEnabled,
         GrowssethStructures.BEEKEEPER_HOUSE to StructureConfig::beekeeperHouseEnabled,
@@ -33,6 +35,8 @@ object StructureDisabler {
 
     private fun isConfigDisabled(structure: Holder<Structure>): Boolean {
         val id = structure.unwrapKey().getOrNull() ?: return false
+        if (id.location().namespace == RuinsOfGrowsseth.MOD_ID && !structToConfigMap.containsKey(id))
+            RuinsOfGrowsseth.LOGGER.warn("No enabled config available for structure $id!")
         return structToConfigMap[id]?.let { !it() } ?: false
     }
 }

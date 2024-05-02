@@ -147,7 +147,7 @@ class ResearcherTent : GrTemplateStructurePiece {
                 placeEntity(GrowssethEntities.RESEARCHER, pos, level) { researcher -> }
             }
             "donkey" -> {
-                level.level.setBlockAndUpdate(pos, DEFAULT_FENCE.defaultBlockState())
+                level.setBlock(pos, DEFAULT_FENCE.defaultBlockState(), SetBlockFlag.NOTIFY_CLIENTS.flag)
 
                 val donkeyPos = pos.relative(placeSettings().rotation.rotate(Direction.SOUTH))
                 placeEntity(EntityType.DONKEY, donkeyPos, level) { donkey ->

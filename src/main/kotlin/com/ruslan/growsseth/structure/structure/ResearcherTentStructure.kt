@@ -52,11 +52,11 @@ class ResearcherTentStructure(
         // Taken from nbt, so more related to structure piece, but shouldn't change here
         @JvmStatic
         val SIZE = Vec3i(15, 18, 20) // As taken from nbt
-        const val BASEMENT_HEIGHT = 11
+        const val BASEMENT_HEIGHT = 10
 
         fun build(ctx: BootstapContext<Structure>, templatePath: ResourceLocation = ResearcherTent.DEFAULT_ID, offsetY: Int = -BASEMENT_HEIGHT): ResearcherTentStructure {
             return ResearcherTentStructure(StructureSettings(
-                ctx.lookup(Registries.BIOME).getOrThrow(TagKey.create(Registries.BIOME, ResourceLocation("growsseth:has_structure/none"))),
+                ctx.lookup(Registries.BIOME).getOrThrow(TagKey.create(Registries.BIOME, ResourceLocation("growsseth:has_structure/researcher_tent"))),
                 mapOf(),
                 GenerationStep.Decoration.SURFACE_STRUCTURES,
                 TerrainAdjustment.BEARD_THIN,
