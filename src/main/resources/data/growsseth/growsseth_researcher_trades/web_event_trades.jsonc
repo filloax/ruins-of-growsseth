@@ -20,30 +20,6 @@
             }
             // Cave camp unlocked by structure
         ],
-        "sell_cave_camp_for_emeralds": [    // just in case
-            {
-                "gives": {
-                    "id": "growsseth:ruins_map",
-                    "amount": 1,
-                    "map": {
-                        "structure": "#growsseth:cave_camp",
-                        "name": "structure.growsseth.cave_camp.map.name",
-                        "fixedStructureId": "#growsseth:cave_camp",
-                        "scale": 1
-                    }
-                },
-                "wants": [
-                    {
-                        "id": "minecraft:emerald",
-                        "amount": 4
-                    },
-                    {
-                        "id": "minecraft:map",
-                        "amount": 1
-                    }
-                ]
-            }
-        ],
         "sell_default": [
             {
                 "gives": {

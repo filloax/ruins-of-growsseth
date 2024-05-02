@@ -58,14 +58,14 @@ public final class ResearcherConfig {
 
     @ConfigEntry(id = "researcherInteractsWithMobs", type = EntryType.BOOLEAN, translation = T_PREF + "researcherInteractsWithMobs.name")
     @Comment(
-            value = "Zombies, skeletons, raiders and vexes will be hostile towards the researcher, and he will react to them and other mobs who attack him.",
+            value = "Zombies, skeletons, raiders and vexes will be hostile towards the researcher, and he will react to them and other mobs who attack him. If changed ingame, takes effect on world reload.",
             translation = T_PREF + "researcherInteractsWithMobs.comment"
     )
     public static boolean researcherInteractsWithMobs = true;
 
     @ConfigEntry(id = "researcherStrikesFirst", type = EntryType.BOOLEAN, translation = T_PREF + "researcherStrikesFirst.name")
     @Comment(
-            value = "The researcher will attack the mobs mentioned in the previous setting (if enabled) even when they are not attacking him.",
+            value = "The researcher will attack the mobs mentioned in the previous setting (if enabled) even when they are not attacking him. If changed ingame, takes effect on world reload.",
             translation = T_PREF + "researcherStrikesFirst.comment"
     )
     public static boolean researcherStrikesFirst = false;
