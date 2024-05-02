@@ -144,10 +144,6 @@ abstract class ModEvents {
         // Register singularly because returns
         beforeNameTagRename(Researcher.Callbacks::nameTagRename)
 
-        beforeStructureGenerate { level, structure, _, _, _, _, _, _, _, _ ->
-            StructureDisabler.Callbacks.shouldDisableStructure(structure, level)
-        }
-
         onLootTableModify { resourceManager, lootManager, id, tableBuilder, source ->
             VanillaStructureLoot.onModifyLootTables(resourceManager, lootManager, id, tableBuilder, source)
         }
@@ -180,15 +176,6 @@ abstract class ModEvents {
     abstract fun onFenceUnleash(event: (Mob, BlockPos) -> Unit)
     abstract fun beforeNameTagRename(event: (target: LivingEntity, Component, ServerPlayer, ItemStack, InteractionHand) -> InteractionResultHolder<ItemStack>)
     abstract fun onLootTableModify(event: (resourceManager: ResourceManager, lootManager: LootDataManager, id: ResourceLocation, tableBuilder: LootTable.Builder, source: LootTableSource) -> Unit)
-
-    /**
-     * Returns true if structure should not spawn
-     */
-    abstract fun beforeStructureGenerate(event: (
-        ServerLevel, structure: Holder<Structure>, StructureManager, RegistryAccess,
-        RandomState, StructureTemplateManager, seed: Long,
-        ChunkAccess, ChunkPos, SectionPos
-    ) -> Boolean)
 }
 
 interface Modify {

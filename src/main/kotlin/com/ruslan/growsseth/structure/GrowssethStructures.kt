@@ -10,6 +10,7 @@ import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.TagKey
 import net.minecraft.world.level.levelgen.structure.Structure
+import net.minecraft.world.level.levelgen.structure.StructureSet
 import net.minecraft.world.level.levelgen.structure.StructureType
 
 object GrowssethStructures {
@@ -53,6 +54,21 @@ object GrowssethStructures {
         NOTEBLOCK_LAB,
         BEEKEEPER_HOUSE,
         CONDUIT_CHURCH,
+    )
+
+    // Structures with structure sets
+    val SPAWNS_NATURALLY = listOf(
+        CAVE_CAMP,
+        GOLEM_HOUSE,
+        ENCHANT_TOWER,
+        NOTEBLOCK_LAB,
+        BEEKEEPER_HOUSE,
+        CONDUIT_CHURCH,
+        RESEARCHER_TENT,
+        RESEARCHER_TENT_SIMPLE,
+        NOTEBLOCK_SHIP,
+        ABANDONED_FORGE,
+        CONDUIT_RUINS,
     )
 
     init {
@@ -119,6 +135,15 @@ object GrowssethStructures {
     fun registerStructureTypes(registrator: (ResourceLocation, StructureType<*>) -> Unit) {
         Types.all.forEach{
             registrator(it.key, it.value)
+        }
+    }
+
+    // Note: assumes that structures with a structures set have the same id
+    fun getStructureSetId(structId: ResourceKey<Structure>): ResourceKey<StructureSet>? {
+        return if (SPAWNS_NATURALLY.contains(structId)) {
+            ResourceKey.create(Registries.STRUCTURE_SET, structId.location())
+        } else {
+            null
         }
     }
 

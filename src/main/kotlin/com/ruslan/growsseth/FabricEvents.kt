@@ -104,9 +104,4 @@ object FabricEvents : ModEvents() {
     override fun beforeNameTagRename(event: (target: LivingEntity, Component, ServerPlayer, ItemStack, InteractionHand) -> InteractionResultHolder<ItemStack>) = NameTagRenameEvent.BEFORE.register(event)
 
     override fun onLootTableModify(event: (resourceManager: ResourceManager, lootManager: LootDataManager, id: ResourceLocation, tableBuilder: LootTable.Builder, source: LootTableSource) -> Unit) = LootTableEvents.MODIFY.register(event)
-
-    /**
-     * Returns true if structure should not spawn
-     */
-    override fun beforeStructureGenerate(event: (ServerLevel, structure: Holder<Structure>, StructureManager, RegistryAccess, RandomState, StructureTemplateManager, seed: Long, ChunkAccess, ChunkPos, SectionPos) -> Boolean) = DisableStructuresEvents.STRUCTURE_GENERATE.register(event)
 }

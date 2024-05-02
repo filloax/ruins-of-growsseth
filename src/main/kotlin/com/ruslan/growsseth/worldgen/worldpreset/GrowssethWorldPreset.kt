@@ -1,7 +1,6 @@
 package com.ruslan.growsseth.worldgen.worldpreset
 
 import com.filloax.fxlib.FxLibServices
-import com.filloax.fxlib.structure.FixedStructureGeneration
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.config.WorldPresetConfig
 import com.ruslan.growsseth.networking.PlacesInfoPacket
@@ -23,6 +22,7 @@ import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings
 import net.minecraft.world.level.levelgen.presets.WorldPreset
 import net.minecraft.world.level.levelgen.structure.Structure
+import net.minecraft.world.level.levelgen.structure.StructureSet
 import kotlin.jvm.optionals.getOrNull
 
 // object as WorldPreset as a class doesn't seem to do much except hold data,
@@ -60,9 +60,7 @@ object GrowssethWorldPreset {
     }
 
     @JvmStatic
-    fun isGrowssethPreset(server: MinecraftServer): Boolean {
-        val overworld = server.overworld()
-        val biomeSource = overworld.chunkSource.generator.biomeSource
+    fun isGrowssethPresetFromOverworldBiomeSource(biomeSource: BiomeSource): Boolean {
         if (biomeSource is MultiNoiseBiomeSource) {
             val parameters = biomeSource.parameters
             return parameters.map({
@@ -75,6 +73,11 @@ object GrowssethWorldPreset {
     }
 
     @JvmStatic
+    fun isGrowssethPreset(server: MinecraftServer): Boolean {
+        return isGrowssethPresetFromOverworldBiomeSource(server.overworld().chunkSource.generator.biomeSource)
+    }
+
+    @JvmStatic
     fun isGrowssethPreset(levelAcc: ServerLevelAccessor): Boolean {
         return isGrowssethPreset(levelAcc.level.server)
     }
@@ -82,6 +85,11 @@ object GrowssethWorldPreset {
     fun shouldDisableStructure(structure: Holder<Structure>, level: ServerLevel): Boolean {
         return isGrowssethPreset(level)
             && structure.unwrapKey().getOrNull()?.location()?.namespace == RuinsOfGrowsseth.MOD_ID
+    }
+
+    fun shouldDisableStructureSet(structureSet: Holder<StructureSet>, biomeSource: BiomeSource): Boolean {
+        return isGrowssethPresetFromOverworldBiomeSource(biomeSource)
+            && structureSet.unwrapKey().getOrNull()?.location()?.namespace == RuinsOfGrowsseth.MOD_ID
     }
 
     fun shouldDisableVillagePresets(server: MinecraftServer): Boolean {
