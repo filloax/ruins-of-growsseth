@@ -31,6 +31,7 @@
     "event.PlaceBlockMixin",
     "event.ServerLevel_EntityCallbacksMixin",
     "event.StructureSpawnMixins$ChunkGeneratorMixin",
+    "event.StructureSpawnMixins$ChunkGeneratorStructureStateMixin",
     "growssethworld.WorldDimensionsMixin",
     "item.DecoratedPotPatternsMixin",
     "item.KnockbackEnchantmentMixin",

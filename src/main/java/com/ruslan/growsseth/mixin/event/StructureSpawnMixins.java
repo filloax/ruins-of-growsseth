@@ -1,10 +1,10 @@
 package com.ruslan.growsseth.mixin.event;
 
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import com.mojang.datafixers.util.Pair;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.ruslan.growsseth.RuinsOfGrowsseth;
-import com.ruslan.growsseth.events.DisableStructuresEvents;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import com.ruslan.growsseth.structure.StructureDisabler;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.SectionPos;
@@ -12,24 +12,21 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.StructureManager;
+import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.chunk.ChunkGeneratorStructureState;
 import net.minecraft.world.level.levelgen.RandomState;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
-import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
-import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
+import org.objectweb.asm.Opcodes;
+import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class StructureSpawnMixins {
     @Mixin(ChunkGenerator.class)
@@ -49,10 +46,26 @@ public class StructureSpawnMixins {
         ) {
             ServerLevel level = ((ServerLevelAccessor) structureManager).getLevel();
 
-            if (DisableStructuresEvents.STRUCTURE_GENERATE.invoker().shouldCancel(level, structureSetEntry.structure(), structureManager, registryAccess, randomState, structureTemplateManager, seed, chunkAccess, chunkPos, sectionPos)) {
-                RuinsOfGrowsseth.getLOGGER().info("Disabled spawn for structure " + structureSetEntry.structure());
+            if (StructureDisabler.Mixins.shouldDisableStructure(structureSetEntry.structure(), level)) {
+                if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+                    RuinsOfGrowsseth.getLOGGER().info("Disabled spawn for structure " + structureSetEntry.structure());
+                }
                 cir.setReturnValue(false);
             }
+        }
+    }
+
+    @Mixin(ChunkGeneratorStructureState.class)
+    public static class ChunkGeneratorStructureStateMixin {
+        @Shadow @Final private List<Holder<StructureSet>> possibleStructureSets;
+
+        @ModifyVariable(
+            method = "<init>(Lnet/minecraft/world/level/levelgen/RandomState;Lnet/minecraft/world/level/biome/BiomeSource;JJLjava/util/List;)V",
+            at = @At("HEAD"),
+            argsOnly = true
+        )
+        private static List<Holder<StructureSet>> modifyPossibleStructureSets(List<Holder<StructureSet>> possibleStructureSets, @Local(argsOnly = true) BiomeSource biomeSource) {
+            return StructureDisabler.Mixins.filterStructureSets(possibleStructureSets, biomeSource);
         }
     }
 }
