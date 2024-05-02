@@ -11,8 +11,6 @@ import static com.ruslan.growsseth.config.GrowssethConfig.T_PREF;
 public class StructureConfig {
     @ConfigEntry(id = "researcherTentEnabled", type = EntryType.BOOLEAN, translation = T_PREF + "researcherTentEnabled.name")
     public static boolean researcherTentEnabled = true;
-    @ConfigEntry(id = "researcherTentSimpleEnabled", type = EntryType.BOOLEAN, translation = T_PREF + "researcherTentSimpleEnabled.name")
-    public static boolean researcherTentSimpleEnabled = false;
     @ConfigEntry(id = "caveCampEnabled", type = EntryType.BOOLEAN, translation = T_PREF + "caveCampEnabled.name")
     public static boolean caveCampEnabled = true;
     @ConfigEntry(id = "beekeeperHouseEnabled", type = EntryType.BOOLEAN, translation = T_PREF + "beekeeperHouseEnabled.name")
@@ -32,4 +30,7 @@ public class StructureConfig {
     public static boolean conduitRuinsEnabled = true;
     @ConfigEntry(id = "noteblockShipEnabled", type = EntryType.BOOLEAN, translation = T_PREF + "noteblockShipEnabled.name")
     public static boolean noteblockShipEnabled = true;
+    @ConfigEntry(id = "researcherTentSimpleEnabled", type = EntryType.BOOLEAN, translation = T_PREF + "researcherTentSimpleEnabled.name")
+    @Comment(value = "Warning: with this version the final quest might work incorrectly. It's also recommended to enable only one variant.",translation = T_PREF + "researcherTentSimpleEnabled.comment")
+    public static boolean researcherTentSimpleEnabled = false;
 }

@@ -184,7 +184,6 @@
     "growsseth.config.researcherCuredDiscount.comment": "Moltiplicatore del prezzo degli scambi del ricercatore una volta curato. Influenza solo gli smeraldi.",
 
     "growsseth.config.researcherTentEnabled.name": "Abilita spawn della tenda del ricercatore",
-    "growsseth.config.researcherTentSimpleEnabled.name": "Abilita spawn della tenda del ricercatore (no scantinato)",
     "growsseth.config.caveCampEnabled.name": "Abilita spawn dell'accampamento nella caverna'",
     "growsseth.config.beekeeperHouseEnabled.name": "Abilita spawn della casa dell'apicoltore",
     "growsseth.config.conduitChurchEnabled.name": "Abilita spawn della chiesa del condotto",
@@ -194,6 +193,8 @@
     "growsseth.config.golemHouseEnabled.name": "Abilita spawn della casa del costruttore di golem",
     "growsseth.config.conduitRuinsEnabled.name": "Abilita spawn delle rovine del condotto (extra)",
     "growsseth.config.noteblockShipEnabled.name": "Abilita spawn della nave del musicista (extra)",
+    "growsseth.config.researcherTentSimpleEnabled.name": "Abilita spawn della tenda del ricercatore senza scantinato (extra)",
+    "growsseth.config.researcherTentSimpleEnabled.comment": "Attenzione: con questa versione la quest finale potrebbe non funzionare correttamente. Inoltre è consigliabile non abilitarla insieme alla variante normale.",
 
     "growsseth.config.buttons.updatedPreset": "Applica preset aggiornato",
     "growsseth.config.buttons.originalPreset": "Applica preset originale",
