@@ -195,6 +195,8 @@
     "growsseth.config.noteblockShipEnabled.name": "Enable spawn of the musician's ship (extra)",
     "growsseth.config.researcherTentSimpleEnabled.name": "Enable spawn of the researcher's tent with no cellar (variant)",
     "growsseth.config.researcherTentSimpleEnabled.comment": "Warning: with this version the final quest might work incorrectly. It's also recommended to enable only one variant.",
+    "growsseth.config.structuresDebugMode.name": "Structures debug",
+    "growsseth.config.structuresDebugMode.comment": "Make structures wildly more likely, for dev usage.",
 
     "growsseth.config.buttons.updatedPreset": "Apply updated preset",
     "growsseth.config.buttons.originalPreset": "Apply original preset",
