@@ -13,31 +13,38 @@ import net.minecraft.core.registries.Registries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.MobSpawnType
+import net.minecraft.world.entity.SpawnGroupData
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
+import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.entity.ai.goal.FleeSunGoal
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.entity.monster.ZombieVillager
+import net.minecraft.world.entity.npc.VillagerProfession
 import net.minecraft.world.item.InstrumentItem
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.enchantment.Enchantments
 import net.minecraft.world.level.Level
+import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.block.LevelEvent
-import net.minecraft.world.level.storage.loot.LootPool
-import net.minecraft.world.level.storage.loot.LootTable
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue
 
 class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
     ZombieVillager(entityType, level), SpawnTimeTracker {
     companion object {
         fun createAttributes(): AttributeSupplier.Builder {
             return ZombieVillager.createAttributes()
+                // taken from non zombie researcher
+                .add(Attributes.MAX_HEALTH, 40.0)
+                .add(Attributes.ARMOR, 10.0)
         }
 
+        /*
         fun getLootTable(): LootTable.Builder = LootTable.lootTable()
             .withPool(
                 LootPool.lootPool()
@@ -48,15 +55,30 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
                             .apply(LootingEnchantFunction.lootingMultiplier(UniformGenerator.between(0.0F, 1.0F)))
                     )*/
             )
-        // Do not add horn to pool as need to create itemstack ourselves to init instrument
-//            .withPool(
-//                LootPool.lootPool()
-//                    .setRolls(ConstantValue.exactly(1.0F))
-//                    .add(LootItem.lootTableItem(GrowssethItems.RESEARCHER_HORN))
-//                    .`when`(LootItemKilledByPlayerCondition.killedByPlayer())
-//            )
+            /* // Do not add horn to pool as need to create itemstack ourselves to init instrument
+            .withPool(
+                LootPool.lootPool()
+                    .setRolls(ConstantValue.exactly(1.0F))
+                    .add(LootItem.lootTableItem(GrowssethItems.RESEARCHER_HORN))
+                    .`when`(LootItemKilledByPlayerCondition.killedByPlayer())
+            ) */
+         */
 
         const val SPAWN_TIME_TAG = "ResearcherSpawnTime"
+    }
+
+    override fun finalizeSpawn(
+        level: ServerLevelAccessor, difficulty: DifficultyInstance,
+        reason: MobSpawnType, spawnData: SpawnGroupData?, dataTag: CompoundTag?
+    ): SpawnGroupData? {
+        villagerData = villagerData.setProfession(VillagerProfession.CARTOGRAPHER).setLevel(5)
+        return super.finalizeSpawn(level, difficulty, reason, spawnData, dataTag)
+    }
+
+    override fun registerGoals() {
+        super.registerGoals()
+        // same priority as attacking villagers, after attacking player, useful for simple tent variant
+        goalSelector.addGoal(3, FleeSunGoal(this, 1.0))
     }
 
     var researcherData: CompoundTag? = null
