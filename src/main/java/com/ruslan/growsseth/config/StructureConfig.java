@@ -11,6 +11,8 @@ import static com.ruslan.growsseth.config.GrowssethConfig.T_PREF;
 public class StructureConfig {
     @ConfigEntry(id = "researcherTentEnabled", type = EntryType.BOOLEAN, translation = T_PREF + "researcherTentEnabled.name")
     public static boolean researcherTentEnabled = true;
+    @ConfigEntry(id = "researcherTentSimpleEnabled", type = EntryType.BOOLEAN, translation = T_PREF + "researcherTentSimpleEnabled.name")
+    public static boolean researcherTentSimpleEnabled = false;
     @ConfigEntry(id = "caveCampEnabled", type = EntryType.BOOLEAN, translation = T_PREF + "caveCampEnabled.name")
     public static boolean caveCampEnabled = true;
     @ConfigEntry(id = "beekeeperHouseEnabled", type = EntryType.BOOLEAN, translation = T_PREF + "beekeeperHouseEnabled.name")

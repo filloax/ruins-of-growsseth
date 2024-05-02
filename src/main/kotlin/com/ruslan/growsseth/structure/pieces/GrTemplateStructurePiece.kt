@@ -1,5 +1,6 @@
 package com.ruslan.growsseth.structure.pieces
 
+import com.filloax.fxlib.SetBlockFlag
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import net.minecraft.core.BlockPos
 import net.minecraft.nbt.CompoundTag
@@ -14,6 +15,7 @@ import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSeriali
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager
+
 
 abstract class GrTemplateStructurePiece : TemplateStructurePiece {
     companion object {
@@ -42,7 +44,7 @@ abstract class GrTemplateStructurePiece : TemplateStructurePiece {
             mob.moveTo(pos.x + .5, pos.y + .0, pos.z + .5, 0.0f, 0.0f)
             mob.finalizeSpawn(levelAccessor, levelAccessor.getCurrentDifficultyAt(pos), MobSpawnType.STRUCTURE, null, null)
             levelAccessor.addFreshEntityWithPassengers(mob)
-            levelAccessor.setBlock(pos, Blocks.AIR.defaultBlockState(), 2)
+            levelAccessor.setBlock(pos, Blocks.AIR.defaultBlockState(), SetBlockFlag.NOTIFY_CLIENTS.flag)
             after(mob)
         } catch (e: Exception) {
             RuinsOfGrowsseth.LOGGER.error(e)

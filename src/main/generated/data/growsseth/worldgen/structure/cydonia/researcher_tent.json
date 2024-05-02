@@ -1,6 +1,6 @@
 {
   "type": "growsseth:researcher_tent",
-  "biomes": "#growsseth:has_structure/none",
+  "biomes": "#growsseth:has_structure/researcher_tent",
   "force_pos_uses_y": true,
   "spawn_overrides": {},
   "step": "surface_structures",

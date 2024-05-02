@@ -150,7 +150,7 @@ object GrowssethStructures {
 
         private fun registerTents() {
             ctx.register(RESEARCHER_TENT, ResearcherTentStructure.build(ctx))
-            ctx.register(RESEARCHER_TENT_SIMPLE, ResearcherTentStructure.build(ctx, ResearcherTent.SIMPLE_ID, -1))
+            ctx.register(RESEARCHER_TENT_SIMPLE, ResearcherTentStructure.build(ctx, ResearcherTent.SIMPLE_ID, 0))
             ctx.register(CydoniaVersion.RESEARCHER_TENT, ResearcherTentStructure.build(ctx, ResearcherTent.CYDONIA_ID))
         }
 

@@ -18,8 +18,7 @@ import java.util.*
 abstract class SimpleStructure(
     structureSettings: StructureSettings,
     val defaultForcePosUsesY: Boolean = true,
-) : Structure(structureSettings), FixablePosition,
-    FixableRotation {
+) : Structure(structureSettings), FixablePosition, FixableRotation {
     private var forcePosUsesY = defaultForcePosUsesY
     private var nextPlacePos: BlockPos? = null
     private var nextPlaceRotation: Rotation? = null
