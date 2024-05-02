@@ -13,3 +13,5 @@ Le **operazioni** (anche dette "emergenze") sono comandi specifici della mod, og
 **Spawna ricercatore** spawna un ricercatore <u>SENZA</u> tenda alle coordinate date (per spawnarne uno nuovo con la tenda usare la sezione delle strutture).
 
 **Rimuovi tenda** rimuove la tenda alle coordinate impostate appena viene caricata, e l'asino se non preso in prestito dal giocatore.
+
+**Rimuovi tenda e lascia regalo** rimuove il ricercatore, la tenda, e spawna una cassa con il diario d'addio e il corno del ricercatore, senza bisogno della quest. Si triggera al primo Ricercatore che viene caricato.

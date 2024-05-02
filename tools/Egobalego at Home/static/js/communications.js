@@ -43,10 +43,11 @@ async function updateServer(card, action) {
             break;
         case "researcher-diary-new":
         case "researcher-diary-replace":
+        case "researcher-diary-replace-goodbye":
             commData["type"] = "researcherDiary"
             if (typeSpecific === "researcher-diary-replace")
                 commData["structure"] = diaryStructure
-            commData["title"] = title
+            commData["title"] = (typeSpecific === "researcher-diary-replace-goodbye") ? (title + "/endDiary") : title
             break;
         case "structure-book":
             commData["type"] = "structureBook"
@@ -134,10 +135,15 @@ function addCommCard(isNew, item) {
                 title.value = item.title;
                 break;
             case "researcherDiary":
-                commSelect.value = item.structure ? "researcher-diary-replace" : "researcher-diary-new"
+                if (item.title.endsWith("/endDiary")) {
+                    commSelect.value = "researcher-diary-replace-goodbye"
+                    title.value = item.title.replace("/endDiary", "");
+                } else {
+                    commSelect.value = item.structure ? "researcher-diary-replace" : "researcher-diary-new"
+                    title.value = item.title;
+                }
                 if (item.structure)
                     diaryStructure.value = item.structure
-                title.value = item.title;
                 break;
             case "structureBook":
                 commSelect.value = "structure-book"
@@ -218,6 +224,7 @@ function addCommCard(isNew, item) {
                 hideElements(bookAuthorDiv, researcherStructDiv, bookStructDiv);
                 break;
             case 'researcher-diary-new':
+            case 'researcher-diary-replace-goodbye':
                 showElements(commTitleDiv, contentDiv);
                 hideElements(bookAuthorDiv, toastIconDiv, researcherStructDiv, bookStructDiv);
                 break;

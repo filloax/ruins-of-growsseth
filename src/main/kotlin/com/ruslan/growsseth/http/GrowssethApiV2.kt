@@ -232,8 +232,12 @@ object GrowssethApiV2 : AbstractGrowssethApi() {
                     eventDesc = content!!
                 }
                 "researcherDiary" -> {
-                    eventName = if (structure == null)
-                        "rdiary/$title!!"
+                    eventName = if (structure == null) {
+                        if (title!!.endsWith("/endDiary"))
+                            "enddiary/$title!!"
+                        else
+                            "rdiary/$title!!"
+                    }
                     else
                         "rdiary/$structure/$title!!"
                     eventDesc = content!!
