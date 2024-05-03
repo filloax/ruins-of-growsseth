@@ -11,13 +11,11 @@ import kotlin.concurrent.thread
 
 interface GrowssethApi {
     val structureSpawns: List<ApiStructureSpawn>
+    // Currently unused
     val quests: List<ApiQuestData>
     val events: List<ApiEvent>
 
-    fun structById(id: Int): ApiStructureSpawn?
     fun structByName(name: String): ApiStructureSpawn?
-    fun questById(id: Int): ApiQuestData?
-    fun eventById(id: Int): ApiEvent?
     fun eventByName(name: String): ApiEvent?
     fun isEventActive(name: String): Boolean
 
@@ -33,29 +31,25 @@ interface GrowssethApi {
 }
 
 interface ApiStructureSpawn {
-    val id: Int
     val structureId: String
     val name: String
     val startPos: BlockPos
     val active: Boolean
     val rotation: Rotation?
-    val questId: Int?
 
     fun structureKey(): Either<TagKey<Structure>, ResourceKey<Structure>>
 }
 
 interface ApiEvent {
-    val id: Int
     val name: String
     val active: Boolean
     val desc: String?
     val pos: BlockPos?
-    val questId: Int?
     val rotation: Rotation?
 }
 
+// Currently unused
 interface ApiQuestData {
-    val id: Int
     val unlocked: Boolean
     val solved: Boolean
     val name: String

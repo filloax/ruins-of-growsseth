@@ -28,18 +28,11 @@ object GrowssethApiV2 : AbstractGrowssethApi() {
     private val eventsList = mutableListOf<ApiEvent>()
     private val questsList = mutableListOf<ApiQuestData>()
     // Keep map separately, so there is still a fallback in case of duplicate ids
-    private val structSpawnsMap = sortedMapOf<Int, ApiStructureSpawn>()
     private val structSpawnsByName = mutableMapOf<String, ApiStructureSpawn>()
-    private val questsMap = sortedMapOf<Int, ApiQuestData>()
     private val eventsByName = mutableMapOf<String, ApiEvent>()
     private var contentsHash: Int? = null
 
-    override fun questById(id: Int): ApiQuestData? = questsMap[id]
-
-    override fun structById(id: Int): ApiStructureSpawn? = structSpawnsMap[id]
     override fun structByName(name: String): ApiStructureSpawn? = structSpawnsByName[name]
-
-    override fun eventById(id: Int): ApiEvent? = eventsList.find { it.id == id }
     override fun eventByName(name: String): ApiEvent? = eventsByName[name]
     override fun isEventActive(name: String): Boolean = eventsByName[name]?.active == true
 
@@ -63,10 +56,8 @@ object GrowssethApiV2 : AbstractGrowssethApi() {
             val (events, structSpawns) = validEntries.partition { it.type in EVENT_TYPES }
 
             structSpawnsList.clear()
-            structSpawnsMap.clear()
             structSpawnsByName.clear()
             structSpawnsList.addAll(structSpawns.map(Entry::toStructureSpawn))
-            structSpawnsMap.putAll(structSpawns.map(Entry::toStructureSpawn).associateBy(ApiStructureSpawn::id))
             structSpawnsByName.putAll(structSpawns.map(Entry::toStructureSpawn).associateBy(ApiStructureSpawn::name))
 
             eventsList.clear()
@@ -75,9 +66,7 @@ object GrowssethApiV2 : AbstractGrowssethApi() {
             eventsByName.putAll(eventsList.associateBy(ApiEvent::name))
 
             questsList.clear()
-            questsMap.clear()
             questsList.addAll(list.mapNotNull { it.quest })
-            questsMap.putAll(questsList.associateBy { it.id })
 
             val hash = Objects.hash(structSpawnsList, eventsList, questsList)
             val changed = hash != contentsHash
@@ -88,17 +77,9 @@ object GrowssethApiV2 : AbstractGrowssethApi() {
                         + "\n\tEvents: $eventsList"
                 )
 
-                structSpawnsList.filter{it.id >= 0}.groupBy { it.name }.filter { it.value.size > 1 }.let {
+                structSpawnsList.groupBy { it.name }.filter { it.value.size > 1 }.let {
                     if (it.isNotEmpty())
                         RuinsOfGrowsseth.LOGGER.warn("More than 1 structure spawn with the same name! (Check list above) $it")
-                }
-                structSpawnsList.filter{it.id >= 0}.groupBy { it.id }.filter { it.value.size > 1 }.let {
-                    if (it.isNotEmpty())
-                        RuinsOfGrowsseth.LOGGER.warn("More than 1 structure spawn with the same id! (Check list above) $it")
-                }
-                questsList.filter{it.id >= 0}.groupBy { it.id }.filter { it.value.size > 1 }.let {
-                    if (it.isNotEmpty())
-                        RuinsOfGrowsseth.LOGGER.warn("More than 1 quest spawn with the same id! (Check list above) $it")
                 }
 
                 triggerSubscriberUpdates(server)
@@ -118,9 +99,7 @@ object GrowssethApiV2 : AbstractGrowssethApi() {
             structSpawnsList.clear()
             questsList.clear()
             eventsList.clear()
-            structSpawnsMap.clear()
             structSpawnsByName.clear()
-            questsMap.clear()
             eventsByName.clear()
             contentsHash = null
         }
@@ -196,7 +175,6 @@ object GrowssethApiV2 : AbstractGrowssethApi() {
         }
 
         fun toStructureSpawn(): StructureSpawn = StructureSpawn (
-            id = Integer.parseInt(id.split("-").last()),
             structureID = structure!!,
             name = id,
             x = x!!,
@@ -258,12 +236,10 @@ object GrowssethApiV2 : AbstractGrowssethApi() {
                 }
             }
             return Event (
-                id = Integer.parseInt(id.split("-").last()),
                 name = eventName,
                 active = active,
                 desc = eventDesc,
                 pos = eventPos,
-                questId = quest?.id,
                 rotation = rotation
             )
         }
@@ -271,7 +247,6 @@ object GrowssethApiV2 : AbstractGrowssethApi() {
 
     @Serializable
     data class StructureSpawn (
-        override val id: Int = -1,
         private val structureID: String = "",
         override val name: String = "",
         private val x: Int = Int.MAX_VALUE,
@@ -290,8 +265,6 @@ object GrowssethApiV2 : AbstractGrowssethApi() {
             get() = structureID
         override val startPos: BlockPos
             get() = BlockPos(x, y, z)
-        override val questId: Int?
-            get() = quest?.id
 
         override fun structureKey(): Either<TagKey<Structure>, ResourceKey<Structure>> = getStructTagOrKey(structureID)
 
@@ -304,35 +277,25 @@ object GrowssethApiV2 : AbstractGrowssethApi() {
                     Rotation.CLOCKWISE_180 -> 180
                 } + "°"
             }
-            return "$name[$id,$questId](${if (active) "X" else ""}($structureID @$startPos$rotString)"
+            return "$name(${if (active) "X" else ""}($structureID @$startPos$rotString)"
         }
 
         private fun checkValid() {
-            // Check if data is set, or if dummy structure used by API
-            val isDummy = id < 0
-            if (!isDummy) {
-                if (!(structureID != "" && name != "")) {
-                    throw IllegalArgumentException("Non-dummy structure spawns must have a structureId and name!")
-                }
-            }
         }
     }
 
 
     data class Event(
-        override val id: Int,
         override val name: String,
         override val active: Boolean = false,
         override val desc: String? = null,
         override val pos: BlockPos? = BlockPos(Integer.MAX_VALUE,Integer.MAX_VALUE,Integer.MAX_VALUE),
-        override val questId: Int? = null,
         override val rotation: Rotation? = null,
     ) : ApiEvent {
         override fun toString(): String {
-            val q = questId?.let{ ",$it" } ?: ""
             val d = desc?.let { " $it" } ?: ""
             val p = pos.let{ " @$it" } ?: ""
-            return "$name[$id$q](${if (active) "X" else ""}$d$p)"
+            return "$name(${if (active) "X" else ""}$d$p)"
         }
     }
 
@@ -340,7 +303,6 @@ object GrowssethApiV2 : AbstractGrowssethApi() {
     // unused (for now)
     @Serializable
     data class Quest (
-        override val id: Int,
         override val unlocked: Boolean = false,
         override val solved: Boolean = false,
         override val name: String = "",
@@ -355,7 +317,7 @@ object GrowssethApiV2 : AbstractGrowssethApi() {
             get() = questIMGLocked
 
         override fun toString(): String {
-            return "$name[$id](${if (unlocked) "U" else ""}${if (solved) "S" else ""})"
+            return "$name(${if (unlocked) "U" else ""}${if (solved) "S" else ""})"
         }
     }
 }
