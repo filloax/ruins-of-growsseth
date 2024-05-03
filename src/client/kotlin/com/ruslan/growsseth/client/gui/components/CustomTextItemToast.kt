@@ -12,14 +12,14 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.FormattedCharSequence
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
+import kotlin.math.min
 
 class CustomTextItemToast private constructor(
     private var title: Component,
     private var messageLines: List<FormattedCharSequence>,
     private var item: ItemStack,
     private val width: Int,
-    val bgTexture: ResourceLocation = ResourceLocation("toast/system"),
-    val bgTextureId: Int = 0, // Texture offset to use in gui/toasts.png, gets multipied by 32 so effectively 0-3
+    val bgTexture: ResourceLocation = ResourceLocation("toast/advancement"),
 ) : Toast {
     private var lastChanged: Long = 0
     private var changed = false
@@ -63,18 +63,17 @@ class CustomTextItemToast private constructor(
         }
         val i = width()
         if (i == 160 && messageLines.size <= 1) {
-            guiGraphics.blit(bgTexture, 0, 0, 0, bgTextureId*32, i, height())
+            guiGraphics.blitSprite(bgTexture, 0, 0, i, height())
         } else {
             val j = height()
             val k = 28
-            val l = Math.min(4, j - 28)
-            renderBackgroundRow(guiGraphics, toastComponent, i, 0, 0, 28)
-            var m = 28
-            while (m < j - l) {
-                renderBackgroundRow(guiGraphics, toastComponent, i, 16, m, Math.min(16, j - m - l))
-                m += MARGIN
+            val l = min(4, j - k)
+            renderBackgroundRow(guiGraphics, i, 0, 0, k)
+
+            for (m in k until j - l step MARGIN) {
+                renderBackgroundRow(guiGraphics, i, 16, m, min(16, j - m - l))
             }
-            renderBackgroundRow(guiGraphics, toastComponent, i, 32 - l, j - l, l)
+            renderBackgroundRow(guiGraphics, i, 32 - l, j - l, l)
         }
 
         if (messageLines.isEmpty()) {
@@ -94,23 +93,22 @@ class CustomTextItemToast private constructor(
             Toast.Visibility.HIDE
     }
 
-    private fun renderBackgroundRow(
-        guiGraphics: GuiGraphics,
-        toastComponent: ToastComponent,
-        i: Int,
-        j: Int,
-        k: Int,
-        l: Int,
-    ) {
-        val m = if (j == 0) 20 else 5
-        val n = Math.min(60, i - m)
-        guiGraphics.blit(bgTexture, 0, k, 0, bgTextureId*32 + j, m, l)
-        var o = m
-        while (o < i - n) {
-            guiGraphics.blit(bgTexture, o, k, 32, bgTextureId*32 + j, Math.min(64, i - o - n), l)
-            o += 64
+    private fun renderBackgroundRow(guiGraphics: GuiGraphics, width: Int, vOffset: Int, y: Int, height: Int) {
+        val i = if (vOffset == 0) 20 else 5
+        val j = min(60, (width - i))
+        val texturePath = bgTexture
+        guiGraphics.blitSprite(texturePath, 160, 32, 0, vOffset, 0, y, i, height)
+
+        var k = i
+        while (k < width - j) {
+            guiGraphics.blitSprite(
+                texturePath, 160, 32, 32, vOffset, k, y,
+                min(64.0, (width - k - j).toDouble()).toInt(), height
+            )
+            k += 64
         }
-        guiGraphics.blit(bgTexture, i - n, k, 160 - n, bgTextureId*32 + j, n, l)
+
+        guiGraphics.blitSprite(texturePath, 160, 32, 160 - j, vOffset, width - j, y, j, height)
     }
 
     fun reset(title: Component, item: ItemStack, message: Component?, fontToSplit: Font? = null) {
