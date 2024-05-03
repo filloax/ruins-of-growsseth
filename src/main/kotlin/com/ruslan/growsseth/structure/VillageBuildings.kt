@@ -9,7 +9,7 @@ import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
-import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement
+import net.minecraft.world.level.levelgen.structure.pools.LegacySinglePoolElement
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList
 import com.mojang.datafixers.util.Pair;
@@ -41,7 +41,7 @@ object VillageBuildings {
 
         if (!shouldAddBuildings) return
 
-        val templatePools: Registry<StructureTemplatePool> = server.registryAccess().registry(Registries.TEMPLATE_POOL) .get()
+        val templatePools: Registry<StructureTemplatePool> = server.registryAccess().registry(Registries.TEMPLATE_POOL).get()
         val processorLists: Registry<StructureProcessorList> = server.registryAccess().registry(Registries.PROCESSOR_LIST).get()
 
         houseEntries[CATEGORY_GOLEM_STREET]!!.forEach { entry ->
@@ -62,7 +62,7 @@ object VillageBuildings {
                 Registries.PROCESSOR_LIST, emptyProcessor
             )
         )
-        val piece = SinglePoolElement.single(poolPieceId.toString(), processorHolder).apply(StructureTemplatePool.Projection.RIGID)
+        val piece = LegacySinglePoolElement.legacy(poolPieceId.toString()).apply(StructureTemplatePool.Projection.TERRAIN_MATCHING)
         for (i in 0 until weight) {
             pool.templates.add(piece)
         }
