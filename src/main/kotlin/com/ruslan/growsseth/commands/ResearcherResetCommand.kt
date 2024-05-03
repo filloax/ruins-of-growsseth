@@ -7,6 +7,7 @@ import net.minecraft.commands.CommandBuildContext
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands.CommandSelection
 import net.minecraft.commands.Commands.literal
+import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
 
 object ResearcherResetCommand {
@@ -15,13 +16,12 @@ object ResearcherResetCommand {
         dispatcher.register(literal("greset").requires{ it.hasPermission(2) }
             .executes { ctx ->
                 if (ResearcherConfig.singleResearcher) {
-                    val savedData = ResearcherSavedData.getContainer(ctx.source.server)
-                    val data = savedData.items
-                    val num = data.size
-                    data.clear()
+                    val savedData = ResearcherSavedData.getPersistent(ctx.source.server)
+                    savedData.data = CompoundTag()
+                    savedData.name = null
                     savedData.setDirty()
-                    ctx.source.sendSuccess({ Component.translatable("growsseth.commands.greset.done", num) }, true)
-                    num
+                    ctx.source.sendSuccess({ Component.translatable("growsseth.commands.greset.done") }, true)
+                    1
                 } else {
                     ctx.source.sendFailure(Component.translatable("growsseth.commands.greset.nop"))
                     0

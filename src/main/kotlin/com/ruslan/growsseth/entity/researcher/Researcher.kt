@@ -1,6 +1,5 @@
 package com.ruslan.growsseth.entity.researcher
 
-import com.filloax.fxlib.EventUtil
 import com.filloax.fxlib.codec.mutableMapCodec
 import com.filloax.fxlib.entity.delegate
 import com.filloax.fxlib.entity.fixedChangeDimension
@@ -63,7 +62,6 @@ import net.minecraft.world.entity.ai.goal.*
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.ai.navigation.PathNavigation
 import net.minecraft.world.entity.ai.navigation.WallClimberNavigation
-import net.minecraft.world.entity.animal.horse.Donkey
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.entity.monster.AbstractIllager.IllagerArmPose
 import net.minecraft.world.entity.monster.AbstractSkeleton
@@ -112,7 +110,6 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         const val RESEARCHER_ATTACK_REACH = 0.7         // default attack reach is 0,828
 
         const val DATA_TAG = "ResearcherData"
-        const val PERSIST_ID_TAG = "ResearcherPersistId"    // Separate from data as used to load it
         const val SPAWN_TIME_TAG = "ResearcherSpawnTime"
         const val STARTING_POS_TAG = "ResearcherStartingPos"
         const val STARTING_DIM_TAG = "ResearcherStartingDim"
@@ -219,8 +216,6 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     var startingPos: BlockPos? = null
         private set
     var startingDimension: ResourceKey<Level> = Level.OVERWORLD
-        private set
-    var persistId: Int? = null
         private set
     var metPlayer: Boolean = false
         private set
@@ -335,20 +330,14 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
     // NOTE: Ran only once at first spawn
     override fun finalizeSpawn(level: ServerLevelAccessor, difficulty: DifficultyInstance, mobSpawnType: MobSpawnType, spawnGroupData: SpawnGroupData?, compoundTag: CompoundTag?): SpawnGroupData? {
-        val (savedData, id) = if (!level().isClientSide()) {
+        val savedData = server?.let{ serv ->
             // Load data from previous researchers
             if (ResearcherConfig.singleResearcher) {
-                Pair(ResearcherSavedData.getOrCreate(server!!, 0), 0)
+                ResearcherSavedData.getPersistent(serv)
             } else {
-                /* Make a new ID for the saved data as with maps, if persistent
-                   mode is off each researcher has its own data (but still needed for things
-                   that are tracked when the researcher is unloaded like donkeys)
-                   not needed right now for the streaming ver
-                   Not tested yet as not needed in streaming ver */
-                val id = ResearcherSavedData.getFreeId(server!!)
-                Pair(ResearcherSavedData.createNew(server!!, id), id)
+                ResearcherSavedData.create()
             }
-        } else Pair(null, 0)
+        }
 
         quest?.data?.active = true
         this.startingPos = blockPosition()
@@ -362,7 +351,6 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         if (savedData != null) {
             if (savedData.data.allKeys.isEmpty())
                 writeSavedData(savedData)
-            this.persistId = id
         }
 
         spawnTime = level().gameTime
@@ -719,15 +707,11 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         super.addAdditionalSaveData(compoundTag)
         val data = makeResearcherData()
 
-        if (!level().isClientSide()) {
-            persistId?.let { id ->
-                val savedData = ResearcherSavedData.get(server!!, id)
-                if (savedData != null)
-                    writeSavedData(savedData, data)
-                else
-                    RuinsOfGrowsseth.LOGGER.error("No persist data for id $id, errored in saving previously?")
-                compoundTag.putInt(PERSIST_ID_TAG, id)
-            } ?: RuinsOfGrowsseth.LOGGER.error("No persist id set for researcher $this, from old version?")
+        if (ResearcherConfig.singleResearcher) {
+            server?.let { serv ->
+                val savedData = ResearcherSavedData.getPersistent(serv)
+                writeSavedData(savedData, data)
+            }
         }
 
         compoundTag.put(DATA_TAG, data)
@@ -742,15 +726,11 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         super.readAdditionalSaveData(compoundTag)
         var read = false
 
-        if (!level().isClientSide()) {
-            if (compoundTag.contains(PERSIST_ID_TAG)) {
-                persistId = compoundTag.getInt(PERSIST_ID_TAG)
-                ResearcherSavedData.get(server!!, persistId!!)?.let {
-                    readSavedData(it)
-                    read = true
-                }
-            } else {
-                RuinsOfGrowsseth.LOGGER.error("Server researcher doesn't have a persist id")
+        if (ResearcherConfig.singleResearcher) {
+            server?.let { serv ->
+                val savedData = ResearcherSavedData.getPersistent(serv)
+                readSavedData(savedData)
+                read = true
             }
         }
         if (!read) {
@@ -768,13 +748,10 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     fun saveWorldData() {
         if (!level().isClientSide()) {
             val data = makeResearcherData()
-            persistId?.let { id ->
-                val savedData = ResearcherSavedData.get(server!!, id)
-                if (savedData != null)
-                    writeSavedData(savedData, data)
-                else
-                    RuinsOfGrowsseth.LOGGER.error("No persist data for id $id, errored in saving previously?")
-            } ?: RuinsOfGrowsseth.LOGGER.error("No persist id set for researcher $this, from old version?")
+            server?.let { serv ->
+                val savedData = ResearcherSavedData.getPersistent(serv)
+                writeSavedData(savedData, data)
+            }
         }
     }
 
