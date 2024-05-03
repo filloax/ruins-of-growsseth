@@ -72,7 +72,7 @@ object GrowssethApiV2 : AbstractGrowssethApi() {
             val changed = hash != contentsHash
 
             if (changed) {
-                RuinsOfGrowsseth.LOGGER.info("API v2 data updated!\n\tQuests: $questsList}"
+                RuinsOfGrowsseth.LOGGER.info("API v2 data updated!"
                         + "\n\tStructures: $structSpawnsList"
                         + "\n\tEvents: $eventsList"
                 )
