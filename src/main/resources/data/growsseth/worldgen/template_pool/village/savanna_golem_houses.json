@@ -6,7 +6,9 @@
       "element": {
         "element_type": "minecraft:legacy_single_pool_element",
         "location": "growsseth:village/savanna/savanna_golem_house",
-        "processors": "minecraft:mossify_10_percent",
+        "processors": {
+          "processors": []
+        },
         "projection": "rigid"
       }
     }
