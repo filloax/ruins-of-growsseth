@@ -134,6 +134,7 @@
 
     "growsseth.config.enableLocationTitles.name": "Enable Growsseth's location titles",
     "growsseth.config.enableLocationTitles.comment": "Shows the title of the places you are visiting when exploring the Growsseth world preset.",
+    "growsseth.config.locationTitlesMode.name": "Location titles display mode",
     "growsseth.config.newTradeNotifications.name": "Notifications on new trades unlocked",
     "growsseth.config.newTradeNotifications.comment": "Shows a small toast when the researcher unlocks new trades. Works only for web and progress trades.",
 
