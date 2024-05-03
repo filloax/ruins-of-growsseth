@@ -38,6 +38,8 @@ open class QuestComponent<E : LivingEntity>(val entity: E, val name: String) {
 
         const val INIT_STAGE_ID = "init"
         const val QUESTS_TAG_ID = "Quests"
+
+        const val NBT_TAG_PERSIST = "status"
     }
 
     var updatePeriod = secondsToTicks(1f)
@@ -171,7 +173,7 @@ open class QuestComponent<E : LivingEntity>(val entity: E, val name: String) {
             tag.put(QUESTS_TAG_ID, it)
         })
         questsTag.put(name, CompoundTag().also { qTag ->
-            qTag.put("status", PERSIST_CODEC.encodeStart(NbtOps.INSTANCE, data).getOrThrow(false) {
+            qTag.put(NBT_TAG_PERSIST, PERSIST_CODEC.encodeNbt(data).getOrThrow(false) {
                 RuinsOfGrowsseth.LOGGER.error("Error in encoding quest status: $it")
             })
             writeCustomNbt(qTag)
@@ -181,7 +183,7 @@ open class QuestComponent<E : LivingEntity>(val entity: E, val name: String) {
     fun readNbt(tag: CompoundTag) {
         tag.getCompound(QUESTS_TAG_ID)?.let { questsTag ->
             questsTag.getCompound(name)?.let { qTag ->
-                data = PERSIST_CODEC.decode(NbtOps.INSTANCE, qTag.getCompound("status")).getOrThrow(false) {
+                data = PERSIST_CODEC.decodeNbt(qTag.getCompound(NBT_TAG_PERSIST)).getOrThrow(false) {
                     RuinsOfGrowsseth.LOGGER.error("Error in decoding quest status: $it")
                 }.first
                 readCustomNbt(qTag)

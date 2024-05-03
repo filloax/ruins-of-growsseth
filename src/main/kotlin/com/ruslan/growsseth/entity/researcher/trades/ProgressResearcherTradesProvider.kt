@@ -160,7 +160,7 @@ class ProgressResearcherTradesProvider(
 
     private fun genRandomTrades(player: ServerPlayer, researcher: Researcher, possibleTrades: List<ResearcherTradeEntry>, allTrades: Boolean = false): List<ResearcherTradeEntry> {
         val daysOffset = researcher.level().gameTime * 1323
-        val random = Random(player.server.overworld().seed + (researcher.persistId ?: 1) * 10 + daysOffset)
+        val random = Random(player.server.overworld().seed + researcher.uuid.hashCode() * 10 + daysOffset)
         return if (allTrades) {
             possibleTrades
         } else {

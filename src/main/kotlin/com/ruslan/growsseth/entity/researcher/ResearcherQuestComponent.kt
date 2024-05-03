@@ -2,20 +2,20 @@ package com.ruslan.growsseth.entity.researcher
 
 import com.filloax.fxlib.EventUtil
 import com.filloax.fxlib.SetBlockFlag
+import com.filloax.fxlib.codec.decodeNbt
+import com.filloax.fxlib.codec.simpleCodecErr
 import com.filloax.fxlib.iterBlocks
-import com.mojang.datafixers.kinds.Const
 import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.RuinsOfGrowsseth
-import com.ruslan.growsseth.config.GrowssethConfig
 import com.ruslan.growsseth.config.QuestConfig
+import com.ruslan.growsseth.config.ResearcherConfig
 import com.ruslan.growsseth.entity.GrowssethEntities
 import com.ruslan.growsseth.entity.researcher.trades.ProgressResearcherTradesProvider
 import com.ruslan.growsseth.entity.researcher.trades.ResearcherTradeMode
 import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.quests.*
 import com.ruslan.growsseth.structure.pieces.ResearcherTent
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.minecraft.core.BlockPos
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
@@ -29,7 +29,6 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.item.InstrumentItem
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.block.Blocks
-import net.minecraft.world.level.block.Rotation
 import net.minecraft.world.level.block.entity.ChestBlockEntity
 import net.minecraft.world.level.block.entity.LecternBlockEntity
 import net.minecraft.world.level.block.state.BlockState
@@ -219,11 +218,20 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
     }
 
     companion object {
+        fun getPersistentData(server: MinecraftServer): QuestData {
+            if (!ResearcherConfig.singleResearcher) {
+                RuinsOfGrowsseth.LOGGER.error("Tried getting researcher quest data when not in single researcher mode!")
+                return QuestData()
+            }
+            return PERSIST_CODEC.decodeNbt(ResearcherSavedData.getPersistent(server).data.getCompound(NBT_TAG_PERSIST))
+                .getOrThrow(false, simpleCodecErr("ResearcherQuestComponent getPersistentData")).first
+        }
+
         fun removeTentAndResearcher(researcher: Researcher) {
             val level = researcher.level() as ServerLevel
             researcher.tent?.let { tent ->
                 val giftPos = tent.boundingBox.center
-                spawnRewardChest(level, giftPos, researcher.persistId)
+                spawnRewardChest(level, giftPos)
                 tent.remove(level, replaceUndergroundEntrance = true)
             }
             if (!researcher.donkeyWasBorrowed) {
@@ -232,7 +240,7 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
             researcher.discard()
         }
 
-        fun spawnRewardChest(level: ServerLevel, pos: BlockPos, persistId: Int?) {
+        fun spawnRewardChest(level: ServerLevel, pos: BlockPos) {
             val chestState: BlockState = Blocks.CHEST.defaultBlockState()
             level.setBlock(pos, chestState, SetBlockFlag.or(
                 SetBlockFlag.NOTIFY_CLIENTS,
@@ -244,7 +252,7 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
                 .getHolder(ResourceKey.create(Registries.INSTRUMENT, GrowssethItems.Instruments.RESEARCHER_HORN.first))
                 .orElseThrow()
             val hornItem = InstrumentItem.create(GrowssethItems.RESEARCHER_HORN, resInstrumentHolder)
-            val researcherName = persistId?.let { ResearcherSavedData.get(level.server, it)?.name } ?: Component.translatable("entity.growsseth.researcher")
+            val researcherName = ResearcherSavedData.getPersistent(level.server).name  ?: Component.translatable("entity.growsseth.researcher")
 
             blockEntity?.load(CompoundTag().also { chestTag ->
                 chestTag.put("Items", ListTag().also { items ->
