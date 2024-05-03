@@ -18,12 +18,13 @@ object GrowssethWorldPresetClient {
     private val locationData = mutableListOf<LocationData>()
     private var lastShowTime: Int = -1
     private var lastPos: BlockPos = BlockPos(0,0,0)
-    private val locationTitlesController = LocationTitlesController.get()
 
     fun initLocationData(locationData: List<LocationData>) {
         this.locationData.clear()
         this.locationData.addAll(locationData.filter { !it.hidden && it.boundingBox != null })
     }
+
+    private fun locationTitlesController() = LocationTitlesController.get()
 
     object Callbacks {
         fun onClientTick(client: Minecraft) {
@@ -41,7 +42,7 @@ object GrowssethWorldPresetClient {
                     .filter { it.boundingBox?.let { vol -> vol.contains(fPos) && !vol.contains(lastPos.vec3()) } == true }
                     .minByOrNull { it.centerPos.distanceToSqr(fPos) }
                 if (closestInside != null) {
-                    locationTitlesController.showLocationTitle(closestInside.name)
+                    locationTitlesController().showLocationTitle(closestInside.name)
                     lastShowTime = player.tickCount
                 }
                 lastPos = pos

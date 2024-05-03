@@ -16,6 +16,9 @@ public class ClientConfig {
     )
     public static boolean enableLocationTitles = true;
 
+    @ConfigEntry(id = "locationTitlesMode", type = EntryType.ENUM, translation = T_PREF + "locationTitlesMode.name")
+    public static TitleMode locationTitlesMode = TitleMode.TITLE;
+
     @ConfigEntry(id = "newTradeNotifications", type = EntryType.BOOLEAN, translation = T_PREF + "newTradeNotifications.name")
     @Comment(
             value = "Shows a small toast when the researcher unlocks new trades. Works only for web and progress trades.",
