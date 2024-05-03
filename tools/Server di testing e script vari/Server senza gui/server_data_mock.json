@@ -1,0 +1,243 @@
+[
+    {
+        "id": "quest-step-1",
+        "type": "questStep",
+        "name": "researcher_end_quest_start",
+        "active": false
+    },
+    {
+        "id": "quest-step-2",
+        "type": "questStep",
+        "name": "researcher_end_quest_zombie",
+        "active": false
+    },
+    {
+        "id": "quest-step-3",
+        "type": "questStep",
+        "name": "researcher_end_quest_leave",
+        "active": false
+    },
+    {
+        "id": "structure-5",
+        "type": "structure",
+        "structure": "growsseth:researcher_tent",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "active": false,
+        "rotation": "none"
+    },
+    {
+        "id": "structure-6",
+        "type": "structure",
+        "structure": "growsseth:cave_camp",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "active": false,
+        "rotation": "none"
+    },
+    {
+        "id": "structure-7",
+        "type": "structure",
+        "structure": "growsseth:marker",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "active": false,
+        "rotation": "none"
+    },
+    {
+        "id": "structure-8",
+        "type": "structure",
+        "structure": "growsseth:golem_variants/plains_golem_house",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "active": false,
+        "rotation": "none"
+    },
+    {
+        "id": "structure-9",
+        "type": "structure",
+        "structure": "growsseth:enchant_tower",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "active": false,
+        "rotation": "none"
+    },
+    {
+        "id": "structure-10",
+        "type": "structure",
+        "structure": "growsseth:abandoned_forge",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "active": false,
+        "rotation": "none"
+    },
+    {
+        "id": "structure-11",
+        "type": "structure",
+        "structure": "growsseth:beekeeper_house",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "active": false,
+        "rotation": "none"
+    },
+    {
+        "id": "structure-12",
+        "type": "structure",
+        "structure": "growsseth:noteblock_lab",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "active": false,
+        "rotation": "none"
+    },
+    {
+        "id": "structure-13",
+        "type": "structure",
+        "structure": "growsseth:conduit_church",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "active": false,
+        "rotation": "none"
+    },
+    {
+        "id": "structure-14",
+        "type": "structure",
+        "structure": "growsseth:noteblock_ship",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "active": false,
+        "rotation": "none"
+    },
+    {
+        "id": "structure-15",
+        "type": "structure",
+        "structure": "growsseth:conduit_ruins",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "active": false,
+        "rotation": "none"
+    },
+    {
+        "id": "communication-15",
+        "type": "toast",
+        "content": "Notification content",
+        "active": false,
+        "title": "Notification title"
+    },
+    {
+        "id": "communication-16",
+        "type": "toast",
+        "content": "Notification with icon content",
+        "active": false,
+        "icon": "minecraft:stone",
+        "title": "Notification with icon title"
+    },
+    {
+        "id": "communication-17",
+        "type": "dialogue",
+        "content": "Hello colleague\\nWant some maps?",
+        "active": false
+    },
+    {
+        "id": "communication-18",
+        "type": "researcherDiary",
+        "content": "Diary content",
+        "active": false,
+        "title": "Diary title"
+    },
+    {
+        "id": "communication-19",
+        "type": "researcherDiary",
+        "content": "Diary related to structure content",
+        "active": false,
+        "structure": "golem_house",
+        "title": "Diary related to structure title"
+    },
+    {
+        "id": "communication-20",
+        "type": "researcherDiary",
+        "content": "Goodbye diary content",
+        "active": false,
+        "title": "Goodbye diary title/endDiary"
+    },
+    {
+        "id": "communication-21",
+        "type": "structureBook",
+        "content": "{\"author\":\"Structure book author\",\"name\":\"Structure book title\",\"pages\":[\"Structure book content\"]}",
+        "active": false,
+        "structure": "cave_camp"
+    },
+    {
+        "id": "trade-22",
+        "type": "tradePreset",
+        "active": false,
+        "name": "sell_default"
+    },
+    {
+        "id": "trade-23",
+        "type": "tradeCustom",
+        "active": false,
+        "content": "{\n    \"gives\":{\n        \"id\":\"minecraft:tnt\",\n        \"amount\":15\n    },\n    \"wants\":[\n        {\n            \"id\":\"minecraft:stick\",\n            \"amount\":3\n        },\n        {\n            \"id\":\"minecraft:carrot\",\n            \"amount\":10\n        }\n    ],\n    \"priority\":100\n}"
+    },
+    {
+        "id": "command-24",
+        "type": "command",
+        "active": false,
+        "content": "summon pig 0 0 0"
+    },
+    {
+        "id": "command-25",
+        "type": "operation",
+        "active": false,
+        "name": "rmResearcher",
+        "x": 0,
+        "y": 0,
+        "z": 0
+    },
+    {
+        "id": "command-26",
+        "type": "operation",
+        "active": false,
+        "name": "tpResearcher",
+        "x": 0,
+        "y": 0,
+        "z": 0
+    },
+    {
+        "id": "command-27",
+        "type": "operation",
+        "active": false,
+        "name": "spawnResearcher",
+        "x": 0,
+        "y": 0,
+        "z": 0
+    },
+    {
+        "id": "command-28",
+        "type": "operation",
+        "active": false,
+        "name": "rmTent",
+        "x": 0,
+        "y": 0,
+        "z": 0
+    },
+    {
+        "id": "command-29",
+        "type": "operation",
+        "active": false,
+        "name": "rmTentWithGift",
+        "x": 0,
+        "y": 0,
+        "z": 0
+    }
+]
