@@ -2,9 +2,13 @@ package com.ruslan.growsseth.entity.researcher
 
 import com.filloax.fxlib.EventUtil
 import com.filloax.fxlib.SetBlockFlag
+import com.filloax.fxlib.alwaysTruePredicate
 import com.filloax.fxlib.codec.decodeNbt
+import com.filloax.fxlib.codec.encodeNbt
 import com.filloax.fxlib.codec.simpleCodecErr
 import com.filloax.fxlib.iterBlocks
+import com.filloax.fxlib.nbt.getCompoundOrNull
+import com.filloax.fxlib.nbt.getOrPut
 import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.RuinsOfGrowsseth
@@ -42,9 +46,10 @@ import net.minecraft.world.level.block.state.BlockState
  * -: If killed, that's it
  * healed: If cured, unlock dialogue regarding that
  * home: Chunk reloaded: teleport to starting position, unlock departure dialogue
+ * wait: Wait a day before leaving
  * ending: Chunk reloaded: vanish
  */
-class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Researcher>(researcher, "researcherIllness") {
+class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Researcher>(researcher, QUEST_NAME) {
     object Stages {
         const val START = "start"
         const val ZOMBIE = "zombie"
@@ -54,6 +59,9 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
         const val ENDING = "ending"
     }
 
+    // Used to avoid repeating full tent removal with multiple tents in normal worlds
+    private var alreadyRemovedTent = false
+
     init {
         addStage(Stages.START, StartStage())
         // can skip start
@@ -62,6 +70,128 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
         addStage(Stages.HOME, LastDialogueStage(), Stages.HEALED, blockNextStages = true)
         addStage(Stages.WAIT, WaitBeforeLeaveStage(), Stages.HOME, blockNextStages = true)
         addStage(Stages.ENDING, EndingStage(), Stages.WAIT)
+    }
+
+    override fun writeCustomNbt(tag: CompoundTag) {
+        tag.putBoolean(TAG_ALREADY_REMOVED_TENT, alreadyRemovedTent)
+    }
+
+    override fun readCustomNbt(tag: CompoundTag) {
+        alreadyRemovedTent = tag.getBoolean(TAG_ALREADY_REMOVED_TENT)
+    }
+
+    companion object {
+        const val QUEST_NAME = "researcherIllness"
+        const val TAG_ALREADY_REMOVED_TENT = "alreadyRemovedTent"
+
+        fun getPersistentData(server: MinecraftServer): QuestData {
+            if (!ResearcherConfig.singleResearcher) {
+                RuinsOfGrowsseth.LOGGER.error("Tried getting researcher quest data when not in single researcher mode!")
+                return QuestData()
+            }
+            val tag = ResearcherSavedData.getPersistent(server).data.getCompound(QUESTS_TAG_ID).getCompound(QUEST_NAME).getCompoundOrNull(NBT_TAG_PERSIST)
+            return tag?.let { PERSIST_CODEC.decodeNbt(it) .getOrThrow(false, simpleCodecErr("ResearcherQuestComponent getPersistentData")).first }
+                ?: QuestData()
+        }
+
+        fun writePersistentData(server: MinecraftServer, data: QuestData) {
+            if (!ResearcherConfig.singleResearcher) {
+                RuinsOfGrowsseth.LOGGER.error("Tried writing researcher quest data when not in single researcher mode!")
+            }
+            val researcherData = ResearcherSavedData.getPersistent(server)
+            val questsTag = researcherData.data.getOrPut(QUESTS_TAG_ID, CompoundTag()).getOrPut(QUEST_NAME, CompoundTag())
+            questsTag.put(NBT_TAG_PERSIST, PERSIST_CODEC.encodeNbt(data).getOrThrow(true, simpleCodecErr("writePersistentData quest")))
+            researcherData.setDirty()
+            updateCurrentResearchers(server)
+        }
+
+        private fun updateCurrentResearchers(server: MinecraftServer) {
+            server.allLevels.forEach { level ->
+                level.getEntities(GrowssethEntities.RESEARCHER, alwaysTruePredicate()).forEach { researcher ->
+                    researcher.readSavedData(ResearcherSavedData.getPersistent(server))
+                }
+            }
+        }
+
+        fun isHealed(server: MinecraftServer): Boolean {
+            return getPersistentData(server).stageHistory.contains(Stages.HEALED)
+        }
+
+        fun shouldRemoveTent(server: MinecraftServer): Boolean {
+            return getPersistentData(server).stageHistory.contains(Stages.ENDING)
+        }
+
+        /**
+         * Note: doesn't care about stage order
+         */
+        fun setStage(server: MinecraftServer, stage: String) {
+            assert(stage in listOf(Stages.HOME, Stages.WAIT, Stages.START, Stages.HEALED, Stages.ZOMBIE, Stages.ENDING)) { "Stage $stage not included in stages for researcher!" }
+            val data = getPersistentData(server)
+            data.currentStageId = stage
+            data.stageHistory.add(stage)
+            data.currentStageTriggerTime = server.overworld().gameTime
+            writePersistentData(server, data)
+        }
+
+        fun backOneStage(server: MinecraftServer): Boolean {
+            val data = getPersistentData(server)
+            data.currentStageId = data.stageHistory.removeLastOrNull() ?: return false
+            writePersistentData(server, data)
+            return true
+        }
+
+        fun removeTentAndResearcher(researcher: Researcher) {
+            val level = researcher.level() as ServerLevel
+            researcher.tent?.let { tent ->
+                val giftPos = tent.boundingBox.center
+                spawnRewardChest(level, giftPos)
+                tent.remove(level, replaceUndergroundEntrance = true)
+            }
+            removeResearcher(researcher)
+        }
+
+        fun removeResearcher(researcher: Researcher) {
+            val level = researcher.level() as ServerLevel
+            if (!researcher.donkeyWasBorrowed) {
+                ResearcherDonkey.removeDonkey(researcher, level)
+            }
+            val savedData = ResearcherSavedData.getPersistent(level.server)
+            researcher.writeSavedData(savedData)
+            researcher.discard()
+        }
+
+        fun spawnRewardChest(level: ServerLevel, pos: BlockPos) {
+            val chestState: BlockState = Blocks.CHEST.defaultBlockState()
+            level.setBlock(pos, chestState, SetBlockFlag.or(
+                SetBlockFlag.NOTIFY_CLIENTS,
+                SetBlockFlag.NO_NEIGHBOR_REACTIONS,
+                SetBlockFlag.NO_NEIGHBOR_REACTION_DROPS
+            ))
+            val blockEntity = level.getBlockEntity(pos)
+            val resInstrumentHolder = BuiltInRegistries.INSTRUMENT
+                .getHolder(ResourceKey.create(Registries.INSTRUMENT, GrowssethItems.Instruments.RESEARCHER_HORN.first))
+                .orElseThrow()
+            val hornItem = InstrumentItem.create(GrowssethItems.RESEARCHER_HORN, resInstrumentHolder)
+            val researcherName = ResearcherSavedData.getPersistent(level.server).name  ?: Component.translatable("entity.growsseth.researcher")
+
+            blockEntity?.load(CompoundTag().also { chestTag ->
+                chestTag.put("Items", ListTag().also { items ->
+                    val endTextItem = (if (DiaryHelper.hasCustomEndDiary()) {
+                        DiaryHelper.getCustomEndDiary(researcherName)
+                    } else {
+                        null
+                    }) ?: DiaryHelper.createMiscDiary("quest_good_ending", researcherName)
+                    ?: Items.PAPER.defaultInstance.copyWithCount(1).also { itemStack ->
+                        itemStack.setHoverName(Component.literal("Per il mio collega"))
+                    }
+
+                    items.add(endTextItem
+                        .save(CompoundTag().also{ it.putInt("Slot", 4) }))
+                    items.add(hornItem
+                        .save(CompoundTag().also{ it.putInt("Slot", 13) }))
+                })
+            }) ?: RuinsOfGrowsseth.LOGGER.error("No blockentity at reward chest pos $pos, error in spawning?")
+        }
     }
 
     inner class StartStage : QuestStage<Researcher> {
@@ -76,9 +206,10 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
 
     inner class ZombieStage : QuestStage<Researcher> {
         override val trigger = ProgressTradesTrigger(server, onlyOne = false)
-            .or(ApiEventTrigger<Researcher>(QuestConfig.finalQuestZombieName))
+            .or(ApiEventTrigger(QuestConfig.finalQuestZombieName))
 
-        override fun onActivated(entity: Researcher) {
+        // Trigger on update too to cover multiple tent situations
+        override fun onUpdate(entity: Researcher) {
             val tent = entity.tent
             val startingPos = entity.position()
             entity.dialogues?.resetNearbyPlayers()
@@ -172,10 +303,6 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
         override val trigger = QuestStageTrigger<Researcher> { entity, _ ->
             entity.healed
         }
-
-        override fun onActivated(entity: Researcher) {
-            entity.dialogues?.resetNearbyPlayers()
-        }
     }
 
     // Separate stage for last dialogue, so we can in next stage count
@@ -202,8 +329,12 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
                 .or(ApiEventTrigger(QuestConfig.finalQuestLeaveName))
             )
 
-        override fun onActivated(entity: Researcher) {
-            removeTentAndResearcher(entity)
+        // OnUpdate to also cover multiple tents
+        override fun onUpdate(entity: Researcher) {
+            if (!alreadyRemovedTent)
+                removeTentAndResearcher(entity)
+            else
+                removeResearcher(entity)
         }
     }
 
@@ -214,63 +345,6 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
 
             return if (onlyOne) tradesProvider.onlyOneLeft(server)
                 else tradesProvider.isFinished(server)
-        }
-    }
-
-    companion object {
-        fun getPersistentData(server: MinecraftServer): QuestData {
-            if (!ResearcherConfig.singleResearcher) {
-                RuinsOfGrowsseth.LOGGER.error("Tried getting researcher quest data when not in single researcher mode!")
-                return QuestData()
-            }
-            return PERSIST_CODEC.decodeNbt(ResearcherSavedData.getPersistent(server).data.getCompound(NBT_TAG_PERSIST))
-                .getOrThrow(false, simpleCodecErr("ResearcherQuestComponent getPersistentData")).first
-        }
-
-        fun removeTentAndResearcher(researcher: Researcher) {
-            val level = researcher.level() as ServerLevel
-            researcher.tent?.let { tent ->
-                val giftPos = tent.boundingBox.center
-                spawnRewardChest(level, giftPos)
-                tent.remove(level, replaceUndergroundEntrance = true)
-            }
-            if (!researcher.donkeyWasBorrowed) {
-                ResearcherDonkey.removeDonkey(researcher, level)
-            }
-            researcher.discard()
-        }
-
-        fun spawnRewardChest(level: ServerLevel, pos: BlockPos) {
-            val chestState: BlockState = Blocks.CHEST.defaultBlockState()
-            level.setBlock(pos, chestState, SetBlockFlag.or(
-                SetBlockFlag.NOTIFY_CLIENTS,
-                SetBlockFlag.NO_NEIGHBOR_REACTIONS,
-                SetBlockFlag.NO_NEIGHBOR_REACTION_DROPS
-            ))
-            val blockEntity = level.getBlockEntity(pos)
-            val resInstrumentHolder = BuiltInRegistries.INSTRUMENT
-                .getHolder(ResourceKey.create(Registries.INSTRUMENT, GrowssethItems.Instruments.RESEARCHER_HORN.first))
-                .orElseThrow()
-            val hornItem = InstrumentItem.create(GrowssethItems.RESEARCHER_HORN, resInstrumentHolder)
-            val researcherName = ResearcherSavedData.getPersistent(level.server).name  ?: Component.translatable("entity.growsseth.researcher")
-
-            blockEntity?.load(CompoundTag().also { chestTag ->
-                chestTag.put("Items", ListTag().also { items ->
-                    val endTextItem = (if (DiaryHelper.hasCustomEndDiary()) {
-                        DiaryHelper.getCustomEndDiary(researcherName)
-                    } else {
-                        null
-                    }) ?: DiaryHelper.createMiscDiary("quest_good_ending", researcherName)
-                        ?: Items.PAPER.defaultInstance.copyWithCount(1).also { itemStack ->
-                            itemStack.setHoverName(Component.literal("Per il mio collega"))
-                        }
-
-                    items.add(endTextItem
-                        .save(CompoundTag().also{ it.putInt("Slot", 4) }))
-                    items.add(hornItem
-                        .save(CompoundTag().also{ it.putInt("Slot", 13) }))
-                })
-            }) ?: RuinsOfGrowsseth.LOGGER.error("No blockentity at reward chest pos $pos, error in spawning?")
         }
     }
 }

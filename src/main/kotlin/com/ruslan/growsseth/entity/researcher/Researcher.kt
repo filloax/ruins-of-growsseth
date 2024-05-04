@@ -692,13 +692,13 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     }
 
     // Also vanilla things like name
-    private fun writeSavedData(savedData: ResearcherSavedData, existingDataTag: CompoundTag? = null) {
+    fun writeSavedData(savedData: ResearcherSavedData, existingDataTag: CompoundTag? = null) {
         savedData.data = existingDataTag ?: makeResearcherData()
         savedData.name = customName
         savedData.setDirty()
     }
 
-    private fun readSavedData(savedData: ResearcherSavedData) {
+    fun readSavedData(savedData: ResearcherSavedData) {
         readResearcherData(savedData.data)
         customName = savedData.name
     }
