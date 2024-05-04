@@ -150,11 +150,22 @@ open class QuestComponent<E : LivingEntity>(val entity: E, val name: String) {
     ): QuestNode<E> {
         data.currentStageId = id
         data.stageHistory += id
-        data.currentStageTriggerTime = entity.level().gameTime
+        data.currentStageTriggerTime = server.overworld().gameTime
         RuinsOfGrowsseth.LOGGER.info("Triggered stage ${node.id}${event?.let{" [$it]"} ?: ""}\n\t$this")
         node.stage.onActivated(entity)
 
         return node
+    }
+
+    fun backOneStage(activate: Boolean = false): Boolean {
+        data.currentStageId = data.stageHistory.removeLastOrNull() ?: return false
+        data.currentStageTriggerTime = server.overworld().gameTime
+        RuinsOfGrowsseth.LOGGER.info("Reverted to quest stage ${data.currentStageId}\n\t$this")
+        if (activate) {
+            getStageNode(data.currentStageId)?.stage?.onActivated(entity) ?: throw IllegalStateException("No node for previous stage ${data.currentStageId}")
+        }
+
+        return true
     }
 
     fun started(): Boolean {
@@ -169,9 +180,7 @@ open class QuestComponent<E : LivingEntity>(val entity: E, val name: String) {
     open fun readCustomNbt(tag: CompoundTag) {}
 
     fun writeNbt(tag: CompoundTag) {
-        val questsTag = tag.getOrPut(QUESTS_TAG_ID, CompoundTag().also {
-            tag.put(QUESTS_TAG_ID, it)
-        })
+        val questsTag = tag.getOrPut(QUESTS_TAG_ID, CompoundTag())
         questsTag.put(name, CompoundTag().also { qTag ->
             qTag.put(NBT_TAG_PERSIST, PERSIST_CODEC.encodeNbt(data).getOrThrow(false) {
                 RuinsOfGrowsseth.LOGGER.error("Error in encoding quest status: $it")

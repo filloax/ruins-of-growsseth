@@ -18,6 +18,7 @@ object GrowssethCommands {
         GrowssethDiaryCommand.register(dispatcher, registryAccess, environment)
         ReloadRemoteCommand.register(dispatcher, registryAccess, environment)
         ResearcherResetCommand.register(dispatcher, registryAccess, environment)
+        QuestCommand.register(dispatcher, registryAccess, environment)
         GrowssethPlaceCommand.register(dispatcher, registryAccess, environment)
     }
 

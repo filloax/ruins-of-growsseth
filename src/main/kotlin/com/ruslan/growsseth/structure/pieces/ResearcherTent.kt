@@ -5,7 +5,9 @@ import com.filloax.fxlib.nbt.*
 import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.RuinsOfGrowsseth
+import com.ruslan.growsseth.config.ResearcherConfig
 import com.ruslan.growsseth.entity.GrowssethEntities
+import com.ruslan.growsseth.entity.researcher.ResearcherQuestComponent
 import com.ruslan.growsseth.structure.GrowssethStructurePieceTypes
 import com.ruslan.growsseth.utils.*
 import net.minecraft.core.BlockPos
@@ -141,21 +143,30 @@ class ResearcherTent : GrTemplateStructurePiece {
     override fun handleDataMarker(name: String, pos: BlockPos, level: ServerLevelAccessor, random: RandomSource, box: BoundingBox) {
         if (!boundingBox.isInside(pos)) return
 
+        val server = level.level.server
+        val spawnEntities = !(ResearcherConfig.singleResearcher && ResearcherQuestComponent.shouldRemoveTent(server))
+
         when (name) {
             "researcher" -> {
                 researcherPos = pos
-                placeEntity(GrowssethEntities.RESEARCHER, pos, level) { researcher -> }
+                if (spawnEntities)
+                    placeEntity(GrowssethEntities.RESEARCHER, pos, level) { }
+                else
+                    level.setBlock(pos, Blocks.AIR.defaultBlockState(), SetBlockFlag.NOTIFY_CLIENTS.flag)
             }
             "donkey" -> {
                 level.setBlock(pos, DEFAULT_FENCE.defaultBlockState(), SetBlockFlag.NOTIFY_CLIENTS.flag)
 
                 val donkeyPos = pos.relative(placeSettings().rotation.rotate(Direction.SOUTH))
-                placeEntity(EntityType.DONKEY, donkeyPos, level) { donkey ->
-                    leashToBlock(level.level, donkey, pos)
-                    donkey.setChest(true)
-                    initDonkeyUuid = donkey.uuid
-                    donkey.addTag(Constants.TAG_RESEARCHER_DONKEY)
-                }
+                if (spawnEntities)
+                    placeEntity(EntityType.DONKEY, donkeyPos, level) { donkey ->
+                        leashToBlock(level.level, donkey, pos)
+                        donkey.setChest(true)
+                        initDonkeyUuid = donkey.uuid
+                        donkey.addTag(Constants.TAG_RESEARCHER_DONKEY)
+                    }
+                else
+                    level.setBlock(pos, Blocks.AIR.defaultBlockState(), SetBlockFlag.NOTIFY_CLIENTS.flag)
             }
             "jail" -> {
                 jailPos = pos

@@ -58,7 +58,7 @@ class TimeTrigger<E : LivingEntity>(
     val requiredTime: Long,
 ) : QuestStageTrigger<E> {
     override fun isActive(entity: E, event: QuestUpdateEvent): Boolean {
-        val time = entity.level().gameTime
+        val time = entity.server!!.overworld().gameTime
         return questComponent.data.currentStageTriggerTime < 0
                 || time - questComponent.data.currentStageTriggerTime >= requiredTime
     }

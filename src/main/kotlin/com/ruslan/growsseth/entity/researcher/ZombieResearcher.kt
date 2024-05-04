@@ -96,7 +96,7 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
         }
     private var _spawnTime: Long? = null
 
-    override fun finishConversion(serverLevel: ServerLevel) {
+    private fun convertToResearcher(serverLevel: ServerLevel, alsoMove: Boolean = false) {
         val researcher = convertTo(GrowssethEntities.RESEARCHER, false)
         for (equipmentSlot in EquipmentSlot.entries) {
             val itemStack = getItemBySlot(equipmentSlot)
@@ -112,8 +112,17 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
         researcher.finalizeSpawn(serverLevel, serverLevel.getCurrentDifficultyAt(researcher.blockPosition()), MobSpawnType.CONVERSION, null, null)
         researcherData?.let { researcher.readResearcherData(it) }
         researcher.healed = true
+        researcher.dialogues?.resetNearbyPlayers()
         researcherOriginalPos?.let { researcher.resetStartingPos(it) }
         researcher.addEffect(MobEffectInstance(MobEffects.CONFUSION, 200, 0))
+
+        if (alsoMove) {
+            researcher.startingPos?.let { researcher.moveTo(it, researcher.yRot, researcher.xRot) }
+        }
+    }
+
+    override fun finishConversion(serverLevel: ServerLevel) {
+        convertToResearcher(serverLevel)
         if (!this.isSilent) {
             serverLevel.levelEvent(null, LevelEvent.SOUND_ZOMBIE_CONVERTED, blockPosition(), 0)
         }
@@ -128,6 +137,11 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
 
     override fun customServerAiStep() {
         super.customServerAiStep()
+
+        // If healed researcher from another tent, then instantly cure
+        if (ResearcherQuestComponent.isHealed(server!!)) {
+            convertToResearcher(this.level() as ServerLevel, true)
+        }
 
         if (tickCount % 20 == 0) {
             if (GrowssethExtraEvents.shouldRunResearcherRemoveCheck) {
