@@ -172,6 +172,8 @@
     "growsseth.config.dataSyncUrl.name": "URL per la API della sinc. web",
     "growsseth.config.dataSyncEndpoint.name": "Endpoint per la API della sinc. web (richiede riavviare il gioco)",
     "growsseth.config.dataSyncApiKey.name": "Chiave API per il server (opzionale)",
+    "growsseth.config.dataSyncReloadTime.name": "Intervallo di ricaricamento dati",
+    "growsseth.config.dataSyncReloadTime.comment": "Quanto tempo (in minuti) deve passare tra ogni richiesta al server. Deve essere almeno pari a 10 secondi.",
     "growsseth.config.liveUpdateService.name": "Abilita servizio live update",
     "growsseth.config.liveUpdateUrl.name": "URL per ricaricare dati API da remoto",
     "growsseth.config.liveUpdatePort.name": "Porta per ricaricare dati API da remoto (opzionale)",
