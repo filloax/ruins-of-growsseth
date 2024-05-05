@@ -18,6 +18,9 @@ public final class WebConfig {
     public static String dataSyncEndpoint = "server_data";
     @ConfigEntry(id = "dataSyncApiKey", type = EntryType.STRING, translation = T_PREF + "dataSyncApiKey.name")
     public static String dataSyncApiKey = "";
+    @ConfigEntry(id = "dataSyncReloadTime", type = EntryType.FLOAT, translation = T_PREF + "dataSyncReloadTime.name")
+    @Comment(value = "How much time (in minutes) must pass between each server query. Must be at least 10 seconds.", translation = T_PREF + "dataSyncReloadTime.comment")
+    public static float dataSyncReloadTime = 1f;
 
     @ConfigEntry(id = "liveUpdateService", type = EntryType.BOOLEAN, translation = T_PREF + "liveUpdateService.name")
     @Comment(value = "If changed ingame, takes effect on world reload.", translation = T_PREF + "needsWorldReload.comment")

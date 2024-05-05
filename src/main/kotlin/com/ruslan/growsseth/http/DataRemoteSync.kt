@@ -30,7 +30,8 @@ object DataRemoteSync {
     var lastSyncSuccessful = false
         private set
 
-    var tickUpdateRealTimeDistance: Duration = Duration.ofMinutes(10)   // how often the mod should query the server
+    private var tickUpdateRealTimeDistance: Duration =
+        Duration.ofSeconds(((WebConfig.dataSyncReloadTime * 60).toLong()))   // how often the mod should query the server
         set(value) {
             if (value > Duration.ofSeconds(10)) {
                 throw IllegalArgumentException("Duration too short, must be at least 10s: $value")
