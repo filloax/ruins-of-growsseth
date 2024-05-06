@@ -43,6 +43,7 @@
     "item.mapitem.MapItemSavedData_HoldingPlayerMixin",
     "item.mapitem.MapItemSavedDataAccessor",
     "item.mapitem.MapItemSavedDataMixin",
+    "structurebook.ItemFrameStructureBookMixin",
     "structurebook.ItemStackStructureBookMixin",
     "structurebook.StructureTemplateMixin"
   ],
