@@ -1,5 +1,6 @@
 package com.ruslan.growsseth.structure
 
+import com.filloax.fxlib.getBookText
 import com.filloax.fxlib.json.KotlinJsonResourceReloadListener
 import com.filloax.fxlib.nbt.getListOrNull
 import com.filloax.fxlib.setBookTags
@@ -45,11 +46,8 @@ object StructureBooks {
 
     @JvmStatic
     fun bookIsTemplate(book: ItemStack): Boolean {
-        val tag = book.orCreateTag
-        tag.getListOrNull("pages", Tag.TAG_STRING)?.let { pages ->
-            return pages.size == 1 && pages[0]?.let{ pageIsTemplate(it.asString) } == true
-        }
-        return false
+        val bookPages = book.getBookText()
+        return bookPages.size == 1 && pageIsTemplate(bookPages.getOrNull(0)?.string ?: "")
     }
 
     @JvmStatic
@@ -58,13 +56,12 @@ object StructureBooks {
     }
 
     fun loadTemplate(book: ItemStack, useTemplate: String?): ItemStack {
-        val tag = book.orCreateTag
-        val templateId = useTemplate ?: tag.getListOrNull("pages", Tag.TAG_STRING)?.let { pages ->
-            pages[0]?.let { getTemplateIdFromPage(it.asString) }?.trim()
-        } ?: run {
-            RuinsOfGrowsseth.LOGGER.error("Book template loading error: cannot get template id")
-            return book
-        }
+        val bookPages = book.getBookText()
+        val templateId = useTemplate ?: bookPages.getOrNull(0)?.let { getTemplateIdFromPage(it.string) }?.trim()
+            ?: run {
+                RuinsOfGrowsseth.LOGGER.error("Book template loading error: cannot get template id")
+                return book
+            }
 
         val languageBooks = StructureBookListener.BOOKS_BY_LANG[GrowssethConfig.serverLanguage] ?: StructureBookListener.BOOKS_BY_LANG[DEFAULT_LANGUAGE]
         val remoteBooks = RemoteStructureBooks.replacementBooks
