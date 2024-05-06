@@ -26,6 +26,7 @@
     "entity.mob.CreeperMixin",
     "entity.mob.HostileTowardsResearcherMixin",
     "entity.mob.VexMixin",
+    "entity.mob.ZombieMixin",
     "event.LeadItemMixin",
     "event.LeashMobMixin",
     "event.NameTagItemMixin",

@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class StructureTemplateMixin {
     // Injects into StructureTemplate#placeEntities, inside the lambda of createEntityIgnoreException
     @Inject(method = "method_17917", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;moveTo(DDDFF)V", shift = At.Shift.AFTER))
-    private static void fixPaintingPlacementAndBeekeeperAge(Rotation rotation, Mirror mirror, Vec3 vec3, boolean bl, ServerLevelAccessor level, CompoundTag tag, Entity entity, CallbackInfo ci) {
+    private static void fixPaintingPlacement(Rotation rotation, Mirror mirror, Vec3 vec3, boolean bl, ServerLevelAccessor level, CompoundTag tag, Entity entity, CallbackInfo ci) {
         if (entity instanceof Painting painting) {
             var pos = new BlockPos.MutableBlockPos();
             pos.set(painting.getPos());
@@ -45,7 +45,5 @@ public class StructureTemplateMixin {
 
             painting.setPos(pos.getCenter());
         }
-        else if (entity instanceof ZombieVillager zombie && zombie.getTags().contains("Beekeeper"))
-            zombie.setBaby(false);  // The zombie beekeeper sometimes spawns as a child because of a bug
     }
 }
