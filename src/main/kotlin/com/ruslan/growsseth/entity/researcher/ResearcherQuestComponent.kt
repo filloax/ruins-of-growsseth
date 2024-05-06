@@ -30,6 +30,7 @@ import net.minecraft.resources.ResourceKey
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.npc.VillagerProfession
 import net.minecraft.world.item.InstrumentItem
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.block.Blocks
@@ -234,6 +235,7 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
                 entity.moveTo(startingPos)
                 return
             }
+            zombie.villagerData = zombie.villagerData.setProfession(VillagerProfession.CARTOGRAPHER).setLevel(5)
             zombie.researcherData = data
             zombie.spawnTime = spawnTime
             zombie.researcherOriginalPos = resStartingPos

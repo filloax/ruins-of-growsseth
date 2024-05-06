@@ -108,7 +108,7 @@ I seguenti comandi attivano le varie fasi della quest finale. Non hanno parametr
 
 NOTA: L'idea sarebbe di attivare `event:event:sell_all_extras` insieme a `event:researcher_end_quest_zombie`, così quando viene curato vende già tutto e scontato.
 Gli eventi sono comunque separati in caso `event:sell_all_extras` possa servire per altre cose. Per curare istantaneamente il ricercatore zombie usare il comando vanilla
-```/data modify entity @e[type=growsseth:zombie_researcher,limit=1,sort=nearest]) ConversionTime set value 0b``` dopo avergli dato la pozione di debolezza e la mela d'oro.
+```/data modify entity @e[type=growsseth:zombie_researcher,limit=1,sort=nearest] ConversionTime set value 0b``` dopo avergli dato la pozione di debolezza e la mela d'oro.
 </details>
 
 ### Comandi di comunicazione
