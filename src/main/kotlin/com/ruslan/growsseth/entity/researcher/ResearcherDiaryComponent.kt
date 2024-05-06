@@ -37,7 +37,6 @@ import net.minecraft.world.Container
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.ai.targeting.TargetingConditions
 import net.minecraft.world.entity.item.ItemEntity
-import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.block.LecternBlock
@@ -390,7 +389,7 @@ object DiaryHelper {
                 if (skipExisting) {
                     for (slot in 0 until it.containerSize) {
                         val item = it.getItem(slot)
-                        if (!item.isEmpty && diaryMatches(item, currentItem!!)) {
+                        if (!item.isEmpty && (item.`is`(Items.WRITABLE_BOOK) || item.`is`(Items.WRITTEN_BOOK)) && diaryMatches(item, currentItem!!)) {
                             return
                         }
                     }

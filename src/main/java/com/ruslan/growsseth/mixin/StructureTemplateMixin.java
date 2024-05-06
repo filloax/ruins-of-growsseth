@@ -5,7 +5,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.Painting;
-import net.minecraft.world.entity.monster.ZombieVillager;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
@@ -18,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 // Big thanks to Naz Ikhsan from https://bugs.mojang.com/browse/MC-102223 for the painting fix
 @Mixin(StructureTemplate.class)
-public class StructureTemplateMixin {
+public abstract class StructureTemplateMixin {
     // Injects into StructureTemplate#placeEntities, inside the lambda of createEntityIgnoreException
     @Inject(method = "method_17917", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;moveTo(DDDFF)V", shift = At.Shift.AFTER))
     private static void fixPaintingPlacement(Rotation rotation, Mirror mirror, Vec3 vec3, boolean bl, ServerLevelAccessor level, CompoundTag tag, Entity entity, CallbackInfo ci) {
