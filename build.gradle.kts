@@ -3,17 +3,20 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
 	kotlin("jvm")
 	kotlin("plugin.serialization")
-	id("fabric-loom") version "1.6-SNAPSHOT"
+	id("fabric-loom")
 	id("maven-publish")
 }
 
+val javaVersion: Int = (property("javaVersion")!! as String).toInt()
 val kotlinVersion: String by project
+val kotlinSerializationVersion: String by project
 val alwaysUseLocalFXLib = (property("alwaysUseLocalFXLib")!! as String).toBoolean()
 version = property("mod_version")!! as String
 group = property("maven_group")!! as String
 val modid: String by project
 val fxLibVersion: String by project
 
+val javaVersionEnum = JavaVersion.values().find { it.majorVersion == javaVersion.toString() } ?: throw Exception("Cannot find java version for $javaVersion")
 val useLocalFxLib = alwaysUseLocalFXLib || fxLibVersion.contains(Regex("rev\\d+"))
 
 base {
@@ -80,7 +83,7 @@ dependencies {
 	include("io.socket:engine.io-client:2.1.0")
 	include("io.socket:socket.io-client:2.1.0")
 
-	implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
+	implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion")
 
 	modImplementation("net.fabricmc:fabric-loader:${property("loader_version")}")
 	modImplementation("net.fabricmc:fabric-language-kotlin:${property("fabric_kotlin_version")}")
@@ -90,7 +93,7 @@ dependencies {
 		exclude(module = "fabric-api-deprecated")
 	}
 	modImplementation("com.terraformersmc:modmenu:${property("mod_menu_version")}")
-	modImplementation("com.teamresourceful.resourcefulconfig:resourcefulconfig-fabric-${property("minecraft_version")}:${property("rconfig_version")}")
+	modImplementation("com.teamresourceful.resourcefulconfig:resourcefulconfig-fabric-${property("rconfig_version")}")
 
 	if (!useLocalFxLib) {
 		modImplementation("com.github.filloax:fx-lib:v${property("fxLibVersion")}-fabric")
@@ -133,19 +136,19 @@ loom.runs.matching{ it.name != "datagenClient" }.configureEach {
 }
 
 tasks.withType<JavaCompile> {
-	options.release = 17
+	options.release = javaVersion
 	options.encoding = "UTF-8"
 	options.isFork = true	// fix for https://github.com/FabricMC/fabric-loom/issues/369
 }
 tasks.withType<KotlinCompile> {
-	kotlinOptions.jvmTarget = "17"
+	kotlinOptions.jvmTarget = "$javaVersion"
 }
 
 java {
 	withSourcesJar()
 
-	sourceCompatibility = JavaVersion.VERSION_17
-	targetCompatibility = JavaVersion.VERSION_17
+	sourceCompatibility = javaVersionEnum
+	targetCompatibility = javaVersionEnum
 }
 
 // configure the maven publication
@@ -164,9 +167,9 @@ publishing {
 }
 val compileKotlin: KotlinCompile by tasks
 compileKotlin.kotlinOptions {
-    jvmTarget = "17"
+    jvmTarget = "$javaVersion"
 }
 val compileTestKotlin: KotlinCompile by tasks
 compileTestKotlin.kotlinOptions {
-    jvmTarget = "17"
+    jvmTarget = "$javaVersion"
 }
