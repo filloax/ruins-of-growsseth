@@ -14,10 +14,12 @@ import com.ruslan.growsseth.entity.researcher.Researcher
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.*
+import net.minecraft.core.component.DataComponents
 import net.minecraft.util.RandomSource
 import net.minecraft.util.random.Weight
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.component.CustomData
 import net.minecraft.world.item.trading.ItemCost
 import net.minecraft.world.item.trading.MerchantOffer
 import kotlin.math.roundToInt
@@ -97,8 +99,8 @@ class ResearcherItemListing(
         offer.addToSpecialPriceDiff((offer.costA.count * (costMultiplier - 1)).roundToInt())
 
         mapInfo?.let { map ->
-            if (!trader.level().isClientSide && !gives.getOrCreateTag().contains(SET_MAP_TAG) && trader is Researcher) {
-                gives.getOrCreateTag().putBoolean(SET_MAP_TAG, true)
+            if (!trader.level().isClientSide && gives[DataComponents.CUSTOM_DATA]?.contains(SET_MAP_TAG) != true && trader is Researcher) {
+                CustomData.update(DataComponents.CUSTOM_DATA, gives) { it.putBoolean(SET_MAP_TAG, true) }
                 ResearcherTradeUtils.setTradeMapTarget(trader, gives, map, offer)
             }
         }

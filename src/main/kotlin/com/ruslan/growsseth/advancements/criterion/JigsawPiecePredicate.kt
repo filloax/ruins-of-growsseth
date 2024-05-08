@@ -23,6 +23,7 @@ import net.minecraft.world.level.levelgen.structure.StructureType
 import net.minecraft.world.level.levelgen.structure.pools.ListPoolElement
 import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement
+import kotlin.jvm.optionals.getOrNull
 
 data class JigsawPiecePredicate(
     val structure: ResourceKey<Structure>,
@@ -60,7 +61,9 @@ data class JigsawPiecePredicate(
         this.biome?.let { if (!level.getBiome(blockPos).`is`(it)) return false }
         if (!level.isLoaded(blockPos)) return false
 
-        val structureStart = level.structureManager().getStructureWithPieceAt(blockPos, structure)
+        val structureObj = level.registryAccess().registryOrThrow(Registries.STRUCTURE).getHolder(structure)
+            .map{it.value()}.or { throw IllegalStateException("Unknown structure $structure") }.orElseThrow()
+        val structureStart = level.structureManager().getStructureWithPieceAt(blockPos, structureObj)
         if (!structureStart.isValid) return false
 
         smokey?.let { if (CampfireBlock.isSmokeyPos(level, blockPos) != it) return false }

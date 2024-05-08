@@ -11,7 +11,12 @@ import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.level.Level
 
 class ResearcherHornItem(properties: Properties, instruments: TagKey<Instrument>) : InstrumentItem(properties, instruments) {
-    override fun appendHoverText(stack: ItemStack, level: Level?, tooltipComponents: MutableList<Component>, isAdvanced: TooltipFlag) {
+    override fun appendHoverText(
+        stack: ItemStack,
+        context: TooltipContext,
+        tooltipComponents: MutableList<Component>,
+        isAdvanced: TooltipFlag
+    ) {
         for (i in 1 .. 2) {
             tooltipComponents.add(Component.translatable("${stack.descriptionId}.description$i")
                 .withStyle(Style.EMPTY
@@ -19,6 +24,6 @@ class ResearcherHornItem(properties: Properties, instruments: TagKey<Instrument>
                     .applyFormat(ChatFormatting.ITALIC)
                 ))
         }
-        super.appendHoverText(stack, level, tooltipComponents, isAdvanced)
+        super.appendHoverText(stack, context, tooltipComponents, isAdvanced)
     }
 }

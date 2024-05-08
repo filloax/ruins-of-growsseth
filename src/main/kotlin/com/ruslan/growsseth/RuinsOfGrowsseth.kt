@@ -71,7 +71,7 @@ object RuinsOfGrowsseth : ModInitializer {
         GrowssethCreativeModeTabs.registerCreativeModeTabs()
         GrowssethItems.registerItems{ id, value -> Registry.register(BuiltInRegistries.ITEM, id, value) }
         GrowssethItems.Instruments.registerInstruments{ id, value -> Registry.register(BuiltInRegistries.INSTRUMENT, id, value) }
-        GrowssethEffects.registerEffects{ id, value -> Registry.register(BuiltInRegistries.MOB_EFFECT, id, value) }
+        GrowssethEffects.registerEffects{ id, value -> Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, id, value) }
         GrowssethEntities.registerEntityTypes{ id, value -> Registry.register(BuiltInRegistries.ENTITY_TYPE, id, value) }
         GrowssethStructurePieceTypes.registerStructurePieces{ id, value -> Registry.register(BuiltInRegistries.STRUCTURE_PIECE, id, value) }
         GrowssethStructures.registerStructureTypes{ id, value -> Registry.register(BuiltInRegistries.STRUCTURE_TYPE, id, value) }
