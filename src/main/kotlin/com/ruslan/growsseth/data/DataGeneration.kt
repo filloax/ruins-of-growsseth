@@ -1,5 +1,6 @@
 package com.ruslan.growsseth.data
 
+import com.ruslan.growsseth.GrowssethBannerPatterns
 import com.ruslan.growsseth.GrowssethLootTables
 import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.RuinsOfGrowsseth
@@ -33,6 +34,7 @@ import net.minecraft.data.recipes.RecipeOutput
 import net.minecraft.data.recipes.RecipeProvider
 import net.minecraft.data.recipes.ShapelessRecipeBuilder
 import net.minecraft.data.recipes.packs.VanillaRecipeProvider.TrimTemplate
+import net.minecraft.data.tags.BannerPatternTagsProvider
 import net.minecraft.data.tags.InstrumentTagsProvider
 import net.minecraft.data.tags.StructureTagsProvider
 import net.minecraft.data.tags.WorldPresetTagsProvider
@@ -93,7 +95,7 @@ class RegistriesProvider(output: FabricDataOutput, registries: CompletableFuture
     }
 }
 
-class RecipesProvider(output: FabricDataOutput) : FabricRecipeProvider(output) {
+class RecipesProvider(output: FabricDataOutput, registriesFuture: CompletableFuture<HolderLookup.Provider>) : FabricRecipeProvider(output, registriesFuture) {
     override fun buildRecipes(exporter: RecipeOutput) {
         RecipeProvider.copySmithingTemplate(exporter, GrowssethItems.GROWSSETH_ARMOR_TRIM, Items.COBBLED_DEEPSLATE)
         listOf(
@@ -115,9 +117,9 @@ class RecipesProvider(output: FabricDataOutput) : FabricRecipeProvider(output) {
     }
 }
 
-class AdvancementsProvider(output: FabricDataOutput) :
-    FabricAdvancementProvider(output) {
-    override fun generateAdvancement(consumer: Consumer<AdvancementHolder>) {
+class AdvancementsProvider(output: FabricDataOutput, registryLookup: CompletableFuture<HolderLookup.Provider>) :
+    FabricAdvancementProvider(output, registryLookup) {
+    override fun generateAdvancement(registryLookup: HolderLookup.Provider, consumer: Consumer<AdvancementHolder>) {
         StructureAdvancements.generateForStructureDetection(consumer)
         //DonkeyAdvancements.generateDonkeyAdvancements(consumer) //not needed
     }
@@ -199,6 +201,15 @@ class TagProviderWorldPresets(output: FabricDataOutput, registries: CompletableF
     }
 }
 
+class TagProviderBannerPatterns(output: FabricDataOutput, registries: CompletableFuture<HolderLookup.Provider>): BannerPatternTagsProvider(output, registries) {
+    override fun addTags(arg: HolderLookup.Provider) {
+        GrowssethBannerPatterns.all.forEach { banner ->
+            getOrCreateRawBuilder(banner.tag)
+                .addElement(banner.id().location())
+        }
+    }
+}
+
 /* // Not needed for now, since it's set in the zombie's class (might be used in the future to allow loot customization)
 class EntityLootTableProvider(output: FabricDataOutput) : SimpleFabricLootTableProvider(output, LootContextParamSets.ENTITY) {
     override fun generate(consumer: BiConsumer<ResourceLocation, LootTable.Builder>) {
@@ -234,20 +245,20 @@ class ModelGenerator constructor(generator: FabricDataOutput) : FabricModelProvi
     override fun generateBlockStateModels(blockStateModelGenerator: BlockModelGenerators?) {
     }
 
-    override fun generateItemModels(itemModelGenerator: ItemModelGenerators?) {
+    override fun generateItemModels(itemModelGenerator: ItemModelGenerators) {
         GrowssethItems.all.forEach { (key, item) ->
             if (item !in GrowssethItems.noAutogenerateItems) {
                 val model = ModelLocationUtils.getModelLocation(item)
                 val discsLayer1 = resLoc("item/music_discs/$item")
                 when (item) {
                     in GrowssethItems.DISCS_WITH_VOCALS ->
-                        itemModelGenerator!!.generateLayeredItem(model, resLoc("item/disc_with_vocals"), discsLayer1)
+                        itemModelGenerator.generateLayeredItem(model, resLoc("item/disc_with_vocals"), discsLayer1)
                     in GrowssethItems.DISCS_INSTRUMENTAL ->
-                        itemModelGenerator!!.generateLayeredItem(model, resLoc("item/disc_instrumental"), discsLayer1)
+                        itemModelGenerator.generateLayeredItem(model, resLoc("item/disc_instrumental"), discsLayer1)
                     in GrowssethItems.DISCS_VANILLA ->
-                        itemModelGenerator!!.generateLayeredItem(model, resLoc("item/disc_vanilla"), discsLayer1)
+                        itemModelGenerator.generateLayeredItem(model, resLoc("item/disc_vanilla"), discsLayer1)
                     else ->
-                        itemModelGenerator!!.generateFlatItem(item, ModelTemplates.FLAT_ITEM)
+                        itemModelGenerator.generateFlatItem(item, ModelTemplates.FLAT_ITEM)
                 }
             }
         }

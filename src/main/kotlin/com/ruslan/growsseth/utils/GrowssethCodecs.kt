@@ -4,15 +4,17 @@ import com.filloax.fxlib.codec.mutableListCodec
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.trading.ItemCost
 import net.minecraft.world.item.trading.MerchantOffer
 import net.minecraft.world.item.trading.MerchantOffers
+import java.util.*
 
 
 object GrowssethCodecs {
     val MERCHANT_OFFER_CODEC: Codec<MerchantOffer> = RecordCodecBuilder.create { builder ->
         builder.group(
-            ItemStack.CODEC.fieldOf("baseCostA").forGetter(MerchantOffer::getBaseCostA),
-            ItemStack.CODEC.fieldOf("costB").forGetter(MerchantOffer::getCostB),
+            ItemCost.CODEC.fieldOf("baseCostA").forGetter(MerchantOffer::getItemCostA),
+            ItemCost.CODEC.optionalFieldOf("costB").forGetter(MerchantOffer::getItemCostB),
             ItemStack.CODEC.fieldOf("result").forGetter(MerchantOffer::getResult),
             Codec.INT.fieldOf("uses").forGetter(MerchantOffer::getUses),
             Codec.INT.fieldOf("maxUses").forGetter(MerchantOffer::getMaxUses),
@@ -21,7 +23,7 @@ object GrowssethCodecs {
             Codec.INT.fieldOf("demand").forGetter(MerchantOffer::getDemand),
             Codec.FLOAT.fieldOf("priceMultiplier").forGetter(MerchantOffer::getPriceMultiplier),
             Codec.INT.fieldOf("xp").forGetter(MerchantOffer::getXp)
-        ).apply(builder) { baseCostA: ItemStack, costB: ItemStack, result: ItemStack, uses: Int, maxUses: Int, rewardExp: Boolean, specialPriceDiff: Int, demand: Int, priceMultiplier: Float, xp: Int ->
+        ).apply(builder) { baseCostA: ItemCost, costB: Optional<ItemCost>, result: ItemStack, uses: Int, maxUses: Int, rewardExp: Boolean, specialPriceDiff: Int, demand: Int, priceMultiplier: Float, xp: Int ->
             val out = MerchantOffer(baseCostA, costB, result, uses, maxUses, xp, priceMultiplier, demand)
             out.specialPriceDiff = specialPriceDiff
             out.rewardExp = rewardExp

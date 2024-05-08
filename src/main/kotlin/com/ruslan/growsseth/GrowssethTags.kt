@@ -34,4 +34,8 @@ object GrowssethTags {
             ALL.add(it)
         }
     }
+
+    object BannerTags {
+        fun getAll() = GrowssethBannerPatterns.all.map { it.tag }
+    }
 }
