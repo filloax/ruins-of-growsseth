@@ -179,7 +179,7 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
             val hornItem = InstrumentItem.create(GrowssethItems.RESEARCHER_HORN, resInstrumentHolder)
             val researcherName = ResearcherSavedData.getPersistent(level.server).name  ?: Component.translatable("entity.growsseth.researcher")
 
-            blockEntity?.load(CompoundTag().also { chestTag ->
+            blockEntity?.loadWithComponents(CompoundTag().also { chestTag ->
                 chestTag.put("Items", ListTag().also { items ->
                     val endTextItem = (if (DiaryHelper.hasCustomEndDiary()) {
                         DiaryHelper.getCustomEndDiary(researcherName)
@@ -190,10 +190,10 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
                         itemStack[DataComponents.CUSTOM_NAME] = Component.literal("Per il mio collega")
                     }
 
-                    items.add(endTextItem.save(CompoundTag().also{ it.putInt("Slot", 4) }))
-                    items.add(hornItem.save(CompoundTag().also{ it.putInt("Slot", 13) }))
+                    items.add(endTextItem.save(level.registryAccess(), CompoundTag().also{ it.putByte("Slot", 4) }))
+                    items.add(hornItem.save(level.registryAccess(), CompoundTag().also{ it.putByte("Slot", 13) }))
                 })
-            }) ?: RuinsOfGrowsseth.LOGGER.error("No blockentity at reward chest pos $pos, error in spawning?")
+            }, level.registryAccess()) ?: RuinsOfGrowsseth.LOGGER.error("No blockentity at reward chest pos $pos, error in spawning?")
         }
     }
 
