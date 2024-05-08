@@ -22,6 +22,7 @@ import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.quests.*
 import com.ruslan.growsseth.structure.pieces.ResearcherTent
 import net.minecraft.core.BlockPos
+import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.nbt.CompoundTag
@@ -186,13 +187,11 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
                         null
                     }) ?: DiaryHelper.createMiscDiary("quest_good_ending", researcherName)
                     ?: Items.PAPER.defaultInstance.copyWithCount(1).also { itemStack ->
-                        itemStack.setHoverName(Component.literal("Per il mio collega"))
+                        itemStack[DataComponents.CUSTOM_NAME] = Component.literal("Per il mio collega")
                     }
 
-                    items.add(endTextItem
-                        .save(CompoundTag().also{ it.putInt("Slot", 4) }))
-                    items.add(hornItem
-                        .save(CompoundTag().also{ it.putInt("Slot", 13) }))
+                    items.add(endTextItem.save(CompoundTag().also{ it.putInt("Slot", 4) }))
+                    items.add(hornItem.save(CompoundTag().also{ it.putInt("Slot", 13) }))
                 })
             }) ?: RuinsOfGrowsseth.LOGGER.error("No blockentity at reward chest pos $pos, error in spawning?")
         }
