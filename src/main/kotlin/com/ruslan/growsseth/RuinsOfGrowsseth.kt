@@ -68,7 +68,6 @@ object RuinsOfGrowsseth : ModInitializer {
     }
 
     private fun initRegistries() {
-        GrowssethBannerPatterns.registerBannerPatterns{ id, value -> Registry.register(BuiltInRegistries.BANNER_PATTERN, id, value) }
         GrowssethCreativeModeTabs.registerCreativeModeTabs()
         GrowssethItems.registerItems{ id, value -> Registry.register(BuiltInRegistries.ITEM, id, value) }
         GrowssethItems.Instruments.registerInstruments{ id, value -> Registry.register(BuiltInRegistries.INSTRUMENT, id, value) }
