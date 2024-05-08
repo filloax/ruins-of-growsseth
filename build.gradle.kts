@@ -104,7 +104,7 @@ dependencies {
 		// include(it)
 	}
 
-	if (!tryUseLocalFXLib) {
+	if (!useLocalFxLib) {
 		"com.github.filloax:fx-lib:v${property("fxLibVersion")}-fabric".let{
 			modImplementation(it)
 			// include(it)
