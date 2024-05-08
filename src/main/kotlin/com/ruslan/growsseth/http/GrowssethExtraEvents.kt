@@ -403,7 +403,7 @@ object GrowssethExtraEvents {
                     return@runWhenChunkLoaded
                 }
                 mob.moveTo(pos.x + .5, pos.y + .0, pos.z + .5, 0.0f, 0.0f)
-                mob.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), MobSpawnType.MOB_SUMMONED, null, null)
+                mob.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), MobSpawnType.MOB_SUMMONED, null)
                 level.addFreshEntityWithPassengers(mob)
             }
         }

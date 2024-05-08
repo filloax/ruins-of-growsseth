@@ -296,16 +296,16 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
     /* METHODS SECTION */
 
-    override fun defineSynchedData() {
-        super.defineSynchedData()
-        entityData.define(DATA_UNHAPPY_COUNTER, 0)
-        entityData.define(DATA_ANGRY_FOR_MESS, false)
-        entityData.define(DATA_DONKEY_BORROWED, false)
-        entityData.define(DATA_HEALED, false)
-        entityData.define(DATA_USING_ITEM, false)
-        entityData.define(DATA_ANGRY_PARTICLES, false)
-        entityData.define(DATA_DEFLECT_ARROW_PARTICLES, false)
-        entityData.define(DATA_TELEPORT_PARTICLES, false)
+    override fun defineSynchedData(builder: SynchedEntityData.Builder) {
+        super.defineSynchedData(builder)
+        builder.define(DATA_UNHAPPY_COUNTER, 0)
+        builder.define(DATA_ANGRY_FOR_MESS, false)
+        builder.define(DATA_DONKEY_BORROWED, false)
+        builder.define(DATA_HEALED, false)
+        builder.define(DATA_USING_ITEM, false)
+        builder.define(DATA_ANGRY_PARTICLES, false)
+        builder.define(DATA_DEFLECT_ARROW_PARTICLES, false)
+        builder.define(DATA_TELEPORT_PARTICLES, false)
     }
 
     override fun registerGoals() {
@@ -332,7 +332,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     }
 
     // NOTE: Ran only once at first spawn
-    override fun finalizeSpawn(level: ServerLevelAccessor, difficulty: DifficultyInstance, mobSpawnType: MobSpawnType, spawnGroupData: SpawnGroupData?, compoundTag: CompoundTag?): SpawnGroupData? {
+    override fun finalizeSpawn(level: ServerLevelAccessor, difficulty: DifficultyInstance, mobSpawnType: MobSpawnType, spawnGroupData: SpawnGroupData?): SpawnGroupData? {
         val savedData = server?.let{ serv ->
             // Load data from previous researchers
             if (ResearcherConfig.singleResearcher) {
