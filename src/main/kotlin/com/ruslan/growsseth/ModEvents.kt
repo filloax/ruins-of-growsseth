@@ -16,7 +16,6 @@ import com.ruslan.growsseth.http.LiveUpdatesConnection
 import com.ruslan.growsseth.loot.VanillaStructureLoot
 import com.ruslan.growsseth.quests.QuestComponentEvents
 import com.ruslan.growsseth.structure.RemoteStructureBooks
-import com.ruslan.growsseth.structure.StructureDisabler
 import com.ruslan.growsseth.structure.VillageBuildings
 import com.ruslan.growsseth.utils.AsyncLocator
 import com.ruslan.growsseth.utils.MixinHelpers
@@ -26,9 +25,6 @@ import net.fabricmc.fabric.api.loot.v2.LootTableSource
 import net.fabricmc.fabric.api.networking.v1.PacketSender
 import net.minecraft.advancements.AdvancementHolder
 import net.minecraft.core.BlockPos
-import net.minecraft.core.Holder
-import net.minecraft.core.RegistryAccess
-import net.minecraft.core.SectionPos
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
@@ -46,17 +42,11 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.BlockPlaceContext
-import net.minecraft.world.level.ChunkPos
 import net.minecraft.world.level.Level
-import net.minecraft.world.level.StructureManager
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
-import net.minecraft.world.level.chunk.ChunkAccess
 import net.minecraft.world.level.chunk.LevelChunk
-import net.minecraft.world.level.levelgen.RandomState
 import net.minecraft.world.level.levelgen.structure.Structure
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager
-import net.minecraft.world.level.storage.loot.LootDataManager
 import net.minecraft.world.level.storage.loot.LootTable
 
 abstract class ModEvents {
@@ -144,8 +134,8 @@ abstract class ModEvents {
         // Register singularly because returns
         beforeNameTagRename(Researcher.Callbacks::nameTagRename)
 
-        onLootTableModify { resourceManager, lootManager, id, tableBuilder, source ->
-            VanillaStructureLoot.onModifyLootTables(resourceManager, lootManager, id, tableBuilder, source)
+        onLootTableModify { key, tableBuilder, source ->
+            VanillaStructureLoot.onModifyLootTables(key, tableBuilder, source)
         }
     }
 
@@ -175,24 +165,5 @@ abstract class ModEvents {
     abstract fun onFenceLeash(event: (Mob, BlockPos, ServerPlayer) -> Unit)
     abstract fun onFenceUnleash(event: (Mob, BlockPos) -> Unit)
     abstract fun beforeNameTagRename(event: (target: LivingEntity, Component, ServerPlayer, ItemStack, InteractionHand) -> InteractionResultHolder<ItemStack>)
-    abstract fun onLootTableModify(event: (resourceManager: ResourceManager, lootManager: LootDataManager, id: ResourceLocation, tableBuilder: LootTable.Builder, source: LootTableSource) -> Unit)
-}
-
-interface Modify {
-    /**
-     * Called when a loot table is loading to modify loot tables.
-     *
-     * @param resourceManager the server resource manager
-     * @param lootManager     the loot manager
-     * @param id              the loot table ID
-     * @param tableBuilder    a builder of the loot table being loaded
-     * @param source          the source of the loot table
-     */
-    fun modifyLootTable(
-        resourceManager: ResourceManager?,
-        lootManager: LootDataManager?,
-        id: ResourceLocation?,
-        tableBuilder: LootTable.Builder?,
-        source: LootTableSource?
-    )
+    abstract fun onLootTableModify(event: (key: ResourceKey<LootTable>, tableBuilder: LootTable.Builder, source: LootTableSource) -> Unit)
 }
