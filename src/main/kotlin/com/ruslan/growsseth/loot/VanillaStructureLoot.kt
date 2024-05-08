@@ -1,6 +1,5 @@
 package com.ruslan.growsseth.loot
 
-import com.ruslan.growsseth.config.GrowssethConfig
 import com.ruslan.growsseth.config.MiscConfig
 import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.item.GrowssethItems.DISC_ABBANDONATI
@@ -11,11 +10,9 @@ import com.ruslan.growsseth.item.GrowssethItems.GROWSSETH_POTTERY_SHERD
 import com.ruslan.growsseth.item.GrowssethItems.RESEARCHER_DAGGER
 import com.ruslan.growsseth.item.GrowssethItems.RESEARCHER_HORN
 import net.fabricmc.fabric.api.loot.v2.LootTableSource
-import net.minecraft.resources.ResourceLocation
-import net.minecraft.server.packs.resources.ResourceManager
+import net.minecraft.resources.ResourceKey
 import net.minecraft.world.item.RecordItem
 import net.minecraft.world.level.storage.loot.BuiltInLootTables
-import net.minecraft.world.level.storage.loot.LootDataManager
 import net.minecraft.world.level.storage.loot.LootPool
 import net.minecraft.world.level.storage.loot.LootTable
 import net.minecraft.world.level.storage.loot.entries.LootItem
@@ -38,7 +35,7 @@ object VanillaStructureLoot {
         .filterIsInstance<RecordItem>()
         .minus(SKULK_DISCS)
 
-    fun onModifyLootTables(resourceManager: ResourceManager, lootManager: LootDataManager, id: ResourceLocation, tableBuilder: LootTable.Builder, source: LootTableSource) {
+    fun onModifyLootTables(id: ResourceKey<LootTable>, tableBuilder: LootTable.Builder, source: LootTableSource) {
         if (MiscConfig.modLootInVanillaStructures) {
             val poolBuilder = LootPool.lootPool()
             if (STRONGHOLD_LOOT == id) {
