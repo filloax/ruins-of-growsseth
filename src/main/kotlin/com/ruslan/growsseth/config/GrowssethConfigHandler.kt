@@ -26,7 +26,7 @@ object GrowssethConfigHandler {
     fun initConfig() {
         CONFIGURATOR.register(GrowssethConfig::class.java)
         config = CONFIGURATOR.getConfig(GrowssethConfig::class.java).also { c ->
-            c.load()
+            c.load { }
             afterLoadConfig(c)
         }
     }
