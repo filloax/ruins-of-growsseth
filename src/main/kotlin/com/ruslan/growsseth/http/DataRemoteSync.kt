@@ -1,8 +1,12 @@
 package com.ruslan.growsseth.http
 
+import com.filloax.fxlib.savedata.FxSavedData
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParseException
 import com.google.gson.reflect.TypeToken
+import com.mojang.serialization.Codec
+import com.mojang.serialization.codecs.RecordCodecBuilder
+import com.mojang.serialization.codecs.UnboundedMapCodec
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.config.GrowssethConfig
 import com.ruslan.growsseth.config.WebConfig
@@ -328,33 +332,20 @@ object DataRemoteSync {
 
 inline fun <reified T> genericType(): Type = object: TypeToken<T>() {}.type
 
-class DataSyncMemorySavedData private constructor ()
-    : SavedData() {
-    val lastEndpointOutputs: MutableMap<String, String> = mutableMapOf()
+class DataSyncMemorySavedData private constructor (
+    lastEndpointOutputs: Map<String, String> = mapOf()
+) : FxSavedData<DataSyncMemorySavedData>(CODEC) {
+    val lastEndpointOutputs: MutableMap<String, String> = lastEndpointOutputs.toMutableMap()
 
     companion object {
-        private val factory = Factory(::DataSyncMemorySavedData, ::load, DataFixTypes.STRUCTURE)
+        val CODEC: Codec<DataSyncMemorySavedData> = RecordCodecBuilder.create { builder -> builder.group(
+            Codec.unboundedMap(Codec.STRING, Codec.STRING).fieldOf("lastEndpointOutputs").forGetter(DataSyncMemorySavedData::lastEndpointOutputs)
+        ).apply(builder, ::DataSyncMemorySavedData) }
+        private val DEF = define("growsseth_datasync_memory", ::DataSyncMemorySavedData, CODEC)
 
         @JvmStatic
         fun get(level: ServerLevel): DataSyncMemorySavedData {
-            return level.dataStorage.computeIfAbsent(factory, "growsseth_datasync_memory")
+            return level.loadData(DEF)
         }
-
-        private fun load(compoundTag: CompoundTag): DataSyncMemorySavedData {
-            val out = DataSyncMemorySavedData()
-            compoundTag.getCompound("lastEndpointOutputs")?.let { lastEndpointOutputsTag ->
-                lastEndpointOutputsTag.allKeys.forEach {
-                    out.lastEndpointOutputs[it] = lastEndpointOutputsTag.getString(it)
-                }
-            }
-            return out
-        }
-    }
-
-    override fun save(compoundTag: CompoundTag): CompoundTag {
-        val lastEndpointOutputsTag = CompoundTag()
-        lastEndpointOutputs.forEach { lastEndpointOutputsTag.put(it.key, StringTag.valueOf(it.value)) }
-        compoundTag.put("lastEndpointOutputs", lastEndpointOutputsTag)
-        return compoundTag
     }
 }
