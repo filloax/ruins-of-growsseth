@@ -1,5 +1,6 @@
 package com.ruslan.growsseth.mixin.client;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import com.ruslan.growsseth.entity.researcher.Researcher;
 import net.minecraft.client.model.VillagerModel;
 import net.minecraft.world.entity.Entity;
@@ -9,11 +10,12 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(VillagerModel.class)
 public abstract class VillagerModelMixin {
+    // Errors are normal apparently
     @ModifyVariable(
         at = @At(value = "STORE", ordinal = 0),
         method = "setupAnim", ordinal = 0
     )
-    private boolean researcherUnhappyCheck(boolean bl, Entity entity) {
+    private boolean researcherUnhappyCheck(boolean bl, @Local(argsOnly = true) Entity entity) {
         if (entity instanceof Researcher researcher) {
             return researcher.getUnhappyCounter() > 0;
         }

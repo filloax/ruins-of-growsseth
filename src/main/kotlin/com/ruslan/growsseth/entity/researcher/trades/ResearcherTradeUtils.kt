@@ -9,7 +9,6 @@ import com.ruslan.growsseth.entity.researcher.Researcher
 import com.ruslan.growsseth.maps.DestinationType
 import com.ruslan.growsseth.maps.updateMapToPos
 import com.ruslan.growsseth.maps.updateMapToStruct
-import com.ruslan.growsseth.mixin.item.mapitem.MapItemAccessor
 import net.minecraft.core.BlockPos
 import net.minecraft.core.RegistryAccess
 import net.minecraft.core.component.DataComponents
@@ -20,6 +19,7 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.MapItem
 import net.minecraft.world.item.trading.MerchantOffer
 import net.minecraft.world.level.saveddata.maps.MapId
+import javax.xml.crypto.Data
 import kotlin.jvm.optionals.getOrNull
 
 object ResearcherTradeUtils {
@@ -52,8 +52,7 @@ object ResearcherTradeUtils {
                 }, {
                     DestinationType.auto(it)
                 })
-                updateMapToPos(
-                    itemStack,
+                itemStack.updateMapToPos(
                     level,
                     mapMemory.pos,
                     scale,
@@ -62,7 +61,7 @@ object ResearcherTradeUtils {
                 )
                 val mapSavedData = MapItem.getSavedData(MapId(mapMemory.mapId), researcher.level())
                 if (mapSavedData != null) {
-                    MapItemAccessor.callStoreMapData(itemStack, mapMemory.mapId)
+                    itemStack[DataComponents.MAP_ID] = MapId(mapMemory.mapId)
                 } else {
                     RuinsOfGrowsseth.LOGGER.info(
                         "Tried setting res. known map data from id ${mapMemory.mapId} but was null, making new"
@@ -96,8 +95,7 @@ object ResearcherTradeUtils {
                     DestinationType.auto(it)
                 })
 
-                updateMapToPos(
-                    itemStack,
+                itemStack.updateMapToPos(
                     level,
                     pos,
                     scale,
@@ -120,8 +118,7 @@ object ResearcherTradeUtils {
 
         if (!known) {
             // For community version (locate map functionality)
-            updateMapToStruct(
-                itemStack,
+            itemStack.updateMapToStruct(
                 level,
                 mapData.structure,
                 researcher.blockPosition(),

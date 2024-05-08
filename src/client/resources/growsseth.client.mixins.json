@@ -8,8 +8,6 @@
   "client": [
     "AdvancementTabMixin",
     "EasterEggMixinClient$AbstractZombieRendererMixin",
-    "MapRendererInstanceMixin",
-    "MultiPlayerGameModeMixin",
     "VillagerModelMixin",
     "custommapitem.CartographyTableScreenMixin",
     "custommapitem.ItemFrameRendererMixin",

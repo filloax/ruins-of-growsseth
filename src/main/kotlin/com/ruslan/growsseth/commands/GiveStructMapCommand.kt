@@ -78,8 +78,8 @@ object GiveStructMapCommand {
         // Call the thing with either struct tag or key
         try {
             structureArg.unwrap()
-                .ifLeft { updateMapToStruct(mapStack, serverLevel, it, blockPos, 100, scale = 3) }
-                .ifRight { updateMapToStruct(mapStack, serverLevel, it, blockPos, 100, scale = 3) }
+                .ifLeft { mapStack.updateMapToStruct(serverLevel, it, blockPos, 100, scale = 3) }
+                .ifRight { mapStack.updateMapToStruct(serverLevel, it, blockPos, 100, scale = 3) }
         } catch (e: Exception) {
             throw ERROR_STRUCTURE_INVALID.create(structureArg)
         }

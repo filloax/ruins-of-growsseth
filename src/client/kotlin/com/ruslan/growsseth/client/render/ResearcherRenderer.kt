@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.MobRenderer
 import net.minecraft.client.renderer.entity.layers.CustomHeadLayer
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer
+import net.minecraft.core.component.DataComponents
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.HumanoidArm
 import net.minecraft.world.entity.LivingEntity
@@ -46,7 +47,7 @@ class ResearcherRenderer(context: EntityRendererProvider.Context) : MobRenderer<
                     context.itemInHandRenderer.renderItem(researcher,  itemStack, displayContext, bl, poseStack, buffer, packedLight)
                     poseStack.popPose()
                 }
-                else if (researcher.isAggressive || itemStack.item is PotionItem || itemStack.item.isEdible || itemStack.`is`(Items.ENDER_PEARL))
+                else if (researcher.isAggressive || itemStack.item is PotionItem || itemStack[DataComponents.FOOD] != null || itemStack.`is`(Items.ENDER_PEARL))
                     super.renderArmWithItem(researcher, itemStack, displayContext, arm, poseStack, buffer, packedLight)
             }
         })

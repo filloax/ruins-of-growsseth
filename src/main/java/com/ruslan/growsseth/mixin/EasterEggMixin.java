@@ -55,15 +55,15 @@ public class EasterEggMixin {
             method = "defineSynchedData",
             at = @At("RETURN")
         )
-        private void onDefineSynchedData(CallbackInfo ci) {
-            this.getEntityData().define(DATA_IS_GUBER, false);
+        private void onDefineSynchedData(SynchedEntityData.Builder builder, CallbackInfo ci) {
+            builder.define(DATA_IS_GUBER, false);
         }
 
         @Inject(
             method = "finalizeSpawn",
             at = @At("RETURN")
         )
-        private void onFinalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType reason, SpawnGroupData spawnData, CompoundTag dataTag, CallbackInfoReturnable<SpawnGroupData> cir) {
+        private void onFinalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType reason, SpawnGroupData spawnData, CallbackInfoReturnable<SpawnGroupData> cir) {
             float value = random.nextFloat();
             if (value < MiscConfig.zombieGuberSpawnChance / 100) {
                 setIsGuber(true);
