@@ -4,7 +4,9 @@ import com.filloax.fxlib.*
 import com.filloax.fxlib.nbt.*
 import com.filloax.fxlib.codec.*
 import com.filloax.fxlib.entity.getPersistData
+import com.filloax.fxlib.savedata.FxSavedData
 import com.mojang.serialization.Codec
+import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.entity.GrowssethEntities
 import com.ruslan.growsseth.entity.SpawnTimeTracker
@@ -430,35 +432,22 @@ object GrowssethExtraEvents {
     }
 
     class EventsSavedData private constructor(
-        val alreadyRan: MutableSet<String> = mutableSetOf(),
-        val removeResearchersTimes: MutableMap<String, Long> = mutableMapOf(),
-    ) : SavedData() {
-        companion object {
-            val ALREADY_RAN_CODEC: Codec<MutableSet<String>> = mutableSetCodec(Codec.STRING)
-            val REMOVE_RES_TIMES_CODEC: Codec<MutableMap<String, Long>> = mutableMapCodec(Codec.STRING, Codec.LONG)
+        alreadyRan: Set<String> = setOf(),
+        removeResearchersTimes: Map<String, Long> = mapOf(),
+    ) : FxSavedData<EventsSavedData>(CODEC) {
+        val alreadyRan: MutableSet<String> = alreadyRan.toMutableSet()
+        val removeResearchersTimes: MutableMap<String, Long> = removeResearchersTimes.toMutableMap()
 
-            private val factory = Factory(::EventsSavedData, ::load, DataFixTypes.SAVED_DATA_COMMAND_STORAGE)
+        companion object {
+            val CODEC: Codec<EventsSavedData> = RecordCodecBuilder.create { builder -> builder.group(
+                Codec.STRING.mutableSetOf().fieldOf("alreadyRan").forGetter(EventsSavedData::alreadyRan),
+                Codec.unboundedMap(Codec.STRING, Codec.LONG).fieldOf("removeResearchersTimes").forGetter(EventsSavedData::removeResearchersTimes),
+            ).apply(builder, ::EventsSavedData) }
+            private val DEF = define("growssethEvents", ::EventsSavedData, CODEC)
 
             fun get(server: MinecraftServer): EventsSavedData {
-                val level = server.overworld()
-                return level.dataStorage.computeIfAbsent(factory, "growssethEvents")
+                return server.loadData(DEF)
             }
-
-            private fun load(tag: CompoundTag): EventsSavedData {
-                return EventsSavedData(
-                    tag.loadField("alreadyRan", ALREADY_RAN_CODEC) ?: run {
-                        RuinsOfGrowsseth.LOGGER.warn("Events saved data doesn't have alreadyRan")
-                        mutableSetOf()
-                    },
-                    tag.loadField("removeResearchersTimes", REMOVE_RES_TIMES_CODEC) ?: mutableMapOf(),
-                )
-            }
-        }
-
-        override fun save(compoundTag: CompoundTag): CompoundTag {
-            compoundTag.saveField("alreadyRan", ALREADY_RAN_CODEC, ::alreadyRan)
-            compoundTag.saveField("removeResearchersTimes", REMOVE_RES_TIMES_CODEC, ::removeResearchersTimes)
-            return compoundTag
         }
     }
 }
