@@ -10,7 +10,7 @@ import net.fabricmc.fabric.api.networking.v1.PacketSender
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
 import net.minecraft.core.registries.Registries
-import net.minecraft.data.worldgen.BootstapContext
+import net.minecraft.data.worldgen.BootstrapContext
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.network.ServerGamePacketListenerImpl
@@ -96,7 +96,7 @@ object GrowssethWorldPreset {
         return isGrowssethPreset(server)
     }
 
-    fun build(ctx: BootstapContext<WorldPreset>): WorldPreset {
+    fun build(ctx: BootstrapContext<WorldPreset>): WorldPreset {
         val noiseSettings = ctx.lookup(Registries.NOISE_SETTINGS)
         val biomes = ctx.lookup(Registries.BIOME)
         val multiNoiseBiomeSourceParameterLists = ctx.lookup(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST)
@@ -134,7 +134,7 @@ object GrowssethWorldPreset {
         ))
     }
 
-    fun bootstrapNoiseBiomeSourcesSettings(ctx: BootstapContext<MultiNoiseBiomeSourceParameterList>) {
+    fun bootstrapNoiseBiomeSourcesSettings(ctx: BootstrapContext<MultiNoiseBiomeSourceParameterList>) {
         val biomes = ctx.lookup(Registries.BIOME)
         ctx.register(
             GrowssethModBiomeSources.GROWSSETH_OVERWORLD_SETTINGS,

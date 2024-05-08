@@ -5,7 +5,7 @@ import com.ruslan.growsseth.structure.pieces.ResearcherTent
 import com.ruslan.growsseth.structure.structure.ResearcherTentStructure
 import com.ruslan.growsseth.utils.resLoc
 import net.minecraft.core.registries.Registries
-import net.minecraft.data.worldgen.BootstapContext
+import net.minecraft.data.worldgen.BootstrapContext
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.TagKey
@@ -160,7 +160,7 @@ object GrowssethStructures {
         return key
     }
 
-    class Bootstrapper(private val ctx: BootstapContext<Structure>) {
+    class Bootstrapper(private val ctx: BootstrapContext<Structure>) {
         // TODO: switch all structures to datagen so datagen for tags etc works properly
 //        private fun registerSimpleJigsaw(key: ResourceKey<Structure>) {
 //            context.register(
@@ -184,7 +184,7 @@ object GrowssethStructures {
             registerTents()
         }
     }
-    fun bootstrap(ctx: BootstapContext<Structure>) = Bootstrapper(ctx).bootstrap()
+    fun bootstrap(ctx: BootstrapContext<Structure>) = Bootstrapper(ctx).bootstrap()
 
     data class StructureInfo(
         val key: ResourceKey<Structure>,
