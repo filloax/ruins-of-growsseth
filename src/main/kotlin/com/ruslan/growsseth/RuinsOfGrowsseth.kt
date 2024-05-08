@@ -15,7 +15,7 @@ import com.ruslan.growsseth.http.GrowssethApi
 import com.ruslan.growsseth.http.GrowssethExtraEvents
 import com.ruslan.growsseth.item.GrowssethCreativeModeTabs
 import com.ruslan.growsseth.item.GrowssethItems
-import com.ruslan.growsseth.maps.GrowssethMapDecorations
+import com.ruslan.growsseth.item.GrowssethMapDecorations
 import com.ruslan.growsseth.structure.*
 import com.ruslan.growsseth.utils.resLoc
 import com.ruslan.growsseth.worldgen.worldpreset.LocationNotifListener
@@ -54,7 +54,6 @@ object RuinsOfGrowsseth : ModInitializer {
         GameMasterResearcherTradesProvider.subscribe()
         GrowssethExtraEvents.init()
         ResearcherDialogueApiListener.init()
-        GrowssethMapDecorations.init()
 
         initItemGroups()
         registerResourceListeners()
@@ -71,6 +70,7 @@ object RuinsOfGrowsseth : ModInitializer {
         GrowssethCreativeModeTabs.registerCreativeModeTabs()
         GrowssethItems.registerItems{ id, value -> Registry.register(BuiltInRegistries.ITEM, id, value) }
         GrowssethItems.Instruments.registerInstruments{ id, value -> Registry.register(BuiltInRegistries.INSTRUMENT, id, value) }
+        GrowssethMapDecorations.registerMapDecorations{ id, value -> Registry.registerForHolder(BuiltInRegistries.MAP_DECORATION_TYPE, id, value) }
         GrowssethEffects.registerEffects{ id, value -> Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, id, value) }
         GrowssethEntities.registerEntityTypes{ id, value -> Registry.register(BuiltInRegistries.ENTITY_TYPE, id, value) }
         GrowssethStructurePieceTypes.registerStructurePieces{ id, value -> Registry.register(BuiltInRegistries.STRUCTURE_PIECE, id, value) }

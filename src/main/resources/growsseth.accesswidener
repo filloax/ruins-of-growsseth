@@ -32,6 +32,7 @@ accessible field net/minecraft/world/level/levelgen/structure/pools/SinglePoolEl
 accessible field net/minecraft/world/level/levelgen/structure/pools/ListPoolElement elements Ljava/util/List;
 
 accessible field net/minecraft/world/item/trading/MerchantOffer rewardExp Z
+mutable field net/minecraft/world/item/trading/MerchantOffer rewardExp Z
 
 mutable field net/minecraft/world/level/levelgen/structure/placement/RandomSpreadStructurePlacement spacing I
 accessible field net/minecraft/world/level/levelgen/structure/placement/RandomSpreadStructurePlacement spacing I

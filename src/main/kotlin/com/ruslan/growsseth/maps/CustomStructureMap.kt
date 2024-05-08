@@ -9,6 +9,7 @@ import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
 import net.minecraft.core.HolderSet
 import net.minecraft.core.RegistryAccess
+import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.Registries
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
@@ -19,6 +20,7 @@ import net.minecraft.world.item.MapItem
 import net.minecraft.world.level.levelgen.structure.BuiltinStructures
 import net.minecraft.world.level.levelgen.structure.Structure
 import net.minecraft.world.level.saveddata.maps.MapDecoration
+import net.minecraft.world.level.saveddata.maps.MapDecorationTypes
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData
 import org.apache.logging.log4j.Level
 import java.lang.IllegalStateException
@@ -41,7 +43,7 @@ fun updateMapToPos(
     level: ServerLevel,
     pos: BlockPos,
     scale: Int = 1,
-    destinationType: DestinationType = DestinationType.vanilla(MapDecoration.Type.TARGET_X),
+    destinationType: DestinationType = DestinationType.vanilla(MapDecorationTypes.TARGET_X),
     displayName: String? = null,
     unlimitedTracking: Boolean = true,
 ) {
@@ -50,14 +52,13 @@ fun updateMapToPos(
     )
     MapItem.renderBiomePreviewMap(level, mapStack)
 
-    if (destinationType.isVanilla) MapItemSavedData.addTargetDecoration(mapStack, pos, "+", destinationType.vanillaType!!)
-    else if (destinationType.isCustom) CustomMapData.addTargetCustomDecoration(mapStack, pos, "+", destinationType.customType!!)
+    if (destinationType.isSet) MapItemSavedData.addTargetDecoration(mapStack, pos, "+", destinationType.type!!)
 
     displayName?.let {
         if (it == "reset") {
-            mapStack.resetHoverName()
+            mapStack.remove(DataComponents.CUSTOM_NAME)
         } else {
-            mapStack.hoverName = Component.translatable(it)
+            mapStack[DataComponents.CUSTOM_NAME] = Component.translatable(it)
         }
     }
 
@@ -65,7 +66,7 @@ fun updateMapToPos(
 }
 
 fun invalidateMap(mapStack: ItemStack) {
-    mapStack.resetHoverName()
+    mapStack.remove(DataComponents.CUSTOM_NAME)
 }
 
 /**
@@ -165,7 +166,7 @@ private fun updateMapToStructWithHolder(
     val destString = destinationHolderSet.unwrapKey().toString()
     if (async) {
         RuinsOfGrowsseth.LOGGER.log(Level.INFO, "Starting async structure '$destString' search...")
-        mapStack.hoverName = Component.translatable("menu.working")
+        mapStack[DataComponents.CUSTOM_NAME] = Component.translatable("menu.working")
 
         AsyncLocator.locate(
             level,
@@ -209,50 +210,7 @@ private fun updateMapToStructWithHolder(
     return future
 }
 
-class DestinationType private constructor(val vanillaType: MapDecoration.Type? = null, val customType: CustomMapDecorationType? = null, val auto: Boolean = false) {
-    init {
-        assert((vanillaType == null) or (customType == null)) { "must set one between customType or vanillaType" }
-    }
 
-    val isVanilla get() = vanillaType != null
-    val isCustom get() = customType != null
-
-    companion object {
-        val EMPTY = DestinationType()
-        val AUTO = DestinationType(auto = true)
-
-        fun vanilla(type: MapDecoration.Type): DestinationType {
-            return DestinationType(vanillaType = type)
-        }
-        fun custom(type: CustomMapDecorationType): DestinationType {
-            return DestinationType(customType = type)
-        }
-        fun auto(struct: Holder<Structure>): DestinationType {
-            return auto(struct.unwrapKey().get())
-        }
-        fun auto(structKey: ResourceKey<Structure>): DestinationType {
-            VANILLA_STRUCT_ICONS[structKey]?.let { type ->
-                return vanilla(type)
-            }
-            return CustomMapData.decorationTypeByStructure(structKey)?.let { custom(it) } ?: vanilla(MapDecoration.Type.RED_X)
-        }
-        fun auto(structTag: TagKey<Structure>, registryAccess: RegistryAccess): DestinationType {
-            val matchingCustomDecorations = CustomMapData.decorationTypesByStructureTag(registryAccess, structTag)
-            if (matchingCustomDecorations.isNotEmpty()) {
-                return custom(matchingCustomDecorations.first())
-            }
-            val tagHolders = registryAccess.registryOrThrow(Registries.STRUCTURE).getTag(structTag).orElseThrow()
-            VANILLA_STRUCT_ICONS.forEach {
-                tagHolders.forEach { holder ->
-                    if (holder.unwrapKey().get().location() == it.key.location()) {
-                        return vanilla(it.value)
-                    }
-                }
-            }
-            return vanilla(MapDecoration.Type.RED_X)
-        }
-    }
-}
 
 // Private stuff
 
@@ -262,8 +220,3 @@ private fun getHolderSet(level: ServerLevel, destination: ResourceKey<Structure>
     val registry = level.registryAccess().registryOrThrow(Registries.STRUCTURE)
     return HolderSet.direct(registry.getHolderOrThrow(destination))
 }
-
-private val VANILLA_STRUCT_ICONS = mapOf<ResourceKey<Structure>, MapDecoration.Type>(
-    BuiltinStructures.WOODLAND_MANSION to MapDecoration.Type.MANSION,
-    BuiltinStructures.OCEAN_MONUMENT to MapDecoration.Type.MONUMENT,
-)
