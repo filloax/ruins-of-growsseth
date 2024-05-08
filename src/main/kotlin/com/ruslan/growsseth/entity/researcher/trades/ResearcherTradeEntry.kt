@@ -18,6 +18,7 @@ import net.minecraft.util.RandomSource
 import net.minecraft.util.random.Weight
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.trading.ItemCost
 import net.minecraft.world.item.trading.MerchantOffer
 import kotlin.math.roundToInt
 
@@ -52,7 +53,7 @@ data class ResearcherTradeEntry(
  */
 class ResearcherItemListing(
     gives: ItemStack,
-    wants: List<ItemStack>,
+    wants: List<ItemCost>,
     maxUses: Int,
     val mapInfo: TradeItemMapInfo? = null,
     val diaryId: String? = null,
@@ -64,7 +65,7 @@ class ResearcherItemListing(
     companion object {
         val CODEC: Codec<ResearcherItemListing> = RecordCodecBuilder.create { b -> b.group(
             ItemStack.CODEC.fieldOf("gives").forGetter(ResearcherItemListing::gives),
-            Codec.list(ItemStack.CODEC).fieldOf("wants").forGetter(ResearcherItemListing::wants),
+            ItemCost.CODEC.listOf().fieldOf("wants").forGetter(ResearcherItemListing::wants),
             Codec.INT.fieldOf("maxUses").forGetter(ResearcherItemListing::maxUses),
             TradeItemMapInfo.CODEC.optionalFieldOf("mapInfo").forNullableGetter(ResearcherItemListing::mapInfo),
             Codec.STRING.optionalFieldOf("diaryId").forNullableGetter(ResearcherItemListing::diaryId),

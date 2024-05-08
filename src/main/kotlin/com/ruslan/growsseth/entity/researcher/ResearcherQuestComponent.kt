@@ -6,6 +6,7 @@ import com.filloax.fxlib.alwaysTruePredicate
 import com.filloax.fxlib.codec.decodeNbt
 import com.filloax.fxlib.codec.encodeNbt
 import com.filloax.fxlib.codec.simpleCodecErr
+import com.filloax.fxlib.codec.throwableCodecErr
 import com.filloax.fxlib.iterBlocks
 import com.filloax.fxlib.nbt.getCompoundOrNull
 import com.filloax.fxlib.nbt.getOrPut
@@ -91,7 +92,9 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
                 return QuestData()
             }
             val tag = ResearcherSavedData.getPersistent(server).data.getCompound(QUESTS_TAG_ID).getCompound(QUEST_NAME).getCompoundOrNull(NBT_TAG_PERSIST)
-            return tag?.let { PERSIST_CODEC.decodeNbt(it) .getOrThrow(false, simpleCodecErr("ResearcherQuestComponent getPersistentData")).first }
+            return tag?.let { PERSIST_CODEC.decodeNbt(it) .getOrThrow(
+                throwableCodecErr("ResearcherQuestComponent getPersistentData")
+            ).first }
                 ?: QuestData()
         }
 
@@ -101,7 +104,7 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
             }
             val researcherData = ResearcherSavedData.getPersistent(server)
             val questsTag = researcherData.data.getOrPut(QUESTS_TAG_ID, CompoundTag()).getOrPut(QUEST_NAME, CompoundTag())
-            questsTag.put(NBT_TAG_PERSIST, PERSIST_CODEC.encodeNbt(data).getOrThrow(true, simpleCodecErr("writePersistentData quest")))
+            questsTag.put(NBT_TAG_PERSIST, PERSIST_CODEC.encodeNbt(data).getOrThrow(throwableCodecErr("writePersistentData quest")))
             researcherData.setDirty()
             updateCurrentResearchers(server)
         }

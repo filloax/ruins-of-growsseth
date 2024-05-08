@@ -39,8 +39,8 @@ class JigsawPieceTrigger : SimpleCriterionTrigger<JigsawPieceTrigger.Instance>()
 
         companion object {
             val CODEC: Codec<Instance> = RecordCodecBuilder.create { builder -> builder.group(
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(Instance::player),
-                ExtraCodecs.strictOptionalField(JigsawPiecePredicate.CODEC, "jigsawPiecePredicate").forGetter(Instance::jigsawPiecePredicate),
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(Instance::player),
+                JigsawPiecePredicate.CODEC.optionalFieldOf("jigsawPiecePredicate").forGetter(Instance::jigsawPiecePredicate),
             ).apply(builder, ::Instance) }
         }
 
