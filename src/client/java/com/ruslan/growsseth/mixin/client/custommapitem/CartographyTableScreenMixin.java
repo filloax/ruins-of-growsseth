@@ -1,5 +1,7 @@
 package com.ruslan.growsseth.mixin.client.custommapitem;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.ruslan.growsseth.maps.CustomMapItems;
 import net.minecraft.client.gui.screens.inventory.CartographyTableScreen;
 import net.minecraft.world.item.Item;
@@ -11,8 +13,8 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(CartographyTableScreen.class)
 public abstract class CartographyTableScreenMixin {
     // See CustomMapItems.isCustomMapItem doc
-    @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;is(Lnet/minecraft/world/item/Item;)Z"), method = "renderBg(Lnet/minecraft/client/gui/GuiGraphics;FII)V")
-    private boolean recognizeMapsFromClass(ItemStack instance, Item item) {
-        return CustomMapItems.checkCustomMapItem(instance, item);
+    @WrapOperation(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;is(Lnet/minecraft/world/item/Item;)Z"), method = "renderBg(Lnet/minecraft/client/gui/GuiGraphics;FII)V")
+    private boolean recognizeMapsFromClass(ItemStack instance, Item item, Operation<Boolean> original) {
+        return CustomMapItems.checkMapItemWrapper(instance, item, original);
     }
 }

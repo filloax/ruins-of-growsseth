@@ -1,6 +1,6 @@
 package com.ruslan.growsseth.mixin.client;
 
-import com.llamalad7.mixinextras.injector.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.ruslan.growsseth.advancements.GrowssethAdvancements;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.advancements.AdvancementTab;

@@ -1,26 +1,12 @@
 package com.ruslan.growsseth.entity.researcher.trades
 
 import com.filloax.fxlib.FxLibServices
-import com.filloax.fxlib.getStructTagOrKey
-import com.filloax.fxlib.getYAtXZ
-import com.mojang.datafixers.util.Either
-import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.entity.researcher.Researcher
-import com.ruslan.growsseth.maps.DestinationType
-import com.ruslan.growsseth.maps.updateMapToPos
-import com.ruslan.growsseth.maps.updateMapToStruct
-import com.ruslan.growsseth.mixin.item.mapitem.MapItemAccessor
-import net.minecraft.core.BlockPos
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.Item
-import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.MapItem
-import net.minecraft.world.item.trading.MerchantOffer
 import net.minecraft.world.item.trading.MerchantOffers
-import java.util.UUID
+import java.util.*
 
 /**
  * Server-side

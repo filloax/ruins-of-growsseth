@@ -1,4 +1,4 @@
-package com.ruslan.growsseth.mixin;
+package com.ruslan.growsseth.mixin.vanillafixes;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,10 +17,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 // Big thanks to Naz Ikhsan from https://bugs.mojang.com/browse/MC-102223 for the painting fix
 @Mixin(StructureTemplate.class)
-public abstract class StructureTemplateMixin {
+public abstract class PaintingFixesStructureTemplateMixin {
     // Injects into StructureTemplate#placeEntities, inside the lambda of createEntityIgnoreException
     @Inject(method = "method_17917", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;moveTo(DDDFF)V", shift = At.Shift.AFTER))
-    private static void fixPaintingPlacement(Rotation rotation, Mirror mirror, Vec3 vec3, boolean bl, ServerLevelAccessor level, CompoundTag tag, Entity entity, CallbackInfo ci) {
+    private static void fixPaintingPlacement(Rotation rotation, Mirror mirror, Vec3 vec3, boolean bl, ServerLevelAccessor serverLevelAccessor, Entity entity, CallbackInfo ci) {
         if (entity instanceof Painting painting) {
             var pos = new BlockPos.MutableBlockPos();
             pos.set(painting.getPos());

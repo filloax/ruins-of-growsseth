@@ -8,18 +8,24 @@ import net.minecraft.world.item.Items;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
+import java.util.Optional;
+
 @Mixin(ItemStack.class)
 public abstract class ItemStackStructureBookMixin {
-    @ModifyReturnValue(method = "of(Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/world/item/ItemStack;", at = @At("RETURN"))
-    private static ItemStack onCreateFromTag(ItemStack item) {
-        if (
-            MixinHelpers.placingBlockEntityInStructure
-            && (item.is(Items.WRITABLE_BOOK) || item.is(Items.WRITTEN_BOOK))
-        ) {
-            if (StructureBooks.bookIsTemplate(item)) {
-                 return StructureBooks.loadTemplate(item);
-            }
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    @ModifyReturnValue(method = "parse", at = @At("RETURN"))
+    private static Optional<ItemStack> onCreateFromTag(Optional<ItemStack> original) {
+        if (MixinHelpers.placingBlockEntityInStructure) {
+            return original.map(item -> {
+                if (
+                    (item.is(Items.WRITABLE_BOOK) || item.is(Items.WRITTEN_BOOK))
+                    && StructureBooks.bookIsTemplate(item)
+                ) {
+                    return StructureBooks.loadTemplate(item);
+                }
+                return item;
+            });
         }
-        return item;
+        return original;
     }
 }
