@@ -1,7 +1,9 @@
 package com.ruslan.growsseth.structure.structure
 
+import com.filloax.fxlib.FxLibServices
 import com.mojang.serialization.Codec
 import com.mojang.serialization.DataResult
+import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.ruslan.growsseth.structure.GrowssethStructures
 import com.ruslan.growsseth.structure.pieces.ResearcherTent
@@ -31,8 +33,7 @@ class ResearcherTentStructure(
 ) : SimpleStructure(structureSettings, forcePosUseY) {
     companion object {
         @JvmStatic
-        val CODEC: Codec<ResearcherTentStructure> = ExtraCodecs.validate(
-            RecordCodecBuilder.mapCodec<ResearcherTentStructure> { builder ->
+        val CODEC: MapCodec<ResearcherTentStructure> = RecordCodecBuilder.mapCodec { builder ->
                 builder.group(
                     settingsCodec(builder),
                     Codec.BOOL.optionalFieldOf("force_pos_uses_y").forGetter{ Optional.of(it.nextPlaceUseY) },
@@ -46,7 +47,7 @@ class ResearcherTentStructure(
                         forcePosUseY.orElse(false),
                     )
                 }
-            }) { structure -> DataResult.success(structure) }.codec()
+            }
 
 
         // Taken from nbt, so more related to structure piece, but shouldn't change here

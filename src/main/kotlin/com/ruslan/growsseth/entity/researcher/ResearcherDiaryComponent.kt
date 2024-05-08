@@ -266,15 +266,15 @@ class ResearcherDiaryComponent(val researcher: Researcher) {
     }
 
     fun writeNbt(tag: CompoundTag) {
-        tag.put("DiaryData", PERSIST_CODEC.encodeStart(NbtOps.INSTANCE, data).getOrThrow(false) {
-            RuinsOfGrowsseth.LOGGER.error("Error in encoding DiaryData: $it")
+        tag.put("DiaryData", PERSIST_CODEC.encodeStart(NbtOps.INSTANCE, data).getOrThrow {
+            throw Exception("Error in encoding DiaryData: $it")
         })
     }
 
     fun readNbt(tag: CompoundTag) {
         tag.get("DiaryData")?.let { diaryData ->
-            data = PERSIST_CODEC.decode(NbtOps.INSTANCE, diaryData).getOrThrow(false) {
-                RuinsOfGrowsseth.LOGGER.error("Error in decoding DiaryData: $it")
+            data = PERSIST_CODEC.decode(NbtOps.INSTANCE, diaryData).getOrThrow {
+                throw Exception("Error in decoding DiaryData: $it")
             }.first
         }
     }

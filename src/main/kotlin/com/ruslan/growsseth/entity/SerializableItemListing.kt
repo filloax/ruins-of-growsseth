@@ -6,11 +6,13 @@ import net.minecraft.util.RandomSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.npc.VillagerTrades
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.trading.ItemCost
 import net.minecraft.world.item.trading.MerchantOffer
+import java.util.*
 
 open class SerializableItemListing(
     val gives: ItemStack,
-    val wants: List<ItemStack>,
+    val wants: List<ItemCost>,
     val maxUses: Int,
     val xp: Int = 0,
     val priceMul: Float = 1f,
@@ -19,7 +21,7 @@ open class SerializableItemListing(
     companion object {
         val CODEC: Codec<SerializableItemListing> = RecordCodecBuilder.create { b -> b.group(
             ItemStack.CODEC.fieldOf("gives").forGetter(SerializableItemListing::gives),
-            Codec.list(ItemStack.CODEC).fieldOf("wants").forGetter(SerializableItemListing::wants),
+            ItemCost.CODEC.listOf().fieldOf("wants").forGetter(SerializableItemListing::wants),
             Codec.INT.fieldOf("maxUses").forGetter(SerializableItemListing::maxUses),
             Codec.INT.fieldOf("xp").forGetter(SerializableItemListing::xp),
             Codec.FLOAT.fieldOf("priceMul").forGetter(SerializableItemListing::priceMul),
@@ -34,7 +36,7 @@ open class SerializableItemListing(
     }
 
     override fun getOffer(trader: Entity, random: RandomSource): MerchantOffer
-        = MerchantOffer(wants[0], wants.getOrElse(1) { ItemStack.EMPTY }, gives, maxUses, xp, priceMul)
+        = MerchantOffer(wants[0], Optional.ofNullable(wants.getOrNull(1)), gives, maxUses, xp, priceMul)
 
 
     override fun equals(other: Any?): Boolean {

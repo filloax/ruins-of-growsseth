@@ -22,6 +22,7 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.network.ServerGamePacketListenerImpl
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.trading.MerchantOffers
+import kotlin.jvm.optionals.getOrDefault
 
 /**
  * For trade modes that are shared between all researcher entities
@@ -103,7 +104,7 @@ abstract class GlobalResearcherTradesProvider protected constructor(
     protected open fun onNewTrades(server: MinecraftServer, newTrades: List<ResearcherItemListing>) {
         if (!isEnabled(server)) return
 
-        val dataList: Tag = ResearcherTradeEntry.LIST_CODEC.encodeNbt(GameMasterResearcherTradesProvider.trades).get().map({it}, { ListTag() })
+        val dataList: Tag = ResearcherTradeEntry.LIST_CODEC.encodeNbt(GameMasterResearcherTradesProvider.trades).result().getOrDefault(ListTag())
         server.playerList.players.forEach { player ->
             val metResearcher = player.getPersistData().getBoolean(Constants.DATA_PLAYER_MET_RESEARCHER)
             if (metResearcher) notifyPlayer(player, newTrades, {
@@ -142,7 +143,7 @@ abstract class GlobalResearcherTradesProvider protected constructor(
         val data = player.getPersistData()
         val metResearcher = player.getPersistData().getBoolean(Constants.DATA_PLAYER_MET_RESEARCHER)
         val itemListingTrades by lazy { trades.map{ it.itemListing } }
-        val dataList by lazy { ResearcherItemListing.LIST_CODEC.encodeNbt(itemListingTrades).get().map({it}, { ListTag() }) }
+        val dataList by lazy { ResearcherItemListing.LIST_CODEC.encodeNbt(itemListingTrades).resultOrPartial().getOrDefault(ListTag()) }
         if (metResearcher)
             data.getListOrNull("ResearcherTradeMemory", Tag.TAG_COMPOUND)?.let { dataListKnown ->
                 val savedTrades = ResearcherItemListing.LIST_CODEC.decodeNbtNullable(dataListKnown) ?: listOf()
