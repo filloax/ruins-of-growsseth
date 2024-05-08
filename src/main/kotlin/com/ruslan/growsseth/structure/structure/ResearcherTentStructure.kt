@@ -8,7 +8,7 @@ import com.ruslan.growsseth.structure.pieces.ResearcherTent
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Vec3i
 import net.minecraft.core.registries.Registries
-import net.minecraft.data.worldgen.BootstapContext
+import net.minecraft.data.worldgen.BootstrapContext
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.TagKey
 import net.minecraft.util.ExtraCodecs
@@ -54,7 +54,7 @@ class ResearcherTentStructure(
         val SIZE = Vec3i(15, 18, 20) // As taken from nbt
         const val BASEMENT_HEIGHT = 10
 
-        fun build(ctx: BootstapContext<Structure>, templatePath: ResourceLocation = ResearcherTent.DEFAULT_ID, offsetY: Int = -BASEMENT_HEIGHT): ResearcherTentStructure {
+        fun build(ctx: BootstrapContext<Structure>, templatePath: ResourceLocation = ResearcherTent.DEFAULT_ID, offsetY: Int = -BASEMENT_HEIGHT): ResearcherTentStructure {
             return ResearcherTentStructure(StructureSettings(
                 ctx.lookup(Registries.BIOME).getOrThrow(TagKey.create(Registries.BIOME, ResourceLocation("growsseth:has_structure/researcher_tent"))),
                 mapOf(),
