@@ -1,4 +1,4 @@
-name: Publish Test Release
+name: Publish Test Release (1.20.6)
  
 on:
   push:
@@ -16,7 +16,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           distribution: "temurin"
-          java-version: 17
+          java-version: 21
 
       - name: Make Gradle Wrapper Executable
         if: ${{ runner.os != 'Windows' }}
@@ -29,8 +29,8 @@ jobs:
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.TOKEN_GITHUB }}"
-          automatic_release_tag: "test-release"
+          automatic_release_tag: "test-release-1.20.6"
           prerelease: true
-          title: "Current Test Release"
+          title: "Current Test Release (1.20.6)"
           files: |
             build/libs/*.jar
