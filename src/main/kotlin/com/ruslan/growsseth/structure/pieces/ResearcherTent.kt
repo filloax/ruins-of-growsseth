@@ -166,7 +166,7 @@ class ResearcherTent : GrTemplateStructurePiece {
                         donkey.addTag(Constants.TAG_RESEARCHER_DONKEY)
                     }
                 else
-                    level.setBlock(pos, Blocks.AIR.defaultBlockState(), SetBlockFlag.NOTIFY_CLIENTS.flag)
+                    level.setBlock(pos, DEFAULT_FENCE.defaultBlockState(), SetBlockFlag.NOTIFY_CLIENTS.flag)
             }
             "jail" -> {
                 jailPos = pos
