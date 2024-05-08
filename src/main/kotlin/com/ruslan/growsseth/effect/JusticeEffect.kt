@@ -13,8 +13,9 @@ class JusticeEffect(category: MobEffectCategory, color: Int) : MobEffect(categor
             true
     }
 
-    override fun applyEffectTick(livingEntity: LivingEntity, amplifier: Int) {
+    override fun applyEffectTick(livingEntity: LivingEntity, amplifier: Int): Boolean {
         if (livingEntity.health < livingEntity.maxHealth)
             livingEntity.heal(1.0f)
+        return true
     }
 }

@@ -12,12 +12,14 @@ import com.ruslan.growsseth.maps.updateMapToStruct
 import com.ruslan.growsseth.mixin.item.mapitem.MapItemAccessor
 import net.minecraft.core.BlockPos
 import net.minecraft.core.RegistryAccess
+import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.MapItem
 import net.minecraft.world.item.trading.MerchantOffer
+import net.minecraft.world.level.saveddata.maps.MapId
 import kotlin.jvm.optionals.getOrNull
 
 object ResearcherTradeUtils {
@@ -58,7 +60,7 @@ object ResearcherTradeUtils {
                     destinationType = destinationType,
                     displayName = mapData.name,
                 )
-                val mapSavedData = MapItem.getSavedData(mapMemory.mapId, researcher.level())
+                val mapSavedData = MapItem.getSavedData(MapId(mapMemory.mapId), researcher.level())
                 if (mapSavedData != null) {
                     MapItemAccessor.callStoreMapData(itemStack, mapMemory.mapId)
                 } else {
@@ -108,7 +110,7 @@ object ResearcherTradeUtils {
                     researcher.storedMapLocations[mapData.structure] = Researcher.MapMemory(
                         pos,
                         destination,
-                        MapItem.getMapId(itemStack) ?: throw IllegalStateException("Map has no id after updating pos! $itemStack"),
+                        itemStack[DataComponents.MAP_ID]?.id ?: throw IllegalStateException("Map has no id after updating pos! $itemStack"),
                     )
                 }
                 researcher.refreshCurrentTrades()
@@ -134,7 +136,7 @@ object ResearcherTradeUtils {
                         researcher.storedMapLocations[mapData.structure] = Researcher.MapMemory(
                             pos,
                             Either.right(it.second.unwrapKey().get()),
-                            MapItem.getMapId(itemStack) ?: throw IllegalStateException("Map item has no id after updating! $itemStack"),
+                            itemStack[DataComponents.MAP_ID]?.id ?: throw IllegalStateException("Map item has no id after updating! $itemStack"),
                         )
                     }
                     researcher.refreshCurrentTrades()

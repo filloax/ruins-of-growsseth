@@ -120,7 +120,7 @@ class RecipesProvider(output: FabricDataOutput, registriesFuture: CompletableFut
 class AdvancementsProvider(output: FabricDataOutput, registryLookup: CompletableFuture<HolderLookup.Provider>) :
     FabricAdvancementProvider(output, registryLookup) {
     override fun generateAdvancement(registryLookup: HolderLookup.Provider, consumer: Consumer<AdvancementHolder>) {
-        StructureAdvancements.generateForStructureDetection(consumer)
+        StructureAdvancements.Bootstrapper(registryLookup).generateForStructureDetection(consumer)
         //DonkeyAdvancements.generateDonkeyAdvancements(consumer) //not needed
     }
 }

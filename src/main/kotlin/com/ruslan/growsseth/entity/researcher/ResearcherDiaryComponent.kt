@@ -21,6 +21,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Vec3i
+import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.Registries
 import net.minecraft.nbt.ByteTag
 import net.minecraft.nbt.CompoundTag
@@ -39,6 +40,7 @@ import net.minecraft.world.entity.ai.targeting.TargetingConditions
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
+import net.minecraft.world.item.component.CustomData
 import net.minecraft.world.level.block.LecternBlock
 import net.minecraft.world.level.block.entity.ChestBlockEntity
 import net.minecraft.world.level.block.entity.LecternBlockEntity
@@ -46,6 +48,7 @@ import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.level.levelgen.structure.BoundingBox
 import net.minecraft.world.level.levelgen.structure.Structure
 import net.minecraft.world.phys.AABB
+import javax.xml.crypto.Data
 
 
 /**
@@ -113,9 +116,9 @@ class ResearcherDiaryComponent(val researcher: Researcher) {
     private fun makeEventDiary(customDiaryData: DiaryEntry): Boolean {
         val success = makeDiary({ customDiaryData }, {
             RuinsOfGrowsseth.LOGGER.info("Created custom remote diary (${it.name}), recording content...")
-        }) { book ->
-            book.orCreateTag.put(DiaryHelper.TAG_REMOVE_DIARIES_ON_PUSH, ByteTag.valueOf(true))
-        }
+        }) { book -> CustomData.update(DataComponents.CUSTOM_DATA, book) { tag ->
+            tag.put(DiaryHelper.TAG_REMOVE_DIARIES_ON_PUSH, ByteTag.valueOf(true))
+        } }
         if (!success) {
             RuinsOfGrowsseth.LOGGER.info("Failed in creating custom remote diary ${customDiaryData.name}")
             return false
@@ -380,7 +383,7 @@ object DiaryHelper {
         if (currentItem?.isEmpty == true) currentItem = null
 
         // If item on lectern that is made by events etc, do not place in chest
-        if (currentItem?.orCreateTag?.contains(TAG_REMOVE_DIARIES_ON_PUSH) == true) {
+        if (currentItem?.let { it[DataComponents.CUSTOM_DATA]?.contains(TAG_REMOVE_DIARIES_ON_PUSH) } == true) {
             currentItem = null
         }
 
@@ -416,9 +419,8 @@ object DiaryHelper {
                 if (slotStack.isEmpty) {
                     container.setItem(slot, stack)
                     return true
-                } else if (slotStack.count <= slotStack.maxStackSize - stack.count && ItemStack.isSameItemSameTags(
-                        stack, slotStack
-                    )
+                } else if (slotStack.count <= slotStack.maxStackSize - stack.count
+                    && ItemStack.isSameItemSameComponents(stack, slotStack)
                 ) {
                     slotStack.grow(stack.count)
                     return true

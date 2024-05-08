@@ -16,6 +16,7 @@ import net.minecraft.util.profiling.ProfilerFiller
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
+import net.minecraft.world.item.trading.ItemCost
 
 // Instanced in init class RuinsOfGrowsseth
 class TradesListener : KotlinJsonResourceReloadListener(JSON, Constants.TRADES_DATA_FOLDER) {
@@ -108,7 +109,7 @@ data class ResearcherTradeObj(
         return ResearcherTradeEntry(
             itemListing = ResearcherItemListing(
                 gives.toItemStack(),
-                wants.map { it.toItemStack() },
+                wants.map { it.toItemCost() },
                 maxUses,
                 gives.map?.unwrap(),
                 gives.diaryId,
@@ -132,6 +133,9 @@ data class ResearcherTradeObj(
             // Add description here so it only gets added once
             map?.unwrap()?.description?.forEach { itemStack.loreLines().add(Component.translatable(it)) }
             return itemStack
+        }
+        fun toItemCost(): ItemCost {
+            return ItemCost(itemFromId(id), amount)
         }
     }
 

@@ -32,7 +32,9 @@ import com.ruslan.growsseth.structure.pieces.ResearcherTent
 import com.ruslan.growsseth.structure.structure.ResearcherTentStructure
 import com.ruslan.growsseth.utils.GrowssethCodecs
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Holder
 import net.minecraft.core.UUIDUtil
+import net.minecraft.core.component.DataComponents
 import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.core.registries.Registries
@@ -52,6 +54,7 @@ import net.minecraft.tags.TagKey
 import net.minecraft.util.RandomSource
 import net.minecraft.world.*
 import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.*
@@ -75,7 +78,7 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.alchemy.Potion
-import net.minecraft.world.item.alchemy.PotionUtils
+import net.minecraft.world.item.alchemy.PotionContents
 import net.minecraft.world.item.alchemy.Potions
 import net.minecraft.world.item.enchantment.Enchantments
 import net.minecraft.world.item.trading.MerchantOffer
@@ -142,9 +145,9 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             "dinnerbone" to false
         )
 
-        val SPEED_MODIFIER_DRINKING = AttributeModifier(UUID.randomUUID(), "Researcher drinking speed penalty", -0.2, AttributeModifier.Operation.MULTIPLY_TOTAL)
+        val SPEED_MODIFIER_DRINKING = AttributeModifier(UUID.randomUUID(), "Researcher drinking speed penalty", -0.2, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
         // Used when fighting someone that is not running away (using this instead of sprinting for control over amount):
-        val SPEED_MODIFIER_FIGHTING = AttributeModifier(UUID.randomUUID(), "Researcher fighting speed boost", 0.5, AttributeModifier.Operation.MULTIPLY_TOTAL)
+        val SPEED_MODIFIER_FIGHTING = AttributeModifier(UUID.randomUUID(), "Researcher fighting speed boost", 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
 
         // Used for drinking potions:
         private val DATA_USING_ITEM: EntityDataAccessor<Boolean> = SynchedEntityData.defineId(Researcher::class.java, EntityDataSerializers.BOOLEAN)
@@ -413,7 +416,9 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
                 setItemSlot(EquipmentSlot.OFFHAND, ItemStack.EMPTY)
 
                 if (itemStack.`is`(Items.POTION)) {
-                    val list = PotionUtils.getMobEffects(itemStack)
+                    val list = itemStack[DataComponents.POTION_CONTENTS]?.potion
+                        ?.map{ p -> p.value().effects }
+                        ?.orElse(listOf())
                     if (list != null)
                         for (mobEffectInstance in list)
                             addEffect(MobEffectInstance(mobEffectInstance))
@@ -442,7 +447,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             }
         }
         else {
-            var potion: Potion? = null
+            var potion: Holder<Potion>? = null
             var item: Item? = null
 
             if (needsToTpBack)
@@ -482,7 +487,9 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
                 if (item != null)
                     setItemSlot(EquipmentSlot.OFFHAND, ItemStack(item))
                 if (potion != null)
-                    setItemSlot(EquipmentSlot.OFFHAND, PotionUtils.setPotion(ItemStack(Items.POTION), potion))
+                    setItemSlot(EquipmentSlot.OFFHAND, ItemStack(Items.POTION).also {
+                        it[DataComponents.POTION_CONTENTS] = PotionContents(potion)
+                    })
 
                 itemUsingTime = if (offhandItem.`is`(Items.ENDER_PEARL))
                     secondsToTicks(1f)

@@ -14,6 +14,9 @@ import net.minecraft.advancements.AdvancementRequirements
 import net.minecraft.advancements.AdvancementRewards
 import net.minecraft.advancements.critereon.LocationPredicate
 import net.minecraft.advancements.critereon.PlayerTrigger
+import net.minecraft.core.Holder
+import net.minecraft.core.HolderLookup
+import net.minecraft.core.HolderLookup.RegistryLookup
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
@@ -112,70 +115,74 @@ object StructureAdvancements {
         ) }
     }
 
-
-    fun generateForStructureDetection(consumer: Consumer<AdvancementHolder>) {
-        // Root dummy so that the one defined in datagen can be referred to
-        val rootDummy = Advancement(
-            Optional.of(GrowssethAdvancements.ROOT), Optional.empty(), AdvancementRewards.EMPTY,
-            mapOf(), AdvancementRequirements.EMPTY, false
-        )
-        val rootHolder = AdvancementHolder(GrowssethAdvancements.ROOT, rootDummy)
-
-        GrowssethStructures.all
-            .forEach { createStructureDetectionAdvancement(consumer, it, rootHolder) }
-
-        villageHouseStructures.forEach { (struct, villageHouses) ->
-            villageHouses.forEach { (villageStructId, housePaths) ->
-                val name = getStructureJigsawAdvancementId(villageStructId, struct)
-                createJigsawDetectionAdvancement(consumer, villageStructId, housePaths, rootHolder, name.toString())
-            }
-        }
-    }
-
-    private fun createStructureDetectionAdvancement(consumer: Consumer<AdvancementHolder>, structKey: ResourceKey<Structure>, root: AdvancementHolder): AdvancementHolder {
-        return Advancement.Builder.advancement()
-            /* not needed if it's not going to be displayed
-            .display(
-                Items.FILLED_MAP,  // The display icon
-                Component.literal(structKey.location().path),  // The title
-                Component.literal("hidden adv for structure detection (${structKey.location()})"),  // The description
-                null,  // Background image used
-                FrameType.TASK,  // Options: TASK, CHALLENGE, GOAL
-                false,  // Show toast top right
-                false,  // Announce to chat
-                true // Hidden in the advancement tab
-            )
-             */
-            .parent(root)
-            .addCriterion("in_structure", PlayerTrigger.TriggerInstance.located(LocationPredicate.Builder.inStructure(structKey)) )
-            .save(consumer, getStructureAdvancementId(structKey).toString())
-    }
-
-    private fun createJigsawDetectionAdvancement(
-        consumer: Consumer<AdvancementHolder>,
-        structKey: ResourceKey<Structure>,
-        pieceIds: List<ResourceLocation>,
-        root: AdvancementHolder,
-        name: String = pieceIds.joinToString("_") { it.path.replace("/", "_") },
-    ): AdvancementHolder {
-        return Advancement.Builder.advancement()
-            .parent(root)
-            .addCriterion("in_structure_piece", GrowssethCriterions.JIGSAW_PIECE.createCriterion(JigsawPieceTrigger.Instance(
-                Optional.empty(),
-                Optional.of(JigsawPiecePredicate(
-                    structKey,
-                    pieceIds,
-                )),
-            )))
-            .save(consumer, name)
-    }
-
     private fun getHousesOfVillageCategory(category: String): Map<ResourceKey<Structure>, List<ResourceLocation>> {
         val entries = VillageBuildings.houseEntries[category] ?: throw IllegalArgumentException("Village category $category not found")
         return entries
             .groupBy{ it.kind }
             .mapKeys { ResourceKey.create(Registries.STRUCTURE, ResourceLocation("minecraft", "village_${it.key}")) }
             .mapValues { e -> e.value.flatMap { listOf(it.normal, it.zombie) } }
+    }
+
+    class Bootstrapper(private val registryLookup: HolderLookup.Provider) {
+        private val structureReg = registryLookup.lookupOrThrow(Registries.STRUCTURE)
+
+        fun generateForStructureDetection(consumer: Consumer<AdvancementHolder>) {
+            // Root dummy so that the one defined in datagen can be referred to
+            val rootDummy = Advancement(
+                Optional.of(GrowssethAdvancements.ROOT), Optional.empty(), AdvancementRewards.EMPTY,
+                mapOf(), AdvancementRequirements.EMPTY, false
+            )
+            val rootHolder = AdvancementHolder(GrowssethAdvancements.ROOT, rootDummy)
+
+            GrowssethStructures.all
+                .forEach { createStructureDetectionAdvancement(consumer, it, rootHolder) }
+
+            villageHouseStructures.forEach { (struct, villageHouses) ->
+                villageHouses.forEach { (villageStructId, housePaths) ->
+                    val name = getStructureJigsawAdvancementId(villageStructId, struct)
+                    createJigsawDetectionAdvancement(consumer, villageStructId, housePaths, rootHolder, name.toString())
+                }
+            }
+        }
+
+        private fun createStructureDetectionAdvancement(consumer: Consumer<AdvancementHolder>, structKey: ResourceKey<Structure>, root: AdvancementHolder): AdvancementHolder {
+            val holder = structureReg.getOrThrow(structKey)
+            return Advancement.Builder.advancement()
+                /* not needed if it's not going to be displayed
+                .display(
+                    Items.FILLED_MAP,  // The display icon
+                    Component.literal(structKey.location().path),  // The title
+                    Component.literal("hidden adv for structure detection (${structKey.location()})"),  // The description
+                    null,  // Background image used
+                    FrameType.TASK,  // Options: TASK, CHALLENGE, GOAL
+                    false,  // Show toast top right
+                    false,  // Announce to chat
+                    true // Hidden in the advancement tab
+                )
+                 */
+                .parent(root)
+                .addCriterion("in_structure", PlayerTrigger.TriggerInstance.located(LocationPredicate.Builder.inStructure(holder)) )
+                .save(consumer, getStructureAdvancementId(structKey).toString())
+        }
+
+        private fun createJigsawDetectionAdvancement(
+            consumer: Consumer<AdvancementHolder>,
+            structKey: ResourceKey<Structure>,
+            pieceIds: List<ResourceLocation>,
+            root: AdvancementHolder,
+            name: String = pieceIds.joinToString("_") { it.path.replace("/", "_") },
+        ): AdvancementHolder {
+            return Advancement.Builder.advancement()
+                .parent(root)
+                .addCriterion("in_structure_piece", GrowssethCriterions.JIGSAW_PIECE.createCriterion(JigsawPieceTrigger.Instance(
+                    Optional.empty(),
+                    Optional.of(JigsawPiecePredicate(
+                        structKey,
+                        pieceIds,
+                    )),
+                )))
+                .save(consumer, name)
+        }
     }
 
     object Callbacks {

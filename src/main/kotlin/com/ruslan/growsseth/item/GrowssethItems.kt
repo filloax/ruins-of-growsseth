@@ -5,14 +5,15 @@ import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.entity.GrowssethEntities
 import com.ruslan.growsseth.sound.GrowssethSounds
 import com.ruslan.growsseth.utils.resLoc
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings
 import net.minecraft.core.Holder
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.sounds.SoundEvent
+import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.item.*
 import net.minecraft.world.item.armortrim.TrimPattern
+import net.minecraft.world.item.component.ItemAttributeModifiers
 
 object GrowssethItems {
 	val all = mutableMapOf<ResourceLocation, Item>()
@@ -23,7 +24,10 @@ object GrowssethItems {
 	val RESEARCHER_HORN = make("researcher_horn", ResearcherHornItem(defaultBuilder().rarity(Rarity.EPIC).stacksTo(1).fireResistant(), GrowssethTags.RESEARCHER_HORNS), autoGenerateJson = false)
 	// 5 attack (2 less than diamond sword), 2,5 attack speed (sword speed + 0,9) (sword modifiers: 3 and -2.4):
 	val RESEARCHER_DAGGER = make("researcher_dagger",
-		ResearcherDaggerItem(Tiers.DIAMOND, 1, -1.5F, Item.Properties().rarity(Rarity.EPIC)),
+		ResearcherDaggerItem(Tiers.DIAMOND, Item.Properties()
+			.rarity(Rarity.EPIC)
+			.attributes(SwordItem.createAttributes(Tiers.DIAMOND, 1, -1.5F)),
+		),
 		autoGenerateJson = false,
 	)
 
@@ -33,33 +37,33 @@ object GrowssethItems {
 
 	// Custom discs
 	val DISC_SEGA_DI_NIENTE = make("disc_sega_di_niente",
-		RecordItem(6, GrowssethSounds.DISC_SEGA_DI_NIENTE, FabricItemSettings().maxCount(1), 119))
+		RecordItem(6, GrowssethSounds.DISC_SEGA_DI_NIENTE, Item.Properties().stacksTo(1), 119))
 	val DISC_GIORGIO_CUBETTI = make("disc_giorgio_cubetti",
-		RecordItem(6, GrowssethSounds.DISC_GIORGIO_CUBETTI, FabricItemSettings().maxCount(1), 161))
+		RecordItem(6, GrowssethSounds.DISC_GIORGIO_CUBETTI, Item.Properties().stacksTo(1), 161))
 	val DISC_GIORGIO_LOFI = make("disc_giorgio_lofi",
-		RecordItem(6, GrowssethSounds.DISC_GIORGIO_LOFI, FabricItemSettings().maxCount(1), 295))
+		RecordItem(6, GrowssethSounds.DISC_GIORGIO_LOFI, Item.Properties().stacksTo(1), 295))
 	val DISC_GIORGIO_LOFI_INST = make("disc_giorgio_lofi_inst",
-		RecordItem(6, GrowssethSounds.DISC_GIORGIO_LOFI_INST, FabricItemSettings().maxCount(1), 295))
+		RecordItem(6, GrowssethSounds.DISC_GIORGIO_LOFI_INST, Item.Properties().stacksTo(1), 295))
 	val DISC_GIORGIO_FINDING_HOME = make("disc_giorgio_finding_home",
-		RecordItem(6, GrowssethSounds.DISC_GIORGIO_FINDING_HOME, FabricItemSettings().maxCount(1), 186))
+		RecordItem(6, GrowssethSounds.DISC_GIORGIO_FINDING_HOME, Item.Properties().stacksTo(1), 186))
 	val DISC_BINOBINOOO = make("disc_binobinooo",
-		RecordItem(6, GrowssethSounds.DISC_BINOBINOOO, FabricItemSettings().maxCount(1), 98))
+		RecordItem(6, GrowssethSounds.DISC_BINOBINOOO, Item.Properties().stacksTo(1), 98))
 	val DISC_BINOBINOOO_INST = make("disc_binobinooo_inst",
-		RecordItem(6, GrowssethSounds.DISC_BINOBINOOO_INST, FabricItemSettings().maxCount(1), 98))
+		RecordItem(6, GrowssethSounds.DISC_BINOBINOOO_INST, Item.Properties().stacksTo(1), 98))
 	val DISC_PADRE_MAMMONK = make("disc_padre_mammonk",
-		RecordItem(6, GrowssethSounds.DISC_PADRE_MAMMONK, FabricItemSettings().maxCount(1), 74))
+		RecordItem(6, GrowssethSounds.DISC_PADRE_MAMMONK, Item.Properties().stacksTo(1), 74))
 	val DISC_ABBANDONATI = make("disc_abbandonati",
-		RecordItem(6, GrowssethSounds.DISC_ABBANDONATI, FabricItemSettings().maxCount(1), 145))
+		RecordItem(6, GrowssethSounds.DISC_ABBANDONATI, Item.Properties().stacksTo(1), 145))
 	val DISC_MISSIVA_NELL_OMBRA = make("disc_missiva_nell_ombra",
-		RecordItem(6, GrowssethSounds.DISC_MISSIVA_NELL_OMBRA, FabricItemSettings().maxCount(1), 329))
+		RecordItem(6, GrowssethSounds.DISC_MISSIVA_NELL_OMBRA, Item.Properties().stacksTo(1), 329))
 
 	// Vanilla ambience discs
 	val DISC_MICE_ON_VENUS = make("disc_mice_on_venus",
-		RecordItem(6, GrowssethSounds.MUSIC_MICE_ON_VENUS, FabricItemSettings().maxCount(1), 280))
+		RecordItem(6, GrowssethSounds.MUSIC_MICE_ON_VENUS, Item.Properties().stacksTo(1), 280))
 	val DISC_INFINITE_AMETHYST = make("disc_infinite_amethyst",
-		RecordItem(6, GrowssethSounds.MUSIC_INFINITE_AMETHYST, FabricItemSettings().maxCount(1), 271))
+		RecordItem(6, GrowssethSounds.MUSIC_INFINITE_AMETHYST, Item.Properties().stacksTo(1), 271))
 	val DISC_LABYRINTHINE = make("disc_labyrinthine",
-		RecordItem(6, GrowssethSounds.MUSIC_LABYRINTHINE, FabricItemSettings().maxCount(1), 324))
+		RecordItem(6, GrowssethSounds.MUSIC_LABYRINTHINE, Item.Properties().stacksTo(1), 324))
 
 	val DISCS_TO_VOCALS = mutableMapOf(
 		DISC_GIORGIO_LOFI_INST to DISC_GIORGIO_LOFI,
