@@ -16,7 +16,7 @@ import net.minecraft.sounds.SoundEvents
 object GrowssethNetworkingClient {
     fun init() {
         val client = Minecraft.getInstance()
-        ClientPlayNetworking.registerGlobalReceiver(ResearcherTradesNotifPacket.TYPE) { packet, player, responseSender ->
+        ClientPlayNetworking.registerGlobalReceiver(ResearcherTradesNotifPacket.TYPE) { packet, context ->
             if (ClientConfig.newTradeNotifications) {
                 client.toasts.updateNewTradeToast(packet.newTrades)
                 RuinsOfGrowsseth.LOGGER.info("Received trade notification")
@@ -25,17 +25,17 @@ object GrowssethNetworkingClient {
             }
         }
 
-        ClientPlayNetworking.registerGlobalReceiver(CustomToastPacket.TYPE) { packet, player, responseSender ->
+        ClientPlayNetworking.registerGlobalReceiver(CustomToastPacket.TYPE) { packet, context ->
             client.toasts.updateCustomToast(packet.title, packet.message, packet.item)
         }
 
-        ClientPlayNetworking.registerGlobalReceiver(StopMusicPacket.TYPE) { packet, player, responseSender ->
+        ClientPlayNetworking.registerGlobalReceiver(StopMusicPacket.TYPE) { packet, context ->
             client.submit {
                 client.musicManager.stopPlaying()
             }
         }
 
-        ClientPlayNetworking.registerGlobalReceiver(AmbientSoundsPacket.TYPE) { packet, player, responseSender ->
+        ClientPlayNetworking.registerGlobalReceiver(AmbientSoundsPacket.TYPE) { packet, context ->
             client.submit {
                 client.player?.let { player ->
                     val simpleSoundInstance = SimpleSoundInstance.forAmbientMood(
@@ -50,7 +50,7 @@ object GrowssethNetworkingClient {
             }
         }
 
-        ClientPlayNetworking.registerGlobalReceiver(PlacesInfoPacket.TYPE) { packet, player, responseSender ->
+        ClientPlayNetworking.registerGlobalReceiver(PlacesInfoPacket.TYPE) { packet, context ->
             client.submit {
                 GrowssethWorldPresetClient.initLocationData(packet.locationData)
             }

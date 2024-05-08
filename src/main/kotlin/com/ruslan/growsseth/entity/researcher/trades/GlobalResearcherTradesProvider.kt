@@ -17,6 +17,8 @@ import net.fabricmc.fabric.api.networking.v1.PacketSender
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.Tag
+import net.minecraft.network.PacketSendListener
+import net.minecraft.network.protocol.Packet
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.network.ServerGamePacketListenerImpl
@@ -118,7 +120,9 @@ abstract class GlobalResearcherTradesProvider protected constructor(
         val notifiableNewTrades = newTrades.filterNot { it.noNotification }
         if (notifiableNewTrades.isEmpty()) return
 
-        sender.sendPacket(ResearcherTradesNotifPacket(notifiableNewTrades)) { after() }
+        sender.sendPacket(ResearcherTradesNotifPacket(notifiableNewTrades), object : PacketSendListener {
+            override fun onSuccess() = after()
+        })
     }
 
     private fun onServerStop(server: MinecraftServer) {
