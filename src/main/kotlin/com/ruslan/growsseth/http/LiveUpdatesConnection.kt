@@ -14,9 +14,12 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
+import net.minecraft.network.PacketSendListener
 import net.minecraft.network.chat.Component
+import net.minecraft.network.protocol.Packet
 import net.minecraft.server.MinecraftServer
 import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.phys.AABB
 import java.net.URI
 import java.util.concurrent.TimeUnit
@@ -258,14 +261,15 @@ class LiveUpdatesConnection private constructor(val server: MinecraftServer) : R
             return
         }
 
-        val packet = CustomToastPacket(toastData.title, toastData.message, toastData.item?.defaultInstance)
+        val packet = CustomToastPacket(toastData.title, toastData.message, toastData.item?.defaultInstance ?: ItemStack.EMPTY)
         server.playerList.players.forEach { player ->
-            ServerPlayNetworking.getSender(player).sendPacket(packet) {
-                if (it.isSuccess)
-                    sendSuccess()
-                else
+            ServerPlayNetworking.getSender(player).sendPacket(packet, object : PacketSendListener {
+                override fun onSuccess() = sendSuccess()
+                override fun onFailure(): Packet<*>? {
                     sendFailure()
-            }
+                    return null
+                }
+            })
         }
     }
 

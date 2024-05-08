@@ -31,6 +31,7 @@ import net.minecraft.util.datafix.DataFixTypes
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.MobSpawnType
 import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.ChunkPos
 import net.minecraft.world.level.chunk.LevelChunk
 import net.minecraft.world.level.levelgen.Heightmap
@@ -152,7 +153,7 @@ object GrowssethExtraEvents {
 
         val content = event.desc?.let { Component.literal(it) }
 
-        return CustomToastPacket(Component.literal(title), content, item?.defaultInstance)
+        return CustomToastPacket(Component.literal(title), content, item?.defaultInstance ?: ItemStack.EMPTY)
     }
 
     private fun handleCustomToastJoin(event: ApiEvent, player: ServerPlayer) {

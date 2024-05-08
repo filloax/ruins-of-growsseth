@@ -16,6 +16,8 @@ import com.ruslan.growsseth.http.GrowssethExtraEvents
 import com.ruslan.growsseth.item.GrowssethCreativeModeTabs
 import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.item.GrowssethMapDecorations
+import com.ruslan.growsseth.networking.GrowssethPackets
+import com.ruslan.growsseth.platform.PlatformAbstractions
 import com.ruslan.growsseth.structure.*
 import com.ruslan.growsseth.utils.resLoc
 import com.ruslan.growsseth.worldgen.worldpreset.LocationNotifListener
@@ -23,10 +25,14 @@ import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents.ModifyEntries
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.network.codec.StreamCodec
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload
 import net.minecraft.server.packs.PackType
 import net.minecraft.world.item.CreativeModeTabs
 import net.minecraft.world.item.Items
@@ -38,6 +44,7 @@ import org.apache.logging.log4j.Logger
 object RuinsOfGrowsseth : ModInitializer {
     @JvmStatic
     val LOGGER: Logger = LogManager.getLogger()
+    val platform = PlatformAbstractions.get()
     const val MOD_ID = "growsseth"
     const val MOD_NAME = "Ruins of Growsseth"
 
@@ -77,6 +84,8 @@ object RuinsOfGrowsseth : ModInitializer {
         GrowssethStructures.registerStructureTypes{ id, value -> Registry.register(BuiltInRegistries.STRUCTURE_TYPE, id, value) }
         GrowssethCriterions.registerCriterions { id, value -> Registry.register(BuiltInRegistries.TRIGGER_TYPES, id, value) }
         GrowssethCommands.ArgumentTypes.registerArgumentTypes(BuiltInRegistries.COMMAND_ARGUMENT_TYPE)
+        GrowssethPackets.registerPacketsC2S(platform)
+        GrowssethPackets.registerPacketsS2C(platform)
     }
 
     private fun initItemGroups() {
