@@ -20,7 +20,7 @@ public abstract class ItemFrameStructureBookMixin {
                 target = "Lnet/minecraft/world/item/ItemStack;of(Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/world/item/ItemStack;"
         )
     )
-    private ItemStack convertDroppedBook(CompoundTag compoundTag, Operation<ItemStack> original){
+    private ItemStack convertToStructureBook(CompoundTag compoundTag, Operation<ItemStack> original){
         var item = original.call(compoundTag);
         if ((item.is(Items.WRITABLE_BOOK) || item.is(Items.WRITTEN_BOOK)) && StructureBooks.bookIsTemplate(item)) {
             return StructureBooks.loadTemplate(item);
