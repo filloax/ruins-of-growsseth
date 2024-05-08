@@ -69,10 +69,10 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
 
     override fun finalizeSpawn(
         level: ServerLevelAccessor, difficulty: DifficultyInstance,
-        reason: MobSpawnType, spawnData: SpawnGroupData?, dataTag: CompoundTag?
+        reason: MobSpawnType, spawnData: SpawnGroupData?
     ): SpawnGroupData? {
         villagerData = villagerData.setProfession(VillagerProfession.CARTOGRAPHER).setLevel(5)
-        return super.finalizeSpawn(level, difficulty, reason, spawnData, dataTag)
+        return super.finalizeSpawn(level, difficulty, reason, spawnData)
     }
 
     override fun registerGoals() {
@@ -109,7 +109,7 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
             RuinsOfGrowsseth.LOGGER.error("Zombie researcher to researcher for $this conversion failed!")
             return
         }
-        researcher.finalizeSpawn(serverLevel, serverLevel.getCurrentDifficultyAt(researcher.blockPosition()), MobSpawnType.CONVERSION, null, null)
+        researcher.finalizeSpawn(serverLevel, serverLevel.getCurrentDifficultyAt(researcher.blockPosition()), MobSpawnType.CONVERSION, null)
         researcherData?.let { researcher.readResearcherData(it) }
         researcher.healed = true
         researcher.dialogues?.resetNearbyPlayers()
