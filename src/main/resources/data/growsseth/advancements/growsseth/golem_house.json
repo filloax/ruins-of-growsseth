@@ -8,7 +8,7 @@
             "translate": "advancements.growsseth.structures.golem_house.description"
         },
         "icon": {
-            "item": "minecraft:iron_block"
+            "id": "minecraft:iron_block"
         },
         "hidden": true,
         "show_toast": true
@@ -93,6 +93,7 @@
     },
     "requirements": [
         [
+            "golem_house",
             "jigsaw_plains",
             "jigsaw_desert",
             "jigsaw_savanna",

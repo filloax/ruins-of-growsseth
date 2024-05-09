@@ -8,7 +8,7 @@
             "translate": "advancements.growsseth.structures.beekeeper_house.description"
         },
         "icon": {
-            "item": "minecraft:honeycomb"
+            "id": "minecraft:honeycomb"
         },
         "hidden": true,
         "show_toast": true
@@ -30,11 +30,5 @@
             },
             "trigger": "minecraft:location"
         }
-    },
-    "requirements": [
-        [
-            "in_structure",
-            "in_structure_cydonia"
-        ]
-    ]
+    }
 }

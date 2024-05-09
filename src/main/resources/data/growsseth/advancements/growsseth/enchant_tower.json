@@ -8,7 +8,7 @@
             "translate": "advancements.growsseth.structures.enchant_tower.description"
         },
         "icon": {
-            "item": "minecraft:enchanting_table"
+            "id": "minecraft:enchanting_table"
         },
         "hidden": true,
         "show_toast": true,
@@ -31,11 +31,5 @@
             },
             "trigger": "minecraft:location"
         }
-    },
-    "requirements": [
-        [
-            "in_structure",
-            "in_structure_cydonia"
-        ]
-    ]
+    }
 }
