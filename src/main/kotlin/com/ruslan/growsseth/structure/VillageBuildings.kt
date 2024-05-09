@@ -29,11 +29,11 @@ object VillageBuildings {
     val SAVANNA_GOLEM_STREET   = register("savanna_golem_street", CATEGORY_GOLEM_STREET, "savanna", "streets", GOLEM_WEIGHT)
     val SNOWY_GOLEM_STREET     = register("snowy_golem_street", CATEGORY_GOLEM_STREET, "snowy", "streets", GOLEM_WEIGHT)
 
-    val DESERT_GOLEM    = register("desert_golem_street", CATEGORY_GOLEM_HOUSE, "desert", "house", GOLEM_WEIGHT)
-    val PLAINS_GOLEM    = register("plains_golem_street", CATEGORY_GOLEM_HOUSE, "plains", "house", GOLEM_WEIGHT)
-    val TAIGA_GOLEM     = register("taiga_golem_street",  CATEGORY_GOLEM_HOUSE, "taiga", "house", GOLEM_WEIGHT)
-    val SAVANNA_GOLEM   = register("savanna_golem_street", CATEGORY_GOLEM_HOUSE, "savanna", "house", GOLEM_WEIGHT)
-    val SNOWY_GOLEM     = register("snowy_golem_street", CATEGORY_GOLEM_HOUSE, "snowy", "house", GOLEM_WEIGHT)
+    val DESERT_GOLEM    = register("desert_golem_house", CATEGORY_GOLEM_HOUSE, "desert", "house", GOLEM_WEIGHT)
+    val PLAINS_GOLEM    = register("plains_golem_house", CATEGORY_GOLEM_HOUSE, "plains", "house", GOLEM_WEIGHT)
+    val TAIGA_GOLEM     = register("taiga_golem_house",  CATEGORY_GOLEM_HOUSE, "taiga", "house", GOLEM_WEIGHT)
+    val SAVANNA_GOLEM   = register("savanna_golem_house", CATEGORY_GOLEM_HOUSE, "savanna", "house", GOLEM_WEIGHT)
+    val SNOWY_GOLEM     = register("snowy_golem_house", CATEGORY_GOLEM_HOUSE, "snowy", "house", GOLEM_WEIGHT)
 
     fun onServerStarted(server: MinecraftServer) {
         val shouldAddBuildings = StructureConfig.golemHouseEnabled

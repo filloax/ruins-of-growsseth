@@ -7,6 +7,7 @@ import com.ruslan.growsseth.advancements.StructureAdvancements
 import com.ruslan.growsseth.entity.GrowssethEntities
 import com.ruslan.growsseth.entity.researcher.ZombieResearcher
 import com.ruslan.growsseth.item.GrowssethItems
+import com.ruslan.growsseth.structure.GrProcessorLists
 import com.ruslan.growsseth.structure.GrowssethStructures
 import com.ruslan.growsseth.utils.resLoc
 import com.ruslan.growsseth.worldgen.GrowssethModWorldPresets
@@ -62,19 +63,22 @@ class DataGeneration : DataGeneratorEntrypoint {
 
         pack.addProvider(::RegistriesProvider)
         pack.addProvider(::RecipesProvider)
-        pack.addProvider(::AdvancementsProvider)
         pack.addProvider(::TagProviderBlocks)
         pack.addProvider(::TagProviderItems)
         pack.addProvider(::TagProviderInstruments)
         pack.addProvider(::TagProviderStructures)
         pack.addProvider(::TagProviderWorldPresets)
+        pack.addProvider(::AdvancementsProvider)
         //pack.addProvider(::EntityLootTableProvider)
         //pack.addProvider(::MiscLootTableProvider)
         pack.addProvider(::ModelGenerator)
         pack.addProvider(::CustomDataProvider)
+
     }
 
     override fun buildRegistry(registryBuilder: RegistrySetBuilder) {
+        registryBuilder.add(Registries.PROCESSOR_LIST, GrProcessorLists::bootstrap)
+        registryBuilder.add(Registries.TEMPLATE_POOL, SimplePools::bootstrap)
         registryBuilder.add(Registries.STRUCTURE, GrowssethStructures::bootstrap)
         registryBuilder.add(Registries.WORLD_PRESET, GrowssethModWorldPresets::bootstrap)
         registryBuilder.add(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST, GrowssethWorldPreset::bootstrapNoiseBiomeSourcesSettings)
@@ -84,9 +88,11 @@ class DataGeneration : DataGeneratorEntrypoint {
 }
 
 class RegistriesProvider(output: FabricDataOutput, registries: CompletableFuture<HolderLookup.Provider>) : FabricDynamicRegistryProvider(output, registries) {
-    override fun getName(): String = "Growsseth World Gen"
+    override fun getName(): String = "Growsseth Registries"
 
     override fun configure(registries: HolderLookup.Provider, entries: Entries) {
+        entries.addAll(registries.lookupOrThrow(Registries.PROCESSOR_LIST))
+        entries.addAll(registries.lookupOrThrow(Registries.TEMPLATE_POOL))
         entries.addAll(registries.lookupOrThrow(Registries.STRUCTURE))
         entries.addAll(registries.lookupOrThrow(Registries.WORLD_PRESET))
         entries.addAll(registries.lookupOrThrow(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST))

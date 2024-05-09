@@ -1,17 +1,30 @@
 package com.ruslan.growsseth.structure
 
+import com.filloax.fxlib.structure.ForcePosJigsawStructure
 import com.ruslan.growsseth.GrowssethTags.StructTags
 import com.ruslan.growsseth.structure.pieces.ResearcherTent
 import com.ruslan.growsseth.structure.structure.ResearcherTentStructure
 import com.ruslan.growsseth.utils.resLoc
+import net.minecraft.core.HolderGetter
+import net.minecraft.core.Vec3i
 import net.minecraft.core.registries.Registries
 import net.minecraft.data.worldgen.BootstapContext
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.tags.BiomeTags
 import net.minecraft.tags.TagKey
+import net.minecraft.world.level.biome.Biome
+import net.minecraft.world.level.levelgen.GenerationStep.Decoration
+import net.minecraft.world.level.levelgen.Heightmap
+import net.minecraft.world.level.levelgen.VerticalAnchor
+import net.minecraft.world.level.levelgen.heightproviders.ConstantHeight
+import net.minecraft.world.level.levelgen.heightproviders.HeightProvider
+import net.minecraft.world.level.levelgen.heightproviders.UniformHeight
 import net.minecraft.world.level.levelgen.structure.Structure
 import net.minecraft.world.level.levelgen.structure.StructureSet
 import net.minecraft.world.level.levelgen.structure.StructureType
+import net.minecraft.world.level.levelgen.structure.TerrainAdjustment
+import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool
 
 object GrowssethStructures {
     @JvmStatic
@@ -31,8 +44,11 @@ object GrowssethStructures {
     val CAVE_CAMP = make("cave_camp", StructTags.CAVE_CAMP, emeraldCost = 0)
     @JvmField
     val MARKER = make("marker", StructTags.MARKER)
+    // Not actual structure, placeholder used for mod features and legacy stuff
+    // Real structures are either the variants found below meant for /place or gamemaster-mode,
+    // or the templates added to village house pools
     @JvmField
-    val GOLEM_HOUSE = make("golem_house", StructTags.GOLEM_HOUSE)
+    val GOLEM_HOUSE = make("golem_house", StructTags.GOLEM_HOUSE, placeholder = true)
     @JvmField
     val ENCHANT_TOWER = make("enchant_tower", StructTags.ENCHANT_TOWER, emeraldCost = 7)
     @JvmField
@@ -59,7 +75,6 @@ object GrowssethStructures {
     // Structures with structure sets
     val SPAWNS_NATURALLY = listOf(
         CAVE_CAMP,
-        GOLEM_HOUSE,
         ENCHANT_TOWER,
         NOTEBLOCK_LAB,
         BEEKEEPER_HOUSE,
@@ -147,9 +162,14 @@ object GrowssethStructures {
         }
     }
 
-    private fun make(name: String, tag: TagKey<Structure>, emeraldCost: Int = 5): ResourceKey<Structure> {
+    private fun make(
+        name: String, tag: TagKey<Structure>,
+        emeraldCost: Int = 5,
+        placeholder: Boolean = false
+    ): ResourceKey<Structure> {
         val key = ResourceKey.create(Registries.STRUCTURE, resLoc(name))
-        all.add(key)
+        if (!placeholder)
+            all.add(key)
         info[key] = StructureInfo(key, tag, emeraldCost)
         return key
     }
@@ -161,17 +181,97 @@ object GrowssethStructures {
     }
 
     class Bootstrapper(private val ctx: BootstapContext<Structure>) {
-        // TODO: switch all structures to datagen so datagen for tags etc works properly
-//        private fun registerSimpleJigsaw(key: ResourceKey<Structure>) {
-//            context.register(
-//                BuiltinStructures.VILLAGE_PLAINS, JigsawStructure(
-//                    Structures.structure(
-//                        holderGetter.getOrThrow(BiomeTags.HAS_VILLAGE_PLAINS), TerrainAdjustment.BEARD_THIN
-//                    ), holderGetter2.getOrThrow(PlainVillagePools.START), 6,
-//                    ConstantHeight.of(VerticalAnchor.absolute(0)), true, Heightmap.Types.WORLD_SURFACE_WG
-//                )
-//            )
-//        }
+        private val templatePoolGetter: HolderGetter<StructureTemplatePool> = ctx.lookup(Registries.TEMPLATE_POOL)
+        private val biomesGetter: HolderGetter<Biome> = ctx.lookup(Registries.BIOME)
+
+        val NONE_BIOMES = TagKey.create(Registries.BIOME, resLoc("has_structure/none"))
+
+        private fun registerJigsaws() {
+            registerSimpleJigsaw(BEEKEEPER_HOUSE, "ruins/beekeeper_house/house",
+                offset = Vec3i(-11, 0, -9),
+            )
+            registerSimpleJigsaw(CAVE_CAMP, "misc/cave_camp",
+                startHeight = UniformHeight.of(VerticalAnchor.absolute(20), VerticalAnchor.absolute(50)),
+                projectStartToHeightMap = null,
+                offset = Vec3i(-10, -7, -10),
+                step = Decoration.UNDERGROUND_STRUCTURES,
+            )
+            registerSimpleJigsaw(CONDUIT_CHURCH, "ruins/conduit_church/main",
+                offset = Vec3i(-15, -2, -14),
+                startHeight = ConstantHeight.of(VerticalAnchor.absolute(-2)),
+                projectStartToHeightMap = Heightmap.Types.OCEAN_FLOOR,
+                terrainAdaptation = TerrainAdjustment.NONE,
+            )
+            registerSimpleJigsaw(ENCHANT_TOWER, "ruins/enchant_tower/base",
+                offset = Vec3i(-5, 0, -4),
+                size = 6,
+            )
+            registerSimpleJigsaw(MARKER, "misc/marker",
+                biomesTag = NONE_BIOMES,
+                size = 1,
+            )
+            registerSimpleJigsaw(ABANDONED_FORGE, "ruins/abandoned_forge/base",
+                offset = Vec3i(-9, 0, -9),
+            )
+            registerSimpleJigsaw(NOTEBLOCK_LAB, "ruins/noteblock_lab/house",
+                offset = Vec3i(-8, 0, -9),
+            )
+            registerSimpleJigsaw(NOTEBLOCK_SHIP, "ruins/noteblock_ship",
+                startHeight = ConstantHeight.of(VerticalAnchor.absolute(-2)),
+                offset = Vec3i(-19, -2, -15),
+                terrainAdaptation = TerrainAdjustment.NONE,
+            )
+            registerSimpleJigsaw(CONDUIT_RUINS, "ruins/conduit_ruins",
+                offset = Vec3i(-16, 0, -16),
+                projectStartToHeightMap = Heightmap.Types.OCEAN_FLOOR,
+            )
+        }
+
+        private fun registerCydoniaVersions() {
+            registerSimpleJigsaw(CydoniaVersion.BEEKEEPER_HOUSE, "cydonia/ruins/beekeeper_house/house",
+                offset = Vec3i(-11, -2, -9),
+                startHeight = ConstantHeight.of(VerticalAnchor.absolute(-2)),
+            )
+            registerSimpleJigsaw(CydoniaVersion.CAVE_CAMP, "cydonia/misc/cave_camp",
+                biomesTag = BiomeTags.IS_OVERWORLD,
+                projectStartToHeightMap = null,
+                startHeight = UniformHeight.of(VerticalAnchor.absolute(20), VerticalAnchor.absolute(50)),
+                offset = Vec3i(-10, -7, -10),
+                step = Decoration.UNDERGROUND_STRUCTURES,
+            )
+            registerSimpleJigsaw(CydoniaVersion.CONDUIT_CHURCH, "cydonia/ruins/conduit_church/main",
+                offset = Vec3i(-15, -2, -14),
+                startHeight = ConstantHeight.of(VerticalAnchor.absolute(-2)),
+                projectStartToHeightMap = Heightmap.Types.OCEAN_FLOOR,
+            )
+            registerSimpleJigsaw(CydoniaVersion.ENCHANT_TOWER, "cydonia/ruins/enchant_tower/base",
+                offset = Vec3i(-5, 0, -4),
+                size = 6,
+            )
+            registerSimpleJigsaw(CydoniaVersion.GOLEM_HOUSE, "cydonia/misc/golem_house",
+                offset = Vec3i(-6, 0, -6),
+                size = 6,
+            )
+            registerSimpleJigsaw(CydoniaVersion.MARKER, "cydonia/misc/marker",
+                size = 1,
+            )
+            registerSimpleJigsaw(CydoniaVersion.NOTEBLOCK_LAB, "cydonia/ruins/noteblock_lab/house",
+                offset = Vec3i(-8, 0, -9),
+            )
+        }
+
+        private fun registerGolemVariants() {
+            registerStandaloneGolemVariant(GolemStandaloneVariants.GOLEM_HOUSE_TAIGA, "taiga", Vec3i(-7, 0, -8))
+            registerStandaloneGolemVariant(GolemStandaloneVariants.GOLEM_HOUSE_ZOMBIE_TAIGA, "taiga", Vec3i(-7, 0, -8), zombie = true)
+            registerStandaloneGolemVariant(GolemStandaloneVariants.GOLEM_HOUSE_DESERT, "desert", Vec3i(-6, 0, -8))
+            registerStandaloneGolemVariant(GolemStandaloneVariants.GOLEM_HOUSE_ZOMBIE_DESERT, "desert", Vec3i(-6, 0, -8), zombie = true)
+            registerStandaloneGolemVariant(GolemStandaloneVariants.GOLEM_HOUSE_PLAINS, "plains", Vec3i(-6, 0, -6))
+            registerStandaloneGolemVariant(GolemStandaloneVariants.GOLEM_HOUSE_ZOMBIE_PLAINS, "plains", Vec3i(-6, 0, -6), zombie = true)
+            registerStandaloneGolemVariant(GolemStandaloneVariants.GOLEM_HOUSE_SNOWY, "snowy", Vec3i(-6, 0, -6))
+            registerStandaloneGolemVariant(GolemStandaloneVariants.GOLEM_HOUSE_ZOMBIE_SNOWY, "snowy", Vec3i(-6, 0, -6), zombie = true)
+            registerStandaloneGolemVariant(GolemStandaloneVariants.GOLEM_HOUSE_SAVANNA, "savanna", Vec3i(-7, 0, -5))
+            registerStandaloneGolemVariant(GolemStandaloneVariants.GOLEM_HOUSE_ZOMBIE_SAVANNA, "savanna", Vec3i(-7, 0, -5), zombie = true)
+        }
 
         private fun registerTents() {
             ctx.register(RESEARCHER_TENT, ResearcherTentStructure.build(ctx))
@@ -179,9 +279,43 @@ object GrowssethStructures {
             ctx.register(CydoniaVersion.RESEARCHER_TENT, ResearcherTentStructure.build(ctx, ResearcherTent.CYDONIA_ID))
         }
 
+        private fun registerSimpleJigsaw(
+            key: ResourceKey<Structure>, startPool: String,
+            biomesTag: TagKey<Biome>? = null,
+            offset: Vec3i = Vec3i.ZERO,
+            projectStartToHeightMap: Heightmap.Types? = Heightmap.Types.WORLD_SURFACE_WG,
+            step: Decoration = Decoration.SURFACE_STRUCTURES,
+            startHeight: HeightProvider = ConstantHeight.ZERO,
+            terrainAdaptation: TerrainAdjustment = TerrainAdjustment.BEARD_THIN,
+            size: Int = 7,
+        ) {
+            val startPoolHolder = templatePoolGetter.getOrThrow(ResourceKey.create(Registries.TEMPLATE_POOL, resLoc(startPool)))
+            val name = key.location().path.split("/").last()
+            val biomesHolder = biomesGetter.getOrThrow(biomesTag ?: TagKey.create(Registries.BIOME, resLoc("has_structure/$name")))
+            ctx.register(key, ForcePosJigsawStructure.build(
+                startPoolHolder, biomesHolder,
+                forcePosOffset = offset, projectStartToHeightmap = projectStartToHeightMap,
+                step = step, startHeight = startHeight,
+                terrainAdaptation = terrainAdaptation,
+                size = size,
+            ))
+        }
+
+        // Standalone golem house variants, to be used with /place or gamemaster mode
+        private fun registerStandaloneGolemVariant(key: ResourceKey<Structure>, name: String, offset: Vec3i, zombie: Boolean = false) {
+            registerSimpleJigsaw(key, "village/${name}/${name}_golem_house${if (zombie) "_zombie" else ""}",
+                size = 6,
+                offset = offset,
+                biomesTag = NONE_BIOMES,
+            )
+        }
+
         // Used in data generation
         fun bootstrap() {
+            registerJigsaws()
+            registerCydoniaVersions()
             registerTents()
+            registerGolemVariants()
         }
     }
     fun bootstrap(ctx: BootstapContext<Structure>) = Bootstrapper(ctx).bootstrap()

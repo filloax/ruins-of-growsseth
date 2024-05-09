@@ -1,6 +1,7 @@
 package com.ruslan.growsseth.advancements
 
 import com.mojang.datafixers.util.Either
+import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.ModEvents
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.advancements.criterion.JigsawPiecePredicate
@@ -29,6 +30,9 @@ object StructureAdvancements {
     // Structures that are also considered "found" if a village house is found
     private val villageHouseStructures = mapOf(
         GrowssethStructures.GOLEM_HOUSE to getHousesOfVillageCategory(VillageBuildings.CATEGORY_GOLEM_HOUSE)
+    )
+    private val villageHouseStructureTags = mapOf(
+        GrowssethTags.StructTags.GOLEM_HOUSE to getHousesOfVillageCategory(VillageBuildings.CATEGORY_GOLEM_HOUSE)
     )
 
     // To use with getStructTagOrKey (in utils)
