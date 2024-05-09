@@ -17,7 +17,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -26,12 +25,15 @@ import java.util.function.Predicate;
 public abstract class LeadItemMixin {
     @Inject(
         method = "bindPlayerMobs",
-        at = @At("RETURN")
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/world/entity/Mob;setLeashedTo(Lnet/minecraft/world/entity/Entity;Z)V",
+            shift = At.Shift.AFTER
+        )
     )
     private static void triggerEventOnLeash(
-        Player player, Level level, BlockPos pos,
-        CallbackInfoReturnable<InteractionResult> cir,
-        @Local(ordinal = 0) Mob mob
+            Player player, Level level, BlockPos pos, CallbackInfoReturnable<InteractionResult> cir,
+            @Local(ordinal = 0) Mob mob
     ) {
         if (player instanceof ServerPlayer serverPlayer) {
             LeashEvents.FENCE_LEASH.invoker().apply(mob, pos, serverPlayer);
