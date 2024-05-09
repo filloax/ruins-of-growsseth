@@ -76,7 +76,11 @@ class CustomDataProvider(private val output: PackOutput) : DataProvider {
                         fixedStructureId = tagString,
                     )),
                     listOf(
-                        ResearcherTradeObj.tradeIdemEntryObj(Items.EMERALD, info.emeraldCost),
+                        if (info.emeraldCost > 0) {
+                            ResearcherTradeObj.tradeIdemEntryObj(Items.EMERALD, info.emeraldCost)
+                        } else {
+                            ResearcherTradeObj.tradeIdemEntryObj(Items.MAP, 1)
+                        },
                     ),
                     priority = -50,
                 )
