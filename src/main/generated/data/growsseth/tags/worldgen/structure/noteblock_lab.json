@@ -1,13 +1,7 @@
 {
   "replace": false,
   "values": [
-    {
-      "id": "growsseth:noteblock_lab",
-      "required": false
-    },
-    {
-      "id": "growsseth:cydonia/noteblock_lab",
-      "required": false
-    }
+    "growsseth:noteblock_lab",
+    "growsseth:cydonia/noteblock_lab"
   ]
 }

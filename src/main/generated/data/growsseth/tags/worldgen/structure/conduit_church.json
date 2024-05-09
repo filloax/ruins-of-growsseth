@@ -1,13 +1,7 @@
 {
   "replace": false,
   "values": [
-    {
-      "id": "growsseth:conduit_church",
-      "required": false
-    },
-    {
-      "id": "growsseth:cydonia/conduit_church",
-      "required": false
-    }
+    "growsseth:conduit_church",
+    "growsseth:cydonia/conduit_church"
   ]
 }

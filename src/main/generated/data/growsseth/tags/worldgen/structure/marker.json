@@ -1,13 +1,7 @@
 {
   "replace": false,
   "values": [
-    {
-      "id": "growsseth:marker",
-      "required": false
-    },
-    {
-      "id": "growsseth:cydonia/marker",
-      "required": false
-    }
+    "growsseth:marker",
+    "growsseth:cydonia/marker"
   ]
 }

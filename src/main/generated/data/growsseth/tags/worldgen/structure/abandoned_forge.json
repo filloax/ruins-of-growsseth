@@ -1,9 +1,6 @@
 {
   "replace": false,
   "values": [
-    {
-      "id": "growsseth:abandoned_forge",
-      "required": false
-    }
+    "growsseth:abandoned_forge"
   ]
 }
