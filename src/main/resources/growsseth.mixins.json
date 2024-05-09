@@ -18,7 +18,6 @@
     "debug.StructureDebugMixins$FlatLevelSourceMixin",
     "debug.StructureDebugMixins$RegistryDataLoaderMixin",
     "entity.EntityAccessor",
-    "entity.EntityDataMixin",
     "entity.LivingEntityMixin",
     "entity.PlayerMixin",
     "entity.ServerPlayerMixin",
