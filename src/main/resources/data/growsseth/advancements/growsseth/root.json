@@ -7,7 +7,7 @@
             "translate": "advancements.growsseth.root.description"
         },
         "icon": {
-            "item": "minecraft:cartography_table"
+            "id": "minecraft:cartography_table"
         },
         "background": "growsseth:textures/gui/advancements/backgrounds/advancements_background.png"
     },
@@ -20,7 +20,7 @@
                         "entity": "this",
                         "predicate": {
                             "location": {
-                                "structure": "growsseth:researcher_tent"
+                                "structures": "#growsseth:researcher_tent"
                             }
                         }
                     }

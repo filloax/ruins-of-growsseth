@@ -9,7 +9,7 @@
             "translate": "advancements.growsseth.start.description"
         },
         "icon": {
-            "item": "minecraft:spyglass"
+            "id": "minecraft:spyglass"
         },
         "show_toast": true,
         "announce_to_chat": true,

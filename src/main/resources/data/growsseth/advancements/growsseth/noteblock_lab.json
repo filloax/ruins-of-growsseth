@@ -8,7 +8,7 @@
             "translate": "advancements.growsseth.structures.noteblock_lab.description"
         },
         "icon": {
-            "item": "minecraft:note_block"
+            "id": "minecraft:note_block"
         },
         "hidden": true,
         "show_toast": true
@@ -30,11 +30,5 @@
             },
             "trigger": "minecraft:location"
         }
-    },
-    "requirements": [
-        [
-            "in_structure",
-            "in_structure_cydonia"
-        ]
-    ]
+    }
 }

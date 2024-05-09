@@ -8,7 +8,7 @@
             "translate": "advancements.growsseth.structures.conduit_ruins.description"
         },
         "icon": {
-            "item": "minecraft:conduit"
+            "id": "minecraft:conduit"
         },
         "hidden": true,
         "show_toast": true,
@@ -31,11 +31,5 @@
             },
             "trigger": "minecraft:location"
         }
-    },
-    "requirements": [
-        [
-            "in_structure",
-            "in_structure_cydonia"
-        ]
-    ]
+    }
 }

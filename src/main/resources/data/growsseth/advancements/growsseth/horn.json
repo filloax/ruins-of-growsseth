@@ -8,7 +8,7 @@
             "translate": "advancements.growsseth.horn.description"
         },
         "icon": {
-            "item": "growsseth:researcher_horn"
+            "id": "growsseth:researcher_horn"
         },
         "hidden": true,
         "frame": "challenge"
