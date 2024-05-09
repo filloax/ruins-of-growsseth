@@ -9,7 +9,7 @@
             "entity": "this",
             "predicate": {
               "location": {
-                "structure": "growsseth:golem_variants/savanna_golem_house"
+                "structures": "growsseth:golem_variants/savanna_golem_house"
               }
             }
           }

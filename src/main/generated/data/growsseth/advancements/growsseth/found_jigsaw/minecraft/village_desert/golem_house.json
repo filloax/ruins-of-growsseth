@@ -5,8 +5,8 @@
       "conditions": {
         "jigsawPiecePredicate": {
           "jigsawPieceIds": [
-            "growsseth:village/desert/desert_golem_street",
-            "growsseth:village/desert/desert_golem_street_zombie"
+            "growsseth:village/desert/desert_golem_house",
+            "growsseth:village/desert/desert_golem_house_zombie"
           ],
           "structure": "minecraft:village_desert"
         }

@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "growsseth:disc_binobinooo_inst"
-            ]
+            "items": "growsseth:disc_binobinooo_inst"
           }
         ]
       },
