@@ -21,8 +21,8 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "location": {
-                "structure": "growsseth:abandoned_forge"
+              "location_check": {
+                "structures": "#growsseth:abandoned_forge"
               }
             }
           }

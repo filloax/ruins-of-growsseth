@@ -23,23 +23,7 @@
                         "entity": "this",
                         "predicate": {
                             "location": {
-                                "structure": "growsseth:enchant_tower"
-                            }
-                        }
-                    }
-                ]
-            },
-            "trigger": "minecraft:location"
-        },
-        "in_structure_cydonia": {
-            "conditions": {
-                "player": [
-                    {
-                        "condition": "minecraft:entity_properties",
-                        "entity": "this",
-                        "predicate": {
-                            "location": {
-                                "structure": "growsseth:cydonia/enchant_tower"
+                                "structures": "#growsseth:enchant_tower"
                             }
                         }
                     }
