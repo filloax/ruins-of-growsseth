@@ -84,6 +84,7 @@ class DataGeneration : DataGeneratorEntrypoint {
         registryBuilder.add(Registries.STRUCTURE, GrowssethStructures::bootstrap)
         registryBuilder.add(Registries.WORLD_PRESET, GrowssethModWorldPresets::bootstrap)
         registryBuilder.add(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST, GrowssethWorldPreset::bootstrapNoiseBiomeSourcesSettings)
+        registryBuilder.add(Registries.BANNER_PATTERN, GrowssethBannerPatterns::bootstrap)
     }
 
     override fun getEffectiveModId(): String = RuinsOfGrowsseth.MOD_ID
@@ -98,6 +99,7 @@ class RegistriesProvider(output: FabricDataOutput, registries: CompletableFuture
         entries.addAll(registries.lookupOrThrow(Registries.STRUCTURE))
         entries.addAll(registries.lookupOrThrow(Registries.WORLD_PRESET))
         entries.addAll(registries.lookupOrThrow(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST))
+        entries.addAll(registries.lookupOrThrow(Registries.BANNER_PATTERN))
     }
 }
 
