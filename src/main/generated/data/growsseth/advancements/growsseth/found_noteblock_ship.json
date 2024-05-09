@@ -9,7 +9,7 @@
             "entity": "this",
             "predicate": {
               "location": {
-                "structure": "growsseth:noteblock_ship"
+                "structures": "growsseth:noteblock_ship"
               }
             }
           }

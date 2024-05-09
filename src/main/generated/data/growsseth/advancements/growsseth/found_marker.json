@@ -9,7 +9,7 @@
             "entity": "this",
             "predicate": {
               "location": {
-                "structure": "growsseth:marker"
+                "structures": "growsseth:marker"
               }
             }
           }

@@ -1,9 +1,5 @@
 {
-  "replace": false,
   "values": [
-    {
-      "id": "growsseth:noteblock_ship",
-      "required": false
-    }
+    "growsseth:noteblock_ship"
   ]
 }
