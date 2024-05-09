@@ -1,9 +1,6 @@
 {
   "replace": false,
   "values": [
-    {
-      "id": "growsseth:conduit_ruins",
-      "required": false
-    }
+    "growsseth:conduit_ruins"
   ]
 }

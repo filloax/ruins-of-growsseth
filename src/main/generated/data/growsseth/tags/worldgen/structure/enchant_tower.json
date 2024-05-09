@@ -1,13 +1,7 @@
 {
   "replace": false,
   "values": [
-    {
-      "id": "growsseth:enchant_tower",
-      "required": false
-    },
-    {
-      "id": "growsseth:cydonia/enchant_tower",
-      "required": false
-    }
+    "growsseth:enchant_tower",
+    "growsseth:cydonia/enchant_tower"
   ]
 }
