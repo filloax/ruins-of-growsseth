@@ -5,8 +5,8 @@
       "conditions": {
         "jigsawPiecePredicate": {
           "jigsawPieceIds": [
-            "growsseth:village/snowy/snowy_golem_street",
-            "growsseth:village/snowy/snowy_golem_street_zombie"
+            "growsseth:village/snowy/snowy_golem_house",
+            "growsseth:village/snowy/snowy_golem_house_zombie"
           ],
           "structure": "minecraft:village_snowy"
         }

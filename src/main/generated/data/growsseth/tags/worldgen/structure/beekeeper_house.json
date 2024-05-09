@@ -1,13 +1,6 @@
 {
-  "replace": false,
   "values": [
-    {
-      "id": "growsseth:beekeeper_house",
-      "required": false
-    },
-    {
-      "id": "growsseth:cydonia/beekeeper_house",
-      "required": false
-    }
+    "growsseth:beekeeper_house",
+    "growsseth:cydonia/beekeeper_house"
   ]
 }
