@@ -8,7 +8,7 @@
             "translate": "advancements.growsseth.structures.noteblock_lab.description"
         },
         "icon": {
-            "item": "minecraft:note_block"
+            "id": "minecraft:note_block"
         },
         "hidden": true,
         "show_toast": true
@@ -22,23 +22,7 @@
                         "entity": "this",
                         "predicate": {
                             "location": {
-                                "structure": "growsseth:noteblock_lab"
-                            }
-                        }
-                    }
-                ]
-            },
-            "trigger": "minecraft:location"
-        },
-        "in_structure_cydonia": {
-            "conditions": {
-                "player": [
-                    {
-                        "condition": "minecraft:entity_properties",
-                        "entity": "this",
-                        "predicate": {
-                            "location": {
-                                "structure": "growsseth:cydonia/noteblock_lab"
+                                "structures": "#growsseth:noteblock_lab"
                             }
                         }
                     }
@@ -46,11 +30,5 @@
             },
             "trigger": "minecraft:location"
         }
-    },
-    "requirements": [
-        [
-            "in_structure",
-            "in_structure_cydonia"
-        ]
-    ]
+    }
 }

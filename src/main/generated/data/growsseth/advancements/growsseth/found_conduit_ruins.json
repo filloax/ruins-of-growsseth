@@ -9,7 +9,7 @@
             "entity": "this",
             "predicate": {
               "location": {
-                "structure": "growsseth:conduit_ruins"
+                "structures": "growsseth:conduit_ruins"
               }
             }
           }

@@ -1,53 +1,19 @@
 {
-  "replace": false,
   "values": [
     {
       "id": "growsseth:golem_house",
       "required": false
     },
-    {
-      "id": "growsseth:golem_variants/snowy_golem_house",
-      "required": false
-    },
-    {
-      "id": "growsseth:golem_variants/taiga_golem_house",
-      "required": false
-    },
-    {
-      "id": "growsseth:golem_variants/desert_golem_house",
-      "required": false
-    },
-    {
-      "id": "growsseth:golem_variants/plains_golem_house",
-      "required": false
-    },
-    {
-      "id": "growsseth:golem_variants/savanna_golem_house",
-      "required": false
-    },
-    {
-      "id": "growsseth:golem_variants/zombie_desert_golem_house",
-      "required": false
-    },
-    {
-      "id": "growsseth:golem_variants/zombie_plains_golem_house",
-      "required": false
-    },
-    {
-      "id": "growsseth:golem_variants/zombie_savanna_golem_house",
-      "required": false
-    },
-    {
-      "id": "growsseth:golem_variants/zombie_snowy_golem_house",
-      "required": false
-    },
-    {
-      "id": "growsseth:golem_variants/zombie_taiga_golem_house",
-      "required": false
-    },
-    {
-      "id": "growsseth:cydonia/golem_house",
-      "required": false
-    }
+    "growsseth:golem_variants/snowy_golem_house",
+    "growsseth:golem_variants/taiga_golem_house",
+    "growsseth:golem_variants/desert_golem_house",
+    "growsseth:golem_variants/plains_golem_house",
+    "growsseth:golem_variants/savanna_golem_house",
+    "growsseth:golem_variants/zombie_desert_golem_house",
+    "growsseth:golem_variants/zombie_plains_golem_house",
+    "growsseth:golem_variants/zombie_savanna_golem_house",
+    "growsseth:golem_variants/zombie_snowy_golem_house",
+    "growsseth:golem_variants/zombie_taiga_golem_house",
+    "growsseth:cydonia/golem_house"
   ]
 }

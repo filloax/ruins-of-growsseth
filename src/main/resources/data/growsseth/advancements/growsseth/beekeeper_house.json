@@ -8,7 +8,7 @@
             "translate": "advancements.growsseth.structures.beekeeper_house.description"
         },
         "icon": {
-            "item": "minecraft:honeycomb"
+            "id": "minecraft:honeycomb"
         },
         "hidden": true,
         "show_toast": true
@@ -22,23 +22,7 @@
                         "entity": "this",
                         "predicate": {
                             "location": {
-                                "structure": "growsseth:beekeeper_house"
-                            }
-                        }
-                    }
-                ]
-            },
-            "trigger": "minecraft:location"
-        },
-        "in_structure_cydonia": {
-            "conditions": {
-                "player": [
-                    {
-                        "condition": "minecraft:entity_properties",
-                        "entity": "this",
-                        "predicate": {
-                            "location": {
-                                "structure": "growsseth:cydonia/beekeeper_house"
+                                "structures": "#growsseth:beekeeper_house"
                             }
                         }
                     }
@@ -46,11 +30,5 @@
             },
             "trigger": "minecraft:location"
         }
-    },
-    "requirements": [
-        [
-            "in_structure",
-            "in_structure_cydonia"
-        ]
-    ]
+    }
 }

@@ -38,8 +38,8 @@ object StructureDisabler {
         GrowssethStructures.CONDUIT_RUINS to StructureConfig::conduitRuinsEnabled,
         GrowssethStructures.ENCHANT_TOWER to StructureConfig::enchantTowerEnabled,
         GrowssethStructures.ABANDONED_FORGE to StructureConfig::abandonedForgeEnabled,
-        // Doesn't spawn as standalone structure naturally, but also check here
-        GrowssethStructures.GOLEM_HOUSE to StructureConfig::golemHouseEnabled,
+        // Doesn't spawn as standalone structure naturally
+//        GrowssethStructures.GOLEM_HOUSE to StructureConfig::golemHouseEnabled,
         GrowssethStructures.NOTEBLOCK_LAB to StructureConfig::noteblockLabEnabled,
         GrowssethStructures.NOTEBLOCK_SHIP to StructureConfig::noteblockShipEnabled,
     )

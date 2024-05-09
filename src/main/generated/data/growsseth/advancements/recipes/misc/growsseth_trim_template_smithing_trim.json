@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "growsseth:growsseth_trim_template"
-            ]
+            "items": "growsseth:growsseth_trim_template"
           }
         ]
       },
