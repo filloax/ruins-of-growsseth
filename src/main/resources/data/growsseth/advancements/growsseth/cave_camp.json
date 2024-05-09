@@ -22,23 +22,7 @@
                         "entity": "this",
                         "predicate": {
                             "location": {
-                                "structure": "growsseth:cave_camp"
-                            }
-                        }
-                    }
-                ]
-            },
-            "trigger": "minecraft:location"
-        },
-        "in_structure_cydonia": {
-            "conditions": {
-                "player": [
-                    {
-                        "condition": "minecraft:entity_properties",
-                        "entity": "this",
-                        "predicate": {
-                            "location": {
-                                "structure": "growsseth:cydonia/cave_camp"
+                                "structures": "#growsseth:cave_camp"
                             }
                         }
                     }
