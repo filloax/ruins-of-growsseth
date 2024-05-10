@@ -5,7 +5,7 @@
                 "Oh... salve collega. §o*yawn*§r uh... ultimamente sono sempre assonnato, eppure sto dormendo più del solito.",
                 "Probabilmente le mie ricerche imperterrite mi stanno stancando più del solito. §o*yawn*§r",
                 "Dimmi un po'... non è che hai trovato informazioni riguardo i sintomi della Piaga per caso? Ci sono voci in giro che dicono che forse, e ripeto forse, possa esistere una cura. Non che ci creda davvero, ahah!",
-                "Io? Sto benissimo §o*yawn*§r ...non preoccuparti, sto seguendo una mia intuizione, ma stando in una tenda mi sarò ammalato, ho comunque una certa età! Ahah... §o*yawn*§r",
+                "Io? Sto benissimo §o*yawn*§r ...non preoccuparti, sto seguendo una mia intuizione, ma stando in una tenda mi sarò ammalato, ho comunque una certa età! Ahah... §o*yawn*§r"
             ],
             "useLimit": 1,
             "priority": 1000,
@@ -45,7 +45,7 @@
                 "Ora che hai scoperto la cura serve che qualcuno la diffonda, no? Ci penserò io, andrò in posti lontani e la porterò a chiunque ne abbia bisogno. Sarà questo il mio riscatto.",
                 "Ma non essere triste per la mia dipartita, collega! Prima o poi ci le nostre strade si incroceranno di nuovo, ne sono certo.",
                 "Comunque, volevo ringraziarti di nuovo. Se non ci fossi stato tu non sarei qui, in piedi, a respirare, e soprattutto non ci sarebbe la speranza di un mondo nuovo. Per tutto questo, grazie.",
-                "Ehm ehm, comunque partirò a breve, quindi se vuoi chiedermi ancora qualcosa, questo è il momento giusto."
+                "§lEhm ehm§r, comunque partirò a breve, quindi se vuoi chiedermi ancora qualcosa, questo è il momento giusto."
             ],
             "useLimit": 1,
             "priority": 1100,

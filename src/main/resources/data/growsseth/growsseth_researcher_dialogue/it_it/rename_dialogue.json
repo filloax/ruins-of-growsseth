@@ -63,38 +63,6 @@
             "requiresEventParam": "ruslan"
         },
         {
-            "content": "Carlorg? Ho sentito da dei villaggeri qui in giro che era il nome del tuo vecchio cavallo. Condoglianze, collega, sono sicuro che ti ci fossi affezionato molto.\nNon voglio che il mio nome ti riporti alla mente brutti ricordi (né essere chiamato come un cavallo), quindi preferisco non usare quel nome.",
-            "requiresEventParam": "carlorg"
-        },
-        {
-            "content": "Aspetta... ma non è un nome da cavallo? Non so che idea ti fossi fatto di me ma non appartengo al genere equino, mi trovo costretto a rifiutare.",
-            "requiresEventParam": "jargad"
-        },
-        {
-            "content": "Superpippo? Ho sentito da alcuni villaggeri che questo era il nome che avevi dato al loro golem, in maniera molto poco consenziente, tralaltro.\nGli abitanti lo rimpiangono molto, non voglio portargli alla mente vecchi ricordi.",
-            "requiresEventParam": "superpippo"
-        },
-        {
-            "content": "Il nome del vecchio parroco? Ho sentito che c'era stata una messa in suo onore, deve essere stata una grande persona.\nTuttavia, non posso accettare il nome di qualcuno che non ho neanche avuto modo di conoscere, mi dispiace.",
-            "requiresEventParam": "mammonk"
-        },
-        {
-            "content": "Ho già sentito quel nome mentre conversavo con alcuni abitanti del villaggio. So che è stato infettato anche lui, brutta storia.\nNon mi auguro di subire anch'io lo stesso trattamento, collega. Non credo nelle superstizioni ma eviterei di usare il suo nome, grazie.",
-            "requiresEventParam": "ricky"
-        },
-        {
-            "content": "Robertong? In passato ho sentito una storia di questo tizio che girava nudo durante un temporale e... uh... diciamo che i fulmini non gradirono i genitali umani. No grazie, preferirei un nome diverso.",
-            "requiresEventParam": "robertong"
-        },
-        {
-            "content": "Poly... come il nome di quel nobile di Kor Teena (da 1 pezzo)? Non sentivo questo nome da molti anni, in passato avevo comprato delle mappe da lui.\nComunque scusa, ma i nomi da nobile non mi si addicono particolarmente.",
-            "requiresEventParam": "poly"
-        },
-        {
-            "content": "Salvatore? Mi ricorda un coltivatore di Kor Teena (da 1 pezzo) che anni fa mi fece dei prezzi assurdi per delle banalissime rape. Scusami, ma non ci tengo ad avere il suo nome.",
-            "requiresEventParam": "salvatore"
-        },
-        {
             "content": "Collega, no. So benissimo cosa fa quella targhetta, e non ci tengo a subirne gli effetti, grazie.",
             "requiresEventParam": "grumm"
         },

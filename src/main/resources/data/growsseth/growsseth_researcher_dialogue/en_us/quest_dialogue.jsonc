@@ -2,10 +2,10 @@
     "shared": [
         {
             "content": [
-                "Oh... hello colleague. §o*yawn*§r uh... lately I've been feeling very sleepy, even though I'm sleeping more than usual.",
-                "Probably my relentless research is wearing me out more than usual. §o*yawn*§r",
-                "Tell me... have you found any information about the symptoms of the Plague? There are rumors going around that perhaps, and I repeat perhaps, there might be a cure. Not that I really believe it, haha!",
-                "Me? I'm doing great §o*yawn*§r ...don't worry, I'm following my intuition, but staying in a tent must have made me sick, after all, I'm getting old! Haha... §o*yawn*§r",
+                "Oh... hello colleague. §o*yawn*§r uh... lately I've been feeling sleepy all the time, even though I'm sleeping more than usual.",
+                "Perhaps my relentless research is wearing me out more than usual. §o*yawn*§r",
+                "Tell me... have you found any information about the symptoms of the Plague by any chance? There are rumors going around that maybe, and I repeat maybe, there might be a cure. Not that I really believe it, haha!",
+                "Me? I'm doing great §o*yawn*§r ...don't worry, I'm following my intuition, but staying in a tent might have made me sick, after all, I'm not getting any younger! Haha... §o*yawn*§r"
             ],
             "useLimit": 1,
             "priority": 1000,
@@ -15,12 +15,18 @@
         },
         {
             "content": [
-                "...pant... pant... Colleague? Is that you..? Are we... in my underground? What are you doing here? And what am I doing in my cage..?",
-                "Oh, I think I understand, in the end, I couldn't find that cursed ingredient...",
-                "Wait... this smell... this taste... §lNOW I UNDERSTAND!§r I can't believe it, for so long I've been blind to such an obvious solution!",
-                "Oh, sorry, I got carried away with emotion and didn't even thank you!",
-                "I thank you infinitely, colleague, I can never repay you enough but please, if you need any of my research, don't hesitate to ask, it's the least I can do.",
-                "I'll come back upstairs once I've fully recovered... I'd like to prepare some things.",
+                "§o...pant... pant...§r Colleague? Is that you..? Are we... in my underground? What are you doing here? And what am I doing in my cage..?",
+                "Oh, I remember now, in the end, I couldn't find that cursed ingredient...",
+                "Wait... this smell... this taste... §lNOW I UNDERSTAND!§r",
+                "It was the weakness potion, right? And this other taste... a golden apple? I can't believe it, it was one of the last combinations I had left to try!",
+                {
+                    "content": "...",
+                    "duration": 4
+                },
+                "Oh right, sorry! I got carried away by the excitement and forgot to thank you!",
+                "I thank you infinitely, colleague, I was sure my end had come, I even wrote a farewell diary, and yet here I am, alive.",
+                "I can never repay you enough but please, if you need any of my research, don't hesitate to ask, it's the least I can do.",
+                "I'll go back up once I've fully recovered... I'd like to prepare a few things."
             ],
             "useLimit": 1,
             "priority": 1050,
@@ -34,11 +40,12 @@
                     "content": "Hello colleague.",
                     "duration": 4
                 },
-                "You know, after what happened I thought maybe it was time for me to retire... I don't even know how long I've been wandering around this land without results.",
-                "I've reflected on it, and I've come to a conclusion... my journey isn't over yet. I'll go to distant places, bringing relief to anyone in need.",
-                "But don't be sad about my departure, colleague! Sooner or later we'll meet again, I'm sure of it.",
-                "Anyway, I wanted to thank you again. If it weren't for you, I wouldn't be here, standing, breathing, and above all, there wouldn't have been hope for a new world. For all this, thank you.",
-                "Ahem ahem, anyway, I'll be leaving soon, so if you want to ask me anything else, now's the right time.",
+                "You know, after what happened, I thought it was time to retire... For years I've wandered these lands with no results, and in the end, I even failed in my one true goal.",
+                "So I reflected on it, and I came to a conclusion... No, my journey is not over, there is still something I can do.",
+                "Now that you've found the cure, someone needs to spread it, right? I'll do it, I'll go to faraway places and bring it to anyone who needs it. That'll be my redemption.",
+                "But don't be sad about my departure, colleague! Sooner or later our paths will cross again, I'm sure of it.",
+                "Anyway, I wanted to thank you again. If it weren't for you, I wouldn't be here, standing, breathing, and above all, there wouldn't be hope for a new world. For all this, thank you.",
+                "§lAhem ahem§r, anyway, I'll be leaving soon, so if you want to ask me anything else, now's the right time."
             ],
             "useLimit": 1,
             "priority": 1100,
@@ -103,27 +110,27 @@
     ],
     "playerLeave": [
         {
-            "content": "Goodbye colleague, don't you dare become undead, huh!",
+            "content": "Goodbye colleague, don't you dare become an undead, huh!",
             "priority": 1000,
             "requiresQuestStage": "start",
             "requiresUntilQuestStage": "healed"
         },
         {
-            "content": "Farewell colleague, I'll miss you.",
+            "content": "Goodbye colleague, I'll miss you.",
             "priority": 1000,
             "requiresQuestStage": "home"
         }
     ],
     "playerLeaveSoon": [
         {
-            "content": "Farewell colleague, I'll miss you.",
+            "content": "Goodbye colleague, I'll miss you.",
             "priority": 1000,
             "requiresQuestStage": "home"
         }
     ],
     "playerLeaveNight": [
         {
-            "content": "Farewell colleague, I'll miss you.",
+            "content": "Goodbye colleague, I'll miss you.",
             "priority": 1000,
             "requiresQuestStage": "home"
         }
