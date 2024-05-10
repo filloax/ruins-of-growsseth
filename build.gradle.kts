@@ -150,7 +150,6 @@ loom.runs.matching{ it.name != "datagenClient" }.configureEach {
 tasks.withType<JavaCompile> {
 	options.release = javaVersion
 	options.encoding = "UTF-8"
-	options.isFork = true	// fix for https://github.com/FabricMC/fabric-loom/issues/369
 }
 tasks.withType<KotlinCompile> {
 	kotlinOptions.jvmTarget = "$javaVersion"
