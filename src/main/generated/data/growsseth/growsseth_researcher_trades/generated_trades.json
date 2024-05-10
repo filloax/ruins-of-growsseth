@@ -32,7 +32,8 @@
         "priority": -50,
         "wants": [
           {
-            "id": "minecraft:map"
+            "amount": 2,
+            "id": "minecraft:emerald"
           }
         ]
       }
