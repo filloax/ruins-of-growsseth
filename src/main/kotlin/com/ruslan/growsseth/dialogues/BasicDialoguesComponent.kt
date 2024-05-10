@@ -4,6 +4,7 @@ import com.filloax.fxlib.*
 import com.filloax.fxlib.nbt.*
 import com.filloax.fxlib.codec.*
 import com.mojang.serialization.Codec
+import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.config.MiscConfig
 import com.ruslan.growsseth.dialogues.BasicDialogueEvents
@@ -23,7 +24,7 @@ import net.minecraft.world.entity.ai.targeting.TargetingConditions
 import net.minecraft.world.phys.AABB
 import java.util.*
 import java.util.concurrent.LinkedBlockingDeque
-import kotlin.math.max
+import kotlin.jvm.optionals.getOrNull
 import com.ruslan.growsseth.dialogues.BasicDialogueEvents as Events
 import org.apache.logging.log4j.Level as LogLevel
 
@@ -32,37 +33,43 @@ open class BasicDialoguesComponent(
     val entity: LivingEntity, val random: RandomSource,
 ) : NpcDialoguesComponent {
     companion object {
-        // Stuff to persist in NBT (using DataFixerUpper because shorter to write even if complicated af to read)
-        val CODEC_LIMITED_DIALOGUES: Codec<MutableMap<UUID, MutableMap<String, Int>>> = mutableMapCodec(
-            UUIDUtil.STRING_CODEC, mutableMapCodec(
-                Codec.STRING, Codec.INT)
-        )
-        val CODEC_PLAYER_LEFT_TIMESTAMPS: Codec<MutableMap<UUID, Long>> = mutableMapCodec(UUIDUtil.STRING_CODEC, Codec.LONG)
-        val CODEC_CLOSE_PLAYERS_WITH_TIMESTAMPS: Codec<MutableMap<UUID, Long>> = mutableMapCodec(UUIDUtil.STRING_CODEC, Codec.LONG)
-        val CODEC_EVENT_TRIGGER_COUNT: Codec<MutableMap<DialogueEvent, Int>> = mutableMapCodec(DialogueEvent.CODEC, Codec.INT)
+        val PLAYER_DATA_CODEC: Codec<PlayerData> = RecordCodecBuilder.create { builder -> builder.group(
+            Codec.STRING.mapWithValueOf(Codec.INT).fieldOf("dialogueCount").forGetter(PlayerData::dialogueCount),
+            DialogueEvent.CODEC.mapWithValueOf(Codec.INT).fieldOf("eventTriggerCount").forGetter(PlayerData::eventTriggerCount),
+            DialogueEvent.CODEC.mapWithValueOf(Codec.INT).fieldOf("eventCloseTriggerCount").forGetter(PlayerData::eventCloseTriggerCount),
+            DialogueEvent.CODEC.mapWithValueOf(Codec.LONG).fieldOf("eventLastTriggerTime").forGetter(PlayerData::eventLastTriggerTime),
+            Codec.LONG.optionalFieldOf("lastSeenTimestamp").forGetter(PlayerData::lastSeenTimestamp.optional()),
+            Codec.LONG.optionalFieldOf("lastArrivedTimestamp").forGetter(PlayerData::lastArrivedTimestamp.optional()),
+        ).apply(builder) { d, et, ec, el, ls, la ->  PlayerData(d, et, ec, el, ls.getOrNull(), la.getOrNull()) } }
 
         val TARGETING: TargetingConditions = TargetingConditions.forNonCombat().ignoreLineOfSight().ignoreInvisibilityTesting()
     }
 
+    data class PlayerData(
+        val dialogueCount: MutableMap<String, Int> = mutableMapOf(),
+        val eventTriggerCount: MutableMap<DialogueEvent, Int> = mutableMapOf(),
+        val eventCloseTriggerCount: MutableMap<DialogueEvent, Int> = mutableMapOf(),
+        val eventLastTriggerTime: MutableMap<DialogueEvent, Long> = mutableMapOf(),
+        var lastSeenTimestamp: Long? = null,
+        var lastArrivedTimestamp: Long? = null,
+        // Do not persist, not necessary
+        val lastEventDialogue: MutableMap<DialogueEvent, DialogueEntry> = mutableMapOf(),
+    )
+
     // NBT data
     // First key is player UUID
-    protected var closePlayersWithTimestamps: MutableMap<UUID, Long> = mutableMapOf()
-    protected var playerLeftTimestamps: MutableMap<UUID, Long> = mutableMapOf()
-    protected var dialogueCount: MutableMap<UUID, MutableMap<String, Int>> = mutableMapOf()
-    // count, gametime
-    protected var eventTriggerCount: MutableMap<DialogueEvent, Int> = mutableMapOf()
-
+    protected val closePlayers = mutableSetOf<UUID>()
     protected val leavingPlayers = mutableMapOf<UUID, Int>()
     protected val playersArrivedSoon = mutableMapOf<UUID, Boolean>()
-    //protected val playersWhoAttackedRecently = mutableMapOf<UUID, Boolean>()
-    protected val lastEventDialogue: MutableMap<DialogueEvent, DialogueEntry> = mutableMapOf()
+    protected val savedPlayersData = mutableMapOf<UUID, PlayerData>()
+
     protected val dialogueQueue: Deque<Triple<ServerPlayer, DialogueLine, DialogueEvent>> = LinkedBlockingDeque()
-    protected val eventCloseTriggerCount: MutableMap<DialogueEvent, Int> = mutableMapOf()
-    protected val eventLastTriggerTime: MutableMap<DialogueEvent, Long> = mutableMapOf()
-    protected val serverLevel = entity.level() as ServerLevel
+    protected val serverLevel: ServerLevel get() = entity.level() as ServerLevel
+    protected val server get() = serverLevel.server
 
     var nearbyRadius = 12.0
     var radiusForTriggerLeave = 17.0
+    var maxDialogueRadius = 50.0 // Radius before any dialogue event is prevented from triggering
     var secondsForTriggerLeave = 1.0   // waiting time before saying goodbye when a player leaves
     var checkLineOfSight = true
     /** Set to 0 to disable "soon" events: */
@@ -80,20 +87,26 @@ open class BasicDialoguesComponent(
 
     protected var dialogueQueueDelay = 0
 
+    protected fun playerDataOrCreate(player: ServerPlayer) = playerDataOrCreate(player.uuid)
+    protected fun playerDataOrCreate(uuid: UUID) = savedPlayersData.computeIfAbsent(uuid) { PlayerData() }
+    protected fun playerData(player: ServerPlayer) = playerData(player.uuid)
+    protected fun playerData(uuid: UUID) = savedPlayersData[uuid]
+
+
     open fun onPlayerArrive(player: ServerPlayer) {
         triggerDialogue(player, Events.PLAYER_ARRIVE_LONG_TIME, Events.PLAYER_ARRIVE_SOON, Events.PLAYER_ARRIVE_NIGHT, Events.PLAYER_ARRIVE)
     }
 
     open fun onPlayerLeave(player: ServerPlayer) {
-        playerLeftTimestamps[player.uuid] = entity.level().gameTime
+        playerDataOrCreate(player).lastSeenTimestamp = entity.level().gameTime
         triggerDialogue(player, Events.PLAYER_LEAVE_SOON, Events.PLAYER_LEAVE_NIGHT, Events.PLAYER_LEAVE)
     }
 
     override fun resetNearbyPlayers() {
-        closePlayersWithTimestamps.keys.forEach { uuid ->
-            playerLeftTimestamps[uuid] = entity.level().gameTime
+        closePlayers.forEach { uuid ->
+            playerDataOrCreate(uuid).lastSeenTimestamp = entity.level().gameTime
         }
-        closePlayersWithTimestamps.clear()
+        closePlayers.clear()
     }
 
     /**
@@ -103,9 +116,9 @@ open class BasicDialoguesComponent(
         return when (dialogueEvent) {
             Events.PLAYER_ARRIVE_NIGHT -> entity.level().isNight
             Events.PLAYER_ARRIVE_SOON -> secondsForArriveSoon > 0
-                    && playerLeftTimestamps[player.uuid]?.let { getSecondsSinceWorldTime(it) < secondsForArriveSoon } == true
+                    && playerData(player)?.lastSeenTimestamp?.let { getSecondsSinceWorldTime(it) < secondsForArriveSoon } == true
             Events.PLAYER_ARRIVE_LONG_TIME ->  secondsForArriveLongTime > 0
-                    && playerLeftTimestamps[player.uuid]?.let { getSecondsSinceWorldTime(it) > secondsForArriveLongTime } == true
+                    && playerData(player)?.lastSeenTimestamp?.let { getSecondsSinceWorldTime(it) > secondsForArriveLongTime } == true
             Events.PLAYER_LEAVE_NIGHT -> entity.level().isNight
             Events.PLAYER_LEAVE_SOON -> secondsForArriveSoon > 0
                     && playersArrivedSoon[player.uuid] ?: false
@@ -149,28 +162,33 @@ open class BasicDialoguesComponent(
     }
 
     private fun checkNearbyPlayers() {
-        val farRadius = max(nearbyRadius, radiusForTriggerLeave) * 5
-        val possiblePlayers: Set<ServerPlayer> = (entity.level() as ServerLevel).getNearbyPlayers(
+        val detectRadius = radiusForTriggerLeave
+        val visiblePlayers: Set<ServerPlayer> = serverLevel.getNearbyPlayers(
             TARGETING,
             entity,
-            AABB.ofSize(entity.position(), farRadius, farRadius, farRadius)
+            AABB.ofSize(entity.position(), detectRadius, detectRadius, detectRadius)
         ).map { it as ServerPlayer }.toSet()
+        val knownPlayers = closePlayers.mapNotNull { serverLevel.getPlayerByUUID(it) as ServerPlayer? }
+        val possiblePlayers = visiblePlayers + knownPlayers
+
         val nearbyBoundingBox = AABB.ofSize(entity.position(), nearbyRadius, nearbyRadius, nearbyRadius)
         val farBoundingBox = AABB.ofSize(entity.position(), radiusForTriggerLeave, nearbyRadius, radiusForTriggerLeave)
+
         // Players close enough to trigger arrive
         val nearPlayers = possiblePlayers.filter {
             nearbyBoundingBox.contains(it.position())
             && (!checkLineOfSight || entity.hasLineOfSight(it))
         }.toMutableSet()
-        // Players far enough to trigger leave (further radius to prevent accidental trigger)
+        // Players far enough to trigger leave
         val farPlayers = possiblePlayers.filterNot { farBoundingBox.contains(it.position()) }.toMutableSet()
         changeNearPlayers(nearPlayers, farPlayers)
+
         // Player not in either area
         val inbetweenPlayers = possiblePlayers - nearPlayers - farPlayers
 
         for (player in nearPlayers) {
-            if (player.uuid !in closePlayersWithTimestamps) {
-                closePlayersWithTimestamps[player.uuid] = entity.level().gameTime
+            if (player.uuid !in closePlayers) {
+                closePlayers.add(player.uuid)
                 onPlayerArrive(player)
             }
             if (player.uuid in leavingPlayers) {
@@ -185,11 +203,11 @@ open class BasicDialoguesComponent(
             }
         }
         for (player in farPlayers) {
-            if (player.uuid in closePlayersWithTimestamps) {
+            if (player.uuid in closePlayers) {
                 val tickCount = leavingPlayers.computeIfAbsent(player.uuid) { player.tickCount }
                 if (getSecondsSinceTick(player, tickCount) >= secondsForTriggerLeave) {
                     onPlayerLeave(player)
-                    closePlayersWithTimestamps.remove(player.uuid)
+                    closePlayers.remove(player.uuid)
                     leavingPlayers.remove(player.uuid)
                 }
             }
@@ -317,12 +335,10 @@ open class BasicDialoguesComponent(
 
         val selected = weightedRandom(validOptions, DialogueEntry::weight::get, random)
 
-        lastEventDialogue[event] = selected
+        playerDataOrCreate(player).lastEventDialogue[event] = selected
 
         if (selected.id != null) {
-            dialogueCount.computeIfAbsent(player.uuid) { mutableMapOf() }.also { countMap ->
-                countMap[selected.id] = countMap.getOrDefault(selected.id, 0) + 1
-            }
+            playerDataOrCreate(player).dialogueCount.let{map -> map[selected.id] = map.getOrDefault(selected.id, 0) + 1 }
         }
 
         onDialogueSelected(selected, event, eventParam, player)
@@ -334,39 +350,40 @@ open class BasicDialoguesComponent(
     protected open fun incrementEventCount(event: DialogueEvent, player: ServerPlayer) {
         //to avoid repetitions
         val time =  entity.level().gameTime
-        val lastTriggerTime = eventLastTriggerTime[event]
+        val pdata = playerDataOrCreate(player)
+        val lastTriggerTime = pdata.eventLastTriggerTime[event]
 
         if (event == Events.HIT_BY_PLAYER && lastTriggerTime != null) {
-            val count = eventCloseTriggerCount[event] ?: 1
+            val count = pdata.eventCloseTriggerCount[event] ?: 1
             val secondsSinceLastAttack = getSecondsSinceWorldTime(lastTriggerTime)
             if (secondsSinceLastAttack < secondsForAttackRepeat && count < maxCloseHitsForDialogues)
-                eventCloseTriggerCount[event] = count + 1
+                pdata.eventCloseTriggerCount[event] = count + 1
             else if (secondsSinceLastAttack > secondsForAttackRepeat * 2)
-                eventCloseTriggerCount[event] = 1
+                pdata.eventCloseTriggerCount[event] = 1
         }
         else if (lastTriggerTime != null) {
-            val count = eventCloseTriggerCount[event] ?: 1
+            val count = pdata.eventCloseTriggerCount[event] ?: 1
             if (getSecondsSinceWorldTime(lastTriggerTime) < secondsForCloseRepeat) {
-                eventCloseTriggerCount[event] = count + 1
+                pdata.eventCloseTriggerCount[event] = count + 1
             } else {
-                eventCloseTriggerCount[event] = 1
+                pdata.eventCloseTriggerCount[event] = 1
             }
         } else {
-            eventCloseTriggerCount[event] = 1
+            pdata.eventCloseTriggerCount[event] = 1
         }
-        eventLastTriggerTime[event] = time
+        pdata.eventLastTriggerTime[event] = time
 
-        eventTriggerCount[event] = eventTriggerCount.getOrDefault(event, 0) + 1
+        pdata.eventTriggerCount[event] = pdata.eventTriggerCount.getOrDefault(event, 0) + 1
 
         // Handle special event behavior in close repetition
         when (event) {
             BasicDialogueEvents.PLAYER_ARRIVE, BasicDialogueEvents.PLAYER_ARRIVE_NIGHT, BasicDialogueEvents.PLAYER_ARRIVE_LONG_TIME -> {
-                eventCloseTriggerCount[BasicDialogueEvents.PLAYER_ARRIVE_SOON] = 0
-                eventCloseTriggerCount[BasicDialogueEvents.PLAYER_LEAVE_SOON] = 0
+                pdata.eventCloseTriggerCount[BasicDialogueEvents.PLAYER_ARRIVE_SOON] = 0
+                pdata.eventCloseTriggerCount[BasicDialogueEvents.PLAYER_LEAVE_SOON] = 0
             }
         }
 
-        RuinsOfGrowsseth.logDev(LogLevel.INFO, "Triggered $event ${eventTriggerCount[event]} times (close ${eventCloseTriggerCount[event] ?: 0})")
+        RuinsOfGrowsseth.logDev(LogLevel.INFO, "Triggered $event ${pdata.eventTriggerCount[event]} times (close ${pdata.eventCloseTriggerCount[event] ?: 0})")
     }
 
     protected open fun onEventSelected(event: DialogueEvent, eventParam: String?, player: ServerPlayer, triggerSuccess: Boolean) {
@@ -403,18 +420,21 @@ open class BasicDialoguesComponent(
     }
 
     override fun getTriggeredDialogues(player: ServerPlayer): Map<DialogueEntry, Int> {
-        return dialogueCount[player.uuid]
+        return playerData(player)?.dialogueCount
             ?.mapNotNull { DialogueEntry.getWithId(it.key)?.to(it.value) }
             ?.associate { it }
             ?: mapOf()
     }
 
     override fun getTriggeredDialogues(): Map<DialogueEntry, Int> {
-        return dialogueCount.flatMap {
-            it.value.entries.mapNotNull { entry -> DialogueEntry.getWithId(entry.key)?.to(entry.value) }
-        }
-        .groupingBy { it.first }
-        .aggregate { _, accumulator: Int?, element, _ -> accumulator?.plus(element.second) ?: element.second }
+//        return dialogueCount.flatMap {
+//            it.value.entries.mapNotNull { entry -> DialogueEntry.getWithId(entry.key)?.to(entry.value) }
+//        }
+        return savedPlayersData.values.flatMap { data -> data.dialogueCount.entries.mapNotNull {
+                entry -> DialogueEntry.getWithId(entry.key)?.to(entry.value)
+            } }
+            .groupingBy { it.first }
+            .aggregate { _, accumulator: Int?, element, _ -> accumulator?.plus(element.second) ?: element.second }
     }
 
     private fun filterDialogueOptions(
@@ -423,7 +443,8 @@ open class BasicDialoguesComponent(
         event: DialogueEvent,
         eventParam: String? = null
     ): List<DialogueEntry> {
-        val lastForEvent = lastEventDialogue[event]
+        val pdata = playerDataOrCreate(player)
+        val lastForEvent = pdata.lastEventDialogue[event]
         val filters = mutableListOf<(DialogueEntry) -> Boolean>(
             { entry ->
                 if (entry.useLimit != null) {
@@ -432,7 +453,7 @@ open class BasicDialoguesComponent(
                         RuinsOfGrowsseth.LOGGER.error("Dialogue has no id but has useLimit: $entry")
                         false
                     } else {
-                        val count = dialogueCount[player.uuid]?.get(entryId) ?: 0
+                        val count = pdata.dialogueCount[entryId] ?: 0
                         count < entry.useLimit
                     }
                 } else true
@@ -452,10 +473,10 @@ open class BasicDialoguesComponent(
                 } ?: false
             },
         )
-        eventTriggerCount[event]?.let {
+        pdata.eventTriggerCount[event]?.let {
             filters.add { entry -> it >= entry.afterRepeatsMin && (entry.afterRepeatsMax == null || it <= entry.afterRepeatsMax) }
         }
-        eventCloseTriggerCount[event]?.let {
+        pdata.eventCloseTriggerCount[event]?.let {
             filters.add { entry ->
                 it >= entry.afterCloseRepeatsMin
                         && (entry.afterCloseRepeatsMax == null || it <= entry.afterCloseRepeatsMax)
@@ -513,14 +534,14 @@ open class BasicDialoguesComponent(
         return if (player != null) {
             player as ServerPlayer
         } else {
-            playerLeftTimestamps[uuid] = entity.level().gameTime
-            closePlayersWithTimestamps.remove(uuid)
+            playerDataOrCreate(uuid).lastSeenTimestamp = entity.level().gameTime
+            closePlayers.remove(uuid)
 
             null
         }
     }
 
-    override fun nearbyPlayers(): List<ServerPlayer> = closePlayersWithTimestamps.mapNotNull { getPlayerById(it.key) }
+    override fun nearbyPlayers(): List<ServerPlayer> = closePlayers.mapNotNull { getPlayerById(it) }
 
     private fun eventInQueue(event: DialogueEvent): Boolean {
         return dialogueQueue.any { it.third == event }
@@ -552,24 +573,24 @@ open class BasicDialoguesComponent(
         val data = CompoundTag()
         tag.put("DialogueData", data)
 
-        data.saveField("DialogueCount", CODEC_LIMITED_DIALOGUES, this::dialogueCount)
-        data.saveField("PlayersLeftTimestamps", CODEC_PLAYER_LEFT_TIMESTAMPS, this::playerLeftTimestamps)
-        data.saveField("PlayersArrivalTimestamps", CODEC_CLOSE_PLAYERS_WITH_TIMESTAMPS, this::closePlayersWithTimestamps)
-        data.saveField("DialogueEventCount", CODEC_EVENT_TRIGGER_COUNT, this::eventTriggerCount)
+        data.saveField("closePlayers", mutableSetCodec(UUIDUtil.STRING_CODEC), ::closePlayers)
+        data.saveField("leavingPlayers", mutableMapCodec(UUIDUtil.STRING_CODEC, Codec.INT), ::leavingPlayers)
+        data.saveField("playersArrivedSoon", mutableMapCodec(UUIDUtil.STRING_CODEC, Codec.BOOL), ::playersArrivedSoon)
+        data.saveField("savedPlayersData", mutableMapCodec(UUIDUtil.STRING_CODEC, PLAYER_DATA_CODEC), ::savedPlayersData)
 
         addExtraNbtData(data)
     }
 
     override fun readNbt(tag: CompoundTag) {
-        dialogueCount.clear()
-        playerLeftTimestamps.clear()
-        closePlayersWithTimestamps.clear()
-        eventTriggerCount.clear()
+        closePlayers.clear()
+        leavingPlayers.clear()
+        closePlayers.clear()
+        savedPlayersData.clear()
         tag.get("DialogueData")?.let { data -> if (data is CompoundTag) {
-            data.loadField("DialogueCount", CODEC_LIMITED_DIALOGUES) { dialogueCount = it }
-            data.loadField("PlayersLeftTimestamps", CODEC_PLAYER_LEFT_TIMESTAMPS) { playerLeftTimestamps = it }
-            data.loadField("PlayersArrivalTimestamps", CODEC_CLOSE_PLAYERS_WITH_TIMESTAMPS) { closePlayersWithTimestamps = it }
-            data.loadField("DialogueEventCount", CODEC_EVENT_TRIGGER_COUNT) { eventTriggerCount = it }
+            data.loadField("closePlayers", mutableSetCodec(UUIDUtil.STRING_CODEC)) { closePlayers.addAll(it) }
+            data.loadField("leavingPlayers", mutableMapCodec(UUIDUtil.STRING_CODEC, Codec.INT)) { leavingPlayers.putAll(it) }
+            data.loadField("playersArrivedSoon", mutableMapCodec(UUIDUtil.STRING_CODEC, Codec.BOOL)) { playersArrivedSoon.putAll(it) }
+            data.loadField("savedPlayersData", mutableMapCodec(UUIDUtil.STRING_CODEC, PLAYER_DATA_CODEC)) { savedPlayersData.putAll(it) }
 
             readExtraNbtData(data)
         }}
