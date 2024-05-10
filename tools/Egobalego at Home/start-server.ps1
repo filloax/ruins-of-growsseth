@@ -1,13 +1,7 @@
 # Check if Python is installed
 $pythonExists = $(get-command python -ErrorAction SilentlyContinue)
 if (-not $pythonExists) {
-    Write-Host "Please install Python 3.x https://www.python.org/downloads/"
-    exit 1
-}
-
-$python = py --version 2>&1
-if ($python -notmatch "Python") {
-    Write-Host "Please install Python 3.x https://www.python.org/downloads/"
+    Write-Host "Could not find python command, please install Python 3.x: https://www.python.org/downloads/"
     exit 1
 }
 
@@ -17,7 +11,7 @@ if (!(Test-Path $venv)) {
     py -m venv $venv
 }
 
-"$venv\Scripts\Activate.ps1"
+& "$venv\Scripts\Activate.ps1"
 
 # Install Flask if it's not already installed
 pip install -r "$PSScriptRoot\requirements.txt"
