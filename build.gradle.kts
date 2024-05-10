@@ -89,7 +89,7 @@ dependencies {
 
 	"net.fabricmc:fabric-language-kotlin:${property("fabric_kotlin_version")}".let{
 		modImplementation(it)
-		// include(it)
+		include(it)
 	}
 
 	modImplementation("net.fabricmc.fabric-api:fabric-api:${property("fabric_api_version")}") {
@@ -97,17 +97,17 @@ dependencies {
 	}
 	"com.terraformersmc:modmenu:${property("mod_menu_version")}".let{
 		modImplementation(it)
-		// include(it)
+		include(it)
 	}
 	"com.teamresourceful.resourcefulconfig:resourcefulconfig-fabric-${property("rconfig_version")}".let{
 		modImplementation(it)
-		// include(it)
+		include(it)
 	}
 
 	if (!useLocalFxLib) {
 		"com.github.filloax:fx-lib:v${property("fxLibVersion")}-fabric".let{
 			modImplementation(it)
-			// include(it)
+			include(it)
 		}
 	} else {
 		println("Loading FX-Lib from local Maven...")
