@@ -28,7 +28,7 @@
                     "map": {
                         "structure": "#growsseth:enchant_tower",
                         "name": "structure.growsseth.enchant_tower.map.name",
-                        "fixedStructureId": "#growsseth:enchant_tower",
+                        "fixedStructureId": "#growsseth:enchant_tower"
                     }
                 },
                 "wants": [
@@ -83,9 +83,9 @@
                     "id": "growsseth:ruins_map",
                     "amount": 1,
                     "map": {
-                        "structure": "#growsseth:conduit_ruins",
-                        "name": "structure.growsseth.conduit_ruins.map.name",
-                        "fixedStructureId": "#growsseth:conduit_ruins",
+                        "structure": "#growsseth:conduit_church",
+                        "name": "structure.growsseth.conduit_church.map.name",
+                        "fixedStructureId": "#growsseth:conduit_church",
                         "scale": 4
                     }
                 },
@@ -325,5 +325,5 @@
                 ]
             }
         ]
-    },
+    }
 }
