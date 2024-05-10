@@ -192,10 +192,12 @@ open class QuestComponent<E : LivingEntity>(val entity: E, val name: String) {
     fun readNbt(tag: CompoundTag) {
         tag.getCompound(QUESTS_TAG_ID)?.let { questsTag ->
             questsTag.getCompound(name)?.let { qTag ->
-                data = PERSIST_CODEC.decodeNbt(qTag.getCompound(NBT_TAG_PERSIST)).getOrThrow(false) {
-                    RuinsOfGrowsseth.LOGGER.error("Error in decoding quest status: $it")
-                }.first
-                readCustomNbt(qTag)
+                val result = PERSIST_CODEC.decodeNbt(qTag.getCompound(NBT_TAG_PERSIST)).result()
+                result.ifPresent {
+                    data = it.first
+                    readCustomNbt(qTag)
+                }
+                if (result.isEmpty) RuinsOfGrowsseth.LOGGER.error("Couldn't parse quest data: $qTag")
             }
         }
     }

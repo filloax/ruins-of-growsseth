@@ -6,6 +6,10 @@
     }
   ],
   "placement": {
+    "exclusion_zone": {
+      "chunk_count": 10,
+      "other_set": "minecraft:pillager_outposts"
+    },
     "salt": 1364758395,
     "spacing": 48,
     "separation": 32,
