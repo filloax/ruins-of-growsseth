@@ -152,20 +152,11 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
 
     override fun dropCustomDeathLoot(damageSource: DamageSource, looting: Int, hitByPlayer: Boolean) {
         super.dropCustomDeathLoot(damageSource, looting, hitByPlayer)
-
-        val resInstrumentHolder = BuiltInRegistries.INSTRUMENT
-            .getHolder(ResourceKey.create(Registries.INSTRUMENT, GrowssethItems.Instruments.RESEARCHER_HORN.first))
-            .orElseThrow()
-
-        val hornItem = InstrumentItem.create(GrowssethItems.RESEARCHER_HORN, resInstrumentHolder)
-        var itemEntity = ItemEntity(level(), position().x, position().y, position().z, hornItem)
-        level().addFreshEntity(itemEntity)
-
         val daggerItem = ItemStack(GrowssethItems.RESEARCHER_DAGGER)
         daggerItem.enchant(Enchantments.SMITE, 5)
         daggerItem.enchant(Enchantments.UNBREAKING, 3)
         daggerItem.enchant(Enchantments.MENDING, 1)
-        itemEntity = ItemEntity(level(), position().x, position().y, position().z, daggerItem)
+        val itemEntity = ItemEntity(level(), position().x, position().y, position().z, daggerItem)
         level().addFreshEntity(itemEntity)
     }
 
