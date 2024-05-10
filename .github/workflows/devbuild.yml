@@ -36,7 +36,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build with Gradle
-        run: ./gradlew build -Pmod_version='${{ env.RELEASE_COUNT }}'
+        run: ./gradlew build -Pmod_version='1.20.6-${{ env.RELEASE_COUNT }}'
 
       - name: "Replace test release"
         uses: "marvinpinto/action-automatic-releases@latest"
@@ -44,6 +44,6 @@ jobs:
           repo_token: "${{ secrets.TOKEN_GITHUB }}"
           automatic_release_tag: "test-release-1.20.6"
           prerelease: true
-          title: "Current Test Release [${{ env.RELEASE_COUNT }}] - 1.20.6"
+          title: "Test Release [${{ env.RELEASE_COUNT }}] - 1.20.6 - $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
           files: |
             build/libs/*.jar
