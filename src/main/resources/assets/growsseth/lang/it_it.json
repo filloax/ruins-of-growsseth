@@ -75,6 +75,12 @@
     "growsseth.commands.reloadremote.failure": "Ricaricamento dati remoti: fallito (Controlla il log)!",
     "growsseth.commands.greset.nop": "Niente da resettare (persistenza ricercatore disabilitata)",
     "growsseth.commands.greset.done": "Resettati dati ricercatore (%d)",
+    "growsseth.commands.gquest.noQuest": "L'entità selezionata non ha quest",
+    "growsseth.commands.gquest.stage.success": "Impostata correttamente la fase per %s, la cronologia è: %s",
+    "growsseth.commands.gquest.stage.failure": "Non è stato possibile impostare la fase",
+    "growsseth.commands.gquest.back.success": "Riportata correttamente la fase a %s, la cronologia è: %s",
+    "growsseth.commands.gquest.back.failure": "Non è stato possibile riportare indietro la fase",
+    "growsseth.commands.gquest.info": "Dati della quest di %s: Fase %s, Cronologia: %s",
     "growsseth.commands.booktemplate.invalidtemplate": "Template libro invalido %s",
 
     "entity.growsseth.researcher": "Ricercatore",
