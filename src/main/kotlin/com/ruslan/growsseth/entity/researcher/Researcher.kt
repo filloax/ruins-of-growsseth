@@ -968,6 +968,8 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
     override fun dropCustomDeathLoot(damageSource: DamageSource, looting: Int, hitByPlayer: Boolean) {
         val itemEntity = ItemEntity(level(), position().x, position().y, position().z, ItemStack(GrowssethItems.RESEARCHER_DAGGER).also { dagger ->
+            dagger.enchant(Enchantments.UNBREAKING, 3)
+            dagger.enchant(Enchantments.MENDING, 1)
             dagger.enchant(Enchantments.SMITE, 5)       // smite only on drop to prevent exploits
         })
         level().addFreshEntity(itemEntity)
