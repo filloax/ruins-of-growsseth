@@ -82,14 +82,17 @@ object ResearcherDonkey {
     }
 
     fun removeDonkey(tent: ResearcherTent, level: ServerLevel, predicate: ((Entity) -> Boolean) = {true}) {
-        val donkeys = level.getEntitiesOfClass(Researcher::class.java, AABB.of(tent.boundingBox).inflate(80.0), predicate)
-        val noItemDonkey = donkeys.filter { it.inventory.isEmpty }.firstOrNull()
-        if (noItemDonkey == null && donkeys.isNotEmpty()) {
-            RuinsOfGrowsseth.LOGGER.warn("Couldn't remove donkey as inventory was not empty")
-        }
-        if (noItemDonkey != null) {
-            RuinsOfGrowsseth.LOGGER.info("Removing Researcher donkey $noItemDonkey")
-            noItemDonkey.discard()
+        val donkeys = level.getEntitiesOfClass(Donkey::class.java, AABB.of(tent.boundingBox).inflate(80.0), predicate)
+//        val noItemDonkey = donkeys.firstOrNull { !hasItems(it) }
+//        if (noItemDonkey == null && donkeys.isNotEmpty()) {
+//            RuinsOfGrowsseth.LOGGER.warn("Couldn't remove donkey as inventory was not empty")
+//        }
+        val useDonkey = donkeys.firstOrNull()
+        if (useDonkey != null) {
+            RuinsOfGrowsseth.LOGGER.info("Removing Researcher donkey $useDonkey")
+            EventUtil.runAtServerTickEnd {
+                useDonkey.discard()
+            }
         }
     }
 }

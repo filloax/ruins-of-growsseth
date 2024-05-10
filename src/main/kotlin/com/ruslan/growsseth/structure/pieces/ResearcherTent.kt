@@ -29,6 +29,7 @@ import net.minecraft.world.level.WorldGenLevel
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.Rotation
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity
 import net.minecraft.world.level.chunk.ChunkGenerator
 import net.minecraft.world.level.levelgen.structure.BoundingBox
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext
@@ -97,6 +98,9 @@ class ResearcherTent : GrTemplateStructurePiece {
                 val blockState = level.getBlockState(pos)
                 if (blockState.block in blockCounts && blockState.`is`(tag)) {
                     val blockEntity = level.getBlockEntity(pos)
+                    if (blockEntity is RandomizableContainerBlockEntity) {
+                        blockEntity.unpackLootTable(null)
+                    }
                     Clearable.tryClear(blockEntity)
                     val newBlock = removeReplaceBlocks.getOrDefault(blockState.block, Blocks.AIR).defaultBlockState()
                     level.setBlock(pos, newBlock, SetBlockFlag.or(
@@ -104,6 +108,7 @@ class ResearcherTent : GrTemplateStructurePiece {
                         SetBlockFlag.NO_NEIGHBOR_REACTIONS,
                         SetBlockFlag.NO_NEIGHBOR_REACTION_DROPS
                     ))
+                    level.blockUpdated(pos, newBlock.block)
                     numRemoved++
                     blockCounts[blockState.block] = blockCounts[blockState.block]!! - 1
                     if (blockCounts[blockState.block]!! <= 0) {
