@@ -10,14 +10,16 @@ plugins {
 val javaVersion: Int = (property("javaVersion")!! as String).toInt()
 val kotlinVersion: String by project
 val kotlinSerializationVersion: String by project
-val alwaysUseLocalFXLib = (property("alwaysUseLocalFXLib")!! as String).toBoolean()
+val useLocalJarFxLib = (property("useLocalJarFxLib") as String).toBoolean()
+val alwaysUseLocalMavenFXLib = (property("alwaysUseLocalMavenFXLib")!! as String).toBoolean()
 version = property("mod_version")!! as String
 group = property("maven_group")!! as String
 val modid: String by project
 val fxLibVersion: String by project
+val minecraftVersion = property("minecraft_version") as String
 
 val javaVersionEnum = JavaVersion.values().find { it.majorVersion == javaVersion.toString() } ?: throw Exception("Cannot find java version for $javaVersion")
-val useLocalFxLib = alwaysUseLocalFXLib || fxLibVersion.contains(Regex("rev\\d+"))
+val useLocalMavenFxLib = alwaysUseLocalMavenFXLib || fxLibVersion.contains(Regex("rev\\d+"))
 
 base {
 	archivesName.set(property("archivesBaseName") as String)
@@ -58,12 +60,12 @@ loom {
 }
 
 dependencies {
-	minecraft("com.mojang:minecraft:${property("minecraft_version")}")
+	minecraft("com.mojang:minecraft:${minecraftVersion}")
 	//mappings("net.fabricmc:yarn:${property("yarnMappings")}:v2")
 	mappings(loom.layered() {
 		officialMojangMappings()
 		if ((property("parchment_version") as String).isNotBlank()) {
-			parchment("org.parchmentmc.data:parchment-${property("minecraft_version")}:${property("parchment_version")}@zip")
+			parchment("org.parchmentmc.data:parchment-${minecraftVersion}:${property("parchment_version")}@zip")
 		}
 	})
 
@@ -104,14 +106,17 @@ dependencies {
 		include(it)
 	}
 
-	if (!useLocalFxLib) {
-		"com.github.filloax:fx-lib:v${property("fxLibVersion")}-fabric".let{
-			modImplementation(it)
-			include(it)
-		}
-	} else {
-		println("Loading FX-Lib from local Maven...")
-		modImplementation("com.filloax.fxlib:fx-lib:${property("fxLibVersion")}-fabric")
+	val fxLib = (if (useLocalJarFxLib)
+			":fx-lib-${fxLibVersion}-fabric"
+		else if (useLocalMavenFxLib)
+			"com.filloax.fxlib:fx-lib:${fxLibVersion}-fabric"
+		else
+			"com.github.filloax:fx-lib:v${fxLibVersion}-fabric"
+		)
+
+	fxLib.let{
+		modImplementation(it)
+		include(it)
 	}
     implementation(kotlin("stdlib-jdk8"))
 }
