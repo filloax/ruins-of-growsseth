@@ -572,7 +572,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     override fun hurt(source: DamageSource, amount: Float): Boolean {
         val attacker = source.entity
 
-        if (attacker is Player && (ResearcherConfig.immortalResearcher || level().difficulty == Difficulty.PEACEFUL))
+        if (attacker is Player && ResearcherConfig.immortalResearcher && !attacker.isCreative)
             dialogues?.triggerDialogue(attacker as ServerPlayer, ResearcherDialoguesComponent.HIT_BY_PLAYER_IMMORTAL)
 
         val combatRet = combat.hurt(source, amount) { s, a -> super.hurt(s, a) }

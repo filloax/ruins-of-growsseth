@@ -11,24 +11,14 @@ import net.minecraft.world.Difficulty
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
-import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.ai.attributes.Attributes
-import net.minecraft.world.entity.ai.goal.GoalSelector
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.boss.wither.WitherBoss
-import net.minecraft.world.entity.monster.AbstractSkeleton
-import net.minecraft.world.entity.monster.Vex
-import net.minecraft.world.entity.monster.Zombie
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.entity.projectile.AbstractArrow
-import net.minecraft.world.entity.raid.Raider
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.enchantment.Enchantments
-import net.minecraft.world.level.Level
 import org.apache.commons.lang3.mutable.MutableInt
-import org.spongepowered.asm.mixin.injection.selectors.TargetSelector
 
 /**
  * Split combat-related features to simplify main class
@@ -49,7 +39,7 @@ class ResearcherCombatComponent(
         val distanceForUnjustifiedAggression: Int = 10
     }
 
-    private val dialogues = owner.dialogues
+    private val dialogues by owner::dialogues
 
     // For player aggro management
     private var angerBuildupTimer: MutableMap<Player, MutableInt> = mutableMapOf()
@@ -63,16 +53,12 @@ class ResearcherCombatComponent(
         dagger.enchant(Enchantments.MENDING, 1)
     }
 
-    fun addCombatGoals(goalSelector: GoalSelector, targetSelector: GoalSelector) {
-
-    }
-
     fun hurt(source: DamageSource, amount: Float, superHurt: (DamageSource, Float) -> Boolean): Boolean? {
         val attacker = source.entity
         if (attacker is WitherBoss)
             return superHurt(source, amount * 2)
 
-        if (attacker is Player && !attacker.isCreative && level.difficulty != Difficulty.PEACEFUL) {
+        if (attacker is Player && !(attacker.isCreative || level.difficulty == Difficulty.PEACEFUL || ResearcherConfig.immortalResearcher)) {
             if (lowHealthCondition)
                 dialogues?.triggerDialogue(attacker as ServerPlayer, BasicDialogueEvents.LOW_HEALTH)
             else
