@@ -133,14 +133,6 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             "wazo" to true,
             "efisio" to false,
             "ruslan" to true,
-            "carlorg" to false,
-            "jargad" to false,
-            "superpippo" to false,
-            "mammonk" to true,
-            "ricky" to false,
-            "robertong" to false,
-            "poly" to false,
-            "salvatore" to false,
             "grumm" to false,
             "dinnerbone" to false
         )
