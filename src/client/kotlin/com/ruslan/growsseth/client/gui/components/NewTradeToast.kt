@@ -10,6 +10,7 @@ import net.minecraft.resources.ResourceLocation
 // Adapted from RecipeToast
 class NewTradeToast(newTrades: List<ResearcherItemListing>) : Toast {
     private val trades = newTrades.toMutableList()
+    private val tradeItems = newTrades.map { it.gives() }.toMutableList()
     private var lastChanged: Long = 0
     private var changed = false
 
@@ -45,9 +46,8 @@ class NewTradeToast(newTrades: List<ResearcherItemListing>) : Toast {
                     / (DISPLAY_TIME * toastComponent.notificationDisplayTimeMultiplier / trades.size).coerceAtLeast(1.0)
                     % trades.size.toDouble()
                     ).toInt()
-            val trade = trades[idx]
             guiGraphics.pose().pushPose()
-            guiGraphics.renderFakeItem(trade.gives, 8, 8)
+            guiGraphics.renderFakeItem(tradeItems[idx], 8, 8)
             guiGraphics.pose().popPose()
             if (timeSinceLastVisible - lastChanged >= DISPLAY_TIME * toastComponent.notificationDisplayTimeMultiplier)
                 Toast.Visibility.HIDE
@@ -58,6 +58,7 @@ class NewTradeToast(newTrades: List<ResearcherItemListing>) : Toast {
 
     private fun addItems(trades: List<ResearcherItemListing>) {
         this.trades.addAll(trades)
+        this.tradeItems.addAll(trades.map{it.gives()})
         changed = true
     }
 }

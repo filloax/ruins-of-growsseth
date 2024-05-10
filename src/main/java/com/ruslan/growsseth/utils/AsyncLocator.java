@@ -1,6 +1,7 @@
 package com.ruslan.growsseth.utils;
 
 import com.mojang.datafixers.util.Pair;
+import com.ruslan.growsseth.RuinsOfGrowsseth;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
@@ -11,6 +12,7 @@ import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import org.jetbrains.annotations.NotNull;
 
+import java.text.NumberFormat;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -26,6 +28,7 @@ public class AsyncLocator {
         shutdownExecutorService();
 
         int threads = 2;
+        RuinsOfGrowsseth.getLOGGER().info("Starting locating executor service with {} threads", threads);
         LOCATING_EXECUTOR_SERVICE = Executors.newFixedThreadPool(
                 threads,
                 new ThreadFactory() {
@@ -42,6 +45,7 @@ public class AsyncLocator {
     }
 
     private static void shutdownExecutorService() {
+        RuinsOfGrowsseth.getLOGGER().info("Stopping locating executor service");
         if (LOCATING_EXECUTOR_SERVICE != null) {
             LOCATING_EXECUTOR_SERVICE.shutdown();
         }
@@ -100,7 +104,17 @@ public class AsyncLocator {
             int searchRadius,
             boolean skipExistingChunks
     ) {
+        RuinsOfGrowsseth.getLOGGER().info(
+            "[level] Trying to locate {} in {} around {} within {} chunks",
+            structureTag, level, pos, searchRadius
+        );
+        long start = System.nanoTime();
         BlockPos foundPos = level.findNearestMapStructure(structureTag, pos, searchRadius, skipExistingChunks);
+        String time = NumberFormat.getNumberInstance().format(TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start));
+        if (foundPos == null)
+            RuinsOfGrowsseth.getLOGGER().info("[level] No {} found (took {}ms)", structureTag, time);
+        else
+            RuinsOfGrowsseth.getLOGGER().info("[level] Found {} at {} (took {}ms)", structureTag, foundPos, time);
         completableFuture.complete(foundPos);
     }
 
@@ -112,8 +126,18 @@ public class AsyncLocator {
             int searchRadius,
             boolean skipExistingChunks
     ) {
+        RuinsOfGrowsseth.getLOGGER().info(
+                "[chunkGenerator] Trying to locate {} in {} around {} within {} chunks",
+                structureSet, level, pos, searchRadius
+        );
+        long start = System.nanoTime();
         Pair<BlockPos, Holder<Structure>> foundPair = level.getChunkSource().getGenerator()
                 .findNearestMapStructure(level, structureSet, pos, searchRadius, skipExistingChunks);
+        String time = NumberFormat.getNumberInstance().format(TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start));
+        if (foundPair == null)
+            RuinsOfGrowsseth.getLOGGER().info("[chunkGenerator] No {} found (took {}ms)", structureSet, time);
+        else
+            RuinsOfGrowsseth.getLOGGER().info("[chunkGenerator] Found {} at {} (took {}ms)", structureSet, foundPair, time);
         completableFuture.complete(foundPair);
     }
 

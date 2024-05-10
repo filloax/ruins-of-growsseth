@@ -69,7 +69,7 @@ class ProgressResearcherTradesProvider(
     override fun getExtraPlayerTrades(player: ServerPlayer, researcher: Researcher, data: ResearcherTradesData): List<ResearcherTradeEntry> {
         val finishedQuest = researcher.quest!!.passedStage(ResearcherQuestComponent.Stages.HOME)
         val possibleTrades = getPossibleRandomTrades(player, researcher)
-        val possibleTradesItems = possibleTrades.map { it.itemListing.gives.itemHolder }
+        val possibleTradesItems = possibleTrades.map { it.itemListing.givesItemHolder }
         val tradesChanged = tradesDiffer(data.lastAvailableRandomTrades, possibleTradesItems)
 
         val time = researcher.level().gameTime

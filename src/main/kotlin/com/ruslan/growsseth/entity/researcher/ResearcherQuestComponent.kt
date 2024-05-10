@@ -175,23 +175,10 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
             val hornItem = InstrumentItem.create(GrowssethItems.RESEARCHER_HORN, resInstrumentHolder)
             val researcherName = ResearcherSavedData.getPersistent(level.server).name  ?: Component.translatable("entity.growsseth.researcher")
 
-            blockEntity?.load(CompoundTag().also { chestTag ->
-                chestTag.put("Items", ListTag().also { items ->
-                    val endTextItem = (if (DiaryHelper.hasCustomEndDiary()) {
-                        DiaryHelper.getCustomEndDiary(researcherName)
-                    } else {
-                        null
-                    }) ?: DiaryHelper.createMiscDiary("quest_good_ending", researcherName)
-                    ?: Items.PAPER.defaultInstance.copyWithCount(1).also { itemStack ->
-                        itemStack.setHoverName(Component.literal("Per il mio collega"))
-                    }
-
-                    items.add(endTextItem
-                        .save(CompoundTag().also{ it.putInt("Slot", 4) }))
-                    items.add(hornItem
-                        .save(CompoundTag().also{ it.putInt("Slot", 13) }))
-                })
-            }) ?: RuinsOfGrowsseth.LOGGER.error("No blockentity at reward chest pos $pos, error in spawning?")
+            blockEntity.setItem(4, endTextItem)
+            blockEntity.setItem(13, hornItem)
+            level.blockUpdated(pos, chestState.block)
+            RuinsOfGrowsseth.LOGGER.info("Spawned researcher reward chest at $pos")
         }
     }
 
@@ -214,7 +201,7 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
             val tent = entity.tent
             val startingPos = entity.position()
             entity.dialogues?.resetNearbyPlayers()
-            val data = entity.makeResearcherData()
+            val data = entity.saveResearcherData()
             var scheduleMoveRemoveLater = false
             if (tent != null) {
                 moveToJail(entity, tent)
@@ -228,7 +215,6 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
             val resStartingPos = entity.startingPos ?: entity.blockPosition()
             val spawnTime = entity.spawnTime
 
-            entity.saveWorldData()
             val zombie = entity.convertTo(GrowssethEntities.ZOMBIE_RESEARCHER, false)
             if (zombie == null) {
                 RuinsOfGrowsseth.LOGGER.error("Couldn't zombify researcher in quest stage!")
