@@ -136,10 +136,11 @@ class ResearcherDialoguesComponent(
 
     override fun incrementEventCount(event: DialogueEvent, player: ServerPlayer) {
         if (event == BasicDialogueEvents.HIT_BY_PLAYER) {
-            eventLastTriggerTime[event] = entity.level().gameTime
-            eventTriggerCount[event] = eventTriggerCount.getOrDefault(event, 0) + 1
-            eventCloseTriggerCount[event] = combat.hitCounter.getOrDefault(player, 0).toInt() + 1       // + 1 because can't put 0 in afterCloseRepeatsMax
-            RuinsOfGrowsseth.logDev(org.apache.logging.log4j.Level.INFO, "Triggered $event ${eventTriggerCount[event]} times (close ${eventCloseTriggerCount[event] ?: 0})")
+            val pdata = playerDataOrCreate(player)
+            pdata.eventLastTriggerTime[event] = entity.level().gameTime
+            pdata.eventTriggerCount[event] = pdata.eventTriggerCount.getOrDefault(event, 0) + 1
+            pdata.eventCloseTriggerCount[event] = combat.hitCounter.getOrDefault(player, 0).toInt() + 1       // + 1 because can't put 0 in afterCloseRepeatsMax
+            RuinsOfGrowsseth.logDev(org.apache.logging.log4j.Level.INFO, "Triggered $event ${pdata.eventTriggerCount[event]} times (close ${pdata.eventCloseTriggerCount[event] ?: 0})")
         }
         else
             super.incrementEventCount(event, player)
