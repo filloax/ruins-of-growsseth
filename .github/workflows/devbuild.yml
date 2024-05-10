@@ -44,6 +44,6 @@ jobs:
           repo_token: "${{ secrets.TOKEN_GITHUB }}"
           automatic_release_tag: "test-release-1.20.6"
           prerelease: true
-          title: "Test Release [${{ env.RELEASE_COUNT }}] - 1.20.6 - $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          title: "Test Release [${{ env.RELEASE_COUNT }}] - 1.20.6"
           files: |
             build/libs/*.jar
