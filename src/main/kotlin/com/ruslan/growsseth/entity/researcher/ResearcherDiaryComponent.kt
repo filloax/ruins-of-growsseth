@@ -275,6 +275,7 @@ class ResearcherDiaryComponent(val researcher: Researcher) {
     }
 
     fun readNbt(tag: CompoundTag) {
+        data = DiaryData()
         tag.get("DiaryData")?.let { diaryData ->
             data = PERSIST_CODEC.decode(NbtOps.INSTANCE, diaryData).getOrThrow {
                 throw Exception("Error in decoding DiaryData: $it")

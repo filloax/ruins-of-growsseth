@@ -3,15 +3,14 @@
         // Used by more events (referenced by id)
         {
             "content": [
-                "Primo saluto!",
-                //"Cosa..? Una persona che vaga per queste terre e non è un mercante?",
-                //"Non può essere... senti, non è che sei per caso un ricercatore, o comunque un esploratore?",
-                //"Quindi è davvero così, incredibile... Lascia che mi spieghi, io sono entrambe le cose, ricercatore ED esploratore. Vago da anni per queste terre, ma non ho mai incontrato nessuno della mia professione. Sai, quello che è successo dopo la Piaga... Pensavo che non esistessero più persone come me.",
-                //"Beh, piacere di conoscerti allora, lascia che mi presenti... O almeno è quello che vorrei dire. È da così tanto che non uso il mio nome che ho finito con il dimenticarlo...",
-                //"In ogni caso, cambiamo argomento. Ricercatore o esploratore che sia suppongo che possiamo comunque considerarci colleghi.",
-                //"Io? Personalmente non appartengo ad una branca specifica. Il dovermi spostare continuamente e sopravvivere da solo in mezzo alla natura mi ha reso una sorta di 'tuttologo'. Immagino che valga lo stesso anche per te, dato il coraggio che mostri nell'avventurarti qua fuori.",
-                //"E a proposito di avventure, durante le mie esplorazioni mi è capitato spesso di scoprire luoghi e reliquie del regno ormai caduto. Presumo che la faccenda ti interessi, vero?",
-                //"Normalmente non mi separerei dalle mie scoperte, neanche sotto pagamento, ma credo che collaborare possa portare un vantaggio reciproco, dai pure un'occhiata!"
+                "Cosa..? Una persona che vaga per queste terre e non è un mercante?",
+                "Non può essere... senti, non è che sei per caso un ricercatore, o comunque un esploratore?",
+                "Quindi è davvero così, incredibile... Lascia che mi spieghi, io sono entrambe le cose, ricercatore ED esploratore. Vago da anni per queste terre, ma non ho mai incontrato nessuno della mia professione. Sai, quello che è successo dopo la Piaga... Pensavo che non esistessero più persone come me.",
+                "Beh, piacere di conoscerti allora, lascia che mi presenti... O almeno è quello che vorrei dire. È da così tanto che non uso il mio nome che ho finito con il dimenticarlo...",
+                "In ogni caso, cambiamo argomento. Ricercatore o esploratore che sia suppongo che possiamo comunque considerarci colleghi.",
+                "Io? Personalmente non appartengo ad una branca specifica. Il dovermi spostare continuamente e sopravvivere da solo in mezzo alla natura mi ha reso una sorta di 'tuttologo'. Immagino che valga lo stesso anche per te, dato il coraggio che mostri nell'avventurarti qua fuori.",
+                "E a proposito di avventure, durante le mie esplorazioni mi è capitato spesso di scoprire luoghi e reliquie del regno ormai caduto. Presumo che la faccenda ti interessi, vero?",
+                "Normalmente non mi separerei dalle mie scoperte, neanche sotto pagamento, ma credo che collaborare possa portare un vantaggio reciproco, dai pure un'occhiata!"
             ],
             "useLimit": 1,
             "priority": 100,
@@ -65,7 +64,7 @@
         "...forse, con quell'ingrediente... Oh, salve collega.",
         "Buongiorno collega, bella giornata oggi, vero?",
         "...ma certo, ora ha senso... Oh, salve, dimmi pure.",
-        "Salve collega, sempre in movimento eh?",
+        "Salve collega, sempre in movimento eh?"
     ],
     "playerArriveNight": [
         { "id": "researcher-first" },
@@ -105,10 +104,10 @@
             "content": "Arrivederci, e ricordati sempre che nelle mappe il nord è in alto!",
             "useLimit": 1,
             "priority": 30,
-            "afterRepeatsMin": 3,
+            "afterRepeatsMin": 3
         },
         { "id": "goodbye-made-mess-1" },
-        { "id": "goodbye-made-mess-2" },
+        { "id": "goodbye-made-mess-2" }
     ],
     "playerLeaveNight": [
         { "id": "researcher-first-leave" },
@@ -117,7 +116,7 @@
         "Mi raccomando, stai alla larga dallo sguardo dei demoni!",
         "Arrivederci, e buonanotte!",
         { "id": "goodbye-made-mess-1" },
-        { "id": "goodbye-made-mess-2" },
+        { "id": "goodbye-made-mess-2" }
     ],
     "playerArriveLongTime": [
         {
@@ -177,7 +176,7 @@
             "afterCloseRepeatsMin": 3
         },
         { "id": "goodbye-made-mess-1" },
-        { "id": "goodbye-made-mess-2" },
+        { "id": "goodbye-made-mess-2" }
     ],
     "hitByPlayer": [
         {
@@ -384,7 +383,7 @@
             "content": [
                 "Oh, ti serve il mio asino per caso? Fai pure, tanto non ho intenzione di trasferirmi presto.",
                 "Però dovrò farti pagare di più finché non lo riporti sano e salvo, vedila come una specie di cauzione.",
-                "Queste terre sono molto pericolose dopo tutto, e non si sa mai cosa possa accadere...",
+                "Queste terre sono molto pericolose dopo tutto, e non si sa mai cosa possa accadere..."
             ],
             "immediate": true,
             "id": "first-donkey-borrow",
