@@ -133,14 +133,6 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             "wazo" to true,
             "efisio" to false,
             "ruslan" to true,
-            "carlorg" to false,
-            "jargad" to false,
-            "superpippo" to false,
-            "mammonk" to true,
-            "ricky" to false,
-            "robertong" to false,
-            "poly" to false,
-            "salvatore" to false,
             "grumm" to false,
             "dinnerbone" to false
         )
@@ -676,21 +668,33 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
                     tag.getInt("mapId"),
                 )
             }
+        } else {
+            storedMapLocations.clear()
         }
         if (researcherData.contains("Healed")) {
             healed = researcherData.getBoolean("Healed")
+        } else {
+            healed = false
         }
         if (researcherData.contains("AngryForMess")) {
             angryForMess = researcherData.getBoolean("AngryForMess")
+        } else {
+            angryForMess = false
         }
         if (researcherData.contains("DonkeyBorrowed")) {
             donkeyWasBorrowed = researcherData.getBoolean("DonkeyBorrowed")
+        } else {
+            donkeyWasBorrowed = false
         }
         if (researcherData.contains("MetPlayer")) {
             metPlayer = researcherData.getBoolean("MetPlayer")
+        } else {
+            metPlayer = false
         }
 
+        offersByPlayer.clear()
         researcherData.loadField("PlayerOffers", mutableMapCodec(UUIDUtil.STRING_CODEC, GrowssethCodecs.MERCHANT_OFFERS_CODEC)) { offersByPlayer.putAll(it) }
+        server?.let { tradesData = ResearcherTradesData(ResearcherTradeMode.getFromSettings(it)) }
         researcherData.loadField("TradesData", ResearcherTradesData.CODEC) {tradesData = it}
 
         dialogues?.readNbt(researcherData)
