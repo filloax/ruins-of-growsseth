@@ -3,8 +3,23 @@
   "id": "growsseth",
   "version": "${version}",
   "name": "Ruins of Growsseth",
-  "description": "Explore the ruins of the lost kingdom of Growsseth\n\nCredits: Ruslan Fanclub\n- Filloax (Lead Programmer)\n- Reivaxelain (Art, Structures and Writing)\n- Krozzzt (Programming and Writing)\n- bb01 (Structures and Additional Writing)\n- SkullFury (Original Datapack Management)\nEveryone: Design and Testing\n\nContributors:\n- Sync_Gabri (Supervisor, Coordinator and Writer for the Cydonia's version)\n- Worgage (API Integration, Testing and Writing for the Cydonia's version)\n- Vovalcool (Researcher tent + another structure)\n- Simone Russo (Sound Effect)\n- Farcr (Zombie Guber texture)\n\nMusical artists:\n- EGO & R-E-M (Abbandonati)\n- Guber (Una sega di niente)\n- HunterProduction (Giorgio Finding Home)\n- Il Coro di Mammonk (A Padre Mammonk, La Missiva nell'Ombra)\n- Singalek (Binobinooo, Giorgio Cubetti, Giorgio Lo-Fi)\n",
-  "authors": [],
+  "description": "Explore the ruins of the lost kingdom of Growsseth\n\nCredits: Ruslan Fanclub\n- Filloax (Lead Programmer)\n- Reivaxelain (Art, Structures and Writing)\n- Krozzzt (Programming and Writing)\n- bb01 (Structures and Additional Writing)\n- SkullFury (Original Datapack Management)\n- Farcr (Guber sprite)\nEveryone: Design and Testing\n\nContributors:\n- Sync_Gabri (Supervisor, Coordinator and Writer for the Cydonia's version)\n- Worgage (API Integration, Testing and Writing for the Cydonia's version)\n- Vovalcool (Researcher tent + another structure)\n- Simone Russo (Sound Effect)\n- Farcr (Zombie Guber texture)\n\nMusical artists:\n- EGO & R-E-M (Abbandonati)\n- Guber (Una sega di niente)\n- HunterProduction (Giorgio Finding Home)\n- Il Coro di Mammonk (A Padre Mammonk, La Missiva nell'Ombra)\n- Singalek (Binobinooo, Giorgio Cubetti, Giorgio Lo-Fi)\n",
+  "authors": [
+    "Filloax",
+    "Krozzt",
+    "Reivaxelain",
+    "bb01",
+    "SkullFury",
+    "Farcr",
+    "Vovalcool",
+    "Sync_Gabri",
+    "Worgage",
+    "Simone Russo",
+    "Singalek",
+    "EGO & R-E-M",
+    "Guber",
+    "Il Coro di Mammonk"
+  ],
   "contributors": [],
   "contact": {},
   "license": "MIT",
@@ -41,11 +56,11 @@
   ],
   "accessWidener": "growsseth.accesswidener",
   "depends": {
-    "fxlib": ">=0.16.0-1.20.4-fabric",
-    "resourcefulconfig": ">=2.4.7-1.20.4-fabric",
-    "fabric-language-kotlin": ">=1.10.16+kotlin.1.9.21",
-    "fabricloader": ">=0.15.9",
-    "fabric-api": ">=0.91.1+1.20.2",
+    "fxlib": ">=0.20.0-1.20.6-fabric",
+    "resourcefulconfig": ">=2.5.1-1.20.5-fabric",
+    "fabric-language-kotlin": ">=1.10.19+kotlin.1.9.23",
+    "fabricloader": ">=0.15.11",
+    "fabric-api": ">=0.97.8+1.20.6",
     "fabric": "*"
   }
 }
