@@ -41,7 +41,7 @@ object GrowssethStructures {
     @JvmField
     val BEEKEEPER_HOUSE = make("beekeeper_house", StructTags.BEEKEEPER_HOUSE)
     @JvmField
-    val CAVE_CAMP = make("cave_camp", StructTags.CAVE_CAMP, emeraldCost = 0)
+    val CAVE_CAMP = make("cave_camp", StructTags.CAVE_CAMP, emeraldCost = 2)
     @JvmField
     val MARKER = make("marker", StructTags.MARKER)
     // Not actual structure, placeholder used for mod features and legacy stuff
