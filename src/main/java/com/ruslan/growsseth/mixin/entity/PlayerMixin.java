@@ -1,5 +1,6 @@
 package com.ruslan.growsseth.mixin.entity;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.ruslan.growsseth.entity.researcher.Researcher;
 import com.ruslan.growsseth.item.ResearcherDaggerItem;
 import net.minecraft.world.InteractionHand;
@@ -36,5 +37,13 @@ public abstract class PlayerMixin {
         if (lastAttackerIsResearcher)
             return 30;      // 1.5 seconds of cooldown instead of usual 5
         return constant;
+    }
+
+    @ModifyReturnValue(method = "entityInteractionRange", at = @At("RETURN"))
+    public double shortRangeForDagger(double original){
+        Item itemInHand = player.getItemInHand(InteractionHand.MAIN_HAND).getItem();
+        if (itemInHand instanceof ResearcherDaggerItem)
+            return 2.5;     // half block less than normal
+        return original;
     }
 }
