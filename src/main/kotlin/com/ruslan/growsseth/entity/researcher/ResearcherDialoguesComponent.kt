@@ -212,6 +212,8 @@ class ResearcherDialoguesComponent(
 
     override fun readExtraNbtData(dialogueData: CompoundTag) {
         super.readExtraNbtData(dialogueData)
+        playersMadeMess.clear()
+        playersInCellar.clear()
         dialogueData.loadField("PlayersMadeMess", CODEC_PLAYERS_MADE_MESS) { playersMadeMess = it.toMutableSet() }
         dialogueData.loadField("PlayersInCellar", CODEC_PLAYERS_IN_CELLAR) { playersInCellar = it.toMutableSet() }
     }

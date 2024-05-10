@@ -561,6 +561,10 @@ open class BasicDialoguesComponent(
     }
 
     override fun readNbt(tag: CompoundTag) {
+        dialogueCount.clear()
+        playerLeftTimestamps.clear()
+        closePlayersWithTimestamps.clear()
+        eventTriggerCount.clear()
         tag.get("DialogueData")?.let { data -> if (data is CompoundTag) {
             data.loadField("DialogueCount", CODEC_LIMITED_DIALOGUES) { dialogueCount = it }
             data.loadField("PlayersLeftTimestamps", CODEC_PLAYER_LEFT_TIMESTAMPS) { playerLeftTimestamps = it }

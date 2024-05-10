@@ -5,7 +5,6 @@ import com.filloax.fxlib.SetBlockFlag
 import com.filloax.fxlib.alwaysTruePredicate
 import com.filloax.fxlib.codec.decodeNbt
 import com.filloax.fxlib.codec.encodeNbt
-import com.filloax.fxlib.codec.simpleCodecErr
 import com.filloax.fxlib.codec.throwableCodecErr
 import com.filloax.fxlib.iterBlocks
 import com.filloax.fxlib.nbt.getCompoundOrNull
@@ -19,23 +18,26 @@ import com.ruslan.growsseth.entity.GrowssethEntities
 import com.ruslan.growsseth.entity.researcher.trades.ProgressResearcherTradesProvider
 import com.ruslan.growsseth.entity.researcher.trades.ResearcherTradeMode
 import com.ruslan.growsseth.item.GrowssethItems
+import com.ruslan.growsseth.item.ResearcherDaggerItem
 import com.ruslan.growsseth.quests.*
 import com.ruslan.growsseth.structure.pieces.ResearcherTent
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Vec3i
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.nbt.ListTag
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.Clearable
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.npc.VillagerProfession
 import net.minecraft.world.item.InstrumentItem
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.block.Blocks
+import net.minecraft.world.level.block.entity.BaseContainerBlockEntity
 import net.minecraft.world.level.block.entity.ChestBlockEntity
 import net.minecraft.world.level.block.entity.LecternBlockEntity
 import net.minecraft.world.level.block.state.BlockState
@@ -148,9 +150,9 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
         fun removeTentAndResearcher(researcher: Researcher) {
             val level = researcher.level() as ServerLevel
             researcher.tent?.let { tent ->
-                val giftPos = tent.boundingBox.center
-                spawnRewardChest(level, giftPos)
+                val giftPos = tent.boundingBox.center.above(2)
                 tent.remove(level, replaceUndergroundEntrance = true)
+                spawnRewardChest(level, giftPos)
             }
             removeResearcher(researcher)
         }
@@ -162,38 +164,48 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
             }
             val savedData = ResearcherSavedData.getPersistent(level.server)
             researcher.writeSavedData(savedData)
+            savedData.setDirty()
             researcher.discard()
         }
 
         fun spawnRewardChest(level: ServerLevel, pos: BlockPos) {
+            val prevBlockEntity = level.getBlockEntity(pos)
+            Clearable.tryClear(prevBlockEntity)
+
             val chestState: BlockState = Blocks.CHEST.defaultBlockState()
+
             level.setBlock(pos, chestState, SetBlockFlag.or(
                 SetBlockFlag.NOTIFY_CLIENTS,
                 SetBlockFlag.NO_NEIGHBOR_REACTIONS,
-                SetBlockFlag.NO_NEIGHBOR_REACTION_DROPS
+                SetBlockFlag.NO_NEIGHBOR_REACTION_DROPS,
             ))
             val blockEntity = level.getBlockEntity(pos)
+            if (blockEntity == null || blockEntity !is BaseContainerBlockEntity) {
+                RuinsOfGrowsseth.LOGGER.error("No blockentity at reward chest pos $pos, error in spawning?")
+                return
+            }
+
             val resInstrumentHolder = BuiltInRegistries.INSTRUMENT
                 .getHolder(ResourceKey.create(Registries.INSTRUMENT, GrowssethItems.Instruments.RESEARCHER_HORN.first))
                 .orElseThrow()
             val hornItem = InstrumentItem.create(GrowssethItems.RESEARCHER_HORN, resInstrumentHolder)
+            val daggerItem = GrowssethItems.RESEARCHER_DAGGER.defaultInstance
             val researcherName = ResearcherSavedData.getPersistent(level.server).name  ?: Component.translatable("entity.growsseth.researcher")
+            val endTextItem = (if (DiaryHelper.hasCustomEndDiary()) {
+                    DiaryHelper.getCustomEndDiary(researcherName)
+                } else {
+                    null
+                }) ?: DiaryHelper.createMiscDiary("quest_good_ending", researcherName)
+                ?: Items.PAPER.defaultInstance.copyWithCount(1).also { itemStack ->
+                    itemStack[DataComponents.CUSTOM_NAME] = Component.literal("Per il mio collega")
+                    RuinsOfGrowsseth.LOGGER.warn("Couldn't load final diary!")
+                }
 
-            blockEntity?.loadWithComponents(CompoundTag().also { chestTag ->
-                chestTag.put("Items", ListTag().also { items ->
-                    val endTextItem = (if (DiaryHelper.hasCustomEndDiary()) {
-                        DiaryHelper.getCustomEndDiary(researcherName)
-                    } else {
-                        null
-                    }) ?: DiaryHelper.createMiscDiary("quest_good_ending", researcherName)
-                    ?: Items.PAPER.defaultInstance.copyWithCount(1).also { itemStack ->
-                        itemStack[DataComponents.CUSTOM_NAME] = Component.literal("Per il mio collega")
-                    }
-
-                    items.add(endTextItem.save(level.registryAccess(), CompoundTag().also{ it.putByte("Slot", 4) }))
-                    items.add(hornItem.save(level.registryAccess(), CompoundTag().also{ it.putByte("Slot", 13) }))
-                })
-            }, level.registryAccess()) ?: RuinsOfGrowsseth.LOGGER.error("No blockentity at reward chest pos $pos, error in spawning?")
+            blockEntity.setItem(4, endTextItem)
+            blockEntity.setItem(13, hornItem)
+            blockEntity.setItem(22, daggerItem)
+            level.blockUpdated(pos, chestState.block)
+            RuinsOfGrowsseth.LOGGER.info("Spawned researcher reward chest at $pos")
         }
     }
 

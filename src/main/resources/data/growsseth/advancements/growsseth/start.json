@@ -1,6 +1,6 @@
 {
     "parent": "minecraft:recipes/root", 
-    "_comment": "For now, make impossible to unlock via mod when tent is spawned, in community ver simply unlock on starting a world with the mod installed (many mods do this). Also, parent being recipes hides it from tabs.",
+    "_comment": "Gamemaster mode only, unlocked when tent placed in world",
     "display": {
         "title": {
             "translate": "advancements.growsseth.start.title"
