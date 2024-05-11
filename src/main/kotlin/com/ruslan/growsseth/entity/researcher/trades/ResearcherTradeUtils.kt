@@ -3,8 +3,10 @@ package com.ruslan.growsseth.entity.researcher.trades
 import com.filloax.fxlib.FxLibServices
 import com.filloax.fxlib.getStructTagOrKey
 import com.filloax.fxlib.getYAtXZ
+import com.filloax.fxlib.nbt.loadField
 import com.mojang.datafixers.util.Either
 import com.ruslan.growsseth.RuinsOfGrowsseth
+import com.ruslan.growsseth.entity.researcher.DiaryHelper
 import com.ruslan.growsseth.entity.researcher.Researcher
 import com.ruslan.growsseth.maps.DestinationType
 import com.ruslan.growsseth.maps.updateMapToPos
@@ -17,7 +19,9 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.MapItem
+import net.minecraft.world.item.component.CustomData
 import net.minecraft.world.item.trading.MerchantOffer
+import net.minecraft.world.item.trading.MerchantOffers
 import net.minecraft.world.level.saveddata.maps.MapId
 import javax.xml.crypto.Data
 import kotlin.jvm.optionals.getOrNull
@@ -83,8 +87,6 @@ object ResearcherTradeUtils {
                     .minByOrNull { it.pos.distManhattan(researcher.blockPosition()) }
                 if (spawnData != null) {
                     pos = spawnData.pos
-                } else {
-                    RuinsOfGrowsseth.LOGGER.warn("Map $mapData has structure id not found in fixed spawns: ${mapData.fixedStructureId}")
                 }
             }
             if (pos != null) {
@@ -117,14 +119,16 @@ object ResearcherTradeUtils {
         }
 
         if (!known) {
-            // For community version (locate map functionality)
+            offer.setToOutOfStock() // Disable offer until found
+            researcher.refreshCurrentTrades()
+            // Locate map if not fixed struct or pos
             itemStack.updateMapToStruct(
                 level,
-                mapData.structure,
-                researcher.blockPosition(),
-                scale,
+                destinationName = mapData.structure,
+                searchFromPos = researcher.blockPosition(),
+                scale = scale,
                 displayName = mapData.name,
-                async = true,
+//                async = true,
             ).thenAccept {
                 val pos = it.first
                 if (pos != null) {
@@ -136,11 +140,47 @@ object ResearcherTradeUtils {
                             itemStack[DataComponents.MAP_ID]?.id ?: throw IllegalStateException("Map item has no id after updating! $itemStack"),
                         )
                     }
+                    offer.resetUses()
                     researcher.refreshCurrentTrades()
-                } else {
-                    offer.increaseUses() // Disable offer, as it's always generated with 1 use
                 }
             }
         }
+    }
+
+    fun offersMatch(offersA: MerchantOffers, offersB: MerchantOffers): Boolean {
+        if (offersA.size != offersB.size) return false
+
+        // loose match: ignore components etc, only check item & amount
+        for (i in offersA.indices) {
+            if (offersA[i].costA.item != offersB[i].costA.item) return false
+            if (offersA[i].costA.count != offersB[i].costA.count) return false
+            if (offersA[i].costB.item != offersB[i].costB.item) return false
+            if (offersA[i].costB.count != offersB[i].costB.count) return false
+            if (offersA[i].result.item != offersB[i].result.item) return false
+            if (offersA[i].result.count != offersB[i].result.count) return false
+        }
+
+        return true
+    }
+
+    /**
+     * Run lengthy/non efficient functions, to be used only after
+     * the trade is given to the researcher to avoid repetition
+     * Includes map finding and diary setting
+     */
+    fun finalizeTradeResult(researcher: Researcher, offer: MerchantOffer): MerchantOffer {
+        val offerOut = offer.copy()
+        val result = offerOut.result
+        val data = result[DataComponents.CUSTOM_DATA]?.copyTag() ?: return offerOut
+        data.loadField(ResearcherItemListing.MAP_INFO_TAG, TradeItemMapInfo.CODEC)?.let { mapInfo ->
+            if (!researcher.level().isClientSide && result[DataComponents.CUSTOM_DATA]?.contains(ResearcherItemListing.SET_MAP_TAG) != true) {
+                CustomData.update(DataComponents.CUSTOM_DATA, result) { it.putBoolean(ResearcherItemListing.SET_MAP_TAG, true) }
+                setTradeMapTarget(researcher, result, mapInfo, offerOut)
+            }
+        }
+        if (data.contains(ResearcherItemListing.DIARY_ID_TAG)) {
+            DiaryHelper.updateItemWithMiscDiary(result, data.getString(ResearcherItemListing.DIARY_ID_TAG), researcher)
+        }
+        return offerOut
     }
 }

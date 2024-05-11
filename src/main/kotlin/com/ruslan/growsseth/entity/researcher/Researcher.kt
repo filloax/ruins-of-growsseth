@@ -26,6 +26,7 @@ import com.ruslan.growsseth.entity.SpawnTimeTracker
 import com.ruslan.growsseth.entity.researcher.ResearcherCombatComponent.Companion.distanceForUnjustifiedAggression
 import com.ruslan.growsseth.entity.researcher.ResearcherCombatComponent.ResearcherAttackGoal
 import com.ruslan.growsseth.entity.researcher.trades.ResearcherTradeMode
+import com.ruslan.growsseth.entity.researcher.trades.ResearcherTradeUtils
 import com.ruslan.growsseth.entity.researcher.trades.ResearcherTradesData
 import com.ruslan.growsseth.http.GrowssethExtraEvents
 import com.ruslan.growsseth.item.GrowssethItems
@@ -627,7 +628,8 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     }
 
     override fun die(damageSource: DamageSource) {
-        if (damageSource.entity is ServerPlayer)
+        val source = damageSource.entity
+        if (source is ServerPlayer && !source.isCreative)
             dialogues?.triggerDialogue(damageSource.entity as ServerPlayer, BasicDialogueEvents.DEATH)
         super.die(damageSource)
     }
@@ -792,7 +794,8 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     override fun getOffers(): MerchantOffers {
         return server?.let { serv ->
             val provider = ResearcherTradeMode.providerFromSettings(serv)
-            provider.getOffers(this, tradesData())
+            val lastPlayerTrade = provider.lastTradePlayerId(this)
+            lastPlayerTrade?.let {offersByPlayer[it]}
         } ?: MerchantOffers()
     }
 
@@ -806,17 +809,18 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             tradesData.resetRandomTrades()
         }
 
-        var offers = offersByPlayer[player.uuid]
+        var offers = offersByPlayer.computeIfAbsent(player.uuid) { MerchantOffers() }
         val updatedOffers = currentProvider.getOffers(this, tradesData, player)
 
         if (
             currentProvider.mode != tradesData.mode
-            || offers == null
+            || offers.isEmpty()
             || ResearcherConfig.tradesRestockTime > 0 && time - tradesData.lastTradeRefreshTime > ResearcherConfig.tradesRestockTime * Constants.DAY_TICKS_DURATION
-            || !offersMatch(offers, updatedOffers)
+            || !ResearcherTradeUtils.offersMatch(offers, updatedOffers)
         ) {
             // Refresh offers
-            offers = updatedOffers
+            offers.clear()
+            offers.addAll(updatedOffers.map { ResearcherTradeUtils.finalizeTradeResult(this, it) })
             tradesData.mode = currentProvider.mode
             tradesData.lastTradeRefreshTime = time
         }
@@ -825,22 +829,11 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         return offers
     }
 
-    private fun offersMatch(offersA: MerchantOffers, offersB: MerchantOffers): Boolean {
-        if (offersA.size != offersB.size) return false
-
-        for (i in offersA.indices) {
-            if (!offersA[i].equals(offersB[i])) return false
-        }
-
-        return true
-    }
-
     override fun refreshCurrentTrades() {
         assert(!this.level().isClientSide) { "Refreshing trades from client side" }
-        val offersCurrent = this.offers ?: throw IllegalStateException("Refreshing offers when not set yet on server")
         tradingPlayer?.let {
             it.sendMerchantOffers(
-                it.containerMenu.containerId, offersCurrent,1,0,false,true,
+                it.containerMenu.containerId, offersByPlayer[it.uuid] ?: throw IllegalStateException("No offers for player $it"),1,0,false,true,
             )
         }
     }
