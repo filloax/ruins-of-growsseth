@@ -11,6 +11,10 @@ import net.minecraft.world.level.saveddata.maps.MapDecoration
 import net.minecraft.world.level.saveddata.maps.MapDecorationType
 import net.minecraft.world.level.saveddata.maps.MapDecorationTypes
 
+/**
+ * Pre-1.20.5: wrapper for both vanilla and custom map icons
+ * Post-1.20.5: wrapper above map icons, kept for easier backporting
+ */
 class DestinationType private constructor(val type: Holder<MapDecorationType>? = null, val auto: Boolean = false) {
     val isSet get() = type != null
 
@@ -31,17 +35,23 @@ class DestinationType private constructor(val type: Holder<MapDecorationType>? =
         )
 
         fun vanilla(type: Holder<MapDecorationType>) = DestinationType(type)
-        fun vanilla(type: MapDecorationType) = vanilla(Holder.direct(type))
+
         fun auto(struct: Holder<Structure>): DestinationType {
             return auto(struct.unwrapKey().get())
         }
         fun auto(structKey: ResourceKey<Structure>): DestinationType {
+            GrowssethMapDecorations.getForStructure(structKey)?.let { type ->
+                return vanilla(type)
+            }
             VANILLA_STRUCT_ICONS[structKey]?.let { type ->
                 return vanilla(type)
             }
             return vanilla(MapDecorationTypes.RED_X)
         }
         fun auto(structTag: TagKey<Structure>, registryAccess: RegistryAccess): DestinationType {
+            GrowssethMapDecorations.getForStructure(structTag)?.let { type ->
+                return vanilla(type)
+            }
             val tagHolders = registryAccess.registryOrThrow(Registries.STRUCTURE).getTag(structTag).orElseThrow()
             VANILLA_STRUCT_ICONS.forEach {
                 tagHolders.forEach { holder ->

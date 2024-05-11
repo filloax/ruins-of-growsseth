@@ -15,7 +15,7 @@ import com.ruslan.growsseth.http.GrowssethApi
 import com.ruslan.growsseth.http.GrowssethExtraEvents
 import com.ruslan.growsseth.item.GrowssethCreativeModeTabs
 import com.ruslan.growsseth.item.GrowssethItems
-import com.ruslan.growsseth.item.GrowssethMapDecorations
+import com.ruslan.growsseth.maps.GrowssethMapDecorations
 import com.ruslan.growsseth.networking.GrowssethPackets
 import com.ruslan.growsseth.platform.PlatformAbstractions
 import com.ruslan.growsseth.structure.*
@@ -25,14 +25,10 @@ import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents.ModifyEntries
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
-import net.minecraft.network.RegistryFriendlyByteBuf
-import net.minecraft.network.codec.StreamCodec
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload
 import net.minecraft.server.packs.PackType
 import net.minecraft.world.item.CreativeModeTabs
 import net.minecraft.world.item.Items
