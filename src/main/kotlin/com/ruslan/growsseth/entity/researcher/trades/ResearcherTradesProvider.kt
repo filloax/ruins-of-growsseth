@@ -12,11 +12,8 @@ import java.util.*
  * Server-side
  */
 interface ResearcherTradesProvider {
-    /**
-     * Used so Researcher can properly implement Merchant interface as it has no player
-     */
-    fun getOffers(researcher: Researcher, tradesData: ResearcherTradesData): MerchantOffers
     fun getOffers(researcher: Researcher, tradesData: ResearcherTradesData, player: ServerPlayer): MerchantOffers
+    fun lastTradePlayerId(researcher: Researcher): UUID?
 
     val mode: ResearcherTradeMode
 }
@@ -25,11 +22,6 @@ abstract class AbstractResearcherTradesProvider : ResearcherTradesProvider {
     // simply cache players to respond to the player-less version of getOffers
     private var lastPlayers = mutableMapOf<UUID, UUID>()
     protected val fixedStructureGeneration = FxLibServices.fixedStructureGeneration
-
-    final override fun getOffers(researcher: Researcher, tradesData: ResearcherTradesData): MerchantOffers {
-        val player = getPlayer(researcher) ?: throw IllegalStateException("Tried running Researcher getOffers before any player used it!")
-        return getOffers(researcher, tradesData, player)
-    }
 
     final override fun getOffers(
         researcher: Researcher,
@@ -67,4 +59,6 @@ abstract class AbstractResearcherTradesProvider : ResearcherTradesProvider {
         val playerUuid = lastPlayers[researcher.uuid]
         return playerUuid?.let { server.playerList.getPlayer(playerUuid) }
     }
+
+    override fun lastTradePlayerId(researcher: Researcher) = getPlayer(researcher)?.uuid
 }

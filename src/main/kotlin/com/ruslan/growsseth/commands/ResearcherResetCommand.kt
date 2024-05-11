@@ -2,9 +2,11 @@ package com.ruslan.growsseth.commands
 
 import com.filloax.fxlib.alwaysTruePredicate
 import com.mojang.brigadier.CommandDispatcher
+import com.mojang.brigadier.context.CommandContext
 import com.ruslan.growsseth.config.ResearcherConfig
 import com.ruslan.growsseth.entity.GrowssethEntities
 import com.ruslan.growsseth.entity.researcher.ResearcherSavedData
+import com.ruslan.growsseth.entity.researcher.trades.ProgressResearcherTradesProvider
 import net.minecraft.commands.CommandBuildContext
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands.CommandSelection
@@ -19,7 +21,7 @@ object ResearcherResetCommand {
         dispatcher.register(literal("greset").requires{ it.hasPermission(2) }
             .executes { ctx ->
                 if (ResearcherConfig.singleResearcher) {
-                    resetAll(ctx.source.server)
+                    resetAll(ctx, ctx.source.server)
                     ctx.source.sendSuccess({ Component.translatable("growsseth.commands.greset.done") }, true)
                     1
                 } else {
@@ -30,16 +32,25 @@ object ResearcherResetCommand {
         )
     }
 
-    private fun resetAll(server: MinecraftServer) {
+    private fun resetAll(ctx: CommandContext<CommandSourceStack>, server: MinecraftServer) {
         val savedData = ResearcherSavedData.getPersistent(server)
         savedData.data = CompoundTag()
         savedData.name = null
         savedData.setDirty()
 
-        server.allLevels.forEach { level ->
-            level.getEntities(GrowssethEntities.RESEARCHER, alwaysTruePredicate()).forEach { researcher ->
-                researcher.readSavedData(savedData)
+        val progressData = ProgressResearcherTradesProvider.ProgressTradesSavedData.get(server)
+        progressData.foundStructures.clear()
+        progressData.setDirty()
+
+        try {
+            server.allLevels.forEach { level ->
+                level.getEntities(GrowssethEntities.RESEARCHER, alwaysTruePredicate()).forEach { researcher ->
+                    researcher.readSavedData(savedData)
+                }
             }
+        } catch(e: Exception) {
+            ctx.source.sendFailure(Component.literal("Error in resetting loaded researchers: ${e.message}"))
+            e.printStackTrace()
         }
     }
 }
