@@ -270,10 +270,6 @@ object GrowssethExtraEvents {
         val maxTime = savedData.removeResearchersTimes.values.max()
 
         if (tracker.spawnTime < maxTime) {
-            // Also used by zombie researcher
-            if (entity is Researcher) {
-                entity.saveWorldData()
-            }
             entity.discard()
             RuinsOfGrowsseth.LOGGER.info("Removed researcher $entity via remote command (time was ${tracker.spawnTime} ${tracker.spawnTime.ticksToTimecode()})")
         }
