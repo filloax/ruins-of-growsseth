@@ -18,11 +18,9 @@ import com.ruslan.growsseth.entity.GrowssethEntities
 import com.ruslan.growsseth.entity.researcher.trades.ProgressResearcherTradesProvider
 import com.ruslan.growsseth.entity.researcher.trades.ResearcherTradeMode
 import com.ruslan.growsseth.item.GrowssethItems
-import com.ruslan.growsseth.item.ResearcherDaggerItem
 import com.ruslan.growsseth.quests.*
 import com.ruslan.growsseth.structure.pieces.ResearcherTent
 import net.minecraft.core.BlockPos
-import net.minecraft.core.Vec3i
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
@@ -228,7 +226,7 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
             val tent = entity.tent
             val startingPos = entity.position()
             entity.dialogues?.resetNearbyPlayers()
-            val data = entity.makeResearcherData()
+            val data = entity.saveResearcherData()
             var scheduleMoveRemoveLater = false
             if (tent != null) {
                 moveToJail(entity, tent)
@@ -242,7 +240,6 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
             val resStartingPos = entity.startingPos ?: entity.blockPosition()
             val spawnTime = entity.spawnTime
 
-            entity.saveWorldData()
             val zombie = entity.convertTo(GrowssethEntities.ZOMBIE_RESEARCHER, false)
             if (zombie == null) {
                 RuinsOfGrowsseth.LOGGER.error("Couldn't zombify researcher in quest stage!")
