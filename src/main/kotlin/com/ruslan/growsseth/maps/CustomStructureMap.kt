@@ -4,6 +4,8 @@ import com.filloax.fxlib.*
 import com.mojang.datafixers.util.Pair
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.utils.AsyncLocator
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
 import net.minecraft.core.HolderSet
@@ -21,6 +23,11 @@ import net.minecraft.world.level.saveddata.maps.MapDecorationTypes
 import net.minecraft.world.level.saveddata.maps.MapId
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData
 import java.util.concurrent.CompletableFuture
+import kotlin.concurrent.thread
+
+private const val DEFAULT_ASYNC = true
+// true seems to be way slower even in single threaded mode
+private const val DEFAULT_SKIP_EXPLORED = false
 
 fun ItemStack.createAndStoreMapData(
     level: Level, x: Int, z: Int, scale: Int,
@@ -85,11 +92,11 @@ fun ItemStack.invalidateMap() {
 fun ItemStack.updateMapToStruct(
     level: ServerLevel,
     destinationName: String, searchFromPos: BlockPos,
-    searchRadius: Int = 50, skipExploredChunks: Boolean = true,
+    searchRadius: Int = 50, skipExploredChunks: Boolean? = null,
     scale: Int = 1,
     destinationType: DestinationType = DEFAULT_DESTINATION_TYPE,
     displayName: String? = null,
-    async: Boolean = false,
+    async: Boolean? = null,
 ): CompletableFuture<Pair<BlockPos, Holder<Structure>>> {
     val structTagKey = getStructTagOrKey(destinationName)
     return structTagKey.map({
@@ -114,11 +121,11 @@ fun ItemStack.updateMapToStruct(
 fun ItemStack.updateMapToStruct(
     level: ServerLevel,
     destination: ResourceKey<Structure>, searchFromPos: BlockPos,
-    searchRadius: Int = 50, skipExploredChunks: Boolean = true,
+    searchRadius: Int = 50, skipExploredChunks: Boolean? = null,
     scale: Int = 1,
     destinationType: DestinationType = DEFAULT_DESTINATION_TYPE,
     displayName: String? = null,
-    async: Boolean = false,
+    async: Boolean? = null,
 ): CompletableFuture<Pair<BlockPos, Holder<Structure>>> {
     return updateMapToStructWithHolder(level, getHolderSet(level, destination), searchFromPos, searchRadius, skipExploredChunks, scale, destinationType, displayName, async)
 }
@@ -138,11 +145,11 @@ fun ItemStack.updateMapToStruct(
 fun ItemStack.updateMapToStruct(
     level: ServerLevel,
     destinationTag: TagKey<Structure>, searchFromPos: BlockPos,
-    searchRadius: Int = 50, skipExploredChunks: Boolean = true,
+    searchRadius: Int = 50, skipExploredChunks: Boolean? = null,
     scale: Int = 1,
     destinationType: DestinationType = DEFAULT_DESTINATION_TYPE,
     displayName: String? = null,
-    async: Boolean = false,
+    async: Boolean? = null,
 ): CompletableFuture<Pair<BlockPos, Holder<Structure>>> {
     val holderSet = level.registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(destinationTag).orElseThrow()
     return updateMapToStructWithHolder(level, holderSet, searchFromPos, searchRadius, skipExploredChunks, scale, destinationType, displayName, async)
@@ -151,28 +158,44 @@ fun ItemStack.updateMapToStruct(
 private fun ItemStack.updateMapToStructWithHolder(
     level: ServerLevel,
     destinationHolderSet: HolderSet<Structure>, searchFromPos: BlockPos,
-    searchRadius: Int = 50, skipExploredChunks: Boolean = true,
-    scale: Int = 1,
-    destinationType: DestinationType = DEFAULT_DESTINATION_TYPE,
-    displayName: String? = null,
-    async: Boolean = false,
+    searchRadius: Int, skipExploredChunks: Boolean?,
+    scale: Int,
+    destinationType: DestinationType,
+    displayName: String?,
+    async: Boolean?,
 ): CompletableFuture<Pair<BlockPos, Holder<Structure>>> {
+    val doSkipExploredChunks = skipExploredChunks ?: DEFAULT_SKIP_EXPLORED
     // In general, return CompletableFuture *separately* from locatetask
     // to make sure things added to it as a return of this run after the locatetask's
     // callback here
     val future = CompletableFuture<Pair<BlockPos, Holder<Structure>>>()
     val destString = destinationHolderSet.unwrapKey().toString()
-    if (async) {
+    if (async == true || (async == null && DEFAULT_ASYNC)) {
         RuinsOfGrowsseth.LOGGER.info("Starting async structure '$destString' search...")
         this[DataComponents.CUSTOM_NAME] = Component.translatable("menu.working")
+
+        var done = false
+        val lock = object {}
+        val startTime = Clock.System.now()
+
+        thread(name="locator-timing-thread", start = true, isDaemon = true){
+            while (synchronized(lock) { !done }) {
+                Thread.sleep(10000)
+                if (synchronized(lock) { !done }) {
+                    val time = Clock.System.now()
+                    RuinsOfGrowsseth.LOGGER.info("Async structure '$destString' search still running, took ${(time - startTime).inWholeMilliseconds/1000}s")
+                }
+            }
+        }
 
         AsyncLocator.locate(
             level,
             destinationHolderSet,
             searchFromPos,
             searchRadius,
-            skipExploredChunks
+            doSkipExploredChunks
         ).thenOnServerThread {
+            synchronized(lock) { done = true }
             val pos = it.first
             if (pos != null) {
                 val finalDestType = if (destinationType.auto) DestinationType.auto(it.second) else destinationType
@@ -186,8 +209,10 @@ private fun ItemStack.updateMapToStructWithHolder(
             future.complete(it)
         }
     } else {
-        val found = level.chunkSource.generator
-            .findNearestMapStructure(level, destinationHolderSet, searchFromPos, searchRadius, skipExploredChunks)
+        RuinsOfGrowsseth.LOGGER.info("Starting single-thread structure '$destString' search...")
+//        val found = level.chunkSource.generator
+//            .findNearestMapStructure(level, destinationHolderSet, searchFromPos, searchRadius, doSkipExploredChunks)
+        val found = level.chunkSource.generator.findNearestMapStructure(level, destinationHolderSet, searchFromPos, 100, false)
         if (found == null) {
             RuinsOfGrowsseth.LOGGER.error("Structure $destinationHolderSet not found!")
             future.completeExceptionally(IllegalStateException("Structure $destinationHolderSet not found!"))

@@ -83,8 +83,6 @@ object ResearcherTradeUtils {
                     .minByOrNull { it.pos.distManhattan(researcher.blockPosition()) }
                 if (spawnData != null) {
                     pos = spawnData.pos
-                } else {
-                    RuinsOfGrowsseth.LOGGER.warn("Map $mapData has structure id not found in fixed spawns: ${mapData.fixedStructureId}")
                 }
             }
             if (pos != null) {
@@ -117,14 +115,15 @@ object ResearcherTradeUtils {
         }
 
         if (!known) {
-            // For community version (locate map functionality)
+            offer.setToOutOfStock() // Disable offer until found
+            // Locate map if not fixed struct or pos
             itemStack.updateMapToStruct(
                 level,
                 mapData.structure,
                 researcher.blockPosition(),
                 scale,
                 displayName = mapData.name,
-                async = true,
+//                async = true,
             ).thenAccept {
                 val pos = it.first
                 if (pos != null) {
@@ -137,8 +136,7 @@ object ResearcherTradeUtils {
                         )
                     }
                     researcher.refreshCurrentTrades()
-                } else {
-                    offer.increaseUses() // Disable offer, as it's always generated with 1 use
+                    offer.resetUses()
                 }
             }
         }
