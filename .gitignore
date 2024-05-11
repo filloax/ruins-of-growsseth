@@ -27,8 +27,10 @@ run/
 temp/**
 tools/Live-Update-Server/update.ps1
 **/.venv/**
+logs/*
 
 #egobalego
 */Egobalego at Home/last_id.txt
 */Egobalego at Home/server_data.json
 */Server di testing e script vari/server_data.json
+

@@ -74,7 +74,7 @@
     "growsseth.commands.reloadremote.success": "Reloading remote data success!",
     "growsseth.commands.reloadremote.failure": "Reloading remote data failure (check log)!",
     "growsseth.commands.greset.nop": "Nothing to reset (researcher persistence is disabled)",
-    "growsseth.commands.greset.done": "Researcher data reset (%d)",
+    "growsseth.commands.greset.done": "Researcher data reset",
     "growsseth.commands.gquest.noQuest": "Target entity doesn't have any quests",
     "growsseth.commands.gquest.stage.success": "Correctly set stage to %s, history is: %s",
     "growsseth.commands.gquest.stage.failure": "Failed in setting stage",

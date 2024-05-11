@@ -12,6 +12,7 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.animal.horse.Donkey
+import net.minecraft.world.entity.decoration.LeashFenceKnotEntity
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.levelgen.structure.BoundingBox
 import net.minecraft.world.level.levelgen.structure.StructureStart
@@ -90,8 +91,12 @@ object ResearcherDonkey {
         val useDonkey = donkeys.firstOrNull()
         if (useDonkey != null) {
             RuinsOfGrowsseth.LOGGER.info("Removing Researcher donkey $useDonkey")
+
+            val knot = useDonkey.leashHolder?.let { if (it is LeashFenceKnotEntity) it else null }
+
             EventUtil.runAtServerTickEnd {
                 useDonkey.discard()
+                knot?.discard()
             }
         }
     }
