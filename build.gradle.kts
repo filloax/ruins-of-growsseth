@@ -121,6 +121,29 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
 }
 
+tasks.register("zipEgobalegoFolder") {
+	group = "custom"
+
+	val sourceDir = project.file("tools/Egobalego At Home")
+	val destinationDir = project.file("build")
+	val zipFile = destinationDir.resolve("Egobalego At Home.zip")
+
+	inputs.dir(sourceDir)
+	outputs.file(zipFile)
+
+	doLast {
+		destinationDir.mkdirs()
+		project.exec {
+			workingDir = sourceDir.parentFile
+			commandLine("zip", "-r", zipFile.absolutePath, "Egobalego At Home")
+		}
+	}
+}
+
+tasks.named("build") {
+	dependsOn("zipEgobalegoFolder")
+}
+
 tasks.processResources {
 	inputs.property("version", project.version)
 
