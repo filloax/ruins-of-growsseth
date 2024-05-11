@@ -6,12 +6,16 @@ on:
       - 'test/**'
 env:
   TEST_RELEASE_COUNT: ${{ vars.TEST_RELEASE_COUNT }}
+  JAVA_VERSION: 21
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Print release num
+        run: "echo Release num: ${{ env.TEST_RELEASE_COUNT }}"
+
       - uses: actions/checkout@v1  
         with:
           path: .github/workflows/release-count
@@ -20,7 +24,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           distribution: "temurin"
-          java-version: 21
+          java-version: ${{ env.JAVA_VERSION }}
 
       - name: Make Gradle Wrapper Executable
         if: ${{ runner.os != 'Windows' }}
