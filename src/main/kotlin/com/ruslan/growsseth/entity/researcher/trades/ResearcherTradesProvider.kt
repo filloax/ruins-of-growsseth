@@ -50,7 +50,7 @@ abstract class AbstractResearcherTradesProvider : ResearcherTradesProvider {
         val valueToItemMap = mutableMapOf<Item, MutableList<ResearcherTradeEntry>>()
 
         for (entry in list) {
-            val value = entry.itemListing.gives.item
+            val value = entry.itemListing.givesItem
             val itemList = valueToItemMap.computeIfAbsent(value) { mutableListOf() }
             if (entry.replace) {
                 // Priority affects order such that low priority number goes first, so treat it the same here

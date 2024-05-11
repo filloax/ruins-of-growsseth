@@ -11,7 +11,7 @@ import net.minecraft.world.item.trading.MerchantOffer
 import java.util.*
 
 open class SerializableItemListing(
-    val gives: ItemStack,
+    private val gives: ItemStack,
     val wants: List<ItemCost>,
     val maxUses: Int,
     val xp: Int = 0,
@@ -20,7 +20,7 @@ open class SerializableItemListing(
 ) : VillagerTrades.ItemListing {
     companion object {
         val CODEC: Codec<SerializableItemListing> = RecordCodecBuilder.create { b -> b.group(
-            ItemStack.CODEC.fieldOf("gives").forGetter(SerializableItemListing::gives),
+            ItemStack.CODEC.fieldOf("gives").forGetter { it.gives },
             ItemCost.CODEC.listOf().fieldOf("wants").forGetter(SerializableItemListing::wants),
             Codec.INT.fieldOf("maxUses").forGetter(SerializableItemListing::maxUses),
             Codec.INT.fieldOf("xp").forGetter(SerializableItemListing::xp),
@@ -36,8 +36,13 @@ open class SerializableItemListing(
     }
 
     override fun getOffer(trader: Entity, random: RandomSource): MerchantOffer
-        = MerchantOffer(wants[0], Optional.ofNullable(wants.getOrNull(1)), gives, maxUses, xp, priceMul)
+        = MerchantOffer(wants[0], Optional.ofNullable(wants.getOrNull(1)), gives(), maxUses, xp, priceMul)
 
+    // Returns a copy of the specified item, to avoid
+    // accidentally changing it for all trades by changing its properties
+    fun gives(): ItemStack = gives.copy()
+    val givesItem get() = gives.item
+    val givesItemHolder get() = gives.itemHolder
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
