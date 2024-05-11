@@ -17,8 +17,6 @@ jobs:
         run: "echo Release num: ${{ env.TEST_RELEASE_NUM }}"
 
       - uses: actions/checkout@v1  
-        with:
-          path: .github/workflows/release-count
 
       - name: Setup Java
         uses: actions/setup-java@v2
