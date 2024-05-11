@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - 'test/**'
+env:
+  TEST_RELEASE_COUNT: ${{ vars.TEST_RELEASE_COUNT }}
 
 jobs:
   build:
@@ -33,13 +35,13 @@ jobs:
           repo_token: "${{ secrets.TOKEN_GITHUB }}"
           automatic_release_tag: "test-release-1.20.6"
           prerelease: true
-          title: "Test Release [${{ vars.TEST_RELEASE_COUNT }}] - 1.20.6"
+          title: "Test Release [${{ env.TEST_RELEASE_COUNT }}] - 1.20.6"
           files: |
             build/libs/*.jar
 
       - name: Increment release count
         id: get_release_count
-        run: echo "NEW_RELEASE_COUNT=$((${{ vars.TEST_RELEASE_COUNT }} + 1))" >> $GITHUB_ENV
+        run: echo "NEW_RELEASE_COUNT=$((${{ env.TEST_RELEASE_COUNT }} + 1))" >> $GITHUB_ENV
 
       - name: "Call API"
         uses: indiesdev/curl@v1.1
