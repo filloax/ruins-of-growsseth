@@ -80,7 +80,9 @@ class ResearcherItemListing(
         val MLIST_CODEC: Codec<MutableList<ResearcherItemListing>> = mutableListCodec(CODEC)
         val LIST_CODEC: Codec<List<ResearcherItemListing>> = Codec.list(CODEC)
 
-        private const val SET_MAP_TAG = "ResearcherSetMap"
+        const val SET_MAP_TAG = "ResearcherSetMap"
+        const val MAP_INFO_TAG = "ResearcherMapInfo"
+        const val DIARY_ID_TAG = "ResearcherDiaryId"
     }
 
     override fun getOffer(trader: Entity, random: RandomSource): MerchantOffer {
@@ -99,15 +101,11 @@ class ResearcherItemListing(
         offer.addToSpecialPriceDiff((offer.costA.count * (costMultiplier - 1)).roundToInt())
 
         mapInfo?.let { map ->
-            val offerResult = offer.result
-            if (!trader.level().isClientSide && offerResult[DataComponents.CUSTOM_DATA]?.contains(SET_MAP_TAG) != true && trader is Researcher) {
-                CustomData.update(DataComponents.CUSTOM_DATA, offerResult) { it.putBoolean(SET_MAP_TAG, true) }
-                ResearcherTradeUtils.setTradeMapTarget(trader, offerResult, map, offer)
-            }
+            CustomData.update(DataComponents.CUSTOM_DATA, offer.result) { it.saveField(MAP_INFO_TAG, TradeItemMapInfo.CODEC) { map } }
         }
 
         diaryId?.let { id ->
-            DiaryHelper.updateItemWithMiscDiary(offer.result, id, trader)
+            CustomData.update(DataComponents.CUSTOM_DATA, offer.result) { it.putString(DIARY_ID_TAG, id) }
         }
 
         return offer

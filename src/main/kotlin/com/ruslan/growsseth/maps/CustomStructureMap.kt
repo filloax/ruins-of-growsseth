@@ -28,6 +28,8 @@ import kotlin.concurrent.thread
 private const val DEFAULT_ASYNC = true
 // true seems to be way slower even in single threaded mode
 private const val DEFAULT_SKIP_EXPLORED = false
+private const val DEFAULT_SEARCH_RANGE = 100
+
 
 fun ItemStack.createAndStoreMapData(
     level: Level, x: Int, z: Int, scale: Int,
@@ -92,7 +94,7 @@ fun ItemStack.invalidateMap() {
 fun ItemStack.updateMapToStruct(
     level: ServerLevel,
     destinationName: String, searchFromPos: BlockPos,
-    searchRadius: Int = 50, skipExploredChunks: Boolean? = null,
+    searchRadius: Int = DEFAULT_SEARCH_RANGE, skipExploredChunks: Boolean? = null,
     scale: Int = 1,
     destinationType: DestinationType = DEFAULT_DESTINATION_TYPE,
     displayName: String? = null,
@@ -121,7 +123,7 @@ fun ItemStack.updateMapToStruct(
 fun ItemStack.updateMapToStruct(
     level: ServerLevel,
     destination: ResourceKey<Structure>, searchFromPos: BlockPos,
-    searchRadius: Int = 50, skipExploredChunks: Boolean? = null,
+    searchRadius: Int = DEFAULT_SEARCH_RANGE, skipExploredChunks: Boolean? = null,
     scale: Int = 1,
     destinationType: DestinationType = DEFAULT_DESTINATION_TYPE,
     displayName: String? = null,
@@ -145,7 +147,7 @@ fun ItemStack.updateMapToStruct(
 fun ItemStack.updateMapToStruct(
     level: ServerLevel,
     destinationTag: TagKey<Structure>, searchFromPos: BlockPos,
-    searchRadius: Int = 50, skipExploredChunks: Boolean? = null,
+    searchRadius: Int = DEFAULT_SEARCH_RANGE, skipExploredChunks: Boolean? = null,
     scale: Int = 1,
     destinationType: DestinationType = DEFAULT_DESTINATION_TYPE,
     displayName: String? = null,
