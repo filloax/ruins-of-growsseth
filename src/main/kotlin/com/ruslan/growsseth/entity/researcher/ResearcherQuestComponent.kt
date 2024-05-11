@@ -187,7 +187,6 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
                 .getHolder(ResourceKey.create(Registries.INSTRUMENT, GrowssethItems.Instruments.RESEARCHER_HORN.first))
                 .orElseThrow()
             val hornItem = InstrumentItem.create(GrowssethItems.RESEARCHER_HORN, resInstrumentHolder)
-            val daggerItem = GrowssethItems.RESEARCHER_DAGGER.defaultInstance
             val researcherName = ResearcherSavedData.getPersistent(level.server).name  ?: Component.translatable("entity.growsseth.researcher")
             val endTextItem = (if (DiaryHelper.hasCustomEndDiary()) {
                     DiaryHelper.getCustomEndDiary(researcherName)
@@ -201,7 +200,6 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
 
             blockEntity.setItem(4, endTextItem)
             blockEntity.setItem(13, hornItem)
-            blockEntity.setItem(22, daggerItem)
             level.blockUpdated(pos, chestState.block)
             RuinsOfGrowsseth.LOGGER.info("Spawned researcher reward chest at $pos")
         }
