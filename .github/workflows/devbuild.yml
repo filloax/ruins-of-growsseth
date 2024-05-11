@@ -5,7 +5,7 @@ on:
     branches:
       - 'test/**'
 env:
-  TEST_RELEASE_COUNT: ${{ vars.TEST_RELEASE_COUNT }}
+  TEST_RELEASE_NUM: ${{ vars.TEST_RELEASE_NUM }}
   JAVA_VERSION: 21
 
 jobs:
@@ -14,7 +14,7 @@ jobs:
 
     steps:
       - name: Print release num
-        run: "echo Release num: ${{ env.TEST_RELEASE_COUNT }}"
+        run: "echo Release num: ${{ env.TEST_RELEASE_NUM }}"
 
       - uses: actions/checkout@v1  
         with:
@@ -31,7 +31,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build with Gradle
-        run: ./gradlew build -Pmod_version='1.20.6-${{ env.TEST_RELEASE_COUNT }}'
+        run: ./gradlew build -Pmod_version='1.20.6-${{ env.TEST_RELEASE_NUM }}'
 
       - name: "Replace test release"
         uses: "marvinpinto/action-automatic-releases@latest"
@@ -39,13 +39,13 @@ jobs:
           repo_token: "${{ secrets.TOKEN_GITHUB }}"
           automatic_release_tag: "test-release-1.20.6"
           prerelease: true
-          title: "Test Release [${{ env.TEST_RELEASE_COUNT }}] - 1.20.6"
+          title: "Test Release [${{ env.TEST_RELEASE_NUM }}] - 1.20.6"
           files: |
             build/libs/*.jar
 
       - name: Increment release count
         id: get_release_count
-        run: echo "NEW_RELEASE_COUNT=$((${{ env.TEST_RELEASE_COUNT }} + 1))" >> $GITHUB_ENV
+        run: echo "NEW_RELEASE_COUNT=$((${{ env.TEST_RELEASE_NUM }} + 1))" >> $GITHUB_ENV
 
       - name: "Call API"
         uses: indiesdev/curl@v1.1
