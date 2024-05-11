@@ -6,6 +6,10 @@
     }
   ],
   "placement": {
+    "exclusion_zone": {
+      "chunk_count": 10,
+      "other_set": "growsseth:researcher_tent"
+    },
     "salt": 1994828484,
     "spacing": 40,
     "separation": 24,
