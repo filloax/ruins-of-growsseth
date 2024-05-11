@@ -99,9 +99,10 @@ class ResearcherItemListing(
         offer.addToSpecialPriceDiff((offer.costA.count * (costMultiplier - 1)).roundToInt())
 
         mapInfo?.let { map ->
-            if (!trader.level().isClientSide && gives[DataComponents.CUSTOM_DATA]?.contains(SET_MAP_TAG) != true && trader is Researcher) {
-                CustomData.update(DataComponents.CUSTOM_DATA, gives) { it.putBoolean(SET_MAP_TAG, true) }
-                ResearcherTradeUtils.setTradeMapTarget(trader, gives, map, offer)
+            val offerResult = offer.result
+            if (!trader.level().isClientSide && offerResult[DataComponents.CUSTOM_DATA]?.contains(SET_MAP_TAG) != true && trader is Researcher) {
+                CustomData.update(DataComponents.CUSTOM_DATA, offerResult) { it.putBoolean(SET_MAP_TAG, true) }
+                ResearcherTradeUtils.setTradeMapTarget(trader, offerResult, map, offer)
             }
         }
 
@@ -113,7 +114,7 @@ class ResearcherItemListing(
     }
 
     fun looselyMatches(other: ResearcherItemListing) =
-        ItemStack.matches(gives, other.gives) && mapInfo == other.mapInfo
+        ItemStack.matches(gives(), other.gives()) && mapInfo == other.mapInfo
 }
 
 /**
