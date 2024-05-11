@@ -179,11 +179,11 @@ class ResearcherTent : GrTemplateStructurePiece {
             }
             "cellarCorner1" -> {
                 cellarPos1 = pos
-                level.setBlock(pos, Blocks.STONE.defaultBlockState(), SetBlockFlag.NOTIFY_CLIENTS.flag)
+                level.setBlock(pos, Blocks.DIRT.defaultBlockState(), SetBlockFlag.NOTIFY_CLIENTS.flag)
             }
             "cellarCorner2" -> {
                 cellarPos2 = pos
-                level.setBlock(pos, Blocks.STONE.defaultBlockState(), SetBlockFlag.NOTIFY_CLIENTS.flag)
+                level.setBlock(pos, Blocks.DIRT.defaultBlockState(), SetBlockFlag.NOTIFY_CLIENTS.flag)
             }
         }
     }
