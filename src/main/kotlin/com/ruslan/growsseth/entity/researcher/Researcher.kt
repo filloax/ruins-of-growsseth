@@ -12,6 +12,8 @@ import com.filloax.fxlib.secondsToTicks
 import com.filloax.fxlib.structure.tracking.CustomPlacedStructureTracker
 import com.mojang.datafixers.util.Either
 import com.mojang.serialization.Codec
+import com.mojang.serialization.codecs.RecordCodecBuilder
+import com.mojang.serialization.codecs.UnboundedMapCodec
 import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.RuinsOfGrowsseth
@@ -54,7 +56,6 @@ import net.minecraft.tags.TagKey
 import net.minecraft.util.RandomSource
 import net.minecraft.world.*
 import net.minecraft.world.damagesource.DamageSource
-import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.*
@@ -85,10 +86,12 @@ import net.minecraft.world.item.trading.MerchantOffer
 import net.minecraft.world.item.trading.MerchantOffers
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
+import net.minecraft.world.level.entity.EntityTypeTest
 import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.level.levelgen.structure.Structure
 import net.minecraft.world.level.levelgen.structure.StructureStart
 import net.minecraft.world.level.portal.PortalInfo
+import net.minecraft.world.level.saveddata.maps.MapId
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import java.util.*
@@ -117,6 +120,8 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         const val STARTING_POS_TAG = "ResearcherStartingPos"
         const val STARTING_DIM_TAG = "ResearcherStartingDim"
         const val TELEPORT_COUNTER_TAG = "ResearcherTPCounter"
+        const val MAP_MEMORY_TAG = "ResearcherMapLocations"
+        const val OFFERS_TAG = "ResearcherOffers"
 
         val RENAME_BLACKLIST = mutableMapOf(
             // True if it should check word parts
@@ -153,6 +158,13 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         private val DATA_ANGRY_PARTICLES = SynchedEntityData.defineId(Researcher::class.java, EntityDataSerializers.BOOLEAN)
         private val DATA_DEFLECT_ARROW_PARTICLES = SynchedEntityData.defineId(Researcher::class.java, EntityDataSerializers.BOOLEAN)
         private val DATA_TELEPORT_PARTICLES = SynchedEntityData.defineId(Researcher::class.java, EntityDataSerializers.BOOLEAN)
+
+        // keep type annotations, kotlin + codecs might be janky otherwise
+        private val MAP_MEMORY_CODEC: Codec<Map<String, MapMemory>> = UnboundedMapCodec(Codec.STRING, RecordCodecBuilder.create<MapMemory> { builder -> builder.group(
+            BlockPos.CODEC.fieldOf("pos").forGetter(MapMemory::pos),
+            Codec.either(TagKey.codec(Registries.STRUCTURE), ResourceKey.codec(Registries.STRUCTURE)).fieldOf("struct").forGetter(MapMemory::struct),
+            Codec.INT.fieldOf("mapId").forGetter(MapMemory::mapId),
+        ).apply(builder, ::MapMemory) })
 
 //        private var tentStructures: List<Structure>? = null
 
@@ -214,6 +226,9 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         private set
     var metPlayer: Boolean = false
         private set
+    // Set to false (intentionally public) to prevent the researcher from saving world data
+    // on remove in single researcher mode
+    var saveOnRemove: Boolean = true
 
     /* If the donkey was borrowed by any player, do not check for specific player
        as there is only one donkey anyway and atm the penalty is shared
@@ -617,11 +632,18 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         super.die(damageSource)
     }
 
+    override fun remove(reason: RemovalReason) {
+        if (saveOnRemove)
+            saveWorldData()
+
+        super.remove(reason)
+    }
+
 
     /* Researcher data methods */
 
     // Only NBT stuff of this class
-    fun makeResearcherData(): CompoundTag {
+    fun saveResearcherData(): CompoundTag {
         val researcherData = CompoundTag()
 
         val persistMapMemory = if (!researcherData.contains("ResearcherMapMemory", Tag.TAG_COMPOUND.toInt())) {
@@ -632,22 +654,10 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             researcherData.getCompound("ResearcherMapMemory")
         }
 
-        synchronized(storedMapLocations) { storedMapLocations.forEach { mapMemory ->
-            val structData = CompoundTag()
-            structData.putInt("x", mapMemory.value.pos.x)
-            structData.putInt("y", mapMemory.value.pos.y)
-            structData.putInt("z", mapMemory.value.pos.z)
-            structData.putString("id", mapMemory.value.struct.map({"#${it.location()}"}, {"${it.location()}"}))
-            structData.putInt("mapId", mapMemory.value.mapId)
-
-            persistMapMemory.put(mapMemory.key, structData)
-        } }
-
         researcherData.putBoolean("Healed", healed)
         researcherData.putBoolean("AngryForMess", angryForMess)
         researcherData.putBoolean("DonkeyBorrowed", donkeyWasBorrowed)
         researcherData.putBoolean("MetPlayer", metPlayer)
-        researcherData.saveField("PlayerOffers", mutableMapCodec(UUIDUtil.STRING_CODEC, GrowssethCodecs.MERCHANT_OFFERS_CODEC), ::offersByPlayer)
         researcherData.saveField("TradesData", ResearcherTradesData.CODEC) { tradesData() }
 
         dialogues?.writeNbt(researcherData)
@@ -658,19 +668,6 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
     // Only NBT stuff of this class
     fun readResearcherData(researcherData: CompoundTag) {
-        if (researcherData.contains("ResearcherMapMemory")) {
-            val mapMemory = researcherData.getCompound("ResearcherMapMemory")
-            mapMemory.allKeys.forEach {
-                val tag = mapMemory.getCompound(it)
-                storedMapLocations[it] = MapMemory(
-                    BlockPos(tag.getInt("x"), tag.getInt("y"), tag.getInt("z")),
-                    getStructTagOrKey(tag.getString("id")),
-                    tag.getInt("mapId"),
-                )
-            }
-        } else {
-            storedMapLocations.clear()
-        }
         if (researcherData.contains("Healed")) {
             healed = researcherData.getBoolean("Healed")
         } else {
@@ -692,8 +689,6 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             metPlayer = false
         }
 
-        offersByPlayer.clear()
-        researcherData.loadField("PlayerOffers", mutableMapCodec(UUIDUtil.STRING_CODEC, GrowssethCodecs.MERCHANT_OFFERS_CODEC)) { offersByPlayer.putAll(it) }
         server?.let { tradesData = ResearcherTradesData(ResearcherTradeMode.getFromSettings(it)) }
         researcherData.loadField("TradesData", ResearcherTradesData.CODEC) {tradesData = it}
 
@@ -704,7 +699,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
     // Also vanilla things like name
     fun writeSavedData(savedData: ResearcherSavedData, existingDataTag: CompoundTag? = null) {
-        savedData.data = existingDataTag ?: makeResearcherData()
+        savedData.data = existingDataTag ?: saveResearcherData()
         savedData.name = customName
         savedData.setDirty()
     }
@@ -716,7 +711,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
     override fun addAdditionalSaveData(compoundTag: CompoundTag) {
         super.addAdditionalSaveData(compoundTag)
-        val data = makeResearcherData()
+        val data = saveResearcherData()
 
         if (ResearcherConfig.singleResearcher) {
             server?.let { serv ->
@@ -725,12 +720,19 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             }
         }
 
+        // Entity specific data (not shared even in single researcher mode)
         compoundTag.put(DATA_TAG, data)
         compoundTag.putLong(SPAWN_TIME_TAG, spawnTime)
         // Save separately from data as specific to single researcher
         compoundTag.saveField(TELEPORT_COUNTER_TAG, Codec.INT, ::secondsAwayFromTent)
         compoundTag.saveField(STARTING_POS_TAG, BlockPos.CODEC, ::startingPos)
         compoundTag.saveField(STARTING_DIM_TAG, ResourceKey.codec(Registries.DIMENSION), ::startingDimension)
+
+        synchronized(storedMapLocations) {
+            compoundTag.saveField(MAP_MEMORY_TAG, MAP_MEMORY_CODEC, ::storedMapLocations)
+        }
+
+        compoundTag.saveField(OFFERS_TAG, Codec.unboundedMap(UUIDUtil.STRING_CODEC, GrowssethCodecs.MERCHANT_OFFERS_CODEC), ::offersByPlayer)
     }
 
     override fun readAdditionalSaveData(compoundTag: CompoundTag) {
@@ -754,16 +756,30 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         compoundTag.loadField(TELEPORT_COUNTER_TAG, Codec.INT) { secondsAwayFromTent = it }
         compoundTag.loadField(STARTING_POS_TAG, BlockPos.CODEC) { startingPos = it }
         compoundTag.loadField(STARTING_DIM_TAG, ResourceKey.codec(Registries.DIMENSION)) { startingDimension = it }
+        synchronized(storedMapLocations) {
+            storedMapLocations.clear()
+            compoundTag.loadField(MAP_MEMORY_TAG, MAP_MEMORY_CODEC) {
+                storedMapLocations.putAll(it)
+            }
+        }
+        offersByPlayer.clear()
+        compoundTag.loadField(OFFERS_TAG, Codec.unboundedMap(UUIDUtil.STRING_CODEC, GrowssethCodecs.MERCHANT_OFFERS_CODEC)) { offersByPlayer.putAll(it) }
     }
 
     fun saveWorldData() {
-        if (!level().isClientSide()) {
-            val data = makeResearcherData()
-            server?.let { serv ->
-                val savedData = ResearcherSavedData.getPersistent(serv)
-                writeSavedData(savedData, data)
+        if (ResearcherConfig.singleResearcher) { server?.let { serv ->
+            val savedData = ResearcherSavedData.getPersistent(serv)
+            val data = saveResearcherData()
+            writeSavedData(savedData, data)
+
+            // Update all other currently loaded researchers;
+            // undo if we decide this is a bad idea
+            val otherResearchers = serv.allLevels.flatMap { level -> level.getEntities(EntityTypeTest.forClass(Researcher::class.java)) { it.uuid != this.uuid } }
+            otherResearchers.forEach { researcher2 ->
+                researcher2.readSavedData(savedData)
+                RuinsOfGrowsseth.LOGGER.info("Updated world data for $researcher2 after saving it for $this")
             }
-        }
+        } }
     }
 
 
@@ -984,6 +1000,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             return InteractionResultHolder.pass(stack)
         }
     }
+
 
     data class MapMemory(
         val pos: BlockPos,
