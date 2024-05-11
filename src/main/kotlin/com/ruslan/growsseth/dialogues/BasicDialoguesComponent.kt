@@ -103,7 +103,7 @@ open class BasicDialoguesComponent(
     }
 
     override fun resetNearbyPlayers() {
-        closePlayers.forEach { uuid ->
+        closePlayers.toList().forEach { uuid ->
             playerDataOrCreate(uuid).lastSeenTimestamp = entity.level().gameTime
         }
         closePlayers.clear()
@@ -541,7 +541,7 @@ open class BasicDialoguesComponent(
         }
     }
 
-    override fun nearbyPlayers(): List<ServerPlayer> = closePlayers.mapNotNull { getPlayerById(it) }
+    override fun nearbyPlayers(): List<ServerPlayer> = closePlayers.toList().mapNotNull { getPlayerById(it) }
 
     private fun eventInQueue(event: DialogueEvent): Boolean {
         return dialogueQueue.any { it.third == event }
