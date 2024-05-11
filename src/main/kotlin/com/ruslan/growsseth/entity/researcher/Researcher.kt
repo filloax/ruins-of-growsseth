@@ -627,7 +627,8 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     }
 
     override fun die(damageSource: DamageSource) {
-        if (damageSource.entity is ServerPlayer)
+        val source = damageSource.entity
+        if (source is ServerPlayer && !source.isCreative)
             dialogues?.triggerDialogue(damageSource.entity as ServerPlayer, BasicDialogueEvents.DEATH)
         super.die(damageSource)
     }
