@@ -74,7 +74,7 @@
     "growsseth.commands.reloadremote.success": "Ricaricamento dati remoti: successo!",
     "growsseth.commands.reloadremote.failure": "Ricaricamento dati remoti: fallito (Controlla il log)!",
     "growsseth.commands.greset.nop": "Niente da resettare (persistenza ricercatore disabilitata)",
-    "growsseth.commands.greset.done": "Resettati dati ricercatore (%d)",
+    "growsseth.commands.greset.done": "Resettati dati ricercatore",
     "growsseth.commands.gquest.noQuest": "L'entità selezionata non ha quest",
     "growsseth.commands.gquest.stage.success": "Impostata correttamente la fase per %s, la cronologia è: %s",
     "growsseth.commands.gquest.stage.failure": "Non è stato possibile impostare la fase",

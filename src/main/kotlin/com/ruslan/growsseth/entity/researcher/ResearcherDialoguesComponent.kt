@@ -37,7 +37,6 @@ class ResearcherDialoguesComponent(
 ) : BasicDialoguesComponent(researcher, random) {
     companion object {
         // Stuff to persist in NBT (using DataFixerUpper because shorter to write even if complicated af to read)
-        val CODEC_PLAYERS_MADE_MESS: Codec<MutableSet<UUID>> = CodecUtils.setOf(UUIDUtil.STRING_CODEC)
         val CODEC_PLAYERS_IN_CELLAR: Codec<MutableSet<UUID>> = CodecUtils.setOf(UUIDUtil.STRING_CODEC)
 
         val EV_MAKE_MESS     = event("makeMess")
@@ -64,9 +63,11 @@ class ResearcherDialoguesComponent(
     }
 
     // NBT data
-    // First key is player UUID
-    private var playersMadeMess: MutableSet<UUID> = mutableSetOf()
     private var playersInCellar: MutableSet<UUID> = mutableSetOf()
+    // Unlike other dialogue-related variables,
+    // share between all players as it is related to the physical block state
+    // Before we tracked player ids but that meant another player couldn't fix the issue
+    private var playersMadeMess: Boolean = false
 
     init {
         secondsForAttackRepeat = combat.timeToCalmDown / 20
@@ -148,10 +149,10 @@ class ResearcherDialoguesComponent(
 
     override fun onEventSelected(event: DialogueEvent, eventParam: String?, player: ServerPlayer, triggerSuccess: Boolean) {
         super.onEventSelected(event, eventParam, player, triggerSuccess)
-        val wasEmpty = playersMadeMess.isEmpty()
+        val hadMess = playersMadeMess
         when(event) {
-            EV_MAKE_MESS   -> playersMadeMess.add(player.uuid)
-            EV_FIX_MESS    -> playersMadeMess.remove(player.uuid)
+            EV_MAKE_MESS   -> playersMadeMess = true
+            EV_FIX_MESS    -> playersMadeMess = false
             EV_CELLAR      -> {
                 playersInCellar.add(player.uuid)
                 if (triggerSuccess) {
@@ -161,9 +162,9 @@ class ResearcherDialoguesComponent(
             }
             EV_CELLAR_EXIT -> playersInCellar.remove(player.uuid)
         }
-        if (!wasEmpty && playersMadeMess.isEmpty()) {
+        if (hadMess && !playersMadeMess) {
             researcher.angryForMess = false
-        } else if (wasEmpty && playersMadeMess.isNotEmpty()) {
+        } else if (!hadMess && playersMadeMess) {
             researcher.angryForMess = true
             researcher.setUnhappy()
         }
@@ -180,8 +181,8 @@ class ResearcherDialoguesComponent(
 
     override fun canTriggeredEventRun(player: ServerPlayer, dialogueEvent: DialogueEvent): Boolean {
         return super.canTriggeredEventRun(player, dialogueEvent) && when(dialogueEvent) {
-            EV_MAKE_MESS   -> !playersMadeMess.contains(player.uuid)
-            EV_FIX_MESS    ->  playersMadeMess.contains(player.uuid)
+            EV_MAKE_MESS   -> !playersMadeMess
+            EV_FIX_MESS    ->  playersMadeMess
             EV_CELLAR      -> !playersInCellar.contains(player.uuid)
             EV_CELLAR_EXIT ->  playersInCellar.contains(player.uuid)
             EV_BREAK_TENT  -> !playersInCellar.contains(player.uuid)
@@ -207,15 +208,13 @@ class ResearcherDialoguesComponent(
 
     override fun addExtraNbtData(dialogueData: CompoundTag) {
         super.addExtraNbtData(dialogueData)
-        dialogueData.saveField("PlayersMadeMess", CODEC_PLAYERS_MADE_MESS, this::playersMadeMess)
+        dialogueData.saveField("MessAngerActive", Codec.BOOL, this::playersMadeMess)
         dialogueData.saveField("PlayersInCellar", CODEC_PLAYERS_IN_CELLAR, this::playersInCellar)
     }
 
     override fun readExtraNbtData(dialogueData: CompoundTag) {
         super.readExtraNbtData(dialogueData)
-        playersMadeMess.clear()
-        playersInCellar.clear()
-        dialogueData.loadField("PlayersMadeMess", CODEC_PLAYERS_MADE_MESS) { playersMadeMess = it.toMutableSet() }
+        dialogueData.loadField("MessAngerActive", Codec.BOOL) { playersMadeMess = it }
         dialogueData.loadField("PlayersInCellar", CODEC_PLAYERS_IN_CELLAR) { playersInCellar = it.toMutableSet() }
     }
 

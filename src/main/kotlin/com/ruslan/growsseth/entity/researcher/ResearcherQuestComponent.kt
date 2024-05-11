@@ -147,12 +147,15 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
 
         fun removeTentAndResearcher(researcher: Researcher) {
             val level = researcher.level() as ServerLevel
-            researcher.tent?.let { tent ->
-                val giftPos = tent.boundingBox.center.above(2)
-                tent.remove(level, replaceUndergroundEntrance = true)
-                spawnRewardChest(level, giftPos)
+            RuinsOfGrowsseth.LOGGER.info("Removing tent and researcher $this")
+            level.server.run {
+                researcher.tent?.let { tent ->
+                    val giftPos = tent.boundingBox.center.above(2)
+                    tent.remove(level, replaceUndergroundEntrance = true)
+                    spawnRewardChest(level, giftPos)
+                }
+                removeResearcher(researcher)
             }
-            removeResearcher(researcher)
         }
 
         fun removeResearcher(researcher: Researcher) {
