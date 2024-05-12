@@ -33,7 +33,27 @@ The mod also includes [Fx-Lib](https://github.com/filloax/FX-Lib/), so it's not 
 
 ### Credits
 
-[costantino riempi qua e linka egobalego dopo gabri e worgage]
+Ruslan Fanclub:
+- Filloax (Lead Programmer)
+- Krozzzt (Programming and Writing)
+- Reivaxelain (Art, Structures and Writing)
+- bb01 (Structures and Additional Writing)
+- SkullFury (Original member, Datapack Management)
+- Vovalcool (Original member, Structures)
+- Everyone: Design and Testing
+
+Contributors:
+- Sync_Gabri (Supervisor, Coordinator and Writer for the Cydonia's version) and 
+Worgage (API Integration, Testing and Writing for the Cydonia's version) from the [Project Egobalego](https://projectegobalego.com/) team
+- Simone Russo (Sound Effect)
+- Farcr (Guber texture)
+
+Musical artists:
+- Il Coro di Mammonk (A Padre Mammonk, La Missiva nell'Ombra)
+- Singalek (Binobinooo, Giorgio Cubetti, Giorgio Lo-Fi)
+- HunterProduction (Giorgio Finding Home)
+- EGO & R-E-M (Abbandonati)
+- Guber (Una sega di niente)
 
 ### Developers
 
