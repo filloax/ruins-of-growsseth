@@ -21,7 +21,7 @@ object VillageBuildings {
     const val CATEGORY_GOLEM_STREET = "golem_street" // added to pool
     const val CATEGORY_GOLEM_HOUSE = "golem_house" // already in pool referenced by street, used by advancements
 
-    const val GOLEM_WEIGHT = 50
+    const val GOLEM_WEIGHT = 1
 
     val DESERT_GOLEM_STREET    = register("desert_golem_street", CATEGORY_GOLEM_STREET, "desert", "streets", GOLEM_WEIGHT)
     val PLAINS_GOLEM_STREET    = register("plains_golem_street", CATEGORY_GOLEM_STREET, "plains", "streets", GOLEM_WEIGHT)
@@ -45,8 +45,8 @@ object VillageBuildings {
         val processorLists: Registry<StructureProcessorList> = server.registryAccess().registry(Registries.PROCESSOR_LIST).get()
 
         houseEntries[CATEGORY_GOLEM_STREET]!!.forEach { entry ->
-            addBuildingToPool(templatePools, processorLists, entry.parentPool, entry.normalPool, entry.weight)
-            addBuildingToPool(templatePools, processorLists, entry.parentZombiePool, entry.zombiePool, entry.weight)
+            addBuildingToPool(templatePools, processorLists, entry.parentPool, entry.normalTemplate, entry.weight)
+            addBuildingToPool(templatePools, processorLists, entry.parentZombiePool, entry.zombieTemplate, entry.weight)
         }
     }
 
@@ -72,9 +72,9 @@ object VillageBuildings {
     private fun register(name: String, category: String, kind: String, pool: String, weight: Int): VillageEntry {
         val prefix = "village"
         val templateName = "$prefix/$kind/$name"
-        val templateNameZombie = "$prefix//$kind/${name}_zombie"
-        val poolName = templateName.replace("house", "houses")
-        val poolNameZombie = templateNameZombie.replace("house", "houses")
+        val templateNameZombie = "$prefix/$kind/${name}_zombie"
+        val poolName = "$prefix/$name".replace("house", "houses")
+        val poolNameZombie = "$prefix/${name}_zombie".replace("house", "houses")
         return VillageEntry(
             kind,
             ResourceLocation("minecraft", "$prefix/$kind/$pool"),
