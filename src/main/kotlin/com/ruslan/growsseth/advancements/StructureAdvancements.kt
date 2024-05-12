@@ -15,6 +15,7 @@ import net.minecraft.advancements.AdvancementRequirements
 import net.minecraft.advancements.AdvancementRewards
 import net.minecraft.advancements.critereon.LocationPredicate
 import net.minecraft.advancements.critereon.PlayerTrigger
+import net.minecraft.core.HolderLookup
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
@@ -116,6 +117,16 @@ object StructureAdvancements {
         ) }
     }
 
+    private fun getHousesOfVillageCategory(category: String): Map<ResourceKey<Structure>, List<ResourceLocation>> {
+        val entries = VillageBuildings.houseEntries[category] ?: throw IllegalArgumentException("Village category $category not found")
+        return entries
+            .groupBy{ it.kind }
+            .mapKeys { ResourceKey.create(Registries.STRUCTURE, ResourceLocation("minecraft", "village_${it.key}")) }
+            .mapValues { e -> e.value.flatMap { listOf(it.normalPool, it.zombiePool) } }
+    }
+
+    class Bootstrapper(private val registryLookup: HolderLookup.Provider) {
+        private val structureReg = registryLookup.lookupOrThrow(Registries.STRUCTURE)
 
     fun generateForStructureDetection(consumer: Consumer<AdvancementHolder>) {
         // Root dummy so that the one defined in datagen can be referred to
