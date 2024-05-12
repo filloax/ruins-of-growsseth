@@ -2,7 +2,7 @@
 
 <img src="./src/main/resources/assets/growsseth/icon.png" alt="alt text" width="250" height="250">
 
-# [**DESCRIZIONE IN ITALIANO QUA!**](docs/italian_readme.md)
+# [**DESCRIZIONE IN ITALIANO QUA!**](docs/IT/README.md)
 
 A highly configurable structures mod, with a smart NPC to sell maps and guide you in discovery, and structures 
 that hint to vanilla features taking inspiration from Broken Nether Portals. 
@@ -44,7 +44,8 @@ Ruslan Fanclub:
 
 Contributors:
 - Sync_Gabri (Supervisor, Coordinator and Writer for the Cydonia's version) and 
-Worgage (API Integration, Testing and Writing for the Cydonia's version) from the [Project Egobalego](https://projectegobalego.com/) team
+  Worgage (API Integration, Testing and Writing for the Cydonia's version)
+  from the [Project Egobalego](https://projectegobalego.com/) team
 - Simone Russo (Sound Effect)
 - Farcr (Guber texture)
 
