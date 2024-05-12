@@ -34,6 +34,8 @@ class ResearcherDaggerItem(tier: Tier, properties: Properties) : SwordItem(tier,
     ): Boolean {
         if (listOf(Enchantments.KNOCKBACK, Enchantments.SWEEPING_EDGE).contains(enchantment))
             return false
+        if (enchantment == Enchantments.BREACH)
+            return true
         return super.canBeEnchantedWith(stack, enchantment, context)
     }
 }
