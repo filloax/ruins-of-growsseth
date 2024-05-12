@@ -1,6 +1,6 @@
 # Ruins of Growsseth
 
-<img src="../src/main/resources/assets/growsseth/icon.png" alt="alt text" width="250" height="250">
+<img src="../../src/main/resources/assets/growsseth/icon.png" alt="alt text" width="250" height="250">
 
 Una mod di strutture altamente configurabile, con un NPC intelligente per vendere mappe e guidare nel
 percorso, e strutture che suggeriscono feature vanilla allo stesso modo dei Portali del Nether Rotti.
@@ -17,7 +17,7 @@ alla run di Cydonia, con spawn di strutture, modifiche agli scambi, invio notifi
 
 Vedi le pagine [Modrinth](#) e [Curseforge](#), e la [**WIKI**](#) per maggiori informazioni.
 
-![](../src/main/resources/assets/growsseth/textures/gui/advancements/backgrounds/advancements_background.png)
+![](../../src/main/resources/assets/growsseth/textures/gui/advancements/backgrounds/advancements_background.png)
 
 ### Requisiti
 
@@ -28,7 +28,28 @@ La mod include [Fx-Lib](https://github.com/filloax/FX-Lib/), ma in futuro potreb
 
 ### Credits
 
-[costantino riempi qua e linka egobalego dopo gabri e worgage]
+Ruslan Fanclub:
+- Filloax (Lead Programmer)
+- Krozzzt (Programmazione e scrittura)
+- Reivaxelain (Arte, strutture e scrittura)
+- bb01 (Strutture e scrittura aggiuntiva)
+- SkullFury (Membro originale, creazione datapack)
+- Vovalcool (Membro originale, strutture)
+- Tutti quanti: Design e testing
+
+Collaboratori:
+- Sync_Gabri (Supervisore, coordinatore e scrittore per la versione di Cydonia) e
+  Worgage (Integrazione API, testing e scrittura per la versione di Cydonia)
+  del team di [Project Egobalego](https://projectegobalego.com/)
+- Simone Russo (Sound effect)
+- Farcr (Texture di Guber)
+
+Artisti musicali:
+- Il Coro di Mammonk (A Padre Mammonk, La Missiva nell'Ombra)
+- Singalek (Binobinooo, Giorgio Cubetti, Giorgio Lo-Fi)
+- HunterProduction (Giorgio Finding Home)
+- EGO & R-E-M (Abbandonati)
+- Guber (Una sega di niente)
 
 ### Sviluppatori
 
