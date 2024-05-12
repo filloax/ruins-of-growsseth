@@ -303,7 +303,7 @@ object GrowssethStructures {
 
         // Standalone golem house variants, to be used with /place or gamemaster mode
         private fun registerStandaloneGolemVariant(key: ResourceKey<Structure>, name: String, offset: Vec3i, zombie: Boolean = false) {
-            registerSimpleJigsaw(key, "village/${name}/${name}_golem_house${if (zombie) "_zombie" else ""}",
+            registerSimpleJigsaw(key, "village/${name}_golem_houses${if (zombie) "_zombie" else ""}",
                 size = 6,
                 offset = offset,
                 biomesTag = NONE_BIOMES,

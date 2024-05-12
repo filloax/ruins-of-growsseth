@@ -5,7 +5,6 @@ import com.mojang.datafixers.util.Pair
 import com.ruslan.growsseth.structure.GrProcessorLists
 import com.ruslan.growsseth.structure.VillageBuildings
 import com.ruslan.growsseth.structure.VillageBuildings.CATEGORY_GOLEM_HOUSE
-import com.ruslan.growsseth.structure.VillageBuildings.CATEGORY_GOLEM_STREET
 import com.ruslan.growsseth.utils.resLoc
 import net.minecraft.core.Holder
 import net.minecraft.core.HolderGetter
@@ -16,7 +15,6 @@ import net.minecraft.data.worldgen.ProcessorLists
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement
-import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool.Projection
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList
@@ -40,7 +38,7 @@ class SimplePools(private val context: BootstrapContext<StructureTemplatePool>) 
         bootstrapAbandonedForge()
         bootstrapMinorRuins()
         bootstrapMisc()
-        bootstrapStandaloneVillageHouses()
+        bootstrapVillageHouses()
     }
 
     private fun bootstrapBeekeperHouse() {
@@ -123,13 +121,15 @@ class SimplePools(private val context: BootstrapContext<StructureTemplatePool>) 
         )
     }
 
-    // IMPORTANT: this creates pools used only by the standalone versions
-    // (used for /place and gamemaster mode), for natural village generation
-    // we directly modify the vanilla pools
-    private fun bootstrapStandaloneVillageHouses() {
+    /**
+     * Used by the street nbts that get added to village pools manually via code
+     * (see {@link VillageBuildings} and by standalone houses
+     */
+    private fun bootstrapVillageHouses() {
         VillageBuildings.houseEntries[CATEGORY_GOLEM_HOUSE]!!.forEach { entry ->
             registerSimplePoolElements(
-                entry.normal.path, entry.zombie.path,
+                entry.normalPool.path, entry.zombiePool.path,
+                templatePaths = listOf(entry.normalTemplate.path, entry.zombieTemplate.path)
             )
         }
     }
