@@ -3,7 +3,7 @@
     {
       "element": {
         "element_type": "minecraft:single_pool_element",
-        "location": "growsseth:village//taiga/taiga_golem_house_zombie",
+        "location": "growsseth:village/taiga/taiga_golem_house_zombie",
         "processors": "minecraft:empty",
         "projection": "rigid"
       },

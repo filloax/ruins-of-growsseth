@@ -15,7 +15,7 @@
   "start_height": {
     "absolute": 0
   },
-  "start_pool": "growsseth:village/taiga/taiga_golem_houses",
+  "start_pool": "growsseth:village/taiga_golem_houses",
   "step": "surface_structures",
   "terrain_adaptation": "beard_thin",
   "use_expansion_hack": false
