@@ -115,8 +115,8 @@ dependencies {
 tasks.register("zipEgobalegoFolder") {
 	group = "custom"
 
-	val sourceDir = project.file("tools/Egobalego At Home")
-	val destinationDir = project.file("build")
+	val sourceDir = project.file("tools/egobalego-at-home")
+	val destinationDir = project.file("build/egobalego-at-home")
 	val zipFile = destinationDir.resolve("Egobalego At Home.zip")
 
 	inputs.dir(sourceDir)
@@ -126,7 +126,7 @@ tasks.register("zipEgobalegoFolder") {
 		destinationDir.mkdirs()
 		project.exec {
 			workingDir = sourceDir.parentFile
-			commandLine("zip", "-r", zipFile.absolutePath, "Egobalego At Home")
+			commandLine("zip", "-r", zipFile.absolutePath, "egobalego-at-home")
 		}
 	}
 }
