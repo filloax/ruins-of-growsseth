@@ -5,8 +5,8 @@
       "conditions": {
         "jigsawPiecePredicate": {
           "jigsawPieceIds": [
-            "growsseth:village/plains/plains_golem_house",
-            "growsseth:village/plains/plains_golem_house_zombie"
+            "growsseth:village/plains_golem_houses",
+            "growsseth:village/plains_golem_houses_zombie"
           ],
           "structure": "minecraft:village_plains"
         }
