@@ -3,7 +3,7 @@
     {
       "element": {
         "element_type": "minecraft:single_pool_element",
-        "location": "growsseth:village/taiga/taiga_golem_house",
+        "location": "growsseth:village/snowy_golem_house",
         "processors": "minecraft:empty",
         "projection": "rigid"
       },
