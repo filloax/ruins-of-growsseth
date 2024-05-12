@@ -3,7 +3,7 @@
     {
       "element": {
         "element_type": "minecraft:single_pool_element",
-        "location": "growsseth:village/savanna_golem_house_zombie",
+        "location": "growsseth:village/savanna/savanna_golem_house",
         "processors": "minecraft:empty",
         "projection": "rigid"
       },
