@@ -2,6 +2,7 @@ package com.ruslan.growsseth.structure
 
 import com.filloax.fxlib.structure.ForcePosJigsawStructure
 import com.ruslan.growsseth.GrowssethTags.StructTags
+import com.ruslan.growsseth.structure.VillageBuildings.CATEGORY_GOLEM_HOUSE
 import com.ruslan.growsseth.structure.pieces.ResearcherTent
 import com.ruslan.growsseth.structure.structure.ResearcherTentStructure
 import com.ruslan.growsseth.utils.resLoc
@@ -303,7 +304,8 @@ object GrowssethStructures {
 
         // Standalone golem house variants, to be used with /place or gamemaster mode
         private fun registerStandaloneGolemVariant(key: ResourceKey<Structure>, name: String, offset: Vec3i, zombie: Boolean = false) {
-            registerSimpleJigsaw(key, "village/${name}_golem_houses${if (zombie) "_zombie" else ""}",
+            val villageBuildingEntry = VillageBuildings.houseEntries[CATEGORY_GOLEM_HOUSE]!!.find { it.kind == name }!!
+            registerSimpleJigsaw(key, (if (zombie) villageBuildingEntry.zombiePool else villageBuildingEntry.normalPool).path,
                 size = 6,
                 offset = offset,
                 biomesTag = NONE_BIOMES,
