@@ -34,7 +34,7 @@ La mod si può scaricare da [***QUA***](https://github.com/filloax/ruins-of-grow
 ## 2. Informazioni formato JSON dialoghi e altri
 <a id="markdown-informazioni-formato-json-dialoghi-e-altri" name="informazioni-formato-json-dialoghi-e-altri"></a>
 
-Si possono trovare [QUA](./JSON_FORMAT.md). Contengono info sul formato dei json stile datapack personalizzati usati dalla mod per dialoghi ecc.
+Si possono trovare [QUA](JSON_FORMAT.md). Contengono info sul formato dei json stile datapack personalizzati usati dalla mod per dialoghi ecc.
 
 ## 3. Aggiornamento dati da sito
 <a id="markdown-aggiornamento-dati-da-sito" name="aggiornamento-dati-da-sito"></a>

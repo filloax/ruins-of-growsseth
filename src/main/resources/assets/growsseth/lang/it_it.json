@@ -118,6 +118,8 @@
     "growsseth.notif.researcher_updated": "Il ricercatore ha qualcosa di nuovo per te.",
     "growsseth.notif.researcher_updated.toast.title": "Nuove scoperte!",
     "growsseth.notif.researcher_updated.toast.description": "Il ricercatore ti aspetta.",
+    "growsseth.notif.setLanguage.title": "Ruins of Growsseth - Rilevamento Lingua",
+    "growsseth.notif.setLanguage.message": "Impostata lingua dei testi della mod a %s",
 
     "growsseth.config.title": "Ruins of Growsseth",
     "growsseth.config.category.misc": "Miscellanea",

@@ -15,9 +15,7 @@ import net.minecraft.advancements.AdvancementRequirements
 import net.minecraft.advancements.AdvancementRewards
 import net.minecraft.advancements.critereon.LocationPredicate
 import net.minecraft.advancements.critereon.PlayerTrigger
-import net.minecraft.core.Holder
 import net.minecraft.core.HolderLookup
-import net.minecraft.core.HolderLookup.RegistryLookup
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
@@ -124,7 +122,7 @@ object StructureAdvancements {
         return entries
             .groupBy{ it.kind }
             .mapKeys { ResourceKey.create(Registries.STRUCTURE, ResourceLocation("minecraft", "village_${it.key}")) }
-            .mapValues { e -> e.value.flatMap { listOf(it.normal, it.zombie) } }
+            .mapValues { e -> e.value.flatMap { listOf(it.normalPool, it.zombiePool) } }
     }
 
     class Bootstrapper(private val registryLookup: HolderLookup.Provider) {
