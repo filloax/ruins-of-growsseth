@@ -3,9 +3,10 @@ package com.ruslan.growsseth.maps
 import com.filloax.fxlib.*
 import com.mojang.datafixers.util.Pair
 import com.ruslan.growsseth.RuinsOfGrowsseth
-import com.ruslan.growsseth.utils.AsyncLocator
+import com.ruslan.growsseth.structure.locate.LocateTask
+import com.ruslan.growsseth.structure.locate.SignalProgressFun
+import com.ruslan.growsseth.structure.locate.StoppableAsyncLocator
 import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
 import net.minecraft.core.HolderSet
@@ -24,11 +25,13 @@ import net.minecraft.world.level.saveddata.maps.MapId
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData
 import java.util.concurrent.CompletableFuture
 import kotlin.concurrent.thread
+import kotlin.math.sign
 
 private const val DEFAULT_ASYNC = true
 // true seems to be way slower even in single threaded mode
 private const val DEFAULT_SKIP_EXPLORED = false
 private const val DEFAULT_SEARCH_RANGE = 100
+private const val DEFAULT_SEARCH_TIMEOUT_S = 10
 
 
 fun ItemStack.createAndStoreMapData(
@@ -190,17 +193,23 @@ private fun ItemStack.updateMapToStructWithHolder(
             }
         }
 
-        AsyncLocator.locate(
+        val signalProgress: SignalProgressFun? = if (FxLibServices.platform.isDevEnvironment()) { { task, phase, pct ->
+            RuinsOfGrowsseth.LOGGER.info("Locate $destString progress: phase %s | %.2f%% | %.2fs".format(phase, pct * 100, task.timeElapsedMs() / 1000.0))
+        } } else null
+
+        StoppableAsyncLocator.locate(
             level,
             destinationHolderSet,
             searchFromPos,
             searchRadius,
-            doSkipExploredChunks
-        ).thenOnServerThread {
+            doSkipExploredChunks,
+            timeoutSeconds = DEFAULT_SEARCH_TIMEOUT_S,
+            signalProgress = signalProgress,
+        ).thenOnServerThread { result ->
             synchronized(lock) { done = true }
-            val pos = it.first
-            if (pos != null) {
-                val finalDestType = if (destinationType.auto) DestinationType.auto(it.second) else destinationType
+            if (result != null) {
+                val pos = result.first
+                val finalDestType = if (destinationType.auto) DestinationType.auto(result.second) else destinationType
 
                 updateMapToPos(level, pos, scale, finalDestType, displayName ?: "reset")
                 RuinsOfGrowsseth.LOGGER.info("(async) Found '$destString' at $pos")
@@ -208,7 +217,7 @@ private fun ItemStack.updateMapToStructWithHolder(
                 invalidateMap()
                 RuinsOfGrowsseth.LOGGER.info("(async) '$destString' not found!")
             }
-            future.complete(it)
+            future.complete(result)
         }
     } else {
         RuinsOfGrowsseth.LOGGER.info("Starting single-thread structure '$destString' search...")

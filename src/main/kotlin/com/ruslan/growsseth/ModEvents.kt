@@ -17,7 +17,7 @@ import com.ruslan.growsseth.loot.VanillaStructureLoot
 import com.ruslan.growsseth.quests.QuestComponentEvents
 import com.ruslan.growsseth.structure.RemoteStructureBooks
 import com.ruslan.growsseth.structure.VillageBuildings
-import com.ruslan.growsseth.utils.AsyncLocator
+import com.ruslan.growsseth.structure.locate.StoppableAsyncLocator
 import com.ruslan.growsseth.utils.MixinHelpers
 import com.ruslan.growsseth.worldgen.worldpreset.GrowssethWorldPreset
 import com.ruslan.growsseth.worldgen.worldpreset.LocationNotifListener
@@ -56,7 +56,7 @@ abstract class ModEvents {
 
     fun initCallbacks() {
         onServerStarting { server ->
-            AsyncLocator.handleServerAboutToStartEvent()
+            StoppableAsyncLocator.Callbacks.onServerStarting()
             DataRemoteSync.handleServerAboutToStartEvent(server)
             DataRemoteSync.doSync(WebConfig.dataSyncUrl, server)
             MixinHelpers.serverInit(server)
@@ -68,7 +68,7 @@ abstract class ModEvents {
             ProgressResearcherTradesProvider.Callbacks.onServerStarted(server)
         }
         onServerStopping { server ->
-            AsyncLocator.handleServerStoppingEvent()
+            StoppableAsyncLocator.Callbacks.onServerStopping()
             DataRemoteSync.handleServerStoppingEvent()
             GrowssethApiV2.Callbacks.onServerStop(server)
             GlobalResearcherTradesProvider.Callbacks.onServerStop(server)

@@ -128,6 +128,7 @@ object ResearcherTradeUtils {
                 searchFromPos = researcher.blockPosition(),
                 scale = scale,
                 displayName = mapData.name,
+                skipExploredChunks = true,
 //                async = true,
             ).thenAccept {
                 val pos = it.first
