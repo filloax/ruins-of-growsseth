@@ -45,8 +45,8 @@ object VillageBuildings {
         val processorLists: Registry<StructureProcessorList> = server.registryAccess().registry(Registries.PROCESSOR_LIST).get()
 
         houseEntries[CATEGORY_GOLEM_STREET]!!.forEach { entry ->
-            addBuildingToPool(templatePools, processorLists, entry.pool, entry.normal, entry.weight)
-            addBuildingToPool(templatePools, processorLists, entry.zombiePool, entry.zombie, entry.weight)
+            addBuildingToPool(templatePools, processorLists, entry.parentPool, entry.normalPool, entry.weight)
+            addBuildingToPool(templatePools, processorLists, entry.parentZombiePool, entry.zombiePool, entry.weight)
         }
     }
 
@@ -70,13 +70,19 @@ object VillageBuildings {
     }
 
     private fun register(name: String, category: String, kind: String, pool: String, weight: Int): VillageEntry {
-        val prefix = "village/$kind"
+        val prefix = "village/"
+        val templateName = "$prefix$name"
+        val templateNameZombie = "$prefix${name}_zombie"
+        val poolName = templateName.replace("house", "houses")
+        val poolNameZombie = templateNameZombie.replace("house", "houses")
         return VillageEntry(
             kind,
             ResourceLocation("minecraft", "$prefix/$pool"),
             ResourceLocation("minecraft", "$prefix/zombie/$pool"),
-            resLoc("$prefix/$name"),
-            resLoc("$prefix/${name}_zombie"),
+            resLoc(poolName),
+            resLoc(poolNameZombie),
+            resLoc(templateName),
+            resLoc(templateNameZombie),
             weight,
         ).also {
             houseEntries.getOrPut(category, ::mutableListOf).add(it)
@@ -85,10 +91,12 @@ object VillageBuildings {
 
     data class VillageEntry(
         val kind: String,
-        val pool: ResourceLocation,
+        val parentPool: ResourceLocation,
+        val parentZombiePool: ResourceLocation,
+        val normalPool: ResourceLocation,
         val zombiePool: ResourceLocation,
-        val normal: ResourceLocation,
-        val zombie: ResourceLocation,
+        val normalTemplate: ResourceLocation,
+        val zombieTemplate: ResourceLocation,
         val weight: Int,
     )
 }
