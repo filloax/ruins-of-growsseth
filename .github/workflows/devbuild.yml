@@ -40,6 +40,7 @@ jobs:
           title: "Test Release [${{ env.TEST_RELEASE_NUM }}] - 1.20.6"
           files: |
             build/libs/*.jar
+            build/egobalego-at-home/*.zip
 
       - name: Increment release count
         id: get_release_count
