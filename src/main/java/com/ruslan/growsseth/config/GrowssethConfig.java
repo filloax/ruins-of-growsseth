@@ -28,5 +28,5 @@ public final class GrowssethConfig {
                 + "Additional languages may be added via datapack.",
             translation = T_PREF + "serverLanguage.comment"
     )
-    public static String serverLanguage = "it_it";
+    public static String serverLanguage = "client";
 }

@@ -64,6 +64,13 @@
     "item.growsseth.researcher_dagger": "Pugnale del Ricercatore",
     "item.growsseth.researcher_dagger.description": "(Portata ridotta quando equipaggiato)",
 
+    "item.growsseth.map.loadingName": "Mappa delle rovine [caricamento]",
+    "item.growsseth.map.loading1": "Un attimo, è qui da qualche parte...",
+    "item.growsseth.map.loading2": "Ero certo di averla messa qua...",
+    "item.growsseth.map.loading3": "Appena la trovo te la vendo subito...",
+    "item.growsseth.map.loadingFail": "Mappa delle rovine [non trovata]",
+    "item.growsseth.map.loadingFailLore": "Temo di averla persa, torna più tardi.",
+
     "effect.growsseth.serenity": "Serenità",
     "effect.growsseth.fighting_spirit": "Spirito Combattivo",
     "effect.growsseth.justice": "Giustizia",
@@ -108,7 +115,7 @@
     "advancements.growsseth.structures.enchant_tower.description": "Raggiungi una torre immobile nel cielo",
     "advancements.growsseth.structures.abandoned_forge.title": "Pesanti martelli",
     "advancements.growsseth.structures.abandoned_forge.description": "Scopri la forgia abbandonata",
-    "advancements.growsseth.structures.conduit_ruins.title": "Forti correnti",
+    "advancements.growsseth.structures.conduit_ruins.title": "Occhi del cuore",
     "advancements.growsseth.structures.conduit_ruins.description": "Immergiti tra le rovine inondate",
     "advancements.growsseth.structures.noteblock_lab.title": "Suoni vividi",
     "advancements.growsseth.structures.noteblock_lab.description": "Raggiungi la residenza di un musicista",
@@ -118,6 +125,11 @@
     "growsseth.notif.researcher_updated": "Il ricercatore ha qualcosa di nuovo per te.",
     "growsseth.notif.researcher_updated.toast.title": "Nuove scoperte!",
     "growsseth.notif.researcher_updated.toast.description": "Il ricercatore ti aspetta.",
+    "growsseth.notif.setLanguage.title": "Ruins of Growsseth - Rilevamento Lingua",
+    "growsseth.notif.setLanguage.message": "Impostata lingua dei testi della mod a %s",
+
+
+
 
     "growsseth.config.title": "Ruins of Growsseth",
     "growsseth.config.category.misc": "Miscellanea",
@@ -136,7 +148,6 @@
     "growsseth.config.modLootInVanillaStructures.name": "Genera loot della mod nelle strutture vanilla",
     "growsseth.config.zombieGuberSpawnChance.name": "Chance di spawn di Guber zombi (%)",
     "growsseth.config.disableNpcDialogues.name": "Disabilita dialoghi NPC",
-    "growsseth.config.disableNpcDialogues.comment": "Utile per il debugging.",
 
     "growsseth.config.enableLocationTitles.name": "Abilita i titoli delle location di Growsseth",
     "growsseth.config.enableLocationTitles.comment": "Mostra i nomi dei luoghi che stai visitando quando usi il preset del mondo di Growsseth.",
@@ -149,7 +160,7 @@
     "growsseth.config.immortalResearcher.name": "Ricercatore immortale",
     "growsseth.config.immortalResearcher.comment": "Applica Resistenza V e Rigenerazione V al ricercatore, e gli impedisce di combattere il giocatore.",
     "growsseth.config.researcherWritesDiaries.name": "Generazione diari del ricercatore",
-    "growsseth.config.researcherWritesDiaries.comment": "Quando il giocatore vista una struttura della mod il ricercatore genererà un diario collegato ad essa nel leggio della tenda. Se è già presente un diario sul leggio verrà spostato nella cassa della tenda, e se quest'ultima è piena verrà invece lasciato a terra.",
+    "growsseth.config.researcherWritesDiaries.comment": "Quando il giocatore vista una struttura della mod il ricercatore genererà un diario collegato ad essa nel leggio della tenda. Se è già presente un diario sul leggio verrà spostato nella cassa della tenda, e se quest'ultima è piena verrà invece lasciato a terra. Non funziona se l'impostazione ricercatore singolo è disattivata.",
     "growsseth.config.researcherBorrowPenalty.name": "Penalità per il prestito dell'asino",
     "growsseth.config.researcherBorrowPenalty.comment": "Moltiplicatore del prezzo degli scambi per quando si prende l'asino del ricercatore in prestito. Influenza solo gli smeraldi.",
     "growsseth.config.researcherTeleports.name": "Ricercatore si teletrasporta al punto di restrizione",
@@ -175,14 +186,16 @@
     "growsseth.config.randomTradesRefreshTime.comment": "\"Se >0, il tempo (in frazione di giorni ingame) che serve al ricercatore per cambiare i suoi scambi quando l'opzione ricercatore singolo (o il corrispondente progresso degli scambi) è disattivata.",
 
     "growsseth.config.webDataSync.name": "Abilita sincronizzazione web",
+    "growsseth.config.webDataSync.comment": "ATTENZIONE: controlla la Wiki su GitHub per sapere come usarlo. Attiva modalità game-master, permettendo al giocatore a cui ti connetti di controllare elementi della mod e non. Richiede ricarica mondo.",
     "growsseth.config.dataSyncUrl.name": "URL per la API della sinc. web",
+    "growsseth.config.dataSyncUrl.comment": "Connettiti solo a utenti fidati!",
     "growsseth.config.dataSyncEndpoint.name": "Endpoint per la API della sinc. web (richiede riavviare il gioco)",
     "growsseth.config.dataSyncApiKey.name": "Chiave API per il server (opzionale)",
     "growsseth.config.dataSyncReloadTime.name": "Intervallo di ricaricamento dati",
     "growsseth.config.dataSyncReloadTime.comment": "Quanto tempo (in minuti) deve passare tra ogni richiesta al server. Deve essere almeno pari a 10 secondi.",
-    "growsseth.config.liveUpdateService.name": "Abilita servizio live update",
-    "growsseth.config.liveUpdateUrl.name": "URL per ricaricare dati API da remoto",
-    "growsseth.config.liveUpdatePort.name": "Porta per ricaricare dati API da remoto (opzionale)",
+    "growsseth.config.liveUpdateService.name": "(WIP) Abilita servizio live update",
+    "growsseth.config.liveUpdateUrl.name": "(WIP) URL per ricaricare dati API da remoto",
+    "growsseth.config.liveUpdatePort.name": "(WIP) Porta per ricaricare dati API da remoto (opzionale)",
     "growsseth.config.remoteCommandExecution.name": "Esecuzione comandi remoti",
     "growsseth.config.remoteCommandExecution.comment": "Permette al gamemaster di eseguire qualsiasi comando del gioco a distanza.",
 

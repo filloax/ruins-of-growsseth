@@ -15,7 +15,10 @@
             "useLimit": 1,
             "priority": 100,
             "id": "researcher-first",
-            "requiresUntilQuestStage": "start"
+            "requiresUntilQuestStage": "start",
+            "data": {
+                "singleOnly": "true"
+            }
         },
         {
             "content": "Goodbye, it was a pleasure!",
@@ -60,11 +63,17 @@
         { "id": "researcher-first" },
         { "id": "no-dialogue-mess" },
         "Good morning, colleague.",
-        "Glad to see you're still alive, colleague.",
+        {
+            "content": "Glad to see you're still alive, colleague.",
+            "afterRepeatsMin": 2,
+        },
         "...maybe, with that ingredient... Oh, hello colleague.",
         "Good morning colleague, beautiful day today, isn't it?",
         "...but of course, now it makes sense... Oh, hello, go ahead.",
-        "Hello colleague, always on the move, huh?"
+        {
+            "content": "Hello colleague, always on the move, huh?",
+            "afterRepeatsMin": 2,
+        },
     ],
     "playerArriveNight": [
         { "id": "researcher-first" },
@@ -78,7 +87,7 @@
         "Strange time for a visit, I hope you haven't attracted any night creatures here.",
         "Hello colleague, are you also enjoying the starry sky?",
         "Snore... AH! What are you doing here at this hour?",
-        "Colleague, but are you sleeping enough? Insomnia tends to attract trouble...",
+        "Colleague, are you sleeping enough? Insomnia tends to attract trouble...",
         {
             "content": "Fearless as always I see, just be careful not to attract any creepers.\n...Not that those pests have the courage to explode in my presence, it's obvious.",
             "useLimit": 1,
@@ -141,12 +150,6 @@
         "...Okay, now that he's gone... Oh! Hello again colleague.",
         "Wow, that was fast, did you want to see me again by any chance?",
         "...Let's see, now I should work on... Oh! You're still here colleague.",
-        {
-            "content": "Hmm... did you wash your hands with pee?",
-            "id": "arrive-soon-special",
-            "afterRepeatsMin": 2,
-            "useLimit": 1
-        },
         {
             "content": "Colleague, are you mocking me by any chance? I'm not a child.",
             "priority": 50,

@@ -1,12 +1,16 @@
 package com.ruslan.growsseth.maps
 
 import com.mojang.datafixers.util.Pair
+import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.RuinsOfGrowsseth
-import com.filloax.fxlib.*
-import com.ruslan.growsseth.mixin.item.mapitem.MapItemAccessor
-import com.ruslan.growsseth.utils.AsyncLocator
+import com.ruslan.growsseth.structure.locate.LocateResult
+import com.ruslan.growsseth.structure.locate.LocateTask
+import com.ruslan.growsseth.structure.locate.SignalProgressFun
+import com.ruslan.growsseth.structure.locate.StoppableAsyncLocator
+import kotlinx.atomicfu.atomic
+import kotlinx.atomicfu.update
 import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
+import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
 import net.minecraft.core.HolderSet
@@ -19,19 +23,23 @@ import net.minecraft.tags.TagKey
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.MapItem
 import net.minecraft.world.level.levelgen.structure.BuiltinStructures
+import net.minecraft.world.level.Level
 import net.minecraft.world.level.levelgen.structure.Structure
 import net.minecraft.world.level.saveddata.maps.MapDecoration
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData
 import org.apache.logging.log4j.Level
 import java.lang.IllegalStateException
 import java.util.concurrent.CompletableFuture
+import javax.xml.crypto.Data
 import kotlin.concurrent.thread
+import kotlin.math.sign
+import kotlin.random.Random
 
 private const val DEFAULT_ASYNC = true
 // true seems to be way slower even in single threaded mode
 private const val DEFAULT_SKIP_EXPLORED = false
 private const val DEFAULT_SEARCH_RANGE = 100
-
+private const val DEFAULT_SEARCH_TIMEOUT_S = 10
 
 
 // Source: https://github.com/TelepathicGrunt/RepurposedStructures/blob/1.19.4-Arch/common/src/main/java/com/telepathicgrunt/repurposedstructures/misc/maptrades/MerchantMapUpdating.java
@@ -69,12 +77,13 @@ fun updateMapToPos(
             mapStack.hoverName = Component.translatable(it)
         }
     }
+    this.loreLines().clear()
 
     RuinsOfGrowsseth.LOGGER.info("Set map target to: $pos, with icon: $destinationType, name: $displayName (item is $mapStack)")
 }
 
-fun invalidateMap(mapStack: ItemStack) {
-    mapStack.resetHoverName()
+fun ItemStack.invalidateMap() {
+    this.setMapFailedName()
 }
 
 /**
@@ -98,7 +107,7 @@ fun updateMapToStruct(
     destinationType: DestinationType = DEFAULT_DESTINATION_TYPE,
     displayName: String? = null,
     async: Boolean? = null,
-): CompletableFuture<Pair<BlockPos, Holder<Structure>>> {
+): CompletableFuture<LocateResult> {
     val structTagKey = getStructTagOrKey(destinationName)
     return structTagKey.map({
         updateMapToStruct(mapStack, level, it, searchFromPos, searchRadius, skipExploredChunks, scale, destinationType, displayName, async)
@@ -128,8 +137,8 @@ fun updateMapToStruct(
     destinationType: DestinationType = DEFAULT_DESTINATION_TYPE,
     displayName: String? = null,
     async: Boolean? = null,
-): CompletableFuture<Pair<BlockPos, Holder<Structure>>> {
-    return updateMapToStructWithHolder(mapStack, level, getHolderSet(level, destination), searchFromPos, searchRadius, skipExploredChunks, scale, destinationType, displayName, async)
+): CompletableFuture<LocateResult> {
+    return updateMapToStructWithHolder(level, getHolderSet(level, destination), searchFromPos, searchRadius, skipExploredChunks, scale, destinationType, displayName, async)
 }
 
 /**
@@ -153,7 +162,7 @@ fun updateMapToStruct(
     destinationType: DestinationType = DEFAULT_DESTINATION_TYPE,
     displayName: String? = null,
     async: Boolean? = null,
-): CompletableFuture<Pair<BlockPos, Holder<Structure>>> {
+): CompletableFuture<LocateResult> {
     val holderSet = level.registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(destinationTag).orElseThrow()
     return updateMapToStructWithHolder(mapStack, level, holderSet, searchFromPos, searchRadius, skipExploredChunks, scale, destinationType, displayName, async)
 }
@@ -166,42 +175,47 @@ private fun updateMapToStructWithHolder(
     destinationType: DestinationType,
     displayName: String?,
     async: Boolean?,
-): CompletableFuture<Pair<BlockPos, Holder<Structure>>> {
+): CompletableFuture<LocateResult> {
     val doSkipExploredChunks = skipExploredChunks ?: DEFAULT_SKIP_EXPLORED
     // In general, return CompletableFuture *separately* from locatetask
     // to make sure things added to it as a return of this run after the locatetask's
     // callback here
-    val future = CompletableFuture<Pair<BlockPos, Holder<Structure>>>()
+    val future = CompletableFuture<LocateResult>()
     val destString = destinationHolderSet.unwrapKey().toString()
     if (async == true || (async == null && DEFAULT_ASYNC)) {
         RuinsOfGrowsseth.LOGGER.info("Starting async structure '$destString' search...")
-        this[DataComponents.CUSTOM_NAME] = Component.translatable("menu.working")
+        this.setLoadingName(displayName)
 
-        var done = false
-        val lock = object {}
+        val done = atomic<Boolean>(false)
         val startTime = Clock.System.now()
 
         thread(name="locator-timing-thread", start = true, isDaemon = true){
-            while (synchronized(lock) { !done }) {
+            while (!done.value) {
                 Thread.sleep(10000)
-                if (synchronized(lock) { !done }) {
+                if (!done.value) {
                     val time = Clock.System.now()
                     RuinsOfGrowsseth.LOGGER.info("Async structure '$destString' search still running, took ${(time - startTime).inWholeMilliseconds/1000}s")
                 }
             }
         }
 
-        AsyncLocator.locate(
+        val signalProgress: SignalProgressFun? = if (FxLibServices.platform.isDevEnvironment()) { { task, phase, pct ->
+            RuinsOfGrowsseth.LOGGER.info("Locate $destString progress: phase %s | %.2f%% | %.2fs".format(phase, pct * 100, task.timeElapsedMs() / 1000.0))
+        } } else null
+
+        StoppableAsyncLocator.locate(
             level,
             destinationHolderSet,
             searchFromPos,
             searchRadius,
-            doSkipExploredChunks
-        ).thenOnServerThread {
-            synchronized(lock) { done = true }
-            val pos = it.first
-            if (pos != null) {
-                val finalDestType = if (destinationType.auto) DestinationType.auto(it.second) else destinationType
+            doSkipExploredChunks,
+            timeoutSeconds = DEFAULT_SEARCH_TIMEOUT_S,
+            signalProgress = signalProgress,
+        ).thenOnServerThread { result ->
+            done.update { true }
+            if (result != null) {
+                val pos = result.first
+                val finalDestType = if (destinationType.auto) DestinationType.auto(result.second) else destinationType
 
                 updateMapToPos(mapStack, level, pos, scale, finalDestType, displayName ?: "reset")
                 RuinsOfGrowsseth.LOGGER.log(Level.INFO, "(async) Found '$destString' at $pos")
@@ -209,18 +223,18 @@ private fun updateMapToStructWithHolder(
                 invalidateMap(mapStack)
                 RuinsOfGrowsseth.LOGGER.log(Level.INFO, "(async) '$destString' not found!")
             }
-            future.complete(it)
+            future.complete(result)
         }
     } else {
         RuinsOfGrowsseth.LOGGER.info("Starting single-thread structure '$destString' search...")
-//        val found = level.chunkSource.generator
-//            .findNearestMapStructure(level, destinationHolderSet, searchFromPos, searchRadius, doSkipExploredChunks)
         val found = level.chunkSource.generator.findNearestMapStructure(level, destinationHolderSet, searchFromPos, 100, false)
+
         if (found == null) {
             RuinsOfGrowsseth.LOGGER.error("Structure $destinationHolderSet not found!")
             future.completeExceptionally(IllegalStateException("Structure $destinationHolderSet not found!"))
             return future
         }
+
         val pos = found.first
         if (pos != null) {
             val finalDestType = if (destinationType.auto) DestinationType.auto(found.second) else destinationType
@@ -236,17 +250,28 @@ private fun updateMapToStructWithHolder(
     return future
 }
 
-class DestinationType private constructor(val vanillaType: MapDecoration.Type? = null, val customType: CustomMapDecorationType? = null, val auto: Boolean = false) {
-    init {
-        assert((vanillaType == null) or (customType == null)) { "must set one between customType or vanillaType" }
+private val loadingNameRandom = Random(Clock.System.now().toEpochMilliseconds())
+
+private fun ItemStack.setLoadingName(displayName: String?) {
+    this[DataComponents.CUSTOM_NAME] = Component.translatable("item.growsseth.map.loadingName")
+    val loadingId = loadingNameRandom.nextInt(3) + 1
+    this.loreLines().apply {
+        clear()
+        add(Component.translatable("item.growsseth.map.loading$loadingId"))
+        if (displayName != null)
+            add(Component.translatable(displayName).withStyle(ChatFormatting.DARK_GRAY))
     }
+}
 
-    val isVanilla get() = vanillaType != null
-    val isCustom get() = customType != null
+private fun ItemStack.setMapFailedName() {
+    this[DataComponents.CUSTOM_NAME] = Component.translatable("item.growsseth.map.loadingFail").withStyle(ChatFormatting.RED)
+    this.loreLines().apply {
+        clear()
+        add(Component.translatable("item.growsseth.map.loadingFailLore").withStyle(ChatFormatting.RED))
+    }
+    CustomData.update(DataComponents.CUSTOM_DATA, this) { tag -> tag.putBoolean(Constants.ITEM_TAG_MAP_FAILED_LOCATE, true) }
+}
 
-    companion object {
-        val EMPTY = DestinationType()
-        val AUTO = DestinationType(auto = true)
 
         fun vanilla(type: MapDecoration.Type): DestinationType {
             return DestinationType(vanillaType = type)
