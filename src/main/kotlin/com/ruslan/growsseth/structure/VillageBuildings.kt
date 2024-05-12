@@ -21,7 +21,7 @@ object VillageBuildings {
     const val CATEGORY_GOLEM_STREET = "golem_street" // added to pool
     const val CATEGORY_GOLEM_HOUSE = "golem_house" // already in pool referenced by street, used by advancements
 
-    const val GOLEM_WEIGHT = 1
+    const val GOLEM_WEIGHT = 50
 
     val DESERT_GOLEM_STREET    = register("desert_golem_street", CATEGORY_GOLEM_STREET, "desert", "streets", GOLEM_WEIGHT)
     val PLAINS_GOLEM_STREET    = register("plains_golem_street", CATEGORY_GOLEM_STREET, "plains", "streets", GOLEM_WEIGHT)
@@ -55,7 +55,7 @@ object VillageBuildings {
         poolId: ResourceLocation, poolPieceId: ResourceLocation,
         weight: Int,
     ) {
-        val pool: StructureTemplatePool = templatePoolRegistry.get(poolId) ?: return
+        val pool: StructureTemplatePool = templatePoolRegistry.getOrThrow(ResourceKey.create(Registries.TEMPLATE_POOL, poolId))
         val emptyProcessor = ResourceLocation("minecraft", "empty")
         val processorHolder: Holder<StructureProcessorList> = processorListRegistry.getHolderOrThrow(
             ResourceKey.create(
@@ -70,15 +70,15 @@ object VillageBuildings {
     }
 
     private fun register(name: String, category: String, kind: String, pool: String, weight: Int): VillageEntry {
-        val prefix = "village/"
-        val templateName = "$prefix$name"
-        val templateNameZombie = "$prefix${name}_zombie"
+        val prefix = "village"
+        val templateName = "$prefix/$kind/$name"
+        val templateNameZombie = "$prefix//$kind/${name}_zombie"
         val poolName = templateName.replace("house", "houses")
         val poolNameZombie = templateNameZombie.replace("house", "houses")
         return VillageEntry(
             kind,
-            ResourceLocation("minecraft", "$prefix/$pool"),
-            ResourceLocation("minecraft", "$prefix/zombie/$pool"),
+            ResourceLocation("minecraft", "$prefix/$kind/$pool"),
+            ResourceLocation("minecraft", "$prefix/$kind/zombie/$pool"),
             resLoc(poolName),
             resLoc(poolNameZombie),
             resLoc(templateName),
