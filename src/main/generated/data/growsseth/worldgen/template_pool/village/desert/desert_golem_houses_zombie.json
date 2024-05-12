@@ -3,7 +3,7 @@
     {
       "element": {
         "element_type": "minecraft:single_pool_element",
-        "location": "growsseth:village/snowy_golem_house",
+        "location": "growsseth:village//desert/desert_golem_house_zombie",
         "processors": "minecraft:empty",
         "projection": "rigid"
       },
