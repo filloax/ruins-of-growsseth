@@ -5,8 +5,8 @@
       "conditions": {
         "jigsawPiecePredicate": {
           "jigsawPieceIds": [
-            "growsseth:village/savanna/savanna_golem_houses",
-            "growsseth:village//savanna/savanna_golem_houses_zombie"
+            "growsseth:village/savanna_golem_houses",
+            "growsseth:village/savanna_golem_houses_zombie"
           ],
           "structure": "minecraft:village_savanna"
         }

@@ -15,7 +15,7 @@
   "start_height": {
     "absolute": 0
   },
-  "start_pool": "growsseth:village//desert/desert_golem_houses_zombie",
+  "start_pool": "growsseth:village/desert_golem_houses_zombie",
   "step": "surface_structures",
   "terrain_adaptation": "beard_thin",
   "use_expansion_hack": false
