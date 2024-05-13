@@ -2,10 +2,10 @@
     "parent": "growsseth:growsseth/root",
     "display": {
         "title": {
-            "translate": "advancements.growsseth.structures.conduit_ruins.title"
+            "translate": "advancements.growsseth.structures.conduit_church.title"
         },
         "description": {
-            "translate": "advancements.growsseth.structures.conduit_ruins.description"
+            "translate": "advancements.growsseth.structures.conduit_church.description"
         },
         "icon": {
             "item": "minecraft:conduit"

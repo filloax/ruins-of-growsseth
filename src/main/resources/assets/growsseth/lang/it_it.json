@@ -105,20 +105,24 @@
     "advancements.growsseth.start.description": "Qualcuno si è accampato da qualche parte a Growsseth...",
     "advancements.growsseth.root.title": "Rovine di Growsseth",
     "advancements.growsseth.root.description": "Trova un collega in questo mondo in rovina",
-    "advancements.growsseth.structures.beekeeper_house.title": "Casa dolce casa",
-    "advancements.growsseth.structures.beekeeper_house.description": "Raggiungi la casa dell'apicoltore",
     "advancements.growsseth.structures.cave_camp.title": "Lava e miceti",
     "advancements.growsseth.structures.cave_camp.description": "Trova il vecchio accampamento del ricercatore",
     "advancements.growsseth.structures.golem_house.title": "Costrutti",
     "advancements.growsseth.structures.golem_house.description": "Visita l'officina di un mestiere perduto",
     "advancements.growsseth.structures.enchant_tower.title": "La conoscenza è potere",
     "advancements.growsseth.structures.enchant_tower.description": "Raggiungi una torre immobile nel cielo",
-    "advancements.growsseth.structures.abandoned_forge.title": "Pesanti martelli",
-    "advancements.growsseth.structures.abandoned_forge.description": "Scopri la forgia abbandonata",
-    "advancements.growsseth.structures.conduit_ruins.title": "Occhi del cuore",
-    "advancements.growsseth.structures.conduit_ruins.description": "Immergiti tra le rovine inondate",
+    "advancements.growsseth.structures.abandoned_forge.title": "Maledetta forgia",
+    "advancements.growsseth.structures.abandoned_forge.description": "Addentrati nella forgia abbandonata",
+    "advancements.growsseth.structures.beekeeper_house.title": "Casa dolce casa",
+    "advancements.growsseth.structures.beekeeper_house.description": "Raggiungi la casa dell'apicoltore",
     "advancements.growsseth.structures.noteblock_lab.title": "Suoni vividi",
     "advancements.growsseth.structures.noteblock_lab.description": "Raggiungi la residenza di un musicista",
+    "advancements.growsseth.structures.conduit_church.title": "Occhi del cuore",
+    "advancements.growsseth.structures.conduit_church.description": "Immergiti tra le rovine inondate da tempo",
+    "advancements.growsseth.structures.noteblock_ship.title": "Viaggiatori",
+    "advancements.growsseth.structures.noteblock_ship.description": "Entra nella nave schiantata (extra)",
+    "advancements.growsseth.structures.conduit_ruins.title": "Forti correnti",
+    "advancements.growsseth.structures.conduit_ruins.description": "Esplora le rovine di una civiltà misteriosa (extra)",
     "advancements.growsseth.horn.title": "Dono d'addio",
     "advancements.growsseth.horn.description": "Ricevi il misterioso corno del ricercatore",
 
@@ -127,9 +131,8 @@
     "growsseth.notif.researcher_updated.toast.description": "Il ricercatore ti aspetta.",
     "growsseth.notif.setLanguage.title": "Ruins of Growsseth - Rilevamento Lingua",
     "growsseth.notif.setLanguage.message": "Impostata lingua dei testi della mod a %s",
-
-
-
+    
+    
 
     "growsseth.config.title": "Ruins of Growsseth",
     "growsseth.config.category.misc": "Miscellanea",
