@@ -30,7 +30,7 @@ public final class ResearcherConfig {
     @Comment(
             value = "When the player visits a structure of the mod the researcher will generate a diary " +
                     "related to it in the tent's lectern. If another diary is on the lectern it will be moved " +
-                    "to the tent chest, and even if that is full it will drop on the ground.",
+                    "to the tent chest, and even if that is full it will drop on the ground. Does not work if single researcher is off.",
             translation = T_PREF + "researcherWritesDiaries.comment"
     )
     public static boolean researcherWritesDiaries = true;

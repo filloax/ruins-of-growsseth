@@ -160,7 +160,7 @@
     "growsseth.config.immortalResearcher.name": "Ricercatore immortale",
     "growsseth.config.immortalResearcher.comment": "Applica Resistenza V e Rigenerazione V al ricercatore, e gli impedisce di combattere il giocatore.",
     "growsseth.config.researcherWritesDiaries.name": "Generazione diari del ricercatore",
-    "growsseth.config.researcherWritesDiaries.comment": "Quando il giocatore vista una struttura della mod il ricercatore genererà un diario collegato ad essa nel leggio della tenda. Se è già presente un diario sul leggio verrà spostato nella cassa della tenda, e se quest'ultima è piena verrà invece lasciato a terra.",
+    "growsseth.config.researcherWritesDiaries.comment": "Quando il giocatore vista una struttura della mod il ricercatore genererà un diario collegato ad essa nel leggio della tenda. Se è già presente un diario sul leggio verrà spostato nella cassa della tenda, e se quest'ultima è piena verrà invece lasciato a terra. Non funziona se l'impostazione ricercatore singolo è disattivata.",
     "growsseth.config.researcherBorrowPenalty.name": "Penalità per il prestito dell'asino",
     "growsseth.config.researcherBorrowPenalty.comment": "Moltiplicatore del prezzo degli scambi per quando si prende l'asino del ricercatore in prestito. Influenza solo gli smeraldi.",
     "growsseth.config.researcherTeleports.name": "Ricercatore si teletrasporta al punto di restrizione",

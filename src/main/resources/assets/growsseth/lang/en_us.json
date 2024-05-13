@@ -157,7 +157,7 @@
     "growsseth.config.immortalResearcher.name": "Immortal researcher",
     "growsseth.config.immortalResearcher.comment": "Applies Resistance V and Regeneration V to the researcher, and prevents him from fighting the player.",
     "growsseth.config.researcherWritesDiaries.name": "Researcher writes diaries",
-    "growsseth.config.researcherWritesDiaries.comment": "When the player visits a structure of the mod the researcher will generate a diary related to it in the tent's lectern. If another diary is on the lectern it will be moved to the tent chest, and even if that is full it will drop on the ground.",
+    "growsseth.config.researcherWritesDiaries.comment": "When the player visits a structure of the mod the researcher will generate a diary related to it in the tent's lectern. If another diary is on the lectern it will be moved to the tent chest, and even if that is full it will drop on the ground. Does not work if single researcher is off.",
     "growsseth.config.researcherBorrowPenalty.name": "Donkey borrow penalty",
     "growsseth.config.researcherBorrowPenalty.comment": "Trade price multiplier for borrowing the researcher's donkey. Only affects emeralds.",
     "growsseth.config.researcherTeleports.name": "Researcher teleports back to restriction",
