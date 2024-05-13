@@ -18,7 +18,7 @@ quest for the Researcher NPC.
 Finally, the mod includes a web-tool to act as a Gamemaster to another player's run, similarly to Cydonia's
 original run, being able to spawn structures, tweak trades, and send notifications.
 
-See the [Modrinth](#) or [Curseforge](#) page, and the [**WIKI**](#) (currently Italian only until full release) for more information.
+See the [Modrinth](https://modrinth.com/mod/ruins-of-growsseth) or [Curseforge](https://curseforge.com/minecraft/mc-mods/ruins-of-growsseth) page, and the [**WIKI**](https://github.com/filloax/ruins-of-growsseth/wiki) (currently Italian only until full release) for more information.
 
 ![](./src/main/resources/assets/growsseth/textures/gui/advancements/backgrounds/advancements_background.png)
 
