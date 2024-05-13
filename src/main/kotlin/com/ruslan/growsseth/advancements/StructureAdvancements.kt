@@ -32,9 +32,6 @@ object StructureAdvancements {
     private val villageHouseStructures = mapOf(
         GrowssethStructures.GOLEM_HOUSE to getHousesOfVillageCategory(VillageBuildings.CATEGORY_GOLEM_HOUSE)
     )
-    private val villageHouseStructureTags = mapOf(
-        GrowssethTags.StructTags.GOLEM_HOUSE to getHousesOfVillageCategory(VillageBuildings.CATEGORY_GOLEM_HOUSE)
-    )
 
     // To use with getStructTagOrKey (in utils)
     fun playerHasFoundStructure(player: ServerPlayer, structId: Either<TagKey<Structure>, ResourceKey<Structure>>, failHard: Boolean = false): Boolean {
@@ -80,13 +77,16 @@ object StructureAdvancements {
     }
 
     fun getPlayerFoundStructures(player: ServerPlayer): Set<ResourceKey<Structure>> {
-        return GrowssethStructures.all.filter {
-            val advancement = player.server.advancements.get(getStructureAdvancementId(it))
-            if (advancement != null) {
-                player.advancements.getOrStartProgress(advancement).isDone
-            } else {
-                false
-            }
+        // Use allWithPlaceholders to also track fake structures
+        // that represent village houses
+        return GrowssethStructures.allWithPlaceholders.filter { key ->
+            val advancements = player.server.advancements
+            val advancement = advancements.get(getStructureAdvancementId(key))
+            val jigsawAdvancements = villageHouseStructures[key]?.mapNotNull { advancements.get(
+                getStructureJigsawAdvancementId(it.key, key)
+            ) }
+            val list = listOfNotNull(advancement) + (jigsawAdvancements ?: listOf())
+            list.any { player.advancements.getOrStartProgress(it).isDone }
         }.toSet()
     }
 
@@ -98,7 +98,7 @@ object StructureAdvancements {
         return resLoc("growsseth/found_jigsaw/${structKey.location().namespace}/${structKey.location().path}/${target.location().path}")
     }
 
-    private val structureKeyAdvancementRegex = Regex("^growsseth/found_(.+)$")
+    private val structureKeyAdvancementRegex = Regex("^growsseth/found_(?!jigsaw)(.+)$")
     private val structureJigsawPieceAdvancementRegex = Regex("^growsseth/found_jigsaw/([^/]+)/([^/]+)/(.+)$")
 
     fun getStructureKeyFromAdvancementId(id: ResourceLocation): ResourceKey<Structure>? {
@@ -107,13 +107,20 @@ object StructureAdvancements {
         return structureKeyAdvancementRegex.matchEntire(id.path)?.groupValues?.get(1)?.let { ResourceKey.create(Registries.STRUCTURE, resLoc(it)) }
     }
 
-    fun getStructureJigsawPieceIdFromAdvancementId(id: ResourceLocation): Pair<ResourceKey<Structure>, ResourceLocation>? {
+    /**
+     * From a jigsaw advancement that tracks jigsaw pieces, get the reference structure.
+     * By reference structure we mean a jigsaw piece added by the mod (usually village houses)
+     * that is associated to a structure key to streamline structure detection and village house
+     * detection into the same code.
+     * @return A pair of reference structure and owner structure of the jigsaw piece
+     */
+    fun getReferenceStructureFromJigsawAdvancementId(id: ResourceLocation): Pair<ResourceKey<Structure>, ResourceKey<Structure>>? {
         if (id.namespace != RuinsOfGrowsseth.MOD_ID) return null
 
         val match = structureJigsawPieceAdvancementRegex.matchEntire(id.path)
         return match?.let { m -> Pair(
             ResourceKey.create(Registries.STRUCTURE, ResourceLocation(m.groupValues[1], m.groupValues[2])),
-            resLoc(m.groupValues[3]),
+            ResourceKey.create(Registries.STRUCTURE, resLoc(m.groupValues[3])),
         ) }
     }
 
@@ -122,7 +129,7 @@ object StructureAdvancements {
         return entries
             .groupBy{ it.kind }
             .mapKeys { ResourceKey.create(Registries.STRUCTURE, ResourceLocation("minecraft", "village_${it.key}")) }
-            .mapValues { e -> e.value.flatMap { listOf(it.normalPool, it.zombiePool) } }
+            .mapValues { e -> e.value.flatMap { listOf(it.normalTemplate, it.zombieTemplate) } }
     }
 
     class Bootstrapper(private val registryLookup: HolderLookup.Provider) {
@@ -191,13 +198,8 @@ object StructureAdvancements {
         fun onAdvancement(player: ServerPlayer, advancement: AdvancementHolder, criterionString: String) {
             val (structureId, isJigsaw) = getStructureKeyFromAdvancementId(advancement.id)?.let {
                 Pair(it, false)
-            } ?: getStructureJigsawPieceIdFromAdvancementId(advancement.id)?.let { (structId, pieceId) ->
-                for ((targetStructId, structureHouses) in villageHouseStructures.entries) {
-                    if (structureHouses[structId]?.contains(pieceId) == true) {
-                        return@let Pair(targetStructId, true)
-                    }
-                }
-                return
+            } ?: getReferenceStructureFromJigsawAdvancementId(advancement.id)?.let { (structId, refStructId) ->
+                Pair(refStructId, true)
             } ?: return
 
             ModEvents.get().triggerOnStructureFound(player, structureId, isJigsaw)

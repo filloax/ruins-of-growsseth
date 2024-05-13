@@ -30,6 +30,7 @@ import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool
 object GrowssethStructures {
     @JvmStatic
     val all = HashSet<ResourceKey<Structure>>()
+    val allWithPlaceholders = HashSet<ResourceKey<Structure>>()
     val info = mutableMapOf<ResourceKey<Structure>, StructureInfo>()
     @JvmStatic
     val cydoniaToOriginal = mutableMapOf<ResourceKey<Structure>, ResourceKey<Structure>>()
@@ -171,6 +172,7 @@ object GrowssethStructures {
         val key = ResourceKey.create(Registries.STRUCTURE, resLoc(name))
         if (!placeholder)
             all.add(key)
+        allWithPlaceholders.add(key)
         info[key] = StructureInfo(key, tag, emeraldCost)
         return key
     }
