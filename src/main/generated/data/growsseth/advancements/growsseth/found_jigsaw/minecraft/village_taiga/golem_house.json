@@ -5,8 +5,8 @@
       "conditions": {
         "jigsawPiecePredicate": {
           "jigsawPieceIds": [
-            "growsseth:village/taiga_golem_houses",
-            "growsseth:village/taiga_golem_houses_zombie"
+            "growsseth:village/taiga/taiga_golem_house",
+            "growsseth:village/taiga/taiga_golem_house_zombie"
           ],
           "structure": "minecraft:village_taiga"
         }

@@ -174,11 +174,28 @@ object ResearcherTradeUtils {
      * the trade is given to the researcher to avoid repetition
      * Includes map finding and diary setting
      */
-    fun finalizeTradeResult(researcher: Researcher, offer: MerchantOffer): MerchantOffer {
+    fun finalizeTradeResult(researcher: Researcher, offer: MerchantOffer): MerchantOffer? {
         val offerOut = offer.copy()
         val result = offerOut.result
         val data = result[DataComponents.CUSTOM_DATA]?.copyTag() ?: return offerOut
         data.loadField(ResearcherItemListing.MAP_INFO_TAG, TradeItemMapInfo.CODEC)?.let { mapInfo ->
+            // Until we find a way to locate specific jigsaw pieces, skip golem map if not in growsseth
+            // or fixed spawn not otherwise available
+            if (mapInfo.structure.contains("golem_house")) {
+                val fixedSpawnExists = mapInfo.fixedStructureId?.let { fixedStructureId ->
+                    val matchingStructures = getMatchingStructures(
+                        researcher.level().registryAccess(), fixedStructureId
+                    )
+                    fixedStructureGeneration.registeredStructureSpawns.values
+                        .any { matchingStructures.contains(it.structure) }
+                } ?: false
+
+                if (!fixedSpawnExists) {
+                    RuinsOfGrowsseth.LOGGER.warn("Golem house map not available yet, and no fixed spawn available in world!")
+                    return null
+                }
+            }
+
             if (!researcher.level().isClientSide && result[DataComponents.CUSTOM_DATA]?.contains(ResearcherItemListing.SET_MAP_TAG) != true) {
                 CustomData.update(DataComponents.CUSTOM_DATA, result) { it.putBoolean(ResearcherItemListing.SET_MAP_TAG, true) }
                 setTradeMapTarget(researcher, result, mapInfo, offerOut)

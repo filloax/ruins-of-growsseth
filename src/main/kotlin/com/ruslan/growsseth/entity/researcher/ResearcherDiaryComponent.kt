@@ -14,6 +14,7 @@ import com.ruslan.growsseth.config.GrowssethConfig
 import com.ruslan.growsseth.config.ResearcherConfig
 import com.ruslan.growsseth.http.ApiEvent
 import com.ruslan.growsseth.http.GrowssethApi
+import com.ruslan.growsseth.structure.GrowssethStructures
 import com.ruslan.growsseth.utils.*
 import com.ruslan.growsseth.worldgen.worldpreset.GrowssethWorldPreset.isGrowssethPreset
 import kotlinx.serialization.Serializable
@@ -296,9 +297,17 @@ class ResearcherDiaryComponent(val researcher: Researcher) {
             // Get only once instead of running for every player
             // Run now for registry access reasons and to run only once
             val registry = level.registryAccess().registryOrThrow(Registries.STRUCTURE)
-            structToTag[level] = GrowssethTags.StructTags.ALL.flatMap { tag ->
+
+            // Might include datapack-added things
+            val registryTagAssociations = GrowssethTags.StructTags.ALL.flatMap { tag ->
                 registry.getTagOrEmpty(tag).filter { it.unwrapKey().isPresent }.map { it.unwrapKey().get() to tag }
             }.associate { it }
+            // Also includes placeholders (most importantly village house references),
+            // without this structures tracked by jigsaw piece (village house) advancements
+            // won't be detected
+            val staticTagAssociations = GrowssethStructures.info.mapValues { it.value.tag }
+
+            structToTag[level] = staticTagAssociations + registryTagAssociations
         }
     }
 }

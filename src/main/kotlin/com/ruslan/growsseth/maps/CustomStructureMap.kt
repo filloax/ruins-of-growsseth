@@ -40,7 +40,7 @@ private const val DEFAULT_ASYNC = true
 // true seems to be way slower even in single threaded mode
 private const val DEFAULT_SKIP_EXPLORED = false
 private const val DEFAULT_SEARCH_RANGE = 100
-private const val DEFAULT_SEARCH_TIMEOUT_S = 10
+private const val DEFAULT_SEARCH_TIMEOUT_S = 15
 
 fun ItemStack.createAndStoreMapData(
     level: Level, x: Int, z: Int, scale: Int,
