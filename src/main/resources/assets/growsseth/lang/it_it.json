@@ -148,7 +148,6 @@
     "growsseth.config.modLootInVanillaStructures.name": "Genera loot della mod nelle strutture vanilla",
     "growsseth.config.zombieGuberSpawnChance.name": "Chance di spawn di Guber zombi (%)",
     "growsseth.config.disableNpcDialogues.name": "Disabilita dialoghi NPC",
-    "growsseth.config.disableNpcDialogues.comment": "Utile per il debugging.",
 
     "growsseth.config.enableLocationTitles.name": "Abilita i titoli delle location di Growsseth",
     "growsseth.config.enableLocationTitles.comment": "Mostra i nomi dei luoghi che stai visitando quando usi il preset del mondo di Growsseth.",
@@ -187,14 +186,16 @@
     "growsseth.config.randomTradesRefreshTime.comment": "\"Se >0, il tempo (in frazione di giorni ingame) che serve al ricercatore per cambiare i suoi scambi quando l'opzione ricercatore singolo (o il corrispondente progresso degli scambi) è disattivata.",
 
     "growsseth.config.webDataSync.name": "Abilita sincronizzazione web",
+    "growsseth.config.webDataSync.comment": "ATTENZIONE: controlla la Wiki su GitHub per sapere come usarlo. Attiva modalità game-master, permettendo al giocatore a cui ti connetti di controllare elementi della mod e non. Richiede ricarica mondo.",
     "growsseth.config.dataSyncUrl.name": "URL per la API della sinc. web",
+    "growsseth.config.dataSyncUrl.comment": "Connettiti solo a utenti fidati!",
     "growsseth.config.dataSyncEndpoint.name": "Endpoint per la API della sinc. web (richiede riavviare il gioco)",
     "growsseth.config.dataSyncApiKey.name": "Chiave API per il server (opzionale)",
     "growsseth.config.dataSyncReloadTime.name": "Intervallo di ricaricamento dati",
     "growsseth.config.dataSyncReloadTime.comment": "Quanto tempo (in minuti) deve passare tra ogni richiesta al server. Deve essere almeno pari a 10 secondi.",
-    "growsseth.config.liveUpdateService.name": "Abilita servizio live update",
-    "growsseth.config.liveUpdateUrl.name": "URL per ricaricare dati API da remoto",
-    "growsseth.config.liveUpdatePort.name": "Porta per ricaricare dati API da remoto (opzionale)",
+    "growsseth.config.liveUpdateService.name": "(WIP) Abilita servizio live update",
+    "growsseth.config.liveUpdateUrl.name": "(WIP) URL per ricaricare dati API da remoto",
+    "growsseth.config.liveUpdatePort.name": "(WIP) Porta per ricaricare dati API da remoto (opzionale)",
     "growsseth.config.remoteCommandExecution.name": "Esecuzione comandi remoti",
     "growsseth.config.remoteCommandExecution.comment": "Permette al gamemaster di eseguire qualsiasi comando del gioco a distanza.",
 
