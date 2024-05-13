@@ -285,6 +285,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     private var tradesData = server?.let { ResearcherTradesData(ResearcherTradeMode.getFromSettings(it)) }
     private var tentCache: Optional<StructureStart>? = null
     private var lastRefusedTradeTimer: Int = 0
+    private var clearFailedMapsTime: Int? = null
 
     private var itemUsingTime = 0
 
@@ -573,6 +574,14 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             }
         }
 
+        clearFailedMapsTime?.let { time ->
+            if (this.tickCount >= time) {
+                clearFailedMapsTime = null
+                clearFailedMaps()
+                refreshCurrentTrades()
+            }
+        }
+
         combat.aggressiveAiStep()
 
         if (lastRefusedTradeTimer > 0)
@@ -712,6 +721,8 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     }
 
     override fun addAdditionalSaveData(compoundTag: CompoundTag) {
+        clearFailedMaps()
+
         super.addAdditionalSaveData(compoundTag)
         val data = saveResearcherData()
 
@@ -855,6 +866,18 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         val xpValue = random.nextIntBetweenInclusive(2,4)   // (villagers have 3-6)
         if (offer.shouldRewardExp()) {
             level().addFreshEntity(ExperienceOrb(level(), this.x, this.y + 0.5, this.z, xpValue))
+        }
+    }
+
+    fun scheduleClearingFailedMaps() {
+        // In 10 seconds (or if quitting, in the write nbt function), clear
+        // failed map offers to be able to retry)
+        clearFailedMapsTime = tickCount + secondsToTicks(10f)
+    }
+
+    private fun clearFailedMaps() {
+        offersByPlayer.forEach { (id, offers) ->
+            offers.removeIf { it.result[DataComponents.CUSTOM_DATA]?.contains(Constants.ITEM_TAG_MAP_FAILED_LOCATE) == true }
         }
     }
 

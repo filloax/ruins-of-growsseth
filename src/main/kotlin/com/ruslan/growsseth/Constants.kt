@@ -11,6 +11,8 @@ object Constants {
     const val DATA_PLAYER_MET_RESEARCHER = "metResearcher"
     const val TAG_RESEARCHER_DONKEY = "researcher_donkey"
 
+    const val ITEM_TAG_MAP_FAILED_LOCATE = "GrowssethFailedLocate"
+
     const val MIN_HEIGHT = -64
     const val MAX_HEIGHT = 310
 

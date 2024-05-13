@@ -120,7 +120,6 @@ object ResearcherTradeUtils {
 
         if (!known) {
             offer.setToOutOfStock() // Disable offer until found
-            researcher.refreshCurrentTrades()
             // Locate map if not fixed struct or pos
             itemStack.updateMapToStruct(
                 level,
@@ -128,22 +127,29 @@ object ResearcherTradeUtils {
                 searchFromPos = researcher.blockPosition(),
                 scale = scale,
                 displayName = mapData.name,
+                skipExploredChunks = true,
 //                async = true,
-            ).thenAccept {
-                val pos = it.first
-                if (pos != null) {
+            ).thenAccept { result ->
+                if (result != null) {
+                    val pos = result.first
                     RuinsOfGrowsseth.LOGGER.info("Res.trades: found map to pos $pos struct ${mapData.structure}")
                     synchronized(researcher.storedMapLocations) {
                         researcher.storedMapLocations[mapData.structure] = Researcher.MapMemory(
                             pos,
-                            Either.right(it.second.unwrapKey().get()),
+                            Either.right(result.second.unwrapKey().get()),
                             itemStack[DataComponents.MAP_ID]?.id ?: throw IllegalStateException("Map item has no id after updating! $itemStack"),
                         )
                     }
                     offer.resetUses()
                     researcher.refreshCurrentTrades()
+                } else {
+                    // Update map with failed name
+                    researcher.refreshCurrentTrades()
+                    researcher.scheduleClearingFailedMaps()
                 }
             }
+            // Update map with loading name + stock change
+            researcher.refreshCurrentTrades()
         }
     }
 
