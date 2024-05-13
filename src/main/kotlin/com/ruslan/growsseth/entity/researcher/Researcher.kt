@@ -831,7 +831,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         ) {
             // Refresh offers
             offers.clear()
-            offers.addAll(updatedOffers.map { ResearcherTradeUtils.finalizeTradeResult(this, it) })
+            offers.addAll(updatedOffers.mapNotNull { ResearcherTradeUtils.finalizeTradeResult(this, it) })
             tradesData.mode = currentProvider.mode
             tradesData.lastTradeRefreshTime = time
         }
