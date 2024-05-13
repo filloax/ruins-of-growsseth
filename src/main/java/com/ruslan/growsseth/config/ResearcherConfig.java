@@ -19,6 +19,16 @@ public final class ResearcherConfig {
     )
     public static boolean singleResearcher = true;
 
+    @ConfigEntry(id = "singleResearcherProgressTrades", type = EntryType.BOOLEAN, translation = T_PREF + "singleResearcherProgressTrades.name")
+    @Comment(
+            value = "Ignored if single researcher is false. If enabled, the researcher will initially only sell one kind of map, "
+                    + "and unlock more structures as you return to him after finding the previous one.\nIn this mode, the researcher's 'quest' will automatically progress (see quest config section)."
+                    + "If disabled, each instance of the researcher will have up to N random maps (see randomTradeMaxMaps) for sale, with no quest progress."
+                    + "Always true with a fixed order in Growsseth world preset.",
+            translation = T_PREF + "singleResearcherProgressTrades.comment"
+    )
+    public static boolean singleResearcherProgressTrades = false;
+
     @ConfigEntry(id = "immortalResearcher", type = EntryType.BOOLEAN, translation = T_PREF + "immortalResearcher.name")
     @Comment(
             value = "Applies Resistance V and Regeneration V to the researcher, and prevents him from fighting the player.",
@@ -30,7 +40,7 @@ public final class ResearcherConfig {
     @Comment(
             value = "When the player visits a structure of the mod the researcher will generate a diary " +
                     "related to it in the tent's lectern. If another diary is on the lectern it will be moved " +
-                    "to the tent chest, and even if that is full it will drop on the ground.",
+                    "to the tent chest, and even if that is full it will drop on the ground. Does not work if single researcher is off.",
             translation = T_PREF + "researcherWritesDiaries.comment"
     )
     public static boolean researcherWritesDiaries = true;
@@ -69,16 +79,6 @@ public final class ResearcherConfig {
             translation = T_PREF + "researcherStrikesFirst.comment"
     )
     public static boolean researcherStrikesFirst = false;
-
-    @ConfigEntry(id = "singleResearcherProgressTrades", type = EntryType.BOOLEAN, translation = T_PREF + "singleResearcherProgressTrades.name")
-    @Comment(
-            value = "Ignored if single researcher is false. If enabled, the researcher will initially only sell one kind of map, "
-                    + "and unlock more structures as you return to him after finding the previous one.\nIn this mode, the researcher's 'quest' will automatically progress (see quest config section)."
-                    + "If disabled, each instance of the researcher will have up to N random maps (see randomTradeMaxMaps) for sale, with no quest progress."
-                    + "Always true with a fixed order in Growsseth world preset.",
-            translation = T_PREF + "singleResearcherProgressTrades.comment"
-    )
-    public static boolean singleResearcherProgressTrades = false;
 
     @ConfigEntry(id = "webTrades", type = EntryType.BOOLEAN, translation = T_PREF + "webTrades.name")
     @Comment(
