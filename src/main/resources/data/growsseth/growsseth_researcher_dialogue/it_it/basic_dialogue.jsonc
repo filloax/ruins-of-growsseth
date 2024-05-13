@@ -15,7 +15,10 @@
             "useLimit": 1,
             "priority": 100,
             "id": "researcher-first",
-            "requiresUntilQuestStage": "start"
+            "requiresUntilQuestStage": "start",
+            "data": {
+                "singleOnly": "true"
+            }
         },
         {
             "content": "Arrivederci, è stato un piacere!",
@@ -60,11 +63,17 @@
         { "id": "researcher-first" },
         { "id": "no-dialogue-mess" },
         "Buongiorno, collega.",
-        "Lieto di vederti ancora in vita, collega.",
+        {
+            "content": "Lieto di vederti ancora in vita, collega.",
+            "afterRepeatsMin": 2,
+        },
         "...forse, con quell'ingrediente... Oh, salve collega.",
         "Buongiorno collega, bella giornata oggi, vero?",
         "...ma certo, ora ha senso... Oh, salve, dimmi pure.",
-        "Salve collega, sempre in movimento eh?"
+        {
+            "content": "Salve collega, sempre in movimento eh?",
+            "afterRepeatsMin": 2,
+        },
     ],
     "playerArriveNight": [
         { "id": "researcher-first" },

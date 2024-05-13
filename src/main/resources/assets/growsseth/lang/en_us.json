@@ -145,7 +145,6 @@
     "growsseth.config.modLootInVanillaStructures.name": "Generate mod loot in vanilla structures",
     "growsseth.config.zombieGuberSpawnChance.name": "Zombie Guber spawn chance (%)",
     "growsseth.config.disableNpcDialogues.name": "Disable NPC dialogues",
-    "growsseth.config.disableNpcDialogues.comment": "Useful for debugging.",
 
     "growsseth.config.enableLocationTitles.name": "Enable Growsseth's location titles",
     "growsseth.config.enableLocationTitles.comment": "Shows the title of the places you are visiting when exploring the Growsseth world preset.",
@@ -184,14 +183,16 @@
     "growsseth.config.randomTradesRefreshTime.comment": "If >0, the time (in fraction of ingame days) it takes for the researcher to change his random trades when single researcher (or trade progress for single researcher) is disabled.",
 
     "growsseth.config.webDataSync.name": "Enable HTTP syncing",
+    "growsseth.config.webDataSync.comment": "CAREFUL: check the Wiki on GitHub for how to use this. Enables gamemaster-mode, allowing the player you decide to connect to to control the mod's features and more. Requires reloading world.",
     "growsseth.config.dataSyncUrl.name": "URL for the sync API",
+    "growsseth.config.dataSyncUrl.comment": "Only connect to trusted sources!",
     "growsseth.config.dataSyncEndpoint.name": "Endpoint for the sync API (requires restarting the game)",
     "growsseth.config.dataSyncApiKey.name": "API Key for the server (optional)",
     "growsseth.config.dataSyncReloadTime.name": "Sync reload interval",
     "growsseth.config.dataSyncReloadTime.comment": "How much time (in minutes) must pass between each server query. Must be at least 10 seconds.",
-    "growsseth.config.liveUpdateService.name": "Enable the live update service",
-    "growsseth.config.liveUpdateUrl.name": "URL for reloading API data from remote",
-    "growsseth.config.liveUpdatePort.name": "Port for reloading API data from remote (optional)",
+    "growsseth.config.liveUpdateService.name": "(WIP) Enable the live update service",
+    "growsseth.config.liveUpdateUrl.name": "(WIP) URL for reloading API data from remote",
+    "growsseth.config.liveUpdatePort.name": "(WIP) Port for reloading API data from remote (optional)",
     "growsseth.config.remoteCommandExecution.name": "Remote commands execution",
     "growsseth.config.remoteCommandExecution.comment": "Allow the gamemaster to execute any arbitrary command.",
 
