@@ -90,6 +90,13 @@ class ResearcherDiaryComponent(val researcher: Researcher) {
 
     fun aiStep() {
         if (!ResearcherConfig.researcherWritesDiaries) return
+        /*
+        FOR NOW: Outright disable with non-single researcher mode
+        TODO: make multiple researchers mode make each researcher have diaries only
+        for his structures and only if they're (re)discovered after a player reached that
+        specific entity (harder part is the 2nd as we couldn't rely on just "player has discovered"
+         */
+        if (!ResearcherConfig.singleResearcher) return
 
         if (researcher.tickCount % updatePeriod == 0) {
             val anyNew = updateUnlockedStructures()

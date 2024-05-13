@@ -8,6 +8,7 @@ import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.GrowssethTags.RESEARCHER_MESS_TRIGGER
 import com.ruslan.growsseth.GrowssethTags.TENT_MATERIALS_WHITELIST
 import com.ruslan.growsseth.RuinsOfGrowsseth
+import com.ruslan.growsseth.config.ResearcherConfig
 import com.ruslan.growsseth.dialogues.*
 import com.ruslan.growsseth.dialogues.DialogueEvent.Companion.event
 import com.ruslan.growsseth.networking.AmbientSoundsPacket
@@ -56,6 +57,7 @@ class ResearcherDialoguesComponent(
         const val DDATA_MADE_MESS = "madeMess"
         // "angry", "none", or unset (default)
         const val DDATA_SOUND = "sound"
+        const val DDATA_SINGLE_ONLY = "singleOnly"
 
         val BREAK_BLOCK_BLACKLIST = mutableSetOf<Block>(
             Blocks.WHITE_CARPET,
@@ -197,6 +199,8 @@ class ResearcherDialoguesComponent(
         eventParam: String?
     ) {
         super.addDialogueOptionFilters(filters, player, event, eventParam)
+
+        filters.add { entry -> entry.data[DDATA_SINGLE_ONLY] != "true" || ResearcherConfig.singleResearcher }
 
         // Check made mess dialogue - only negatively, so remove madeMess dialogue if not angry
         // but not normal dialogue if angry, as doing so would remove also higher priority dialogue.
