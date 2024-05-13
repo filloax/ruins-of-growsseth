@@ -145,6 +145,7 @@ object ResearcherTradeUtils {
                 } else {
                     // Update map with failed name
                     researcher.refreshCurrentTrades()
+                    researcher.scheduleClearingFailedMaps()
                 }
             }
             // Update map with loading name + stock change

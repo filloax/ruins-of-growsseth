@@ -186,7 +186,7 @@ private fun ItemStack.updateMapToStructWithHolder(
     val destString = destinationHolderSet.unwrapKey().toString()
     if (async == true || (async == null && DEFAULT_ASYNC)) {
         RuinsOfGrowsseth.LOGGER.info("Starting async structure '$destString' search...")
-        this.setLoadingName()
+        this.setLoadingName(displayName)
 
         val done = atomic<Boolean>(false)
         val startTime = Clock.System.now()
@@ -254,12 +254,14 @@ private fun ItemStack.updateMapToStructWithHolder(
 
 private val loadingNameRandom = Random(Clock.System.now().toEpochMilliseconds())
 
-private fun ItemStack.setLoadingName() {
+private fun ItemStack.setLoadingName(displayName: String?) {
     this[DataComponents.CUSTOM_NAME] = Component.translatable("item.growsseth.map.loadingName")
     val loadingId = loadingNameRandom.nextInt(3) + 1
     this.loreLines().apply {
         clear()
         add(Component.translatable("item.growsseth.map.loading$loadingId"))
+        if (displayName != null)
+            add(Component.translatable(displayName).withStyle(ChatFormatting.DARK_GRAY))
     }
 }
 
