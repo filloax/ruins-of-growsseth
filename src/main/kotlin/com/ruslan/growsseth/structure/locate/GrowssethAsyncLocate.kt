@@ -25,6 +25,8 @@ import java.util.concurrent.*
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.concurrent.thread
 
+typealias LocateResult = Pair<BlockPos, Holder<Structure>>?
+
 // Adapted from AsyncLocator, move to kotlin and allow stopping
 // Original: https://github.com/thebrightspark/AsyncLocator/blob/1.19.x/src/main/java/brightspark/asynclocator/AsyncLocator.java
 object StoppableAsyncLocator {
@@ -33,7 +35,7 @@ object StoppableAsyncLocator {
     private fun setupExecutorService() {
         shutdownExecutorService()
 
-        val threads = 2
+        val threads = 1
         RuinsOfGrowsseth.LOGGER.info("Starting locating executor service with {} threads", threads)
         executorService = Executors.newFixedThreadPool(
             threads,
@@ -70,7 +72,7 @@ object StoppableAsyncLocator {
             structureSet, searchRadius, skipKnownStructures,
             signalProgress
         )
-        val timeoutThread = timeoutSeconds?.let { timeout -> thread(start = false, name = "locateTimeout") {
+        val timeoutThread = timeoutSeconds?.let { timeout -> thread(start = false) {
             Thread.sleep(timeout * 1000L)
             if (!task.done)
                 task.cancel("timeout")
@@ -114,7 +116,7 @@ class LocateTask(
     private val isCancelled = atomic<Boolean>(false)
     private val cancelReason = atomic<String?>(null)
     private val finalTimeMs = atomic<Long?>(null)
-    private val future = CompletableFuture<Pair<BlockPos, Holder<Structure>>?>()
+    private val future = CompletableFuture<LocateResult>()
     private val done_ = atomic<Boolean>(false)
 
     val done get() = done_.value
@@ -137,19 +139,19 @@ class LocateTask(
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            future.completeExceptionally(e)
+            future.complete(null)
         } finally {
             done_.update { true }
         }
     }
 
-    fun then(action: (Pair<BlockPos, Holder<Structure>>?) -> Unit): LocateTask {
+    fun then(action: (LocateResult) -> Unit): LocateTask {
         future.thenAccept(action)
         return this
     }
 
-    fun thenOnServerThread(action: (Pair<BlockPos, Holder<Structure>>?) -> Unit): LocateTask {
-        future.thenAccept{ result -> server.submit { action(result) } }
+    fun thenOnServerThread(action: (LocateResult) -> Unit): LocateTask {
+        future.thenAccept{ result -> server.submit{ simpleTryCatch{ action(result) } } }
         return this
     }
 
@@ -158,7 +160,17 @@ class LocateTask(
     }
 
     fun onExceptionOnServerThread(action: (e: Throwable) -> Unit) {
-        future.exceptionally { e -> server.submit { action(e) }; null }
+        future.exceptionally { e -> server.submit { simpleTryCatch { action(e) } }; null }
+    }
+
+    // For situations that would otherwise silently ignore exceptions
+    private fun <T> simpleTryCatch(action: () -> T?): T? {
+        return try {
+            action()
+        } catch(e: Exception) {
+            e.printStackTrace()
+            return null
+        }
     }
 
     fun timeElapsedMs() = (Clock.System.now() - startTime).inWholeMilliseconds
@@ -175,7 +187,7 @@ class LocateTask(
      * Code analoguous to base [ChunkGenerator.findNearestMapStructure],
      * but with added checks and signals
      */
-    private fun findNearestMapStructure(): Pair<Boolean, Pair<BlockPos, Holder<Structure>>?> {
+    private fun findNearestMapStructure(): Pair<Boolean, LocateResult> {
         val structureState = level.chunkSource.generatorState
         val placementsSets: MutableMap<StructurePlacement, MutableSet<Holder<Structure>>> = Object2ObjectArrayMap()
 

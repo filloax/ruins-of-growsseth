@@ -64,6 +64,13 @@
     "item.growsseth.researcher_dagger": "Pugnale del Ricercatore",
     "item.growsseth.researcher_dagger.description": "(Portata ridotta quando equipaggiato)",
 
+    "item.growsseth.map.loadingName": "Mappa delle rovine [caricamento]",
+    "item.growsseth.map.loading1": "Un attimo, è qui da qualche parte...",
+    "item.growsseth.map.loading2": "Ero certo di averla messa qua...",
+    "item.growsseth.map.loading3": "Appena la trovo te la vendo subito...",
+    "item.growsseth.map.loadingFail": "Mappa delle rovine [non trovata]",
+    "item.growsseth.map.loadingFailLore": "Temo di averla persa, torna più tardi.",
+
     "effect.growsseth.serenity": "Serenità",
     "effect.growsseth.fighting_spirit": "Spirito Combattivo",
     "effect.growsseth.justice": "Giustizia",
@@ -120,6 +127,9 @@
     "growsseth.notif.researcher_updated.toast.description": "Il ricercatore ti aspetta.",
     "growsseth.notif.setLanguage.title": "Ruins of Growsseth - Rilevamento Lingua",
     "growsseth.notif.setLanguage.message": "Impostata lingua dei testi della mod a %s",
+
+
+
 
     "growsseth.config.title": "Ruins of Growsseth",
     "growsseth.config.category.misc": "Miscellanea",

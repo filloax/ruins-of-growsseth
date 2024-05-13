@@ -63,7 +63,14 @@
     "instrument.growsseth.researcher_horn": "Researchers' Pride",
     "item.growsseth.researcher_dagger": "Researcher's Dagger",
     "item.growsseth.researcher_dagger.description": "(Less range when equipped)",
-    
+
+    "item.growsseth.map.loadingName": "Ruins Map [loading]",
+    "item.growsseth.map.loading1": "One moment, it's here somewhere...",
+    "item.growsseth.map.loading2": "I was certain I placed it here...",
+    "item.growsseth.map.loading3": "I'll sell it as soon as I find it...",
+    "item.growsseth.map.loadingFail": "Ruins Map [not found]",
+    "item.growsseth.map.loadingFailLore": "I'm afraid I lost that one, come back later.",
+
     "effect.growsseth.serenity": "Serenity",
     "effect.growsseth.fighting_spirit": "Fighting Spirit",
     "effect.growsseth.justice": "Justice",
