@@ -2,17 +2,16 @@
     "parent": "growsseth:growsseth/root",
     "display": {
         "title": {
-            "translate": "advancements.growsseth.structures.conduit_church.title"
+            "translate": "advancements.growsseth.structures.conduit_ruins.title"
         },
         "description": {
-            "translate": "advancements.growsseth.structures.conduit_church.description"
+            "translate": "advancements.growsseth.structures.conduit_ruins.description"
         },
         "icon": {
-            "id": "minecraft:conduit"
+            "id": "minecraft:prismarine_bricks"
         },
         "hidden": true,
-        "show_toast": true,
-        "frame": "goal"
+        "show_toast": true
     },
     "criteria": {
         "in_structure": {
@@ -23,7 +22,7 @@
                         "entity": "this",
                         "predicate": {
                             "location": {
-                                "structures": "#growsseth:conduit_church"
+                                "structures": "#growsseth:conduit_ruins"
                             }
                         }
                     }
