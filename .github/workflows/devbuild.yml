@@ -41,6 +41,7 @@ jobs:
           files: |
             build/libs/*.jar
             build/egobalego-at-home/*.zip
+            build/datapack/*.zip
 
       - name: Increment release count
         id: get_release_count
