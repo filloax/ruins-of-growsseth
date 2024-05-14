@@ -135,13 +135,44 @@ tasks.register("zipEgobalegoFolder") {
 		destinationDir.mkdirs()
 		project.exec {
 			workingDir = sourceDir.parentFile
-			commandLine("zip", "-r", zipFile.absolutePath, "egobalego-at-home")
+			commandLine("zip", "-r", "-o", zipFile.absolutePath, "egobalego-at-home")
 		}
+	}
+}
+
+tasks.register("makeDatapack") {
+	group = "custom"
+
+	val sourceDir = project.file("src/main/")
+	val generatedDataDir = sourceDir.resolve("generated/data")
+	val resourcesDataDir = sourceDir.resolve("resources/data")
+
+	val destinationDir = project.file("build/datapack")
+	val zipFile = destinationDir.resolve("Growsseth Datapack.zip")
+
+	generatedDataDir.copyRecursively(destinationDir.resolve("data"))
+	resourcesDataDir.copyRecursively(destinationDir.resolve("data"))
+
+	val packMeta = destinationDir.resolve("pack.mcmeta")
+	packMeta.writeText("{\"pack\": {\"pack_format\": 41,\"description\": \"Edits Growsseth data\"}}")
+
+	inputs.dir(sourceDir)
+	outputs.file(zipFile)
+
+	doLast {
+		destinationDir.mkdirs()
+		project.exec {
+			workingDir = destinationDir
+			commandLine("zip", "-r", "-o", zipFile.absolutePath, "data", "pack.mcmeta")
+		}
+		destinationDir.resolve("data").deleteRecursively()
+		destinationDir.resolve(File("pack.mcmeta")).delete()
 	}
 }
 
 tasks.named("build") {
 	dependsOn("zipEgobalegoFolder")
+	dependsOn("makeDatapack")
 }
 
 tasks.processResources {
