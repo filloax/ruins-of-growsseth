@@ -258,14 +258,16 @@ class ModelGenerator constructor(generator: FabricDataOutput) : FabricModelProvi
         GrowssethItems.all.forEach { (key, item) ->
             if (item !in GrowssethItems.noAutogenerateItems) {
                 val model = ModelLocationUtils.getModelLocation(item)
-                val discsLayer1 = resLoc("item/music_discs/$item")
+                val discsBaseLayer = resLoc("item/discs_base")
+                val discsVocalsLayer = resLoc("item/discs_vocals_glare")
+                val discsSongLayer = resLoc("item/music_discs/$item")
                 when (item) {
                     in GrowssethItems.DISCS_WITH_VOCALS ->
-                        itemModelGenerator.generateLayeredItem(model, resLoc("item/disc_with_vocals"), discsLayer1)
+                        itemModelGenerator.generateLayeredItem(model, discsBaseLayer, discsVocalsLayer, discsSongLayer)
                     in GrowssethItems.DISCS_INSTRUMENTAL ->
-                        itemModelGenerator.generateLayeredItem(model, resLoc("item/disc_instrumental"), discsLayer1)
+                        itemModelGenerator.generateLayeredItem(model, discsBaseLayer, discsSongLayer)
                     in GrowssethItems.DISCS_VANILLA ->
-                        itemModelGenerator.generateLayeredItem(model, resLoc("item/disc_vanilla"), discsLayer1)
+                        itemModelGenerator.generateLayeredItem(model, resLoc("item/discs_vanilla"), discsSongLayer)
                     else ->
                         itemModelGenerator.generateFlatItem(item, ModelTemplates.FLAT_ITEM)
                 }
