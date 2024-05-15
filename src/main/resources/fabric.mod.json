@@ -58,11 +58,11 @@
   ],
   "accessWidener": "growsseth.accesswidener",
   "depends": {
-    "fx-lib": ">=0.21.0-1.20.6-fabric",
-    "resourcefulconfig": ">=2.5.1-1.20.5-fabric",
-    "fabric-language-kotlin": ">=1.10.19+kotlin.1.9.23",
-    "fabricloader": ">=0.15.11",
-    "fabric-api": ">=0.98.0+1.20.6",
+    "fx-lib": ">=${fxlib_version}",
+    "resourcefulconfig": ">=${rconfig_version}",
+    "fabric-language-kotlin": ">=${fabric_kotlin_version}",
+    "fabricloader": ">=${loader_version}",
+    "fabric-api": ">=${fapi_version}",
     "fabric": "*"
   }
 }
