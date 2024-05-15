@@ -262,9 +262,10 @@ class ModelGenerator constructor(generator: FabricDataOutput) : FabricModelProvi
                 val discsVocalsLayer = resLoc("item/discs_vocals_glare")
                 val discsSongLayer = resLoc("item/music_discs/$item")
                 when (item) {
-                    in GrowssethItems.DISCS_WITH_VOCALS ->
+                    in GrowssethItems.DISCS_TO_VOCALS.values ->     // if a disc can be crafted it will get the glare
                         itemModelGenerator.generateLayeredItem(model, discsBaseLayer, discsVocalsLayer, discsSongLayer)
-                    in GrowssethItems.DISCS_INSTRUMENTAL ->
+                    in GrowssethItems.DISCS_INSTRUMENTAL,
+                    in GrowssethItems.DISCS_WITH_VOCALS ->
                         itemModelGenerator.generateLayeredItem(model, discsBaseLayer, discsSongLayer)
                     else ->
                         itemModelGenerator.generateFlatItem(item, ModelTemplates.FLAT_ITEM)
