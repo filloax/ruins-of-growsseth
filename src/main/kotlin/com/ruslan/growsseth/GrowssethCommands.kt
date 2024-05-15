@@ -1,6 +1,6 @@
 package com.ruslan.growsseth
 
-import com.filloax.fxlib.registration.CommandsRegistrationHelper
+import com.filloax.fxlib.api.registration.CommandsRegistrationHelper
 import com.mojang.brigadier.CommandDispatcher
 import com.ruslan.growsseth.commands.*
 import com.ruslan.growsseth.commands.GrowssethPlaceCommand.RandomizableRotationArgument

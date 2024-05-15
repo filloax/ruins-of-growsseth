@@ -161,13 +161,13 @@ tasks.register("makeReferenceDatapack") {
 	val zipFile = destinationDir.resolve("Reference Datapack.zip")
 
 	val packMeta = destinationDir.resolve("pack.mcmeta")
-	packMeta.writeText("{\"pack\": {\"pack_format\": 41,\"description\": \"Edits Growsseth data\"}}")
 
 	inputs.dir(sourceDir)
 	outputs.file(zipFile)
 
 	doLast {
 		destinationDir.mkdirs()
+		packMeta.writeText("{\"pack\": {\"pack_format\": 41,\"description\": \"Edits Growsseth data\"}}")
 		generatedDir.copyRecursively(destinationDir.resolve("data/growsseth/growsseth_researcher_trades"))
 		for (dir in resourcesDirs){
 			dir.copyRecursively(destinationDir.resolve("data/growsseth/" + dir.name))

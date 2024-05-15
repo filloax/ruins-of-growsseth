@@ -1,9 +1,9 @@
 package com.ruslan.growsseth.entity.researcher.trades
 
-import com.filloax.fxlib.codec.constructorWithOptionals
-import com.filloax.fxlib.codec.forNullableGetter
-import com.filloax.fxlib.codec.mutableSetCodec
-import com.filloax.fxlib.savedata.FxSavedData
+import com.filloax.fxlib.api.codec.constructorWithOptionals
+import com.filloax.fxlib.api.codec.forNullableGetter
+import com.filloax.fxlib.api.codec.mutableSetCodec
+import com.filloax.fxlib.api.savedata.FxSavedData
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.ruslan.growsseth.Constants
@@ -17,12 +17,10 @@ import com.ruslan.growsseth.utils.resLoc
 import net.minecraft.core.Holder
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.levelgen.structure.Structure
-import java.lang.IllegalArgumentException
 import kotlin.jvm.optionals.getOrNull
 import kotlin.math.min
 import kotlin.random.Random
@@ -198,7 +196,7 @@ class ProgressResearcherTradesProvider(
             val CODEC: Codec<ProgressTradesSavedData> = RecordCodecBuilder.create { builder -> builder.group(
                 mutableSetCodec(ResourceKey.codec(Registries.STRUCTURE)).fieldOf("foundStructures").forGetter(ProgressTradesSavedData::foundStructures),
                 ResourceKey.codec(Registries.STRUCTURE).optionalFieldOf("currentStructure").forNullableGetter(ProgressTradesSavedData::currentStructure),
-            ).apply(builder, constructorWithOptionals(ProgressTradesSavedData::class)::newInstance) }
+            ).apply(builder, ProgressTradesSavedData::class.constructorWithOptionals()::newInstance) }
             private val DEF = define("progressTrades", ::ProgressTradesSavedData, CODEC)
             fun get(server: MinecraftServer) = server.loadData(DEF)
             fun setDirty(server: MinecraftServer) = server.loadData(DEF).setDirty()

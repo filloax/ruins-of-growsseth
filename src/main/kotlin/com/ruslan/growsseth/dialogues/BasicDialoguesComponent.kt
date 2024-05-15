@@ -1,8 +1,13 @@
 package com.ruslan.growsseth.dialogues
 
-import com.filloax.fxlib.*
-import com.filloax.fxlib.nbt.*
-import com.filloax.fxlib.codec.*
+import com.filloax.fxlib.api.codec.mapWithValueOf
+import com.filloax.fxlib.api.codec.mutableMapCodec
+import com.filloax.fxlib.api.codec.mutableSetOf
+import com.filloax.fxlib.api.nbt.loadField
+import com.filloax.fxlib.api.nbt.saveField
+import com.filloax.fxlib.api.optional
+import com.filloax.fxlib.api.secondsToTicks
+import com.filloax.fxlib.api.weightedRandom
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.ruslan.growsseth.RuinsOfGrowsseth
@@ -142,14 +147,14 @@ open class BasicDialoguesComponent(
                 if (dialogueQueue.isNotEmpty()) {
                     val sameId = line.dialogue.id == dialogueQueue.peek().second.dialogue.id
                     dialogueQueueDelay = if (line.duration != null) {
-                        secondsToTicks(line.duration)
+                        line.duration.secondsToTicks()
                     } else if (sameId) {
                         val readingTime = if (dialogueWordsPerMinute > 0) estimateReadingTime(line.content) else 0F
-                        secondsToTicks(dialogueSecondsSameId + readingTime)
+                        (dialogueSecondsSameId + readingTime).secondsToTicks()
                     } else {
                         // Shorter delay in consecutive dialogues
                         if (dialogueDelayMaxSeconds > 0)
-                            random.nextInt() % secondsToTicks(dialogueDelayMaxSeconds / 2)
+                            random.nextInt() % (dialogueDelayMaxSeconds / 2).secondsToTicks()
                         else 0
                     }
                     if (!sameId)
@@ -263,7 +268,7 @@ open class BasicDialoguesComponent(
                         // Since first dialogue is played immediately, delay the second
                         if (idx == lines.size - 2 && dialogueWordsPerMinute > 0) {
                             val readingTime = estimateReadingTime(lines[0].content)
-                            dialogueQueueDelay = secondsToTicks(dialogueSecondsSameId + readingTime)
+                            dialogueQueueDelay = (dialogueSecondsSameId + readingTime).secondsToTicks()
                         }
                     }
                 }
@@ -271,7 +276,7 @@ open class BasicDialoguesComponent(
                 lines.forEach { dialogueQueue.offer(Triple(player, it, event)) }
             }
             if (dialogueQueueDelay <= 0) {
-                dialogueQueueDelay = random.nextInt() % secondsToTicks(dialogueDelayMaxSeconds)
+                dialogueQueueDelay = random.nextInt() % dialogueDelayMaxSeconds.secondsToTicks()
             }
         } else {
             dialogueEntry.content.forEach {
@@ -333,7 +338,7 @@ open class BasicDialoguesComponent(
             return false
         }
 
-        val selected = weightedRandom(validOptions, DialogueEntry::weight::get, random)
+        val selected = validOptions.weightedRandom(DialogueEntry::weight::get, random)
 
         playerDataOrCreate(player).lastEventDialogue[event] = selected
 
@@ -573,7 +578,7 @@ open class BasicDialoguesComponent(
         val data = CompoundTag()
         tag.put("DialogueData", data)
 
-        data.saveField("closePlayers", mutableSetCodec(UUIDUtil.STRING_CODEC), ::closePlayers)
+        data.saveField("closePlayers", UUIDUtil.STRING_CODEC.mutableSetOf(), ::closePlayers)
         data.saveField("leavingPlayers", mutableMapCodec(UUIDUtil.STRING_CODEC, Codec.INT), ::leavingPlayers)
         data.saveField("playersArrivedSoon", mutableMapCodec(UUIDUtil.STRING_CODEC, Codec.BOOL), ::playersArrivedSoon)
         data.saveField("savedPlayersData", mutableMapCodec(UUIDUtil.STRING_CODEC, PLAYER_DATA_CODEC), ::savedPlayersData)
@@ -587,7 +592,7 @@ open class BasicDialoguesComponent(
         closePlayers.clear()
         savedPlayersData.clear()
         tag.get("DialogueData")?.let { data -> if (data is CompoundTag) {
-            data.loadField("closePlayers", mutableSetCodec(UUIDUtil.STRING_CODEC)) { closePlayers.addAll(it) }
+            data.loadField("closePlayers", UUIDUtil.STRING_CODEC.mutableSetOf()) { closePlayers.addAll(it) }
             data.loadField("leavingPlayers", mutableMapCodec(UUIDUtil.STRING_CODEC, Codec.INT)) { leavingPlayers.putAll(it) }
             data.loadField("playersArrivedSoon", mutableMapCodec(UUIDUtil.STRING_CODEC, Codec.BOOL)) { playersArrivedSoon.putAll(it) }
             data.loadField("savedPlayersData", mutableMapCodec(UUIDUtil.STRING_CODEC, PLAYER_DATA_CODEC)) { savedPlayersData.putAll(it) }

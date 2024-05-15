@@ -1,7 +1,7 @@
 package com.ruslan.growsseth.client.worldpreset
 
-import com.filloax.fxlib.secondsToTicks
-import com.filloax.fxlib.vec3
+import com.filloax.fxlib.api.secondsToTicks
+import com.filloax.fxlib.api.vec3
 import com.ruslan.growsseth.client.gui.locationtitles.LocationTitlesController
 import com.ruslan.growsseth.config.ClientConfig
 import com.ruslan.growsseth.worldgen.worldpreset.LocationData
@@ -12,7 +12,7 @@ object GrowssethWorldPresetClient {
     val LOCATION_DATA: List<LocationData>
         get() = locationData
 
-    private val MIN_DELAY_TICKS = secondsToTicks(1f)
+    private val MIN_DELAY_TICKS = 1f.secondsToTicks()
     private const val MIN_DISTANCE_UPDATE = 6
 
     private val locationData = mutableListOf<LocationData>()

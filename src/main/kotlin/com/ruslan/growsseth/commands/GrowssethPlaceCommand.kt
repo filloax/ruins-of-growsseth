@@ -1,9 +1,9 @@
 package com.ruslan.growsseth.commands
 
-import com.filloax.fxlib.codec.decodeJsonNullable
-import com.filloax.fxlib.structure.FixablePosition
-import com.filloax.fxlib.structure.FixableRotation
-import com.filloax.fxlib.structure.tracking.CustomPlacedStructureTracker
+import com.filloax.fxlib.api.codec.decodeJsonNullable
+import com.filloax.fxlib.api.structure.FixablePosition
+import com.filloax.fxlib.api.structure.FixableRotation
+import com.filloax.fxlib.api.structure.tracking.CustomPlacedStructureTracker
 import com.google.gson.JsonPrimitive
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.StringReader

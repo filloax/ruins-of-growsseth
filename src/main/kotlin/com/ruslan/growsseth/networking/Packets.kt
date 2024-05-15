@@ -1,6 +1,6 @@
 package com.ruslan.growsseth.networking
 
-import com.filloax.fxlib.optional
+import com.filloax.fxlib.api.optional
 import com.mojang.serialization.Codec
 import com.ruslan.growsseth.entity.researcher.trades.ResearcherItemListing
 import com.ruslan.growsseth.platform.PlatformAbstractions
@@ -13,7 +13,6 @@ import net.minecraft.network.chat.ComponentSerialization
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload.TypeAndCodec
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
 import kotlin.jvm.optionals.getOrNull
 

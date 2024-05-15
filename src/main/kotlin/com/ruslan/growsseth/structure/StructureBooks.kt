@@ -1,20 +1,17 @@
 package com.ruslan.growsseth.structure
 
-import com.filloax.fxlib.getBookText
-import com.filloax.fxlib.json.KotlinJsonResourceReloadListener
-import com.filloax.fxlib.nbt.getListOrNull
-import com.filloax.fxlib.setBookTags
+import com.filloax.fxlib.api.getBookText
+import com.filloax.fxlib.api.json.KotlinJsonResourceReloadListener
+import com.filloax.fxlib.api.setBookTags
 import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.config.GrowssethConfig
-import com.ruslan.growsseth.entity.researcher.CustomRemoteDiaries
 import com.ruslan.growsseth.http.ApiEvent
 import com.ruslan.growsseth.http.GrowssethApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
-import net.minecraft.nbt.Tag
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.packs.resources.ResourceManager

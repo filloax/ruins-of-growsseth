@@ -2,9 +2,9 @@ package com.ruslan.growsseth.structure.structure
 
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.filloax.fxlib.*
-import com.filloax.fxlib.chunk.isBlockPosInChunk
-import com.filloax.fxlib.structure.FixablePosition
-import com.filloax.fxlib.structure.FixableRotation
+import com.filloax.fxlib.api.chunk.isBlockPosInChunk
+import com.filloax.fxlib.api.structure.FixablePosition
+import com.filloax.fxlib.api.structure.FixableRotation
 import net.minecraft.core.BlockPos
 import net.minecraft.util.RandomSource
 import net.minecraft.world.level.ChunkPos
@@ -29,7 +29,7 @@ abstract class SimpleStructure(
         val curForcePosUsesY = forcePosUsesY
         forcePosUsesY = defaultForcePosUsesY
 
-        if (nextPlacePos?.let { !isBlockPosInChunk(chunkPos, it) } == true) {
+        if (nextPlacePos?.let { !chunkPos.isBlockPosInChunk(it) } == true) {
             RuinsOfGrowsseth.LOGGER.error("Error: fixed position $nextPlacePos not in chunk at $chunkPos")
             nextPlacePos = null
         }

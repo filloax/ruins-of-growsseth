@@ -1,14 +1,14 @@
 package com.ruslan.growsseth.entity.researcher
 
-import com.filloax.fxlib.EventUtil
-import com.filloax.fxlib.SetBlockFlag
-import com.filloax.fxlib.alwaysTruePredicate
-import com.filloax.fxlib.codec.decodeNbt
-import com.filloax.fxlib.codec.encodeNbt
-import com.filloax.fxlib.codec.throwableCodecErr
-import com.filloax.fxlib.iterBlocks
-import com.filloax.fxlib.nbt.getCompoundOrNull
-import com.filloax.fxlib.nbt.getOrPut
+import com.filloax.fxlib.api.EventUtil
+import com.filloax.fxlib.api.enums.SetBlockFlag
+import com.filloax.fxlib.api.alwaysTruePredicate
+import com.filloax.fxlib.api.codec.decodeNbt
+import com.filloax.fxlib.api.codec.encodeNbt
+import com.filloax.fxlib.api.codec.throwableCodecErr
+import com.filloax.fxlib.api.iterBlocks
+import com.filloax.fxlib.api.nbt.getCompoundOrNull
+import com.filloax.fxlib.api.nbt.getOrPut
 import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.RuinsOfGrowsseth
@@ -283,7 +283,7 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
             var chest: ChestBlockEntity? = null
 
             tent.cellarBoundingBox?.let { boundingBox ->
-                for (pos in iterBlocks(boundingBox)) {
+                boundingBox.iterBlocks { pos ->
                     val found = serverLevel.getBlockEntity(pos)?.let {
                         if (it is LecternBlockEntity) {
                             lectern = it
@@ -293,7 +293,7 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
                         }
                         chest != null && lectern != null
                     } == true
-                    if (found) break
+                    if (found) return@iterBlocks
                 }
             }
 

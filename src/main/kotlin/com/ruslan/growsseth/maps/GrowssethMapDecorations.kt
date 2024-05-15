@@ -1,19 +1,15 @@
 package com.ruslan.growsseth.maps
 
-import com.filloax.fxlib.registration.RegistryHolderDelegate
+import com.filloax.fxlib.api.registration.RegistryHolderDelegate
 import com.ruslan.growsseth.GrowssethTags.StructTags
 import com.ruslan.growsseth.structure.GrowssethStructures
 import com.ruslan.growsseth.utils.resLoc
 import net.minecraft.core.Holder
-import net.minecraft.core.RegistryAccess
-import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.TagKey
 import net.minecraft.world.level.levelgen.structure.Structure
 import net.minecraft.world.level.saveddata.maps.MapDecorationType
-import javax.swing.text.html.HTML.Tag
-import kotlin.jvm.optionals.getOrNull
 
 object GrowssethMapDecorations {
     private val all = mutableMapOf<ResourceLocation, RegistryHolderDelegate<MapDecorationType>>()

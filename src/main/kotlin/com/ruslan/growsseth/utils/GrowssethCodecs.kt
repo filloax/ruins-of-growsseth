@@ -1,6 +1,6 @@
 package com.ruslan.growsseth.utils
 
-import com.filloax.fxlib.codec.mutableListCodec
+import com.filloax.fxlib.api.codec.mutableListCodec
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.world.item.ItemStack
