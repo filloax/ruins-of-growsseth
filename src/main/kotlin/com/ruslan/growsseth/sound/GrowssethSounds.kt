@@ -20,6 +20,13 @@ class GrowssethSounds {
         val DISC_ABBANDONATI = registerSoundEvent("disc_abbandonati")
         val DISC_MISSIVA_NELL_OMBRA = registerSoundEvent("disc_missiva_nell_ombra")
 
+        val DISC_OURSTEPS = registerSoundEvent("disc_oursteps")
+        val DISC_ODI_ET_AMO = registerSoundEvent("disc_odi_et_amo")
+        val DISC_ANCORA_QUI = registerSoundEvent("disc_ancora_qui")
+        val DISC_BALLATA_DEL_RESPAWN = registerSoundEvent("disc_ballata_del_respawn")
+        val DISC_CACO_CACO = registerSoundEvent("disc_caco_caco")
+        val DISC_PESCI_STRANI = registerSoundEvent("disc_pesci_strani")
+
         val DEFLECT_ARROW_SOUND = registerSoundEvent("deflect_arrow_sound")
         val RESEARCHER_HORN_SOUND = registerSoundEventHolder("researcher_horn_sound")
 

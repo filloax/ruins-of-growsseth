@@ -71,6 +71,54 @@
       }
     ]
   },
+  "disc_oursteps": {
+    "sounds": [
+      {
+        "name": "growsseth:disc_oursteps",
+        "stream": true
+      }
+    ]
+  },
+  "disc_odi_et_amo": {
+    "sounds": [
+      {
+        "name": "growsseth:disc_odi_et_amo",
+        "stream": true
+      }
+    ]
+  },
+  "disc_ancora_qui": {
+    "sounds": [
+      {
+        "name": "growsseth:disc_ancora_qui",
+        "stream": true
+      }
+    ]
+  },
+  "disc_ballata_del_respawn": {
+    "sounds": [
+      {
+        "name": "growsseth:disc_ballata_del_respawn",
+        "stream": true
+      }
+    ]
+  },
+  "disc_caco_caco": {
+    "sounds": [
+      {
+        "name": "growsseth:disc_caco_caco",
+        "stream": true
+      }
+    ]
+  },
+  "disc_pesci_strani": {
+    "sounds": [
+      {
+        "name": "growsseth:disc_pesci_strani",
+        "stream": true
+      }
+    ]
+  },
   "deflect_arrow_sound": {
     "sounds": [
       {

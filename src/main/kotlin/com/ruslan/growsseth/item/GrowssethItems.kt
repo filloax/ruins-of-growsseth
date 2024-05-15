@@ -55,6 +55,20 @@ object GrowssethItems {
 	val DISC_MISSIVA_NELL_OMBRA = make("disc_missiva_nell_ombra",
 		RecordItem(6, GrowssethSounds.DISC_MISSIVA_NELL_OMBRA, Item.Properties().stacksTo(1), 329))
 
+	val DISC_OURSTEPS = make("disc_oursteps",
+		RecordItem(6, GrowssethSounds.DISC_OURSTEPS, Item.Properties().stacksTo(1), 154))
+	val DISC_ODI_ET_AMO = make("disc_odi_et_amo",
+		RecordItem(6, GrowssethSounds.DISC_ODI_ET_AMO, Item.Properties().stacksTo(1), 191))
+	val DISC_ANCORA_QUI = make("disc_ancora_qui",
+		RecordItem(6, GrowssethSounds.DISC_ANCORA_QUI, Item.Properties().stacksTo(1), 145))
+	val DISC_BALLATA_DEL_RESPAWN = make("disc_ballata_del_respawn",
+		RecordItem(6, GrowssethSounds.DISC_BALLATA_DEL_RESPAWN, Item.Properties().stacksTo(1), 266))
+	val DISC_CACO_CACO = make("disc_caco_caco",
+		RecordItem(6, GrowssethSounds.DISC_CACO_CACO, Item.Properties().stacksTo(1), 145))
+	val DISC_PESCI_STRANI = make("disc_pesci_strani",
+		RecordItem(6, GrowssethSounds.DISC_PESCI_STRANI, Item.Properties().stacksTo(1), 0))	// SISTEMARE DURATA!!!!!!
+
+
 	val DISCS_TO_VOCALS = mutableMapOf(
 		DISC_GIORGIO_LOFI_INST to DISC_GIORGIO_LOFI
 	)
@@ -66,7 +80,13 @@ object GrowssethItems {
 		DISC_GIORGIO_LOFI,
 		DISC_MISSIVA_NELL_OMBRA,
 		DISC_PADRE_MAMMONK,
-		DISC_SEGA_DI_NIENTE
+		DISC_SEGA_DI_NIENTE,
+		DISC_OURSTEPS,
+		DISC_ODI_ET_AMO,
+		DISC_ANCORA_QUI,
+		DISC_BALLATA_DEL_RESPAWN,
+		DISC_CACO_CACO,
+		DISC_PESCI_STRANI
 	)
 
 	val DISCS_INSTRUMENTAL = listOf(

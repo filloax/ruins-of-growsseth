@@ -34,6 +34,12 @@ object GrowssethCreativeModeTabs {
                 output.accept(GrowssethItems.DISC_PADRE_MAMMONK)
                 output.accept(GrowssethItems.DISC_ABBANDONATI)
                 output.accept(GrowssethItems.DISC_MISSIVA_NELL_OMBRA)
+                output.accept(GrowssethItems.DISC_OURSTEPS)
+                output.accept(GrowssethItems.DISC_ODI_ET_AMO)
+                output.accept(GrowssethItems.DISC_ANCORA_QUI)
+                output.accept(GrowssethItems.DISC_BALLATA_DEL_RESPAWN)
+                output.accept(GrowssethItems.DISC_CACO_CACO)
+                output.accept(GrowssethItems.DISC_PESCI_STRANI)
             }.build()
     )
 
