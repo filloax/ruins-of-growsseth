@@ -160,11 +160,6 @@ tasks.register("makeReferenceDatapack") {
 	val destinationDir = project.file("build/datapack")
 	val zipFile = destinationDir.resolve("Reference Datapack.zip")
 
-	generatedDir.copyRecursively(destinationDir.resolve("data/growsseth/growsseth_researcher_trades"))
-	for (dir in resourcesDirs){
-		dir.copyRecursively(destinationDir.resolve("data/growsseth/" + dir.name))
-	}
-
 	val packMeta = destinationDir.resolve("pack.mcmeta")
 	packMeta.writeText("{\"pack\": {\"pack_format\": 41,\"description\": \"Edits Growsseth data\"}}")
 
@@ -173,6 +168,10 @@ tasks.register("makeReferenceDatapack") {
 
 	doLast {
 		destinationDir.mkdirs()
+		generatedDir.copyRecursively(destinationDir.resolve("data/growsseth/growsseth_researcher_trades"))
+		for (dir in resourcesDirs){
+			dir.copyRecursively(destinationDir.resolve("data/growsseth/" + dir.name))
+		}
 		project.exec {
 			workingDir = destinationDir
 			commandLine("zip", "-r", "-o", zipFile.absolutePath, "data", "pack.mcmeta")
