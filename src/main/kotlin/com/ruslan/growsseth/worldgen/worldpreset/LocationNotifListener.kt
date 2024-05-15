@@ -1,30 +1,15 @@
 package com.ruslan.growsseth.worldgen.worldpreset
 
-import com.filloax.fxlib.json.KotlinJsonResourceReloadListener
+import com.filloax.fxlib.api.json.KotlinJsonResourceReloadListener
 import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.RuinsOfGrowsseth
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
-import kotlinx.serialization.descriptors.PrimitiveKind
-import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonArray
-import kotlinx.serialization.modules.SerializersModule
-import kotlinx.serialization.modules.contextual
-import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.util.profiling.ProfilerFiller
-import net.minecraft.world.level.levelgen.structure.BoundingBox
-import kotlin.math.max
-import kotlin.math.min
 
 class LocationNotifListener : KotlinJsonResourceReloadListener(JSON, Constants.PRESET_PLACES_FOLDER) {
     companion object {

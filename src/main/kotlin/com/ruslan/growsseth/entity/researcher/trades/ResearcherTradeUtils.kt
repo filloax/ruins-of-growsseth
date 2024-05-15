@@ -1,9 +1,9 @@
 package com.ruslan.growsseth.entity.researcher.trades
 
-import com.filloax.fxlib.FxLibServices
-import com.filloax.fxlib.getStructTagOrKey
-import com.filloax.fxlib.getYAtXZ
-import com.filloax.fxlib.nbt.loadField
+import com.filloax.fxlib.api.FxLibServices
+import com.filloax.fxlib.api.getStructTagOrKey
+import com.filloax.fxlib.api.getYAtXZ
+import com.filloax.fxlib.api.nbt.loadField
 import com.mojang.datafixers.util.Either
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.entity.researcher.DiaryHelper
@@ -79,7 +79,7 @@ object ResearcherTradeUtils {
         if (!known) {
             var pos: BlockPos? = null
             if (mapData.x != null && mapData.z != null) {
-                pos = BlockPos(mapData.x, getYAtXZ(level, mapData.x, mapData.z), mapData.z)
+                pos = BlockPos(mapData.x, level.getYAtXZ(mapData.x, mapData.z), mapData.z)
             } else if (mapData.fixedStructureId != null) {
                 val matchingStructures = getMatchingStructures(level.registryAccess(), mapData.fixedStructureId)
                 val spawnData = fixedStructureGeneration.registeredStructureSpawns.values

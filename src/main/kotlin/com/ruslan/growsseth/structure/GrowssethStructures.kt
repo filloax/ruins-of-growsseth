@@ -1,6 +1,6 @@
 package com.ruslan.growsseth.structure
 
-import com.filloax.fxlib.structure.ForcePosJigsawStructure
+import com.filloax.fxlib.api.structure.ForcePosJigsawStructure
 import com.ruslan.growsseth.GrowssethTags.StructTags
 import com.ruslan.growsseth.structure.VillageBuildings.CATEGORY_GOLEM_HOUSE
 import com.ruslan.growsseth.structure.pieces.ResearcherTent

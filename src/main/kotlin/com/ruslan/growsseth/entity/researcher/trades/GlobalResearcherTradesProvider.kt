@@ -1,12 +1,11 @@
 package com.ruslan.growsseth.entity.researcher.trades
 
-import com.filloax.fxlib.ScheduledServerTask
-import com.filloax.fxlib.codec.decodeNbt
-import com.filloax.fxlib.codec.decodeNbtNullable
-import com.filloax.fxlib.codec.encodeNbt
-import com.filloax.fxlib.entity.getPersistData
-import com.filloax.fxlib.nbt.getListOrNull
-import com.filloax.fxlib.savedata.FxSavedData
+import com.filloax.fxlib.api.ScheduledServerTask
+import com.filloax.fxlib.api.codec.decodeNbtNullable
+import com.filloax.fxlib.api.codec.encodeNbt
+import com.filloax.fxlib.api.entity.getPersistData
+import com.filloax.fxlib.api.nbt.getListOrNull
+import com.filloax.fxlib.api.savedata.FxSavedData
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.ruslan.growsseth.Constants
@@ -187,10 +186,6 @@ abstract class GlobalResearcherTradesProvider protected constructor(
             fun getGlobalTrades(server: MinecraftServer) = server.loadData(DEF).trades
             fun setDirty(server: MinecraftServer) = server.loadData(DEF).setDirty()
         }
-    }
-
-    protected fun finalize() {
-        instances.remove(this)
     }
 
     object Callbacks {

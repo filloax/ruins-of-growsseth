@@ -1,6 +1,6 @@
 package com.ruslan.growsseth.structure.structure
 
-import com.filloax.fxlib.FxLibServices
+import com.filloax.fxlib.api.FxLibServices
 import com.mojang.serialization.Codec
 import com.mojang.serialization.DataResult
 import com.mojang.serialization.MapCodec

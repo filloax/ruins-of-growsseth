@@ -1,6 +1,6 @@
 package com.ruslan.growsseth.entity.researcher.trades
 
-import com.filloax.fxlib.FxLibServices
+import com.filloax.fxlib.api.FxLibServices
 import com.ruslan.growsseth.entity.researcher.Researcher
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer

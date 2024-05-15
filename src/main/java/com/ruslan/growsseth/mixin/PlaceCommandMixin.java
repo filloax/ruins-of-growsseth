@@ -1,6 +1,6 @@
 package com.ruslan.growsseth.mixin;
 
-import com.filloax.fxlib.structure.tracking.CustomPlacedStructureTracker;
+import com.filloax.fxlib.api.structure.tracking.CustomPlacedStructureTracker;
 import com.ruslan.growsseth.RuinsOfGrowsseth;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;

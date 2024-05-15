@@ -1,9 +1,9 @@
 package com.ruslan.growsseth.structure
 
-import com.filloax.fxlib.EventUtil
-import com.filloax.fxlib.FxLibServices
-import com.filloax.fxlib.nbt.*
-import com.filloax.fxlib.structure.FixedStructureGeneration
+import com.filloax.fxlib.api.EventUtil
+import com.filloax.fxlib.api.FxLibServices
+import com.filloax.fxlib.api.nbt.*
+import com.filloax.fxlib.api.structure.FixedStructureGeneration
 import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.http.GrowssethApi

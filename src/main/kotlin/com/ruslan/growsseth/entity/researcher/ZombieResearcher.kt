@@ -1,7 +1,7 @@
 package com.ruslan.growsseth.entity.researcher
 
-import com.filloax.fxlib.nbt.loadField
-import com.filloax.fxlib.nbt.saveField
+import com.filloax.fxlib.api.nbt.loadField
+import com.filloax.fxlib.api.nbt.saveField
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.entity.GrowssethEntities
 import com.ruslan.growsseth.entity.SpawnTimeTracker
