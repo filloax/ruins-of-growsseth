@@ -1,6 +1,6 @@
 package com.ruslan.growsseth.effect
 
-import com.filloax.fxlib.registration.RegistryHolderDelegate
+import com.filloax.fxlib.api.registration.RegistryHolderDelegate
 import com.ruslan.growsseth.utils.resLoc
 import net.minecraft.core.Holder
 import net.minecraft.resources.ResourceLocation

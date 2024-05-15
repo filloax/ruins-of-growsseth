@@ -1,8 +1,7 @@
 package com.ruslan.growsseth.worldgen.worldpreset
 
-import com.filloax.fxlib.codec.FxCodecs
-import com.filloax.fxlib.codec.constructorWithOptionals
-import com.filloax.fxlib.codec.forNullableGetter
+import com.filloax.fxlib.api.codec.forNullableGetter
+import com.filloax.fxlib.api.codec.FxCodecs
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.ruslan.growsseth.Constants
@@ -14,10 +13,6 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import net.fabricmc.loader.impl.lib.sat4j.core.Vec
-import net.minecraft.core.BlockPos
-import net.minecraft.util.ExtraCodecs
-import net.minecraft.world.level.levelgen.structure.BoundingBox
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import kotlin.jvm.optionals.getOrNull

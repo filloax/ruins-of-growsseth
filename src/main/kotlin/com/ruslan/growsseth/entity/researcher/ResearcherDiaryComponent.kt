@@ -1,9 +1,10 @@
 package com.ruslan.growsseth.entity.researcher
 
 import com.filloax.fxlib.*
-import com.filloax.fxlib.codec.mutableMapCodec
-import com.filloax.fxlib.codec.mutableSetCodec
-import com.filloax.fxlib.json.KotlinJsonResourceReloadListener
+import com.filloax.fxlib.api.*
+import com.filloax.fxlib.api.codec.mutableMapCodec
+import com.filloax.fxlib.api.codec.mutableSetCodec
+import com.filloax.fxlib.api.json.KotlinJsonResourceReloadListener
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.ruslan.growsseth.Constants
@@ -49,7 +50,6 @@ import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.level.levelgen.structure.BoundingBox
 import net.minecraft.world.level.levelgen.structure.Structure
 import net.minecraft.world.phys.AABB
-import javax.xml.crypto.Data
 
 
 /**
@@ -74,7 +74,7 @@ class ResearcherDiaryComponent(val researcher: Researcher) {
         const val DEFAULT_LANGUAGE = "en_us"
     }
 
-    val updatePeriod = secondsToTicks(1f)
+    val updatePeriod = 1f.secondsToTicks()
 
     var data = DiaryData()
         private set
@@ -163,7 +163,7 @@ class ResearcherDiaryComponent(val researcher: Researcher) {
         val diaryData = selector() ?: return false
         val name = Component.literal(diaryData.name)
         val pages = diaryData.pages.map(Component::literal)
-        val book = createWrittenBook(name, researcher.name, pages)
+        val book = FxItemUtils.createWrittenBook(name, researcher.name, pages)
 
         done(diaryData)
         doOnDiary(book)
@@ -233,25 +233,25 @@ class ResearcherDiaryComponent(val researcher: Researcher) {
                 val offset = Vec3i(searchRange, searchRange * 3 / 4, searchRange)
                 for (center in listOfNotNull(researcher.startingPos, researcher.blockPosition())) {
                     val searchArea = BoundingBox.fromCorners(center.subtract(offset), center.offset(offset))
-                    for (pos in iterBlocks(searchArea)) {
+                    searchArea.iterBlocks { pos ->
                         val found = checkBlockPosForEnt(pos, findLectern, findChest)
                         findLectern = !found.first
                         findChest = !found.second
 
                         if (!findChest && !findLectern) {
-                            break
+                            return@iterBlocks
                         }
                     }
                 }
             } else {
                 val boundingBoxWithoutCellar = tent.boundingBox.clip(minY = tent.cellarTrapdoorPos?.y ?: (tent.boundingBox.minY() + 11))
-                for (pos in iterBlocks(boundingBoxWithoutCellar)) {
+                boundingBoxWithoutCellar.iterBlocks { pos ->
                     val found = checkBlockPosForEnt(pos, findLectern, findChest)
                     findLectern = !found.first
                     findChest = !found.second
 
                     if (!findChest && !findLectern) {
-                        break
+                        return@iterBlocks
                     }
                 }
             }

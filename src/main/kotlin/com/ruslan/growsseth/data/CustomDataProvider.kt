@@ -1,6 +1,6 @@
 package com.ruslan.growsseth.data
 
-import com.filloax.fxlib.json.saveStable
+import com.filloax.fxlib.api.json.saveStable
 import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.entity.researcher.trades.ResearcherTradeObj

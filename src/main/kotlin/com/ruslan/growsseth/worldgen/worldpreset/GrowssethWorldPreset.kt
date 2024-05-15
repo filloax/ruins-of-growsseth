@@ -1,6 +1,6 @@
 package com.ruslan.growsseth.worldgen.worldpreset
 
-import com.filloax.fxlib.FxLibServices
+import com.filloax.fxlib.api.FxLibServices
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.config.WorldPresetConfig
 import com.ruslan.growsseth.networking.PlacesInfoPacket

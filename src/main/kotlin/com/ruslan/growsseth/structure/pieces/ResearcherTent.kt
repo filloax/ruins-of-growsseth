@@ -1,7 +1,9 @@
 package com.ruslan.growsseth.structure.pieces
 
 import com.filloax.fxlib.*
-import com.filloax.fxlib.nbt.*
+import com.filloax.fxlib.api.enums.SetBlockFlag
+import com.filloax.fxlib.api.iterBlocks
+import com.filloax.fxlib.api.nbt.*
 import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.RuinsOfGrowsseth
@@ -94,7 +96,7 @@ class ResearcherTent : GrTemplateStructurePiece {
         fun removeTent(tent: ResearcherTent, level: ServerLevel, tag: TagKey<Block>, replaceUndergroundEntrance: Boolean = false) {
             var numRemoved = 0
             val blockCounts = tent.getBlockNum().toMutableMap()
-            iterBlocks(tent.boundingBox) { pos ->
+            tent.boundingBox.iterBlocks { pos ->
                 val blockState = level.getBlockState(pos)
                 if (blockState.block in blockCounts && blockState.`is`(tag)) {
                     val blockEntity = level.getBlockEntity(pos)
@@ -201,16 +203,16 @@ class ResearcherTent : GrTemplateStructurePiece {
 
         // Find trapdoor above ladders position
         var ladderPos: BlockPos? = null
-        for (iPos in iterBlocks(boundingBox)) {
+        boundingBox.iterBlocks { iPos ->
             val blockState = level.getBlockState(iPos)
             if (blockState.`is`(Blocks.LADDER)) {
                 ladderPos = iPos
-                break
+                return@iterBlocks
             }
         }
 
-        cellarTrapdoorPos = if (ladderPos != null) {
-            var iPos = BlockPos.MutableBlockPos(ladderPos.x, ladderPos.y, ladderPos.z)
+        cellarTrapdoorPos = ladderPos?.let { lPos ->
+            var iPos = BlockPos.MutableBlockPos(lPos.x, lPos.y, lPos.z)
             var valid = false
             for (i in 1 .. 100) {
                 if (level.getBlockState(iPos).`is`(Blocks.SPRUCE_TRAPDOOR)) {
@@ -220,13 +222,13 @@ class ResearcherTent : GrTemplateStructurePiece {
                 iPos.y += 1
             }
             if (valid) iPos else null
-        } else { // no ladder, tent variant with no basement? Return where trapdoor _would_ be to replace it
+        } ?: run { // no ladder, tent variant with no basement? Return where trapdoor _would_ be to replace it
             var tpos: BlockPos? = null
-            for (iPos in iterBlocks(boundingBox)) {
+            boundingBox.iterBlocks { iPos ->
                 val blockState = level.getBlockState(iPos)
                 if (blockState.`is`(Blocks.WHITE_CARPET)) {
                     tpos = iPos.below()
-                    break
+                    return@iterBlocks
                 }
             }
             tpos

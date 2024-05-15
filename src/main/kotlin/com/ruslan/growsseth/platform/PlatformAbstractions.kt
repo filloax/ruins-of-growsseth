@@ -1,6 +1,6 @@
 package com.ruslan.growsseth.platform
 
-import com.filloax.fxlib.platform.ServiceUtil
+import com.filloax.fxlib.api.platform.ServiceUtil
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.codec.StreamCodec

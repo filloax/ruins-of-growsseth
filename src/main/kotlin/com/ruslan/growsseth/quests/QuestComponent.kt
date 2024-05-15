@@ -1,8 +1,8 @@
 package com.ruslan.growsseth.quests
 
-import com.filloax.fxlib.*
-import com.filloax.fxlib.nbt.*
-import com.filloax.fxlib.codec.*
+import com.filloax.fxlib.api.*
+import com.filloax.fxlib.api.nbt.*
+import com.filloax.fxlib.api.codec.*
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.ruslan.growsseth.RuinsOfGrowsseth
@@ -42,7 +42,7 @@ open class QuestComponent<E : LivingEntity>(val entity: E, val name: String) {
         const val NBT_TAG_PERSIST = "status"
     }
 
-    var updatePeriod = secondsToTicks(1f)
+    var updatePeriod = 1f.secondsToTicks()
 
     private val stagesGraph = QuestNodeImpl(QuestStage.blank<E>(), INIT_STAGE_ID)
     private val stagesMap = mutableMapOf<String, QuestNodeImpl<E>>("init" to stagesGraph)

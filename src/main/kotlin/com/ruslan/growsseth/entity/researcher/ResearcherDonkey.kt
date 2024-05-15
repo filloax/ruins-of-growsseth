@@ -1,7 +1,7 @@
 package com.ruslan.growsseth.entity.researcher
 
-import com.filloax.fxlib.EventUtil
-import com.filloax.fxlib.entity.getPersistData
+import com.filloax.fxlib.api.EventUtil
+import com.filloax.fxlib.api.entity.getPersistData
 import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.RuinsOfGrowsseth

@@ -1,7 +1,7 @@
 package com.ruslan.growsseth.http
 
-import com.filloax.fxlib.getStructTagOrKey
-import com.filloax.fxlib.json.RotationSerializer
+import com.filloax.fxlib.api.getStructTagOrKey
+import com.filloax.fxlib.api.json.RotationSerializer
 import com.mojang.datafixers.util.Either
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.config.WebConfig
