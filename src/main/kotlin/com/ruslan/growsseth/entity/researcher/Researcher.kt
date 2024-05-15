@@ -1,15 +1,15 @@
 package com.ruslan.growsseth.entity.researcher
 
-import com.filloax.fxlib.codec.mutableMapCodec
-import com.filloax.fxlib.entity.delegate
-import com.filloax.fxlib.entity.fixedChangeDimension
-import com.filloax.fxlib.entity.getPersistData
-import com.filloax.fxlib.getStructTagOrKey
-import com.filloax.fxlib.nbt.getCompoundOrNull
-import com.filloax.fxlib.nbt.loadField
-import com.filloax.fxlib.nbt.saveField
-import com.filloax.fxlib.secondsToTicks
-import com.filloax.fxlib.structure.tracking.CustomPlacedStructureTracker
+import com.filloax.fxlib.api.codec.mutableMapCodec
+import com.filloax.fxlib.api.entity.delegate
+import com.filloax.fxlib.api.entity.fixedChangeDimension
+import com.filloax.fxlib.api.entity.getPersistData
+import com.filloax.fxlib.api.getStructTagOrKey
+import com.filloax.fxlib.api.nbt.getCompoundOrNull
+import com.filloax.fxlib.api.nbt.loadField
+import com.filloax.fxlib.api.nbt.saveField
+import com.filloax.fxlib.api.secondsToTicks
+import com.filloax.fxlib.api.structure.tracking.CustomPlacedStructureTracker
 import com.mojang.datafixers.util.Either
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
@@ -298,7 +298,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     // For cheese prevention
     internal var isStuck: Boolean = false
     internal var stuckCounter: Int = 0
-    internal val maxStuckCounter: Int = secondsToTicks(2.0f)
+    internal val maxStuckCounter: Int = 2.0f.secondsToTicks()
     internal var lastCheckStuckPosition: BlockPos? = blockPosition()
     internal var needsJumpBoost = false
 
@@ -501,7 +501,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
                     })
 
                 itemUsingTime = if (offhandItem.`is`(Items.ENDER_PEARL))
-                    secondsToTicks(1f)
+                    1f.secondsToTicks()
                 else
                     offhandItem.useDuration / 2
                 isUsingItem = true
@@ -872,7 +872,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     fun scheduleClearingFailedMaps() {
         // In 10 seconds (or if quitting, in the write nbt function), clear
         // failed map offers to be able to retry)
-        clearFailedMapsTime = tickCount + secondsToTicks(10f)
+        clearFailedMapsTime = tickCount + 10f.secondsToTicks()
     }
 
     private fun clearFailedMaps() {

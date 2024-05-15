@@ -1,6 +1,6 @@
 package com.ruslan.growsseth.structure.pieces
 
-import com.filloax.fxlib.SetBlockFlag
+import com.filloax.fxlib.api.enums.SetBlockFlag
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import net.minecraft.core.BlockPos
 import net.minecraft.nbt.CompoundTag

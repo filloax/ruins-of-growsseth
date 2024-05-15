@@ -1,13 +1,12 @@
 package com.ruslan.growsseth.commands
 
-import com.filloax.fxlib.alwaysTruePredicate
+import com.filloax.fxlib.api.alwaysTruePredicate
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.arguments.BoolArgumentType
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.builder.ArgumentBuilder
 import com.mojang.brigadier.context.CommandContext
 import com.ruslan.growsseth.entity.GrowssethEntities
-import com.ruslan.growsseth.entity.researcher.Researcher
 import com.ruslan.growsseth.quests.QuestComponent
 import com.ruslan.growsseth.quests.QuestOwner
 import net.minecraft.commands.CommandBuildContext

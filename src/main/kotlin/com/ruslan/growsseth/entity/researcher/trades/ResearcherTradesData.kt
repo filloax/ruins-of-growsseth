@@ -1,7 +1,7 @@
 package com.ruslan.growsseth.entity.researcher.trades
 
-import com.filloax.fxlib.codec.forNullableGetter
-import com.filloax.fxlib.codec.mutableListCodec
+import com.filloax.fxlib.api.codec.forNullableGetter
+import com.filloax.fxlib.api.codec.mutableListCodec
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.core.Holder

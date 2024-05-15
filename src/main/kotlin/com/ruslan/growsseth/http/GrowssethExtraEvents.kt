@@ -1,10 +1,12 @@
 package com.ruslan.growsseth.http
 
 import com.filloax.fxlib.*
-import com.filloax.fxlib.nbt.*
-import com.filloax.fxlib.codec.*
-import com.filloax.fxlib.entity.getPersistData
-import com.filloax.fxlib.savedata.FxSavedData
+import com.filloax.fxlib.api.*
+import com.filloax.fxlib.api.codec.mutableSetOf
+import com.filloax.fxlib.api.entity.getPersistData
+import com.filloax.fxlib.api.nbt.putIfAbsent
+import com.filloax.fxlib.api.savedata.FxSavedData
+import com.filloax.fxlib.api.codec.*
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.ruslan.growsseth.RuinsOfGrowsseth
@@ -224,7 +226,7 @@ object GrowssethExtraEvents {
         val server = level.server
         val savedData = EventsSavedData.get(server)
         if (!savedData.alreadyRan.contains(id)) {
-            val teleportPos = nearestFreePosition(level, pos, aboveSolid = true, onlyAbove = true) ?: pos
+            val teleportPos = level.nearestFreePosition(pos, aboveSolid = true, onlyAbove = true) ?: pos
             researcher.moveTo(teleportPos.center)
             researcher.resetStartingPos(teleportPos)
             RuinsOfGrowsseth.LOGGER.info("Teleported researcher $researcher to $teleportPos[$pos] ($id)")
@@ -253,7 +255,7 @@ object GrowssethExtraEvents {
                 return@runWhenServerStarted
             }
 
-            val time = server.overworld().gameTime - secondsToTicks(60f)
+            val time = server.overworld().gameTime - 60f.secondsToTicks()
             savedData.removeResearchersTimes[id] = time
             savedData.setDirty()
             RuinsOfGrowsseth.LOGGER.info("Set researchers older than $time (${time.ticksToTimecode()}) to be removed")

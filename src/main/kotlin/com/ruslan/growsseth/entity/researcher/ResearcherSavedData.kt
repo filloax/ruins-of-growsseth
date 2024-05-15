@@ -1,7 +1,7 @@
 package com.ruslan.growsseth.entity.researcher
 
-import com.filloax.fxlib.codec.forNullableGetter
-import com.filloax.fxlib.savedata.FxSavedData
+import com.filloax.fxlib.api.codec.forNullableGetter
+import com.filloax.fxlib.api.savedata.FxSavedData
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.nbt.CompoundTag

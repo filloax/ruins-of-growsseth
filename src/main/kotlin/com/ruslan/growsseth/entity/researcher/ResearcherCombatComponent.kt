@@ -1,6 +1,6 @@
 package com.ruslan.growsseth.entity.researcher
 
-import com.filloax.fxlib.secondsToTicks
+import com.filloax.fxlib.api.secondsToTicks
 import com.ruslan.growsseth.config.ResearcherConfig
 import com.ruslan.growsseth.dialogues.BasicDialogueEvents
 import com.ruslan.growsseth.effect.GrowssethEffects
@@ -32,7 +32,7 @@ class ResearcherCombatComponent(
 
     // For player aggro management
     var hitCounter: MutableMap<Player, MutableInt> = mutableMapOf()
-    val timeToCalmDown: Int = secondsToTicks(10F)
+    val timeToCalmDown: Int = 10F.secondsToTicks()
 
     companion object {
         // distance for attacking mobs that are not going after him (if option is active)
@@ -108,8 +108,8 @@ class ResearcherCombatComponent(
             // Used for cheese prevention:
             if (ResearcherConfig.researcherAntiCheat) {
                 if (owner.stuckCounter < owner.maxStuckCounter &&
-                    owner.tickCount - owner.lastHurtByMobTimestamp < secondsToTicks(2.0f) &&
-                    owner.tickCount - owner.lastHurtMobTimestamp > secondsToTicks(5.0f) &&
+                    owner.tickCount - owner.lastHurtByMobTimestamp < 2.0f.secondsToTicks() &&
+                    owner.tickCount - owner.lastHurtMobTimestamp > 5.0f.secondsToTicks() &&
                     owner.blockPosition().distSqr(owner.lastCheckStuckPosition!!) < 4
                 )
                     owner.stuckCounter++
@@ -122,7 +122,7 @@ class ResearcherCombatComponent(
         }
 
         val attributeInstance = owner.getAttribute(Attributes.MOVEMENT_SPEED)
-        if (owner.isAggressive && (owner.tickCount - owner.lastHurtByMobTimestamp) in 0..secondsToTicks(3.0f)) {
+        if (owner.isAggressive && (owner.tickCount - owner.lastHurtByMobTimestamp) in 0..3.0f.secondsToTicks()) {
             // if enemy is fighting speed up (to avoid keeping him back by attacking constantly)
             attributeInstance!!.removeModifier(Researcher.SPEED_MODIFIER_FIGHTING.id)
             attributeInstance.addTransientModifier(Researcher.SPEED_MODIFIER_FIGHTING)

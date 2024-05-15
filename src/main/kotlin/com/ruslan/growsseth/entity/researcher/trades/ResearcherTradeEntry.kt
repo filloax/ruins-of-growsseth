@@ -1,8 +1,8 @@
 package com.ruslan.growsseth.entity.researcher.trades
 
 import com.filloax.fxlib.*
-import com.filloax.fxlib.nbt.*
-import com.filloax.fxlib.codec.*
+import com.filloax.fxlib.api.nbt.*
+import com.filloax.fxlib.api.codec.*
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.ruslan.growsseth.RuinsOfGrowsseth
@@ -75,7 +75,7 @@ class ResearcherItemListing(
             Codec.FLOAT.fieldOf("priceMul").forGetter(ResearcherItemListing::priceMul),
             Codec.BOOL.fieldOf("noNotification").forGetter(ResearcherItemListing::noNotification),
             Codec.FLOAT.fieldOf("randomWeight").forGetter(ResearcherItemListing::randomWeight),
-        ).apply(b, constructorWithOptionals(ResearcherItemListing::class)::newInstance) }
+        ).apply(b, ResearcherItemListing::class.constructorWithOptionals()::newInstance) }
 
         val MLIST_CODEC: Codec<MutableList<ResearcherItemListing>> = mutableListCodec(CODEC)
         val LIST_CODEC: Codec<List<ResearcherItemListing>> = Codec.list(CODEC)
@@ -143,7 +143,7 @@ data class TradeItemMapInfo (
             Codec.INT.optionalFieldOf("z").forNullableGetter(TradeItemMapInfo::z),
             Codec.STRING.optionalFieldOf("fixedStructureId").forNullableGetter(TradeItemMapInfo::fixedStructureId),
             Codec.INT.optionalFieldOf("scale").forNullableGetter(TradeItemMapInfo::scale),
-        ).apply(b, constructorWithOptionals(TradeItemMapInfo::class)::newInstance) }
+        ).apply(b, TradeItemMapInfo::class.constructorWithOptionals()::newInstance) }
     }
 
     @Serializable

@@ -1,7 +1,7 @@
 package com.ruslan.growsseth.advancements.criterion
 
-import com.filloax.fxlib.codec.constructorWithOptionals
-import com.filloax.fxlib.codec.forNullableGetter
+import com.filloax.fxlib.api.codec.constructorWithOptionals
+import com.filloax.fxlib.api.codec.forNullableGetter
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.advancements.critereon.BlockPredicate
@@ -23,7 +23,6 @@ import net.minecraft.world.level.levelgen.structure.StructureType
 import net.minecraft.world.level.levelgen.structure.pools.ListPoolElement
 import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement
-import kotlin.jvm.optionals.getOrNull
 
 data class JigsawPiecePredicate(
     val structure: ResourceKey<Structure>,
@@ -47,7 +46,7 @@ data class JigsawPiecePredicate(
             LightPredicate.CODEC.optionalFieldOf("light").forNullableGetter(JigsawPiecePredicate::light),
             BlockPredicate.CODEC.optionalFieldOf("block").forNullableGetter(JigsawPiecePredicate::block),
             FluidPredicate.CODEC.optionalFieldOf("fluid").forNullableGetter(JigsawPiecePredicate::fluid),
-        ).apply(builder, constructorWithOptionals(JigsawPiecePredicate::class)::newInstance) }
+        ).apply(builder, JigsawPiecePredicate::class.constructorWithOptionals()::newInstance) }
     }
 
     fun matches(level: ServerLevel, x: Double, y: Double, z: Double): Boolean {
