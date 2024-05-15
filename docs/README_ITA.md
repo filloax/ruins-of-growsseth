@@ -1,6 +1,6 @@
 # Ruins of Growsseth
 
-<img src="../../src/main/resources/assets/growsseth/icon.png" alt="alt text" width="250" height="250">
+<img src="../src/main/resources/assets/growsseth/icon.png" alt="alt text" width="250" height="250">
 
 Una mod di strutture altamente configurabile, con un NPC intelligente per vendere mappe e guidare nel
 percorso, e strutture che suggeriscono feature vanilla allo stesso modo dei Portali del Nether Rotti.
@@ -17,7 +17,7 @@ alla run di Cydonia, con spawn di strutture, modifiche agli scambi, invio notifi
 
 Vedi le pagine [Modrinth](#) e [Curseforge](#), e la [**WIKI**](#) per maggiori informazioni.
 
-![](../../src/main/resources/assets/growsseth/textures/gui/advancements/backgrounds/advancements_background.png)
+![](../src/main/resources/assets/growsseth/textures/gui/advancements/backgrounds/advancements_background.png)
 
 ### Requisiti
 
