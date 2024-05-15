@@ -126,13 +126,55 @@ tasks.register("zipEgobalegoFolder") {
 		destinationDir.mkdirs()
 		project.exec {
 			workingDir = sourceDir.parentFile
-			commandLine("zip", "-r", zipFile.absolutePath, "egobalego-at-home")
+			commandLine("zip", "-r", "-o", zipFile.absolutePath, "egobalego-at-home")
 		}
+	}
+}
+
+tasks.register("makeReferenceDatapack") {
+	group = "custom"
+
+	val sourceDir = project.file("src/main/")
+
+	val generatedRoot = sourceDir.resolve("generated/data/growsseth")
+	val generatedDir = generatedRoot.resolve("growsseth_researcher_trades")
+
+	val resourcesDir = sourceDir.resolve("resources/data/growsseth")
+	val resourcesDirs = listOf(
+		resourcesDir.resolve("growsseth_places"),
+		resourcesDir.resolve("growsseth_researcher_dialogue"),
+		resourcesDir.resolve("growsseth_researcher_diary"),
+		resourcesDir.resolve("growsseth_researcher_trades"),
+		resourcesDir.resolve("growsseth_structure_books")
+	)
+
+	val destinationDir = project.file("build/datapack")
+	val zipFile = destinationDir.resolve("Reference Datapack.zip")
+
+	val packMeta = destinationDir.resolve("pack.mcmeta")
+	packMeta.writeText("{\"pack\": {\"pack_format\": 41,\"description\": \"Edits Growsseth data\"}}")
+
+	inputs.dir(sourceDir)
+	outputs.file(zipFile)
+
+	doLast {
+		destinationDir.mkdirs()
+		generatedDir.copyRecursively(destinationDir.resolve("data/growsseth/growsseth_researcher_trades"))
+		for (dir in resourcesDirs){
+			dir.copyRecursively(destinationDir.resolve("data/growsseth/" + dir.name))
+		}
+		project.exec {
+			workingDir = destinationDir
+			commandLine("zip", "-r", "-o", zipFile.absolutePath, "data", "pack.mcmeta")
+		}
+		destinationDir.resolve("data").deleteRecursively()
+		destinationDir.resolve(File("pack.mcmeta")).delete()
 	}
 }
 
 tasks.named("build") {
 	dependsOn("zipEgobalegoFolder")
+	dependsOn("makeReferenceDatapack")
 }
 
 tasks.processResources {
