@@ -7,19 +7,28 @@ plugins {
 	id("maven-publish")
 }
 
+val modid: String by project
+val minecraftVersion = property("minecraft_version") as String
+
 val javaVersion: Int = (property("javaVersion")!! as String).toInt()
 val kotlinVersion: String by project
 val kotlinSerializationVersion: String by project
+val javaVersionEnum = JavaVersion.values().find { it.majorVersion == javaVersion.toString() } ?: throw Exception("Cannot find java version for $javaVersion")
+
 val useLocalJarFxLib = (property("useLocalJarFxLib") as String).toBoolean()
 val alwaysUseLocalMavenFXLib = (property("alwaysUseLocalMavenFXLib")!! as String).toBoolean()
-version = property("mod_version")!! as String
-group = property("maven_group")!! as String
-val modid: String by project
 val fxLibVersion: String by project
-val minecraftVersion = property("minecraft_version") as String
-
-val javaVersionEnum = JavaVersion.values().find { it.majorVersion == javaVersion.toString() } ?: throw Exception("Cannot find java version for $javaVersion")
 val useLocalMavenFxLib = alwaysUseLocalMavenFXLib || fxLibVersion.contains(Regex("rev\\d+"))
+
+val parchmentVersion = property("parchment_version")
+val loaderVersion = property("loader_version")
+val fabricKotlinVersion = property("fabric_kotlin_version")
+val fabricApiVersion = property("fabric_api_version")
+
+val modMenuVersion = property("mod_menu_version")
+val resConfigVersion = property("rconfig_version")
+
+version = property("mod_version")!! as String
 
 base {
 	archivesName.set(property("archivesBaseName") as String)
@@ -65,7 +74,7 @@ dependencies {
 	mappings(loom.layered() {
 		officialMojangMappings()
 		if ((property("parchment_version") as String).isNotBlank()) {
-			parchment("org.parchmentmc.data:parchment-${minecraftVersion}:${property("parchment_version")}@zip")
+			parchment("org.parchmentmc.data:parchment-${minecraftVersion}:${parchmentVersion}@zip")
 		}
 	})
 
@@ -87,15 +96,15 @@ dependencies {
 
 	implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion")
 
-	modImplementation("net.fabricmc:fabric-loader:${property("loader_version")}")
-	modImplementation("net.fabricmc:fabric-language-kotlin:${property("fabric_kotlin_version")}")
+	modImplementation("net.fabricmc:fabric-loader:${loaderVersion}")
+	modImplementation("net.fabricmc:fabric-language-kotlin:${fabricKotlinVersion}")
 	// include("net.fabricmc:fabric-language-kotlin:${property("fabricKotlinVersion")}")
 
-	modImplementation("net.fabricmc.fabric-api:fabric-api:${property("fabric_api_version")}") {
+	modImplementation("net.fabricmc.fabric-api:fabric-api:${fabricApiVersion}") {
 		exclude(module = "fabric-api-deprecated")
 	}
-	modImplementation("com.terraformersmc:modmenu:${property("mod_menu_version")}")
-	modImplementation("com.teamresourceful.resourcefulconfig:resourcefulconfig-fabric-${property("rconfig_version")}")
+	modImplementation("com.terraformersmc:modmenu:${modMenuVersion}")
+	modImplementation("com.teamresourceful.resourcefulconfig:resourcefulconfig-fabric-${resConfigVersion}")
 
 	val fxLib = (if (useLocalJarFxLib)
 			":fx-lib-${fxLibVersion}-fabric"
@@ -178,7 +187,14 @@ tasks.named("build") {
 }
 
 tasks.processResources {
-	inputs.property("version", project.version)
+	mapOf(
+		"version" to project.version,
+		"fxlib_version" to fxLibVersion,
+		"rconfig_version" to resConfigVersion,
+		"fabric_kotlin_version" to fabricKotlinVersion,
+		"loader_version" to loaderVersion,
+		"fapi_version" to fabricApiVersion,
+	).forEach { (prop, value) -> inputs.property(prop, value) }
 
 	filesMatching("fabric.mod.json") {
 		expand(mapOf("version" to project.version))
