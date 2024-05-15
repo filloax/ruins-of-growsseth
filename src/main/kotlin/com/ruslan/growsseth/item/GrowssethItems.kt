@@ -12,6 +12,7 @@ import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.world.item.*
+import net.minecraft.world.item.Item.Properties
 import net.minecraft.world.item.armortrim.TrimPattern
 
 object GrowssethItems {
@@ -32,62 +33,45 @@ object GrowssethItems {
 	val GROWSSETH_POTTERY_SHERD = make("growsseth_pottery_sherd", defaultItem())
 
 	// Custom discs
-	val DISC_SEGA_DI_NIENTE = make("disc_sega_di_niente",
-		RecordItem(6, GrowssethSounds.DISC_SEGA_DI_NIENTE, FabricItemSettings().maxCount(1), 119))
-	val DISC_GIORGIO_CUBETTI = make("disc_giorgio_cubetti",
-		RecordItem(6, GrowssethSounds.DISC_GIORGIO_CUBETTI, FabricItemSettings().maxCount(1), 161))
-	val DISC_GIORGIO_LOFI = make("disc_giorgio_lofi",
-		RecordItem(6, GrowssethSounds.DISC_GIORGIO_LOFI, FabricItemSettings().maxCount(1), 295))
-	val DISC_GIORGIO_LOFI_INST = make("disc_giorgio_lofi_inst",
-		RecordItem(6, GrowssethSounds.DISC_GIORGIO_LOFI_INST, FabricItemSettings().maxCount(1), 295))
-	val DISC_GIORGIO_FINDING_HOME = make("disc_giorgio_finding_home",
-		RecordItem(6, GrowssethSounds.DISC_GIORGIO_FINDING_HOME, FabricItemSettings().maxCount(1), 186))
-	val DISC_BINOBINOOO = make("disc_binobinooo",
-		RecordItem(6, GrowssethSounds.DISC_BINOBINOOO, Item.Properties().stacksTo(1), 98))
-	val DISC_PADRE_MAMMONK = make("disc_padre_mammonk",
-		RecordItem(6, GrowssethSounds.DISC_PADRE_MAMMONK, FabricItemSettings().maxCount(1), 74))
-	val DISC_ABBANDONATI = make("disc_abbandonati",
-		RecordItem(6, GrowssethSounds.DISC_ABBANDONATI, FabricItemSettings().maxCount(1), 145))
-	val DISC_MISSIVA_NELL_OMBRA = make("disc_missiva_nell_ombra",
-		RecordItem(6, GrowssethSounds.DISC_MISSIVA_NELL_OMBRA, FabricItemSettings().maxCount(1), 329))
+	val DISC_SEGA_DI_NIENTE 		= makeDisc("disc_sega_di_niente", GrowssethSounds.DISC_SEGA_DI_NIENTE, 119)
+	val DISC_GIORGIO_CUBETTI 		= makeDisc("disc_giorgio_cubetti", GrowssethSounds.DISC_GIORGIO_CUBETTI, 161)
+	val DISC_GIORGIO_LOFI 			= makeDisc("disc_giorgio_lofi", GrowssethSounds.DISC_GIORGIO_LOFI, 295)
+	val DISC_GIORGIO_LOFI_INST 		= makeDisc("disc_giorgio_lofi_inst", GrowssethSounds.DISC_GIORGIO_LOFI_INST, 295)
+	val DISC_GIORGIO_FINDING_HOME 	= makeDisc("disc_giorgio_finding_home", GrowssethSounds.DISC_GIORGIO_FINDING_HOME, 186)
+	val DISC_BINOBINOOO 			= makeDisc("disc_binobinooo", GrowssethSounds.DISC_BINOBINOOO, 98)
+	val DISC_PADRE_MAMMONK 			= makeDisc("disc_padre_mammonk", GrowssethSounds.DISC_PADRE_MAMMONK, 74)
+	val DISC_ABBANDONATI 			= makeDisc("disc_abbandonati", GrowssethSounds.DISC_ABBANDONATI, 145)
+	val DISC_MISSIVA_NELL_OMBRA 	= makeDisc("disc_missiva_nell_ombra", GrowssethSounds.DISC_MISSIVA_NELL_OMBRA, 329)
 
-	val DISC_OURSTEPS = make("disc_oursteps",
-		RecordItem(6, GrowssethSounds.DISC_OURSTEPS, Item.Properties().stacksTo(1), 154))
-	val DISC_ODI_ET_AMO = make("disc_odi_et_amo",
-		RecordItem(6, GrowssethSounds.DISC_ODI_ET_AMO, Item.Properties().stacksTo(1), 191))
-	val DISC_ANCORA_QUI = make("disc_ancora_qui",
-		RecordItem(6, GrowssethSounds.DISC_ANCORA_QUI, Item.Properties().stacksTo(1), 145))
-	val DISC_BALLATA_DEL_RESPAWN = make("disc_ballata_del_respawn",
-		RecordItem(6, GrowssethSounds.DISC_BALLATA_DEL_RESPAWN, Item.Properties().stacksTo(1), 266))
-	val DISC_CACO_CACO = make("disc_caco_caco",
-		RecordItem(6, GrowssethSounds.DISC_CACO_CACO, Item.Properties().stacksTo(1), 145))
-	val DISC_PESCI_STRANI = make("disc_pesci_strani",
-		RecordItem(6, GrowssethSounds.DISC_PESCI_STRANI, Item.Properties().stacksTo(1), 0))	// SISTEMARE DURATA!!!!!!
+	val DISC_OURSTEPS 				= makeDisc("disc_oursteps", GrowssethSounds.DISC_OURSTEPS, 154)
+	val DISC_ODI_ET_AMO 			= makeDisc("disc_odi_et_amo", GrowssethSounds.DISC_ODI_ET_AMO, 191)
+	val DISC_ANCORA_QUI 			= makeDisc("disc_ancora_qui", GrowssethSounds.DISC_ANCORA_QUI, 145)
+	val DISC_BALLATA_DEL_RESPAWN 	= makeDisc("disc_ballata_del_respawn", GrowssethSounds.DISC_BALLATA_DEL_RESPAWN, 266)
+	val DISC_CACO_CACO 				= makeDisc("disc_caco_caco", GrowssethSounds.DISC_CACO_CACO, 145)
+	val DISC_PESCI_STRANI 			= makeDisc("disc_pesci_strani", GrowssethSounds.DISC_PESCI_STRANI, 0)	// SISTEMARE DURATA!!!!!!
 
 
 	val DISCS_TO_VOCALS = mutableMapOf(
+		Items.MUSIC_DISC_PIGSTEP to DISC_OURSTEPS,
 		DISC_GIORGIO_LOFI_INST to DISC_GIORGIO_LOFI
 	)
 
-	val DISCS_WITH_VOCALS = listOf(
-		DISC_ABBANDONATI,
-		DISC_BINOBINOOO,
-		DISC_GIORGIO_CUBETTI,
-		DISC_GIORGIO_LOFI,
-		DISC_MISSIVA_NELL_OMBRA,
-		DISC_PADRE_MAMMONK,
-		DISC_SEGA_DI_NIENTE,
+	val DISCS_ORDERED = listOf(
 		DISC_OURSTEPS,
-		DISC_ODI_ET_AMO,
-		DISC_ANCORA_QUI,
-		DISC_BALLATA_DEL_RESPAWN,
-		DISC_CACO_CACO,
-		DISC_PESCI_STRANI
-	)
-
-	val DISCS_INSTRUMENTAL = listOf(
+		DISC_SEGA_DI_NIENTE,
+		DISC_GIORGIO_CUBETTI,
+		DISC_GIORGIO_LOFI_INST,
+		DISC_GIORGIO_LOFI,
 		DISC_GIORGIO_FINDING_HOME,
-		DISC_GIORGIO_LOFI_INST
+		DISC_ANCORA_QUI,
+		DISC_BINOBINOOO,
+		DISC_PADRE_MAMMONK,
+		DISC_ABBANDONATI,
+		DISC_MISSIVA_NELL_OMBRA,
+		DISC_CACO_CACO,
+		DISC_PESCI_STRANI,
+		DISC_ODI_ET_AMO,
+		DISC_BALLATA_DEL_RESPAWN
 	)
 
 	val RUINS_MAP = make("ruins_map", MapItem(defaultBuilder().stacksTo(1)), autoGenerateJson = false)
@@ -103,6 +87,9 @@ object GrowssethItems {
 		all[resourceLocation] = item
 		return item
 	}
+
+	private fun makeDisc(name: String, sound: SoundEvent, lengthInSeconds: Int, authors: List<String> = listOf(), properties: Properties = Properties()) =
+		make(name, RecordAuthorsItem(6, sound, properties.stacksTo(1), lengthInSeconds, authors))
 
 	fun registerItems(registrator: (ResourceLocation, Item) -> Unit) {
 		all.forEach{

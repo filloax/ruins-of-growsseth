@@ -123,7 +123,7 @@
         "gives": {
           "id": "growsseth:disc_sega_di_niente"
         },
-        "randomWeight": 0.083333336,
+        "randomWeight": 0.09090909,
         "wants": [
           {
             "amount": 5,
@@ -135,7 +135,7 @@
         "gives": {
           "id": "growsseth:disc_giorgio_finding_home"
         },
-        "randomWeight": 0.083333336,
+        "randomWeight": 0.09090909,
         "wants": [
           {
             "amount": 5,
@@ -147,7 +147,7 @@
         "gives": {
           "id": "growsseth:disc_binobinooo"
         },
-        "randomWeight": 0.083333336,
+        "randomWeight": 0.09090909,
         "wants": [
           {
             "amount": 5,
@@ -159,7 +159,7 @@
         "gives": {
           "id": "growsseth:disc_padre_mammonk"
         },
-        "randomWeight": 0.083333336,
+        "randomWeight": 0.09090909,
         "wants": [
           {
             "amount": 5,
@@ -171,7 +171,7 @@
         "gives": {
           "id": "growsseth:disc_abbandonati"
         },
-        "randomWeight": 0.083333336,
+        "randomWeight": 0.09090909,
         "wants": [
           {
             "amount": 5,
@@ -183,19 +183,7 @@
         "gives": {
           "id": "growsseth:disc_missiva_nell_ombra"
         },
-        "randomWeight": 0.083333336,
-        "wants": [
-          {
-            "amount": 5,
-            "id": "minecraft:emerald"
-          }
-        ]
-      },
-      {
-        "gives": {
-          "id": "growsseth:disc_oursteps"
-        },
-        "randomWeight": 0.083333336,
+        "randomWeight": 0.09090909,
         "wants": [
           {
             "amount": 5,
@@ -207,7 +195,7 @@
         "gives": {
           "id": "growsseth:disc_odi_et_amo"
         },
-        "randomWeight": 0.083333336,
+        "randomWeight": 0.09090909,
         "wants": [
           {
             "amount": 5,
@@ -219,7 +207,7 @@
         "gives": {
           "id": "growsseth:disc_ancora_qui"
         },
-        "randomWeight": 0.083333336,
+        "randomWeight": 0.09090909,
         "wants": [
           {
             "amount": 5,
@@ -231,7 +219,7 @@
         "gives": {
           "id": "growsseth:disc_ballata_del_respawn"
         },
-        "randomWeight": 0.083333336,
+        "randomWeight": 0.09090909,
         "wants": [
           {
             "amount": 5,
@@ -243,7 +231,7 @@
         "gives": {
           "id": "growsseth:disc_caco_caco"
         },
-        "randomWeight": 0.083333336,
+        "randomWeight": 0.09090909,
         "wants": [
           {
             "amount": 5,
@@ -255,7 +243,7 @@
         "gives": {
           "id": "growsseth:disc_pesci_strani"
         },
-        "randomWeight": 0.083333336,
+        "randomWeight": 0.09090909,
         "wants": [
           {
             "amount": 5,
@@ -270,7 +258,7 @@
       "gives": {
         "id": "growsseth:disc_sega_di_niente"
       },
-      "randomWeight": 0.071428575,
+      "randomWeight": 0.07692308,
       "wants": [
         {
           "amount": 5,
@@ -282,7 +270,7 @@
       "gives": {
         "id": "growsseth:disc_giorgio_cubetti"
       },
-      "randomWeight": 0.071428575,
+      "randomWeight": 0.07692308,
       "wants": [
         {
           "amount": 5,
@@ -294,7 +282,7 @@
       "gives": {
         "id": "growsseth:disc_giorgio_lofi_inst"
       },
-      "randomWeight": 0.071428575,
+      "randomWeight": 0.07692308,
       "wants": [
         {
           "amount": 5,
@@ -306,7 +294,7 @@
       "gives": {
         "id": "growsseth:disc_giorgio_finding_home"
       },
-      "randomWeight": 0.071428575,
+      "randomWeight": 0.07692308,
       "wants": [
         {
           "amount": 5,
@@ -318,7 +306,7 @@
       "gives": {
         "id": "growsseth:disc_binobinooo"
       },
-      "randomWeight": 0.071428575,
+      "randomWeight": 0.07692308,
       "wants": [
         {
           "amount": 5,
@@ -330,7 +318,7 @@
       "gives": {
         "id": "growsseth:disc_padre_mammonk"
       },
-      "randomWeight": 0.071428575,
+      "randomWeight": 0.07692308,
       "wants": [
         {
           "amount": 5,
@@ -342,7 +330,7 @@
       "gives": {
         "id": "growsseth:disc_abbandonati"
       },
-      "randomWeight": 0.071428575,
+      "randomWeight": 0.07692308,
       "wants": [
         {
           "amount": 5,
@@ -354,19 +342,7 @@
       "gives": {
         "id": "growsseth:disc_missiva_nell_ombra"
       },
-      "randomWeight": 0.071428575,
-      "wants": [
-        {
-          "amount": 5,
-          "id": "minecraft:emerald"
-        }
-      ]
-    },
-    {
-      "gives": {
-        "id": "growsseth:disc_oursteps"
-      },
-      "randomWeight": 0.071428575,
+      "randomWeight": 0.07692308,
       "wants": [
         {
           "amount": 5,
@@ -378,7 +354,7 @@
       "gives": {
         "id": "growsseth:disc_odi_et_amo"
       },
-      "randomWeight": 0.071428575,
+      "randomWeight": 0.07692308,
       "wants": [
         {
           "amount": 5,
@@ -390,7 +366,7 @@
       "gives": {
         "id": "growsseth:disc_ancora_qui"
       },
-      "randomWeight": 0.071428575,
+      "randomWeight": 0.07692308,
       "wants": [
         {
           "amount": 5,
@@ -402,7 +378,7 @@
       "gives": {
         "id": "growsseth:disc_ballata_del_respawn"
       },
-      "randomWeight": 0.071428575,
+      "randomWeight": 0.07692308,
       "wants": [
         {
           "amount": 5,
@@ -414,7 +390,7 @@
       "gives": {
         "id": "growsseth:disc_caco_caco"
       },
-      "randomWeight": 0.071428575,
+      "randomWeight": 0.07692308,
       "wants": [
         {
           "amount": 5,
@@ -426,7 +402,7 @@
       "gives": {
         "id": "growsseth:disc_pesci_strani"
       },
-      "randomWeight": 0.071428575,
+      "randomWeight": 0.07692308,
       "wants": [
         {
           "amount": 5,
