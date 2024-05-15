@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "growsseth:item/discs_base",
+    "layer1": "growsseth:item/music_discs/disc_ancora_qui"
+  }
+}
