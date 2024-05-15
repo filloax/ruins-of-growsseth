@@ -140,18 +140,30 @@ tasks.register("zipEgobalegoFolder") {
 	}
 }
 
-tasks.register("makeDatapack") {
+tasks.register("makeReferenceDatapack") {
 	group = "custom"
 
 	val sourceDir = project.file("src/main/")
-	val generatedDataDir = sourceDir.resolve("generated/data")
-	val resourcesDataDir = sourceDir.resolve("resources/data")
+
+	val generatedRoot = sourceDir.resolve("generated/data/growsseth")
+	val generatedDir = generatedRoot.resolve("growsseth_researcher_trades")
+
+	val resourcesDir = sourceDir.resolve("resources/data/growsseth")
+	val resourcesDirs = listOf(
+		resourcesDir.resolve("growsseth_places"),
+		resourcesDir.resolve("growsseth_researcher_dialogue"),
+		resourcesDir.resolve("growsseth_researcher_diary"),
+		resourcesDir.resolve("growsseth_researcher_trades"),
+		resourcesDir.resolve("growsseth_structure_books")
+	)
 
 	val destinationDir = project.file("build/datapack")
-	val zipFile = destinationDir.resolve("Growsseth Datapack.zip")
+	val zipFile = destinationDir.resolve("Reference Datapack.zip")
 
-	generatedDataDir.copyRecursively(destinationDir.resolve("data"))
-	resourcesDataDir.copyRecursively(destinationDir.resolve("data"))
+	generatedDir.copyRecursively(destinationDir.resolve("data/growsseth/growsseth_researcher_trades"))
+	for (dir in resourcesDirs){
+		dir.copyRecursively(destinationDir.resolve("data/growsseth/" + dir.name))
+	}
 
 	val packMeta = destinationDir.resolve("pack.mcmeta")
 	packMeta.writeText("{\"pack\": {\"pack_format\": 41,\"description\": \"Edits Growsseth data\"}}")
@@ -172,7 +184,7 @@ tasks.register("makeDatapack") {
 
 tasks.named("build") {
 	dependsOn("zipEgobalegoFolder")
-	dependsOn("makeDatapack")
+	dependsOn("makeReferenceDatapack")
 }
 
 tasks.processResources {
