@@ -1,5 +1,6 @@
 package com.ruslan.growsseth.networking
 
+import com.filloax.fxlib.api.optional
 import com.mojang.serialization.Codec
 import com.ruslan.growsseth.entity.researcher.trades.ResearcherItemListing
 import com.ruslan.growsseth.utils.resLoc
@@ -8,6 +9,10 @@ import net.fabricmc.fabric.api.networking.v1.FabricPacket
 import net.fabricmc.fabric.api.networking.v1.PacketType
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.ComponentSerialization
+import net.minecraft.network.codec.StreamCodec
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload.TypeAndCodec
 import net.minecraft.world.item.ItemStack
 
 object GrowssethPackets {

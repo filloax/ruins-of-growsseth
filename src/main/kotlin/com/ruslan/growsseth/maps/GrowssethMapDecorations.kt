@@ -1,10 +1,14 @@
 package com.ruslan.growsseth.maps
 
-import com.ruslan.growsseth.utils.resLoc
+import com.filloax.fxlib.api.registration.RegistryHolderDelegate
+import com.ruslan.growsseth.GrowssethTags.StructTags
 import com.ruslan.growsseth.structure.GrowssethStructures
+import com.ruslan.growsseth.utils.resLoc
+import net.minecraft.core.Holder
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.levelgen.structure.Structure
+import net.minecraft.world.level.saveddata.maps.MapDecorationType
 
 object GrowssethMapDecorations {
     private val allBuilder = mutableMapOf<ResourceLocation, CustomMapDecorationType>()

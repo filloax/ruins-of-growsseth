@@ -1,6 +1,6 @@
 package com.ruslan.growsseth.commands
 
-import com.filloax.fxlib.alwaysTruePredicate
+import com.filloax.fxlib.api.alwaysTruePredicate
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.context.CommandContext
 import com.ruslan.growsseth.config.ResearcherConfig

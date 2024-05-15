@@ -1,6 +1,6 @@
 package com.ruslan.growsseth
 
-import com.filloax.fxlib.fabric.FabricReloadListener
+import com.filloax.fxlib.api.fabric.FabricReloadListener
 import com.ruslan.growsseth.advancements.GrowssethCriterions
 import com.ruslan.growsseth.config.GrowssethConfigHandler
 import com.ruslan.growsseth.dialogues.ResearcherDialogueApiListener

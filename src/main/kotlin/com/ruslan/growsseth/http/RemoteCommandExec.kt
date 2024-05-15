@@ -1,6 +1,6 @@
 package com.ruslan.growsseth.http
 
-import com.filloax.fxlib.EventUtil
+import com.filloax.fxlib.api.EventUtil
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.config.WebConfig
 import kotlinx.serialization.Serializable

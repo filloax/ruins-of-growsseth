@@ -1,6 +1,8 @@
 package com.ruslan.growsseth.entity.researcher.trades
 
 import com.filloax.fxlib.*
+import com.filloax.fxlib.api.EventUtil
+import com.filloax.fxlib.api.getStructTagOrKey
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.advancements.StructureAdvancements
 import com.ruslan.growsseth.entity.researcher.Researcher

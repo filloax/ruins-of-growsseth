@@ -1,9 +1,8 @@
 package com.ruslan.growsseth.http
 
-import com.filloax.fxlib.json.ItemByNameSerializer
-import com.filloax.fxlib.json.SimpleComponentSerializer
+import com.filloax.fxlib.api.json.ItemByNameSerializer
+import com.filloax.fxlib.api.json.SimpleComponentSerializer
 import com.ruslan.growsseth.RuinsOfGrowsseth
-import com.ruslan.growsseth.config.GrowssethConfig
 import com.ruslan.growsseth.config.WebConfig
 import com.ruslan.growsseth.dialogues.DialogueEntry
 import com.ruslan.growsseth.entity.researcher.Researcher

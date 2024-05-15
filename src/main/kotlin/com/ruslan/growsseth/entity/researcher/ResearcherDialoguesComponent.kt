@@ -1,8 +1,8 @@
 package com.ruslan.growsseth.entity.researcher
 
-import com.filloax.fxlib.codec.CodecUtils
-import com.filloax.fxlib.nbt.loadField
-import com.filloax.fxlib.nbt.saveField
+import com.filloax.fxlib.api.codec.CodecUtils
+import com.filloax.fxlib.api.nbt.loadField
+import com.filloax.fxlib.api.nbt.saveField
 import com.mojang.serialization.Codec
 import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.GrowssethTags.RESEARCHER_MESS_TRIGGER

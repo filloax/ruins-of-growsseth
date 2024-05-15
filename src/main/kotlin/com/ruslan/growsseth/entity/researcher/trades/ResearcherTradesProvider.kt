@@ -1,10 +1,6 @@
 package com.ruslan.growsseth.entity.researcher.trades
 
-import com.filloax.fxlib.FxLibServices
-import com.filloax.fxlib.getStructTagOrKey
-import com.filloax.fxlib.getYAtXZ
-import com.mojang.datafixers.util.Either
-import com.ruslan.growsseth.RuinsOfGrowsseth
+import com.filloax.fxlib.api.FxLibServices
 import com.ruslan.growsseth.entity.researcher.Researcher
 import com.ruslan.growsseth.maps.DestinationType
 import com.ruslan.growsseth.maps.updateMapToPos

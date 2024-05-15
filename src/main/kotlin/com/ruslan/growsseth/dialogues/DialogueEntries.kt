@@ -1,6 +1,6 @@
 package com.ruslan.growsseth.dialogues
 
-import com.filloax.fxlib.json.KotlinJsonResourceReloadListener
+import com.filloax.fxlib.api.json.KotlinJsonResourceReloadListener
 import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.config.GrowssethConfig

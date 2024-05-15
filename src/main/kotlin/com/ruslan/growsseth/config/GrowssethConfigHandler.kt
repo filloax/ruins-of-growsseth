@@ -1,6 +1,6 @@
 package com.ruslan.growsseth.config
 
-import com.filloax.fxlib.getServer
+import com.filloax.fxlib.api.FxUtils
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.teamresourceful.resourcefulconfig.api.loader.Configurator
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig
@@ -35,7 +35,7 @@ object GrowssethConfigHandler {
         loadCallbacks.forEach { it(config) }
 
         if (GrowssethConfig.serverLanguage == "client") {
-            val server = getServer()
+            val server = FxUtils.getServer()
             if (server != null && server is DedicatedServer) {
                 // if in server, cannot detect language so default to specific language
                 GrowssethConfig.serverLanguage = DEFAULT_LANGUAGE

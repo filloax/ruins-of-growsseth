@@ -1,8 +1,8 @@
 package com.ruslan.growsseth.entity.researcher.trades
 
-import com.filloax.fxlib.itemFromId
-import com.filloax.fxlib.json.KotlinJsonResourceReloadListener
-import com.filloax.fxlib.loreLines
+import com.filloax.fxlib.api.itemFromId
+import com.filloax.fxlib.api.json.KotlinJsonResourceReloadListener
+import com.filloax.fxlib.api.loreLines
 import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import kotlinx.serialization.Serializable
