@@ -85,7 +85,7 @@ class ResearcherTent : GrTemplateStructurePiece {
         val DEFAULT_FENCE: Block = Blocks.SPRUCE_FENCE
 
         fun makeSettings(rotation: Rotation): StructurePlaceSettings
-            = defaultSettings().setRotation(rotation)
+            = defaultSettings().setRotation(rotation).setKeepLiquids(false)     // we don't want the cellar to be flooded
 
         private val removeReplaceBlocks = mutableMapOf<Block, Block>(
             Blocks.GREEN_WOOL to Blocks.COARSE_DIRT,
