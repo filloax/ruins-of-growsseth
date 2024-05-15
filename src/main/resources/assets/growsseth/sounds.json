@@ -47,14 +47,6 @@
       }
     ]
   },
-  "disc_binobinooo_inst": {
-    "sounds": [
-      {
-        "name": "growsseth:disc_binobinooo_inst",
-        "stream": true
-      }
-    ]
-  },
   "disc_padre_mammonk": {
     "sounds": [
       {
@@ -79,26 +71,50 @@
       }
     ]
   },
-  "disc_mice_on_venus": {
+  "disc_oursteps": {
     "sounds": [
       {
-        "name": "growsseth:piano3_mono",
+        "name": "growsseth:disc_oursteps",
         "stream": true
       }
     ]
   },
-  "disc_infinite_amethyst": {
+  "disc_odi_et_amo": {
     "sounds": [
       {
-        "name": "growsseth:infinite_amethyst_mono",
+        "name": "growsseth:disc_odi_et_amo",
         "stream": true
       }
     ]
   },
-  "disc_labyrinthine": {
+  "disc_ancora_qui": {
     "sounds": [
       {
-        "name": "growsseth:labyrinthine_mono",
+        "name": "growsseth:disc_ancora_qui",
+        "stream": true
+      }
+    ]
+  },
+  "disc_ballata_del_respawn": {
+    "sounds": [
+      {
+        "name": "growsseth:disc_ballata_del_respawn",
+        "stream": true
+      }
+    ]
+  },
+  "disc_caco_caco": {
+    "sounds": [
+      {
+        "name": "growsseth:disc_caco_caco",
+        "stream": true
+      }
+    ]
+  },
+  "disc_pesci_strani": {
+    "sounds": [
+      {
+        "name": "growsseth:disc_pesci_strani",
         "stream": true
       }
     ]

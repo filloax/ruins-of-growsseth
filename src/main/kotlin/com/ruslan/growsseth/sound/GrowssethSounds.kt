@@ -16,15 +16,16 @@ class GrowssethSounds {
         val DISC_GIORGIO_LOFI_INST = registerSoundEvent("disc_giorgio_lofi_inst")
         val DISC_GIORGIO_FINDING_HOME = registerSoundEvent("disc_giorgio_finding_home")
         val DISC_BINOBINOOO = registerSoundEvent("disc_binobinooo")
-        val DISC_BINOBINOOO_INST = registerSoundEvent("disc_binobinooo_inst")
         val DISC_PADRE_MAMMONK = registerSoundEvent("disc_padre_mammonk")
         val DISC_ABBANDONATI = registerSoundEvent("disc_abbandonati")
         val DISC_MISSIVA_NELL_OMBRA = registerSoundEvent("disc_missiva_nell_ombra")
 
-        // vanilla ost, but not available as standalone sound event
-        val MUSIC_MICE_ON_VENUS = registerSoundEvent("disc_mice_on_venus")
-        val MUSIC_INFINITE_AMETHYST = registerSoundEvent("disc_infinite_amethyst")
-        val MUSIC_LABYRINTHINE = registerSoundEvent("disc_labyrinthine")
+        val DISC_OURSTEPS = registerSoundEvent("disc_oursteps")
+        val DISC_ODI_ET_AMO = registerSoundEvent("disc_odi_et_amo")
+        val DISC_ANCORA_QUI = registerSoundEvent("disc_ancora_qui")
+        val DISC_BALLATA_DEL_RESPAWN = registerSoundEvent("disc_ballata_del_respawn")
+        val DISC_CACO_CACO = registerSoundEvent("disc_caco_caco")
+        val DISC_PESCI_STRANI = registerSoundEvent("disc_pesci_strani")
 
         val DEFLECT_ARROW_SOUND = registerSoundEvent("deflect_arrow_sound")
         val RESEARCHER_HORN_SOUND = registerSoundEventHolder("researcher_horn_sound")
