@@ -266,8 +266,6 @@ class ModelGenerator constructor(generator: FabricDataOutput) : FabricModelProvi
                         itemModelGenerator.generateLayeredItem(model, discsBaseLayer, discsVocalsLayer, discsSongLayer)
                     in GrowssethItems.DISCS_INSTRUMENTAL ->
                         itemModelGenerator.generateLayeredItem(model, discsBaseLayer, discsSongLayer)
-                    in GrowssethItems.DISCS_VANILLA ->
-                        itemModelGenerator.generateLayeredItem(model, resLoc("item/discs_vanilla"), discsSongLayer)
                     else ->
                         itemModelGenerator.generateFlatItem(item, ModelTemplates.FLAT_ITEM)
                 }

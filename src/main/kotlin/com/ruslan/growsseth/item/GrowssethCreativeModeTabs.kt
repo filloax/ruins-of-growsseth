@@ -31,13 +31,9 @@ object GrowssethCreativeModeTabs {
                 output.accept(GrowssethItems.DISC_GIORGIO_LOFI_INST)
                 output.accept(GrowssethItems.DISC_GIORGIO_FINDING_HOME)
                 output.accept(GrowssethItems.DISC_BINOBINOOO)
-                output.accept(GrowssethItems.DISC_BINOBINOOO_INST)
                 output.accept(GrowssethItems.DISC_PADRE_MAMMONK)
                 output.accept(GrowssethItems.DISC_ABBANDONATI)
                 output.accept(GrowssethItems.DISC_MISSIVA_NELL_OMBRA)
-                output.accept(GrowssethItems.DISC_MICE_ON_VENUS)
-                output.accept(GrowssethItems.DISC_INFINITE_AMETHYST)
-                output.accept(GrowssethItems.DISC_LABYRINTHINE)
             }.build()
     )
 
