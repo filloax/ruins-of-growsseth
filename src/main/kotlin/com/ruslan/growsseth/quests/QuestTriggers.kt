@@ -1,5 +1,6 @@
 package com.ruslan.growsseth.quests
 
+import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.dialogues.DialoguesNpc
 import com.ruslan.growsseth.http.GrowssethApi
 import net.minecraft.world.entity.LivingEntity
@@ -63,6 +64,28 @@ class TimeTrigger<E : LivingEntity>(
                 || time - questComponent.data.currentStageTriggerTime >= requiredTime
     }
 }
+
+class DayTimeTrigger<E : LivingEntity>(
+    private val questComponent: QuestComponent<E>,
+    val requiredTime: Long,
+) : QuestStageTrigger<E> {
+    override fun isActive(entity: E, event: QuestUpdateEvent): Boolean {
+        val time = entity.server!!.overworld().dayTime
+        val timeOff = time - questComponent.data.currentStageTriggerDayTime
+        // Time set fuckery, reset trigger time
+        if (timeOff < 0 || questComponent.data.currentStageTriggerDayTime < 0) {
+            RuinsOfGrowsseth.LOGGER.warn("Time changed backwards (command?), resetting quest trigger time")
+            questComponent.data.currentStageTriggerDayTime = time
+            return false
+        }
+        return timeOff >= requiredTime
+    }
+}
+
+fun <E : LivingEntity> TimeOrDayTimeTrigger(
+    questComponent: QuestComponent<E>,
+    requiredTime: Long,
+) = TimeTrigger(questComponent, requiredTime).or(DayTimeTrigger(questComponent, requiredTime))
 
 private class AndTrigger<E: LivingEntity>(val parts: List<QuestStageTrigger<E>>): QuestStageTrigger<E> {
     override fun isActive(entity: E, event: QuestUpdateEvent): Boolean {
