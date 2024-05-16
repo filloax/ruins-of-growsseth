@@ -66,7 +66,7 @@ class ProgressResearcherTradesProvider(
 
     override fun getExtraPlayerTrades(player: ServerPlayer, researcher: Researcher, data: ResearcherTradesData): List<ResearcherTradeEntry> {
         val finishedQuest = researcher.quest!!.passedStage(ResearcherQuestComponent.Stages.HOME)
-        val possibleTrades = getPossibleRandomTrades(player, researcher)
+        val possibleTrades = getPossibleRandomTrades(player, researcher, finishedQuest)
         val possibleTradesItems = possibleTrades.map { it.itemListing.givesItemHolder }
         val tradesChanged = tradesDiffer(data.lastAvailableRandomTrades, possibleTradesItems)
 
@@ -148,12 +148,13 @@ class ProgressResearcherTradesProvider(
         return changedMapPriority
     }
 
-    private fun getPossibleRandomTrades(player: ServerPlayer, researcher: Researcher): List<ResearcherTradeEntry> {
-        return TradesListener.TRADES_PROGRESS_AFTER_STRUCTURE_RANDOM.filterKeys {
+    private fun getPossibleRandomTrades(player: ServerPlayer, researcher: Researcher, allTrades: Boolean = false): List<ResearcherTradeEntry> {
+        val tradesTable = TradesListener.TRADES_PROGRESS_AFTER_STRUCTURE_RANDOM
+        return (if (!allTrades) tradesTable.filterKeys {
             val key = ResourceKey.create(Registries.STRUCTURE, resLoc(it))
             val tag = GrowssethStructures.info[key]!!.tag
             StructureAdvancements.playerHasFoundStructure(player, tag)
-        }.values.flatten()
+        } else tradesTable).values.flatten()
     }
 
     private fun genRandomTrades(player: ServerPlayer, researcher: Researcher, possibleTrades: List<ResearcherTradeEntry>, allTrades: Boolean = false): List<ResearcherTradeEntry> {
