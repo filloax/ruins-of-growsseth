@@ -7,6 +7,7 @@ import com.filloax.fxlib.api.codec.decodeNbt
 import com.filloax.fxlib.api.codec.encodeNbt
 import com.filloax.fxlib.api.codec.throwableCodecErr
 import com.filloax.fxlib.api.iterBlocks
+import com.filloax.fxlib.api.loreLines
 import com.filloax.fxlib.api.nbt.getCompoundOrNull
 import com.filloax.fxlib.api.nbt.getOrPut
 import com.ruslan.growsseth.Constants
@@ -190,6 +191,8 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
                 .getHolder(ResourceKey.create(Registries.INSTRUMENT, GrowssethItems.Instruments.RESEARCHER_HORN.first))
                 .orElseThrow()
             val hornItem = InstrumentItem.create(GrowssethItems.RESEARCHER_HORN, resInstrumentHolder)
+            hornItem.loreLines().add(Component.translatable("item.growsseth.researcher_horn.description1"))
+            hornItem.loreLines().add(Component.translatable("item.growsseth.researcher_horn.description2"))
             val researcherName = ResearcherSavedData.getPersistent(level.server).name  ?: Component.translatable("entity.growsseth.researcher")
             val endTextItem = (if (DiaryHelper.hasCustomEndDiary()) {
                     DiaryHelper.getCustomEndDiary(researcherName)
