@@ -1,10 +1,8 @@
 package com.ruslan.growsseth.entity.researcher
 
-import com.filloax.fxlib.api.codec.mutableMapCodec
 import com.filloax.fxlib.api.entity.delegate
 import com.filloax.fxlib.api.entity.fixedChangeDimension
 import com.filloax.fxlib.api.entity.getPersistData
-import com.filloax.fxlib.api.getStructTagOrKey
 import com.filloax.fxlib.api.nbt.getCompoundOrNull
 import com.filloax.fxlib.api.nbt.loadField
 import com.filloax.fxlib.api.nbt.saveField
@@ -63,7 +61,9 @@ import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
-import net.minecraft.world.entity.ai.goal.*
+import net.minecraft.world.entity.ai.goal.FloatGoal
+import net.minecraft.world.entity.ai.goal.MoveTowardsRestrictionGoal
+import net.minecraft.world.entity.ai.goal.OpenDoorGoal
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.ai.navigation.PathNavigation
 import net.minecraft.world.entity.ai.navigation.WallClimberNavigation
@@ -85,6 +85,7 @@ import net.minecraft.world.item.alchemy.Potions
 import net.minecraft.world.item.enchantment.Enchantments
 import net.minecraft.world.item.trading.MerchantOffer
 import net.minecraft.world.item.trading.MerchantOffers
+import net.minecraft.world.level.ClipContext
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.entity.EntityTypeTest
@@ -92,8 +93,8 @@ import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.level.levelgen.structure.Structure
 import net.minecraft.world.level.levelgen.structure.StructureStart
 import net.minecraft.world.level.portal.PortalInfo
-import net.minecraft.world.level.saveddata.maps.MapId
 import net.minecraft.world.phys.AABB
+import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
@@ -634,6 +635,38 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             return InteractionResult.sidedSuccess(level().isClientSide)
         }
         return super.mobInteract(player, interactionHand)
+    }
+
+    // Override to use visual blockers instead of collision as necessary, to have a proper logic with caged dialogue
+    override fun hasLineOfSight(entity: Entity): Boolean {
+        if (entity.level() !== this.level()) {
+            return false
+        } else {
+            val vec3 = Vec3(this.x, this.eyeY, this.z)
+            val vec32 = Vec3(entity.x, entity.eyeY, entity.z)
+            return if (vec32.distanceTo(vec3) > 128.0) {
+                false
+            } else {
+                level().clip(ClipContext(
+                    vec3, vec32,
+                    getLOSBlockSetting(),
+                    ClipContext.Fluid.NONE,
+                    this
+                )).type == HitResult.Type.MISS
+            }
+        }
+    }
+
+    private fun getLOSBlockSetting(): ClipContext.Block {
+        return quest?.let { q ->
+            if (
+                q.passedStage(ResearcherQuestComponent.Stages.HEALED)
+                && !q.passedStage(ResearcherQuestComponent.Stages.HOME)
+            )
+                ClipContext.Block.VISUAL
+            else
+                null
+        } ?: ClipContext.Block.COLLIDER
     }
 
     override fun die(damageSource: DamageSource) {
