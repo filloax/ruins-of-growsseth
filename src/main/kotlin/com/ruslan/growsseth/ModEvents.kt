@@ -97,6 +97,7 @@ abstract class ModEvents {
         onStartServerTick { server ->
             DataRemoteSync.checkTickSync(WebConfig.dataSyncUrl, server)
             GrowssethAdvancements.Callbacks.onServerTick(server)
+            ProgressResearcherTradesProvider.Callbacks.onServerTick(server)
         }
 
         onEndServerLevelTick { level ->

@@ -132,6 +132,15 @@ object StructureAdvancements {
             .mapValues { e -> e.value.flatMap { listOf(it.normalTemplate, it.zombieTemplate) } }
     }
 
+    fun getAllStructureAdvancementIds(): List<ResourceLocation> {
+        val structureAdvancements = GrowssethStructures.all
+            .map { getStructureAdvancementId(it) }
+        val jigsawAdvancements = villageHouseStructures.flatMap { (struct, villageHouses) ->
+                villageHouses.map { (villageStructId, _) -> getStructureJigsawAdvancementId(villageStructId, struct) }
+            }
+        return structureAdvancements + jigsawAdvancements
+    }
+
     class Bootstrapper(private val registryLookup: HolderLookup.Provider) {
         private val structureReg = registryLookup.lookupOrThrow(Registries.STRUCTURE)
 

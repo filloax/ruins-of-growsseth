@@ -33,6 +33,7 @@ open class QuestComponent<E : LivingEntity>(val entity: E, val name: String) {
                 mutableListCodec(Codec.STRING).fieldOf("stageHistory").forGetter(QuestData::stageHistory),
                 Codec.BOOL.fieldOf("active").forGetter(QuestData::active),
                 Codec.LONG.optionalFieldOf("currentStageTriggerTime", -1).forGetter(QuestData::currentStageTriggerTime),
+                Codec.LONG.optionalFieldOf("currentStageTriggerDayTime", -1).forGetter(QuestData::currentStageTriggerDayTime),
             ).apply(builder, ::QuestData)
         }
 
@@ -60,6 +61,7 @@ open class QuestComponent<E : LivingEntity>(val entity: E, val name: String) {
         var stageHistory: MutableList<String> = mutableListOf(INIT_STAGE_ID),
         var active: Boolean = true,
         var currentStageTriggerTime: Long = -1,
+        var currentStageTriggerDayTime: Long = -1,
     )
 
     /**
@@ -160,6 +162,7 @@ open class QuestComponent<E : LivingEntity>(val entity: E, val name: String) {
     fun backOneStage(activate: Boolean = false): Boolean {
         data.currentStageId = data.stageHistory.removeLastOrNull() ?: return false
         data.currentStageTriggerTime = server.overworld().gameTime
+        data.currentStageTriggerDayTime = server.overworld().dayTime
         RuinsOfGrowsseth.LOGGER.info("Reverted to quest stage ${data.currentStageId}\n\t$this")
         if (activate) {
             getStageNode(data.currentStageId)?.stage?.onActivated(entity) ?: throw IllegalStateException("No node for previous stage ${data.currentStageId}")
