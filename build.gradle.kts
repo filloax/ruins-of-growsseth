@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.incremental.deleteDirectoryContents
 
 plugins {
 	kotlin("jvm")
@@ -168,6 +169,7 @@ tasks.register("makeReferenceDatapack") {
 
 	doLast {
 		destinationDir.mkdirs()
+		destinationDir.deleteDirectoryContents()
 		packMeta.writeText("{\"pack\": {\"pack_format\": 41,\"description\": \"Edits Growsseth data\"}}")
 		generatedDir.copyRecursively(destinationDir.resolve("data/growsseth/growsseth_researcher_trades"))
 		for (dir in resourcesDirs){
