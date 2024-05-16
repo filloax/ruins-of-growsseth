@@ -56,6 +56,7 @@ object GrowssethItems {
 
 
 	val DISCS_TO_VOCALS = mutableMapOf(
+		Items.MUSIC_DISC_PIGSTEP to DISC_OURSTEPS,
 		DISC_GIORGIO_LOFI_INST to DISC_GIORGIO_LOFI
 	)
 

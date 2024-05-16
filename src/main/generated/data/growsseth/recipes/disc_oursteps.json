@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "minecraft:amethyst_shard"
+    },
+    {
+      "item": "minecraft:music_disc_pigstep"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "growsseth:disc_oursteps"
+  }
+}
