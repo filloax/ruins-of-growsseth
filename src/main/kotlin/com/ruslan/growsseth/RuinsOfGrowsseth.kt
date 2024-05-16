@@ -103,21 +103,10 @@ object RuinsOfGrowsseth : ModInitializer {
             })
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES)
             .register(ModifyEntries {
-                it.addAfter(Items.MUSIC_DISC_PIGSTEP, GrowssethItems.DISC_SEGA_DI_NIENTE)
-                it.addAfter(GrowssethItems.DISC_SEGA_DI_NIENTE, GrowssethItems.DISC_GIORGIO_CUBETTI)
-                it.addAfter(GrowssethItems.DISC_GIORGIO_CUBETTI, GrowssethItems.DISC_GIORGIO_LOFI)
-                it.addAfter(GrowssethItems.DISC_GIORGIO_LOFI, GrowssethItems.DISC_GIORGIO_LOFI_INST)
-                it.addAfter(GrowssethItems.DISC_GIORGIO_LOFI_INST, GrowssethItems.DISC_GIORGIO_FINDING_HOME)
-                it.addAfter(GrowssethItems.DISC_GIORGIO_FINDING_HOME, GrowssethItems.DISC_BINOBINOOO)
-                it.addAfter(GrowssethItems.DISC_BINOBINOOO, GrowssethItems.DISC_BINOBINOOO_INST)
-                it.addAfter(GrowssethItems.DISC_BINOBINOOO_INST, GrowssethItems.DISC_PADRE_MAMMONK)
-                it.addAfter(GrowssethItems.DISC_PADRE_MAMMONK, GrowssethItems.DISC_ABBANDONATI)
-                it.addAfter(GrowssethItems.DISC_ABBANDONATI, GrowssethItems.DISC_MISSIVA_NELL_OMBRA)
-                it.addAfter(GrowssethItems.DISC_MISSIVA_NELL_OMBRA, GrowssethItems.DISC_MICE_ON_VENUS)
-                it.addAfter(GrowssethItems.DISC_MICE_ON_VENUS, GrowssethItems.DISC_INFINITE_AMETHYST)
-                it.addAfter(GrowssethItems.DISC_INFINITE_AMETHYST, GrowssethItems.DISC_LABYRINTHINE)
-
                 it.addAfter(Items.GOAT_HORN, GrowssethItems.RESEARCHER_HORN)
+                for (disc in GrowssethItems.DISCS_ORDERED) {
+                    it.accept(disc)
+                }
             })
     }
 

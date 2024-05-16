@@ -4,6 +4,7 @@ import com.filloax.fxlib.api.codec.constructorWithOptionals
 import com.filloax.fxlib.api.codec.forNullableGetter
 import com.filloax.fxlib.api.codec.mutableSetCodec
 import com.filloax.fxlib.api.savedata.FxSavedData
+import com.filloax.fxlib.api.secondsToTicks
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.ruslan.growsseth.Constants
@@ -66,7 +67,7 @@ class ProgressResearcherTradesProvider(
 
     override fun getExtraPlayerTrades(player: ServerPlayer, researcher: Researcher, data: ResearcherTradesData): List<ResearcherTradeEntry> {
         val finishedQuest = researcher.quest!!.passedStage(ResearcherQuestComponent.Stages.HOME)
-        val possibleTrades = getPossibleRandomTrades(player, researcher)
+        val possibleTrades = getPossibleRandomTrades(player, researcher, finishedQuest)
         val possibleTradesItems = possibleTrades.map { it.itemListing.givesItemHolder }
         val tradesChanged = tradesDiffer(data.lastAvailableRandomTrades, possibleTradesItems)
 
@@ -148,12 +149,13 @@ class ProgressResearcherTradesProvider(
         return changedMapPriority
     }
 
-    private fun getPossibleRandomTrades(player: ServerPlayer, researcher: Researcher): List<ResearcherTradeEntry> {
-        return TradesListener.TRADES_PROGRESS_AFTER_STRUCTURE_RANDOM.filterKeys {
+    private fun getPossibleRandomTrades(player: ServerPlayer, researcher: Researcher, allTrades: Boolean = false): List<ResearcherTradeEntry> {
+        val tradesTable = TradesListener.TRADES_PROGRESS_AFTER_STRUCTURE_RANDOM
+        return (if (!allTrades) tradesTable.filterKeys {
             val key = ResourceKey.create(Registries.STRUCTURE, resLoc(it))
             val tag = GrowssethStructures.info[key]!!.tag
             StructureAdvancements.playerHasFoundStructure(player, tag)
-        }.values.flatten()
+        } else tradesTable).values.flatten()
     }
 
     private fun genRandomTrades(player: ServerPlayer, researcher: Researcher, possibleTrades: List<ResearcherTradeEntry>, allTrades: Boolean = false): List<ResearcherTradeEntry> {
@@ -217,6 +219,25 @@ class ProgressResearcherTradesProvider(
             val prov = getCurrent(server) ?: return
             if (!prov.isEnabled(server)) return
             prov.regenTrades(server)
+        }
+
+        fun onServerTick(server: MinecraftServer) {
+            if (server.tickCount % 5f.secondsToTicks() == 0) {
+                val prov = getCurrent(server) ?: return
+                if (!prov.isEnabled(server)) return
+                val data = ProgressTradesSavedData.get(server)
+
+                val foundStructureRefs = server.playerList.players.flatMap { player ->
+                    StructureAdvancements.getPlayerFoundStructures(player)
+                }.mapNotNull{ prov.getReferenceStructure(it) }.toSet()
+
+                val newStructureRefs = foundStructureRefs - data.foundStructures
+                if (newStructureRefs.isNotEmpty()) {
+                    data.foundStructures.addAll(newStructureRefs)
+                    ProgressTradesSavedData.setDirty(server)
+                    prov.regenTrades(server)
+                }
+            }
         }
 
         fun onStructureFound(player: ServerPlayer, structId: ResourceKey<Structure>, isJigsawPart: Boolean) {

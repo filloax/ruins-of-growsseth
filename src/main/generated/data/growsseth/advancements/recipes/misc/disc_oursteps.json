@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_disc_binobinooo_inst": {
+    "has_music_disc_pigstep": {
       "conditions": {
         "items": [
           {
-            "items": "growsseth:disc_binobinooo_inst"
+            "items": "minecraft:music_disc_pigstep"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "growsseth:disc_binobinooo"
+        "recipe": "growsseth:disc_oursteps"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -21,12 +21,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_disc_binobinooo_inst"
+      "has_music_disc_pigstep"
     ]
   ],
   "rewards": {
     "recipes": [
-      "growsseth:disc_binobinooo"
+      "growsseth:disc_oursteps"
     ]
   }
 }
