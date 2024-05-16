@@ -103,23 +103,10 @@ object RuinsOfGrowsseth : ModInitializer {
             })
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES)
             .register(ModifyEntries {
-                it.accept(GrowssethItems.DISC_OURSTEPS)
-                it.accept(GrowssethItems.DISC_SEGA_DI_NIENTE)
-                it.accept(GrowssethItems.DISC_GIORGIO_CUBETTI)
-                it.accept(GrowssethItems.DISC_GIORGIO_LOFI_INST)
-                it.accept(GrowssethItems.DISC_GIORGIO_LOFI)
-                it.accept(GrowssethItems.DISC_GIORGIO_FINDING_HOME)
-                it.accept(GrowssethItems.DISC_ANCORA_QUI)
-                it.accept(GrowssethItems.DISC_BINOBINOOO)
-                it.accept(GrowssethItems.DISC_PADRE_MAMMONK)
-                it.accept(GrowssethItems.DISC_ABBANDONATI)
-                it.accept(GrowssethItems.DISC_MISSIVA_NELL_OMBRA)
-                it.accept(GrowssethItems.DISC_CACO_CACO)
-                it.accept(GrowssethItems.DISC_PESCI_STRANI)
-                it.accept(GrowssethItems.DISC_ODI_ET_AMO)
-                it.accept(GrowssethItems.DISC_BALLATA_DEL_RESPAWN)
-
                 it.addAfter(Items.GOAT_HORN, GrowssethItems.RESEARCHER_HORN)
+                for (disc in GrowssethItems.DISCS_ORDERED) {
+                    it.accept(disc)
+                }
             })
     }
 
