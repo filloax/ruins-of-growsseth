@@ -27,6 +27,7 @@ val fabricApiVersion = property("fabric_api_version")
 
 val modMenuVersion = property("mod_menu_version")
 val resConfigVersion = property("rconfig_version")
+val resConfigMcVersion = property("rconfig_mc_version")
 
 version = property("mod_version")!! as String
 
@@ -104,7 +105,7 @@ dependencies {
 		exclude(module = "fabric-api-deprecated")
 	}
 	modImplementation("com.terraformersmc:modmenu:${modMenuVersion}")
-	modImplementation("com.teamresourceful.resourcefulconfig:resourcefulconfig-fabric-${resConfigVersion}")
+	modImplementation("com.teamresourceful.resourcefulconfig:resourcefulconfig-fabric-$resConfigMcVersion:$resConfigVersion")
 
 	val fxLib = (if (useLocalJarFxLib)
 			":fx-lib-${fxLibVersion}-fabric"
