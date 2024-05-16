@@ -342,7 +342,7 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
 
     inner class EndingStage: QuestStage<Researcher> {
         override val trigger: QuestStageTrigger<Researcher> = EventTrigger<Researcher>(QuestUpdateEvent.LOAD)
-            .and(TimeTrigger(this@ResearcherQuestComponent, Constants.DAY_TICKS_DURATION)
+            .and(TimeOrDayTimeTrigger(this@ResearcherQuestComponent, Constants.DAY_TICKS_DURATION)
                 .or(ApiEventTrigger(QuestConfig.finalQuestLeaveName))
             )
 

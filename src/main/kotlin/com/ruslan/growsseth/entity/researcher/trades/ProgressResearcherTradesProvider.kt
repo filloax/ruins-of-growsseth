@@ -4,6 +4,7 @@ import com.filloax.fxlib.api.codec.constructorWithOptionals
 import com.filloax.fxlib.api.codec.forNullableGetter
 import com.filloax.fxlib.api.codec.mutableSetCodec
 import com.filloax.fxlib.api.savedata.FxSavedData
+import com.filloax.fxlib.api.secondsToTicks
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.ruslan.growsseth.Constants
@@ -218,6 +219,25 @@ class ProgressResearcherTradesProvider(
             val prov = getCurrent(server) ?: return
             if (!prov.isEnabled(server)) return
             prov.regenTrades(server)
+        }
+
+        fun onServerTick(server: MinecraftServer) {
+            if (server.tickCount % 5f.secondsToTicks() == 0) {
+                val prov = getCurrent(server) ?: return
+                if (!prov.isEnabled(server)) return
+                val data = ProgressTradesSavedData.get(server)
+
+                val foundStructureRefs = server.playerList.players.flatMap { player ->
+                    StructureAdvancements.getPlayerFoundStructures(player)
+                }.mapNotNull{ prov.getReferenceStructure(it) }.toSet()
+
+                val newStructureRefs = foundStructureRefs - data.foundStructures
+                if (newStructureRefs.isNotEmpty()) {
+                    data.foundStructures.addAll(newStructureRefs)
+                    ProgressTradesSavedData.setDirty(server)
+                    prov.regenTrades(server)
+                }
+            }
         }
 
         fun onStructureFound(player: ServerPlayer, structId: ResourceKey<Structure>, isJigsawPart: Boolean) {
