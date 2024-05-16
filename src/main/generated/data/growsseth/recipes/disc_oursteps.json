@@ -6,11 +6,11 @@
       "item": "minecraft:amethyst_shard"
     },
     {
-      "item": "growsseth:disc_binobinooo_inst"
+      "item": "minecraft:music_disc_pigstep"
     }
   ],
   "result": {
     "count": 1,
-    "id": "growsseth:disc_binobinooo"
+    "id": "growsseth:disc_oursteps"
   }
 }

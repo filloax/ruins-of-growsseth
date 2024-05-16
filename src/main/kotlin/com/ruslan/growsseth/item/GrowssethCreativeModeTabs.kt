@@ -25,19 +25,9 @@ object GrowssethCreativeModeTabs {
                 output.accept(GrowssethItems.GROWSSETH_BANNER_PATTERN)
                 output.accept(GrowssethItems.GROWSSETH_ARMOR_TRIM)
                 output.accept(GrowssethItems.GROWSSETH_POTTERY_SHERD)
-                output.accept(GrowssethItems.DISC_SEGA_DI_NIENTE)
-                output.accept(GrowssethItems.DISC_GIORGIO_CUBETTI)
-                output.accept(GrowssethItems.DISC_GIORGIO_LOFI)
-                output.accept(GrowssethItems.DISC_GIORGIO_LOFI_INST)
-                output.accept(GrowssethItems.DISC_GIORGIO_FINDING_HOME)
-                output.accept(GrowssethItems.DISC_BINOBINOOO)
-                output.accept(GrowssethItems.DISC_BINOBINOOO_INST)
-                output.accept(GrowssethItems.DISC_PADRE_MAMMONK)
-                output.accept(GrowssethItems.DISC_ABBANDONATI)
-                output.accept(GrowssethItems.DISC_MISSIVA_NELL_OMBRA)
-                output.accept(GrowssethItems.DISC_MICE_ON_VENUS)
-                output.accept(GrowssethItems.DISC_INFINITE_AMETHYST)
-                output.accept(GrowssethItems.DISC_LABYRINTHINE)
+                for (disc in GrowssethItems.DISCS_ORDERED) {
+                    output.accept(disc)
+                }
             }.build()
     )
 

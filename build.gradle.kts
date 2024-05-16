@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.incremental.deleteDirectoryContents
 
 plugins {
 	kotlin("jvm")
@@ -7,19 +8,29 @@ plugins {
 	id("maven-publish")
 }
 
+val modid: String by project
+val minecraftVersion = property("minecraft_version") as String
+
 val javaVersion: Int = (property("javaVersion")!! as String).toInt()
 val kotlinVersion: String by project
 val kotlinSerializationVersion: String by project
+val javaVersionEnum = JavaVersion.values().find { it.majorVersion == javaVersion.toString() } ?: throw Exception("Cannot find java version for $javaVersion")
+
 val useLocalJarFxLib = (property("useLocalJarFxLib") as String).toBoolean()
 val alwaysUseLocalMavenFXLib = (property("alwaysUseLocalMavenFXLib")!! as String).toBoolean()
-version = property("mod_version")!! as String
-group = property("maven_group")!! as String
-val modid: String by project
 val fxLibVersion: String by project
-val minecraftVersion = property("minecraft_version") as String
-
-val javaVersionEnum = JavaVersion.values().find { it.majorVersion == javaVersion.toString() } ?: throw Exception("Cannot find java version for $javaVersion")
 val useLocalMavenFxLib = alwaysUseLocalMavenFXLib || fxLibVersion.contains(Regex("rev\\d+"))
+
+val parchmentVersion = property("parchment_version")
+val loaderVersion = property("loader_version")
+val fabricKotlinVersion = property("fabric_kotlin_version")
+val fabricApiVersion = property("fabric_api_version")
+
+val modMenuVersion = property("mod_menu_version")
+val resConfigVersion = property("rconfig_version")
+val resConfigMcVersion = property("rconfig_mc_version")
+
+version = property("mod_version")!! as String
 
 base {
 	archivesName.set(property("archivesBaseName") as String)
@@ -65,7 +76,7 @@ dependencies {
 	mappings(loom.layered() {
 		officialMojangMappings()
 		if ((property("parchment_version") as String).isNotBlank()) {
-			parchment("org.parchmentmc.data:parchment-${minecraftVersion}:${property("parchment_version")}@zip")
+			parchment("org.parchmentmc.data:parchment-${minecraftVersion}:${parchmentVersion}@zip")
 		}
 	})
 
@@ -87,21 +98,21 @@ dependencies {
 
 	implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion")
 
-	modImplementation("net.fabricmc:fabric-loader:${property("loader_version")}")
+	modImplementation("net.fabricmc:fabric-loader:${loaderVersion}")
 
-	"net.fabricmc:fabric-language-kotlin:${property("fabric_kotlin_version")}".let{
+	"net.fabricmc:fabric-language-kotlin:${fabricKotlinVersion}".let{
 		modImplementation(it)
 		include(it)
 	}
 
-	modImplementation("net.fabricmc.fabric-api:fabric-api:${property("fabric_api_version")}") {
+	modImplementation("net.fabricmc.fabric-api:fabric-api:${fabricApiVersion}") {
 		exclude(module = "fabric-api-deprecated")
 	}
-	"com.terraformersmc:modmenu:${property("mod_menu_version")}".let{
+	"com.terraformersmc:modmenu:${modMenuVersion}".let{
 		modImplementation(it)
 		include(it)
 	}
-	"com.teamresourceful.resourcefulconfig:resourcefulconfig-fabric-${property("rconfig_version")}".let{
+	"com.teamresourceful.resourcefulconfig:resourcefulconfig-fabric-$resConfigMcVersion:$resConfigVersion".let{
 		modImplementation(it)
 		include(it)
 	}
@@ -167,6 +178,7 @@ tasks.register("makeReferenceDatapack") {
 
 	doLast {
 		destinationDir.mkdirs()
+		destinationDir.deleteDirectoryContents()
 		packMeta.writeText("{\"pack\": {\"pack_format\": 41,\"description\": \"Edits Growsseth data\"}}")
 		generatedDir.copyRecursively(destinationDir.resolve("data/growsseth/growsseth_researcher_trades"))
 		for (dir in resourcesDirs){
@@ -187,10 +199,19 @@ tasks.named("build") {
 }
 
 tasks.processResources {
-	inputs.property("version", project.version)
-
-	filesMatching("fabric.mod.json") {
-		expand(mapOf("version" to project.version))
+	mapOf(
+		"version" to project.version,
+		"fxlib_version" to fxLibVersion,
+		"rconfig_version" to resConfigVersion,
+		"fabric_kotlin_version" to fabricKotlinVersion,
+		"loader_version" to loaderVersion,
+		"fapi_version" to fabricApiVersion,
+	).also {
+		filesMatching("fabric.mod.json") {
+			expand(it)
+		}
+	}.forEach { (prop, value) ->
+		inputs.property(prop, value)
 	}
 }
 

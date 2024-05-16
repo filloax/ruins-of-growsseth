@@ -24,13 +24,17 @@ import net.minecraft.world.Clearable
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.decoration.LeashFenceKnotEntity
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
 import net.minecraft.world.level.ChunkPos
 import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.StructureManager
 import net.minecraft.world.level.WorldGenLevel
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
+import net.minecraft.world.level.block.ChestBlock
 import net.minecraft.world.level.block.Rotation
+import net.minecraft.world.level.block.entity.ChestBlockEntity
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity
 import net.minecraft.world.level.chunk.ChunkGenerator
 import net.minecraft.world.level.levelgen.structure.BoundingBox
@@ -168,12 +172,10 @@ class ResearcherTent : GrTemplateStructurePiece {
                 if (spawnEntities)
                     placeEntity(EntityType.DONKEY, donkeyPos, level) { donkey ->
                         leashToBlock(level.level, donkey, pos)
-                        donkey.setChest(true)
+                        donkey.getSlot(499).set(ItemStack(Items.CHEST))
                         initDonkeyUuid = donkey.uuid
                         donkey.addTag(Constants.TAG_RESEARCHER_DONKEY)
                     }
-                else
-                    level.setBlock(pos, DEFAULT_FENCE.defaultBlockState(), SetBlockFlag.NOTIFY_CLIENTS.flag)
             }
             "jail" -> {
                 jailPos = pos

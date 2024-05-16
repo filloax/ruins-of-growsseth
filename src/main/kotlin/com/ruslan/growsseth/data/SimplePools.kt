@@ -1,5 +1,6 @@
 package com.ruslan.growsseth.data
 
+import com.filloax.fxlib.api.structure.pools.FxSinglePoolElement
 import com.mojang.datafixers.util.Either
 import com.mojang.datafixers.util.Pair
 import com.ruslan.growsseth.structure.GrProcessorLists
@@ -18,6 +19,7 @@ import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool.Projection
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList
+import java.util.*
 
 class SimplePools(private val context: BootstrapContext<StructureTemplatePool>) {
     private val processorGetter: HolderGetter<StructureProcessorList> = context.lookup(Registries.PROCESSOR_LIST)
@@ -42,12 +44,12 @@ class SimplePools(private val context: BootstrapContext<StructureTemplatePool>) 
     }
 
     private fun bootstrapBeekeperHouse() {
-        registerSimplePoolElementsWithCydonia(
+        registerPoolElementsWithCydonia(
             "ruins/beekeeper_house/beenest",
             "ruins/beekeeper_house/house",
             "ruins/beekeeper_house/zombie",
         )
-        registerSimplePoolElements(
+        registerPoolElements(
             "ruins/beekeeper_house/beehive",
             "cydonia/ruins/beekeeper_house/beehive_off",
             "cydonia/ruins/beekeeper_house/beehive_on",
@@ -56,38 +58,39 @@ class SimplePools(private val context: BootstrapContext<StructureTemplatePool>) 
     }
 
     private fun bootstrapConduitChurch() {
-        registerSimplePoolElementsWithCydonia(
-            "ruins/conduit_church/main",
+        registerPoolElementsWithCydonia("ruins/conduit_church/main", keepLiquids = true)
+        registerPoolElementsWithCydonia(
             "ruins/conduit_church/maze_end",
             "ruins/conduit_church/maze",
             "ruins/conduit_church/secret_tunnel",
         )
-        registerSimplePoolElements(
+        registerPoolElements(
             "cydonia/ruins/conduit_church/follonichese",
             "cydonia/ruins/conduit_church/follonichese_shell",
+            keepLiquids = true,
         )
     }
 
     private fun bootstrapEnchantTower() {
         val processors = processorGetter.getOrThrow(GrProcessorLists.TOWER_DEGRADATION)
-        registerSimplePoolElements(
+        registerPoolElements(
             "ruins/enchant_tower/base",
             "ruins/enchant_tower/table",
             "ruins/enchant_tower/tower",
             processors = processors,
         )
-        registerSimplePoolElements(
+        registerPoolElements(
             "cydonia/ruins/enchant_tower/base",
             "cydonia/ruins/enchant_tower/table",
             "cydonia/ruins/enchant_tower/tower",
         )
-        registerSimplePoolElements(
+        registerPoolElements(
             "ruins/enchant_tower/armor_stand",
         )
     }
 
     private fun bootstrapNoteblockLab() {
-        registerSimplePoolElementsWithCydonia(
+        registerPoolElementsWithCydonia(
             "ruins/noteblock_lab/basement",
             "ruins/noteblock_lab/house",
         )
@@ -95,7 +98,7 @@ class SimplePools(private val context: BootstrapContext<StructureTemplatePool>) 
 
     private fun bootstrapAbandonedForge() {
         val processors = processorGetter.getOrThrow(GrProcessorLists.FORGE_DEGRADATION)
-        registerSimplePoolElements(
+        registerPoolElements(
             "ruins/abandoned_forge/base",
             "ruins/abandoned_forge/cave",
             "ruins/abandoned_forge/hole",
@@ -104,18 +107,21 @@ class SimplePools(private val context: BootstrapContext<StructureTemplatePool>) 
     }
 
     private fun bootstrapMinorRuins() {
-        registerSimplePoolElements(
+        registerPoolElements(
             "ruins/conduit_ruins",
+            keepLiquids = true,
+        )
+        registerPoolElements(
             "ruins/noteblock_ship",
         )
     }
 
     private fun bootstrapMisc() {
-        registerSimplePoolElementsWithCydonia(
+        registerPoolElementsWithCydonia(
             "misc/cave_camp",
             "misc/marker",
         )
-        registerSimplePoolElements(
+        registerPoolElements(
             "cydonia/misc/golem_house",
             processors = processorGetter.getOrThrow(ProcessorLists.MOSSIFY_10_PERCENT),
         )
@@ -127,7 +133,7 @@ class SimplePools(private val context: BootstrapContext<StructureTemplatePool>) 
      */
     private fun bootstrapVillageHouses() {
         VillageBuildings.houseEntries[CATEGORY_GOLEM_HOUSE]!!.forEach { entry ->
-            registerSimplePoolElements(
+            registerPoolElements(
                 entry.normalPool.path, entry.zombiePool.path,
                 templatePaths = listOf(entry.normalTemplate.path, entry.zombieTemplate.path)
             )
@@ -135,17 +141,29 @@ class SimplePools(private val context: BootstrapContext<StructureTemplatePool>) 
     }
 
 
-    private fun registerSimplePoolElementsWithCydonia(vararg paths: String, templatePaths: List<String> = paths.toList(), processors: Holder<StructureProcessorList> = emptyProcessor) {
-        registerSimplePoolElements(paths.toList().flatMap { listOf(it, "cydonia/$it") }, templatePaths.flatMap { listOf(it, "cydonia/$it") }, processors)
+    private fun registerPoolElementsWithCydonia(
+        vararg paths: String, templatePaths: List<String> = paths.toList(), processors: Holder<StructureProcessorList> = emptyProcessor,
+        keepLiquids: Boolean? = false,
+    ) {
+        registerPoolElements(paths.toList().flatMap { listOf(it, "cydonia/$it") }, templatePaths.flatMap { listOf(it, "cydonia/$it") }, processors, keepLiquids)
     }
 
-    private fun registerSimplePoolElements(vararg paths: String, templatePaths: List<String> = paths.toList(), processors: Holder<StructureProcessorList> = emptyProcessor) {
-        registerSimplePoolElements(paths.toList(), templatePaths, processors)
+    private fun registerPoolElements(
+        vararg paths: String, templatePaths: List<String> = paths.toList(), processors: Holder<StructureProcessorList> = emptyProcessor,
+        keepLiquids: Boolean? = false,
+    ) {
+        registerPoolElements(paths.toList(), templatePaths, processors, keepLiquids)
     }
 
-    private fun registerSimplePoolElements(paths: List<String>, templatePaths: List<String> = paths.toList(), processors: Holder<StructureProcessorList> = emptyProcessor) {
+    private fun registerPoolElements(
+        paths: List<String>, templatePaths: List<String> = paths.toList(), processors: Holder<StructureProcessorList> = emptyProcessor,
+        keepLiquids: Boolean? = false,
+    ) {
         for ((path, templatePath) in paths.zip(templatePaths)) {
-            registerSimplePoolElement(path, templatePath, processors)
+            if (keepLiquids != null)
+                registerFxPoolElement(path, templatePath, processors, keepLiquids)
+            else
+                registerSimplePoolElement(path, templatePath, processors)
         }
     }
 
@@ -154,13 +172,32 @@ class SimplePools(private val context: BootstrapContext<StructureTemplatePool>) 
             emptyPool,
             listOf(
                 // Why didn't Mojang expose a function to do this with any resloc goddammit
-                Pair.of(singlePoolElement(resLoc(templatePath), processors), 1),
+                Pair(singlePoolElement(resLoc(templatePath), processors), 1),
             ),
             Projection.RIGID
         ))
     }
 
+    private fun registerFxPoolElement(
+        path: String, templatePath: String = path, processors: Holder<StructureProcessorList> = emptyProcessor,
+        keepLiquids: Boolean? = null
+    ) {
+        context.register(ResourceKey.create(Registries.TEMPLATE_POOL, resLoc(path)), StructureTemplatePool(
+            emptyPool,
+            listOf(
+                Pair(singlePoolElementFx(resLoc(templatePath), processors, FxSinglePoolElement.StructurePlaceSettingsDefaults(
+                    keepLiquids = keepLiquids,
+                )), 1)
+            ),
+            Projection.RIGID,
+        ))
+    }
+
     private fun singlePoolElement(id: ResourceLocation, processors: Holder<StructureProcessorList>) = java.util.function.Function<Projection, SinglePoolElement> { proj ->
-        SinglePoolElement(Either.left(id), processors, proj)
+       SinglePoolElement(Either.left(id), processors, proj)
+    }
+
+    private fun singlePoolElementFx(id: ResourceLocation, processors: Holder<StructureProcessorList>, placeDefaults: FxSinglePoolElement.StructurePlaceSettingsDefaults) = java.util.function.Function<Projection, FxSinglePoolElement> { proj ->
+       FxSinglePoolElement(Either.left(id), processors, proj, Optional.of(placeDefaults))
     }
 }
