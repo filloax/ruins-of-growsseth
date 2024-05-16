@@ -194,10 +194,12 @@ tasks.processResources {
 		"fabric_kotlin_version" to fabricKotlinVersion,
 		"loader_version" to loaderVersion,
 		"fapi_version" to fabricApiVersion,
-	).forEach { (prop, value) -> inputs.property(prop, value) }
-
-	filesMatching("fabric.mod.json") {
-		expand(mapOf("version" to project.version))
+	).also {
+		filesMatching("fabric.mod.json") {
+			expand(it)
+		}
+	}.forEach { (prop, value) ->
+		inputs.property(prop, value)
 	}
 }
 
