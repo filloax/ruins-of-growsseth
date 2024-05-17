@@ -181,8 +181,8 @@
     "growsseth.config.researcherStrikesFirst.name": "Researcher strikes first",
     "growsseth.config.researcherStrikesFirst.comment": "The researcher will attack the mobs mentioned in the previous setting (if enabled) even when they are not attacking him. If changed ingame, takes effect on world reload.",
 
-    "growsseth.config.singleResearcherProgressTrades.name": "Trade progress for single researcher",
-    "growsseth.config.singleResearcherProgressTrades.comment": "Ignored if single researcher is false. If enabled, the researcher will initially only sell one kind of map, and unlock more structures as you return to him after finding the previous one. In this mode, the researcher's 'quest' will automatically progress (see quest config section). If disabled, each instance of the researcher will have up to N random maps (see randomTradeMaxMaps) for sale, with no quest progress. Always true with a fixed order in Growsseth world preset.",
+    "growsseth.config.singleResearcherProgress.name": "Trades and quest progress for single researcher",
+    "growsseth.config.singleResearcherProgress.comment": "Ignored if single researcher is false. If enabled, the researcher will initially only sell one kind of map, and unlock more structures as you return to him after finding the previous one. In this mode, the researcher's 'quest' will automatically progress (see quest config section). If disabled, each instance of the researcher will have up to N random maps (see randomTradeMaxMaps) for sale, with no quest progress. Always true with a fixed order in Growsseth world preset.",
     "growsseth.config.webTrades.name": "Web trades",
     "growsseth.config.webTrades.comment": "Whether to apply gamemaster-controlled trades when web data sync is enabled.",
     "growsseth.config.tradesRestockTime.name": "Trades restock time",

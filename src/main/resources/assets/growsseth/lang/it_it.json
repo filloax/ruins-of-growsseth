@@ -181,8 +181,8 @@
     "growsseth.config.researcherStrikesFirst.name": "Ricercatore attacca per primo",
     "growsseth.config.researcherStrikesFirst.comment": "Il ricercatore attaccherà i mob menzionati nell'opzione precedente (se attiva) anche quando non sono ostili verso di lui. Se cambiata ingame farà effetto al ricaricamento del mondo.",
 
-    "growsseth.config.singleResearcherProgressTrades.name": "Progresso degli scambi per ricercatore singolo",
-    "growsseth.config.singleResearcherProgressTrades.comment": "Ignorato se il ricercatore singolo è disattivato. Se abilitato, il ricercatore venderà inizialmente solo un tipo di mappa, e sbloccherà più strutture man mano che torni da lui dopo aver trovato le precedenti. In questa modalità la 'quest' del ricercatore progredirà automaticamente (vedi la sezione config della quest). Se disabilitata, ogni istanza del ricercatore avrà fino a N mappe casuali (vedi randomTradeMaxMaps) in vendita, senza progresso della quest. Sempre attiva con un ordine fissato nel preset del mondo di Growsseth.",
+    "growsseth.config.singleResearcherProgress.name": "Progresso di scambi e quest per ricercatore singolo",
+    "growsseth.config.singleResearcherProgress.comment": "Ignorato se il ricercatore singolo è disattivato. Se abilitato, il ricercatore venderà inizialmente solo un tipo di mappa, e sbloccherà più strutture man mano che torni da lui dopo aver trovato le precedenti. In questa modalità la 'quest' del ricercatore progredirà automaticamente (vedi la sezione config della quest). Se disabilitata, ogni istanza del ricercatore avrà fino a N mappe casuali (vedi randomTradeMaxMaps) in vendita, senza progresso della quest. Sempre attiva con un ordine fissato nel preset del mondo di Growsseth.",
     "growsseth.config.webTrades.name": "Scambi web",
     "growsseth.config.webTrades.comment": "Se applicare o meno gli scambi controllati dal gamemaster quando la sincronizzazione web è attiva.",
     "growsseth.config.tradesRestockTime.name": "Tempo di rifornimento scambi",
