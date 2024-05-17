@@ -10,7 +10,7 @@
                 },
                 "wants": [
                     {
-                        "id": "minecraft:book",
+                        "id": "minecraft:emerald",
                         "amount": 1
                     },
                 ],
