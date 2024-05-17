@@ -64,7 +64,17 @@ object GrowssethStructures {
     @JvmField
     val NOTEBLOCK_SHIP = make("noteblock_ship", StructTags.NOTEBLOCK_SHIP)
 
-    // Structures findable by map in the original live run, used for progress modes
+    // Structures findable by map, used for normal progress mode
+    val PROGRESS_STRUCTURES = listOf(
+        CAVE_CAMP,
+        GOLEM_HOUSE,
+        ENCHANT_TOWER,
+        NOTEBLOCK_LAB,
+        BEEKEEPER_HOUSE,
+        CONDUIT_CHURCH,
+        ABANDONED_FORGE,
+    )
+    // structures from the original live run, for growsseth progress mode
     val ORIGINAL_STRUCTURES = listOf(
         CAVE_CAMP,
         GOLEM_HOUSE,
