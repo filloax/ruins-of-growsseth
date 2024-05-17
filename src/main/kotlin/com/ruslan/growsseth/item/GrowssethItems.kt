@@ -56,7 +56,7 @@ object GrowssethItems {
 	val DISC_ANCORA_QUI 			= makeDisc("disc_ancora_qui", GrowssethSounds.DISC_ANCORA_QUI, 145)
 	val DISC_BALLATA_DEL_RESPAWN 	= makeDisc("disc_ballata_del_respawn", GrowssethSounds.DISC_BALLATA_DEL_RESPAWN, 266)
 	val DISC_CACO_CACO 				= makeDisc("disc_caco_caco", GrowssethSounds.DISC_CACO_CACO, 145)
-	val DISC_PESCI_STRANI 			= makeDisc("disc_pesci_strani", GrowssethSounds.DISC_PESCI_STRANI, 0)	// SISTEMARE DURATA!!!!!!
+	val DISC_PESCI_STRANI 			= makeDisc("disc_pesci_strani", GrowssethSounds.DISC_PESCI_STRANI, 157)
 
 
 	val DISCS_TO_VOCALS = mutableMapOf(
