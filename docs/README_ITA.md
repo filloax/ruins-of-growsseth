@@ -32,7 +32,7 @@ Ruslan Fanclub:
 - Filloax (Lead Programmer)
 - Krozzzt (Programmazione e scrittura)
 - Reivaxelain (Arte, strutture e scrittura)
-- bb01 (Strutture e scrittura aggiuntiva)
+- bb01 (Strutture, scrittura aggiuntiva e testing aggiuntivo)
 - SkullFury (Membro originale, creazione datapack)
 - Vovalcool (Membro originale, strutture)
 - Tutti quanti: Design e testing
