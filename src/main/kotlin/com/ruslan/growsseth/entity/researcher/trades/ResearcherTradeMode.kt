@@ -1,18 +1,12 @@
 package com.ruslan.growsseth.entity.researcher.trades
 
 import com.mojang.serialization.Codec
-import com.mojang.serialization.DynamicOps
-import com.mojang.serialization.Keyable
 import com.ruslan.growsseth.config.ResearcherConfig
 import com.ruslan.growsseth.config.WebConfig
-import com.ruslan.growsseth.entity.researcher.Researcher
 import com.ruslan.growsseth.structure.GrowssethStructures
 import com.ruslan.growsseth.worldgen.worldpreset.GrowssethWorldPreset
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.level.ServerPlayer
 import net.minecraft.util.StringRepresentable
-import net.minecraft.world.item.trading.MerchantOffers
-import java.util.stream.Stream
 
 enum class ResearcherTradeMode(val id: String) : StringRepresentable {
     // single researcher on AND random trades off
@@ -38,7 +32,7 @@ enum class ResearcherTradeMode(val id: String) : StringRepresentable {
                 GAME_MASTER
             } else if (GrowssethWorldPreset.isGrowssethPreset(server)) {
                 GROWSSETH_PROGRESS
-            } else if (!ResearcherConfig.singleResearcher || !ResearcherConfig.singleResearcherProgressTrades) {
+            } else if (!ResearcherConfig.singleResearcher || !ResearcherConfig.singleResearcherProgress) {
                 RANDOM
             } else {
                 PROGRESS
