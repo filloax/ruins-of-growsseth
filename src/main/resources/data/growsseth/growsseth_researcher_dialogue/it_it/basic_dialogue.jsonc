@@ -405,7 +405,10 @@
         }
     ],
     "returnDonkey": [
-        "Grazie per avermelo riportato. Ti farò di nuovo i prezzi originali!"
+        {
+            "content": "Grazie per avermelo riportato. Ti farò di nuovo i prezzi originali!",
+            "immediate": true
+        },
     ],
     "exploreCellar": [
         {
