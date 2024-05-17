@@ -75,6 +75,8 @@ object ResearcherDonkey {
                 researcher.dialogues?.triggerDialogue(player, ResearcherDialoguesComponent.EV_RETURN_DONKEY)
             }
         }
+
+        mob.tags.add(Constants.TAG_RESEARCHER_DONKEY)
     }
 
     fun removeDonkey(entity: Researcher, level: ServerLevel, predicate: ((Entity) -> Boolean) = {true}) {
