@@ -63,7 +63,7 @@ class CustomDataProvider(private val output: PackOutput) : DataProvider {
 
     private fun generateResearcherTradesBeforeStruct(): Map<String, List<ResearcherTradeObj>> {
         val out = mutableMapOf<String, List<ResearcherTradeObj>>()
-        GrowssethStructures.ORIGINAL_STRUCTURES
+        GrowssethStructures.PROGRESS_STRUCTURES
             // Remove golem house as currently no way to map to village house
             .forEach { key ->
             val info = GrowssethStructures.info[key]!!

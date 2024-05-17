@@ -14,7 +14,8 @@ import com.teamresourceful.resourcefulconfig.api.types.options.EntryType;
         WebConfig.class,
         QuestConfig.class,
         StructureConfig.class,
-        WorldPresetConfig.class
+        WorldPresetConfig.class,
+        DebugConfig.class
     }
 )
 public final class GrowssethConfig {
@@ -25,6 +26,7 @@ public final class GrowssethConfig {
             // Different from the translated string, since the 'client' info is needed only for those who edit the json directly
             value = "Choose between 'en_us' and 'it_it'. Used for npc dialogues, researcher diaries and structure books. "
                 + "Defaults to 'client', which will autoselect the language depending on client language on first launch, or default to en_us in servers. "
+                + "Will not affect already generated structures. "
                 + "Additional languages may be added via datapack.",
             translation = T_PREF + "serverLanguage.comment"
     )

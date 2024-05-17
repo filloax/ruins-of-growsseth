@@ -9,7 +9,7 @@
         {
           "type": "minecraft:tag",
           "expand": true,
-          "name": "growsseth:music_discs"
+          "name": "growsseth:noteblock_discs"
         }
       ]
     },

@@ -1,0 +1,77 @@
+{
+    "name": "Dizionario alfabeto antico",
+    "pages": [
+        "Salve collega, se hai intenzione di comprare la mappa per il \"Santuario tra le correnti\" questi appunti ti torneranno molto utili.\n\nÈ una struttura più antica delle altre, e ha delle iscrizioni in un alfabeto diverso dal nostro.",
+        {
+            "type": "component",
+            "content": [
+                { "text": "" },
+                { "text": "A", "font": "minecraft:alt" },
+                { "text": " = A\n" },
+                { "text": "B", "font": "minecraft:alt" },
+                { "text": " = B\n" },
+                { "text": "C", "font": "minecraft:alt" },
+                { "text": " = C\n" },
+                { "text": "D", "font": "minecraft:alt" },
+                { "text": " = D\n" },
+                { "text": "E", "font": "minecraft:alt" },
+                { "text": " = E\n" },
+                { "text": "F", "font": "minecraft:alt" },
+                { "text": " = F\n" },
+                { "text": "G", "font": "minecraft:alt" },
+                { "text": " = G\n" },
+                { "text": "H", "font": "minecraft:alt" },
+                { "text": " = H\n" },
+                { "text": "I", "font": "minecraft:alt" },
+                { "text": " = I\n" },
+                { "text": "J", "font": "minecraft:alt" },
+                { "text": " = J\n" },
+                { "text": "K", "font": "minecraft:alt" },
+                { "text": " = K\n" },
+                { "text": "L", "font": "minecraft:alt" },
+                { "text": " = L\n" },
+                { "text": "M", "font": "minecraft:alt" },
+                { "text": " = M\n" },
+                { "text": "N", "font": "minecraft:alt" },
+                { "text": " = N\n" }
+            ]
+        },
+        {
+            "type": "component",
+            "content": [
+                { "text": "" },
+                { "text": "O", "font": "minecraft:alt" },
+                { "text": " = O\n" },
+                { "text": "P", "font": "minecraft:alt" },
+                { "text": " = P\n" },
+                { "text": "Q", "font": "minecraft:alt" },
+                { "text": " = Q\n" },
+                { "text": "R", "font": "minecraft:alt" },
+                { "text": " = R\n" },
+                { "text": "S", "font": "minecraft:alt" },
+                { "text": " = S\n" },
+                { "text": "T", "font": "minecraft:alt" },
+                { "text": " = T\n" },
+                { "text": "U", "font": "minecraft:alt" },
+                { "text": " = U\n" },
+                { "text": "V", "font": "minecraft:alt" },
+                { "text": " = V\n" },
+                { "text": "W", "font": "minecraft:alt" },
+                { "text": " = W\n" },
+                { "text": "X", "font": "minecraft:alt" },
+                { "text": " = X\n" },
+                { "text": "Y", "font": "minecraft:alt" },
+                { "text": " = Y\n" },
+                { "text": "Z", "font": "minecraft:alt" },
+                { "text": " = Z" }
+            ]
+        },
+        {
+            "type": "component",
+            "content": [
+                { "text": "Per fare pratica, prova a tradurre questa scritta, la ho trovata nella torre in frantumi:\n\n" },
+                { "text": "Gli uomini verdi ci guardano", "font": "minecraft:alt" }
+            ]
+        }
+    ]
+}

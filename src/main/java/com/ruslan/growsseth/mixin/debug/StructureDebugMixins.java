@@ -7,6 +7,7 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Decoder;
 import com.mojang.serialization.DynamicOps;
 import com.ruslan.growsseth.RuinsOfGrowsseth;
+import com.ruslan.growsseth.config.DebugConfig;
 import com.ruslan.growsseth.config.StructureConfig;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -40,7 +41,7 @@ public class StructureDebugMixins {
             at = @At("STORE")
         )
         private Predicate<Holder<Biome>> onSetBiomePredicate(Predicate<Holder<Biome>> value, @Local(argsOnly = true) StructureSet.StructureSelectionEntry structureSelectionEntry) {
-            if (!StructureConfig.structuresDebugMode || !structureSelectionEntry.structure().unwrapKey().map(k -> k.location().getNamespace().equals(RuinsOfGrowsseth.MOD_ID)).orElse(false)) {
+            if (!DebugConfig.structuresDebugMode || !structureSelectionEntry.structure().unwrapKey().map(k -> k.location().getNamespace().equals(RuinsOfGrowsseth.MOD_ID)).orElse(false)) {
                 return value;
             } else {
                 return (h) -> true;
@@ -60,9 +61,9 @@ public class StructureDebugMixins {
                 @Local(argsOnly = true) ResourceKey<? extends Registry<?>> registryKey
         ) {
             var result = original.call(instance, ops, jsonElement);
-            if (StructureConfig.structuresDebugMode && registryKey.equals(Registries.STRUCTURE_SET) && jsonElement.toString().contains("growsseth")) {
-                RuinsOfGrowsseth.getLOGGER().info("(debug mode) Increasing spawn frequency for {}", jsonElement);
-                StructureSet structureSet = (StructureSet) result.getOrThrow(false, string -> {});
+            if (DebugConfig.structuresDebugMode && registry.key().equals(Registries.STRUCTURE_SET) && jsonElement.toString().contains("growsseth")) {
+                RuinsOfGrowsseth.getLOGGER().info("(debug mode) Network | Increasing spawn frequency for {}", jsonElement);
+                StructureSet structureSet = (StructureSet) result.getOrThrow();
                 var placement = structureSet.placement();
                 placement.frequency = 1;
                 if (placement instanceof RandomSpreadStructurePlacement randomSpread) {
@@ -91,7 +92,7 @@ public class StructureDebugMixins {
             cancellable = true
         )
         private void overrideStructuresInDebug(HolderLookup<StructureSet> structureSetLookup, RandomState randomState, long seed, CallbackInfoReturnable<ChunkGeneratorStructureState> cir) {
-            if (StructureConfig.structuresDebugMode) {
+            if (DebugConfig.structuresDebugMode) {
                 RuinsOfGrowsseth.getLOGGER().info("(debug mode) Replaced flat worldgen structure selection");
                 cir.setReturnValue(super.createState(structureSetLookup, randomState, seed));
             }
@@ -106,7 +107,7 @@ public class StructureDebugMixins {
             cancellable = true
         )
         private static void hasBiomesForStructureSet(StructureSet structureSet, BiomeSource biomeSource, CallbackInfoReturnable<Boolean> cir) {
-            if (StructureConfig.structuresDebugMode) {
+            if (DebugConfig.structuresDebugMode) {
                 cir.setReturnValue(true);
             }
         }

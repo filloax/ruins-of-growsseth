@@ -81,17 +81,17 @@ dependencies {
 	})
 
 	implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5")
-	implementation("org.json:json:20230618")
+	implementation("org.json:json:20231013")
 	implementation("org.java-websocket:Java-WebSocket:1.5.4")
-	implementation("com.squareup.okio:okio:3.0.0-alpha.9")
+	implementation("com.squareup.okio:okio:3.4.0")
 	implementation("com.squareup.okhttp3:okhttp:4.11.0")
 	implementation("io.socket:engine.io-client:2.1.0")
 	implementation("io.socket:socket.io-client:2.1.0")
 
 	include("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5")
-	include("org.json:json:20230618")
+	include("org.json:json:20231013")
 	include("org.java-websocket:Java-WebSocket:1.5.4")
-	include("com.squareup.okio:okio:3.0.0-alpha.9")
+	include("com.squareup.okio:okio:3.4.0")
 	include("com.squareup.okhttp3:okhttp:4.11.0")
 	include("io.socket:engine.io-client:2.1.0")
 	include("io.socket:socket.io-client:2.1.0")
@@ -154,9 +154,8 @@ tasks.register("makeReferenceDatapack") {
 	val resourcesDirs = listOf(
 		resourcesDir.resolve("growsseth_places"),
 		resourcesDir.resolve("growsseth_researcher_dialogue"),
-		resourcesDir.resolve("growsseth_researcher_diary"),
 		resourcesDir.resolve("growsseth_researcher_trades"),
-		resourcesDir.resolve("growsseth_structure_books")
+		resourcesDir.resolve("growsseth_templates")
 	)
 
 	val destinationDir = project.file("build/datapack")

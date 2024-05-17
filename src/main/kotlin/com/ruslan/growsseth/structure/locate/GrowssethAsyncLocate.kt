@@ -14,6 +14,7 @@ import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
 import net.minecraft.core.HolderSet
 import net.minecraft.core.SectionPos
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.chunk.ChunkGenerator
 import net.minecraft.world.level.levelgen.structure.Structure
@@ -57,8 +58,7 @@ object StoppableAsyncLocator {
     }
 
     /**
-     * Queues a task to locate a feature using
-     * [ChunkGenerator.findNearestMapStructure] and returns a
+     * Queues a task to locate a feature and returns a
      * [LocateTask] that allows monitoring, cancelling it, and running code with futures.
      */
     fun locate(
@@ -81,6 +81,35 @@ object StoppableAsyncLocator {
             timeoutThread?.start()
             task.start()
         } ?: throw IllegalStateException("No executorservice for locate!")
+        return task
+    }
+
+    /**
+     * Queues a task to locate a structure with a specific jigsaw piece inside it and returns a
+     * [JigsawLocateTask] that allows monitoring, cancelling it, and running code with futures.
+     */
+    fun locateJigsaw(
+        level: ServerLevel, structureSet: HolderSet<Structure>,
+        jigsawIds: Set<ResourceLocation>,
+        pos: BlockPos,
+        searchRadius: Int, skipKnownStructures: Boolean,
+        timeoutSeconds: Int? = null,
+        signalProgress: JigsawSignalProgressFun? = null,
+    ): JigsawLocateTask {
+        val task = JigsawLocateTask(
+            level.chunkSource.generator, level, pos,
+            structureSet, jigsawIds, searchRadius, skipKnownStructures,
+            signalProgress
+        )
+        val timeoutThread = timeoutSeconds?.let { timeout -> thread(start = false) {
+            Thread.sleep(timeout * 1000L)
+            if (!task.done)
+                task.cancel("timeout")
+        } }
+        executorService?.submit {
+            timeoutThread?.start()
+            task.start()
+        } ?: throw IllegalStateException("No executorservice for jigsaw locate!")
         return task
     }
 

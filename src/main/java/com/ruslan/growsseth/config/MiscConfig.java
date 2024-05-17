@@ -15,7 +15,4 @@ public class MiscConfig {
 
     @ConfigEntry(id = "zombieGuberSpawnChance", type = EntryType.FLOAT, translation = T_PREF + "zombieGuberSpawnChance.name")
     public static float zombieGuberSpawnChance = 0.2f;
-
-    @ConfigEntry(id = "disableNpcDialogues", type = EntryType.BOOLEAN, translation = T_PREF + "disableNpcDialogues.name")
-    public static boolean disableNpcDialogues = false;
 }

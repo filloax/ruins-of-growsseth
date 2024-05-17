@@ -1,9 +1,12 @@
 package com.ruslan.growsseth.quests
 
+import com.filloax.fxlib.api.secondsToTicks
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.dialogues.DialoguesNpc
 import com.ruslan.growsseth.http.GrowssethApi
+import net.minecraft.core.SectionPos
 import net.minecraft.world.entity.LivingEntity
+import java.lang.IllegalArgumentException
 
 
 fun interface QuestStageTrigger<E : LivingEntity> {
@@ -13,11 +16,14 @@ fun interface QuestStageTrigger<E : LivingEntity> {
      */
     fun isActive(entity: E, event: QuestUpdateEvent): Boolean
 
-    fun and(vararg with: QuestStageTrigger<E>): QuestStageTrigger<E> {
+    infix fun and(other: QuestStageTrigger<E>): QuestStageTrigger<E> = andMulti(other)
+    infix fun or(other: QuestStageTrigger<E>): QuestStageTrigger<E> = orMulti(other)
+
+    fun andMulti(vararg with: QuestStageTrigger<E>): QuestStageTrigger<E> {
         return AndTrigger(with.toMutableList().also{it.add(this)})
     }
 
-    fun or(vararg with: QuestStageTrigger<E>): QuestStageTrigger<E> {
+    fun orMulti(vararg with: QuestStageTrigger<E>): QuestStageTrigger<E> {
         return OrTrigger(with.toMutableList().also{it.add(this)})
     }
 }
@@ -86,6 +92,24 @@ fun <E : LivingEntity> TimeOrDayTimeTrigger(
     questComponent: QuestComponent<E>,
     requiredTime: Long,
 ) = TimeTrigger(questComponent, requiredTime).or(DayTimeTrigger(questComponent, requiredTime))
+
+class NoPlayersInRadiusTrigger<E : LivingEntity>(
+    private val quest: QuestComponent<E>,
+    radius: Int? = null,
+    chunkRadius: Int? = null,
+): QuestStageTrigger<E> {
+    val radius = radius ?: chunkRadius?.let{ it * SectionPos.SECTION_SIZE }
+        ?: throw IllegalArgumentException("NoPlayersInRadiusTrigger needs radius or chunkRadius")
+
+    override fun isActive(entity: E, event: QuestUpdateEvent): Boolean {
+        val updatePeriod = (5f.secondsToTicks() / quest.updatePeriod) * quest.updatePeriod // Ensure is multiple of updatePeriod
+        if (entity.tickCount % updatePeriod == 0) {
+            val hasPlayers = entity.level().getNearestPlayer(entity, radius.toDouble()) != null
+            return !hasPlayers
+        }
+        return false
+    }
+}
 
 private class AndTrigger<E: LivingEntity>(val parts: List<QuestStageTrigger<E>>): QuestStageTrigger<E> {
     override fun isActive(entity: E, event: QuestUpdateEvent): Boolean {

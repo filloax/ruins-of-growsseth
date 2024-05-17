@@ -1,0 +1,11 @@
+This is the section for the steps of the researcher's final quest. Below, they will be described by sections to follow the logic of the mod.
+
+**First step:** the researcher begins to succumb to the plague, showing symptoms preceding the transformation into undead; this step consists only of triggering a dialogue.  
+<u>Note</u>: the dialogue tied to the event can be skipped by activating it along with the next step, so if you want to change it without installing the datapack, you can trigger a manual dialogue from the communication section (before activating the steps).
+
+**Second step:** once realizing he has failed in his search for a cure, the researcher descends into the basement (leaving the trapdoor under the sleeping bag uncovered), writes a farewell diary to the player, and locks himself in the cage.  
+When the player finds him, there are **two possibilities**: to search for the necessary materials and **cure him** (if they know it's possible, of course), or **kill him** and obtain the decorated horn and dagger (which can only be obtained with his death). If the player decides to cure the researcher, he will thank them and (<u>if the appropriate trade is activated</u>, which is therefore advisable to activate with the second step to avoid forgetting) offer them the mod items in exchange for simple paper.  
+If the researcher is cured, **moving away** and **approaching again** to the tent, reloading the chunks, will teleport him out of the basement (otherwise, the teleportation command from the commands section can be used), and once encountered again, he will give a farewell speech and remain in the tent, continuing to sell (or give away) what he has.
+
+**Third step:** the researcher will leave a crate containing the decorated horn and the thank-you diary, and will leave to continue his adventures, taking the tent and the basement items with him (the entrance to which will be plugged).  
+<u>Note</u>: He won't necessarily never return; if you want to bring him back in the future for some reason, you can always spawn a new tent, perhaps without a basement. In that case, make sure to deactivate the steps before spawning it and prepare the dialogues to justify his return.

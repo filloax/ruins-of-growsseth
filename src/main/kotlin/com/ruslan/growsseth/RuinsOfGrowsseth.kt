@@ -8,7 +8,7 @@ import com.ruslan.growsseth.dialogues.ResearcherDialogueListener
 import com.ruslan.growsseth.effect.GrowssethEffects
 import com.ruslan.growsseth.entity.GrowssethEntities
 import com.ruslan.growsseth.entity.researcher.CustomRemoteDiaries
-import com.ruslan.growsseth.entity.researcher.DiaryListener
+import com.ruslan.growsseth.entity.researcher.ResearcherDiaryComponent
 import com.ruslan.growsseth.entity.researcher.trades.GameMasterResearcherTradesProvider
 import com.ruslan.growsseth.entity.researcher.trades.TradesListener
 import com.ruslan.growsseth.http.GrowssethApi
@@ -19,6 +19,7 @@ import com.ruslan.growsseth.maps.GrowssethMapDecorations
 import com.ruslan.growsseth.networking.GrowssethPackets
 import com.ruslan.growsseth.platform.PlatformAbstractions
 import com.ruslan.growsseth.structure.*
+import com.ruslan.growsseth.templates.TemplateListener
 import com.ruslan.growsseth.utils.resLoc
 import com.ruslan.growsseth.worldgen.worldpreset.LocationNotifListener
 import net.fabricmc.api.ModInitializer
@@ -56,7 +57,7 @@ object RuinsOfGrowsseth : ModInitializer {
         GameMasterResearcherTradesProvider.subscribe()
         GrowssethExtraEvents.init()
         ResearcherDialogueApiListener.init()
-        GrowssethMapDecorations.init()
+        ResearcherDiaryComponent.init()
 
         initItemGroups()
         registerResourceListeners()
@@ -80,6 +81,8 @@ object RuinsOfGrowsseth : ModInitializer {
         GrowssethStructures.registerStructureTypes{ id, value -> Registry.register(BuiltInRegistries.STRUCTURE_TYPE, id, value) }
         GrowssethCriterions.registerCriterions { id, value -> Registry.register(BuiltInRegistries.TRIGGER_TYPES, id, value) }
         GrowssethCommands.ArgumentTypes.registerArgumentTypes(BuiltInRegistries.COMMAND_ARGUMENT_TYPE)
+        GrowssethPackets.registerPacketsC2S(platform.packetRegistratorC2S)
+        GrowssethPackets.registerPacketsS2C(platform.packetRegistratorS2C)
     }
 
     private fun initItemGroups() {
@@ -119,12 +122,8 @@ object RuinsOfGrowsseth : ModInitializer {
             ResearcherDialogueListener(),
         ))
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(FabricReloadListener(
-            resLoc(Constants.RESEARCHER_DIARY_DATA_FOLDER),
-            DiaryListener(),
-        ))
-        ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(FabricReloadListener(
-            resLoc(Constants.STRUCTURE_BOOK_FOLDER),
-            StructureBookListener(),
+            resLoc(Constants.TEMPLATE_FOLDER),
+            TemplateListener,
         ))
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(FabricReloadListener(
             resLoc(Constants.PRESET_PLACES_FOLDER),

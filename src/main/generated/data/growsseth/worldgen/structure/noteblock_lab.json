@@ -17,6 +17,5 @@
   },
   "start_pool": "growsseth:ruins/noteblock_lab/house",
   "step": "surface_structures",
-  "terrain_adaptation": "beard_thin",
   "use_expansion_hack": false
 }

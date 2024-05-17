@@ -6,12 +6,11 @@ import com.filloax.fxlib.api.getYAtXZ
 import com.filloax.fxlib.api.nbt.loadField
 import com.mojang.datafixers.util.Either
 import com.ruslan.growsseth.RuinsOfGrowsseth
-import com.ruslan.growsseth.entity.researcher.DiaryHelper
 import com.ruslan.growsseth.entity.researcher.Researcher
 import com.ruslan.growsseth.maps.DestinationType
 import com.ruslan.growsseth.maps.updateMapToPos
 import com.ruslan.growsseth.maps.updateMapToStruct
-import com.ruslan.growsseth.mixin.item.mapitem.MapItemAccessor
+import com.ruslan.growsseth.templates.BookTemplates
 import net.minecraft.core.BlockPos
 import net.minecraft.core.RegistryAccess
 import net.minecraft.core.registries.Registries
@@ -202,8 +201,8 @@ object ResearcherTradeUtils {
                 setTradeMapTarget(researcher, result, mapInfo, offerOut)
             }
         }
-        if (data.contains(ResearcherItemListing.DIARY_ID_TAG)) {
-            DiaryHelper.updateItemWithMiscDiary(result, data.getString(ResearcherItemListing.DIARY_ID_TAG), researcher)
+        if (data.contains(ResearcherItemListing.BOOK_TEMPLATE_TAG)) {
+            BookTemplates.loadTemplate(result, data.getString(ResearcherItemListing.BOOK_TEMPLATE_TAG), edit = { withAuthor(researcher.name.string) })
         }
         return offerOut
     }

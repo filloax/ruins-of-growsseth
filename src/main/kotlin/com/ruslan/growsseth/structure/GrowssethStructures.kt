@@ -64,7 +64,17 @@ object GrowssethStructures {
     @JvmField
     val NOTEBLOCK_SHIP = make("noteblock_ship", StructTags.NOTEBLOCK_SHIP)
 
-    // Structures findable by map in the original live run, used for progress modes
+    // Structures findable by map, used for normal progress mode
+    val PROGRESS_STRUCTURES = listOf(
+        CAVE_CAMP,
+        GOLEM_HOUSE,
+        ENCHANT_TOWER,
+        NOTEBLOCK_LAB,
+        BEEKEEPER_HOUSE,
+        CONDUIT_CHURCH,
+        ABANDONED_FORGE,
+    )
+    // structures from the original live run, for growsseth progress mode
     val ORIGINAL_STRUCTURES = listOf(
         CAVE_CAMP,
         GOLEM_HOUSE,
@@ -203,7 +213,6 @@ object GrowssethStructures {
                 offset = Vec3i(-15, -2, -14),
                 startHeight = ConstantHeight.of(VerticalAnchor.absolute(-2)),
                 projectStartToHeightMap = Heightmap.Types.OCEAN_FLOOR,
-                terrainAdaptation = TerrainAdjustment.NONE,
             )
             registerSimpleJigsaw(ENCHANT_TOWER, "ruins/enchant_tower/base",
                 offset = Vec3i(-5, 0, -4),
@@ -222,7 +231,6 @@ object GrowssethStructures {
             registerSimpleJigsaw(NOTEBLOCK_SHIP, "ruins/noteblock_ship",
                 startHeight = ConstantHeight.of(VerticalAnchor.absolute(-2)),
                 offset = Vec3i(-19, -2, -15),
-                terrainAdaptation = TerrainAdjustment.NONE,
             )
             registerSimpleJigsaw(CONDUIT_RUINS, "ruins/conduit_ruins",
                 offset = Vec3i(-16, 0, -16),
@@ -289,7 +297,6 @@ object GrowssethStructures {
             projectStartToHeightMap: Heightmap.Types? = Heightmap.Types.WORLD_SURFACE_WG,
             step: Decoration = Decoration.SURFACE_STRUCTURES,
             startHeight: HeightProvider = ConstantHeight.ZERO,
-            terrainAdaptation: TerrainAdjustment = TerrainAdjustment.BEARD_THIN,
             size: Int = 7,
         ) {
             val startPoolHolder = templatePoolGetter.getOrThrow(ResourceKey.create(Registries.TEMPLATE_POOL, resLoc(startPool)))
@@ -299,7 +306,6 @@ object GrowssethStructures {
                 startPoolHolder, biomesHolder,
                 forcePosOffset = offset, projectStartToHeightmap = projectStartToHeightMap,
                 step = step, startHeight = startHeight,
-                terrainAdaptation = terrainAdaptation,
                 size = size,
             ))
         }

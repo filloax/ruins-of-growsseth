@@ -10,7 +10,6 @@ import com.ruslan.growsseth.maps.MapIconTextures
 import com.teamresourceful.resourcefulconfig.client.ConfigScreen
 
 import net.fabricmc.api.ClientModInitializer
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.minecraft.client.gui.screens.Screen
 import org.apache.logging.log4j.Level
@@ -31,9 +30,6 @@ object GrowssethClient : ClientModInitializer {
     fun initEvents() {
         ClientTickEvents.START_CLIENT_TICK.register { client ->
             GrowssethWorldPresetClient.Callbacks.onClientTick(client)
-        }
-        ClientLifecycleEvents.CLIENT_STARTED.register { client ->
-            ClientConfigHandler.initClientConfig()
         }
     }
 

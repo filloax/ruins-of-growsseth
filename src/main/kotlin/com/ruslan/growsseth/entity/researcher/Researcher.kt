@@ -86,7 +86,6 @@ import net.minecraft.world.item.trading.MerchantOffers
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
-import net.minecraft.world.level.entity.EntityTypeTest
 import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.level.levelgen.structure.Structure
 import net.minecraft.world.level.levelgen.structure.StructureStart
@@ -94,12 +93,15 @@ import net.minecraft.world.level.portal.PortalInfo
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
+import java.time.LocalDateTime
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
 
 class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderMob(entityType, level),
-    Npc, RefreshableMerchant, InventoryCarrier, QuestOwner<Researcher>, DialoguesNpc, SpawnTimeTracker {
+    Npc, RefreshableMerchant, InventoryCarrier, QuestOwner<Researcher>, DialoguesNpc, SpawnTimeTracker,
+    ResearcherDataUser
+{
 
     companion object {
         fun createAttributes(): AttributeSupplier.Builder {
@@ -166,25 +168,14 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             Codec.INT.fieldOf("mapId").forGetter(MapMemory::mapId),
         ).apply(builder, ::MapMemory) })
 
-//        private var tentStructures: List<Structure>? = null
-
         fun findTent(level: ServerLevel, startingPos: BlockPos, currentPos: BlockPos? = null): StructureStart? {
             val structureManager = level.structureManager()
             var tentStart: StructureStart? = null
-//
-//            val validStructures = tentStructures ?: run {
-//                val structures = level.registryAccess().registryOrThrow(Registries.STRUCTURE).holders().filter {
-//                    it.value() is ResearcherTentStructure
-//                }.map{ it.value() }.toList()
-//                tentStructures = structures
-//                structures
-//            }
 
             // First try in starting pos, then less likely current pos
             for (pos in listOfNotNull(startingPos, currentPos)) {
                 if (tentStart != null) break
 
-//                tentStart = validStructures.firstNotNullOfOrNull { structureManager.getStructureAt(pos, it) }
                 tentStart = structureManager.getStructureWithPieceAt(pos, GrowssethTags.StructTags.RESEARCHER_TENT)
 
                 // Error in the fixed structures mixin? Just incase, given usecase of mod (streaming)
@@ -215,7 +206,6 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
     /* VARIABLES SECTION */
 
-
     val armPose : IllagerArmPose
         get() = if (this.isAggressive || this.isUsingItem) IllagerArmPose.ATTACKING else IllagerArmPose.CROSSED
 
@@ -226,9 +216,13 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         private set
     var metPlayer: Boolean = false
         private set
+    // Do not persist, only relevant as long as entity is loaded
+    override var lastWorldDataTime: LocalDateTime = LocalDateTime.now()
+        private set
     // Set to false (intentionally public) to prevent the researcher from saving world data
     // on remove in single researcher mode
     var saveOnRemove: Boolean = true
+    var shouldDespawn: Boolean = false
 
     /* If the donkey was borrowed by any player, do not check for specific player
        as there is only one donkey anyway and atm the penalty is shared
@@ -324,7 +318,6 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         goalSelector.addGoal(4, ResearcherRandomStrollGoal(this, 0.6))
         goalSelector.addGoal(5, ResearcherLookAtPlayerGoal(this, 8f, 0.1f))
 
-
         targetSelector.addGoal(0, NearestAttackableTargetGoal(this, Player::class.java, 0, true, true)
             { player -> combat.wantsToKillPlayer((player as Player)) })
         if (ResearcherConfig.researcherInteractsWithMobs) {
@@ -361,7 +354,8 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         // Set savedData if it was just created (and so nbt empty)
         if (savedData != null) {
             if (savedData.data.allKeys.isEmpty())
-                writeSavedData(savedData)
+                writeSavedData(savedData, force = true)
+            lastWorldDataTime = savedData.lastChangeTimestamp
         }
 
         spawnTime = level().gameTime
@@ -375,7 +369,6 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
     override fun aiStep() {
         updateSwingTime()       // needed for the attack animation
-
         if (showAngryParticles) {
             addParticlesAroundSelf(ParticleTypes.ANGRY_VILLAGER, 3, 6, 0.7)
             showAngryParticles = false
@@ -388,13 +381,8 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             addParticlesAroundSelf(ParticleTypes.PORTAL, 14, 20, 0.0)
             showTeleportParticles = false
         }
-
         if (!level().isClientSide && isAlive) {
             handleItems()
-
-            // witch stuff
-//            if (random.nextFloat() < 7.5E-4f)
-//                level().broadcastEntityEvent(this, 15.toByte())
         }
         super.aiStep()
     }
@@ -448,7 +436,6 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
                     ))
                     gameEvent(GameEvent.TELEPORT)
                 }
-
                 getAttribute(Attributes.MOVEMENT_SPEED)!!.removeModifier(SPEED_MODIFIER_DRINKING.id)
             }
         }
@@ -517,13 +504,33 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         if (this.startingPos == null)
             this.startingPos = this.blockPosition()
 
+        if (ResearcherConfig.singleResearcher) { // && this.tickCount % 5 == 0) {
+            // make sure we are up to date in case more researcher entities are loaded
+            // (edge case, but just in case)
+            // Note that this does not load from nbt every time, but uses the single instance
+            val savedData = ResearcherSavedData.getPersistent(serverLevel.server)
+            if (savedData.isDead) {
+                RuinsOfGrowsseth.LOGGER.info("Zombie researcher $this | should be dead from data, discarding...")
+                this.saveOnRemove = false
+                this.discard()
+                return
+            }
+            if (!this.isUpToDateWithWorldData(savedData)) {
+                RuinsOfGrowsseth.LOGGER.info("Researcher $this | is not up to date with world data, updating...")
+                this.readSavedData(savedData)
+                this.lastWorldDataTime = savedData.lastChangeTimestamp
+                RuinsOfGrowsseth.LOGGER.info("Researcher $this | updated world data!")
+            }
+        }
+
+        diary?.aiStep()     // diaries before quest to not make the player miss some before the final quest
+
         quest?.aiStep()
         // Run after quest to run at its same time
         GrowssethExtraEvents.queuedRemoveTentWithGiftEvent?.let {
             GrowssethExtraEvents.removeTentWithGift(this, serverLevel)
         }
 
-        diary?.aiStep()
         dialogues?.dialoguesStep()
 
         if (!metPlayer && dialogues?.nearbyPlayers()?.isNotEmpty() == true)
@@ -581,6 +588,11 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
         if (lastRefusedTradeTimer > 0)
             lastRefusedTradeTimer--
+
+        if (shouldDespawn) {
+            this.remove(RemovalReason.DISCARDED)
+            RuinsOfGrowsseth.LOGGER.info("Removed $this because another researcher was killed somewhere else")
+        }
     }
 
     override fun tick() {
@@ -673,7 +685,6 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     override fun remove(reason: RemovalReason) {
         if (saveOnRemove)
             saveWorldData()
-
         super.remove(reason)
     }
 
@@ -728,10 +739,19 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     }
 
     // Also vanilla things like name
-    fun writeSavedData(savedData: ResearcherSavedData, existingDataTag: CompoundTag? = null) {
+    fun writeSavedData(savedData: ResearcherSavedData, existingDataTag: CompoundTag? = null, force: Boolean = false) {
+        if (!isUpToDateWithWorldData(savedData) && !force) {
+            RuinsOfGrowsseth.LOGGER.warn("Researcher $this | not saving data, not up to date! " +
+                "Last data time for this is $lastWorldDataTime, data time is ${savedData.lastChangeTimestamp}")
+            return
+        }
+
         savedData.data = existingDataTag ?: saveResearcherData()
         savedData.name = customName
+        if (this.isDeadOrDying && ResearcherConfig.singleResearcher)
+            savedData.isDead = true
         savedData.setDirty()
+        lastWorldDataTime = savedData.lastChangeTimestamp
     }
 
     fun readSavedData(savedData: ResearcherSavedData) {
@@ -798,19 +818,11 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         compoundTag.loadField(OFFERS_TAG, Codec.unboundedMap(UUIDUtil.STRING_CODEC, GrowssethCodecs.MERCHANT_OFFERS_CODEC)) { offersByPlayer.putAll(it) }
     }
 
-    fun saveWorldData() {
+    fun saveWorldData(force: Boolean = false) {
         if (ResearcherConfig.singleResearcher) { server?.let { serv ->
             val savedData = ResearcherSavedData.getPersistent(serv)
             val data = saveResearcherData()
-            writeSavedData(savedData, data)
-
-            // Update all other currently loaded researchers;
-            // undo if we decide this is a bad idea
-            val otherResearchers = serv.allLevels.flatMap { level -> level.getEntities(EntityTypeTest.forClass(Researcher::class.java)) { it.uuid != this.uuid } }
-            otherResearchers.forEach { researcher2 ->
-                researcher2.readSavedData(savedData)
-                RuinsOfGrowsseth.LOGGER.info("Updated world data for $researcher2 after saving it for $this")
-            }
+            writeSavedData(savedData, data, force)
         } }
     }
 

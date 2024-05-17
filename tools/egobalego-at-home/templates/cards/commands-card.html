@@ -6,13 +6,13 @@
 
             <div class="row card-title">
                 <div id="no-type-warning" class="col-auto text-danger">
-                    Tipo comando non impostato
+                    {{ translations.command_type_not_set }}
                 </div>
 
                 <div id="card-enabler" class="col-auto form-check form-switch ms-3" hidden>
                     <input id="card-enabler-switch" class="form-check-input" type="checkbox" role="switch">
                     <label id="card-enabler-label" class="form-check-label">
-                        Non attivo
+                        {{ translations.not_active_1 }}
                     </label>
                 </div>
 
@@ -25,15 +25,15 @@
 
             <div class="card-body justify-content-center">
                 <div class="row input-group g-0">
-                    <span class="input-group-text col-4">Tipologia</span>
+                    <span class="input-group-text col-4">{{ translations.type }}</span>
                     <select id="command-type" class="form-select">
                         <option value="none" selected></option>
-                        <option value="manual">Manuale</option>
-                        <option value="rmResearcher">Rimuovi ricercatori</option>
-                        <option value="tpResearcher">Teletrasporta ricercatore</option>
-                        <option value="spawnResearcher">Spawna ricercatore</option>
-                        <option value="rmTent">Rimuovi tenda</option>
-                        <option value="rmTentWithGift">Rimuovi tenda e lascia regalo</option>
+                        <option value="manual">{{ translations.command_manual }}</option>
+                        <option value="rmResearcher">{{ translations.command_rmResearcher }}</option>
+                        <option value="tpResearcher">{{ translations.command_tpResearcher }}</option>
+                        <option value="spawnResearcher">{{ translations.command_spawnResearcher }}</option>
+                        <option value="rmTent">{{ translations.command_rmTent }}</option>
+                        <option value="rmTentWithGift">{{ translations.command_rmTentWithGift }}</option>
                     </select>
                 </div>
 
@@ -43,7 +43,7 @@
                 </div>
 
                 <div id="coordinates" class="row input-group g-0 mt-3" hidden>
-                    <span class="input-group-text col-4">Coordinate</span>
+                    <span class="input-group-text col-4">{{ translations.coordinates }}</span>
                     <input id="x-coord" type="number" class="form-control" placeholder="X" value="0">
                     <input id="y-coord" type="number" class="form-control" placeholder="Y" value="0">
                     <input id="z-coord" type="number" class="form-control" placeholder="Z" value="0">

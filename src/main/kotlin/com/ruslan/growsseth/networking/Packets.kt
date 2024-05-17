@@ -1,7 +1,9 @@
 package com.ruslan.growsseth.networking
 
+import com.filloax.fxlib.api.codec.streamCodec
 import com.filloax.fxlib.api.optional
 import com.mojang.serialization.Codec
+import com.ruslan.growsseth.dialogues.DialogueLine
 import com.ruslan.growsseth.entity.researcher.trades.ResearcherItemListing
 import com.ruslan.growsseth.utils.resLoc
 import com.ruslan.growsseth.worldgen.worldpreset.LocationData
@@ -16,11 +18,55 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload.TypeAndC
 import net.minecraft.world.item.ItemStack
 
 object GrowssethPackets {
-    val TRADE_NOTIF = resLoc("researcher_trades_notif")
-    val CUSTOM_TOAST = resLoc("custom_toast")
-    val STOP_MUSIC = resLoc("stop_music")
-    val FORCE_AMBIENT_SOUND = resLoc("force_ambient_sound")
-    val PLACES_DATA = resLoc("places_data")
+    object Types {
+        val TRADE_NOTIF = resLoc("researcher_trades_notif")
+        val CUSTOM_TOAST = resLoc("custom_toast")
+        val STOP_MUSIC = resLoc("stop_music")
+        val FORCE_AMBIENT_SOUND = resLoc("force_ambient_sound")
+        val PLACES_DATA = resLoc("places_data")
+        val DIALOGUE = resLoc("dialogue")
+    }
+
+    val DIALOGUE            = DialoguePacket.ENTRY
+    val TRADE_NOTIF         = ResearcherTradesNotifPacket.ENTRY
+    val CUSTOM_TOAST        = CustomToastPacket.ENTRY
+    val STOP_MUSIC          = StopMusicPacket.ENTRY
+    val FORCE_AMBIENT_SOUND = AmbientSoundsPacket.ENTRY
+    val PLACES_DATA         = PlacesInfoPacket.ENTRY
+
+    fun registerPacketsS2C(registrator: PlatformAbstractions.PacketRegistrator<RegistryFriendlyByteBuf>) {
+        registrator.apply {
+            register(DIALOGUE)
+            register(TRADE_NOTIF)
+            register(CUSTOM_TOAST)
+            register(STOP_MUSIC)
+            register(FORCE_AMBIENT_SOUND)
+            register(PLACES_DATA)
+        }
+    }
+
+    fun registerPacketsC2S(registrator: PlatformAbstractions.PacketRegistrator<RegistryFriendlyByteBuf>) {
+    }
+}
+
+data class DialoguePacket(
+    val dialogueLine: DialogueLine,
+    val senderName: Component,
+) : CustomPacketPayload  {
+    companion object {
+        val TYPE = CustomPacketPayload.Type<DialoguePacket>(GrowssethPackets.Types.DIALOGUE)
+        val CODEC: RStreamCodec<DialoguePacket> = StreamCodec.composite(
+            DialogueLine.serializer().streamCodec(), DialoguePacket::dialogueLine,
+            ComponentSerialization.STREAM_CODEC, DialoguePacket::senderName,
+            ::DialoguePacket
+        )
+        val ENTRY = TypeAndCodec(TYPE, CODEC)
+
+        private fun write(buf: RegistryFriendlyByteBuf, packet: ResearcherTradesNotifPacket) = buf.writeJsonWithCodec(ResearcherItemListing.LIST_CODEC, packet.newTrades)
+        private fun read(buf: RegistryFriendlyByteBuf) = ResearcherTradesNotifPacket(buf.readJsonWithCodec(ResearcherItemListing.LIST_CODEC))
+    }
+
+    override fun type(): CustomPacketPayload.Type<DialoguePacket> = TYPE
 }
 
 data class ResearcherTradesNotifPacket(

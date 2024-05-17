@@ -21,6 +21,7 @@ import com.ruslan.growsseth.entity.researcher.trades.ResearcherTradeMode
 import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.quests.*
 import com.ruslan.growsseth.structure.pieces.ResearcherTent
+import com.ruslan.growsseth.templates.BookTemplates
 import net.minecraft.core.BlockPos
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
@@ -127,7 +128,8 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
          * Note: doesn't care about stage order
          */
         fun setStage(server: MinecraftServer, stage: String) {
-            assert(stage in listOf(Stages.HOME, Stages.WAIT, Stages.START, Stages.HEALED, Stages.ZOMBIE, Stages.ENDING)) { "Stage $stage not included in stages for researcher!" }
+            assert(stage in listOf(Stages.HOME, Stages.WAIT, Stages.START, Stages.HEALED, Stages.ZOMBIE, Stages.ENDING))
+                { "Stage $stage not included in stages for researcher!" }
             val data = getPersistentData(server)
             data.currentStageId = stage
             data.stageHistory.add(stage)
@@ -180,6 +182,15 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
             hornItem.loreLines().add(Component.translatable("item.growsseth.researcher_horn.description1"))
             hornItem.loreLines().add(Component.translatable("item.growsseth.researcher_horn.description2"))
             val researcherName = ResearcherSavedData.getPersistent(level.server).name  ?: Component.translatable("entity.growsseth.researcher")
+            val endTextItem = (if (DiaryHelper.hasCustomEndDiary()) {
+                    DiaryHelper.getCustomEndDiary(researcherName)
+                } else {
+                    null
+                }) ?:BookTemplates.createTemplatedBook("quest_good_ending", edit = { withAuthor(researcherName.string) })
+                ?: Items.PAPER.defaultInstance.copyWithCount(1).also { itemStack ->
+                    itemStack[DataComponents.CUSTOM_NAME] = Component.literal("Per il mio collega")
+                    RuinsOfGrowsseth.LOGGER.warn("Couldn't load final diary!")
+                }
 
             blockEntity.setItem(4, endTextItem)
             blockEntity.setItem(13, hornItem)
@@ -191,7 +202,6 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
     inner class StartStage : QuestStage<Researcher> {
         override val trigger = ProgressTradesTrigger(server, onlyOne = true)
             .or(ApiEventTrigger(QuestConfig.finalQuestStartName))
-
 
         override fun onActivated(entity: Researcher) {
             entity.dialogues?.resetNearbyPlayers()
@@ -227,10 +237,12 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
                 entity.moveTo(startingPos)
                 return
             }
-            zombie.villagerData = zombie.villagerData.setProfession(VillagerProfession.CARTOGRAPHER).setLevel(5)
             zombie.researcherData = data
+            zombie.lastWorldDataTime = entity.lastWorldDataTime
             zombie.spawnTime = spawnTime
             zombie.researcherOriginalPos = resStartingPos
+            // not visible normally other than with entity info mods
+            zombie.villagerData = zombie.villagerData.setProfession(VillagerProfession.CARTOGRAPHER).setLevel(5)
 
             entity.discard()
 
@@ -253,7 +265,7 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
         }
 
         private fun createDiary(entity: Entity, tent: ResearcherTent) {
-            val diary = DiaryHelper.createMiscDiary("quest_zombie", entity)
+            val diary = BookTemplates.createTemplatedBook("quest_zombie", edit = { withAuthor(entity.name.string) })
             if (diary == null) {
                 RuinsOfGrowsseth.LOGGER.error("No diary for quest_zombie!")
                 return
@@ -301,9 +313,13 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
 
     // Separate stage for last dialogue, so we can in next stage count
     // time only after dialogue of this quest triggered
-    class LastDialogueStage: QuestStage<Researcher> {
+    inner class LastDialogueStage: QuestStage<Researcher> {
         // Automatically trigger as soon as healed (and quests work again)
-        override val trigger = EventTrigger<Researcher>(QuestUpdateEvent.LOAD)
+        override val trigger = (
+                EventTrigger<Researcher>(QuestUpdateEvent.LOAD)
+                or NoPlayersInRadiusTrigger(this@ResearcherQuestComponent, chunkRadius = 8)
+                or TimeOrDayTimeTrigger(this@ResearcherQuestComponent, Constants.DAY_TICKS_DURATION * 5)
+            )
             // You can find the dialogue in the quest dialogues json
             .and(DialogueTrigger("researcher-quest-cure"))
 
@@ -318,9 +334,13 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
     }
 
     inner class EndingStage: QuestStage<Researcher> {
-        override val trigger: QuestStageTrigger<Researcher> = EventTrigger<Researcher>(QuestUpdateEvent.LOAD)
-            .and(TimeOrDayTimeTrigger(this@ResearcherQuestComponent, Constants.DAY_TICKS_DURATION)
-                .or(ApiEventTrigger(QuestConfig.finalQuestLeaveName))
+        override val trigger: QuestStageTrigger<Researcher> = (
+                EventTrigger<Researcher>(QuestUpdateEvent.LOAD)
+                or NoPlayersInRadiusTrigger(this@ResearcherQuestComponent, chunkRadius = 8)
+                or TimeOrDayTimeTrigger(this@ResearcherQuestComponent, Constants.DAY_TICKS_DURATION * 5)
+            ) and (
+                TimeOrDayTimeTrigger(this@ResearcherQuestComponent, Constants.DAY_TICKS_DURATION)
+                or ApiEventTrigger(QuestConfig.finalQuestLeaveName)
             )
 
         // OnUpdate to also cover multiple tents

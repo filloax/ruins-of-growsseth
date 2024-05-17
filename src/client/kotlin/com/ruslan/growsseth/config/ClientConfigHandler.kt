@@ -2,7 +2,6 @@ package com.ruslan.growsseth.config
 
 import com.teamresourceful.resourcefulconfig.client.ConfigScreen
 import net.minecraft.client.Minecraft
-import net.minecraft.client.Options
 import net.minecraft.client.gui.components.toasts.SystemToast
 import net.minecraft.client.gui.components.toasts.SystemToast.SystemToastId
 import net.minecraft.client.gui.screens.Screen
@@ -25,20 +24,12 @@ object ClientConfigHandler {
         else
             GrowssethConfigHandler.DEFAULT_LANGUAGE
 
+        GrowssethConfigHandler.config?.save()       // Need to save manually to config file
+
         client.toasts.addToast(SystemToast.multiline(
             client, SET_LANGUAGE_TOAST_ID,
             Component.translatable("growsseth.notif.setLanguage.title"),
-            Component.translatable("growsseth.notif.setLanguage.message", lang),
+            Component.translatable("growsseth.notif.setLanguage.message", GrowssethConfig.serverLanguage),
         ))
-    }
-
-    fun initClientConfig() {
-        GrowssethConfigHandler.onConfigLoad {
-            if (GrowssethConfig.serverLanguage == "client") {
-                // If first launch = has not seen accessibility screen, set later
-                if (!Minecraft.getInstance().options.onboardAccessibility)
-                    setServerLangFromClient()
-            }
-        }
     }
 }
