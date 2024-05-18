@@ -53,7 +53,7 @@ Musical artists:
 - Il Coro di Mammonk (A Padre Mammonk, La Missiva nell'Ombra)
 - Singalek (Binobinooo, Giorgio Cubetti, Giorgio Lo-Fi)
 - HunterProduction (Giorgio Finding Home)
-- EGO & R-E-M (Abbandonati)
+- Ako & R-E-M (Abbandonati)
 - Guber (Una sega di niente)
 
 ### Developers
