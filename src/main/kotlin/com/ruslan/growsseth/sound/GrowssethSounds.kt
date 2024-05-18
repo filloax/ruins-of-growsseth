@@ -15,6 +15,7 @@ class GrowssethSounds {
         val DISC_GIORGIO_LOFI = registerSoundEvent("disc_giorgio_lofi")
         val DISC_GIORGIO_LOFI_INST = registerSoundEvent("disc_giorgio_lofi_inst")
         val DISC_GIORGIO_FINDING_HOME = registerSoundEvent("disc_giorgio_finding_home")
+        val DISC_GIORGIO_8BIT = registerSoundEvent("disc_giorgio_8bit")
         val DISC_BINOBINOOO = registerSoundEvent("disc_binobinooo")
         val DISC_PADRE_MAMMONK = registerSoundEvent("disc_padre_mammonk")
         val DISC_ABBANDONATI = registerSoundEvent("disc_abbandonati")
