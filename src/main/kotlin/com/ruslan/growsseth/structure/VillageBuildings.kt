@@ -21,13 +21,14 @@ object VillageBuildings {
     const val CATEGORY_GOLEM_STREET = "golem_street" // added to pool
     const val CATEGORY_GOLEM_HOUSE = "golem_house" // already in pool referenced by street, used by advancements
 
-    const val GOLEM_WEIGHT = 1
+    const val GOLEM_WEIGHT = 1      // golem street pools only have one house each
 
-    val DESERT_GOLEM_STREET    = register("desert_golem_street", CATEGORY_GOLEM_STREET, "desert", "streets", GOLEM_WEIGHT)
-    val PLAINS_GOLEM_STREET    = register("plains_golem_street", CATEGORY_GOLEM_STREET, "plains", "streets", GOLEM_WEIGHT)
-    val TAIGA_GOLEM_STREET     = register("taiga_golem_street",  CATEGORY_GOLEM_STREET, "taiga", "streets", GOLEM_WEIGHT)
-    val SAVANNA_GOLEM_STREET   = register("savanna_golem_street", CATEGORY_GOLEM_STREET, "savanna", "streets", GOLEM_WEIGHT)
-    val SNOWY_GOLEM_STREET     = register("snowy_golem_street", CATEGORY_GOLEM_STREET, "snowy", "streets", GOLEM_WEIGHT)
+    // The weights are balanced for each biome (values adjusted by trial and error, sadly there's not much choice with the vanilla weights)
+    val DESERT_GOLEM_STREET    = register("desert_golem_street", CATEGORY_GOLEM_STREET, "desert", "streets", 1)
+    val PLAINS_GOLEM_STREET    = register("plains_golem_street", CATEGORY_GOLEM_STREET, "plains", "streets", 2)
+    val TAIGA_GOLEM_STREET     = register("taiga_golem_street",  CATEGORY_GOLEM_STREET, "taiga", "streets", 3)
+    val SAVANNA_GOLEM_STREET   = register("savanna_golem_street", CATEGORY_GOLEM_STREET, "savanna", "streets", 3)
+    val SNOWY_GOLEM_STREET     = register("snowy_golem_street", CATEGORY_GOLEM_STREET, "snowy", "streets", 1)
 
     val DESERT_GOLEM    = register("desert_golem_house", CATEGORY_GOLEM_HOUSE, "desert", "house", GOLEM_WEIGHT)
     val PLAINS_GOLEM    = register("plains_golem_house", CATEGORY_GOLEM_HOUSE, "plains", "house", GOLEM_WEIGHT)
