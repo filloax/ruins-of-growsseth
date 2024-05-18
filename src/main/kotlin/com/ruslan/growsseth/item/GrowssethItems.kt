@@ -10,11 +10,9 @@ import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.sounds.SoundEvent
-import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.item.*
 import net.minecraft.world.item.Item.Properties
 import net.minecraft.world.item.armortrim.TrimPattern
-import net.minecraft.world.item.component.ItemAttributeModifiers
 
 object GrowssethItems {
 	val all = mutableMapOf<ResourceLocation, Item>()
@@ -43,20 +41,17 @@ object GrowssethItems {
 		"Cover of 'Labyrinthine', by Lena Raine"
 	))
 	val DISC_GIORGIO_CUBETTI 		= makeDisc("disc_giorgio_cubetti", GrowssethSounds.DISC_GIORGIO_CUBETTI, 161, listOf(
-
+		"Vocals, Mix & Master - Singalek",
+		"Lyrics - Singalek, Cydonia",
+		"Cover of 'If I Could, I Would' - MINDME"
 	))
 	val DISC_GIORGIO_LOFI 			= makeDisc("disc_giorgio_lofi", GrowssethSounds.DISC_GIORGIO_LOFI, 295, listOf(
-
+		"Instrumental, Vocals, Mix, Master - Singalek",
+		"Lyrics - Singalek, Cydonia"
 	))
-	val DISC_GIORGIO_LOFI_INST 		= makeDisc("disc_giorgio_lofi_inst", GrowssethSounds.DISC_GIORGIO_LOFI_INST, 295, listOf(
-
-	))
-	val DISC_GIORGIO_FINDING_HOME 	= makeDisc("disc_giorgio_finding_home", GrowssethSounds.DISC_GIORGIO_FINDING_HOME, 186, listOf(
-
-	))
-	val DISC_BINOBINOOO 			= makeDisc("disc_binobinooo", GrowssethSounds.DISC_BINOBINOOO, 98, listOf(
-
-	))
+	val DISC_GIORGIO_LOFI_INST 		= makeDisc("disc_giorgio_lofi_inst", GrowssethSounds.DISC_GIORGIO_LOFI_INST, 295)
+	val DISC_GIORGIO_FINDING_HOME 	= makeDisc("disc_giorgio_finding_home", GrowssethSounds.DISC_GIORGIO_FINDING_HOME, 186)
+	val DISC_BINOBINOOO 			= makeDisc("disc_binobinooo", GrowssethSounds.DISC_BINOBINOOO, 98)
 	val DISC_PADRE_MAMMONK 			= makeDisc("disc_padre_mammonk", GrowssethSounds.DISC_PADRE_MAMMONK, 74, listOf(
 		"Vocals - Emoon LeStrange, HunterProduction, KalarFenrir, Singalek",
 		"Chorus composed by Emoon LeStrange",
