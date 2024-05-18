@@ -39,6 +39,14 @@
       }
     ]
   },
+  "disc_giorgio_8bit": {
+    "sounds": [
+      {
+        "name": "growsseth:disc_giorgio_8bit",
+        "stream": true
+      }
+    ]
+  },
   "disc_binobinooo": {
     "sounds": [
       {

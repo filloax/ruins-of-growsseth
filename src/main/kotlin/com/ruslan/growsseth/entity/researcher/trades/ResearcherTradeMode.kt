@@ -24,7 +24,7 @@ enum class ResearcherTradeMode(val id: String) : StringRepresentable {
         val PROVIDERS = mapOf(
             RANDOM to RandomResearcherTradesProvider,
             GAME_MASTER to GameMasterResearcherTradesProvider,
-            PROGRESS to ProgressResearcherTradesProvider(GrowssethStructures.ORIGINAL_STRUCTURES),
+            PROGRESS to ProgressResearcherTradesProvider(GrowssethStructures.PROGRESS_STRUCTURES),
             GROWSSETH_PROGRESS to ProgressResearcherTradesProvider(GrowssethStructures.ORIGINAL_STRUCTURES, inOrder = true),
         )
 

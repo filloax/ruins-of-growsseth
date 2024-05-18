@@ -9,8 +9,28 @@
         "Giorno ■■■ Anno β 1.9\n\nHo sognato di nuovo quei due esseri, ma questa volta non mi hanno degnato d'uno sguardo.\nAppena sveglio, ho sperimentato con il libro volante, non sapevo cosa potesse uscirne fuori quindi per ogni evenienza ho impugnato la mia",
         "vecchia spada smussata, sperando fosse abbastanza.\n\nMentre sfogliavo le pagine del libro queste ultime si riempivano di rune sempre nuove, che non avevo mai visto.\nHo iniziato ad appuntare tutti i simboli che vedevo, e in men che non si dica",
         "ho riempito decine di librerie. Dalle stesse dopo un po' hanno iniziato a sgorgare gli stessi caratteri scritti in precedenza, che ora confluivano inspiegabilmente verso il libro principale che brillava sempre piú.\nNon potevo fermarmi peró, sempre nuove parole stavano continuando ad",
-        "apparire, quindi ho preso dei lapislazzuli con i quali alle volte coloravo le mie vesti e ho iniziato a scrivere prima sui muri, poi sul pavimento, e infine anche sulla spada che mi ero portato.\n\n\"ᔑ⎓⎓╎ꖎᔑℸ ̣ ᒷ⨅⨅ᔑ\"\n\nQuesta è la parola che ho inciso sulla",
-        "spada prima che da una vecchia lama arrugginita diventasse l'arma piú tagliente che avessi mai visto\nE allora ho continuato:\n\n\"ᔑᓭ!¡ᒷℸ ̣ ℸ ̣ \uD835\uDE79 ↸╎ ⎓⚍\uD835\uDE79ᓵ\uD835\uDE79\"\n\n\"ᓵ\uD835\uDE79リℸ ̣ ∷ᔑᓵᓵ\uD835\uDE79ꖎ!¡\uD835\uDE79\"\n\n\"╎リ↸╎ᓭℸ ̣ ∷⚍ℸ ̣ ℸ ̣ ╎ʖ╎ꖎ╎ℸ ̣ ᔑ\"\n\n\"ᓭᔑᓵᓵ⍑ᒷ⊣⊣╎\uD835\uDE79\"",
+        {
+            "type": "component",
+            "content": [
+                {
+                    "text": "apparire, quindi ho preso dei lapislazzuli con i quali alle volte coloravo le mie vesti e ho iniziato a scrivere prima sui muri, poi sul pavimento, e infine anche sulla spada che mi ero portato.\n\n\""
+                },
+                { "text": "Test enchant", "font": "minecraft:alt" },
+                { "text": "\"\n\nQuesta è la parola che ho inciso sulla" }
+            ]
+        },
+        {
+            "type": "component",
+            "content": [
+                {
+                    "text": "spada prima che da una vecchia lama arrugginita diventasse l'arma piú tagliente che avessi mai visto\nE allora ho continuato:\n\n\""
+                },
+                { "text": "Test enchant", "font": "minecraft:alt" },
+                {
+                    "text": "\""
+                }
+            ]
+        },
         "E ancora, scrivevo su ogni singolo centimetro, osservando ogni volta un effetto più forte del precedente, facendo lo stesso anche su nuovi libri che iniziavano a splendere allo stesso modo...\nFinché infine la spada non si è spezzata, sparando i suoi",
         "frammenti in tutta la stanza.\nMi ha mancato per un soffio, ma lo stesso non posso dire del libro, ora diviso in  mille pezzi che fluttuano ancora adesso in aria.\n\nDevo riposarmi.",
         "",

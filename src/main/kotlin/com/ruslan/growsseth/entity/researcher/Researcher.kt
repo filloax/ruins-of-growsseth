@@ -523,13 +523,14 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         if (this.startingPos == null)
             this.startingPos = this.blockPosition()
 
+        diary?.aiStep()     // diaries before quest to not make the player miss some before the final quest
+
         quest?.aiStep()
         // Run after quest to run at its same time
         GrowssethExtraEvents.queuedRemoveTentWithGiftEvent?.let {
             GrowssethExtraEvents.removeTentWithGift(this, serverLevel)
         }
 
-        diary?.aiStep()
         dialogues?.dialoguesStep()
 
         if (!metPlayer && dialogues?.nearbyPlayers()?.isNotEmpty() == true)
