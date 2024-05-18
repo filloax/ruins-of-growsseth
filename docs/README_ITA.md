@@ -32,7 +32,7 @@ Ruslan Fanclub:
 - Filloax (Lead Programmer)
 - Krozzzt (Programmazione e scrittura)
 - Reivaxelain (Arte, strutture e scrittura)
-- bb01 (Strutture e scrittura aggiuntiva)
+- bb01 (Strutture, scrittura aggiuntiva e testing aggiuntivo)
 - SkullFury (Membro originale, creazione datapack)
 - Vovalcool (Membro originale, strutture)
 - Tutti quanti: Design e testing
@@ -48,7 +48,7 @@ Artisti musicali:
 - Il Coro di Mammonk (A Padre Mammonk, La Missiva nell'Ombra)
 - Singalek (Binobinooo, Giorgio Cubetti, Giorgio Lo-Fi)
 - HunterProduction (Giorgio Finding Home)
-- EGO & R-E-M (Abbandonati)
+- Ako & R-E-M (Abbandonati)
 - Guber (Una sega di niente)
 
 ### Sviluppatori

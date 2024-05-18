@@ -5,6 +5,21 @@
       "entries": [
         {
           "type": "minecraft:item",
+          "name": "growsseth:disc_odi_et_amo",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:air",
+          "weight": 2
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
           "name": "minecraft:flint_and_steel"
         }
       ]
