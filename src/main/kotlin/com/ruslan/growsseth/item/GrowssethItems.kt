@@ -51,6 +51,7 @@ object GrowssethItems {
 	))
 	val DISC_GIORGIO_LOFI_INST 		= makeDisc("disc_giorgio_lofi_inst", GrowssethSounds.DISC_GIORGIO_LOFI_INST, 295)
 	val DISC_GIORGIO_FINDING_HOME 	= makeDisc("disc_giorgio_finding_home", GrowssethSounds.DISC_GIORGIO_FINDING_HOME, 186)
+	val DISC_GIORGIO_8BIT		 	= makeDisc("disc_giorgio_8bit", GrowssethSounds.DISC_GIORGIO_8BIT, 165)
 	val DISC_BINOBINOOO 			= makeDisc("disc_binobinooo", GrowssethSounds.DISC_BINOBINOOO, 98)
 	val DISC_PADRE_MAMMONK 			= makeDisc("disc_padre_mammonk", GrowssethSounds.DISC_PADRE_MAMMONK, 74, listOf(
 		"Vocals - Emoon LeStrange, HunterProduction, KalarFenrir, Singalek",
@@ -106,6 +107,7 @@ object GrowssethItems {
 		DISC_GIORGIO_LOFI_INST,
 		DISC_GIORGIO_LOFI,
 		DISC_GIORGIO_FINDING_HOME,
+		DISC_GIORGIO_8BIT,
 		DISC_ANCORA_QUI,
 		DISC_BINOBINOOO,
 		DISC_PADRE_MAMMONK,

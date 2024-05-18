@@ -132,6 +132,21 @@
                 "priority": -80,
             },
         ],
+        "sell_giorgio_8bit": [
+            {
+                "gives": {
+                    "id": "growsseth:disc_giorgio_8bit",
+                    "amount": 1
+                },
+                "wants": [
+                    {
+                        "id": "minecraft:emerald",
+                        "amount": 5
+                    },
+                ],
+                "priority": -80,
+            },
+        ],
         "sell_binobinooo": [
             {
                 "gives": {
@@ -230,6 +245,21 @@
             {
                 "gives": {
                     "id": "growsseth:disc_giorgio_finding_home",
+                    "amount": 1
+                },
+                "wants": [
+                    {
+                        "id": "minecraft:paper",
+                        "amount": 1
+                    }
+                ],
+                "priority": 20,
+                "noNotification": true,
+                "replace": true
+            },
+            {
+                "gives": {
+                    "id": "growsseth:disc_giorgio_8bit",
                     "amount": 1
                 },
                 "wants": [
