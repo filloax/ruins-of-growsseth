@@ -156,7 +156,7 @@ tasks.register("makeReferenceDatapack") {
 		resourcesDir.resolve("growsseth_researcher_dialogue"),
 		resourcesDir.resolve("growsseth_researcher_diary"),
 		resourcesDir.resolve("growsseth_researcher_trades"),
-		resourcesDir.resolve("growsseth_structure_books")
+		resourcesDir.resolve("growsseth_templates")
 	)
 
 	val destinationDir = project.file("build/datapack")

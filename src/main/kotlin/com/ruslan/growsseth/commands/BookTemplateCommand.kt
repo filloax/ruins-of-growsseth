@@ -3,7 +3,7 @@ package com.ruslan.growsseth.commands
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType
-import com.ruslan.growsseth.structure.StructureBooks
+import com.ruslan.growsseth.templates.BookTemplates
 import net.minecraft.commands.CommandBuildContext
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands.*
@@ -32,26 +32,29 @@ object BookTemplateCommand {
                         )
                     })
             )
-            .executes { ctx -> listBookTemplates(ctx.source) }
+            .then(
+                literal("list")
+                    .executes { ctx -> listBookTemplates(ctx.source) }
+            )
         )
     }
 
     private fun listBookTemplates(commandSourceStack: CommandSourceStack): Int {
         commandSourceStack.sendSuccess({
             Component.literal(
-                StructureBooks.getAvailableTemplates().joinToString(", ")
+                BookTemplates.getAvailableTemplates().joinToString(", ")
             )
         }, true)
         return 1
     }
 
     private fun giveTemplateBook(commandSourceStack: CommandSourceStack, players: Collection<ServerPlayer>, templateName: String): Int {
-        if (!StructureBooks.templateExists(templateName)) {
+        if (!BookTemplates.templateExists(templateName)) {
             throw ERROR_BOOK_TEMPLATE_INVALID.create(templateName)
         }
 
         var book = Items.WRITTEN_BOOK.defaultInstance
-        book = StructureBooks.loadTemplate(book, templateName)
+        book = BookTemplates.loadTemplate(book, templateName)
 
         val blockPos = BlockPos.containing(commandSourceStack.position)
         val serverLevel = commandSourceStack.level

@@ -1,0 +1,1 @@
+Later expand to cover Signs to allow multi-language signs for structures
