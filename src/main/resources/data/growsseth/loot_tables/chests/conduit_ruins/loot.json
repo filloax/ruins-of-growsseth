@@ -5,6 +5,26 @@
       "entries": [
         {
           "type": "minecraft:item",
+          "name": "growsseth:disc_caco_caco",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "growsseth:disc_pesci_strani",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:air",
+          "weight": 4
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
           "name": "minecraft:nautilus_shell",
           "functions": [
             {
