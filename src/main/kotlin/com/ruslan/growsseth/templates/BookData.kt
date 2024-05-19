@@ -1,7 +1,9 @@
 package com.ruslan.growsseth.templates
 
 import com.filloax.fxlib.api.codec.decodeJson
+import com.filloax.fxlib.api.json.ComponentSerializer
 import com.google.gson.Gson
+import com.sun.jna.platform.unix.solaris.LibKstat.KstatNamed.UNION.STR
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
@@ -10,6 +12,7 @@ import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.*
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.ComponentSerialization
+import net.minecraft.world.entity.Entity
 
 private val gson = Gson().newBuilder().setLenient().create()
 
@@ -28,6 +31,13 @@ data class BookData(
         ComponentSerialization.CODEC
             .decodeJson(gson.fromJson(it.content, com.google.gson.JsonElement::class.java)).result()
             .orElseThrow { Exception("Couldn't parse book page component") }.first
+    }
+
+    fun withAuthor(author: String) = copy(author = author)
+    fun withAuthor(entity: Entity) = withAuthor(entity.name.string)
+
+    companion object {
+        fun pageEntry(str: String) = PageEntry(PageEntryType.STRING, str)
     }
 
     @Serializable

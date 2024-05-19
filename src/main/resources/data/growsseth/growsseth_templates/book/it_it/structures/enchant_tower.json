@@ -15,7 +15,7 @@
                 {
                     "text": "apparire, quindi ho preso dei lapislazzuli con i quali alle volte coloravo le mie vesti e ho iniziato a scrivere prima sui muri, poi sul pavimento, e infine anche sulla spada che mi ero portato.\n\n\""
                 },
-                { "text": "Test enchant", "font": "minecraft:alt" },
+                { "text": "Affilatezza", "font": "minecraft:alt" },
                 { "text": "\"\n\nQuesta è la parola che ho inciso sulla" }
             ]
         },
@@ -25,7 +25,19 @@
                 {
                     "text": "spada prima che da una vecchia lama arrugginita diventasse l'arma piú tagliente che avessi mai visto\nE allora ho continuato:\n\n\""
                 },
-                { "text": "Test enchant", "font": "minecraft:alt" },
+                { "text": "Aspetto di fuoco", "font": "minecraft:alt" },
+                {
+                    "text": "\"\n\n\""
+                },
+                { "text": "Contraccolpo", "font": "minecraft:alt" },
+                {
+                    "text": "\"\n\n\""
+                },
+                { "text": "Indistruttibilità", "font": "minecraft:alt" },
+                {
+                    "text": "\"\n\n\""
+                },
+                { "text": "Saccheggio", "font": "minecraft:alt" },
                 {
                     "text": "\""
                 }

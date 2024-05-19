@@ -1,5 +1,24 @@
 {
   "beforeStructure": {
+    "abandoned_forge": [
+      {
+        "gives": {
+          "id": "growsseth:ruins_map",
+          "map": {
+            "fixedStructureId": "#growsseth:abandoned_forge",
+            "name": "structure.growsseth.abandoned_forge.map.name",
+            "structure": "#growsseth:abandoned_forge"
+          }
+        },
+        "priority": -50,
+        "wants": [
+          {
+            "amount": 5,
+            "id": "minecraft:emerald"
+          }
+        ]
+      }
+    ],
     "beekeeper_house": [
       {
         "gives": {

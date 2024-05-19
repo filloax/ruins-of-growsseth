@@ -21,6 +21,7 @@ import com.ruslan.growsseth.entity.researcher.trades.ResearcherTradeMode
 import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.quests.*
 import com.ruslan.growsseth.structure.pieces.ResearcherTent
+import com.ruslan.growsseth.templates.BookTemplates
 import net.minecraft.core.BlockPos
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
@@ -198,7 +199,7 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
                     DiaryHelper.getCustomEndDiary(researcherName)
                 } else {
                     null
-                }) ?: DiaryHelper.createMiscDiary("quest_good_ending", researcherName)
+                }) ?:BookTemplates.createTemplatedBook("quest_good_ending", edit = { withAuthor(researcherName.string) })
                 ?: Items.PAPER.defaultInstance.copyWithCount(1).also { itemStack ->
                     itemStack[DataComponents.CUSTOM_NAME] = Component.literal("Per il mio collega")
                     RuinsOfGrowsseth.LOGGER.warn("Couldn't load final diary!")
@@ -276,7 +277,7 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
         }
 
         private fun createDiary(entity: Entity, tent: ResearcherTent) {
-            val diary = DiaryHelper.createMiscDiary("quest_zombie", entity)
+            val diary = BookTemplates.createTemplatedBook("quest_zombie", edit = { withAuthor(entity.name.string) })
             if (diary == null) {
                 RuinsOfGrowsseth.LOGGER.error("No diary for quest_zombie!")
                 return

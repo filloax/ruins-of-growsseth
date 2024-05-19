@@ -14,17 +14,31 @@ import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.util.profiling.ProfilerFiller
 import java.awt.print.Book
 
-class TemplateListener : KotlinJsonResourceReloadListener(JSON, Constants.TEMPLATE_FOLDER) {
-    companion object {
-        private val JSON = Json
+private val JSON = Json
 
-        // Template tables are created in such a way that they automatically try getting a sample from the default language
-        // if you try to get a template from a language
-        private val TEMPLATES: MutableMap<TemplateKind, MutableMap<String, MutableMap<String, BookData>>> = mutableMapOf()
+typealias ReloadAction<T> = (currentLangEntries: Map<String, T>, currentLangKeys: Set<String>, allEntries: Map<String, Map<String, T>>) -> Unit
 
-        fun books() = books(GrowssethConfig.serverLanguage)
-        fun books(lang: String): Map<String, BookData> = TEMPLATES[TemplateKind.BOOK]!![lang] ?: TEMPLATES[TemplateKind.BOOK]!![Constants.DEFAULT_LANGUAGE]
-            ?: throw Exception("No default language (${Constants.DEFAULT_LANGUAGE}) books!")
+object TemplateListener : KotlinJsonResourceReloadListener(JSON, Constants.TEMPLATE_FOLDER) {
+
+    // Template tables are created in such a way that they automatically try getting a sample from the default language
+    // if you try to get a template from a language
+    private val TEMPLATES: MutableMap<TemplateKind, MutableMap<String, MutableMap<String, BookData>>> = mutableMapOf()
+
+    // TODO: generalize better when signs are added
+    private val reloadActions = mutableMapOf<TemplateKind, MutableList<ReloadAction<BookData>>>()
+
+    fun books() = books(GrowssethConfig.serverLanguage)
+    fun books(lang: String): Map<String, BookData> = TEMPLATES[TemplateKind.BOOK]!![lang] ?: TEMPLATES[TemplateKind.BOOK]!![Constants.DEFAULT_LANGUAGE]
+        ?: throw Exception("No default language (${Constants.DEFAULT_LANGUAGE}) books!")
+
+    /**
+     * Subscribe to the reload of templates, action will be run every time they are loaded.
+     * currentLangKeys param in action is useful to check keys included both in current lang and
+     * missing from current lang but present in default lang
+     */
+    fun onReload(kind: TemplateKind, action: ReloadAction<BookData>) {
+        val actions = reloadActions.computeIfAbsent(kind) { mutableListOf() }
+        actions.add(action)
     }
 
     enum class TemplateKind(val path: String) {
@@ -50,6 +64,16 @@ class TemplateListener : KotlinJsonResourceReloadListener(JSON, Constants.TEMPLA
                 byLanguage.keys.minus(Constants.DEFAULT_LANGUAGE).forEach { langCode ->
                     processKindAndLanguageEntries(byLanguage[langCode]!!, kind, langCode, langTemplates, langTemplates[Constants.DEFAULT_LANGUAGE]!!)
                 }
+            }
+
+            val defaultLangTemplates = langTemplates[Constants.DEFAULT_LANGUAGE]!!
+
+            reloadActions[kind]?.forEach {
+                it(
+                    langTemplates.getOrDefault(GrowssethConfig.serverLanguage, defaultLangTemplates),
+                    langTemplates.keys + defaultLangTemplates.keys,
+                    langTemplates,
+                )
             }
         }
     }

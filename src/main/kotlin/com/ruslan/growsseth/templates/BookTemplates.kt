@@ -4,11 +4,18 @@ import com.filloax.fxlib.api.getBookText
 import com.filloax.fxlib.api.setBookTags
 import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.RuinsOfGrowsseth
+import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 
 object BookTemplates {
     const val PAGE_TEMPLATE_PREFIX = "%%TEMPLATE%%"
+
+    val templates get() = TemplateListener.books()
+
+    fun templates(lang: String) = TemplateListener.books(lang)
+
+    operator fun get(key: String) = templates[key]
 
     private fun pageIsTemplate(page: String): Boolean {
         return page.trim().startsWith(PAGE_TEMPLATE_PREFIX)
@@ -19,12 +26,12 @@ object BookTemplates {
     }
 
     fun templateExists(templateId: String): Boolean {
-        return TemplateListener.books()[templateId] != null
+        return templates[templateId] != null
     }
 
     fun getAvailableTemplates(): List<String> {
-        val languageBooks = TemplateListener.books()
-        val defaultLanguageBooks = TemplateListener.books(Constants.DEFAULT_LANGUAGE)
+        val languageBooks = templates
+        val defaultLanguageBooks = templates(Constants.DEFAULT_LANGUAGE)
         return (languageBooks.keys + defaultLanguageBooks.keys).toList()
     }
 
@@ -34,7 +41,18 @@ object BookTemplates {
         return bookPages.size == 1 && pageIsTemplate(bookPages.getOrNull(0)?.string ?: "")
     }
 
-    fun loadTemplate(book: ItemStack, useTemplate: String? = null, prefix: String = "", override: ((String) -> BookData?)? = null): ItemStack {
+    fun createTemplatedBook(template: String, prefix: String = "", override: ((String) -> BookData?)? = null, edit: (BookData.() -> BookData)? = null): ItemStack? {
+        if (!templateExists(template)) return null
+        val book = ItemStack(Items.WRITTEN_BOOK)
+        return loadTemplate(book, template, prefix, override, edit)
+    }
+
+    fun createTemplatedBook(bookData: BookData, templateId: String? = null): ItemStack {
+        val book = ItemStack(Items.WRITTEN_BOOK)
+        return loadTemplate(book, bookData, templateId)
+    }
+
+    fun loadTemplate(book: ItemStack, useTemplate: String? = null, prefix: String = "", override: ((String) -> BookData?)? = null, edit: (BookData.() -> BookData)? = null): ItemStack {
         val bookPages = book.getBookText()
         val templateId = prefix + (useTemplate ?: bookPages.getOrNull(0)?.let { getTemplateIdFromPage(it.string) }?.trim()
             ?: run {
@@ -47,7 +65,12 @@ object BookTemplates {
             RuinsOfGrowsseth.LOGGER.error("Book template loading error: cannot find template with id $templateId")
             return book
         }
+        val editedBookData = edit?.let { it(bookData) } ?: bookData
 
+        return loadTemplate(book, editedBookData, templateId)
+    }
+
+    fun loadTemplate(book: ItemStack, bookData: BookData, templateId: String? = null): ItemStack {
         val fixedBook = if (bookData.writable && book.`is`(Items.WRITTEN_BOOK)) {
             Items.WRITABLE_BOOK.defaultInstance
         } else if (!bookData.writable && book.`is`(Items.WRITABLE_BOOK)) {
@@ -57,7 +80,7 @@ object BookTemplates {
         }
 
         fixedBook.setBookTags(bookData.name, bookData.author ?: "???", bookData.pagesComponents)
-        RuinsOfGrowsseth.LOGGER.info("Loaded book template $templateId")
+        RuinsOfGrowsseth.LOGGER.info("Loaded book template ${templateId ?: "with title ${bookData.name}"}")
         return fixedBook
     }
 }
