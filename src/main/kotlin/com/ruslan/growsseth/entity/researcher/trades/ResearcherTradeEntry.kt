@@ -9,19 +9,18 @@ import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.config.QuestConfig
 import com.ruslan.growsseth.config.ResearcherConfig
 import com.ruslan.growsseth.entity.SerializableItemListing
-import com.ruslan.growsseth.entity.researcher.DiaryHelper
 import com.ruslan.growsseth.entity.researcher.Researcher
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.*
 import net.minecraft.core.component.DataComponents
 import net.minecraft.util.RandomSource
-import net.minecraft.util.random.Weight
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.component.CustomData
 import net.minecraft.world.item.trading.ItemCost
 import net.minecraft.world.item.trading.MerchantOffer
+import kotlin.jvm.optionals.getOrNull
 import kotlin.math.roundToInt
 
 
@@ -50,6 +49,7 @@ data class ResearcherTradeEntry(
  * @param wants list of one or two itemstacks for trade input
  * @param maxUses Maximum uses of the trade, note that it is currently sort-of-unused as the uses reset when the trades are regenerated
  * @param mapInfo If the trade item is a map, TradeItemMapInfo object to describe its target structure or position
+ * @param bookId Id of book template to use if this is book
  * @param noNotification Prevent this trade from being notified to the player
  * @param replace Replace a higher priority trade with the same output
  */
@@ -58,7 +58,7 @@ class ResearcherItemListing(
     wants: List<ItemCost>,
     maxUses: Int,
     val mapInfo: TradeItemMapInfo? = null,
-    val diaryId: String? = null,
+    val bookId: String? = null,
     xp: Int = 0,
     priceMul: Float = 1f,
     val noNotification: Boolean = false,
@@ -70,19 +70,25 @@ class ResearcherItemListing(
             ItemCost.CODEC.listOf().fieldOf("wants").forGetter(ResearcherItemListing::wants),
             Codec.INT.fieldOf("maxUses").forGetter(ResearcherItemListing::maxUses),
             TradeItemMapInfo.CODEC.optionalFieldOf("mapInfo").forNullableGetter(ResearcherItemListing::mapInfo),
-            Codec.STRING.optionalFieldOf("diaryId").forNullableGetter(ResearcherItemListing::diaryId),
+            Codec.STRING.optionalFieldOf("diaryId").forNullableGetter { null }, // Deprecated, backwards compat
+            Codec.STRING.optionalFieldOf("bookId").forNullableGetter(ResearcherItemListing::bookId),
             Codec.INT.fieldOf("xp").forGetter(ResearcherItemListing::xp),
             Codec.FLOAT.fieldOf("priceMul").forGetter(ResearcherItemListing::priceMul),
             Codec.BOOL.fieldOf("noNotification").forGetter(ResearcherItemListing::noNotification),
             Codec.FLOAT.fieldOf("randomWeight").forGetter(ResearcherItemListing::randomWeight),
-        ).apply(b, ResearcherItemListing::class.constructorWithOptionals()::newInstance) }
+        ).apply(b) { gives, wants, maxUses, mapInfoOpt, diaryIdOpt, bookIdOpt, xp, priceMul, noNotification, randomWeight ->
+            val mapInfo = mapInfoOpt.getOrNull()
+            val diaryId = diaryIdOpt.getOrNull()
+            val bookId = bookIdOpt.getOrNull()
+            ResearcherItemListing(gives, wants, maxUses, mapInfo, bookId ?: diaryId, xp, priceMul, noNotification, randomWeight)
+        } }
 
         val MLIST_CODEC: Codec<MutableList<ResearcherItemListing>> = mutableListCodec(CODEC)
         val LIST_CODEC: Codec<List<ResearcherItemListing>> = Codec.list(CODEC)
 
         const val SET_MAP_TAG = "ResearcherSetMap"
         const val MAP_INFO_TAG = "ResearcherMapInfo"
-        const val DIARY_ID_TAG = "ResearcherDiaryId"
+        const val BOOK_TEMPLATE_TAG = "ResearcherBookId"
     }
 
     override fun getOffer(trader: Entity, random: RandomSource): MerchantOffer {
@@ -104,8 +110,8 @@ class ResearcherItemListing(
             CustomData.update(DataComponents.CUSTOM_DATA, offer.result) { it.saveField(MAP_INFO_TAG, TradeItemMapInfo.CODEC) { map } }
         }
 
-        diaryId?.let { id ->
-            CustomData.update(DataComponents.CUSTOM_DATA, offer.result) { it.putString(DIARY_ID_TAG, id) }
+        bookId?.let { id ->
+            CustomData.update(DataComponents.CUSTOM_DATA, offer.result) { it.putString(BOOK_TEMPLATE_TAG, id) }
         }
 
         return offer

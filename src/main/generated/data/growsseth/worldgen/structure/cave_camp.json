@@ -22,6 +22,5 @@
   },
   "start_pool": "growsseth:misc/cave_camp",
   "step": "underground_structures",
-  "terrain_adaptation": "beard_thin",
   "use_expansion_hack": false
 }

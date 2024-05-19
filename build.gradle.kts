@@ -163,7 +163,6 @@ tasks.register("makeReferenceDatapack") {
 	val resourcesDirs = listOf(
 		resourcesDir.resolve("growsseth_places"),
 		resourcesDir.resolve("growsseth_researcher_dialogue"),
-		resourcesDir.resolve("growsseth_researcher_diary"),
 		resourcesDir.resolve("growsseth_researcher_trades"),
 		resourcesDir.resolve("growsseth_templates")
 	)

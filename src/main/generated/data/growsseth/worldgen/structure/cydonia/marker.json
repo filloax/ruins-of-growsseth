@@ -17,6 +17,5 @@
   },
   "start_pool": "growsseth:cydonia/misc/marker",
   "step": "surface_structures",
-  "terrain_adaptation": "beard_thin",
   "use_expansion_hack": false
 }
