@@ -10,20 +10,20 @@ import kotlin.random.Random
 object RandomResearcherTradesProvider : AbstractResearcherTradesProvider() {
     override fun getOffersImpl(
         researcher: Researcher,
-        data: ResearcherTradesData,
+        tradesData: ResearcherTradesData,
         player: ServerPlayer,
     ): MerchantOffers {
         val time = researcher.level().gameTime
-        val redoTrades = data.randomTrades == null
-                || data.lastRandomTradeChangeTime < 0
-                || ResearcherConfig.randomTradesRefreshTime > 0 && time - data.lastRandomTradeChangeTime > ResearcherConfig.randomTradesRefreshTime * Constants.DAY_TICKS_DURATION
+        val redoTrades = tradesData.randomTrades == null
+                || tradesData.lastRandomTradeChangeTime < 0
+                || ResearcherConfig.randomTradesRefreshTime > 0 && time - tradesData.lastRandomTradeChangeTime > ResearcherConfig.randomTradesRefreshTime * Constants.DAY_TICKS_DURATION
         val trades = if (redoTrades) {
             val out = pickTrades(researcher, player)
-            data.randomTrades = out
-            data.lastRandomTradeChangeTime = time
+            tradesData.randomTrades = out
+            tradesData.lastRandomTradeChangeTime = time
             out
         } else {
-            data.randomTrades!!
+            tradesData.randomTrades!!
         }
 
         val filteredTrades = processTrades(trades)
@@ -35,10 +35,13 @@ object RandomResearcherTradesProvider : AbstractResearcherTradesProvider() {
 
     private fun pickTrades(researcher: Researcher, player: ServerPlayer): List<ResearcherTradeEntry> {
         val random = Random(researcher.random.nextInt())
-
         val structures = pickStructures(researcher, player)
 
-        val amount = ResearcherConfig.randomTradeNumItems.range().random(random)
+        val maxTradesItems = TradesListener.RANDOM_TRADES_POOL.size
+        var amount = ResearcherConfig.randomTradeNumItems.range().random(random)
+        if (amount > maxTradesItems)
+            amount = maxTradesItems
+
         return listOf(
             TradesListener.FIXED_TRADES_WHEN_RANDOM,
             TradesListener.RANDOM_TRADES_POOL.shuffled(random).subList(0, amount),
@@ -49,7 +52,10 @@ object RandomResearcherTradesProvider : AbstractResearcherTradesProvider() {
     private fun pickStructures(researcher: Researcher, player: ServerPlayer): List<String> {
         val available = TradesListener.TRADES_BEFORE_STRUCTURE.keys
         val random = Random(researcher.random.nextInt())
-        val amount = ResearcherConfig.randomTradeNumMaps.range().random(random)
+        var amount = ResearcherConfig.randomTradeNumMaps.range().random(random)
+        val maxTradesMaps = available.size
+        if (amount > maxTradesMaps)
+            amount = available.size
         return available.shuffled(random).subList(0, amount)
     }
 
