@@ -1,13 +1,12 @@
 package com.ruslan.growsseth.entity.researcher
 
-import com.filloax.fxlib.*
 import com.filloax.fxlib.api.*
 import com.filloax.fxlib.api.codec.mutableMapCodec
 import com.filloax.fxlib.api.codec.mutableSetCodec
-import com.filloax.fxlib.api.json.KotlinJsonResourceReloadListener
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import com.ruslan.growsseth.Constants
+import com.ruslan.growsseth.Constants.DEFAULT_LANGUAGE
+import com.ruslan.growsseth.Constants.TEMPLATE_DIARY_FOLDER
 import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.advancements.StructureAdvancements
@@ -16,11 +15,11 @@ import com.ruslan.growsseth.config.ResearcherConfig
 import com.ruslan.growsseth.http.ApiEvent
 import com.ruslan.growsseth.http.GrowssethApi
 import com.ruslan.growsseth.structure.GrowssethStructures
+import com.ruslan.growsseth.templates.BookData
+import com.ruslan.growsseth.templates.BookTemplates
+import com.ruslan.growsseth.templates.TemplateListener
 import com.ruslan.growsseth.utils.*
 import com.ruslan.growsseth.worldgen.worldpreset.GrowssethWorldPreset.isGrowssethPreset
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonElement
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Vec3i
 import net.minecraft.core.component.DataComponents
@@ -30,12 +29,9 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.NbtOps
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
-import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.tags.TagKey
-import net.minecraft.util.profiling.ProfilerFiller
 import net.minecraft.world.Container
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.ai.targeting.TargetingConditions
@@ -71,7 +67,43 @@ class ResearcherDiaryComponent(val researcher: Researcher) {
         val structToTag = mutableMapOf<ServerLevel, Map<ResourceKey<Structure>, TagKey<Structure>>>()
         val targetingConditions: TargetingConditions = TargetingConditions.forNonCombat().ignoreLineOfSight().ignoreInvisibilityTesting()
 
-        const val DEFAULT_LANGUAGE = "en_us"
+        // Cache diaries by structure, etc for efficiency
+        // Needs to also reload on language change
+        private var structureDiaries_: Map<TagKey<Structure>, BookData>? = null
+        val structureDiaries get() = structureDiaries_ ?: throw IllegalStateException("StructureDiaries not init!")
+        private var lastLanguageCode: String? = null
+
+        fun init() {
+            val prefix ="$TEMPLATE_DIARY_FOLDER/"
+            TemplateListener.onReload(TemplateListener.TemplateKind.BOOK) { langTemplates, keys, _ ->
+                val diaries = mutableMapOf<TagKey<Structure>, BookData>()
+                val langCode = GrowssethConfig.serverLanguage
+                lastLanguageCode = langCode
+                keys.filter { it.startsWith(prefix) }.forEach { key ->
+                    val structTag = TagKey.create(Registries.STRUCTURE, resLoc(key.replace(prefix, "")))
+                    diaries[structTag] = langTemplates[key] ?: throw IllegalStateException("Error in caching structure diaries")
+                }
+                structureDiaries_ = diaries
+                RuinsOfGrowsseth.LOGGER.info("Updated structure researcher diaries, has ${diaries.size}")
+            }
+        }
+
+        private fun checkLanguageChanged() {
+            val langCode = GrowssethConfig.serverLanguage
+            if (lastLanguageCode != langCode) {
+                lastLanguageCode = langCode
+                val diaries = mutableMapOf<TagKey<Structure>, BookData>()
+                val keys = BookTemplates.getAvailableTemplates()
+                val prefix ="$TEMPLATE_DIARY_FOLDER/"
+                keys.filter { it.startsWith(prefix) }.forEach { key ->
+                    val structTag = TagKey.create(Registries.STRUCTURE, resLoc(key.replace(prefix, "")))
+                    diaries[structTag] = BookTemplates.templates[key] ?: throw IllegalStateException("Error in caching structure diaries")
+                }
+                structureDiaries_ = diaries
+
+                RuinsOfGrowsseth.LOGGER.info("Updated structure researcher diaries on language change, has ${diaries.size}")
+            }
+        }
     }
 
     val updatePeriod = 1f.secondsToTicks()
@@ -100,6 +132,7 @@ class ResearcherDiaryComponent(val researcher: Researcher) {
         if (!ResearcherConfig.singleResearcher) return
 
         if (researcher.tickCount % updatePeriod == 0) {
+            checkLanguageChanged()
             val anyNew = updateUnlockedStructures()
 
             if (anyNew || !data.recordedStructures.values.all { it }) {
@@ -121,7 +154,7 @@ class ResearcherDiaryComponent(val researcher: Researcher) {
         }
     }
 
-    private fun makeEventDiary(customDiaryData: DiaryEntry): Boolean {
+    private fun makeEventDiary(customDiaryData: BookData): Boolean {
         val success = makeDiary({ customDiaryData }, {
             RuinsOfGrowsseth.LOGGER.info("Created custom remote diary (${it.name}), recording content...")
         }) { book -> CustomData.update(DataComponents.CUSTOM_DATA, book) { tag ->
@@ -135,8 +168,7 @@ class ResearcherDiaryComponent(val researcher: Researcher) {
     }
 
     private fun hasStructureDiary(forStructure: TagKey<Structure>): Boolean {
-        val languageDiaries = DiaryListener.DIARIES_BY_LANG[GrowssethConfig.serverLanguage] ?: DiaryListener.DIARIES_BY_LANG[DEFAULT_LANGUAGE]
-        return languageDiaries?.structures?.containsKey(forStructure) == true
+        return structureDiaries.containsKey(forStructure)
     }
 
     private fun makeStructureDiary(forStructure: TagKey<Structure>): Boolean {
@@ -144,9 +176,8 @@ class ResearcherDiaryComponent(val researcher: Researcher) {
         if (isGrowssethPreset(level.server) && forStructure == GrowssethTags.StructTags.BEEKEEPER_HOUSE)
             return false    // since cydo's beekeeper is a different character with a different diary
 
-        val languageDiaries = DiaryListener.DIARIES_BY_LANG[GrowssethConfig.serverLanguage] ?: DiaryListener.DIARIES_BY_LANG[DEFAULT_LANGUAGE]
         val remoteDiaries = CustomRemoteDiaries.structureReplacementDiaries
-        val success = makeDiary({ remoteDiaries[forStructure] ?: languageDiaries?.structures?.get(forStructure) }) {
+        val success = makeDiary({ remoteDiaries[forStructure] ?: structureDiaries[forStructure] }) {
             RuinsOfGrowsseth.LOGGER.info("Created diary for ${forStructure.location} (${it.name}), recording content...")
         }
         if (!success) {
@@ -156,14 +187,14 @@ class ResearcherDiaryComponent(val researcher: Researcher) {
         return true
     }
 
-    private fun makeDiary(selector: () -> DiaryEntry?, done: (DiaryEntry) -> Unit): Boolean
+    private fun makeDiary(selector: () -> BookData?, done: (BookData) -> Unit): Boolean
         = makeDiary(selector, done) {}
 
-    private fun makeDiary(selector: () -> DiaryEntry?, done: (DiaryEntry) -> Unit, doOnDiary: (ItemStack) -> Unit): Boolean {
+    private fun makeDiary(selector: () -> BookData?, done: (BookData) -> Unit, doOnDiary: (ItemStack) -> Unit): Boolean {
         val diaryData = selector() ?: return false
-        val name = Component.literal(diaryData.name)
-        val pages = diaryData.pages.map(Component::literal)
-        val book = FxItemUtils.createWrittenBook(name, researcher.name, pages)
+        val title = Component.literal(diaryData.name ?: "???")
+        val pages = diaryData.pagesComponents
+        val book = FxItemUtils.createWrittenBook(title, researcher.name, pages)
 
         done(diaryData)
         doOnDiary(book)
@@ -315,16 +346,6 @@ class ResearcherDiaryComponent(val researcher: Researcher) {
 object DiaryHelper {
     const val TAG_REMOVE_DIARIES_ON_PUSH = "RemoveOnResDiaryPush"
 
-    fun createMiscDiary(id: String, author: Component): ItemStack? {
-        val book = ItemStack(Items.WRITTEN_BOOK)
-        if (updateItemWithMiscDiary(book, id, author)) {
-            return book
-        }
-        return null
-    }
-    fun createMiscDiary(id: String, entity: Entity): ItemStack?
-        = createMiscDiary(id, entity.name)
-
     fun hasCustomEndDiary(): Boolean {
         return CustomRemoteDiaries.endDiary != null
     }
@@ -336,34 +357,10 @@ object DiaryHelper {
             return null
         }
 
-        val name = Component.literal(diaryData.name)
-        val pages = diaryData.pages.map(Component::literal)
-        RuinsOfGrowsseth.LOGGER.info("Created end diary ($name, ${pages.size} pages)")
-        book.setBookTags(name, author, pages)
-        return book
+        val pages = diaryData.pages
+        RuinsOfGrowsseth.LOGGER.info("Created end diary (${diaryData.name}, ${pages.size} pages)")
+        return BookTemplates.loadTemplate(book, diaryData)
     }
-
-    fun updateItemWithMiscDiary(itemStack: ItemStack, id: String, author: Component): Boolean {
-        if (!itemStack.`is`(Items.WRITTEN_BOOK) && !itemStack.`is`(Items.WRITABLE_BOOK)) {
-            RuinsOfGrowsseth.LOGGER.warn("Setting diary data in non book item $itemStack")
-        }
-
-        val languageDiaries = DiaryListener.DIARIES_BY_LANG[GrowssethConfig.serverLanguage] ?: DiaryListener.DIARIES_BY_LANG[ResearcherDiaryComponent.DEFAULT_LANGUAGE]
-        val diaryData = languageDiaries?.misc?.get(id)
-        if (diaryData == null) {
-            RuinsOfGrowsseth.LOGGER.info("No diary with id $id")
-            return false
-        }
-
-        val name = Component.literal(diaryData.name)
-        val pages = diaryData.pages.map(Component::literal)
-        RuinsOfGrowsseth.LOGGER.info("Created diary $id ($name)")
-        itemStack.setBookTags(name, author, pages)
-        return true
-    }
-
-    fun updateItemWithMiscDiary(itemStack: ItemStack, id: String, entity: Entity): Boolean
-        = updateItemWithMiscDiary(itemStack, id, entity.name)
 
     private fun diaryMatches(book1: ItemStack, book2: ItemStack): Boolean {
         val text1 = book1.getBookText()
@@ -448,59 +445,12 @@ object DiaryHelper {
     }
 }
 
-class DiaryListener : KotlinJsonResourceReloadListener(JSON, Constants.RESEARCHER_DIARY_DATA_FOLDER) {
-    companion object {
-        private val JSON = Json
-
-        val DIARIES_BY_LANG : MutableMap<String, Diaries> = mutableMapOf()
-    }
-
-    override fun apply(loader: Map<ResourceLocation, JsonElement>, manager: ResourceManager, profiler: ProfilerFiller) {
-        DIARIES_BY_LANG.clear()
-
-        loader.forEach { (fileIdentifier, jsonElement) ->
-            try {
-                val entry: DiaryEntry = JSON.decodeFromJsonElement(DiaryEntry.serializer(), jsonElement)
-                val split = fileIdentifier.path.split("/")
-                val langCode = split[0]
-                val folderOrName = split[1]
-                val diaries = DIARIES_BY_LANG.computeIfAbsent(langCode) { Diaries() }
-                val existing = when (folderOrName) {
-                    "structures" -> {
-                        val tagName = split[2]
-                        diaries.structures.put(TagKey.create(Registries.STRUCTURE, resLoc(tagName)), entry)
-                    }
-                    else -> {
-                        diaries.misc.put(folderOrName, entry)
-                    }
-                }
-                if (existing != null) {
-                    RuinsOfGrowsseth.LOGGER.warn("Diary for structure inserted but one already existed: $existing")
-                }
-            } catch (e: Exception) {
-                RuinsOfGrowsseth.LOGGER.error( "Growsseth: Couldn't parse diary file {}", fileIdentifier, e)
-            }
-        }
-    }
-
-    data class Diaries(
-        val structures: MutableMap<TagKey<Structure>, DiaryEntry> = mutableMapOf(),
-        val misc: MutableMap<String, DiaryEntry> = mutableMapOf(),
-    )
-}
-
-@Serializable
-data class DiaryEntry(
-    val name: String,
-    val pages: List<String>,
-)
-
 object CustomRemoteDiaries {
     // Not language separated
-    val diaries = mutableMapOf<String, DiaryEntry>()
-    var endDiary: DiaryEntry? = null
+    val diaries = mutableMapOf<String, BookData>()
+    var endDiary: BookData? = null
         private set
-    val structureReplacementDiaries = mutableMapOf<TagKey<Structure>, DiaryEntry>()
+    val structureReplacementDiaries = mutableMapOf<TagKey<Structure>, BookData>()
 
     const val DIARY_EVENT_NAME = "rdiary"
     const val DIARY_END_EVENT_NAME = "enddiary"
@@ -519,7 +469,7 @@ object CustomRemoteDiaries {
         return event.name.split("/")[0] == DIARY_STRUCT_EVENT_NAME
     }
 
-    private fun diaryFromEvent(event: ApiEvent): Pair<String, DiaryEntry>? {
+    private fun diaryFromEvent(event: ApiEvent): Pair<String, BookData>? {
         val title = event.name.split("/").getOrNull(1) ?: run {
             RuinsOfGrowsseth.LOGGER.warn("Event researcher diary: no slash, cannot find title: $event.name")
             return null
@@ -536,12 +486,12 @@ object CustomRemoteDiaries {
 
         val pages = desc.split(PAGEBREAK)
 
-        val diary = DiaryEntry(title, pages)
+        val diary = BookData(pages=pages.map(BookData::pageEntry), name=title)
 
         return id to diary
     }
 
-    private fun structDiaryFromEvent(event: ApiEvent): Pair<TagKey<Structure>, DiaryEntry>? {
+    private fun structDiaryFromEvent(event: ApiEvent): Pair<TagKey<Structure>, BookData>? {
         val title = event.name.split("/").getOrNull(2) ?: run {
             RuinsOfGrowsseth.LOGGER.warn("Event struct researcher diary: not enough slashes, cannot find title: ${event.name}")
             return null
@@ -558,7 +508,7 @@ object CustomRemoteDiaries {
 
         val pages = desc.split(PAGEBREAK)
 
-        val diary = DiaryEntry(title, pages)
+        val diary = BookData(pages=pages.map(BookData::pageEntry), name=title)
 
         return id to diary
     }

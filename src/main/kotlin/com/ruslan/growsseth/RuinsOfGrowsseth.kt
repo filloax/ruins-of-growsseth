@@ -8,6 +8,7 @@ import com.ruslan.growsseth.dialogues.ResearcherDialogueListener
 import com.ruslan.growsseth.effect.GrowssethEffects
 import com.ruslan.growsseth.entity.GrowssethEntities
 import com.ruslan.growsseth.entity.researcher.CustomRemoteDiaries
+import com.ruslan.growsseth.entity.researcher.ResearcherDiaryComponent
 import com.ruslan.growsseth.entity.researcher.trades.GameMasterResearcherTradesProvider
 import com.ruslan.growsseth.entity.researcher.trades.TradesListener
 import com.ruslan.growsseth.http.GrowssethApi
@@ -57,6 +58,7 @@ object RuinsOfGrowsseth : ModInitializer {
         GameMasterResearcherTradesProvider.subscribe()
         GrowssethExtraEvents.init()
         ResearcherDialogueApiListener.init()
+        ResearcherDiaryComponent.init()
 
         initItemGroups()
         registerResourceListeners()
@@ -122,7 +124,7 @@ object RuinsOfGrowsseth : ModInitializer {
         ))
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(FabricReloadListener(
             resLoc(Constants.TEMPLATE_FOLDER),
-            TemplateListener(),
+            TemplateListener,
         ))
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(FabricReloadListener(
             resLoc(Constants.PRESET_PLACES_FOLDER),
