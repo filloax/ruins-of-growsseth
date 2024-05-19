@@ -20,6 +20,8 @@ public class RangeConfig {
     }
 
     public IntRange range() {
+        if (min > max)
+            min = max;
         return new IntRange(min, max);
     }
 }
