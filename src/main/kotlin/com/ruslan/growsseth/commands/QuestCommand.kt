@@ -57,7 +57,7 @@ object QuestCommand {
 
         return try {
             quest.activateStageId(stage)
-            ctx.source.sendSuccess({ Component.translatable("growsseth.commands.gquest.stage.success", stage, quest) }, true)
+            ctx.source.sendSuccess({ Component.translatable("growsseth.commands.gquest.stage.success", stage, quest.toString()) }, true)
             1
         } catch (e: Exception) {
             ctx.source.sendFailure(Component.translatable(e.message ?: "growsseth.commands.gquest.stage.failure"))
