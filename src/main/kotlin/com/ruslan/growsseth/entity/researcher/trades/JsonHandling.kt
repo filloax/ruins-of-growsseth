@@ -5,6 +5,7 @@ import com.filloax.fxlib.api.json.KotlinJsonResourceReloadListener
 import com.filloax.fxlib.api.loreLines
 import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.RuinsOfGrowsseth
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
@@ -112,7 +113,7 @@ data class ResearcherTradeObj(
                 wants.map { it.toItemCost() },
                 maxUses,
                 gives.map?.unwrap(),
-                gives.diaryId,
+                gives.bookId ?: gives.diaryIdOld,
                 noNotification = noNotification,
                 randomWeight = randomWeight,
             ),
@@ -126,7 +127,10 @@ data class ResearcherTradeObj(
         val id: String,
         val amount: Int = 1,
         val map: TradeItemMapInfo.JsonDesc? = null,
-        val diaryId: String? = null,
+        val bookId: String? = null,
+        @Deprecated("Use bookId")
+        @SerialName("diaryId")
+        val diaryIdOld: String? = null,
     ) {
         fun toItemStack(): ItemStack {
             val itemStack = ItemStack(itemFromId(id), amount)
@@ -140,11 +144,11 @@ data class ResearcherTradeObj(
     }
 
     companion object {
-        fun tradeIdemEntryObj(id: ResourceLocation, amount: Int = 1, map: TradeItemMapInfo.JsonDesc? = null, diaryId: String? = null) = TradeItemEntryObj(
-            id.toString(), amount, map, diaryId
+        fun tradeIdemEntryObj(id: ResourceLocation, amount: Int = 1, map: TradeItemMapInfo.JsonDesc? = null, bookId: String? = null) = TradeItemEntryObj(
+            id.toString(), amount, map, bookId
         )
-        fun tradeIdemEntryObj(item: Item, amount: Int = 1, map: TradeItemMapInfo.JsonDesc? = null, diaryId: String? = null) = tradeIdemEntryObj(
-            BuiltInRegistries.ITEM.getKey(item), amount, map, diaryId
+        fun tradeIdemEntryObj(item: Item, amount: Int = 1, map: TradeItemMapInfo.JsonDesc? = null, bookId: String? = null) = tradeIdemEntryObj(
+            BuiltInRegistries.ITEM.getKey(item), amount, map, bookId
         )
     }
 }
