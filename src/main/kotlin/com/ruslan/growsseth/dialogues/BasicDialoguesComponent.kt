@@ -14,7 +14,9 @@ import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.config.MiscConfig
 import com.ruslan.growsseth.dialogues.BasicDialogueEvents
 import com.ruslan.growsseth.dialogues.DialoguesNpc.Companion.getDialogueNpcs
+import com.ruslan.growsseth.networking.DialoguePacket
 import com.ruslan.growsseth.quests.QuestOwner
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.ChatFormatting
 import net.minecraft.advancements.AdvancementHolder
 import net.minecraft.core.UUIDUtil
@@ -229,9 +231,10 @@ open class BasicDialoguesComponent(
 
     override fun sendDialogueToPlayer(player: ServerPlayer, line: DialogueLine) {
         if (line.content != "") {
-            val nameComp = Component.literal("<").append(entity.name.copy().withStyle(ChatFormatting.YELLOW)).append("> ")
-            val messageComp = nameComp.append(Component.translatable(line.content))
-            player.displayClientMessage(messageComp, false)
+//            val nameComp = Component.literal("<").append(entity.name.copy().withStyle(ChatFormatting.YELLOW)).append("> ")
+//            val messageComp = nameComp.append(Component.translatable(line.content))
+//            player.displayClientMessage(messageComp, false)
+            ServerPlayNetworking.send(player, DialoguePacket(line, entity.name))
         }
     }
 
