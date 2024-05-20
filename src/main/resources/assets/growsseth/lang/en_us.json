@@ -1,6 +1,10 @@
 {
     "growsseth.creative_tab": "Growsseth items",
 
+    "tag.item.growsseth.music_discs": "Growsseth Music Discs",
+    "tag.item.growsseth.noteblock_discs": "Growsseth Music Discs (Noteblock Structures)",
+    "tag.item.growsseth.researcher_mess_trigger": "Researcher Mess Trigger",
+
     "generator.growsseth.growsseth": "Growsseth",
 
     "item.growsseth.growsseth_banner_pattern": "Banner Pattern (Replaced by code)",

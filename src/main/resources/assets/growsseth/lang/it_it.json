@@ -1,6 +1,10 @@
 {
     "growsseth.creative_tab": "Oggetti di Growsseth",
 
+    "tag.item.growsseth.music_discs": "Dischi musicali di Growsseth",
+    "tag.item.growsseth.noteblock_discs": "Dischi musicali di Growsseth (strutture dei noteblock)",
+    "tag.item.growsseth.researcher_mess_trigger": "Trigger per infastidimento del Ricercatore",
+
     "generator.growsseth.growsseth": "Growsseth",
 
     "item.growsseth.growsseth_banner_pattern": "Banner Pattern (Rimpiazzato da codice)",
