@@ -51,7 +51,7 @@ object GrowssethItems {
 	))
 	val DISC_GIORGIO_LOFI_INST 		= makeDisc("disc_giorgio_lofi_inst", GrowssethSounds.DISC_GIORGIO_LOFI_INST, 295)
 	val DISC_GIORGIO_FINDING_HOME 	= makeDisc("disc_giorgio_finding_home", GrowssethSounds.DISC_GIORGIO_FINDING_HOME, 186)
-	val DISC_GIORGIO_8BIT		 	= makeDisc("disc_giorgio_8bit", GrowssethSounds.DISC_GIORGIO_8BIT, 165, listOf(
+	val DISC_GIORGIO_8BIT		 	= makeDisc("disc_giorgio_8bit", GrowssethSounds.DISC_GIORGIO_8BIT, 152, listOf(
 		"Music - Hawkelele",
 		"Based on 'Giorgio Cubetti' by Singalek",
 		"Cover of 'If I Could, I Would' - MINDME"
