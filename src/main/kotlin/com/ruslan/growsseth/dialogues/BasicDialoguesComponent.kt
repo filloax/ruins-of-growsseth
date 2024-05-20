@@ -320,11 +320,6 @@ open class BasicDialoguesComponent(
     ) : Boolean {
         val (event, dialogueOptions) = getDialoguesAndEvent(player, dialogueEvents, ignoreEventConditions, ignoreEmptyOptionsWarning) ?: return false
 
-        if (MiscConfig.disableNpcDialogues && event != Events.TICK_NEAR_PLAYER) {
-            RuinsOfGrowsseth.LOGGER.info("Dialogue for $event was not triggered because \"Disable NPC dialogues\" is on")
-            return false
-        }
-
         if (countEvents && event.count) {
             incrementEventCount(event, player)
         }
