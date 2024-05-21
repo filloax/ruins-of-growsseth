@@ -10,6 +10,7 @@ import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.config.ResearcherConfig
 import com.ruslan.growsseth.entity.GrowssethEntities
 import com.ruslan.growsseth.entity.researcher.ResearcherQuestComponent
+import com.ruslan.growsseth.entity.researcher.ResearcherSavedData
 import com.ruslan.growsseth.structure.GrowssethStructurePieceTypes
 import com.ruslan.growsseth.utils.*
 import net.minecraft.core.BlockPos
@@ -155,7 +156,8 @@ class ResearcherTent : GrTemplateStructurePiece {
         if (!boundingBox.isInside(pos)) return
 
         val server = level.level.server
-        val spawnEntities = !(ResearcherConfig.singleResearcher && ResearcherQuestComponent.shouldRemoveTent(server))
+        val researcherData = ResearcherSavedData.getPersistent(server)
+        val spawnEntities = !(ResearcherConfig.singleResearcher && ResearcherQuestComponent.shouldRemoveTent(server)) && !(researcherData.isDead)
 
         when (name) {
             "researcher" -> {
