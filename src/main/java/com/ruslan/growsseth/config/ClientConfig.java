@@ -26,7 +26,6 @@ public class ClientConfig {
     )
     public static boolean newTradeNotifications = true;
 
-
     @ConfigEntry(id = "disableNpcDialogues", type = EntryType.BOOLEAN, translation = T_PREF + "disableNpcDialogues.name")
     public static boolean disableNpcDialogues = false;
 }
