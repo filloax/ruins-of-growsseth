@@ -132,7 +132,8 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
          * Note: doesn't care about stage order
          */
         fun setStage(server: MinecraftServer, stage: String) {
-            assert(stage in listOf(Stages.HOME, Stages.WAIT, Stages.START, Stages.HEALED, Stages.ZOMBIE, Stages.ENDING)) { "Stage $stage not included in stages for researcher!" }
+            assert(stage in listOf(Stages.HOME, Stages.WAIT, Stages.START, Stages.HEALED, Stages.ZOMBIE, Stages.ENDING))
+                { "Stage $stage not included in stages for researcher!" }
             val data = getPersistentData(server)
             data.currentStageId = stage
             data.stageHistory.add(stage)
@@ -215,7 +216,6 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
     inner class StartStage : QuestStage<Researcher> {
         override val trigger = ProgressTradesTrigger(server, onlyOne = true)
             .or(ApiEventTrigger(QuestConfig.finalQuestStartName))
-
 
         override fun onActivated(entity: Researcher) {
             entity.dialogues?.resetNearbyPlayers()
@@ -356,6 +356,10 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
         }
     }
 
+    class KilledStage : QuestStage<Researcher> {
+        override val trigger = EntityIsDeadTrigger()
+    }
+
     class ProgressTradesTrigger(val server: MinecraftServer, val onlyOne: Boolean = false) : QuestStageTrigger<Researcher> {
         override fun isActive(entity: Researcher, event: QuestUpdateEvent): Boolean {
             val tradesProvider = ResearcherTradeMode.providerFromSettings(server)
@@ -363,6 +367,12 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
 
             return if (onlyOne) tradesProvider.onlyOneLeft(server)
                 else tradesProvider.isFinished(server)
+        }
+    }
+
+    class EntityIsDeadTrigger : QuestStageTrigger<Researcher> {
+        override fun isActive(entity: Researcher, event: QuestUpdateEvent): Boolean {
+            return entity.isDeadOrDying
         }
     }
 }

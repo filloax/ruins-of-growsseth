@@ -1,6 +1,7 @@
 package com.ruslan.growsseth.structure.pieces
 
-import com.filloax.fxlib.*
+import com.filloax.fxlib.api.EventUtil
+import com.filloax.fxlib.api.ScheduledServerTask
 import com.filloax.fxlib.api.enums.SetBlockFlag
 import com.filloax.fxlib.api.iterBlocks
 import com.filloax.fxlib.api.nbt.*
@@ -10,6 +11,7 @@ import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.config.ResearcherConfig
 import com.ruslan.growsseth.entity.GrowssethEntities
 import com.ruslan.growsseth.entity.researcher.ResearcherQuestComponent
+import com.ruslan.growsseth.entity.researcher.ResearcherSavedData
 import com.ruslan.growsseth.structure.GrowssethStructurePieceTypes
 import com.ruslan.growsseth.utils.*
 import net.minecraft.core.BlockPos
@@ -32,9 +34,7 @@ import net.minecraft.world.level.StructureManager
 import net.minecraft.world.level.WorldGenLevel
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
-import net.minecraft.world.level.block.ChestBlock
 import net.minecraft.world.level.block.Rotation
-import net.minecraft.world.level.block.entity.ChestBlockEntity
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity
 import net.minecraft.world.level.chunk.ChunkGenerator
 import net.minecraft.world.level.levelgen.structure.BoundingBox
@@ -155,7 +155,8 @@ class ResearcherTent : GrTemplateStructurePiece {
         if (!boundingBox.isInside(pos)) return
 
         val server = level.level.server
-        val spawnEntities = !(ResearcherConfig.singleResearcher && ResearcherQuestComponent.shouldRemoveTent(server))
+        val researcherData = ResearcherSavedData.getPersistent(server)
+        val spawnEntities = !(ResearcherConfig.singleResearcher && ResearcherQuestComponent.shouldRemoveTent(server)) && !(researcherData.isDead)
 
         when (name) {
             "researcher" -> {
@@ -171,10 +172,9 @@ class ResearcherTent : GrTemplateStructurePiece {
                 val donkeyPos = pos.relative(placeSettings().rotation.rotate(Direction.SOUTH))
                 if (spawnEntities)
                     placeEntity(EntityType.DONKEY, donkeyPos, level) { donkey ->
-                        leashToBlock(level.level, donkey, pos)
-                        donkey.getSlot(499).set(ItemStack(Items.CHEST))
-                        initDonkeyUuid = donkey.uuid
-                        donkey.addTag(Constants.TAG_RESEARCHER_DONKEY)
+                        ScheduledServerTask.schedule(server, 10) {
+                            manageDonkey(level.level, donkey.uuid, pos)     // the instance changes and gets reset otherwise
+                        }
                     }
             }
             "jail" -> {
@@ -214,7 +214,7 @@ class ResearcherTent : GrTemplateStructurePiece {
         }
 
         cellarTrapdoorPos = ladderPos?.let { lPos ->
-            var iPos = BlockPos.MutableBlockPos(lPos.x, lPos.y, lPos.z)
+            val iPos = BlockPos.MutableBlockPos(lPos.x, lPos.y, lPos.z)
             var valid = false
             for (i in 1 .. 100) {
                 if (level.getBlockState(iPos).`is`(Blocks.SPRUCE_TRAPDOOR)) {
@@ -238,6 +238,15 @@ class ResearcherTent : GrTemplateStructurePiece {
 
         if (cellarPos1 != null && cellarPos2 != null) {
             cellarBoundingBox = BoundingBox.fromCorners(cellarPos1!!, cellarPos2!!)
+        }
+    }
+
+    private fun manageDonkey(level: ServerLevel, uuid: UUID, pos: BlockPos) {
+        EventUtil.runOnEntityWhenPossible(level, uuid) { donkey ->
+            leashToBlock(level.level, donkey as Mob, pos)
+            donkey.getSlot(499)?.set(ItemStack(Items.CHEST))
+            initDonkeyUuid = uuid
+            donkey.addTag(Constants.TAG_RESEARCHER_DONKEY)
         }
     }
 

@@ -82,8 +82,8 @@ object RuinsOfGrowsseth : ModInitializer {
         GrowssethStructures.registerStructureTypes{ id, value -> Registry.register(BuiltInRegistries.STRUCTURE_TYPE, id, value) }
         GrowssethCriterions.registerCriterions { id, value -> Registry.register(BuiltInRegistries.TRIGGER_TYPES, id, value) }
         GrowssethCommands.ArgumentTypes.registerArgumentTypes(BuiltInRegistries.COMMAND_ARGUMENT_TYPE)
-        GrowssethPackets.registerPacketsC2S(platform)
-        GrowssethPackets.registerPacketsS2C(platform)
+        GrowssethPackets.registerPacketsC2S(platform.packetRegistratorC2S)
+        GrowssethPackets.registerPacketsS2C(platform.packetRegistratorS2C)
     }
 
     private fun initItemGroups() {
