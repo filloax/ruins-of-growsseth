@@ -1,26 +1,6 @@
 {
     "unlockableByRemoteEvent": {
-        "sell_beginning": [
-            {
-                "gives": {
-                    "id": "growsseth:growsseth_banner_pattern",
-                    "amount": 1
-                },
-                "wants": [
-                    {
-                        "id": "minecraft:mushroom_stew",
-                        "amount": 1
-                    },
-                    {
-                        "id": "minecraft:mushroom_stew",
-                        "amount": 1
-                    }
-                ],
-                "priority": 100
-            }
-            // Cave camp unlocked by structure
-        ],
-        "sell_default": [
+        "sell_banner_pattern": [
             {
                 "gives": {
                     "id": "growsseth:growsseth_banner_pattern",
@@ -35,7 +15,7 @@
                 "priority": 100 // high priority to appear after all the other trades
             }
         ],
-        "sell_sherd": [
+        "sell_pottery_sherd": [
             {
                 "gives": {
                     "id": "growsseth:growsseth_pottery_sherd",
@@ -71,7 +51,7 @@
                 "noNotification": true
             },
         ],
-        "sell_enchant_dictionary": [    // unused
+        "sell_enchant_dictionary": [
             {
                 "gives": {
                     "id": "minecraft:written_book",
@@ -85,81 +65,6 @@
                     },
                 ],
                 "priority": -100,
-            },
-        ],
-        "sell_giorgio_cubetti": [   // just in case
-            {
-                "gives": {
-                    "id": "growsseth:disc_giorgio_cubetti",
-                    "amount": 1
-                },
-                "wants": [
-                    {
-                        "id": "minecraft:emerald",
-                        "amount": 5
-                    },
-                ],
-                "priority": -80,
-            },
-        ],
-        "sell_giorgio_lofi": [
-            {
-                "gives": {
-                    "id": "growsseth:disc_giorgio_lofi",
-                    "amount": 1
-                },
-                "wants": [
-                    {
-                        "id": "minecraft:emerald",
-                        "amount": 5
-                    },
-                ],
-                "priority": -80,
-            },
-        ],
-        "sell_giorgio_finding_home": [
-            {
-                "gives": {
-                    "id": "growsseth:disc_giorgio_finding_home",
-                    "amount": 1
-                },
-                "wants": [
-                    {
-                        "id": "minecraft:emerald",
-                        "amount": 5
-                    },
-                ],
-                "priority": -80,
-            },
-        ],
-        "sell_giorgio_8bit": [
-            {
-                "gives": {
-                    "id": "growsseth:disc_giorgio_8bit",
-                    "amount": 1
-                },
-                "wants": [
-                    {
-                        "id": "minecraft:emerald",
-                        "amount": 5
-                    },
-                ],
-                "priority": -80,
-            },
-        ],
-        "sell_binobinooo": [
-            {
-                "gives": {
-                    "id": "growsseth:disc_binobinooo",
-                    "amount": 1
-                },
-                "wants": [
-                    {
-                        "id": "minecraft:emerald",
-                        "amount": 5
-                    },
-                ],
-                "priority": -80,
             },
         ],
         "sell_all_extras": [
@@ -212,188 +117,6 @@
                 "noNotification": true,
                 "replace": true
             },
-            {
-                "gives": {
-                    "id": "growsseth:disc_giorgio_lofi",
-                    "amount": 1
-                },
-                "wants": [
-                    {
-                        "id": "minecraft:paper",
-                        "amount": 1
-                    }
-                ],
-                "priority": 20,
-                "noNotification": true,
-                "replace": true
-            },
-            {
-                "gives": {
-                    "id": "growsseth:disc_giorgio_cubetti",
-                    "amount": 1
-                },
-                "wants": [
-                    {
-                        "id": "minecraft:paper",
-                        "amount": 1
-                    }
-                ],
-                "priority": 20, // higher priority than others to avoid being placed between banner and sherd
-                "noNotification": true,
-                "replace": true
-            },
-            {
-                "gives": {
-                    "id": "growsseth:disc_giorgio_finding_home",
-                    "amount": 1
-                },
-                "wants": [
-                    {
-                        "id": "minecraft:paper",
-                        "amount": 1
-                    }
-                ],
-                "priority": 20,
-                "noNotification": true,
-                "replace": true
-            },
-            {
-                "gives": {
-                    "id": "growsseth:disc_giorgio_8bit",
-                    "amount": 1
-                },
-                "wants": [
-                    {
-                        "id": "minecraft:paper",
-                        "amount": 1
-                    }
-                ],
-                "priority": 20,
-                "noNotification": true,
-                "replace": true
-            },
-            {
-                "gives": {
-                    "id": "growsseth:disc_binobinooo",
-                    "amount": 1
-                },
-                "wants": [
-                    {
-                        "id": "minecraft:paper",
-                        "amount": 1
-                    }
-                ],
-                "priority": 20,
-                "noNotification": true,
-                "replace": true
-            }
         ],
-        "sell_easter_egg_discs": [
-            {
-                "gives": {
-                    "id": "growsseth:disc_sega_di_niente",
-                    "amount": 1
-                },
-                "wants": [
-                    {
-                        "id": "minecraft:paper",
-                        "amount": 1
-                    }
-                ],
-                "priority": 50,
-                "noNotification": true,
-                "replace": true
-            },
-            {
-                "gives": {
-                    "id": "growsseth:disc_binobinooo",
-                    "amount": 1
-                },
-                "wants": [
-                    {
-                        "id": "minecraft:paper",
-                        "amount": 1
-                    }
-                ],
-                "priority": 50,
-                "noNotification": true,
-                "replace": true
-            },
-            {
-                "gives": {
-                    "id": "growsseth:disc_padre_mammonk",
-                    "amount": 1
-                },
-                "wants": [
-                    {
-                        "id": "minecraft:paper",
-                        "amount": 1
-                    }
-                ],
-                "priority": 50,
-                "noNotification": true,
-                "replace": true
-            },
-            {
-                "gives": {
-                    "id": "growsseth:disc_giorgio_lofi",
-                    "amount": 1
-                },
-                "wants": [
-                    {
-                        "id": "minecraft:paper",
-                        "amount": 1
-                    }
-                ],
-                "priority": 50,
-                "noNotification": true,
-                "replace": true
-            },
-            {
-                "gives": {
-                    "id": "growsseth:disc_giorgio_cubetti",
-                    "amount": 1
-                },
-                "wants": [
-                    {
-                        "id": "minecraft:paper",
-                        "amount": 1
-                    }
-                ],
-                "priority": 50, // higher priority than others to avoid being placed between banner and sherd
-                "noNotification": true,
-                "replace": true
-            },
-            {
-                "gives": {
-                    "id": "growsseth:disc_abbandonati",
-                    "amount": 1
-                },
-                "wants": [
-                    {
-                        "id": "minecraft:paper",
-                        "amount": 1
-                    }
-                ],
-                "priority": 50,
-                "noNotification": true,
-                "replace": true
-            },
-            {
-                "gives": {
-                    "id": "growsseth:disc_missiva_nell_ombra",
-                    "amount": 1
-                },
-                "wants": [
-                    {
-                        "id": "minecraft:paper",
-                        "amount": 1
-                    }
-                ],
-                "priority": 50,
-                "noNotification": true,
-                "replace": true
-            }
-        ]
     },
 }
