@@ -3,6 +3,7 @@ package com.ruslan.growsseth.entity.researcher
 import com.filloax.fxlib.api.nbt.loadField
 import com.filloax.fxlib.api.nbt.saveField
 import com.ruslan.growsseth.RuinsOfGrowsseth
+import com.ruslan.growsseth.config.ResearcherConfig
 import com.ruslan.growsseth.entity.GrowssethEntities
 import com.ruslan.growsseth.entity.SpawnTimeTracker
 import com.ruslan.growsseth.http.GrowssethExtraEvents
@@ -37,6 +38,7 @@ import net.minecraft.world.item.enchantment.Enchantments
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.block.LevelEvent
+import net.minecraft.world.level.entity.EntityTypeTest
 
 
 class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
@@ -48,21 +50,22 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
                 .add(Attributes.MAX_HEALTH, 40.0)
                 .add(Attributes.ARMOR, 10.0)
         }
-        /*
-        fun getLootTable(): LootTable.Builder = LootTable.lootTable()
-            .withPool(
-                LootPool.lootPool()
-                    .setRolls(ConstantValue.exactly(1.0F))
-                    .add(
-                        LootItem.lootTableItem(Items.ROTTEN_FLESH)
-                            .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F)))
-                            .apply(LootingEnchantFunction.lootingMultiplier(UniformGenerator.between(0.0F, 1.0F)))
-                    )
-            )
-            // Do not add horn to pool as need to create itemstack ourselves to init instrument
-         */
         const val SPAWN_TIME_TAG = "ResearcherSpawnTime"
     }
+
+    var researcherData: CompoundTag? = null
+    var researcherOriginalPos: BlockPos? = null
+    var shouldDespawn: Boolean = false
+
+    // World time the researcher was spawned first at (used in rmresearcher remote command)
+    override var spawnTime: Long
+        set(value) { _spawnTime = value }
+        get() {
+            if (_spawnTime == null)
+                _spawnTime = level().gameTime
+            return _spawnTime!!
+        }
+    private var _spawnTime: Long? = null
 
     override fun finalizeSpawn(level: ServerLevelAccessor, difficulty: DifficultyInstance, reason: MobSpawnType, spawnData: SpawnGroupData?
     ): SpawnGroupData? {
@@ -79,6 +82,7 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
         goalSelector.addGoal(8, RandomLookAroundGoal(this))
         this.addBehaviourGoals()
     }
+
     override fun addBehaviourGoals() {
         goalSelector.addGoal(2, ZombieResearcherAttackGoal(this, 1.0, false, level()))    // special goal to not despawn in peaceful
         // no move through village goal
@@ -94,19 +98,6 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
     override fun shouldDespawnInPeaceful(): Boolean {
         return false        // we don't want the quest to break
     }
-
-    var researcherData: CompoundTag? = null
-    var researcherOriginalPos: BlockPos? = null
-
-    // World time the researcher was spawned first at (used in rmresearcher remote command)
-    override var spawnTime: Long
-        set(value) { _spawnTime = value }
-        get() {
-            if (_spawnTime == null)
-                _spawnTime = level().gameTime
-            return _spawnTime!!
-        }
-    private var _spawnTime: Long? = null
 
     private fun convertToResearcher(serverLevel: ServerLevel, alsoMove: Boolean = false) {
         val researcher = convertTo(GrowssethEntities.RESEARCHER, false)
@@ -139,6 +130,7 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
             serverLevel.levelEvent(null, LevelEvent.SOUND_ZOMBIE_CONVERTED, blockPosition(), 0)
         }
     }
+
     override fun tick() {
         super.tick()
         // Make conversion quicker (more or less two times as fast, since we tick it a second time)
@@ -158,6 +150,24 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
                 GrowssethExtraEvents.researcherRemoveCheck(this, this)
             }
         }
+        if (shouldDespawn) {
+            this.remove(RemovalReason.DISCARDED)
+            RuinsOfGrowsseth.LOGGER.info("Removed $this because another researcher was killed somewhere else")
+        }
+    }
+
+    override fun die(damageSource: DamageSource) {
+        super.die(damageSource)
+        if (ResearcherConfig.singleResearcher) { server?.let { serv ->
+            val savedData = ResearcherSavedData.getPersistent(serv)
+            savedData.isDead = true
+            // Update all other currently loaded researchers (undo if we decide this is a bad idea)
+            val otherResearchers = serv.allLevels.flatMap { level -> level.getEntities(EntityTypeTest.forClass(ZombieResearcher::class.java)) { it.uuid != this.uuid } }
+            otherResearchers.forEach { researcher2 ->
+                if (savedData.isDead)
+                    researcher2.shouldDespawn = true
+            }
+        } }
     }
 
     override fun dropCustomDeathLoot(damageSource: DamageSource, looting: Int, hitByPlayer: Boolean) {
@@ -181,6 +191,7 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
         compound.saveField("ResearcherPos", BlockPos.CODEC, ::researcherOriginalPos)
         compound.putLong(Researcher.SPAWN_TIME_TAG, spawnTime)
     }
+
     override fun readAdditionalSaveData(compound: CompoundTag) {
         super.readAdditionalSaveData(compound)
         compound.getCompound("ResearcherData")?.let { researcherData = it }
