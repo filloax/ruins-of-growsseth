@@ -1,6 +1,10 @@
 {
     "growsseth.creative_tab": "Oggetti di Growsseth",
 
+    "tag.item.growsseth.music_discs": "Dischi musicali di Growsseth",
+    "tag.item.growsseth.noteblock_discs": "Dischi musicali di Growsseth (strutture dei noteblock)",
+    "tag.item.growsseth.researcher_mess_trigger": "Trigger per infastidimento del Ricercatore",
+
     "generator.growsseth.growsseth": "Growsseth",
 
     "item.growsseth.growsseth_banner_pattern": "Banner Pattern (Rimpiazzato da codice)",
@@ -159,6 +163,7 @@
     "growsseth.config.modLootInVanillaStructures.name": "Genera loot della mod nelle strutture vanilla",
     "growsseth.config.zombieGuberSpawnChance.name": "Chance di spawn di Guber zombi (%)",
     "growsseth.config.disableNpcDialogues.name": "Disabilita dialoghi NPC",
+    "growsseth.config.debugNpcDialogues.name": "Segnala dialoghi NPC nei log",
 
     "growsseth.config.enableLocationTitles.name": "Abilita i titoli delle location di Growsseth",
     "growsseth.config.enableLocationTitles.comment": "Mostra i nomi dei luoghi che stai visitando quando usi il preset del mondo di Growsseth.",

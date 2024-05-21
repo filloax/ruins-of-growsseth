@@ -168,25 +168,14 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             Codec.INT.fieldOf("mapId").forGetter(MapMemory::mapId),
         ).apply(builder, ::MapMemory) })
 
-//        private var tentStructures: List<Structure>? = null
-
         fun findTent(level: ServerLevel, startingPos: BlockPos, currentPos: BlockPos? = null): StructureStart? {
             val structureManager = level.structureManager()
             var tentStart: StructureStart? = null
-//
-//            val validStructures = tentStructures ?: run {
-//                val structures = level.registryAccess().registryOrThrow(Registries.STRUCTURE).holders().filter {
-//                    it.value() is ResearcherTentStructure
-//                }.map{ it.value() }.toList()
-//                tentStructures = structures
-//                structures
-//            }
 
             // First try in starting pos, then less likely current pos
             for (pos in listOfNotNull(startingPos, currentPos)) {
                 if (tentStart != null) break
 
-//                tentStart = validStructures.firstNotNullOfOrNull { structureManager.getStructureAt(pos, it) }
                 tentStart = structureManager.getStructureWithPieceAt(pos, GrowssethTags.StructTags.RESEARCHER_TENT)
 
                 // Error in the fixed structures mixin? Just incase, given usecase of mod (streaming)
@@ -217,7 +206,6 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
     /* VARIABLES SECTION */
 
-
     val armPose : IllagerArmPose
         get() = if (this.isAggressive || this.isUsingItem) IllagerArmPose.ATTACKING else IllagerArmPose.CROSSED
 
@@ -231,6 +219,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     // Set to false (intentionally public) to prevent the researcher from saving world data
     // on remove in single researcher mode
     var saveOnRemove: Boolean = true
+    var shouldDespawn: Boolean = false
 
     /* If the donkey was borrowed by any player, do not check for specific player
        as there is only one donkey anyway and atm the penalty is shared
@@ -326,7 +315,6 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         goalSelector.addGoal(4, ResearcherRandomStrollGoal(this, 0.6))
         goalSelector.addGoal(5, ResearcherLookAtPlayerGoal(this, 8f, 0.1f))
 
-
         targetSelector.addGoal(0, NearestAttackableTargetGoal(this, Player::class.java, 0, true, true)
             { player -> combat.wantsToKillPlayer((player as Player)) })
         if (ResearcherConfig.researcherInteractsWithMobs) {
@@ -377,7 +365,6 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
     override fun aiStep() {
         updateSwingTime()       // needed for the attack animation
-
         if (showAngryParticles) {
             addParticlesAroundSelf(ParticleTypes.ANGRY_VILLAGER, 3, 6, 0.7)
             showAngryParticles = false
@@ -390,13 +377,8 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             addParticlesAroundSelf(ParticleTypes.PORTAL, 14, 20, 0.0)
             showTeleportParticles = false
         }
-
         if (!level().isClientSide && isAlive) {
             handleItems()
-
-            // witch stuff
-//            if (random.nextFloat() < 7.5E-4f)
-//                level().broadcastEntityEvent(this, 15.toByte())
         }
         super.aiStep()
     }
@@ -452,7 +434,6 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
                     ))
                     gameEvent(GameEvent.TELEPORT)
                 }
-
                 getAttribute(Attributes.MOVEMENT_SPEED)!!.removeModifier(SPEED_MODIFIER_DRINKING.id)
             }
         }
@@ -588,6 +569,11 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
         if (lastRefusedTradeTimer > 0)
             lastRefusedTradeTimer--
+
+        if (shouldDespawn) {
+            this.remove(RemovalReason.DISCARDED)
+            RuinsOfGrowsseth.LOGGER.info("Removed $this because another researcher was killed somewhere else")
+        }
     }
 
     override fun tick() {
@@ -680,7 +666,6 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     override fun remove(reason: RemovalReason) {
         if (saveOnRemove)
             saveWorldData()
-
         super.remove(reason)
     }
 
@@ -746,6 +731,8 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     fun writeSavedData(savedData: ResearcherSavedData, existingDataTag: CompoundTag? = null) {
         savedData.data = existingDataTag ?: saveResearcherData()
         savedData.name = customName
+        if (this.isDeadOrDying && ResearcherConfig.singleResearcher)
+            savedData.isDead = true
         savedData.setDirty()
     }
 
@@ -824,6 +811,8 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             val otherResearchers = serv.allLevels.flatMap { level -> level.getEntities(EntityTypeTest.forClass(Researcher::class.java)) { it.uuid != this.uuid } }
             otherResearchers.forEach { researcher2 ->
                 researcher2.readSavedData(savedData)
+                if (savedData.isDead)
+                    researcher2.shouldDespawn = true
                 RuinsOfGrowsseth.LOGGER.info("Updated world data for $researcher2 after saving it for $this")
             }
         } }

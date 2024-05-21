@@ -97,9 +97,8 @@ class ResearcherDialoguesComponent(
 
         farPlayers.removeIf {
             val struct = structureManager.getStructureWithPieceAt(it.blockPosition(), GrowssethTags.StructTags.RESEARCHER_TENT)
-            // Note: bounding box is inflated for this kind of structure by vanilla game, so de-inflate it
             if (struct.isValid) {
-                struct.boundingBox.inflatedBy(-12).isInside(it.blockPosition())
+                struct.boundingBox.isInside(it.blockPosition())
             } else {
                 false
             }

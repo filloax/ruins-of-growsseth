@@ -68,6 +68,7 @@ object ResearcherResetCommand {
         val savedData = ResearcherSavedData.getPersistent(server)
         savedData.data = CompoundTag()
         savedData.name = null
+        savedData.isDead = false
         savedData.setDirty()
 
         try {

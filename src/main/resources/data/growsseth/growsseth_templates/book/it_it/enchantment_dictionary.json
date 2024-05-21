@@ -1,12 +1,11 @@
 {
     "name": "Dizionario alfabeto antico",
     "pages": [
+        "Salve collega, se hai intenzione di comprare la mappa per il \"Santuario tra le correnti\" questi appunti ti torneranno molto utili.\n\nÈ una struttura più antica delle altre, e ha delle iscrizioni in un alfabeto diverso dal nostro.",
         {
             "type": "component",
             "content": [
-                {
-                    "text": "Salve collega, visto che potresti esplorare una struttura più antica delle altre ho pensato ti possa aiutare leggere le iscrizioni che ci troverai.\n\n"
-                },
+                { "text": "" },
                 { "text": "A", "font": "minecraft:alt" },
                 { "text": " = A\n" },
                 { "text": "B", "font": "minecraft:alt" },
@@ -16,13 +15,7 @@
                 { "text": "D", "font": "minecraft:alt" },
                 { "text": " = D\n" },
                 { "text": "E", "font": "minecraft:alt" },
-                { "text": " = E\n" }
-            ]
-        },
-        {
-            "type": "component",
-            "content": [
-                { "text": "" },
+                { "text": " = E\n" },
                 { "text": "F", "font": "minecraft:alt" },
                 { "text": " = F\n" },
                 { "text": "G", "font": "minecraft:alt" },
@@ -40,7 +33,13 @@
                 { "text": "M", "font": "minecraft:alt" },
                 { "text": " = M\n" },
                 { "text": "N", "font": "minecraft:alt" },
-                { "text": " = N\n" },
+                { "text": " = N\n" }
+            ]
+        },
+        {
+            "type": "component",
+            "content": [
+                { "text": "" },
                 { "text": "O", "font": "minecraft:alt" },
                 { "text": " = O\n" },
                 { "text": "P", "font": "minecraft:alt" },
@@ -50,13 +49,7 @@
                 { "text": "R", "font": "minecraft:alt" },
                 { "text": " = R\n" },
                 { "text": "S", "font": "minecraft:alt" },
-                { "text": " = S\n" }
-            ]
-        },
-        {
-            "type": "component",
-            "content": [
-                { "text": "" },
+                { "text": " = S\n" },
                 { "text": "T", "font": "minecraft:alt" },
                 { "text": " = T\n" },
                 { "text": "U", "font": "minecraft:alt" },
@@ -70,7 +63,13 @@
                 { "text": "Y", "font": "minecraft:alt" },
                 { "text": " = Y\n" },
                 { "text": "Z", "font": "minecraft:alt" },
-                { "text": " = Z\n\nPer fare pratica, prova a tradurre questo:\n\n" },
+                { "text": " = Z" }
+            ]
+        },
+        {
+            "type": "component",
+            "content": [
+                { "text": "Per fare pratica, prova a tradurre questa scritta, la ho trovata nella torre in frantumi:\n\n" },
                 { "text": "Gli uomini verdi ci guardano", "font": "minecraft:alt" }
             ]
         }

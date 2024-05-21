@@ -14,7 +14,8 @@ import com.teamresourceful.resourcefulconfig.api.types.options.EntryType;
         WebConfig.class,
         QuestConfig.class,
         StructureConfig.class,
-        WorldPresetConfig.class
+        WorldPresetConfig.class,
+        DebugConfig.class
     }
 )
 public final class GrowssethConfig {

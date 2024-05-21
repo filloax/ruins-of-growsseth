@@ -1,7 +1,6 @@
 package com.ruslan.growsseth.entity.researcher
 
 import com.filloax.fxlib.api.EventUtil
-import com.filloax.fxlib.api.entity.getPersistData
 import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.RuinsOfGrowsseth
@@ -15,7 +14,6 @@ import net.minecraft.world.entity.animal.horse.Donkey
 import net.minecraft.world.entity.decoration.LeashFenceKnotEntity
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.levelgen.structure.BoundingBox
-import net.minecraft.world.level.levelgen.structure.StructureStart
 import net.minecraft.world.phys.AABB
 
 
@@ -23,6 +21,11 @@ object ResearcherDonkey {
     @JvmStatic
     fun shouldProtectDonkey(level: Level, entity: Entity): Boolean {
         if (!level.isClientSide()) {
+            // large bounding box because there are already other checks
+            val nearbyResearchers = level.getEntitiesOfClass(Researcher::class.java, AABB.ofSize(entity.position(), 50.0, 50.0, 50.0))
+            if (nearbyResearchers.size == 0)
+                return false
+
             val pos = entity.blockPosition()
             val serverLevel = level as ServerLevel
             val structures = serverLevel.structureManager()
