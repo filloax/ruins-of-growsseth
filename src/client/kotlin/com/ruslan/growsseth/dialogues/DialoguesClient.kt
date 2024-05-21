@@ -22,6 +22,6 @@ fun LocalPlayer.handleNpcDialogueLine(packet: DialoguePacket) {
     if (platform.isDevEnvironment() || DebugConfig.debugNpcDialogues)
         RuinsOfGrowsseth.LOGGER.info("[Client] Received NPC dialogue: ${messageComp.string}")
 
-    if (ClientConfig.disableNpcDialogues)
+    if (!ClientConfig.disableNpcDialogues)
         client.gui.chat.addMessage(messageComp)
 }
