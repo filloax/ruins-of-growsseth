@@ -25,6 +25,8 @@ object ClientConfigHandler {
         else
             GrowssethConfigHandler.DEFAULT_LANGUAGE
 
+        GrowssethConfigHandler.config?.save()       // Need to save manually to config file
+
         client.toasts.addToast(SystemToast.multiline(
             client, SET_LANGUAGE_TOAST_ID,
             Component.translatable("growsseth.notif.setLanguage.title"),
