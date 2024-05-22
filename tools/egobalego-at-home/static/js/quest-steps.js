@@ -47,11 +47,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function changeColor(stepCard, stepLabel, active) {
         if (active) {
-            stepLabel.innerText = "Attivo"
+            stepLabel.innerText = activeText
             stepCard.classList.remove("bg-danger-subtle");
             stepCard.classList.add("bg-success-subtle");
         } else {
-            stepLabel.innerText = "Non attivo"
+            stepLabel.innerText = notActiveText;
             stepCard.classList.remove("bg-success-subtle");
             stepCard.classList.add("bg-danger-subtle");
         }

@@ -9,6 +9,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--open", action='store_true', help="Open browser page on start")
 parser.add_argument("-P", "--port", type=int, default=5000, help="Server port")
 parser.add_argument("--debug", action='store_true', help="Flask debug mode")
+parser.add_argument("lang", type=str, help='Website language')
+
 
 app = Flask(__name__)
 
@@ -16,48 +18,54 @@ app = Flask(__name__)
 def home():
     return render_template(
         'home.html', name="home", 
-        help_title="Aiuto",
-        help_content=md_content("help_home"),
+        help_title = translations[lang]["help_home"],
+        help_content = md_content(lang + "/help_home"),
+        translations = translations.get(lang, translations[lang])
     )
 
 @app.route('/commands.html')
 def commands():
     return render_template(
         'commands.html', name="commands",
-        help_title="Aiuto comandi",
-        help_content=md_content("help_commands"),
+        help_title = translations[lang]["help_commands"],
+        help_content = md_content(lang + "/help_commands"),
+        translations = translations.get(lang, translations[lang])
     )
 
 @app.route('/trades.html')
 def trades():
     return render_template(
         'trades.html', name="trades",
-        help_title="Aiuto scambi",
-        help_content=md_content("help_trades"),
+        help_title = translations[lang]["help_trades"],
+        help_content = md_content(lang + "/help_trades"),
+        translations = translations.get(lang, translations[lang])
     )
 
 @app.route('/communications.html')
 def messages():
     return render_template(
         'communications.html', name="communications",
-        help_title="Aiuto comunicazioni",
-        help_content=md_content("help_communications"),
+        help_title = translations[lang]["help_communications"],
+        help_content = md_content(lang + "/help_communications"),
+        translations = translations.get(lang, translations[lang])
     )
 
 @app.route('/quest-steps.html')
 def quest_steps():
     return render_template(
         'quest-steps.html', name="quest-steps",
-        help_title="Aiuto quest",
-        help_content=md_content("help_quest"),
+        help_title = translations[lang]["help_quest"],
+        help_content = md_content(lang + "/help_quest"),
+        translations = translations.get(lang, translations[lang])
     )
 
 @app.route('/structures.html')
 def structures():
     return render_template(
         'structures.html', name="structures",
-        help_title="Aiuto strutture",
-        help_content=md_content("help_structures"),
+        help_title = translations[lang]["help_structures"],
+        help_content = md_content(lang + "/help_structures"),
+        translations = translations.get(lang, translations[lang])
     )
 
 
@@ -132,15 +140,20 @@ dirname = os.path.dirname(__file__)
 
 def md_content(name: str):
     with open(os.path.join(dirname, "templates", "content", f'{name}.md'), 'r', encoding='UTF-8') as f:
-        return markdown_to_html(f.read())
+        parser = create_markdown(escape=False, plugins=['strikethrough', 'footnotes', 'table'])
+        return parser(f.read())
 
-def markdown_to_html(markdown_text):
-    parser = create_markdown(escape=False, plugins=['strikethrough', 'footnotes', 'table'])
-    return parser(markdown_text)
+def load_translations():
+    global translations
+    translations_path = os.path.join(dirname, 'translations.json')
+    with open(translations_path, 'r', encoding='utf-8') as f:
+        translations = json.load(f)
 
 
+translations = {}
 server_data = []
 last_id = 0
+lang = ""
 
 
 if __name__ == '__main__':
@@ -148,8 +161,11 @@ if __name__ == '__main__':
     args_open: bool = args.open
     args_port: int = args.port
     args_debug: bool = args.debug
+    args_lang: bool = args.lang
     
+    load_translations()
     load_data()
+    lang = args_lang
     
     try:
         with open("last_id.txt", "r") as f:

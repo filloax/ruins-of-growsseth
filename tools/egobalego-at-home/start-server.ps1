@@ -19,4 +19,5 @@ pip install -r "$PSScriptRoot\requirements.txt"
 $script = $PSScriptRoot + "\start-server.py"
 echo $script
 
-py $script --open
+$lang = $args[0]
+py $script --open $lang

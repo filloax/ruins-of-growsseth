@@ -169,7 +169,7 @@ function addCommandCard(isNew, item) {
         else
             thisCard.classList.remove("bg-dark-subtle", "bg-success-subtle");
         thisCard.classList.add(isActive ? "bg-success-subtle" : "bg-danger-subtle");
-        cardEnablerLabel.innerText = isActive ? "Attivo" : "Non attivo";
+        cardEnablerLabel.innerText = isActive ? activeText : notActiveText;
     }
 
     function showElements(...divs) {
