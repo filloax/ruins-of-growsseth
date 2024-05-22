@@ -12,5 +12,7 @@
             {% endwith %}
         </main>
     </body>
+    <script defer> var activeText = "{{translations.active_1}}" </script>
+    <script defer> var notActiveText = "{{translations.not_active_1}}" </script>
     <script src="{{ url_for('static', filename='js/quest-steps.js') }}" defer></script>
 </html>

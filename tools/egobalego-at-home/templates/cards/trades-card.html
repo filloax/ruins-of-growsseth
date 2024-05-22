@@ -6,13 +6,13 @@
 
             <div class="row card-title">
                 <div id="no-type-warning" class="col-auto text-danger">
-                    Tipo scambio non impostato
+                    {{ translations.trade_type_not_set }}
                 </div>
 
                 <div id="card-enabler" class="col-auto form-check form-switch ms-3" hidden>
                     <input id="card-enabler-switch" class="form-check-input" type="checkbox" role="switch">
                     <label id="card-enabler-label" class="form-check-label">
-                        Non attivo
+                        {{ translations.not_active_1 }}
                     </label>
                 </div>
 
@@ -25,28 +25,28 @@
 
             <div class="card-body">
                 <div class="row input-group g-0">
-                    <span class="input-group-text col-4">Tipologia</span>
+                    <span class="input-group-text col-4">{{ translations.type }}</span>
                     <select id="trade-type" class="form-select">
                         <option value="none" selected></option>
-                        <option value="tradePreset">Preimpostato</option>
-                        <option value="tradeCustom">Personalizzato</option>
+                        <option value="tradePreset">{{ translations.trade_preset }}</option>
+                        <option value="tradeCustom">{{ translations.trade_custom }}</option>
                     </select>
                 </div>
 
                 <div id="preset" class="row input-group g-0 mt-3" hidden>
-                    <span class="input-group-text col-4">Scambio</span>
+                    <span class="input-group-text col-4">{{ translations.trade }}</span>
                     <select id="preset-name" class="form-select">
-                        <option value="sell_banner_pattern" selected>Figura per stendardo</option>
-                        <option value="sell_pottery_sherd">Coccio con logo</option>
-                        <option value="sell_trim_template">Schema per armature</option>
-                        <option value="sell_enchant_dictionary">Dizionario alfabeto antico</option>
-                        <option value="sell_all_extras">Tutti gli oggetti non segreti della mod ("gratis")</option>
+                        <option value="sell_banner_pattern" selected>{{ translations.trade_banner_pattern }}</option>
+                        <option value="sell_pottery_sherd">{{ translations.trade_pottery_sherd }}</option>
+                        <option value="sell_trim_template">{{ translations.trade_trim_template }}</option>
+                        <option value="sell_enchant_dictionary">{{ translations.trade_enchant_dictionary }}</option>
+                        <option value="sell_all_extras">{{ translations.trade_all_extras }}</option>
                     </select>
                 </div>
 
                 <div id="advanced-trade-content" class="form-floating mt-3" hidden>
                     <textarea id="content-text" class="form-control" style="height: 100px"></textarea>
-                    <label>JSON dello scambio</label>
+                    <label>{{ translations.trade_json }}</label>
                 </div>
             </div>
         </div>

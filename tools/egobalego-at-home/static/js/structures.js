@@ -168,7 +168,7 @@ function addStructureCard(isNew, item) {
         else
             thisCard.classList.remove("bg-dark-subtle", "bg-success-subtle");
         thisCard.classList.add(isActive ? "bg-success-subtle" : "bg-danger-subtle");
-        cardEnablerLabel.innerText = isActive ? "Attiva" : "Non attiva";
+        cardEnablerLabel.innerText = isActive ? activeText : notActiveText;
     }
 
     function enableCard(selectedStructure) {
