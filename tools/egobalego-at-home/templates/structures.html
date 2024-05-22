@@ -6,7 +6,7 @@
         <main class="container my-3">
             <div class="row justify-content-center">
                 <button id="add-card-button" class="col-auto btn btn-primary">
-                    {% include 'icons/plus-circle.html' %} Aggiungi struttura
+                    {% include 'icons/plus-circle.html' %} {{ translations.add_structure }}
                 </button>
                 <div id="card-container"></div>
             </div>
@@ -18,5 +18,7 @@
         </main>
     </body>
     <script defer> var defaultPreview = "{{url_for('static', filename='img/structure/none.png')}}" </script>
+    <script defer> var activeText = "{{translations.active_2}}" </script>
+    <script defer> var notActiveText = "{{translations.not_active_2}}" </script>
     <script src="{{ url_for('static', filename='js/structures.js') }}" defer></script>
 </html>
