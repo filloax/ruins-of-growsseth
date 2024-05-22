@@ -6,7 +6,7 @@
         <main class="container my-3">
             <div class="row justify-content-center">
                 <button id="add-card-button" type="button" class="col-auto btn btn-primary">
-                    {% include 'icons/plus-circle.html' %} Aggiungi comunicazione
+                    {% include 'icons/plus-circle.html' %} {{ translations.add_communication }}
                 </button>
                 <div id="card-container"></div>
             </div>
@@ -17,5 +17,7 @@
             {% endwith %}
         </main>
     </body>
+    <script defer> var activeText = "{{translations.active_2}}" </script>
+    <script defer> var notActiveText = "{{translations.not_active_2}}" </script>
     <script src="{{ url_for('static', filename='js/communications.js') }}" defer></script>
 </html>
