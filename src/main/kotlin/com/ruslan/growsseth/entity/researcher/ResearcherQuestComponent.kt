@@ -251,10 +251,12 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
                 entity.moveTo(startingPos)
                 return
             }
-            zombie.villagerData = zombie.villagerData.setProfession(VillagerProfession.CARTOGRAPHER).setLevel(5)
             zombie.researcherData = data
+            zombie.lastWorldDataTime = entity.lastWorldDataTime
             zombie.spawnTime = spawnTime
             zombie.researcherOriginalPos = resStartingPos
+            // not visible normally other than with entity info mods
+            zombie.villagerData = zombie.villagerData.setProfession(VillagerProfession.CARTOGRAPHER).setLevel(5)
 
             entity.discard()
 
@@ -356,10 +358,6 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
         }
     }
 
-    class KilledStage : QuestStage<Researcher> {
-        override val trigger = EntityIsDeadTrigger()
-    }
-
     class ProgressTradesTrigger(val server: MinecraftServer, val onlyOne: Boolean = false) : QuestStageTrigger<Researcher> {
         override fun isActive(entity: Researcher, event: QuestUpdateEvent): Boolean {
             val tradesProvider = ResearcherTradeMode.providerFromSettings(server)
@@ -367,12 +365,6 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
 
             return if (onlyOne) tradesProvider.onlyOneLeft(server)
                 else tradesProvider.isFinished(server)
-        }
-    }
-
-    class EntityIsDeadTrigger : QuestStageTrigger<Researcher> {
-        override fun isActive(entity: Researcher, event: QuestUpdateEvent): Boolean {
-            return entity.isDeadOrDying
         }
     }
 }
