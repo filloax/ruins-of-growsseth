@@ -39,10 +39,11 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.block.LevelEvent
 import net.minecraft.world.level.entity.EntityTypeTest
+import java.time.LocalDateTime
 
 
 class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
-    ZombieVillager(entityType, level), SpawnTimeTracker {
+    ZombieVillager(entityType, level), SpawnTimeTracker, ResearcherDataUser {
     companion object {
         fun createAttributes(): AttributeSupplier.Builder {
             return ZombieVillager.createAttributes()
@@ -56,6 +57,7 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
     var researcherData: CompoundTag? = null
     var researcherOriginalPos: BlockPos? = null
     var shouldDespawn: Boolean = false
+    override var lastWorldDataTime: LocalDateTime? = null
 
     // World time the researcher was spawned first at (used in rmresearcher remote command)
     override var spawnTime: Long
@@ -113,7 +115,12 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
             return
         }
         researcher.finalizeSpawn(serverLevel, serverLevel.getCurrentDifficultyAt(researcher.blockPosition()), MobSpawnType.CONVERSION, null)
-        researcherData?.let { researcher.readResearcherData(it) }
+
+        val useResData = if (ResearcherConfig.singleResearcher) {
+            ResearcherSavedData.getPersistent(serverLevel.server).data
+        } else researcherData
+
+        useResData?.let { researcher.readResearcherData(it) }
         researcher.healed = true
         researcher.dialogues?.resetNearbyPlayers()
         researcherOriginalPos?.let { researcher.resetStartingPos(it) }
@@ -141,8 +148,33 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
 
     override fun customServerAiStep() {
         super.customServerAiStep()
+
+        val server = server!!
+
+        if (ResearcherConfig.singleResearcher) { // && this.tickCount % 5 == 0) {
+            // make sure we are up to date in case more researcher entities are loaded
+            // (edge case, but just in case)
+            // Note that this does not load from nbt every time, but uses the single instance
+            val savedData = ResearcherSavedData.getPersistent(server)
+            if (savedData.isDead) {
+                RuinsOfGrowsseth.LOGGER.info("Zombie researcher $this | should be dead from data, discarding...")
+                this.discard()
+                return
+            }
+            // Note: zombie doesn't directly use saved data, only keeps it for when converting later
+            // additionally, it only uses the stored data in case singleresearcher is off
+            // Meaning this is only useful to cases where a user disabled singleResearcher when the
+            // researcher was a zombie
+            if (!this.isUpToDateWithWorldData(savedData)) {
+                RuinsOfGrowsseth.LOGGER.info("Zombie researcher $this | is not up to date with world data, updating...")
+                this.researcherData = savedData.data
+                this.lastWorldDataTime = savedData.lastChangeTimestamp
+                RuinsOfGrowsseth.LOGGER.info("Zombie researcher $this | updated world data!")
+            }
+        }
+
         // If healed researcher from another tent, then instantly cure
-        if (ResearcherQuestComponent.isHealed(server!!)) {
+        if (ResearcherQuestComponent.isHealed(server)) {
             convertToResearcher(this.level() as ServerLevel, true)
         }
         if (tickCount % 20 == 0) {
@@ -161,12 +193,7 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
         if (ResearcherConfig.singleResearcher) { server?.let { serv ->
             val savedData = ResearcherSavedData.getPersistent(serv)
             savedData.isDead = true
-            // Update all other currently loaded researchers (undo if we decide this is a bad idea)
-            val otherResearchers = serv.allLevels.flatMap { level -> level.getEntities(EntityTypeTest.forClass(ZombieResearcher::class.java)) { it.uuid != this.uuid } }
-            otherResearchers.forEach { researcher2 ->
-                if (savedData.isDead)
-                    researcher2.shouldDespawn = true
-            }
+            savedData.setDirty()
         } }
     }
 
