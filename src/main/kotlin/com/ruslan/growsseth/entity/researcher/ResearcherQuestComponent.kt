@@ -327,9 +327,13 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
 
     // Separate stage for last dialogue, so we can in next stage count
     // time only after dialogue of this quest triggered
-    class LastDialogueStage: QuestStage<Researcher> {
+    inner class LastDialogueStage: QuestStage<Researcher> {
         // Automatically trigger as soon as healed (and quests work again)
-        override val trigger = EventTrigger<Researcher>(QuestUpdateEvent.LOAD)
+        override val trigger = (
+                EventTrigger<Researcher>(QuestUpdateEvent.LOAD)
+                or NoPlayersInRadiusTrigger(this@ResearcherQuestComponent, chunkRadius = 8)
+                or TimeOrDayTimeTrigger(this@ResearcherQuestComponent, Constants.DAY_TICKS_DURATION * 5)
+            )
             // You can find the dialogue in the quest dialogues json
             .and(DialogueTrigger("researcher-quest-cure"))
 
@@ -344,9 +348,13 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
     }
 
     inner class EndingStage: QuestStage<Researcher> {
-        override val trigger: QuestStageTrigger<Researcher> = EventTrigger<Researcher>(QuestUpdateEvent.LOAD)
-            .and(TimeOrDayTimeTrigger(this@ResearcherQuestComponent, Constants.DAY_TICKS_DURATION)
-                .or(ApiEventTrigger(QuestConfig.finalQuestLeaveName))
+        override val trigger: QuestStageTrigger<Researcher> = (
+                EventTrigger<Researcher>(QuestUpdateEvent.LOAD)
+                or NoPlayersInRadiusTrigger(this@ResearcherQuestComponent, chunkRadius = 8)
+                or TimeOrDayTimeTrigger(this@ResearcherQuestComponent, Constants.DAY_TICKS_DURATION * 5)
+            ) and (
+                TimeOrDayTimeTrigger(this@ResearcherQuestComponent, Constants.DAY_TICKS_DURATION)
+                or ApiEventTrigger(QuestConfig.finalQuestLeaveName)
             )
 
         // OnUpdate to also cover multiple tents
