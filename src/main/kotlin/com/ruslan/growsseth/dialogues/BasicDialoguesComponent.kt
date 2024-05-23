@@ -70,7 +70,9 @@ open class BasicDialoguesComponent(
     protected val playersArrivedSoon = mutableMapOf<UUID, Boolean>()
     protected val savedPlayersData = mutableMapOf<UUID, PlayerData>()
 
-    protected val dialogueQueue: Deque<Triple<ServerPlayer, DialogueLine, DialogueEvent>> = LinkedBlockingDeque()
+    // UUID is player's
+    protected val dialogueQueues = mutableMapOf<UUID, Deque<Pair<DialogueLine, DialogueEvent>>>()
+    protected var dialogueQueueDelays = mutableMapOf<UUID, Int>()
     protected val serverLevel: ServerLevel get() = entity.level() as ServerLevel
     protected val server get() = serverLevel.server
 
@@ -91,8 +93,6 @@ open class BasicDialoguesComponent(
     var dialogueSecondsSameId = .1f // + estimatedReadingTime
     /** Set to 0 to have no wait: */
     var dialogueWordsPerMinute = 120    // lower equals more time to read
-
-    protected var dialogueQueueDelay = 0
 
     protected fun playerDataOrCreate(player: ServerPlayer) = playerDataOrCreate(player.uuid)
     protected fun playerDataOrCreate(uuid: UUID) = savedPlayersData.computeIfAbsent(uuid) { PlayerData() }
@@ -141,30 +141,40 @@ open class BasicDialoguesComponent(
             checkNearbyPlayers()
         }
 
-        if (dialogueQueue.isNotEmpty()) {
-            dialogueQueueDelay--
-            if (dialogueQueueDelay <= 0) {
-                val (player, line, _) = dialogueQueue.remove()
-                sendDialogueToPlayer(player, line)
-                if (dialogueQueue.isNotEmpty()) {
-                    val sameId = line.dialogue.id == dialogueQueue.peek().second.dialogue.id
-                    dialogueQueueDelay = if (line.duration != null) {
-                        line.duration.secondsToTicks()
-                    } else if (sameId) {
-                        val readingTime = if (dialogueWordsPerMinute > 0) estimateReadingTime(line.content) else 0F
-                        (dialogueSecondsSameId + readingTime).secondsToTicks()
+        for ((playerUuid, dialogueQueue) in dialogueQueues) {
+            var dialogueQueueDelay = dialogueQueueDelays.computeIfAbsent(playerUuid) { 0 }
+            val player = server.playerList.getPlayer(playerUuid)
+            if (player == null) {
+                RuinsOfGrowsseth.LOGGER.warn("Player $playerUuid left while dialogues were still queued!")
+                dialogueQueue.clear()
+                continue
+            }
+            if (dialogueQueue.isNotEmpty()) {
+                dialogueQueueDelay--
+                if (dialogueQueueDelay <= 0) {
+                    val (line, _) = dialogueQueue.remove()
+                    sendDialogueToPlayer(player, line)
+                    if (dialogueQueue.isNotEmpty()) {
+                        val sameId = line.dialogue.id == dialogueQueue.peek().first.dialogue.id
+                        dialogueQueueDelay = if (line.duration != null) {
+                            line.duration.secondsToTicks()
+                        } else if (sameId) {
+                            val readingTime = if (dialogueWordsPerMinute > 0) estimateReadingTime(line.content) else 0F
+                            (dialogueSecondsSameId + readingTime).secondsToTicks()
+                        } else {
+                            // Shorter delay in consecutive dialogues
+                            if (dialogueDelayMaxSeconds > 0)
+                                random.nextInt() % (dialogueDelayMaxSeconds / 2).secondsToTicks()
+                            else 0
+                        }
+                        if (!sameId)
+                            sendSeparatorToPlayer(player)
                     } else {
-                        // Shorter delay in consecutive dialogues
-                        if (dialogueDelayMaxSeconds > 0)
-                            random.nextInt() % (dialogueDelayMaxSeconds / 2).secondsToTicks()
-                        else 0
-                    }
-                    if (!sameId)
                         sendSeparatorToPlayer(player)
-                } else {
-                    sendSeparatorToPlayer(player)
+                    }
                 }
             }
+            dialogueQueueDelays[playerUuid] = dialogueQueueDelay
         }
     }
 
@@ -250,6 +260,8 @@ open class BasicDialoguesComponent(
     protected fun queueDialogue(player: ServerPlayer, dialogueEntry: DialogueEntry, event: DialogueEvent) {
         if (dialogueEntry.content.isEmpty() || dialogueEntry.content[0].content == "") return
 
+        val dialogueQueue = dialogueQueues.computeIfAbsent(player.uuid) { LinkedBlockingDeque() }
+
         if (dialogueDelayMaxSeconds > 0) {
             val lines = dialogueEntry.content
             if (dialogueEntry.immediate) {
@@ -267,19 +279,19 @@ open class BasicDialoguesComponent(
                             sendSeparatorToPlayer(player)
                         }
                     } else {
-                        dialogueQueue.offerFirst(Triple(player, it, event))
+                        dialogueQueue.offerFirst(Pair(it, event))
                         // Since first dialogue is played immediately, delay the second
                         if (idx == lines.size - 2 && dialogueWordsPerMinute > 0) {
                             val readingTime = estimateReadingTime(lines[0].content)
-                            dialogueQueueDelay = (dialogueSecondsSameId + readingTime).secondsToTicks()
+                            dialogueQueueDelays[player.uuid] = (dialogueSecondsSameId + readingTime).secondsToTicks()
                         }
                     }
                 }
             } else {
-                lines.forEach { dialogueQueue.offer(Triple(player, it, event)) }
+                lines.forEach { dialogueQueue.offer(Pair(it, event)) }
             }
-            if (dialogueQueueDelay <= 0) {
-                dialogueQueueDelay = random.nextInt() % dialogueDelayMaxSeconds.secondsToTicks()
+            if ((dialogueQueueDelays[player.uuid] ?: 0) <= 0) {
+                dialogueQueueDelays[player.uuid] = random.nextInt() % dialogueDelayMaxSeconds.secondsToTicks()
             }
         } else {
             dialogueEntry.content.forEach {
@@ -547,7 +559,7 @@ open class BasicDialoguesComponent(
     override fun nearbyPlayers(): List<ServerPlayer> = closePlayers.toList().mapNotNull { getPlayerById(it) }
 
     private fun eventInQueue(event: DialogueEvent): Boolean {
-        return dialogueQueue.any { it.third == event }
+        return dialogueQueues.any { e -> e.value.any { it.second == event } }
     }
 
     protected fun getSecondsSinceTick(entity: Entity, tick: Int): Double {
