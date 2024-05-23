@@ -30,7 +30,7 @@ object ClientConfigHandler {
         client.toasts.addToast(SystemToast.multiline(
             client, SET_LANGUAGE_TOAST_ID,
             Component.translatable("growsseth.notif.setLanguage.title"),
-            Component.translatable("growsseth.notif.setLanguage.message", lang),
+            Component.translatable("growsseth.notif.setLanguage.message", GrowssethConfig.serverLanguage),
         ))
     }
 
