@@ -69,7 +69,7 @@ object QuestCommand {
         val quest = getQuest(ctx, owner) ?: return 0
 
         return if (quest.backOneStage(activate)) {
-            ctx.source.sendSuccess({ Component.translatable("growsseth.commands.gquest.back.success", quest.data.currentStageId, quest) }, true)
+            ctx.source.sendSuccess({ Component.translatable("growsseth.commands.gquest.back.success", quest.data.currentStageId, quest.toString()) }, true)
             1
         } else {
             ctx.source.sendFailure(Component.translatable("growsseth.commands.gquest.back.failure"))
@@ -80,7 +80,7 @@ object QuestCommand {
     private fun showQuestInfo(ctx: CommandContext<CommandSourceStack>, owner: QuestOwner<*>?): Int {
         val quest = getQuest(ctx, owner) ?: return 0
 
-        ctx.source.sendSuccess({ Component.translatable("growsseth.commands.gquest.info", owner, quest.data.currentStageId, quest) }, true)
+        ctx.source.sendSuccess({ Component.translatable("growsseth.commands.gquest.info", owner, quest.data.currentStageId, quest.toString()) }, true)
         return 1
     }
 
