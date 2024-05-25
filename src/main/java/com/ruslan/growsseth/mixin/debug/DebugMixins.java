@@ -9,11 +9,16 @@ import com.ruslan.growsseth.utils.MixinHelpers;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ClassInstanceMultiMap;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.ChunkSource;
+import net.minecraft.world.level.chunk.ProtoChunk;
 import net.minecraft.world.level.entity.EntitySection;
 import net.minecraft.world.level.entity.PersistentEntitySectionManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -23,6 +28,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
@@ -49,6 +55,23 @@ public class DebugMixins {
 //        )
         private <T> void test(int id, ResourceKey<T> key, T value, Lifecycle lifecycle, CallbackInfoReturnable<Holder.Reference<T>> cir) {
             RuinsOfGrowsseth.getLOGGER().info("TEST IS EXPERIMENTAL " + key + ": " + lifecycle);
+        }
+    }
+
+    @Mixin(ServerLevel.class)
+    public static class ServerLevelMixin {
+        @Inject(
+            method = "onStructureStartsAvailable",
+            at = @At("HEAD")
+        )
+        private void onLoadStruct(ChunkAccess chunk, CallbackInfo ci) {
+            if (chunk.getPos().toLong() == -1 && !(chunk instanceof ProtoChunk)) {
+                RuinsOfGrowsseth.getLOGGER().error("Loaded chunk with wrong index, server will probably error and crash soon."
+                + "Happens occasionally after purchasing the golem house map, restarting the game should fix this."
+                + "We're looking into a fix!\n"
+                + Arrays.toString(Thread.currentThread().getStackTrace())
+                );
+            }
         }
     }
 

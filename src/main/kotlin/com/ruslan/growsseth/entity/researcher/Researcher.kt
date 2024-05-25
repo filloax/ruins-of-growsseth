@@ -709,7 +709,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         researcherData.putBoolean("MetPlayer", metPlayer)
         researcherData.saveField("TradesData", ResearcherTradesData.CODEC) { tradesData() }
 
-        dialogues?.writeNbt(researcherData)
+        dialogues?.saveSharedData(researcherData)
         diary?.writeNbt(researcherData)
         quest?.writeNbt(researcherData)
         return researcherData
@@ -733,7 +733,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         server?.let { tradesData = ResearcherTradesData(ResearcherTradeMode.getFromSettings(it)) }
         researcherData.loadField("TradesData", ResearcherTradesData.CODEC) {tradesData = it}
 
-        dialogues?.readNbt(researcherData)
+        dialogues?.readSharedData(researcherData)
         diary?.readNbt(researcherData)
         quest?.readNbt(researcherData)
     }
@@ -763,6 +763,9 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         clearFailedMaps()
 
         super.addAdditionalSaveData(compoundTag)
+
+        dialogues?.writeNbt(compoundTag)
+
         val data = saveResearcherData()
 
         if (ResearcherConfig.singleResearcher) {
@@ -790,6 +793,8 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     override fun readAdditionalSaveData(compoundTag: CompoundTag) {
         super.readAdditionalSaveData(compoundTag)
         var read = false
+
+        dialogues?.readNbt(compoundTag)
 
         if (ResearcherConfig.singleResearcher) {
             server?.let { serv ->

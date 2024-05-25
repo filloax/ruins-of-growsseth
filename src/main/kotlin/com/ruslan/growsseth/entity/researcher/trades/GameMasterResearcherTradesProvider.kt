@@ -31,13 +31,7 @@ object GameMasterResearcherTradesProvider : GlobalResearcherTradesProvider() {
     }
 
     override fun isValidTradeForPlayer(trade: ResearcherItemListing, player: ServerPlayer, entity: Researcher, data: ResearcherTradesData): Boolean {
-        trade.mapInfo?.let { mapInfo ->
-            val structId = getStructTagOrKey(mapInfo.structure)
-            if (StructureAdvancements.playerHasFoundStructure(player, structId)) {
-                return false
-            }
-        }
-        return true
+        return !trade.isDiscoveredStructure(player)
     }
 
     private fun updateTrades(server: MinecraftServer, api: GrowssethApi = GrowssethApi.current) {

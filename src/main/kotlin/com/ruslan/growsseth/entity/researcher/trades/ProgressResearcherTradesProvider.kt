@@ -137,8 +137,7 @@ class ProgressResearcherTradesProvider(
         }.values.flatten()
         val allTrades = tradesBefore + tradesAfter
         val changedMapPriority = allTrades.map { trade ->
-            val toStruct = trade.itemListing.mapInfo?.structure ?: trade.itemListing.mapInfo?.fixedStructureId ?: return@map trade
-            val matchingStructures = ResearcherTradeUtils.getMatchingStructures(server.registryAccess(), toStruct)
+            val matchingStructures = trade.itemListing.getAllPossibleStructures(server.registryAccess())
             if (!matchingStructures.contains(data.currentStructure?.location())) {
                 // Increase priority for maps of not current structure to reduce clogging of UI
                 trade.copy(priority = trade.priority + 1000)

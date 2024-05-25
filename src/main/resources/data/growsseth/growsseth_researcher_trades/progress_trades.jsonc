@@ -17,22 +17,6 @@
                 "priority": -100,
             },
         ],
-        "golem_house": [
-            // Placeholder for now, as cannot make map for village with specific house
-            {
-                "gives": {
-                    "id": "minecraft:written_book",
-                    "amount": 1,
-                    "diaryId": "golem_house_guide_placeholder",
-                },
-                "wants": [
-                    {
-                        "id": "minecraft:emerald",
-                        "amount": 1
-                    },
-                ]
-            },
-        ],
     },
     "progressAfterStructure": {
         "noteblock_lab": [

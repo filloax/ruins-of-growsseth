@@ -14,6 +14,7 @@
     "custommapitem.CartographyTableMenuMixin",
     "custommapitem.ItemFrameMixin",
     "custommapitem.ItemStackMixin",
+    "debug.DebugMixins$ServerLevelMixin",
     "debug.StructureDebugMixins$ChunkGeneratorMixin",
     "debug.StructureDebugMixins$ChunkGeneratorStructureStateMixin",
     "debug.StructureDebugMixins$FlatLevelSourceMixin",

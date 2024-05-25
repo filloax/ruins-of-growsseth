@@ -15,4 +15,7 @@ public class DebugConfig {
     @ConfigEntry(id = "structuresDebugMode", type = EntryType.BOOLEAN, translation = T_PREF + "structuresDebugMode.name")
     @Comment(value = "Make structures wildly more likely, for dev usage.", translation = T_PREF + "structuresDebugMode.comment")
     public static boolean structuresDebugMode = false;
+
+    @ConfigEntry(id = "researcherSpeedup", type = EntryType.BOOLEAN, translation = T_PREF + "researcherSpeedup.name")
+    public static boolean researcherSpeedup = false;
 }

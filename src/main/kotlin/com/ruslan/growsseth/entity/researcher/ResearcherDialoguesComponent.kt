@@ -1,6 +1,7 @@
 package com.ruslan.growsseth.entity.researcher
 
 import com.filloax.fxlib.api.codec.CodecUtils
+import com.filloax.fxlib.api.codec.mutableMapCodec
 import com.filloax.fxlib.api.nbt.loadField
 import com.filloax.fxlib.api.nbt.saveField
 import com.mojang.serialization.Codec
@@ -211,14 +212,40 @@ class ResearcherDialoguesComponent(
 
     override fun addExtraNbtData(dialogueData: CompoundTag) {
         super.addExtraNbtData(dialogueData)
+
+        // Remove shared data, save separately
+        dialogueData.remove(DataFields.SAVED_PLAYERS_DATA)
+
         dialogueData.saveField("MessAngerActive", Codec.BOOL, this::playersMadeMess)
         dialogueData.saveField("PlayersInCellar", CODEC_PLAYERS_IN_CELLAR, this::playersInCellar)
     }
 
     override fun readExtraNbtData(dialogueData: CompoundTag) {
+        // prevent modifying shared data
+        val savedPlayersDataPre = savedPlayersData.mapValues { it.value.copy() }
         super.readExtraNbtData(dialogueData)
+        savedPlayersData.clear()
+        savedPlayersData.putAll(savedPlayersDataPre)
+
         dialogueData.loadField("MessAngerActive", Codec.BOOL) { playersMadeMess = it }
         dialogueData.loadField("PlayersInCellar", CODEC_PLAYERS_IN_CELLAR) { playersInCellar = it.toMutableSet() }
+    }
+
+    // Save nbt data to be shared between researcher entities in single researcher mode
+    fun saveSharedData(data: CompoundTag) {
+        data.put("SharedDialogueData", CompoundTag().apply {
+            saveField(DataFields.SAVED_PLAYERS_DATA, mutableMapCodec(UUIDUtil.STRING_CODEC, PLAYER_DATA_CODEC), ::savedPlayersData)
+        })
+    }
+
+    // Save nbt data to be shared between researcher entities in single researcher mode.
+    // Preferably run AFTER the base readNbtData of dialoguecomponent as it wipes saved players data,
+    // we try to handle this in readExtraNbtData but better safe than sorry
+    fun readSharedData(data: CompoundTag) {
+        savedPlayersData.clear()
+        data.getCompound("SharedDialogueData").apply {
+            loadField(DataFields.SAVED_PLAYERS_DATA, mutableMapCodec(UUIDUtil.STRING_CODEC, PLAYER_DATA_CODEC)) { savedPlayersData.putAll(it) }
+        }
     }
 
     override fun sendDialogueToPlayer(player: ServerPlayer, line: DialogueLine) {
