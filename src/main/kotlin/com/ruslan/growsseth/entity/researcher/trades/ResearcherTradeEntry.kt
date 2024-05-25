@@ -22,6 +22,8 @@ import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.*
 import net.minecraft.core.RegistryAccess
 import net.minecraft.core.component.DataComponents
+import net.minecraft.core.registries.Registries
+import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.util.RandomSource
@@ -30,6 +32,7 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.component.CustomData
 import net.minecraft.world.item.trading.ItemCost
 import net.minecraft.world.item.trading.MerchantOffer
+import net.minecraft.world.level.saveddata.maps.MapDecorationType
 import org.apache.logging.log4j.core.jmx.Server
 import kotlin.jvm.optionals.getOrNull
 import kotlin.math.roundToInt
@@ -176,6 +179,7 @@ data class TradeItemMapInfo (
     val fixedStructureId: String? = null,
     val scale: Int? = null,
     val searchForJigsawIds: List<ResourceLocation>? = null,
+    val overrideMapIcon: ResourceKey<MapDecorationType>? = null,
 ) {
     companion object {
         val CODEC: Codec<TradeItemMapInfo> = RecordCodecBuilder.create { b -> b.group(
@@ -186,7 +190,8 @@ data class TradeItemMapInfo (
             Codec.INT.optionalFieldOf("z").forNullableGetter(TradeItemMapInfo::z),
             Codec.STRING.optionalFieldOf("fixedStructureId").forNullableGetter(TradeItemMapInfo::fixedStructureId),
             Codec.INT.optionalFieldOf("scale").forNullableGetter(TradeItemMapInfo::scale),
-            ResourceLocation.CODEC.listOf().optionalFieldOf("mustContainJigsawPieces").forNullableGetter(TradeItemMapInfo::searchForJigsawIds),
+            ResourceLocation.CODEC.listOf().optionalFieldOf("searchForJigsawIds").forNullableGetter(TradeItemMapInfo::searchForJigsawIds),
+            ResourceKey.codec(Registries.MAP_DECORATION_TYPE).optionalFieldOf("overrideMapIcon").forNullableGetter(TradeItemMapInfo::overrideMapIcon),
         ).apply(b, TradeItemMapInfo::class.constructorWithOptionals()::newInstance) }
     }
 
@@ -198,6 +203,8 @@ data class TradeItemMapInfo (
         val x: Int? = null,
         val z: Int? = null,
         val fixedStructureId: String? = null,
+        @Serializable(with = ResourceLocationSerializer::class)
+        val overrideMapIcon: ResourceLocation? = null,
         val scale: Int = 3,
         @Serializable(with = ResourceLocationListSerializer::class)
         val searchForJigsawIds: List<@Serializable(with=ResourceLocationSerializer::class) ResourceLocation>? = null,
@@ -213,6 +220,7 @@ data class TradeItemMapInfo (
                 x, z, fixedStructureId,
                 scale,
                 searchForJigsawIds,
+                overrideMapIcon = overrideMapIcon?.let { ResourceKey.create(Registries.MAP_DECORATION_TYPE, it) }
             )
         }
     }

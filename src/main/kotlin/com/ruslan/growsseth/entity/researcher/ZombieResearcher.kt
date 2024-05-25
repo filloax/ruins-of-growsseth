@@ -3,6 +3,7 @@ package com.ruslan.growsseth.entity.researcher
 import com.filloax.fxlib.api.nbt.loadField
 import com.filloax.fxlib.api.nbt.saveField
 import com.ruslan.growsseth.RuinsOfGrowsseth
+import com.ruslan.growsseth.config.DebugConfig
 import com.ruslan.growsseth.config.ResearcherConfig
 import com.ruslan.growsseth.entity.GrowssethEntities
 import com.ruslan.growsseth.entity.SpawnTimeTracker
@@ -40,6 +41,7 @@ import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.block.LevelEvent
 import net.minecraft.world.level.entity.EntityTypeTest
 import java.time.LocalDateTime
+import kotlin.math.min
 
 
 class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
@@ -142,6 +144,8 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
         super.tick()
         // Make conversion quicker (more or less two times as fast, since we tick it a second time)
         if (!level().isClientSide && this.isAlive && this.isConverting) {
+            if (DebugConfig.researcherSpeedup)
+                villagerConversionTime = min(10, villagerConversionTime)
             villagerConversionTime--
         }
     }

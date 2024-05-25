@@ -9,6 +9,7 @@ import com.mojang.datafixers.util.Either
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.entity.researcher.Researcher
 import com.ruslan.growsseth.maps.DestinationType
+import com.ruslan.growsseth.maps.MapLocateContext
 import com.ruslan.growsseth.maps.updateMapToPos
 import com.ruslan.growsseth.maps.updateMapToStruct
 import com.ruslan.growsseth.templates.BookTemplates
@@ -46,13 +47,14 @@ object ResearcherTradeUtils {
     // Should be ran once per item stack
     fun setTradeMapTarget(researcher: Researcher, itemStack: ItemStack, mapData: TradeItemMapInfo, offer: MerchantOffer) {
         val server = getServer(researcher)
+        val registryAccess = server.registryAccess()
         val level = researcher.level() as ServerLevel
         val scale = mapData.scale ?: 3
         var known = false
 
         synchronized(researcher.storedMapLocations) {
             researcher.storedMapLocations[mapData.structure]?.let { mapMemory ->
-                val destinationType = mapMemory.struct.map({
+                val destinationType = mapData.overrideMapIcon?.let { DestinationType.withIcon(it, registryAccess) } ?: mapMemory.struct.map({
                     DestinationType.auto(it, server.registryAccess())
                 }, {
                     DestinationType.auto(it)
@@ -94,7 +96,7 @@ object ResearcherTradeUtils {
             }
             if (pos != null) {
                 val destination = getStructTagOrKey(mapData.structure)
-                val destinationType = destination.map({
+                val destinationType = mapData.overrideMapIcon?.let { DestinationType.withIcon(it, registryAccess) } ?: destination.map({
                     DestinationType.auto(it, server.registryAccess())
                 }, {
                     DestinationType.auto(it)
@@ -129,11 +131,14 @@ object ResearcherTradeUtils {
             itemStack.updateMapToStruct(
                 level,
                 destinationName = mapData.structure,
-                searchFromPos = researcher.blockPosition(),
-                scale = scale,
-                displayName = mapData.name,
-                skipExploredChunks = true,
-                mustContainJigsawIds = mapData.searchForJigsawIds,
+                MapLocateContext(
+                    searchFromPos = researcher.blockPosition(),
+                    scale = scale,
+                    displayName = mapData.name,
+                    skipExploredChunks = true,
+                    mustContainJigsawIds = mapData.searchForJigsawIds,
+                    overrideDestinationType = mapData.overrideMapIcon?.let { DestinationType.withIcon(it, level.registryAccess()) },
+                )
             ).thenAccept { result ->
                 if (result != null) {
                     val pos = result.first
