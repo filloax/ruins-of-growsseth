@@ -3,6 +3,7 @@ package com.ruslan.growsseth.structure.locate
 import com.mojang.datafixers.util.Pair
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.structure.locate.LocateTask.Phase
+import com.ruslan.growsseth.utils.matchesJigsaw
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap
 import it.unimi.dsi.fastutil.objects.ObjectArraySet
 import kotlinx.atomicfu.atomic
@@ -16,17 +17,26 @@ import net.minecraft.core.HolderSet
 import net.minecraft.core.SectionPos
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.level.ChunkPos
+import net.minecraft.world.level.LevelReader
+import net.minecraft.world.level.StructureManager
 import net.minecraft.world.level.chunk.ChunkGenerator
-import net.minecraft.world.level.levelgen.structure.Structure
+import net.minecraft.world.level.chunk.status.ChunkStatus
+import net.minecraft.world.level.levelgen.structure.*
 import net.minecraft.world.level.levelgen.structure.placement.ConcentricRingsStructurePlacement
 import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement
 import net.minecraft.world.level.levelgen.structure.placement.StructurePlacement
-import java.text.NumberFormat
+import net.minecraft.world.level.levelgen.structure.pools.ListPoolElement
+import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement
+import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement
 import java.util.concurrent.*
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.concurrent.thread
+import kotlin.jvm.optionals.getOrNull
+import kotlin.math.sign
 
 typealias LocateResult = Pair<BlockPos, Holder<Structure>>?
+typealias StructLocatePredicate = (StructureStart, ChunkPos) -> Boolean
 
 // Adapted from AsyncLocator, move to kotlin and allow stopping
 // Original: https://github.com/thebrightspark/AsyncLocator/blob/1.19.x/src/main/java/brightspark/asynclocator/AsyncLocator.java
@@ -64,12 +74,13 @@ object StoppableAsyncLocator {
     fun locate(
         level: ServerLevel, structureSet: HolderSet<Structure>, pos: BlockPos,
         searchRadius: Int, skipKnownStructures: Boolean,
+        targetFilter: StructLocatePredicate? = null,
         timeoutSeconds: Int? = null,
         signalProgress: SignalProgressFun? = null,
     ): LocateTask {
         val task = LocateTask(
             level.chunkSource.generator, level, pos,
-            structureSet, searchRadius, skipKnownStructures,
+            structureSet, targetFilter, searchRadius, skipKnownStructures,
             signalProgress
         )
         val timeoutThread = timeoutSeconds?.let { timeout -> thread(start = false) {
@@ -90,27 +101,20 @@ object StoppableAsyncLocator {
      */
     fun locateJigsaw(
         level: ServerLevel, structureSet: HolderSet<Structure>,
-        jigsawIds: Set<ResourceLocation>,
+        jigsawIds: Collection<ResourceLocation>,
         pos: BlockPos,
         searchRadius: Int, skipKnownStructures: Boolean,
         timeoutSeconds: Int? = null,
-        signalProgress: JigsawSignalProgressFun? = null,
-    ): JigsawLocateTask {
-        val task = JigsawLocateTask(
-            level.chunkSource.generator, level, pos,
-            structureSet, jigsawIds, searchRadius, skipKnownStructures,
-            signalProgress
+        signalProgress: SignalProgressFun? = null,
+    ): LocateTask {
+        return locate(
+            level, structureSet, pos,
+            searchRadius, skipKnownStructures,
+            { structureStart, _ -> structureStart.pieces.any { piece ->
+                piece.matchesJigsaw(jigsawIds)
+            } },
+            timeoutSeconds, signalProgress
         )
-        val timeoutThread = timeoutSeconds?.let { timeout -> thread(start = false) {
-            Thread.sleep(timeout * 1000L)
-            if (!task.done)
-                task.cancel("timeout")
-        } }
-        executorService?.submit {
-            timeoutThread?.start()
-            task.start()
-        } ?: throw IllegalStateException("No executorservice for jigsaw locate!")
-        return task
     }
 
     object Callbacks {
@@ -136,6 +140,7 @@ class LocateTask(
     val level: ServerLevel,
     val fromPos: BlockPos,
     val targetSet: HolderSet<Structure>,
+    val targetFilter: StructLocatePredicate?,
     val searchRadius: Int,
     val skipKnownStructures: Boolean,
     private val signalProgress: SignalProgressFun?
@@ -245,6 +250,10 @@ class LocateTask(
             }
 
             if (concentricRingsStructures.isNotEmpty()) {
+                if (targetFilter != null) {
+                    RuinsOfGrowsseth.LOGGER.warn("Filter (eg jigsaw) for concentric rings NYI, but only needed for villages (random spread) right now")
+                }
+
                 val structuresSize = concentricRingsStructures.size
                 for ((i, entry) in concentricRingsStructures.withIndex()) {
                     if (shouldStop()) {
@@ -284,7 +293,7 @@ class LocateTask(
                         }
 
                         val randomSpreadStructurePlacement = entry2.key as RandomSpreadStructurePlacement
-                        val spreadResult = ChunkGenerator.getNearestGeneratedStructure(
+                        val spreadResult = getMatchingNearestGeneratedStructureSpread(
                             entry2.value,
                             level,
                             structureManager,
@@ -318,6 +327,71 @@ class LocateTask(
         }
     }
 
+    // Same as vanilla code, but can call filter function
+    private fun getMatchingNearestGeneratedStructureSpread(
+        structureHoldersSet: Set<Holder<Structure>>,
+        level: LevelReader,
+        structureManager: StructureManager,
+        x: Int,
+        y: Int,
+        z: Int,
+        skipKnownStructures: Boolean,
+        seed: Long,
+        spreadPlacement: RandomSpreadStructurePlacement
+    ): LocateResult {
+        val i = spreadPlacement.spacing()
+
+        for (j in -z..z) {
+            val bl = j == -z || j == z
+
+            for (k in -z..z) {
+                val bl2 = k == -z || k == z
+                if (bl || bl2) {
+                    val l = x + i * j
+                    val m = y + i * k
+                    val chunkPos = spreadPlacement.getPotentialStructureChunk(seed, l, m)
+                    val structPos = getMatchingStructureGeneratingAt(
+                        structureHoldersSet, level, structureManager, skipKnownStructures, spreadPlacement, chunkPos
+                    )
+                    if (structPos != null) {
+                        return Pair.of(structPos.first, structPos.second)
+                    }
+                }
+            }
+        }
+
+        return null
+    }
+
+    // Same as vanilla code logic-wise, but also checks predicates (example: jigsaw matches)
+    fun getMatchingStructureGeneratingAt(
+        structureHoldersSet: Set<Holder<Structure>>,
+        level: LevelReader,
+        structureManager: StructureManager,
+        skipKnownStructures: Boolean,
+        placement: StructurePlacement,
+        chunkPos: ChunkPos
+    ): LocateResult {
+        for (holder in structureHoldersSet) {
+            val structureCheckResult = structureManager.checkStructurePresence(chunkPos, holder.value(), placement, skipKnownStructures)
+            if (structureCheckResult != StructureCheckResult.START_NOT_PRESENT) {
+                val chunkAccess = level.getChunk(chunkPos.x, chunkPos.z, ChunkStatus.STRUCTURE_STARTS)
+                val structureStart = structureManager.getStartForStructure(
+                    SectionPos.bottomOf(chunkAccess),
+                    holder.value(), chunkAccess
+                )
+                if (
+                    structureStart != null && structureStart.isValid && targetFilter?.let { it(structureStart, chunkPos) } != false
+                    && (!skipKnownStructures || ChunkGenerator.tryAddReference(structureManager, structureStart))
+                ) {
+                    return Pair.of(placement.getLocatePos(structureStart.chunkPos), holder)
+                }
+            }
+        }
+
+        return null
+    }
+
     private fun shouldStop(): Boolean {
         return isCancelled.value
     }
@@ -342,7 +416,7 @@ class LocateTask(
         future.complete(result)
     }
 
-    private fun targetString(): String = "[${targetSet.stream().toList().joinToString(", ")}]"
+    private fun targetString(): String = "[${targetSet.stream().toList().joinToString(", ")}, filtered=${targetFilter!=null}]"
 
     enum class Phase(val int: Int) {
         CONCENTRIC_RINGS(0),

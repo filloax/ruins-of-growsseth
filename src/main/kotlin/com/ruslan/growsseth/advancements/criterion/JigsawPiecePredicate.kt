@@ -4,6 +4,7 @@ import com.filloax.fxlib.api.codec.constructorWithOptionals
 import com.filloax.fxlib.api.codec.forNullableGetter
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import com.ruslan.growsseth.utils.matches
 import net.minecraft.advancements.critereon.BlockPredicate
 import net.minecraft.advancements.critereon.FluidPredicate
 import net.minecraft.advancements.critereon.LightPredicate
@@ -79,15 +80,6 @@ data class JigsawPiecePredicate(
             }
         }
         return false
-    }
-
-    private fun StructurePoolElement.matches(pieceIds: List<ResourceLocation>): Boolean {
-        return when (this) {
-            // won't work with runtime elements (aka saved without ids)
-            is SinglePoolElement -> this.template.left().map{ pieceIds.contains(it) }.orElse(false)
-            is ListPoolElement -> this.elements.any { it.matches(pieceIds) }
-            else -> false
-        }
     }
 
     private var checked = false

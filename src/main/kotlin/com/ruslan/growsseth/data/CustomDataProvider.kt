@@ -8,12 +8,15 @@ import com.ruslan.growsseth.entity.researcher.trades.TradeItemMapInfo
 import com.ruslan.growsseth.entity.researcher.trades.TradesListener
 import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.structure.GrowssethStructures
+import com.ruslan.growsseth.structure.VillageBuildings
 import kotlinx.serialization.json.Json
 import net.minecraft.data.CachedOutput
 import net.minecraft.data.DataProvider
 import net.minecraft.data.PackOutput
+import net.minecraft.resources.ResourceKey
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.RecordItem
+import net.minecraft.world.level.levelgen.structure.Structure
 import java.util.concurrent.CompletableFuture
 import kotlin.io.path.createDirectories
 
@@ -53,8 +56,8 @@ class CustomDataProvider(private val output: PackOutput) : DataProvider {
         val validDiscs = GrowssethItems.all.filterValues { it is RecordItem && !GrowssethItems.DISCS_TO_VOCALS.values.contains(it) }
         out.addAll(validDiscs.map {
             ResearcherTradeObj(
-                ResearcherTradeObj.tradeIdemEntryObj(it.key, 1),
-                listOf(ResearcherTradeObj.tradeIdemEntryObj(Items.EMERALD, 5)),
+                ResearcherTradeObj.tradeItemEntryObj(it.key, 1),
+                listOf(ResearcherTradeObj.tradeItemEntryObj(Items.EMERALD, 5)),
                 randomWeight = 1f / validDiscs.size
             )
         })
@@ -63,28 +66,45 @@ class CustomDataProvider(private val output: PackOutput) : DataProvider {
 
     private fun generateResearcherTradesBeforeStruct(): Map<String, List<ResearcherTradeObj>> {
         val out = mutableMapOf<String, List<ResearcherTradeObj>>()
-        GrowssethStructures.PROGRESS_STRUCTURES
-            // Remove golem house as currently no way to map to village house
-            .forEach { key ->
+
+        val makeStructTrades = { key: ResourceKey<Structure>, modify: ((ResearcherTradeObj.TradeItemEntryObj) -> ResearcherTradeObj.TradeItemEntryObj)? ->
             val info = GrowssethStructures.info[key]!!
-            val tagString = "#${info.tag.location.toString()}"
-            out[key.location().path] = listOf(
+            val tagString = "#${info.tag.location}"
+            listOf(
                 ResearcherTradeObj(
-                    ResearcherTradeObj.tradeIdemEntryObj(GrowssethItems.RUINS_MAP, map = TradeItemMapInfo.JsonDesc(
+                    ResearcherTradeObj.tradeItemEntryObj(GrowssethItems.RUINS_MAP, map = TradeItemMapInfo.JsonDesc(
                         structure = tagString,
                         name = "structure.${key.location().toLanguageKey()}.map.name",
                         fixedStructureId = tagString,
-                    )),
+                    )).let { obj -> modify?.let{ it(obj) } ?: obj },
                     listOf(
                         if (info.emeraldCost > 0) {
-                            ResearcherTradeObj.tradeIdemEntryObj(Items.EMERALD, info.emeraldCost)
+                            ResearcherTradeObj.tradeItemEntryObj(Items.EMERALD, info.emeraldCost)
                         } else {
-                            ResearcherTradeObj.tradeIdemEntryObj(Items.MAP, 1)
+                            ResearcherTradeObj.tradeItemEntryObj(Items.MAP, 1)
                         },
                     ),
                     priority = -50,
                 )
             )
+        }
+
+        GrowssethStructures.PROGRESS_STRUCTURES
+            .minus(GrowssethStructures.GOLEM_HOUSE)
+            .forEach { key -> out[key.location().path] = makeStructTrades(key, null) }
+        GrowssethStructures.GOLEM_HOUSE.let { key ->
+            out[key.location().path] = makeStructTrades(key) { obj ->
+                val associatedJigsaws = GrowssethStructures.VILLAGE_HOUSE_STRUCTURES[key]!!
+                val maps = associatedJigsaws.map { (villageKey, houseIds) ->
+                    TradeItemMapInfo.JsonDesc(
+                        structure = villageKey.location().toString(),
+                        name = "structure.${key.location().toLanguageKey()}.map.name",
+                        fixedStructureId = key.location().toString(),
+                        searchForJigsawIds = houseIds
+                    )
+                }
+                obj.copy(mapPool = maps)
+            }
         }
         return out
     }
@@ -96,8 +116,8 @@ class CustomDataProvider(private val output: PackOutput) : DataProvider {
             .filterValues { it != GrowssethItems.DISC_GIORGIO_LOFI_INST && it != GrowssethItems.DISC_GIORGIO_CUBETTI }
         discTrades.addAll(validDiscs.map {
             ResearcherTradeObj(
-                ResearcherTradeObj.tradeIdemEntryObj(it.key, 1),
-                listOf(ResearcherTradeObj.tradeIdemEntryObj(Items.EMERALD, 5)),
+                ResearcherTradeObj.tradeItemEntryObj(it.key, 1),
+                listOf(ResearcherTradeObj.tradeItemEntryObj(Items.EMERALD, 5)),
                 randomWeight = 1f / validDiscs.size
             )
         })

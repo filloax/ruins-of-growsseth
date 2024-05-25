@@ -22,6 +22,7 @@ import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.Registries
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.tags.TagKey
 import net.minecraft.world.item.ItemStack
@@ -39,7 +40,6 @@ import kotlin.concurrent.thread
 import kotlin.math.sign
 import kotlin.random.Random
 
-private const val DEFAULT_ASYNC = true
 // true seems to be way slower even in single threaded mode
 private const val DEFAULT_SKIP_EXPLORED = false
 private const val DEFAULT_SEARCH_RANGE = 100
@@ -101,10 +101,10 @@ fun ItemStack.invalidateMap() {
  * @param searchFromPos BlockPos Position to start the structure search from.
  * @param searchRadius Int = 50 Radius of the search.
  * @param skipExploredChunks Bool = true Set to true to ignore chunks that were already generated.
- * @param async Bool = false Run the search asynchronously, better for performance. NYI
  * @param scale Int = 1 Map scale
  * @param destinationType MapDecoration.Type = MapDecoration.Type.TARGET_X Icon to use for the target
  * @param displayName String = null Optional display name to set for the map
+ * @param mustContainJigsawIds If set, will only locate structures that contain jigsaw pieces with ids contained in this Set
  */
 fun ItemStack.updateMapToStruct(
     level: ServerLevel,
@@ -113,13 +113,13 @@ fun ItemStack.updateMapToStruct(
     scale: Int = 1,
     destinationType: DestinationType = DEFAULT_DESTINATION_TYPE,
     displayName: String? = null,
-    async: Boolean? = null,
+    mustContainJigsawIds: Collection<ResourceLocation>? = null,
 ): CompletableFuture<LocateResult> {
     val structTagKey = getStructTagOrKey(destinationName)
     return structTagKey.map({
-        updateMapToStruct(level, it, searchFromPos, searchRadius, skipExploredChunks, scale, destinationType, displayName, async)
+        updateMapToStruct(level, it, searchFromPos, searchRadius, skipExploredChunks, scale, destinationType, displayName, mustContainJigsawIds)
     }, {
-        updateMapToStruct(level, it, searchFromPos, searchRadius, skipExploredChunks, scale, destinationType, displayName, async)
+        updateMapToStruct(level, it, searchFromPos, searchRadius, skipExploredChunks, scale, destinationType, displayName, mustContainJigsawIds)
     })
 }
 
@@ -130,10 +130,10 @@ fun ItemStack.updateMapToStruct(
  * @param searchFromPos BlockPos Position to start the structure search from.
  * @param searchRadius Int = 50 Radius of the search.
  * @param skipExploredChunks Bool = true Set to true to ignore chunks that were already generated.
- * @param async Bool = false Run the search asynchronously, better for performance. NYI
  * @param scale Int = 1 Map scale
  * @param destinationType MapDecoration.Type = MapDecoration.Type.TARGET_X Icon to use for the target
  * @param displayName String = null Optional display name to set for the map
+ * @param mustContainJigsawIds If set, will only locate structures that contain jigsaw pieces with ids contained in this Set
  */
 fun ItemStack.updateMapToStruct(
     level: ServerLevel,
@@ -142,9 +142,9 @@ fun ItemStack.updateMapToStruct(
     scale: Int = 1,
     destinationType: DestinationType = DEFAULT_DESTINATION_TYPE,
     displayName: String? = null,
-    async: Boolean? = null,
+    mustContainJigsawIds: Collection<ResourceLocation>? = null,
 ): CompletableFuture<LocateResult> {
-    return updateMapToStructWithHolder(level, getHolderSet(level, destination), searchFromPos, searchRadius, skipExploredChunks, scale, destinationType, displayName, async)
+    return updateMapToStructWithHolder(level, getHolderSet(level, destination), searchFromPos, searchRadius, skipExploredChunks, scale, destinationType, displayName, mustContainJigsawIds)
 }
 
 /**
@@ -154,10 +154,10 @@ fun ItemStack.updateMapToStruct(
  * @param searchFromPos BlockPos Position to start the structure search from.
  * @param searchRadius Int = 50 Radius of the search.
  * @param skipExploredChunks Bool = true Set to true to ignore chunks that were already generated.
- * @param async Bool = false Run the search asynchronously, better for performance. NYI
  * @param scale Int = 1 Map scale
  * @param destinationType MapDecoration.Type = MapDecoration.Type.TARGET_X Icon to use for the target
  * @param displayName String = null Optional display name to set for the map
+ * @param mustContainJigsawIds If set, will only locate structures that contain jigsaw pieces with ids contained in this Set
  */
 fun ItemStack.updateMapToStruct(
     level: ServerLevel,
@@ -166,10 +166,10 @@ fun ItemStack.updateMapToStruct(
     scale: Int = 1,
     destinationType: DestinationType = DEFAULT_DESTINATION_TYPE,
     displayName: String? = null,
-    async: Boolean? = null,
+    mustContainJigsawIds: Collection<ResourceLocation>? = null,
 ): CompletableFuture<LocateResult> {
     val holderSet = level.registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(destinationTag).orElseThrow()
-    return updateMapToStructWithHolder(level, holderSet, searchFromPos, searchRadius, skipExploredChunks, scale, destinationType, displayName, async)
+    return updateMapToStructWithHolder(level, holderSet, searchFromPos, searchRadius, skipExploredChunks, scale, destinationType, displayName, mustContainJigsawIds)
 }
 
 private fun ItemStack.updateMapToStructWithHolder(
@@ -179,7 +179,7 @@ private fun ItemStack.updateMapToStructWithHolder(
     scale: Int,
     destinationType: DestinationType,
     displayName: String?,
-    async: Boolean?,
+    mustContainJigsawIds: Collection<ResourceLocation>? = null,
 ): CompletableFuture<LocateResult> {
     val doSkipExploredChunks = skipExploredChunks ?: DEFAULT_SKIP_EXPLORED
     // In general, return CompletableFuture *separately* from locatetask
@@ -187,69 +187,60 @@ private fun ItemStack.updateMapToStructWithHolder(
     // callback here
     val future = CompletableFuture<LocateResult>()
     val destString = destinationHolderSet.unwrapKey().toString()
-    if (async == true || (async == null && DEFAULT_ASYNC)) {
-        RuinsOfGrowsseth.LOGGER.info("Starting async structure '$destString' search...")
-        this.setLoadingName(displayName)
+    RuinsOfGrowsseth.LOGGER.info("Starting async structure '$destString' search...")
+    this.setLoadingName(displayName)
 
-        val done = atomic<Boolean>(false)
-        val startTime = Clock.System.now()
+    val done = atomic<Boolean>(false)
+    val startTime = Clock.System.now()
 
-        thread(name="locator-timing-thread", start = true, isDaemon = true){
-            while (!done.value) {
-                Thread.sleep(10000)
-                if (!done.value) {
-                    val time = Clock.System.now()
-                    RuinsOfGrowsseth.LOGGER.info("Async structure '$destString' search still running, took ${(time - startTime).inWholeMilliseconds/1000}s")
-                }
+    thread(name="locator-timing-thread", start = true, isDaemon = true){
+        while (!done.value) {
+            Thread.sleep(10000)
+            if (!done.value) {
+                val time = Clock.System.now()
+                RuinsOfGrowsseth.LOGGER.info("Async structure '$destString' search still running, took ${(time - startTime).inWholeMilliseconds/1000}s")
             }
         }
+    }
 
-        val signalProgress: SignalProgressFun? = if (FxLibServices.platform.isDevEnvironment()) { { task, phase, pct ->
-            RuinsOfGrowsseth.LOGGER.info("Locate $destString progress: phase %s | %.2f%% | %.2fs".format(phase, pct * 100, task.timeElapsedMs() / 1000.0))
-        } } else null
+    val signalProgress: SignalProgressFun? = if (FxLibServices.platform.isDevEnvironment()) { { task, phase, pct ->
+        RuinsOfGrowsseth.LOGGER.info("Locate $destString progress: phase %s | %.2f%% | %.2fs".format(phase, pct * 100, task.timeElapsedMs() / 1000.0))
+    } } else null
 
-        StoppableAsyncLocator.locate(
-            level,
-            destinationHolderSet,
-            searchFromPos,
-            searchRadius,
-            doSkipExploredChunks,
-            timeoutSeconds = DEFAULT_SEARCH_TIMEOUT_S,
-            signalProgress = signalProgress,
-        ).thenOnServerThread { result ->
-            done.update { true }
-            if (result != null) {
-                val pos = result.first
-                val finalDestType = if (destinationType.auto) DestinationType.auto(result.second) else destinationType
+    val task = if (mustContainJigsawIds == null)
+            StoppableAsyncLocator.locate(
+                level,
+                destinationHolderSet,
+                searchFromPos,
+                searchRadius,
+                doSkipExploredChunks,
+                timeoutSeconds = DEFAULT_SEARCH_TIMEOUT_S,
+                signalProgress = signalProgress,
+            )
+        else
+            StoppableAsyncLocator.locateJigsaw(
+                level,
+                destinationHolderSet,
+                mustContainJigsawIds,
+                searchFromPos,
+                searchRadius,
+                doSkipExploredChunks,
+                timeoutSeconds = DEFAULT_SEARCH_TIMEOUT_S,
+                signalProgress = signalProgress,
+            )
+    task.thenOnServerThread { result ->
+        done.update { true }
+        if (result != null) {
+            val pos = result.first
+            val finalDestType = if (destinationType.auto) DestinationType.auto(result.second) else destinationType
 
-                updateMapToPos(level, pos, scale, finalDestType, displayName ?: "reset")
-                RuinsOfGrowsseth.LOGGER.info("(async) Found '$destString' at $pos")
-            } else {
-                invalidateMap()
-                RuinsOfGrowsseth.LOGGER.info("(async) '$destString' not found!")
-            }
-            future.complete(result)
-        }
-    } else {
-        RuinsOfGrowsseth.LOGGER.info("Starting single-thread structure '$destString' search...")
-        val found = level.chunkSource.generator.findNearestMapStructure(level, destinationHolderSet, searchFromPos, 100, false)
-
-        if (found == null) {
-            RuinsOfGrowsseth.LOGGER.error("Structure $destinationHolderSet not found!")
-            future.completeExceptionally(IllegalStateException("Structure $destinationHolderSet not found!"))
-            return future
-        }
-
-        val pos = found.first
-        if (pos != null) {
-            val finalDestType = if (destinationType.auto) DestinationType.auto(found.second) else destinationType
-            updateMapToPos(level, pos, scale, finalDestType, displayName)
-            RuinsOfGrowsseth.LOGGER.info("Found '$destString' at $pos")
+            updateMapToPos(level, pos, scale, finalDestType, displayName ?: "reset")
+            RuinsOfGrowsseth.LOGGER.info("(async) Found '$destString' at $pos")
         } else {
             invalidateMap()
-            RuinsOfGrowsseth.LOGGER.info("'$destString' not found!")
+            RuinsOfGrowsseth.LOGGER.info("(async) '$destString' not found!")
         }
-        future.complete(found)
+        future.complete(result)
     }
 
     return future
