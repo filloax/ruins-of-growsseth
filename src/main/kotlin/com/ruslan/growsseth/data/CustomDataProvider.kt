@@ -7,6 +7,7 @@ import com.ruslan.growsseth.entity.researcher.trades.ResearcherTradeObj
 import com.ruslan.growsseth.entity.researcher.trades.TradeItemMapInfo
 import com.ruslan.growsseth.entity.researcher.trades.TradesListener
 import com.ruslan.growsseth.item.GrowssethItems
+import com.ruslan.growsseth.maps.GrowssethMapDecorations
 import com.ruslan.growsseth.structure.GrowssethStructures
 import com.ruslan.growsseth.structure.VillageBuildings
 import kotlinx.serialization.json.Json
@@ -100,6 +101,7 @@ class CustomDataProvider(private val output: PackOutput) : DataProvider {
                         structure = villageKey.location().toString(),
                         name = "structure.${key.location().toLanguageKey()}.map.name",
                         fixedStructureId = key.location().toString(),
+                        overrideMapIcon = GrowssethMapDecorations.GOLEM_HOUSE.unwrapKey().orElseThrow().location(),
                         searchForJigsawIds = houseIds
                     )
                 }

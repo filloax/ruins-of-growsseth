@@ -118,6 +118,7 @@
             {
               "fixedStructureId": "growsseth:golem_house",
               "name": "structure.growsseth.golem_house.map.name",
+              "overrideMapIcon": "growsseth:icon_golem_house",
               "searchForJigsawIds": [
                 "growsseth:village/desert/desert_golem_house",
                 "growsseth:village/desert/desert_golem_house_zombie"
@@ -127,6 +128,7 @@
             {
               "fixedStructureId": "growsseth:golem_house",
               "name": "structure.growsseth.golem_house.map.name",
+              "overrideMapIcon": "growsseth:icon_golem_house",
               "searchForJigsawIds": [
                 "growsseth:village/plains/plains_golem_house",
                 "growsseth:village/plains/plains_golem_house_zombie"
@@ -136,6 +138,7 @@
             {
               "fixedStructureId": "growsseth:golem_house",
               "name": "structure.growsseth.golem_house.map.name",
+              "overrideMapIcon": "growsseth:icon_golem_house",
               "searchForJigsawIds": [
                 "growsseth:village/taiga/taiga_golem_house",
                 "growsseth:village/taiga/taiga_golem_house_zombie"
@@ -145,6 +148,7 @@
             {
               "fixedStructureId": "growsseth:golem_house",
               "name": "structure.growsseth.golem_house.map.name",
+              "overrideMapIcon": "growsseth:icon_golem_house",
               "searchForJigsawIds": [
                 "growsseth:village/savanna/savanna_golem_house",
                 "growsseth:village/savanna/savanna_golem_house_zombie"
@@ -154,6 +158,7 @@
             {
               "fixedStructureId": "growsseth:golem_house",
               "name": "structure.growsseth.golem_house.map.name",
+              "overrideMapIcon": "growsseth:icon_golem_house",
               "searchForJigsawIds": [
                 "growsseth:village/snowy/snowy_golem_house",
                 "growsseth:village/snowy/snowy_golem_house_zombie"
