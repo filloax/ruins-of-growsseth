@@ -6,6 +6,7 @@ import com.filloax.fxlib.api.enums.SetBlockFlag
 import com.filloax.fxlib.api.iterBlocks
 import com.filloax.fxlib.api.nbt.*
 import com.ruslan.growsseth.Constants
+import com.ruslan.growsseth.FabricEvents
 import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.config.ResearcherConfig
@@ -243,7 +244,11 @@ class ResearcherTent : GrTemplateStructurePiece {
 
     private fun manageDonkey(level: ServerLevel, uuid: UUID, pos: BlockPos) {
         EventUtil.runOnEntityWhenPossible(level, uuid) { donkey ->
-            leashToBlock(level.level, donkey as Mob, pos)
+            // DO NOT DO ON LOAD (which might be the case in runOnEntityWhenPossible),
+            // as adding ents during load leads to ConcurrentModificationException
+            EventUtil.runAtServerTickEnd {
+                leashToBlock(level.level, donkey as Mob, pos)
+            }
             donkey.getSlot(499)?.set(ItemStack(Items.CHEST))
             initDonkeyUuid = uuid
             donkey.addTag(Constants.TAG_RESEARCHER_DONKEY)
