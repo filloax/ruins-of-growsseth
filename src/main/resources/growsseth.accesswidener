@@ -46,3 +46,6 @@ accessible method net/minecraft/world/level/chunk/ChunkGenerator getNearestGener
 accessible method net/minecraft/world/level/chunk/ChunkGenerator getStructureGeneratingAt (Ljava/util/Set;Lnet/minecraft/world/level/LevelReader;Lnet/minecraft/world/level/StructureManager;ZLnet/minecraft/world/level/levelgen/structure/placement/StructurePlacement;Lnet/minecraft/world/level/ChunkPos;)Lcom/mojang/datafixers/util/Pair;
 
 accessible method net/minecraft/server/commands/LocateCommand getHolders (Lnet/minecraft/commands/arguments/ResourceOrTagKeyArgument$Result;Lnet/minecraft/core/Registry;)Ljava/util/Optional;
+
+# enable when debugging concurrentmodificationexception
+# mutable field net/minecraft/util/ClassInstanceMultiMap allInstances Ljava/util/List;
