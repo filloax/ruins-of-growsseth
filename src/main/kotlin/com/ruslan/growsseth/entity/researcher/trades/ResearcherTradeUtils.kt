@@ -3,6 +3,7 @@ package com.ruslan.growsseth.entity.researcher.trades
 import com.filloax.fxlib.api.FxLibServices
 import com.filloax.fxlib.api.getStructTagOrKey
 import com.filloax.fxlib.api.getYAtXZ
+import com.filloax.fxlib.api.loreLines
 import com.filloax.fxlib.api.nbt.loadField
 import com.mojang.datafixers.util.Either
 import com.ruslan.growsseth.RuinsOfGrowsseth
@@ -15,6 +16,7 @@ import net.minecraft.core.BlockPos
 import net.minecraft.core.RegistryAccess
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.Registries
+import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.item.ItemStack
@@ -70,11 +72,13 @@ object ResearcherTradeUtils {
                         "Tried setting res. known map data from id ${mapMemory.mapId} but was null, making new"
                     )
                 }
+                mapData.description?.forEach { itemStack.loreLines().add(Component.translatable(it)) }
                 RuinsOfGrowsseth.LOGGER.info("Loaded map data from known map $mapMemory")
                 known = true
             }
         }
 
+        // Check fixed map positions
         if (!known) {
             var pos: BlockPos? = null
             if (mapData.x != null && mapData.z != null) {
@@ -104,6 +108,7 @@ object ResearcherTradeUtils {
                     displayName = mapData.name,
                 )
                 RuinsOfGrowsseth.LOGGER.info("Res.trades: created map to pos $pos dtype $destinationType")
+                mapData.description?.forEach { itemStack.loreLines().add(Component.translatable(it)) }
 
                 synchronized(researcher.storedMapLocations) {
                     researcher.storedMapLocations[mapData.structure] = Researcher.MapMemory(
@@ -117,6 +122,7 @@ object ResearcherTradeUtils {
             }
         }
 
+        // Locate map
         if (!known) {
             offer.setToOutOfStock() // Disable offer until found
             // Locate map if not fixed struct or pos
@@ -127,7 +133,7 @@ object ResearcherTradeUtils {
                 scale = scale,
                 displayName = mapData.name,
                 skipExploredChunks = true,
-//                async = true,
+                mustContainJigsawIds = mapData.searchForJigsawIds,
             ).thenAccept { result ->
                 if (result != null) {
                     val pos = result.first
@@ -139,6 +145,8 @@ object ResearcherTradeUtils {
                             itemStack[DataComponents.MAP_ID]?.id ?: throw IllegalStateException("Map item has no id after updating! $itemStack"),
                         )
                     }
+                    mapData.description?.forEach { itemStack.loreLines().add(Component.translatable(it)) }
+
                     offer.resetUses()
                     researcher.refreshCurrentTrades()
                 } else {

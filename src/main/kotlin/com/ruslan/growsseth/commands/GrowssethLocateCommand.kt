@@ -6,10 +6,7 @@ import com.mojang.brigadier.arguments.BoolArgumentType
 import com.mojang.brigadier.arguments.IntegerArgumentType
 import com.mojang.brigadier.exceptions.CommandSyntaxException
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType
-import com.mojang.datafixers.util.Pair
 import com.ruslan.growsseth.RuinsOfGrowsseth
-import com.ruslan.growsseth.structure.locate.JigsawSignalProgressFun
-import com.ruslan.growsseth.structure.locate.LocateTask
 import com.ruslan.growsseth.structure.locate.SignalProgressFun
 import com.ruslan.growsseth.structure.locate.StoppableAsyncLocator
 import net.minecraft.Util
@@ -95,7 +92,7 @@ object GrowssethLocateCommand {
 
         StoppableAsyncLocator.locate(
             serverLevel, holderSet, blockPos,
-            100, false,
+            100, false, null,
             timeout, getSignalProgress(source, structure, logProgress, chatProgress)
         ).thenOnServerThread {
             if (it == null) {
@@ -148,13 +145,13 @@ object GrowssethLocateCommand {
         StoppableAsyncLocator.locateJigsaw(
             serverLevel, holderSet, setOf(jigsawId), blockPos,
             100, false,
-            timeout, getSignalJigsawProgress(source, structure, logProgress, chatProgress)
+            timeout, getSignalProgress(source, structure, logProgress, chatProgress)
         ).thenOnServerThread {
             if (it == null) {
                 source.sendFailure(Component.translatable("commands.locate.structure.invalid", structure.asPrintable()))
             } else {
                 LocateCommand.showLocateResult(
-                    source, structure, blockPos, Pair(it.pos, it.structure), "commands.locate.structure.success", false, stopwatch.elapsed()
+                    source, structure, blockPos, it, "commands.locate.structure.success", false, stopwatch.elapsed()
                 )
             }
         }.onExceptionOnServerThread {
@@ -162,27 +159,5 @@ object GrowssethLocateCommand {
         }
 
         return 1
-    }
-
-    private fun getSignalJigsawProgress(source: CommandSourceStack, structure: ResourceOrTagKeyArgument.Result<Structure>, logProgress: Boolean, chatProgress: Boolean): JigsawSignalProgressFun? {
-        val chatProgressFun: JigsawSignalProgressFun = { task, phase, pct ->
-            source.sendSystemMessage(Component.literal("Async jigsaw Locate progress: %s %.2f%%, time %.2fs".format(phase, pct * 100, task.timeElapsedMs() / 1000.0)))
-        }
-        val str = structure.asPrintable()
-        val logProgressFun: JigsawSignalProgressFun = { task, phase, pct ->
-            RuinsOfGrowsseth.LOGGER.info("Async jigsaw Locate $str progress: " + "%s %.2f%%, time %.2fs".format(phase, pct * 100, task.timeElapsedMs() / 1000.0))
-        }
-        if (chatProgress && logProgress) {
-            return { task, phase, pct ->
-                chatProgressFun(task, phase, pct)
-                logProgressFun(task, phase, pct)
-            }
-        } else if (chatProgress) {
-            return chatProgressFun
-        } else if (logProgress) {
-            return logProgressFun
-        } else {
-            return null
-        }
     }
 }
