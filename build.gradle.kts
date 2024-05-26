@@ -137,7 +137,7 @@ tasks.register("zipEgobalegoFolder") {
 		destinationDir.mkdirs()
 		project.exec {
 			workingDir = sourceDir.parentFile
-			commandLine("zip", "-r", "-o", zipFile.absolutePath, "egobalego-at-home")
+			commandLine("zip", "-r", "-x", "egobalego-at-home/.venv/**", "-o", zipFile.absolutePath, "egobalego-at-home")
 		}
 	}
 }
