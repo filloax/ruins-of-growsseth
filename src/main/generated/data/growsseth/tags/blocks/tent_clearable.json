@@ -67,6 +67,7 @@
     "minecraft:ladder",
     "minecraft:lantern",
     "minecraft:torch",
-    "minecraft:chain"
+    "minecraft:chain",
+    "minecraft:hay_block"
   ]
 }
