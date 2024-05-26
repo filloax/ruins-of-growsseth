@@ -76,23 +76,23 @@ open class BasicDialoguesComponent(
     protected val serverLevel: ServerLevel get() = entity.level() as ServerLevel
     protected val server get() = serverLevel.server
 
-    var nearbyRadius = 12.0
-    var radiusForTriggerLeave = 17.0
-    var maxDialogueRadius = 50.0 // Radius before any dialogue event is prevented from triggering
-    var secondsForTriggerLeave = 1.0   // waiting time before saying goodbye when a player leaves
-    var checkLineOfSight = true
+    open var nearbyRadius = 12.0
+    open var radiusForTriggerLeave = 17.0
+    open var maxDialogueRadius = 50.0 // Radius before any dialogue event is prevented from triggering
+    open var secondsForTriggerLeave = 0   // waiting time before saying goodbye when a player leaves
+    open var checkLineOfSight = true
     /** Set to 0 to disable "soon" events: */
-    var secondsForArriveSoon = 10
+    open var secondsForArriveSoon = 10
     /** Set to 0 to disable "long time" events: */
-    var secondsForArriveLongTime = 6 * 3600 // 6 hours
-    var secondsForCloseRepeat = 60
-    var secondsForAttackRepeat = 10
-    var maxCloseHitsForDialogues = 3
+    open var secondsForArriveLongTime = 6 * 3600 // 6 hours
+    open var secondsForCloseRepeat = 60
+    open var secondsForAttackRepeat = 10
+    open var maxCloseHitsForDialogues = 3
     /** Set to 0 to have no wait: */
-    var dialogueDelayMaxSeconds = 0.6f
-    var dialogueSecondsSameId = .1f // + estimatedReadingTime
+    open var dialogueDelayMaxSeconds = 0.6f
+    open var dialogueSecondsSameId = .1f // + estimatedReadingTime
     /** Set to 0 to have no wait: */
-    var dialogueWordsPerMinute = 120    // lower equals more time to read
+    open var dialogueWordsPerMinute = 120    // lower equals more time to read
 
     protected fun playerDataOrCreate(player: ServerPlayer) = playerDataOrCreate(player.uuid)
     protected fun playerDataOrCreate(uuid: UUID) = savedPlayersData.computeIfAbsent(uuid) { PlayerData() }
@@ -188,7 +188,9 @@ open class BasicDialoguesComponent(
         val knownPlayers = closePlayers.mapNotNull { serverLevel.getPlayerByUUID(it) as ServerPlayer? }
         val possiblePlayers = visiblePlayers + knownPlayers
 
+        // Bounding box inside of which players are considered "near" (triggering hello dialogue)
         val nearbyBoundingBox = AABB.ofSize(entity.position(), nearbyRadius, nearbyRadius, nearbyRadius)
+        // Bounding box outside of which players are considered "far" (triggering goodbye dialogue)
         val farBoundingBox = AABB.ofSize(entity.position(), radiusForTriggerLeave, nearbyRadius, radiusForTriggerLeave)
 
         // Players close enough to trigger arrive
@@ -588,10 +590,10 @@ open class BasicDialoguesComponent(
         val data = CompoundTag()
         tag.put("DialogueData", data)
 
-        data.saveField("closePlayers", UUIDUtil.STRING_CODEC.mutableSetOf(), ::closePlayers)
-        data.saveField("leavingPlayers", mutableMapCodec(UUIDUtil.STRING_CODEC, Codec.INT), ::leavingPlayers)
-        data.saveField("playersArrivedSoon", mutableMapCodec(UUIDUtil.STRING_CODEC, Codec.BOOL), ::playersArrivedSoon)
-        data.saveField("savedPlayersData", mutableMapCodec(UUIDUtil.STRING_CODEC, PLAYER_DATA_CODEC), ::savedPlayersData)
+        data.saveField(DataFields.CLOSE_PLAYERS, UUIDUtil.STRING_CODEC.mutableSetOf(), ::closePlayers)
+        data.saveField(DataFields.LEAVING_PLAYERS, mutableMapCodec(UUIDUtil.STRING_CODEC, Codec.INT), ::leavingPlayers)
+        data.saveField(DataFields.PLAYERS_ARRIVED_SOON, mutableMapCodec(UUIDUtil.STRING_CODEC, Codec.BOOL), ::playersArrivedSoon)
+        data.saveField(DataFields.SAVED_PLAYERS_DATA, mutableMapCodec(UUIDUtil.STRING_CODEC, PLAYER_DATA_CODEC), ::savedPlayersData)
 
         addExtraNbtData(data)
     }
@@ -602,13 +604,20 @@ open class BasicDialoguesComponent(
         closePlayers.clear()
         savedPlayersData.clear()
         tag.get("DialogueData")?.let { data -> if (data is CompoundTag) {
-            data.loadField("closePlayers", UUIDUtil.STRING_CODEC.mutableSetOf()) { closePlayers.addAll(it) }
-            data.loadField("leavingPlayers", mutableMapCodec(UUIDUtil.STRING_CODEC, Codec.INT)) { leavingPlayers.putAll(it) }
-            data.loadField("playersArrivedSoon", mutableMapCodec(UUIDUtil.STRING_CODEC, Codec.BOOL)) { playersArrivedSoon.putAll(it) }
-            data.loadField("savedPlayersData", mutableMapCodec(UUIDUtil.STRING_CODEC, PLAYER_DATA_CODEC)) { savedPlayersData.putAll(it) }
+            data.loadField(DataFields.CLOSE_PLAYERS, UUIDUtil.STRING_CODEC.mutableSetOf()) { closePlayers.addAll(it) }
+            data.loadField(DataFields.LEAVING_PLAYERS, mutableMapCodec(UUIDUtil.STRING_CODEC, Codec.INT)) { leavingPlayers.putAll(it) }
+            data.loadField(DataFields.PLAYERS_ARRIVED_SOON, mutableMapCodec(UUIDUtil.STRING_CODEC, Codec.BOOL)) { playersArrivedSoon.putAll(it) }
+            data.loadField(DataFields.SAVED_PLAYERS_DATA, mutableMapCodec(UUIDUtil.STRING_CODEC, PLAYER_DATA_CODEC)) { savedPlayersData.putAll(it) }
 
             readExtraNbtData(data)
         }}
+    }
+
+    object DataFields {
+        const val CLOSE_PLAYERS = "closePlayers"
+        const val LEAVING_PLAYERS = "leavingPlayers"
+        const val PLAYERS_ARRIVED_SOON = "playersArrivedSoon"
+        const val SAVED_PLAYERS_DATA = "savedPlayersData"
     }
 
     object Callbacks {
