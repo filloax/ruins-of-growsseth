@@ -1,6 +1,7 @@
 package com.ruslan.growsseth.client.resource
 
 import com.ruslan.growsseth.RuinsOfGrowsseth
+import com.ruslan.growsseth.resource.MusicCommon
 import com.ruslan.growsseth.utils.DecryptUtil
 import com.ruslan.growsseth.utils.resLoc
 import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener
@@ -9,6 +10,7 @@ import net.minecraft.resources.FileToIdConverter
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.util.profiling.ProfilerFiller
+import java.io.IOException
 import java.io.InputStream
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
@@ -34,6 +36,9 @@ object EncryptedMusicResources {
     @JvmStatic
     fun checkEncryptedSoundStream(resourceLocation: ResourceLocation, inputStream: InputStream): InputStream {
         return if (resourceLocation.path.startsWith("soundsx")) {
+            if (!MusicCommon.hasMusicKey) {
+                throw IOException("Couldn't load encrypted music as no key loaded in mod build!")
+            }
             // inputStream // debug with plain files
             DecryptUtil.decryptInputStream(key ?: throw IllegalStateException("Didn't load decryption key yet!"), inputStream)
         } else {
@@ -45,8 +50,12 @@ object EncryptedMusicResources {
         override fun getFabricId() = resLoc("sounds_key_listener")
 
         override fun onResourceManagerReload(resourceManager: ResourceManager) {
-            key = DecryptUtil.readKey(resourceManager.open(resLoc(KEY_PATH)))
-            RuinsOfGrowsseth.LOGGER.info("Read music key!")
+            if (MusicCommon.hasMusicKey) {
+                key = DecryptUtil.readKey(resourceManager.open(resLoc(KEY_PATH)), MusicCommon.musicPw)
+                RuinsOfGrowsseth.LOGGER.info("Read music key!")
+            } else {
+                RuinsOfGrowsseth.LOGGER.warn("Cannot read key, not setup during build correctly!")
+            }
         }
     }
 }
