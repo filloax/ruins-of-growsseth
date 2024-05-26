@@ -45,7 +45,7 @@ Collaboratori:
 - Farcr (Texture di Guber)
 
 Artisti musicali:
-- Il Coro di Mammonk<details><summary>Lista canzoni</summary>Ancora Qui, La Ballata Del Respawn, Il Tesoro Di CacoCaco, La Missiva Nell'Ombra, Odi et Amo, Oursteps, Elogio a Padre Mammonk, Pesci Strani</details>
+- Il Coro di Mammonk (Ancora Qui, La Ballata Del Respawn, Il Tesoro Di CacoCaco, La Missiva Nell'Ombra, Odi et Amo, Oursteps, Elogio a Padre Mammonk, Pesci Strani)
 - Singalek (Binobinooo, Giorgio Cubetti, Giorgio Lo-Fi)
 - HunterProduction (Giorgio Finding Home)
 - Hawkelele (Giorgio Cub8bit)
