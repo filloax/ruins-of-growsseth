@@ -1,3 +1,4 @@
+import com.ruslan.gradle.TransformTokensTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.incremental.deleteDirectoryContents
 
@@ -6,6 +7,8 @@ plugins {
 	kotlin("plugin.serialization")
 	id("fabric-loom")
 	id("maven-publish")
+	// see buildSrc
+	id("com.ruslan.gradle.token-replacement")
 }
 
 val modid: String by project
@@ -284,137 +287,12 @@ compileTestKotlin.kotlinOptions {
     jvmTarget = "$javaVersion"
 }
 
-// PROCESSING SOURCES WITH TEMPLATES
+// Task defined in the custom plugin in buildSrc
 
-// Probably ugly, but trying to make it directly use generated-src/main as a source
-// lead to either duplication errors, being unable to reference libraries/other classes,
-// and a whole general mess
-
-class TokenReplaceDirs {
-	val baseSourceRoot = "src/main"
-	val backupRoot = "${layout.buildDirectory.get().asFile.absolutePath}/backup-src"
-	val processedRoot = "${layout.buildDirectory.get().asFile.absolutePath}/processed-src"
-
-	val affected = listOf("java", "kotlin")
-
-	val mainSources = affected.map{file("$baseSourceRoot/$it")}
-	val backupSources = affected.map{file("$backupRoot/$it")}
-	val processedSources = affected.map{file("$processedRoot/$it")}
+tasks.withType<TransformTokensTask> {
+	val env = System.getenv()
+	replaceTokens(mapOf(
+		"$@TEST_REPLACEMENT_WORKING@" to (env["GROWSSETH:TEST_REPLACEMENT_WORKING"] ?: "Yes, it works but no var in env! Music will be disabled!"),
+		"$@MUSIC_PW@" to (env["GROWSSETH:MUSIC_PW"] ?: ""),
+	))
 }
-val tokenReplaceDirs = TokenReplaceDirs()
-
-fun File.copyRecursivelyWithFilter(target: File, filter: (String) -> Boolean) {
-	walkTopDown().forEach { file ->
-		if (file.isFile) {
-			val relativePath = toPath().relativize(file.toPath())
-			val destFile = target.toPath().resolve(relativePath).toFile()
-			if (file.readLines(Charsets.UTF_8).any(filter)) {
-				destFile.parentFile.mkdirs()
-				file.copyTo(destFile, overwrite = true)
-				println("Copied $file to $destFile")
-			}
-		}
-	}
-}
-
-fun File.copyRecursivelyWithTransform(target: File, transform: (String) -> String) {
-	walkTopDown().forEach { file ->
-		if (file.isFile) {
-			val relativePath = toPath().relativize(file.toPath())
-			val destFile = target.toPath().resolve(relativePath).toFile()
-			destFile.parentFile.mkdirs()
-			destFile.writer(Charsets.UTF_8).use { writer ->
-				file.readLines(Charsets.UTF_8).forEach { line ->
-					writer.appendLine(transform(line))
-				}
-			}
-			println("Copied $file to $destFile")
-		}
-	}
-}
-
-val backupAndTransformSources by tasks.registering {
-	val replaceTokens = mapOf(
-		"$@TEST_REPLACEMENT_WORKING@" to "Yes, replacement works!"
-	)
-
-	val processedRoot = file(tokenReplaceDirs.processedRoot)
-	val backupRoot = file(tokenReplaceDirs.backupRoot)
-
-	tokenReplaceDirs.mainSources.forEach { inputs.dir(it) }
-	tokenReplaceDirs.backupSources.forEach { outputs.dir(it) }
-	tokenReplaceDirs.processedSources.forEach { outputs.dir(it) }
-
-	doLast {
-		processedRoot.deleteRecursively()
-		processedRoot.mkdirs()
-		backupRoot.deleteRecursively()
-		backupRoot.mkdirs()
-
-		tokenReplaceDirs.mainSources.zip(tokenReplaceDirs.backupSources).forEach { (main, backup) ->
-			println("Copying matching $main sources to $backup...")
-			main.copyRecursivelyWithFilter(backup) { s -> replaceTokens.keys.any { s.contains(it) }}
-		}
-		tokenReplaceDirs.backupSources.zip(tokenReplaceDirs.processedSources).forEach { (backup, processed) ->
-			println("Transforming $backup sources to $processed...")
-			backup.copyRecursivelyWithTransform(processed) { s ->
-				var s2 = s
-				replaceTokens.forEach{ s2 = s2.replace(it.key, it.value) }
-				s2
-			}
-			val files = processedRoot.walkTopDown().filter { it.isFile }.toList()
-			println("Transformed $files")
-		}
-		println("Transformed sources tokens!")
-	}
-}
-
-// Separate task so gradle handles inputs/outputs controls
-val replaceTransformedSources by tasks.registering {
-	dependsOn(backupAndTransformSources)
-
-	tokenReplaceDirs.mainSources.forEach { if (it.exists()) outputs.dir(it) }
-
-	doLast {
-		tokenReplaceDirs.processedSources.zip(tokenReplaceDirs.mainSources).forEach { (processed, main) ->
-			if (processed.exists()) // maybe had only java or only kotlin
-				processed.copyRecursively(main, overwrite = true)
-		}
-		println("Replaced base sources! (If something goes wrong later, check if they are using the replaced values, and revert if necessary!)")
-	}
-}
-
-val restoreSourcesJava by tasks.registering(Copy::class) {
-	dependsOn(tasks.withType<JavaCompile>())
-	dependsOn(tasks.withType<KotlinCompile>())
-	from(tokenReplaceDirs.backupSources[0])
-	into(tokenReplaceDirs.mainSources[0])
-}
-val restoreSourcesKotlin by tasks.registering(Copy::class) {
-	dependsOn(tasks.withType<JavaCompile>())
-	dependsOn(tasks.withType<KotlinCompile>())
-	from(tokenReplaceDirs.backupSources[1])
-	into(tokenReplaceDirs.mainSources[1])
-}
-val restoreSources by tasks.registering {
-	dependsOn(restoreSourcesJava)
-	dependsOn(restoreSourcesKotlin)
-}
-
-tasks.withType<JavaCompile> {
-	dependsOn(replaceTransformedSources)
-	finalizedBy(restoreSources)
-}
-tasks.withType<KotlinCompile> {
-	dependsOn(replaceTransformedSources)
-	finalizedBy(restoreSources)
-}
-
-tasks.kotlinSourcesJar {
-	dependsOn(restoreSources)
-}
-tasks.named("sourcesJar") {
-	dependsOn(restoreSources)
-}
-
-// END PROCESSING SOURCES WITH TEMPLATES
