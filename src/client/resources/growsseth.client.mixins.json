@@ -6,11 +6,15 @@
     "defaultRequire": 1
   },
   "client": [
-    "TitleScreenMixin",
     "AdvancementTabMixin",
     "EasterEggMixinClient$AbstractZombieRendererMixin",
     "MapRendererInstanceMixin",
     "MultiPlayerGameModeMixin",
+    "EncryptedSounds$SoundBufferLibraryMixin",
+    "EncryptedSounds$SoundEventRegistrationSerializerMixin",
+    "EncryptedSounds$SoundManager$PreparationsMixin",
+    "EncryptedSounds$SoundMixin",
+    "TitleScreenMixin",
     "VillagerModelMixin",
     "custommapitem.CartographyTableScreenMixin",
     "custommapitem.ItemFrameRendererMixin",
