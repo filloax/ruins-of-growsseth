@@ -164,6 +164,7 @@
     "growsseth.config.zombieGuberSpawnChance.name": "Chance di spawn di Guber zombi (%)",
     "growsseth.config.disableNpcDialogues.name": "Disabilita dialoghi NPC",
     "growsseth.config.debugNpcDialogues.name": "Segnala dialoghi NPC nei log",
+    "growsseth.config.researcherSpeedup.name": "Velocizza guarigione ricercatore",
 
     "growsseth.config.enableLocationTitles.name": "Abilita i titoli delle location di Growsseth",
     "growsseth.config.enableLocationTitles.comment": "Mostra i nomi dei luoghi che stai visitando quando usi il preset del mondo di Growsseth.",

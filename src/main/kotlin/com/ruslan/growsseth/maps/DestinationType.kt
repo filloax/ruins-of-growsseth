@@ -7,7 +7,6 @@ import net.minecraft.resources.ResourceKey
 import net.minecraft.tags.TagKey
 import net.minecraft.world.level.levelgen.structure.BuiltinStructures
 import net.minecraft.world.level.levelgen.structure.Structure
-import net.minecraft.world.level.saveddata.maps.MapDecoration
 import net.minecraft.world.level.saveddata.maps.MapDecorationType
 import net.minecraft.world.level.saveddata.maps.MapDecorationTypes
 
@@ -15,12 +14,11 @@ import net.minecraft.world.level.saveddata.maps.MapDecorationTypes
  * Pre-1.20.5: wrapper for both vanilla and custom map icons
  * Post-1.20.5: wrapper above map icons, kept for easier backporting
  */
-class DestinationType private constructor(val type: Holder<MapDecorationType>? = null, val auto: Boolean = false) {
+class DestinationType private constructor(val type: Holder<MapDecorationType>? = null) {
     val isSet get() = type != null
 
     companion object {
         val EMPTY = DestinationType()
-        val AUTO = DestinationType(auto = true)
 
         private val VANILLA_STRUCT_ICONS = mapOf<ResourceKey<Structure>, Holder<MapDecorationType>>(
             BuiltinStructures.WOODLAND_MANSION to MapDecorationTypes.WOODLAND_MANSION,
@@ -34,33 +32,35 @@ class DestinationType private constructor(val type: Holder<MapDecorationType>? =
             BuiltinStructures.VILLAGE_SAVANNA to MapDecorationTypes.SAVANNA_VILLAGE,
         )
 
-        fun vanilla(type: Holder<MapDecorationType>) = DestinationType(type)
+        fun withIcon(type: Holder<MapDecorationType>) = DestinationType(type)
+        fun withIcon(typeId: ResourceKey<MapDecorationType>, registryAccess: RegistryAccess) =
+            withIcon(registryAccess.registryOrThrow(Registries.MAP_DECORATION_TYPE).getHolderOrThrow(typeId))
 
         fun auto(struct: Holder<Structure>): DestinationType {
             return auto(struct.unwrapKey().get())
         }
         fun auto(structKey: ResourceKey<Structure>): DestinationType {
             GrowssethMapDecorations.getForStructure(structKey)?.let { type ->
-                return vanilla(type)
+                return withIcon(type)
             }
             VANILLA_STRUCT_ICONS[structKey]?.let { type ->
-                return vanilla(type)
+                return withIcon(type)
             }
-            return vanilla(MapDecorationTypes.RED_X)
+            return withIcon(MapDecorationTypes.RED_X)
         }
         fun auto(structTag: TagKey<Structure>, registryAccess: RegistryAccess): DestinationType {
             GrowssethMapDecorations.getForStructure(structTag)?.let { type ->
-                return vanilla(type)
+                return withIcon(type)
             }
             val tagHolders = registryAccess.registryOrThrow(Registries.STRUCTURE).getTag(structTag).orElseThrow()
             VANILLA_STRUCT_ICONS.forEach {
                 tagHolders.forEach { holder ->
                     if (holder.unwrapKey().get().location() == it.key.location()) {
-                        return vanilla(it.value)
+                        return withIcon(it.value)
                     }
                 }
             }
-            return vanilla(MapDecorationTypes.RED_X)
+            return withIcon(MapDecorationTypes.RED_X)
         }
     }
 }

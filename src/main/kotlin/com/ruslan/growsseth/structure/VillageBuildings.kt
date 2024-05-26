@@ -14,12 +14,13 @@ import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList
 import com.mojang.datafixers.util.Pair;
 
+typealias BuildingKey = String
 
 object VillageBuildings {
-    val houseEntries = mutableMapOf<String, MutableList<VillageEntry>>()
+    val houseEntries = mutableMapOf<BuildingKey, MutableList<VillageEntry>>()
 
-    const val CATEGORY_GOLEM_STREET = "golem_street" // added to pool
-    const val CATEGORY_GOLEM_HOUSE = "golem_house" // already in pool referenced by street, used by advancements
+    const val CATEGORY_GOLEM_STREET: BuildingKey = "golem_street" // added to pool
+    const val CATEGORY_GOLEM_HOUSE:  BuildingKey = "golem_house" // already in pool referenced by street, used by advancements
 
     const val GOLEM_WEIGHT = 1      // golem street pools only have one house each
 
@@ -70,7 +71,7 @@ object VillageBuildings {
         pool.rawTemplates = ArrayList(pool.rawTemplates).also { it.add(Pair(piece, weight)) }
     }
 
-    private fun register(name: String, category: String, kind: String, pool: String, weight: Int): VillageEntry {
+    private fun register(name: String, category: BuildingKey, kind: String, pool: String, weight: Int): VillageEntry {
         val prefix = "village"
         val templateName = "$prefix/$kind/$name"
         val templateNameZombie = "$prefix/$kind/${name}_zombie"

@@ -35,6 +35,7 @@ accessible method net/minecraft/world/level/levelgen/structure/pools/SinglePoolE
 accessible field net/minecraft/world/item/trading/MerchantOffer rewardExp Z
 mutable field net/minecraft/world/item/trading/MerchantOffer rewardExp Z
 
+# async locator
 mutable field net/minecraft/world/level/levelgen/structure/placement/RandomSpreadStructurePlacement spacing I
 accessible field net/minecraft/world/level/levelgen/structure/placement/RandomSpreadStructurePlacement spacing I
 mutable field net/minecraft/world/level/levelgen/structure/placement/RandomSpreadStructurePlacement separation I
@@ -44,5 +45,9 @@ accessible field net/minecraft/world/level/levelgen/structure/placement/Structur
 accessible method net/minecraft/world/level/chunk/ChunkGenerator getNearestGeneratedStructure (Ljava/util/Set;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/level/StructureManager;Lnet/minecraft/core/BlockPos;ZLnet/minecraft/world/level/levelgen/structure/placement/ConcentricRingsStructurePlacement;)Lcom/mojang/datafixers/util/Pair;
 accessible method net/minecraft/world/level/chunk/ChunkGenerator getNearestGeneratedStructure (Ljava/util/Set;Lnet/minecraft/world/level/LevelReader;Lnet/minecraft/world/level/StructureManager;IIIZJLnet/minecraft/world/level/levelgen/structure/placement/RandomSpreadStructurePlacement;)Lcom/mojang/datafixers/util/Pair;
 accessible method net/minecraft/world/level/chunk/ChunkGenerator getStructureGeneratingAt (Ljava/util/Set;Lnet/minecraft/world/level/LevelReader;Lnet/minecraft/world/level/StructureManager;ZLnet/minecraft/world/level/levelgen/structure/placement/StructurePlacement;Lnet/minecraft/world/level/ChunkPos;)Lcom/mojang/datafixers/util/Pair;
+accessible method net/minecraft/world/level/chunk/ChunkGenerator tryAddReference (Lnet/minecraft/world/level/StructureManager;Lnet/minecraft/world/level/levelgen/structure/StructureStart;)Z
 
 accessible method net/minecraft/server/commands/LocateCommand getHolders (Lnet/minecraft/commands/arguments/ResourceOrTagKeyArgument$Result;Lnet/minecraft/core/Registry;)Ljava/util/Optional;
+
+# enable when debugging concurrentmodificationexception
+# mutable field net/minecraft/util/ClassInstanceMultiMap allInstances Ljava/util/List;
