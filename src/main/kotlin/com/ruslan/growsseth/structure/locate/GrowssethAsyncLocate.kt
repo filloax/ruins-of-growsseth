@@ -26,14 +26,9 @@ import net.minecraft.world.level.levelgen.structure.*
 import net.minecraft.world.level.levelgen.structure.placement.ConcentricRingsStructurePlacement
 import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement
 import net.minecraft.world.level.levelgen.structure.placement.StructurePlacement
-import net.minecraft.world.level.levelgen.structure.pools.ListPoolElement
-import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement
-import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement
 import java.util.concurrent.*
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.concurrent.thread
-import kotlin.jvm.optionals.getOrNull
-import kotlin.math.sign
 
 typealias LocateResult = Pair<BlockPos, Holder<Structure>>?
 typealias StructLocatePredicate = (StructureStart, ChunkPos) -> Boolean
@@ -375,6 +370,11 @@ class LocateTask(
         for (holder in structureHoldersSet) {
             val structureCheckResult = structureManager.checkStructurePresence(chunkPos, holder.value(), placement, skipKnownStructures)
             if (structureCheckResult != StructureCheckResult.START_NOT_PRESENT) {
+                // TODO: vanilla code does this, not doing this might be causing the server crash? investigate
+//                if (!skipKnownStructures && structureCheckResult == StructureCheckResult.START_PRESENT) {
+//                    return Pair.of(placement.getLocatePos(chunkPos), holder)
+//                }
+
                 val chunkAccess = level.getChunk(chunkPos.x, chunkPos.z, ChunkStatus.STRUCTURE_STARTS)
                 val structureStart = structureManager.getStartForStructure(
                     SectionPos.bottomOf(chunkAccess),
