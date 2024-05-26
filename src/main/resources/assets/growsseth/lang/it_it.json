@@ -161,6 +161,8 @@
     "growsseth.config.serverLanguage.comment": "Scegli tra 'it_it' e 'en_us'. Usata per i dialoghi degli npc, i diari del ricercatore e i libri delle strutture. Strutture già generate non saranno influenziate dall'impostazione. Altre lingue aggiungibili via datapack.",
 
     "growsseth.config.modLootInVanillaStructures.name": "Genera loot della mod nelle strutture vanilla",
+    "growsseth.config.dialogueWordsPerMinute.name": "Frequenza dialoghi npc",
+    "growsseth.config.dialogueWordsPerMinute.comment": "Velocità di lettura (in parole al minuto) dei messaggi in chat, usata per i dialoghi divisi in più messaggi degli npc. Incrementalo per far 'parlare' gli npc più velocemente, decrementalo per rallentarli. Impostala a 0 per ricevere tutti i messaggi assieme.",
     "growsseth.config.zombieGuberSpawnChance.name": "Chance di spawn di Guber zombi (%)",
     "growsseth.config.disableNpcDialogues.name": "Disabilita dialoghi NPC",
     "growsseth.config.debugNpcDialogues.name": "Segnala dialoghi NPC nei log",
