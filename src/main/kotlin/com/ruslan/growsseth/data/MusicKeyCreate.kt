@@ -8,6 +8,7 @@ import java.io.ObjectOutputStream
 
 
 fun main() {
+    val a = "$@TEST_REPLACEMENT_WORKING@"
     RuinsOfGrowsseth.LOGGER.info("Creating music key...")
     val key = DecryptUtil.generateKey("INSERT PASSWORD HERE; DO NOT LEAVE IN GIT")
     val keyFile = File("music.key")
