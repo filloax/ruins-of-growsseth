@@ -14,6 +14,7 @@ public class MixinHelpers {
     private MixinHelpers() {}
 
     public static boolean placingBlockEntityInStructure = false;
+    public static boolean savingPersistentEntities = false;
 
     @Nullable public static Structure researcherTent;
 

@@ -7,17 +7,18 @@ import com.mojang.brigadier.arguments.IntegerArgumentType
 import com.mojang.brigadier.exceptions.CommandSyntaxException
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType
 import com.ruslan.growsseth.RuinsOfGrowsseth
-import com.ruslan.growsseth.structure.locate.LocateTask
 import com.ruslan.growsseth.structure.locate.SignalProgressFun
 import com.ruslan.growsseth.structure.locate.StoppableAsyncLocator
 import net.minecraft.Util
 import net.minecraft.commands.CommandBuildContext
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands.*
+import net.minecraft.commands.arguments.ResourceLocationArgument
 import net.minecraft.commands.arguments.ResourceOrTagKeyArgument
 import net.minecraft.core.BlockPos
 import net.minecraft.core.registries.Registries
 import net.minecraft.network.chat.*
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.commands.LocateCommand
 import net.minecraft.world.level.levelgen.structure.Structure
 import java.util.*
@@ -30,7 +31,7 @@ object GrowssethLocateCommand {
 
     fun register(dispatcher: CommandDispatcher<CommandSourceStack>, registryAccess: CommandBuildContext, environment: CommandSelection) {
         dispatcher.register(literal("glocate").requires { it.hasPermission(2) }
-            .then(argument("structure", ResourceOrTagKeyArgument.resourceOrTagKey(Registries.STRUCTURE))
+            .then(literal("structure").then(argument("structure", ResourceOrTagKeyArgument.resourceOrTagKey(Registries.STRUCTURE))
                 .executes { ctx -> locateStructure(
                     ctx.source,
                     ResourceOrTagKeyArgument.getResourceOrTagKey(ctx, "structure", Registries.STRUCTURE, ERROR_STRUCTURE_INVALID),
@@ -51,7 +52,33 @@ object GrowssethLocateCommand {
                         ) }
                     )
                 )
-            )
+            ))
+            .then(literal("jigsawStructure").then(argument("structure", ResourceOrTagKeyArgument.resourceOrTagKey(Registries.STRUCTURE))
+                .then(argument("jigsawId", ResourceLocationArgument.id())
+                    .executes { ctx -> locateJigsawStructure(
+                        ctx.source,
+                        ResourceOrTagKeyArgument.getResourceOrTagKey(ctx, "structure", Registries.STRUCTURE, ERROR_STRUCTURE_INVALID),
+                        ResourceLocationArgument.getId(ctx, "jigsawId"),
+                    ) }
+                    .then(argument("timeout", IntegerArgumentType.integer(1))
+                        .executes { ctx -> locateJigsawStructure(
+                            ctx.source,
+                            ResourceOrTagKeyArgument.getResourceOrTagKey(ctx, "structure", Registries.STRUCTURE, ERROR_STRUCTURE_INVALID),
+                            ResourceLocationArgument.getId(ctx, "jigsawId"),
+                            IntegerArgumentType.getInteger(ctx, "timeout")
+                        ) }
+                        .then(argument("logProgress", BoolArgumentType.bool())
+                            .executes { ctx -> locateJigsawStructure(
+                                ctx.source,
+                                ResourceOrTagKeyArgument.getResourceOrTagKey(ctx, "structure", Registries.STRUCTURE, ERROR_STRUCTURE_INVALID),
+                                ResourceLocationArgument.getId(ctx, "jigsawId"),
+                                IntegerArgumentType.getInteger(ctx, "timeout"),
+                                BoolArgumentType.getBool(ctx, "logProgress"),
+                                BoolArgumentType.getBool(ctx, "logProgress"),
+                            ) }
+                        )
+                    ))
+            ))
         )
     }
 
@@ -65,7 +92,7 @@ object GrowssethLocateCommand {
 
         StoppableAsyncLocator.locate(
             serverLevel, holderSet, blockPos,
-            100, false,
+            100, false, null,
             timeout, getSignalProgress(source, structure, logProgress, chatProgress)
         ).thenOnServerThread {
             if (it == null) {
@@ -102,5 +129,35 @@ object GrowssethLocateCommand {
         } else {
             return null
         }
+    }
+
+    @Throws(CommandSyntaxException::class)
+    private fun locateJigsawStructure(
+        source: CommandSourceStack, structure: ResourceOrTagKeyArgument.Result<Structure>, jigsawId: ResourceLocation,
+        timeout: Int? = null, logProgress: Boolean = false, chatProgress: Boolean = false
+    ): Int {
+        val registry = source.level.registryAccess().registryOrThrow(Registries.STRUCTURE)
+        val holderSet = LocateCommand.getHolders(structure, registry).getOrNull() ?: throw ERROR_STRUCTURE_INVALID.create(structure.asPrintable())
+        val blockPos = BlockPos.containing(source.position)
+        val serverLevel = source.level
+        val stopwatch = Stopwatch.createStarted(Util.TICKER)
+
+        StoppableAsyncLocator.locateJigsaw(
+            serverLevel, holderSet, setOf(jigsawId), blockPos,
+            100, false,
+            timeout, getSignalProgress(source, structure, logProgress, chatProgress)
+        ).thenOnServerThread {
+            if (it == null) {
+                source.sendFailure(Component.translatable("commands.locate.structure.invalid", structure.asPrintable()))
+            } else {
+                LocateCommand.showLocateResult(
+                    source, structure, blockPos, it, "commands.locate.structure.success", false, stopwatch.elapsed()
+                )
+            }
+        }.onExceptionOnServerThread {
+            source.sendFailure(Component.literal("Error in async jigsaw search: %s".format(it.message)))
+        }
+
+        return 1
     }
 }

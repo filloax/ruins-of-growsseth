@@ -3,6 +3,7 @@ package com.ruslan.growsseth.commands
 import com.google.common.base.Stopwatch
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType
+import com.ruslan.growsseth.maps.MapLocateContext
 import com.ruslan.growsseth.maps.updateMapToStruct
 import net.minecraft.Util
 import net.minecraft.commands.CommandBuildContext
@@ -78,8 +79,8 @@ object GiveStructMapCommand {
         // Call the thing with either struct tag or key
         try {
             structureArg.unwrap()
-                .ifLeft { mapStack.updateMapToStruct(serverLevel, it, blockPos, 100, scale = 3) }
-                .ifRight { mapStack.updateMapToStruct(serverLevel, it, blockPos, 100, scale = 3) }
+                .ifLeft { mapStack.updateMapToStruct(serverLevel, it, MapLocateContext(blockPos, 100, scale = 3)) }
+                .ifRight { mapStack.updateMapToStruct(serverLevel, it, MapLocateContext(blockPos, 100, scale = 3)) }
         } catch (e: Exception) {
             throw ERROR_STRUCTURE_INVALID.create(structureArg)
         }

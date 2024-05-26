@@ -2,15 +2,13 @@ package com.ruslan.growsseth.entity.researcher.trades
 
 import com.filloax.fxlib.api.itemFromId
 import com.filloax.fxlib.api.json.KotlinJsonResourceReloadListener
-import com.filloax.fxlib.api.loreLines
 import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.SerializationException
+import kotlinx.serialization.json.*
 import net.minecraft.core.registries.BuiltInRegistries
-import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.util.profiling.ProfilerFiller
@@ -93,8 +91,9 @@ class TradesListener : KotlinJsonResourceReloadListener(JSON, Constants.TRADES_D
  */
 @Serializable
 data class ResearcherTradeObj(
+    @Serializable(with = EntryObjSerializer::class)
     val gives: TradeItemEntryObj,
-    val wants: List<TradeItemEntryObj>,
+    val wants: List<@Serializable(with = EntryObjSerializer::class) TradeItemEntryObj>,
     val priority: Int = 0,
     val noNotification: Boolean = false,
     val replace: Boolean = false,
@@ -106,13 +105,29 @@ data class ResearcherTradeObj(
         assert(wants.all { itemFromId(it.id) != Items.AIR }) { "Wants items invalid: $wants" }
         assert(itemFromId(gives.id) != Items.AIR) { "Gives item invalid: $gives" }
     }
+
+    companion object {
+        fun tradeItemEntryObj(id: ResourceLocation, amount: Int = 1, maps: List<TradeItemMapInfo.JsonDesc>, bookId: String? = null) = TradeItemEntryObj(
+            id.toString(), amount, maps, bookId
+        )
+        fun tradeItemEntryObj(id: ResourceLocation, amount: Int = 1, map: TradeItemMapInfo.JsonDesc? = null, bookId: String? = null) = tradeItemEntryObj(
+            id, amount, listOfNotNull(map), bookId
+        )
+        fun tradeItemEntryObj(item: Item, amount: Int = 1, maps: List<TradeItemMapInfo.JsonDesc>, bookId: String? = null) = tradeItemEntryObj(
+            BuiltInRegistries.ITEM.getKey(item), amount, maps, bookId
+        )
+        fun tradeItemEntryObj(item: Item, amount: Int = 1, map: TradeItemMapInfo.JsonDesc? = null, bookId: String? = null) = tradeItemEntryObj(
+            BuiltInRegistries.ITEM.getKey(item), amount, map, bookId
+        )
+    }
+
     fun decode(): ResearcherTradeEntry {
         return ResearcherTradeEntry(
             itemListing = ResearcherItemListing(
                 gives.toItemStack(),
                 wants.map { it.toItemCost() },
                 maxUses,
-                gives.map?.unwrap(),
+                gives.mapPool?.map { it.unwrap() } ?: ResearcherItemListing.BLANK_MAP_POOL,
                 gives.bookId ?: gives.diaryIdOld,
                 noNotification = noNotification,
                 randomWeight = randomWeight,
@@ -123,33 +138,40 @@ data class ResearcherTradeObj(
     }
 
     @Serializable
+    // Use the serializer defined below, so also allows
+    // map field for single maps
     data class TradeItemEntryObj (
         val id: String,
         val amount: Int = 1,
-        val map: TradeItemMapInfo.JsonDesc? = null,
+        val mapPool: List<TradeItemMapInfo.JsonDesc>? = null,
         val bookId: String? = null,
         @Deprecated("Use bookId")
         @SerialName("diaryId")
         val diaryIdOld: String? = null,
     ) {
         fun toItemStack(): ItemStack {
-            val itemStack = ItemStack(itemFromId(id), amount)
-            // Add description here so it only gets added once
-            map?.unwrap()?.description?.forEach { itemStack.loreLines().add(Component.translatable(it)) }
-            return itemStack
+            return ItemStack(itemFromId(id), amount) // map and book are processed in [ResearcherTradeUtils] to make sure it happens once
         }
         fun toItemCost(): ItemCost {
             return ItemCost(itemFromId(id), amount)
         }
     }
 
-    companion object {
-        fun tradeIdemEntryObj(id: ResourceLocation, amount: Int = 1, map: TradeItemMapInfo.JsonDesc? = null, bookId: String? = null) = TradeItemEntryObj(
-            id.toString(), amount, map, bookId
-        )
-        fun tradeIdemEntryObj(item: Item, amount: Int = 1, map: TradeItemMapInfo.JsonDesc? = null, bookId: String? = null) = tradeIdemEntryObj(
-            BuiltInRegistries.ITEM.getKey(item), amount, map, bookId
-        )
+    private class EntryObjSerializer : JsonTransformingSerializer<TradeItemEntryObj>(TradeItemEntryObj.serializer()) {
+        override fun transformDeserialize(element: JsonElement): JsonElement {
+            if (element is JsonObject) {
+                val singleMapElement = element.jsonObject["map"]
+                if (singleMapElement != null && "mapPool" in element) {
+                    throw SerializationException("Cannot define both map and mapPool in TradeItemEntryObj, is $element")
+                } else if (singleMapElement != null) {
+                    return JsonObject(element.toMutableMap().apply {
+                        put("mapPool", JsonArray(listOf(singleMapElement)))
+                        remove("map")
+                    })
+                }
+            }
+            return element
+        }
     }
 }
 

@@ -79,6 +79,7 @@ abstract class ModEvents {
         }
         onServerStopped { server ->
             LocationNotifListener.Callbacks.onServerStopped(server)
+            ResearcherSavedData.Callbacks.onServerStopped(server)
         }
         onServerLevelLoad { server, level ->
             DataRemoteSync.handleWorldLoaded(server, level)

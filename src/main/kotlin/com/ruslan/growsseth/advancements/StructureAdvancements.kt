@@ -28,11 +28,6 @@ import kotlin.jvm.optionals.getOrNull
 
 
 object StructureAdvancements {
-    // Structures that are also considered "found" if a village house is found
-    private val villageHouseStructures = mapOf(
-        GrowssethStructures.GOLEM_HOUSE to getHousesOfVillageCategory(VillageBuildings.CATEGORY_GOLEM_HOUSE)
-    )
-
     // To use with getStructTagOrKey (in utils)
     fun playerHasFoundStructure(player: ServerPlayer, structId: Either<TagKey<Structure>, ResourceKey<Structure>>, failHard: Boolean = false): Boolean {
         // if not failHard, if the structure isn't registered on the mod's system just always return false
@@ -52,11 +47,10 @@ object StructureAdvancements {
         }
     }
 
-
     fun playerHasFoundStructure(player: ServerPlayer, structKey: ResourceKey<Structure>): Boolean {
         val advancements = listOfNotNull(
             player.server.advancements.get(getStructureAdvancementId(structKey)),
-        ) + villageHouseStructures.mapNotNull { player.server.advancements.get(getStructureJigsawAdvancementId(it.key, structKey)) }
+        ) + GrowssethStructures.VILLAGE_HOUSE_STRUCTURES.mapNotNull { player.server.advancements.get(getStructureJigsawAdvancementId(it.key, structKey)) }
         if (advancements.isEmpty()) {
             throw IllegalArgumentException("Unknown advancement key $structKey")
         }
@@ -82,7 +76,7 @@ object StructureAdvancements {
         return GrowssethStructures.allWithPlaceholders.filter { key ->
             val advancements = player.server.advancements
             val advancement = advancements.get(getStructureAdvancementId(key))
-            val jigsawAdvancements = villageHouseStructures[key]?.mapNotNull { advancements.get(
+            val jigsawAdvancements = GrowssethStructures.VILLAGE_HOUSE_STRUCTURES[key]?.mapNotNull { advancements.get(
                 getStructureJigsawAdvancementId(it.key, key)
             ) }
             val list = listOfNotNull(advancement) + (jigsawAdvancements ?: listOf())
@@ -124,18 +118,10 @@ object StructureAdvancements {
         ) }
     }
 
-    private fun getHousesOfVillageCategory(category: String): Map<ResourceKey<Structure>, List<ResourceLocation>> {
-        val entries = VillageBuildings.houseEntries[category] ?: throw IllegalArgumentException("Village category $category not found")
-        return entries
-            .groupBy{ it.kind }
-            .mapKeys { ResourceKey.create(Registries.STRUCTURE, ResourceLocation("minecraft", "village_${it.key}")) }
-            .mapValues { e -> e.value.flatMap { listOf(it.normalTemplate, it.zombieTemplate) } }
-    }
-
     fun getAllStructureAdvancementIds(): List<ResourceLocation> {
         val structureAdvancements = GrowssethStructures.all
             .map { getStructureAdvancementId(it) }
-        val jigsawAdvancements = villageHouseStructures.flatMap { (struct, villageHouses) ->
+        val jigsawAdvancements = GrowssethStructures.VILLAGE_HOUSE_STRUCTURES.flatMap { (struct, villageHouses) ->
                 villageHouses.map { (villageStructId, _) -> getStructureJigsawAdvancementId(villageStructId, struct) }
             }
         return structureAdvancements + jigsawAdvancements
@@ -155,7 +141,7 @@ object StructureAdvancements {
             GrowssethStructures.all
                 .forEach { createStructureDetectionAdvancement(consumer, it, rootHolder) }
 
-            villageHouseStructures.forEach { (struct, villageHouses) ->
+            GrowssethStructures.VILLAGE_HOUSE_STRUCTURES.forEach { (struct, villageHouses) ->
                 villageHouses.forEach { (villageStructId, housePaths) ->
                     val name = getStructureJigsawAdvancementId(villageStructId, struct)
                     createJigsawDetectionAdvancement(consumer, villageStructId, housePaths, rootHolder, name.toString())

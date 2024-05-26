@@ -3,23 +3,37 @@ package com.ruslan.growsseth.entity.researcher.trades
 import com.filloax.fxlib.*
 import com.filloax.fxlib.api.nbt.*
 import com.filloax.fxlib.api.codec.*
+import com.filloax.fxlib.api.getStructTagOrKey
+import com.filloax.fxlib.api.json.ResourceLocationSerializer
+import com.google.common.collect.ImmutableList
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.ruslan.growsseth.RuinsOfGrowsseth
+import com.ruslan.growsseth.advancements.StructureAdvancements
 import com.ruslan.growsseth.config.QuestConfig
 import com.ruslan.growsseth.config.ResearcherConfig
 import com.ruslan.growsseth.entity.SerializableItemListing
 import com.ruslan.growsseth.entity.researcher.Researcher
+import kotlinx.collections.immutable.immutableListOf
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
+import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.*
+import net.minecraft.core.RegistryAccess
 import net.minecraft.core.component.DataComponents
+import net.minecraft.core.registries.Registries
+import net.minecraft.resources.ResourceKey
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.util.RandomSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.component.CustomData
 import net.minecraft.world.item.trading.ItemCost
 import net.minecraft.world.item.trading.MerchantOffer
+import net.minecraft.world.level.saveddata.maps.MapDecorationType
+import org.apache.logging.log4j.core.jmx.Server
 import kotlin.jvm.optionals.getOrNull
 import kotlin.math.roundToInt
 
@@ -43,6 +57,7 @@ data class ResearcherTradeEntry(
     fun looselyMatches(other: ResearcherTradeEntry) = this.itemListing.looselyMatches(other.itemListing)
 }
 
+
 /**
  * Describes a trade for the researcher.
  * @param gives Trade output
@@ -57,7 +72,7 @@ class ResearcherItemListing(
     gives: ItemStack,
     wants: List<ItemCost>,
     maxUses: Int,
-    val mapInfo: TradeItemMapInfo? = null,
+    val mapPool: List<TradeItemMapInfo> = BLANK_MAP_POOL,
     val bookId: String? = null,
     xp: Int = 0,
     priceMul: Float = 1f,
@@ -69,22 +84,23 @@ class ResearcherItemListing(
             ItemStack.CODEC.fieldOf("gives").forGetter(ResearcherItemListing::gives),
             ItemCost.CODEC.listOf().fieldOf("wants").forGetter(ResearcherItemListing::wants),
             Codec.INT.fieldOf("maxUses").forGetter(ResearcherItemListing::maxUses),
-            TradeItemMapInfo.CODEC.optionalFieldOf("mapInfo").forNullableGetter(ResearcherItemListing::mapInfo),
+            TradeItemMapInfo.CODEC.listOf().optionalFieldOf("mapPool", BLANK_MAP_POOL).forGetter(ResearcherItemListing::mapPool),
             Codec.STRING.optionalFieldOf("diaryId").forNullableGetter { null }, // Deprecated, backwards compat
             Codec.STRING.optionalFieldOf("bookId").forNullableGetter(ResearcherItemListing::bookId),
             Codec.INT.fieldOf("xp").forGetter(ResearcherItemListing::xp),
             Codec.FLOAT.fieldOf("priceMul").forGetter(ResearcherItemListing::priceMul),
             Codec.BOOL.fieldOf("noNotification").forGetter(ResearcherItemListing::noNotification),
             Codec.FLOAT.fieldOf("randomWeight").forGetter(ResearcherItemListing::randomWeight),
-        ).apply(b) { gives, wants, maxUses, mapInfoOpt, diaryIdOpt, bookIdOpt, xp, priceMul, noNotification, randomWeight ->
-            val mapInfo = mapInfoOpt.getOrNull()
+        ).apply(b) { gives, wants, maxUses, mapPool, diaryIdOpt, bookIdOpt, xp, priceMul, noNotification, randomWeight ->
             val diaryId = diaryIdOpt.getOrNull()
             val bookId = bookIdOpt.getOrNull()
-            ResearcherItemListing(gives, wants, maxUses, mapInfo, bookId ?: diaryId, xp, priceMul, noNotification, randomWeight)
+            ResearcherItemListing(gives, wants, maxUses, mapPool, bookId ?: diaryId, xp, priceMul, noNotification, randomWeight)
         } }
 
         val MLIST_CODEC: Codec<MutableList<ResearcherItemListing>> = mutableListCodec(CODEC)
         val LIST_CODEC: Codec<List<ResearcherItemListing>> = Codec.list(CODEC)
+
+        val BLANK_MAP_POOL = ImmutableList.of<TradeItemMapInfo>()
 
         const val SET_MAP_TAG = "ResearcherSetMap"
         const val MAP_INFO_TAG = "ResearcherMapInfo"
@@ -106,7 +122,8 @@ class ResearcherItemListing(
 
         offer.addToSpecialPriceDiff((offer.costA.count * (costMultiplier - 1)).roundToInt())
 
-        mapInfo?.let { map ->
+        if (mapPool.isNotEmpty()) {
+            val map = mapPool[random.nextInt(0, mapPool.size)]
             CustomData.update(DataComponents.CUSTOM_DATA, offer.result) { it.saveField(MAP_INFO_TAG, TradeItemMapInfo.CODEC) { map } }
         }
 
@@ -118,7 +135,29 @@ class ResearcherItemListing(
     }
 
     fun looselyMatches(other: ResearcherItemListing) =
-        ItemStack.matches(gives(), other.gives()) && mapInfo == other.mapInfo
+        ItemStack.matches(gives(), other.gives()) && mapPool == other.mapPool
+
+    fun isDiscoveredStructure(player: ServerPlayer): Boolean {
+        return mapPool.any { mapInfo ->
+                val structId = getStructTagOrKey(mapInfo.structure)
+                val fixedStructId = mapInfo.fixedStructureId?.let(::getStructTagOrKey)
+                StructureAdvancements.playerHasFoundStructure(player, structId)
+                && fixedStructId?.let { StructureAdvancements.playerHasFoundStructure(player, it) } == true
+            }
+    }
+
+    // In case of jigsaw piece maps (ie village houses), this may include vanilla structure ids;
+    // If things were done properly, the fixedstructureid should still lead to a mod structure
+    // which will allow recognition anyways
+    fun getAllPossibleStructures(registryAccess: RegistryAccess): List<ResourceLocation> {
+        val baseStructures = mapPool
+            .flatMap { ResearcherTradeUtils.getMatchingStructures(registryAccess, it.structure) }
+        val fixedStructures = mapPool
+            .filter { it.fixedStructureId != null }
+            .flatMap { ResearcherTradeUtils.getMatchingStructures(registryAccess, it.fixedStructureId!!) }
+
+        return baseStructures + fixedStructures
+    }
 }
 
 /**
@@ -139,6 +178,8 @@ data class TradeItemMapInfo (
     val z: Int? = null,
     val fixedStructureId: String? = null,
     val scale: Int? = null,
+    val searchForJigsawIds: List<ResourceLocation>? = null,
+    val overrideMapIcon: ResourceKey<MapDecorationType>? = null,
 ) {
     companion object {
         val CODEC: Codec<TradeItemMapInfo> = RecordCodecBuilder.create { b -> b.group(
@@ -149,6 +190,8 @@ data class TradeItemMapInfo (
             Codec.INT.optionalFieldOf("z").forNullableGetter(TradeItemMapInfo::z),
             Codec.STRING.optionalFieldOf("fixedStructureId").forNullableGetter(TradeItemMapInfo::fixedStructureId),
             Codec.INT.optionalFieldOf("scale").forNullableGetter(TradeItemMapInfo::scale),
+            ResourceLocation.CODEC.listOf().optionalFieldOf("searchForJigsawIds").forNullableGetter(TradeItemMapInfo::searchForJigsawIds),
+            ResourceKey.codec(Registries.MAP_DECORATION_TYPE).optionalFieldOf("overrideMapIcon").forNullableGetter(TradeItemMapInfo::overrideMapIcon),
         ).apply(b, TradeItemMapInfo::class.constructorWithOptionals()::newInstance) }
     }
 
@@ -160,7 +203,11 @@ data class TradeItemMapInfo (
         val x: Int? = null,
         val z: Int? = null,
         val fixedStructureId: String? = null,
+        @Serializable(with = ResourceLocationSerializer::class)
+        val overrideMapIcon: ResourceLocation? = null,
         val scale: Int = 3,
+        @Serializable(with = ResourceLocationListSerializer::class)
+        val searchForJigsawIds: List<@Serializable(with=ResourceLocationSerializer::class) ResourceLocation>? = null,
     ) {
         fun unwrap(): TradeItemMapInfo {
             return TradeItemMapInfo(
@@ -172,7 +219,18 @@ data class TradeItemMapInfo (
                 }},
                 x, z, fixedStructureId,
                 scale,
+                searchForJigsawIds,
+                overrideMapIcon = overrideMapIcon?.let { ResourceKey.create(Registries.MAP_DECORATION_TYPE, it) }
             )
+        }
+    }
+
+    class ResourceLocationListSerializer : JsonTransformingSerializer<List<ResourceLocation>>(ListSerializer(ResourceLocationSerializer())) {
+        override fun transformDeserialize(element: JsonElement): JsonElement {
+            if (element is JsonPrimitive) {
+                return JsonArray(listOf(element))
+            }
+            return element
         }
     }
 }
