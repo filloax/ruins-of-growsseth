@@ -221,6 +221,22 @@ loom {
 
 			runDir("build/datagen")
 		}
+
+		create("musicKey") {
+			client()
+			mainClass = "com.ruslan.growsseth.data.MusicKeyCreateKt"
+
+			name("Create music key")
+			runDir("run/musicencrypt")
+		}
+
+		create("musicEncrypt") {
+			client()
+			mainClass = "com.ruslan.growsseth.data.MusicEncryptKt"
+
+			name("Encrypt music")
+			runDir("run/musicencrypt")
+		}
 	}
 }
 
