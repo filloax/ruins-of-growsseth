@@ -164,7 +164,7 @@ private fun ItemStack.updateMapToStructWithHolder(
     // to make sure things added to it as a return of this run after the locatetask's
     // callback here
     val future = CompletableFuture<LocateResult>()
-    val destString = destinationHolderSet.unwrapKey().toString()
+    val destString = destinationHolderSet.toString()
     RuinsOfGrowsseth.LOGGER.info("Starting async structure '$destString' search...")
     this.setLoadingName(context.displayName)
 
