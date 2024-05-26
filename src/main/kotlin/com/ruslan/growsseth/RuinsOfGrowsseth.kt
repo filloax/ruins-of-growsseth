@@ -18,6 +18,7 @@ import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.maps.GrowssethMapDecorations
 import com.ruslan.growsseth.networking.GrowssethPackets
 import com.ruslan.growsseth.platform.PlatformAbstractions
+import com.ruslan.growsseth.resource.MusicCommon
 import com.ruslan.growsseth.structure.*
 import com.ruslan.growsseth.templates.TemplateListener
 import com.ruslan.growsseth.utils.resLoc
@@ -67,7 +68,10 @@ object RuinsOfGrowsseth : ModInitializer {
 
         CommandRegistrationCallback.EVENT.register { d, ra, e -> GrowssethCommands.register(d, ra, e) }
 
+        MusicCommon.initCheck()
+
         log(Level.INFO, "Initialized! :saidogPipo: :saidogRitto: :saidogMax:")
+
         log(Level.DEBUG, "In log debug mode!")
     }
 
