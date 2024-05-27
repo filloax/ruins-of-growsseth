@@ -28,6 +28,9 @@
 
     "item.growsseth.growsseth_trim_template": "Schema di forgiatura",
     "trim_pattern.growsseth.growsseth": "Egida di un regno perduto",
+    
+    "item.growsseth.fragment_ballata_del_respawn": "Frammento di disco",
+    "item.growsseth.fragment_ballata_del_respawn.desc": "Disco Musicale - La Ballata del Respawn",
 
     "item.growsseth.disc_sega_di_niente": "§dDisco Musicale",
     "item.growsseth.disc_sega_di_niente.desc": "Cydo & Guber - Una sega di niente",
