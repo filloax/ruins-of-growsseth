@@ -15,7 +15,7 @@ fun main() {
     log.info("Creating music key...")
     MusicCommon.initCheck()
     if (!MusicCommon.hasMusicKey) {
-        log.error("Cannot generate music key with no password set! Put password in environment as GROWSSETH:MUSIC_PW before building")
+        log.error("Cannot generate music key with no password set! Put password in environment as GROWSSETH_MUSIC_PW before building")
         exitProcess(-1)
     }
     val keyFile = File("sounds.key")
