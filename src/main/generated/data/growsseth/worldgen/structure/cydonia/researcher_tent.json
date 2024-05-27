@@ -4,6 +4,5 @@
   "force_pos_uses_y": true,
   "spawn_overrides": {},
   "step": "surface_structures",
-  "templatePath": "growsseth:cydonia/misc/researcher_tent",
-  "terrain_adaptation": "beard_thin"
+  "templatePath": "growsseth:cydonia/misc/researcher_tent"
 }
