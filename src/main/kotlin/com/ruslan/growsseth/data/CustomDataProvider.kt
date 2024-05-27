@@ -54,7 +54,10 @@ class CustomDataProvider(private val output: PackOutput) : DataProvider {
 
     private fun generateResearcherTradesRandomTrades(): List<ResearcherTradeObj> {
         val out = mutableListOf<ResearcherTradeObj>()
-        val validDiscs = GrowssethItems.all.filterValues { it is RecordItem && !GrowssethItems.DISCS_TO_VOCALS.values.contains(it) }
+        val validDiscs = GrowssethItems.all
+            .filterValues { it is RecordItem && !GrowssethItems.DISCS_TO_VOCALS.values.contains(it) }
+            // discs obtained by fragments
+            .filterValues { it != GrowssethItems.DISC_BALLATA_DEL_RESPAWN }
         out.addAll(validDiscs.map {
             ResearcherTradeObj(
                 ResearcherTradeObj.tradeItemEntryObj(it.key, 1),
@@ -116,6 +119,8 @@ class CustomDataProvider(private val output: PackOutput) : DataProvider {
         val validDiscs = GrowssethItems.all.filterValues { it is RecordItem && !GrowssethItems.DISCS_TO_VOCALS.values.contains(it) }
             // discs already in guaranteed trade
             .filterValues { it != GrowssethItems.DISC_GIORGIO_LOFI_INST && it != GrowssethItems.DISC_GIORGIO_CUBETTI }
+            // discs obtained by fragments
+            .filterValues { it != GrowssethItems.DISC_BALLATA_DEL_RESPAWN }
         discTrades.addAll(validDiscs.map {
             ResearcherTradeObj(
                 ResearcherTradeObj.tradeItemEntryObj(it.key, 1),

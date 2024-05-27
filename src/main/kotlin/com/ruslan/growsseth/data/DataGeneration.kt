@@ -1,12 +1,9 @@
 package com.ruslan.growsseth.data
 
 import com.ruslan.growsseth.GrowssethBannerPatterns
-import com.ruslan.growsseth.GrowssethLootTables
 import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.advancements.StructureAdvancements
-import com.ruslan.growsseth.entity.GrowssethEntities
-import com.ruslan.growsseth.entity.researcher.ZombieResearcher
 import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.structure.GrProcessorLists
 import com.ruslan.growsseth.structure.GrowssethStructures
@@ -24,8 +21,6 @@ import net.minecraft.core.HolderLookup
 import net.minecraft.core.RegistrySetBuilder
 import net.minecraft.core.registries.Registries
 import net.minecraft.data.PackOutput
-import net.minecraft.data.loot.LootTableProvider
-import net.minecraft.data.loot.LootTableSubProvider
 import net.minecraft.data.models.BlockModelGenerators
 import net.minecraft.data.models.ItemModelGenerators
 import net.minecraft.data.models.model.ModelLocationUtils
@@ -41,19 +36,11 @@ import net.minecraft.data.tags.StructureTagsProvider
 import net.minecraft.data.tags.WorldPresetTagsProvider
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.ItemTags
-import net.minecraft.tags.TagEntry
 import net.minecraft.tags.WorldPresetTags
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.ItemLike
 import net.minecraft.world.level.block.Blocks
-import net.minecraft.world.level.storage.loot.LootPool
-import net.minecraft.world.level.storage.loot.LootTable
-import net.minecraft.world.level.storage.loot.entries.LootItem
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue
-import java.nio.file.Paths
 import java.util.concurrent.CompletableFuture
-import java.util.function.BiConsumer
 import java.util.function.Consumer
 
 
@@ -115,6 +102,8 @@ class RecipesProvider(output: FabricDataOutput, registriesFuture: CompletableFut
         }
 
         GrowssethItems.DISCS_TO_VOCALS.forEach { vocalsDiscRecipe(exporter, it.key, it.value) }
+
+        GrowssethItems.FRAGMENTS_TO_DISCS.forEach { fragmentToDiscRecipe(exporter, it.key, it.value) }
     }
 
     private fun vocalsDiscRecipe(exporter: RecipeOutput, baseDisc: ItemLike, vocalsDisc: ItemLike) {
@@ -122,6 +111,13 @@ class RecipesProvider(output: FabricDataOutput, registriesFuture: CompletableFut
             .requires(Items.AMETHYST_SHARD)
             .requires(baseDisc)
             .unlockedBy(RecipeProvider.getHasName(baseDisc), RecipeProvider.has(baseDisc))
+            .save(exporter)
+    }
+
+    private fun fragmentToDiscRecipe (exporter: RecipeOutput, discFragment: ItemLike, disc: ItemLike) {
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, disc)
+            .requires(discFragment, 9)
+            .unlockedBy(RecipeProvider.getHasName(discFragment), RecipeProvider.has(discFragment))
             .save(exporter)
     }
 }

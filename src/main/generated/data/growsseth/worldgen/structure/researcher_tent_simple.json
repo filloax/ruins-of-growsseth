@@ -5,6 +5,5 @@
   "offsetY": 0,
   "spawn_overrides": {},
   "step": "surface_structures",
-  "templatePath": "growsseth:misc/researcher_tent_simple",
-  "terrain_adaptation": "beard_thin"
+  "templatePath": "growsseth:misc/researcher_tent_simple"
 }
