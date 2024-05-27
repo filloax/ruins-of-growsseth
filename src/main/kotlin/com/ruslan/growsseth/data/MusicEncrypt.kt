@@ -1,14 +1,24 @@
 package com.ruslan.growsseth.data
 
 import com.ruslan.growsseth.RuinsOfGrowsseth
+import com.ruslan.growsseth.resource.MusicCommon
 import com.ruslan.growsseth.utils.DecryptUtil
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 import java.io.File
-import java.io.FileOutputStream
-import java.io.ObjectOutputStream
+import kotlin.system.exitProcess
 
 
 fun main() {
-    val logger = RuinsOfGrowsseth.LOGGER
+    val log = RuinsOfGrowsseth.LOGGER
+
+    MusicCommon.initCheck()
+    if (!MusicCommon.hasMusicKey) {
+        log.error(
+            "Cannot encrypt music with no password set! Put password in environment as GROWSSETH:MUSIC_PW before building"
+        )
+        exitProcess(-1)
+    }
 
     val folder = File(".")
     val musFolder = folder.resolve("plain-music")
@@ -16,19 +26,19 @@ fun main() {
     musFolder.mkdirs()
     outFolder.mkdirs()
 
-    logger.info("Encrypting music found in ${folder.absolutePath}")
-    logger.info("Loading key...")
+    log.info("Encrypting music found in ${folder.absolutePath}")
+    log.info("Loading key...")
     val keyFile = File("sounds.key")
-    val key = DecryptUtil.readKey(keyFile)
-    logger.info("Loaded key")
+    val key = DecryptUtil.readKey(keyFile, MusicCommon.musicPw)
+    log.info("Loaded key")
 
     musFolder.list()?.forEach { fn ->
         val file = musFolder.resolve(fn)
-        logger.info("File: $file")
+        log.info("File: $file")
         val outFile = outFolder.resolve(fn.replace(".ogg", ".oggx"))
         DecryptUtil.encryptFile(key, file, outFile)
-        logger.info("Saved to ${outFile.absolutePath}")
-    } ?: run { logger.warn("No music files!") }
+        log.info("Saved to ${outFile.absolutePath}")
+    } ?: run { log.warn("No music files!") }
 
-    logger.info("Done!")
+    log.info("Done!")
 }
