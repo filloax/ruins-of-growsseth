@@ -293,6 +293,9 @@ tasks.withType<TransformTokensTask> {
 	val env = System.getenv()
 	replaceTokens(mapOf(
 //		"$@TEST_REPLACEMENT_WORKING@" to (env["GROWSSETH:TEST_REPLACEMENT_WORKING"] ?: "Yes, it works but no var in env! Music will be disabled!"),
-		"$@MUSIC_PW@" to (env["GROWSSETH:MUSIC_PW"] ?: ""),
+		"$@MUSIC_PW@" to (env["GROWSSETH:MUSIC_PW2"] ?: run {
+			project.logger.error("Music key not set up in env variable GROWSSETH:MUSIC_PW, music in builds won't work!")
+			""
+		}),
 	))
 }
