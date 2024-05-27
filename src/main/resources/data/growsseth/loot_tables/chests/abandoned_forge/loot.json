@@ -20,6 +20,21 @@
       "entries": [
         {
           "type": "minecraft:item",
+          "name": "growsseth:fragment_ballata_del_respawn",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:air",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
           "name": "growsseth:growsseth_trim_template",
           "functions": [
             {

@@ -209,7 +209,7 @@
           "id": "growsseth:disc_sega_di_niente",
           "mapPool": []
         },
-        "randomWeight": 0.083333336,
+        "randomWeight": 0.09090909,
         "wants": [
           {
             "amount": 5,
@@ -223,7 +223,7 @@
           "id": "growsseth:disc_giorgio_finding_home",
           "mapPool": []
         },
-        "randomWeight": 0.083333336,
+        "randomWeight": 0.09090909,
         "wants": [
           {
             "amount": 5,
@@ -237,7 +237,7 @@
           "id": "growsseth:disc_giorgio_8bit",
           "mapPool": []
         },
-        "randomWeight": 0.083333336,
+        "randomWeight": 0.09090909,
         "wants": [
           {
             "amount": 5,
@@ -251,7 +251,7 @@
           "id": "growsseth:disc_binobinooo",
           "mapPool": []
         },
-        "randomWeight": 0.083333336,
+        "randomWeight": 0.09090909,
         "wants": [
           {
             "amount": 5,
@@ -265,7 +265,7 @@
           "id": "growsseth:disc_padre_mammonk",
           "mapPool": []
         },
-        "randomWeight": 0.083333336,
+        "randomWeight": 0.09090909,
         "wants": [
           {
             "amount": 5,
@@ -279,7 +279,7 @@
           "id": "growsseth:disc_abbandonati",
           "mapPool": []
         },
-        "randomWeight": 0.083333336,
+        "randomWeight": 0.09090909,
         "wants": [
           {
             "amount": 5,
@@ -293,7 +293,7 @@
           "id": "growsseth:disc_missiva_nell_ombra",
           "mapPool": []
         },
-        "randomWeight": 0.083333336,
+        "randomWeight": 0.09090909,
         "wants": [
           {
             "amount": 5,
@@ -307,7 +307,7 @@
           "id": "growsseth:disc_odi_et_amo",
           "mapPool": []
         },
-        "randomWeight": 0.083333336,
+        "randomWeight": 0.09090909,
         "wants": [
           {
             "amount": 5,
@@ -321,21 +321,7 @@
           "id": "growsseth:disc_ancora_qui",
           "mapPool": []
         },
-        "randomWeight": 0.083333336,
-        "wants": [
-          {
-            "amount": 5,
-            "id": "minecraft:emerald",
-            "mapPool": []
-          }
-        ]
-      },
-      {
-        "gives": {
-          "id": "growsseth:disc_ballata_del_respawn",
-          "mapPool": []
-        },
-        "randomWeight": 0.083333336,
+        "randomWeight": 0.09090909,
         "wants": [
           {
             "amount": 5,
@@ -349,7 +335,7 @@
           "id": "growsseth:disc_caco_caco",
           "mapPool": []
         },
-        "randomWeight": 0.083333336,
+        "randomWeight": 0.09090909,
         "wants": [
           {
             "amount": 5,
@@ -363,7 +349,7 @@
           "id": "growsseth:disc_pesci_strani",
           "mapPool": []
         },
-        "randomWeight": 0.083333336,
+        "randomWeight": 0.09090909,
         "wants": [
           {
             "amount": 5,
@@ -380,7 +366,7 @@
         "id": "growsseth:disc_sega_di_niente",
         "mapPool": []
       },
-      "randomWeight": 0.071428575,
+      "randomWeight": 0.07692308,
       "wants": [
         {
           "amount": 5,
@@ -394,7 +380,7 @@
         "id": "growsseth:disc_giorgio_cubetti",
         "mapPool": []
       },
-      "randomWeight": 0.071428575,
+      "randomWeight": 0.07692308,
       "wants": [
         {
           "amount": 5,
@@ -408,7 +394,7 @@
         "id": "growsseth:disc_giorgio_lofi_inst",
         "mapPool": []
       },
-      "randomWeight": 0.071428575,
+      "randomWeight": 0.07692308,
       "wants": [
         {
           "amount": 5,
@@ -422,7 +408,7 @@
         "id": "growsseth:disc_giorgio_finding_home",
         "mapPool": []
       },
-      "randomWeight": 0.071428575,
+      "randomWeight": 0.07692308,
       "wants": [
         {
           "amount": 5,
@@ -436,7 +422,7 @@
         "id": "growsseth:disc_giorgio_8bit",
         "mapPool": []
       },
-      "randomWeight": 0.071428575,
+      "randomWeight": 0.07692308,
       "wants": [
         {
           "amount": 5,
@@ -450,7 +436,7 @@
         "id": "growsseth:disc_binobinooo",
         "mapPool": []
       },
-      "randomWeight": 0.071428575,
+      "randomWeight": 0.07692308,
       "wants": [
         {
           "amount": 5,
@@ -464,7 +450,7 @@
         "id": "growsseth:disc_padre_mammonk",
         "mapPool": []
       },
-      "randomWeight": 0.071428575,
+      "randomWeight": 0.07692308,
       "wants": [
         {
           "amount": 5,
@@ -478,7 +464,7 @@
         "id": "growsseth:disc_abbandonati",
         "mapPool": []
       },
-      "randomWeight": 0.071428575,
+      "randomWeight": 0.07692308,
       "wants": [
         {
           "amount": 5,
@@ -492,7 +478,7 @@
         "id": "growsseth:disc_missiva_nell_ombra",
         "mapPool": []
       },
-      "randomWeight": 0.071428575,
+      "randomWeight": 0.07692308,
       "wants": [
         {
           "amount": 5,
@@ -506,7 +492,7 @@
         "id": "growsseth:disc_odi_et_amo",
         "mapPool": []
       },
-      "randomWeight": 0.071428575,
+      "randomWeight": 0.07692308,
       "wants": [
         {
           "amount": 5,
@@ -520,21 +506,7 @@
         "id": "growsseth:disc_ancora_qui",
         "mapPool": []
       },
-      "randomWeight": 0.071428575,
-      "wants": [
-        {
-          "amount": 5,
-          "id": "minecraft:emerald",
-          "mapPool": []
-        }
-      ]
-    },
-    {
-      "gives": {
-        "id": "growsseth:disc_ballata_del_respawn",
-        "mapPool": []
-      },
-      "randomWeight": 0.071428575,
+      "randomWeight": 0.07692308,
       "wants": [
         {
           "amount": 5,
@@ -548,7 +520,7 @@
         "id": "growsseth:disc_caco_caco",
         "mapPool": []
       },
-      "randomWeight": 0.071428575,
+      "randomWeight": 0.07692308,
       "wants": [
         {
           "amount": 5,
@@ -562,7 +534,7 @@
         "id": "growsseth:disc_pesci_strani",
         "mapPool": []
       },
-      "randomWeight": 0.071428575,
+      "randomWeight": 0.07692308,
       "wants": [
         {
           "amount": 5,

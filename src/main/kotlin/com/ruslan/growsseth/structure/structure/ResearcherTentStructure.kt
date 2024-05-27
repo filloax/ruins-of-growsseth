@@ -60,7 +60,7 @@ class ResearcherTentStructure(
                 ctx.lookup(Registries.BIOME).getOrThrow(TagKey.create(Registries.BIOME, ResourceLocation("growsseth:has_structure/researcher_tent"))),
                 mapOf(),
                 GenerationStep.Decoration.SURFACE_STRUCTURES,
-                TerrainAdjustment.BEARD_THIN,
+                TerrainAdjustment.NONE,
             ), templatePath, offsetY)
         }
     }
