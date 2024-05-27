@@ -50,9 +50,10 @@ Contributors:
 - Farcr (Guber texture)
 
 Musical artists:
-- Il Coro di Mammonk (A Padre Mammonk, La Missiva nell'Ombra)
+- Il Coro di Mammonk (Ancora Qui, La Ballata Del Respawn, Il Tesoro Di CacoCaco, La Missiva Nell'Ombra, Odi et Amo, Oursteps, Elogio a Padre Mammonk, Pesci Strani)
 - Singalek (Binobinooo, Giorgio Cubetti, Giorgio Lo-Fi)
 - HunterProduction (Giorgio Finding Home)
+- Hawkelele (Giorgio Cub8bit)
 - Ako & R-E-M (Abbandonati)
 - Guber (Una sega di niente)
 

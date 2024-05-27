@@ -1,3 +1,4 @@
+import com.ruslan.gradle.TransformTokensTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.incremental.deleteDirectoryContents
 
@@ -6,6 +7,8 @@ plugins {
 	kotlin("plugin.serialization")
 	id("fabric-loom")
 	id("maven-publish")
+	// see buildSrc
+	id("com.ruslan.gradle.token-replacement")
 }
 
 val modid: String by project
@@ -146,7 +149,7 @@ tasks.register("zipEgobalegoFolder") {
 		destinationDir.mkdirs()
 		project.exec {
 			workingDir = sourceDir.parentFile
-			commandLine("zip", "-r", "-o", zipFile.absolutePath, "egobalego-at-home")
+			commandLine("zip", "-r", "-x", "egobalego-at-home/.venv/**", "-o", zipFile.absolutePath, "egobalego-at-home")
 		}
 	}
 }
@@ -172,8 +175,10 @@ tasks.register("makeReferenceDatapack") {
 
 	val packMeta = destinationDir.resolve("pack.mcmeta")
 
-	inputs.dir(sourceDir)
+	inputs.dir(generatedDir)
+	resourcesDirs.forEach { inputs.dir(it) }
 	outputs.file(zipFile)
+	outputs.file(packMeta)
 
 	doLast {
 		destinationDir.mkdirs()
@@ -230,6 +235,22 @@ loom {
 
 			runDir("build/datagen")
 		}
+
+		create("musicKey") {
+			client()
+			mainClass = "com.ruslan.growsseth.data.MusicKeyCreateKt"
+
+			name("Create music key")
+			runDir("run/musicencrypt")
+		}
+
+		create("musicEncrypt") {
+			client()
+			mainClass = "com.ruslan.growsseth.data.MusicEncryptKt"
+
+			name("Encrypt music")
+			runDir("run/musicencrypt")
+		}
 	}
 }
 
@@ -273,4 +294,17 @@ compileKotlin.kotlinOptions {
 val compileTestKotlin: KotlinCompile by tasks
 compileTestKotlin.kotlinOptions {
     jvmTarget = "$javaVersion"
+}
+
+// Task defined in the custom plugin in buildSrc
+
+tasks.withType<TransformTokensTask> {
+	val env = System.getenv()
+	replaceTokens(mapOf(
+//		"$@TEST_REPLACEMENT_WORKING@" to (env["GROWSSETH_TEST_REPLACEMENT_WORKING"] ?: "Yes, it works but no var in env! Music will be disabled!"),
+		"$@MUSIC_PW@" to (env["GROWSSETH_MUSIC_PW"] ?: run {
+			project.logger.error("Music key not set up in env variable GROWSSETH_MUSIC_PW, music in builds won't work!")
+			""
+		}),
+	))
 }
