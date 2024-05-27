@@ -15,7 +15,7 @@ fun main() {
     MusicCommon.initCheck()
     if (!MusicCommon.hasMusicKey) {
         log.error(
-            "Cannot encrypt music with no password set! Put password in environment as GROWSSETH:MUSIC_PW before building"
+            "Cannot encrypt music with no password set! Put password in environment as GROWSSETH_MUSIC_PW before building"
         )
         exitProcess(-1)
     }
