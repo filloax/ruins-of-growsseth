@@ -12,21 +12,14 @@ object MusicCommon {
     const val musicPw = "$@MUSIC_PW@"
 
     fun initCheck() {
-        val musicKeyString = "$@HAS_MUSIC_KEY@"
-        hasMusicKey = musicKeyString.toBoolean()
         @Suppress("SENSELESS_COMPARISON")
-        if (musicKeyString == "$" + "@HAS_MUSIC_KEY@") {
+        if (musicPw == "$" + "@MUSIC_PW@") {
             log(Level.INFO, "Token replacement not working! Something went wrong during mod build, encrypted music won't work!")
-        } else if (hasMusicKey) {
+        } else if (musicPw.isNotBlank()) {
             log(Level.INFO, "Token replacement is working!")
+            hasMusicKey = true
         } else {
             log(Level.INFO, "Token replacement is working but no env var set! If you're a dev, did you set up build env correctly! Encrypted music won't work!")
-        }
-
-        @Suppress("SENSELESS_COMPARISON")
-        if (hasMusicKey && (musicPw == "$" + "@MUSIC_PW@" || musicPw.isBlank())) {
-            RuinsOfGrowsseth.LOGGER.info("Token replacement works but music key not set! If you're a dev, did you set up build env correctly! Encrypted music won't work!")
-            hasMusicKey = false
         }
     }
 }

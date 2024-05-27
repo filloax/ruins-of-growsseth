@@ -1,6 +1,7 @@
 package com.ruslan.growsseth.client.resource
 
 import com.ruslan.growsseth.RuinsOfGrowsseth
+import com.ruslan.growsseth.resource.MusicCommon
 import com.ruslan.growsseth.utils.DecryptUtil
 import com.ruslan.growsseth.utils.resLoc
 import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener
@@ -45,7 +46,7 @@ object EncryptedMusicResources {
         override fun getFabricId() = resLoc("sounds_key_listener")
 
         override fun onResourceManagerReload(resourceManager: ResourceManager) {
-            key = DecryptUtil.readKey(resourceManager.open(resLoc(KEY_PATH)))
+            key = DecryptUtil.readKey(resourceManager.open(resLoc(KEY_PATH)), MusicCommon.musicPw)
             RuinsOfGrowsseth.LOGGER.info("Read music key!")
         }
     }

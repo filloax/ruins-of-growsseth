@@ -292,7 +292,7 @@ compileTestKotlin.kotlinOptions {
 tasks.withType<TransformTokensTask> {
 	val env = System.getenv()
 	replaceTokens(mapOf(
-		"$@TEST_REPLACEMENT_WORKING@" to (env["GROWSSETH:TEST_REPLACEMENT_WORKING"] ?: "Yes, it works but no var in env! Music will be disabled!"),
+//		"$@TEST_REPLACEMENT_WORKING@" to (env["GROWSSETH:TEST_REPLACEMENT_WORKING"] ?: "Yes, it works but no var in env! Music will be disabled!"),
 		"$@MUSIC_PW@" to (env["GROWSSETH:MUSIC_PW"] ?: ""),
 	))
 }
