@@ -25,6 +25,7 @@ object GrowssethCreativeModeTabs {
                 output.accept(GrowssethItems.GROWSSETH_BANNER_PATTERN)
                 output.accept(GrowssethItems.GROWSSETH_ARMOR_TRIM)
                 output.accept(GrowssethItems.GROWSSETH_POTTERY_SHERD)
+                output.accept(GrowssethItems.FRAGMENT_BALLATA_DEL_RESPAWN)
                 for (disc in GrowssethItems.DISCS_ORDERED) {
                     output.accept(disc)
                 }

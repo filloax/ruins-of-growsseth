@@ -33,6 +33,7 @@ object GrowssethItems {
 	val GROWSSETH_BANNER_PATTERN = make("growsseth_banner_pattern", AutoBannerItem(GrowssethBannerPatterns.GROWSSETH.tag, defaultBuilder().rarity(Rarity.RARE)))
 	val GROWSSETH_ARMOR_TRIM = make("growsseth_trim_template", SmithingTemplateItem.createArmorTrimTemplate(TrimPatterns.GROWSSETH))
 	val GROWSSETH_POTTERY_SHERD = make("growsseth_pottery_sherd", defaultItem())
+	val FRAGMENT_BALLATA_DEL_RESPAWN = make("fragment_ballata_del_respawn", defaultItem())
 
 	// Custom discs
 	val DISC_SEGA_DI_NIENTE 		= makeDisc("disc_sega_di_niente", GrowssethSounds.DISC_SEGA_DI_NIENTE, 119, listOf(
@@ -102,6 +103,10 @@ object GrowssethItems {
 	val DISCS_TO_VOCALS = mutableMapOf(
 		Items.MUSIC_DISC_PIGSTEP to DISC_OURSTEPS,
 		DISC_GIORGIO_LOFI_INST to DISC_GIORGIO_LOFI
+	)
+
+	val FRAGMENTS_TO_DISCS = mutableMapOf(
+		FRAGMENT_BALLATA_DEL_RESPAWN to DISC_BALLATA_DEL_RESPAWN
 	)
 
 	val DISCS_ORDERED = listOf(

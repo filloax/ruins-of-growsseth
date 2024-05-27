@@ -114,6 +114,10 @@ object RuinsOfGrowsseth : ModInitializer {
                     it.accept(disc)
                 }
             })
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.INGREDIENTS)
+            .register(ModifyEntries {
+                it.addAfter(Items.DISC_FRAGMENT_5, GrowssethItems.FRAGMENT_BALLATA_DEL_RESPAWN)
+            })
     }
 
     private fun registerResourceListeners() {
