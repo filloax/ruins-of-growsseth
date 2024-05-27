@@ -23,7 +23,7 @@ object GrowssethItems {
 	val RESEARCHER_HORN = make("researcher_horn", ResearcherHornItem(defaultBuilder().rarity(Rarity.EPIC).stacksTo(1).fireResistant(), GrowssethTags.RESEARCHER_HORNS), autoGenerateJson = false)
 	// 5 attack (2 less than diamond sword), 2,5 attack speed (sword speed + 0,9) (sword modifiers: 3 and -2.4):
 	val RESEARCHER_DAGGER = make("researcher_dagger",
-		ResearcherDaggerItem(Tiers.DIAMOND, Item.Properties()
+		ResearcherDaggerItem(Tiers.DIAMOND, Properties()
 			.rarity(Rarity.EPIC)
 			.attributes(SwordItem.createAttributes(Tiers.DIAMOND, 1, -1.5F)),
 		),
@@ -33,7 +33,7 @@ object GrowssethItems {
 	val GROWSSETH_BANNER_PATTERN = make("growsseth_banner_pattern", AutoBannerItem(GrowssethBannerPatterns.GROWSSETH.tag, defaultBuilder().rarity(Rarity.RARE)))
 	val GROWSSETH_ARMOR_TRIM = make("growsseth_trim_template", SmithingTemplateItem.createArmorTrimTemplate(TrimPatterns.GROWSSETH))
 	val GROWSSETH_POTTERY_SHERD = make("growsseth_pottery_sherd", defaultItem())
-	val FRAGMENT_BALLATA_DEL_RESPAWN = make("fragment_ballata_del_respawn", defaultItem())
+	val FRAGMENT_BALLATA_DEL_RESPAWN = make("fragment_ballata_del_respawn", DiscFragmentItem(Properties()))
 
 	// Custom discs
 	val DISC_SEGA_DI_NIENTE 		= makeDisc("disc_sega_di_niente", GrowssethSounds.DISC_SEGA_DI_NIENTE, 119, listOf(
