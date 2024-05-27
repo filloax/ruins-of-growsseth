@@ -59,6 +59,17 @@ Musical artists:
 
 ### Developers
 
+As this mod wouldn't have been possible without the help of the community, and most mods code being freely available only to be able to look at examples of how things are done, feel free to use this mod to look at examples of how to do the thing it does, as we do various specific and niche things in this mods' features (but do note that this is Filloax and Krozzt's first minecraft mod). In particular (also to aid google searches that might be needing this), this mod contains examples of:
+- Explorer maps that lead to villages with specific houses
+- Disabling/enabling structures and village houses via config and not only datapack
+- Language settings for structure elements, books, signs (nyi), etc.
+- Locate structure functionality with timeout
+- NPCs with dialogue
+- Detecting if a player has explored a structure
+- Connecting to external endpoints for special interactions (referring to the Gamemaster functionalities)
+- Spawning leashed entities in structures
+- Custom merchant villager-like entities
+
 I plan to release some of the mod features (like language settings for structure texts, NPCs, and such) as 
 a library sooner or after; for now the mod is not available with maven to add support, will try to do it as it
 gets out of pre-release.
