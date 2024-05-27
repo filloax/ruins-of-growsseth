@@ -30,6 +30,8 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew build -Pmod_version='1.20.6-${{ env.TEST_RELEASE_NUM }}'
+        env:
+          GROWSSETH_MUSIC_PW: ${{ secrets.MUSIC_PW }}
 
       - name: "Replace test release"
         uses: "marvinpinto/action-automatic-releases@latest"
