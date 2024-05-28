@@ -35,8 +35,8 @@
         "id": "2",
         "type": "questStep",
 
-        /* Nome dello step che si vuole attivare, sono (modificabili da opzioni) "researcher_end_quest_start",
-           "researcher_end_quest_zombie" e "researcher_end_quest_leave" (che richiede di aver curato il ricercatore): */
+        /* Nome dello step che si vuole attivare, sono "researcher_end_quest_start", "researcher_end_quest_zombie"
+           e "researcher_end_quest_leave" (che richiede di aver curato il ricercatore): */
         "name": "",
 
         "active": false
