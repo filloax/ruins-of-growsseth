@@ -147,16 +147,7 @@
     "growsseth.notif.setLanguage.title": "Ruins of Growsseth - Rilevamento Lingua",
     "growsseth.notif.setLanguage.message": "Impostata lingua dei testi della mod a %s",
     
-    
 
-    "growsseth.config.title": "Ruins of Growsseth",
-    "growsseth.config.category.misc": "Miscellanea",
-    "growsseth.config.category.client": "Client",
-    "growsseth.config.category.researcher": "Ricercatore",
-    "growsseth.config.category.web": "Interazione Web",
-    "growsseth.config.category.quest": "Quest",
-    "growsseth.config.category.structures": "Strutture",
-    "growsseth.config.category.worldPreset": "Preset Mondo",
 
     "growsseth.config.needsWorldReload.comment": "Se cambiata ingame farà effetto al ricaricamento del mondo.",
 
@@ -220,9 +211,6 @@
     "growsseth.config.remoteCommandExecution.name": "Esecuzione comandi remoti",
     "growsseth.config.remoteCommandExecution.comment": "Permette al gamemaster di eseguire qualsiasi comando del gioco a distanza.",
 
-    "growsseth.config.finalQuestStartName.name": "Nome evento per l'inizio della quest finale",
-    "growsseth.config.finalQuestZombieName.name": "Nome evento per la zombificazione del ricercatore",
-    "growsseth.config.finalQuestLeaveName.name": "Nome evento per far andare via il ricercatore",
     "growsseth.config.researcherCuredDiscount.name": "Sconto per la cura del ricercatore",
     "growsseth.config.researcherCuredDiscount.comment": "Moltiplicatore del prezzo degli scambi del ricercatore una volta curato. Influenza solo gli smeraldi.",
 
