@@ -167,18 +167,19 @@
     "growsseth.config.dialogueWordsPerMinute.name": "Frequenza dialoghi npc",
     "growsseth.config.dialogueWordsPerMinute.comment": "Velocità di lettura (in parole al minuto) dei messaggi in chat, usata per i dialoghi divisi in più messaggi degli npc. Incrementalo per far 'parlare' gli npc più velocemente, decrementalo per rallentarli. Impostala a 0 per ricevere tutti i messaggi assieme.",
     "growsseth.config.zombieGuberSpawnChance.name": "Chance di spawn di Guber zombi (%)",
-    "growsseth.config.disableNpcDialogues.name": "Disabilita dialoghi NPC",
-    "growsseth.config.debugNpcDialogues.name": "Segnala dialoghi NPC nei log",
-    "growsseth.config.researcherSpeedup.name": "Velocizza guarigione ricercatore",
 
     "growsseth.config.enableLocationTitles.name": "Abilita i titoli delle location di Growsseth",
     "growsseth.config.enableLocationTitles.comment": "Mostra i nomi dei luoghi che stai visitando quando usi il preset del mondo di Growsseth.",
     "growsseth.config.locationTitlesMode.name": "Visualizzazione titoli delle location",
     "growsseth.config.newTradeNotifications.name": "Notifiche per lo sblocco di nuovi scambi",
     "growsseth.config.newTradeNotifications.comment": "Mostra una piccola notifica quando il ricercatore sblocca nuovi scambi. Funziona solo con gli scambi web e a progresso.",
+    "growsseth.config.disableNpcDialogues.name": "Disabilita dialoghi NPC",
 
     "growsseth.config.singleResearcher.name": "Ricercatore singolo",
     "growsseth.config.singleResearcher.comment": "Condivide la memoria tra tutte le entità ricercatore (assumi narrativamente che sia lo 'stesso' ricercatore che si sposta). Si applica al primo spawn o con il comando '/greset'. Influenzerà dialoghi e scambi (ricercatori multipli avranno sempre una offerta casuale di scambi che non cambia). Nel preset del mondo di Growsseth sarà sempre impostata a true.",
+    "growsseth.config.singleResearcherProgress.name": "Progresso di scambi e quest per ricercatore singolo",
+    "growsseth.config.singleResearcherProgress.comment": "Ignorato se il ricercatore singolo è disattivato. Se abilitato, il ricercatore venderà inizialmente solo un tipo di mappa, e sbloccherà più strutture man mano che torni da lui dopo aver trovato le precedenti. In questa modalità la 'quest' del ricercatore progredirà automaticamente (vedi la sezione config della quest). Se disabilitata, ogni istanza del ricercatore avrà fino a N mappe casuali (vedi randomTradeMaxMaps) in vendita, senza progresso della quest. Sempre attiva con un ordine fissato nel preset del mondo di Growsseth.",
+
     "growsseth.config.immortalResearcher.name": "Ricercatore immortale",
     "growsseth.config.immortalResearcher.comment": "Applica Resistenza V e Rigenerazione V al ricercatore, e gli impedisce di combattere il giocatore.",
     "growsseth.config.researcherWritesDiaries.name": "Generazione diari del ricercatore",
@@ -194,8 +195,6 @@
     "growsseth.config.researcherStrikesFirst.name": "Ricercatore attacca per primo",
     "growsseth.config.researcherStrikesFirst.comment": "Il ricercatore attaccherà i mob menzionati nell'opzione precedente (se attiva) anche quando non sono ostili verso di lui. Se cambiata ingame farà effetto al ricaricamento del mondo.",
 
-    "growsseth.config.singleResearcherProgress.name": "Progresso di scambi e quest per ricercatore singolo",
-    "growsseth.config.singleResearcherProgress.comment": "Ignorato se il ricercatore singolo è disattivato. Se abilitato, il ricercatore venderà inizialmente solo un tipo di mappa, e sbloccherà più strutture man mano che torni da lui dopo aver trovato le precedenti. In questa modalità la 'quest' del ricercatore progredirà automaticamente (vedi la sezione config della quest). Se disabilitata, ogni istanza del ricercatore avrà fino a N mappe casuali (vedi randomTradeMaxMaps) in vendita, senza progresso della quest. Sempre attiva con un ordine fissato nel preset del mondo di Growsseth.",
     "growsseth.config.webTrades.name": "Scambi web",
     "growsseth.config.webTrades.comment": "Se applicare o meno gli scambi controllati dal gamemaster quando la sincronizzazione web è attiva.",
     "growsseth.config.tradesRestockTime.name": "Tempo di rifornimento scambi",
@@ -205,7 +204,7 @@
     "growsseth.config.randomTradeNumItems.name": "Quantità di oggetti casuali negli scambi",
     "growsseth.config.randomTradeNumItems.comment": "Il numero massimo di oggetti vari che vende il ricercatore. Usato per gli scambi casuali inclusi in tutte le modalità di scambio eccetto quella web (limitata dal progresso per le modalità di progresso).",
     "growsseth.config.randomTradesRefreshTime.name": "Tempo di refresh degli scambi casuali",
-    "growsseth.config.randomTradesRefreshTime.comment": "\"Se >0, il tempo (in frazione di giorni ingame) che serve al ricercatore per cambiare i suoi scambi quando l'opzione ricercatore singolo (o il corrispondente progresso degli scambi) è disattivata.",
+    "growsseth.config.randomTradesRefreshTime.comment": "Se >0, il tempo (in frazione di giorni ingame) che serve al ricercatore per cambiare i suoi scambi quando l'opzione ricercatore singolo (o il corrispondente progresso degli scambi) è disattivata.",
 
     "growsseth.config.webDataSync.name": "Abilita sincronizzazione web",
     "growsseth.config.webDataSync.comment": "ATTENZIONE: controlla la Wiki su GitHub per sapere come usarlo. Attiva modalità game-master, permettendo al giocatore a cui ti connetti di controllare elementi della mod e non. Richiede ricarica mondo.",
@@ -239,8 +238,6 @@
     "growsseth.config.noteblockShipEnabled.name": "Abilita spawn della nave del musicista (extra)",
     "growsseth.config.researcherTentSimpleEnabled.name": "Abilita spawn della tenda del ricercatore senza scantinato (variante)",
     "growsseth.config.researcherTentSimpleEnabled.comment": "Attenzione: con questa versione la quest finale potrebbe non funzionare correttamente. Inoltre è consigliabile non abilitarla insieme alla variante normale.",
-    "growsseth.config.structuresDebugMode.name": "Debug strutture",
-    "growsseth.config.structuresDebugMode.comment": "Rende le strutture molto più frequenti, per sviluppatori.",
 
     "growsseth.config.buttons.updatedPreset": "Applica preset aggiornato",
     "growsseth.config.buttons.originalPreset": "Applica preset originale",
@@ -253,5 +250,10 @@
     "growsseth.config.enchantTower.name": "Torre in frantumi",
     "growsseth.config.abandonedForge.name": "Forgia abbandonata",
     "growsseth.config.noteblockLab.name": "Casa del musicista",
-    "growsseth.config.golemHouse.name": "Casa del costruttore di golem"
+    "growsseth.config.golemHouse.name": "Casa del costruttore di golem",
+
+    "growsseth.config.debugNpcDialogues.name": "Segnala dialoghi NPC nei log",
+    "growsseth.config.structuresDebugMode.name": "Debug strutture",
+    "growsseth.config.structuresDebugMode.comment": "Rende le strutture molto più frequenti, per sviluppatori.",
+    "growsseth.config.researcherSpeedup.name": "Velocizza guarigione ricercatore"
 }
