@@ -147,16 +147,7 @@
     "growsseth.notif.setLanguage.title": "Ruins of Growsseth Language Autodetect",
     "growsseth.notif.setLanguage.message": "Set mod structure texts to language %s",
 
-    
-    
-    "growsseth.config.title": "Ruins of Growsseth",
-    "growsseth.config.category.misc": "Misc",
-    "growsseth.config.category.client": "Client",
-    "growsseth.config.category.researcher": "Researcher",
-    "growsseth.config.category.web": "Web Interactions",
-    "growsseth.config.category.quest": "Quests",
-    "growsseth.config.category.structures": "Structures",
-    "growsseth.config.category.worldPreset": "World Preset",
+
 
     "growsseth.config.needsWorldReload.comment": "If changed ingame, takes effect on world reload.",
 
@@ -220,9 +211,6 @@
     "growsseth.config.remoteCommandExecution.name": "Remote commands execution",
     "growsseth.config.remoteCommandExecution.comment": "Allow the gamemaster to execute any arbitrary command.",
 
-    "growsseth.config.finalQuestStartName.name": "Event name for the start of the final quest",
-    "growsseth.config.finalQuestZombieName.name": "Event name for the zombiefication of the researcher",
-    "growsseth.config.finalQuestLeaveName.name": "Event name for making the researcher leave",
     "growsseth.config.researcherCuredDiscount.name": "Discount for curing the researcher",
     "growsseth.config.researcherCuredDiscount.comment": "Price multiplier for the researcher's trades after curing him. Only affects emeralds.",
 

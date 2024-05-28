@@ -64,6 +64,11 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
         const val ENDING = "ending"
     }
 
+    private val finalQuestStartName = "researcher_end_quest_start"
+    private val finalQuestZombieName = "researcher_end_quest_zombie"
+    private val finalQuestLeaveName = "researcher_end_quest_leave"
+
+
     // Used to avoid repeating full tent removal with multiple tents in normal worlds
     private var alreadyRemovedTent = false
 
@@ -215,7 +220,7 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
 
     inner class StartStage : QuestStage<Researcher> {
         override val trigger = ProgressTradesTrigger(server, onlyOne = true)
-            .or(ApiEventTrigger(QuestConfig.finalQuestStartName))
+            .or(ApiEventTrigger(finalQuestStartName))
 
         override fun onActivated(entity: Researcher) {
             entity.dialogues?.resetNearbyPlayers()
@@ -224,7 +229,7 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
 
     inner class ZombieStage : QuestStage<Researcher> {
         override val trigger = ProgressTradesTrigger(server, onlyOne = false)
-            .or(ApiEventTrigger(QuestConfig.finalQuestZombieName))
+            .or(ApiEventTrigger(finalQuestZombieName))
 
         // Trigger on update too to cover multiple tent situations
         override fun onUpdate(entity: Researcher) {
@@ -354,7 +359,7 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
                 or TimeOrDayTimeTrigger(this@ResearcherQuestComponent, Constants.DAY_TICKS_DURATION * 5)
             ) and (
                 TimeOrDayTimeTrigger(this@ResearcherQuestComponent, Constants.DAY_TICKS_DURATION)
-                or ApiEventTrigger(QuestConfig.finalQuestLeaveName)
+                or ApiEventTrigger(finalQuestLeaveName)
             )
 
         // OnUpdate to also cover multiple tents
