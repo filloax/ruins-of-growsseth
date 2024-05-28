@@ -117,3 +117,27 @@
         "active": false
     }
 ]
+
+/*
+    Chiavi usate nel json (formato: Chiave (usata da)):
+
+    id (tutti)
+    type (tutti)
+    active (tutti)
+
+    structure (strutture, diari ricercatore, libri strutture)
+
+    rotation (strutture)
+
+    x (strutture, operazioni)
+    y (strutture, operazioni)
+    z (strutture, operazioni)
+
+    name (step della quest, scambi, operazioni)
+
+    content (scambi personalizzati, dialoghi, notifiche, diari ricercatore, libri strutture, comandi)
+
+    icon (notifiche)
+
+    title (notifiche, diari ricercatore, libri strutture)
+*/
