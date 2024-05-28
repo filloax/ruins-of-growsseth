@@ -167,18 +167,19 @@
     "growsseth.config.dialogueWordsPerMinute.name": "Npc talking frequency",
     "growsseth.config.dialogueWordsPerMinute.comment": "Reading speed (in words per minute) of chat messages, used for multiline npc dialogues. Increase it to make npcs 'talk' faster, decrease it to make them 'talk' slower. Set it to 0 to receive all messages together.",
     "growsseth.config.zombieGuberSpawnChance.name": "Zombie Guber spawn chance (%)",
-    "growsseth.config.disableNpcDialogues.name": "Disable NPC dialogues",
-    "growsseth.config.debugNpcDialogues.name": "Log NPC dialogues",
-    "growsseth.config.researcherSpeedup.name": "Speedup researcher healing",
 
     "growsseth.config.enableLocationTitles.name": "Enable Growsseth's location titles",
     "growsseth.config.enableLocationTitles.comment": "Shows the title of the places you are visiting when exploring the Growsseth world preset.",
     "growsseth.config.locationTitlesMode.name": "Location titles display mode",
     "growsseth.config.newTradeNotifications.name": "Notifications on new trades unlocked",
     "growsseth.config.newTradeNotifications.comment": "Shows a small toast when the researcher unlocks new trades. Works only for web and progress trades.",
+    "growsseth.config.disableNpcDialogues.name": "Disable NPC dialogues",
 
     "growsseth.config.singleResearcher.name": "Single researcher",
     "growsseth.config.singleResearcher.comment": "Shares memory between all researcher entities (narratively assume it's the 'same' Researcher moving around). Applies on first spawn or with the command '/greset'. Will affect dialogues and trades (multiple researchers will always have a random selection of trades that do not change). In Growsseth world preset this will always be true.",
+    "growsseth.config.singleResearcherProgress.name": "Trades and quest progress for single researcher",
+    "growsseth.config.singleResearcherProgress.comment": "Ignored if single researcher is false. If enabled, the researcher will initially only sell one kind of map, and unlock more structures as you return to him after finding the previous one. In this mode, the researcher's 'quest' will automatically progress (see quest config section). If disabled, each instance of the researcher will have up to N random maps (see randomTradeMaxMaps) for sale, with no quest progress. Always true with a fixed order in Growsseth world preset.",
+
     "growsseth.config.immortalResearcher.name": "Immortal researcher",
     "growsseth.config.immortalResearcher.comment": "Applies Resistance V and Regeneration V to the researcher, and prevents him from fighting the player.",
     "growsseth.config.researcherWritesDiaries.name": "Researcher writes diaries",
@@ -194,8 +195,6 @@
     "growsseth.config.researcherStrikesFirst.name": "Researcher strikes first",
     "growsseth.config.researcherStrikesFirst.comment": "The researcher will attack the mobs mentioned in the previous setting (if enabled) even when they are not attacking him. If changed ingame, takes effect on world reload.",
 
-    "growsseth.config.singleResearcherProgress.name": "Trades and quest progress for single researcher",
-    "growsseth.config.singleResearcherProgress.comment": "Ignored if single researcher is false. If enabled, the researcher will initially only sell one kind of map, and unlock more structures as you return to him after finding the previous one. In this mode, the researcher's 'quest' will automatically progress (see quest config section). If disabled, each instance of the researcher will have up to N random maps (see randomTradeMaxMaps) for sale, with no quest progress. Always true with a fixed order in Growsseth world preset.",
     "growsseth.config.webTrades.name": "Web trades",
     "growsseth.config.webTrades.comment": "Whether to apply gamemaster-controlled trades when web data sync is enabled.",
     "growsseth.config.tradesRestockTime.name": "Trades restock time",
@@ -239,8 +238,6 @@
     "growsseth.config.noteblockShipEnabled.name": "Enable spawn of the musician's ship (extra)",
     "growsseth.config.researcherTentSimpleEnabled.name": "Enable spawn of the researcher's tent with no cellar (variant)",
     "growsseth.config.researcherTentSimpleEnabled.comment": "Warning: with this version the final quest might work incorrectly. It's also recommended to enable only one variant.",
-    "growsseth.config.structuresDebugMode.name": "Structures debug",
-    "growsseth.config.structuresDebugMode.comment": "Make structures wildly more likely, for dev usage.",
 
     "growsseth.config.buttons.updatedPreset": "Apply updated preset",
     "growsseth.config.buttons.originalPreset": "Apply original preset",
@@ -253,5 +250,10 @@
     "growsseth.config.enchantTower.name": "Enchant tower",
     "growsseth.config.abandonedForge.name": "Abandoned forge",
     "growsseth.config.noteblockLab.name": "Noteblock lab",
-    "growsseth.config.golemHouse.name": "Golem house"
+    "growsseth.config.golemHouse.name": "Golem house",
+
+    "growsseth.config.debugNpcDialogues.name": "Log NPC dialogues",
+    "growsseth.config.structuresDebugMode.name": "Structures debug",
+    "growsseth.config.structuresDebugMode.comment": "Make structures wildly more likely, for dev usage.",
+    "growsseth.config.researcherSpeedup.name": "Speedup researcher healing"
 }

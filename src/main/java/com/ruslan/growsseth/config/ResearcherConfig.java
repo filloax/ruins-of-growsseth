@@ -23,7 +23,7 @@ public final class ResearcherConfig {
     @Comment(
             value = "Ignored if single researcher is false. If enabled, the researcher will initially only sell one kind of map, "
                     + "and unlock more structures as you return to him after finding the previous one.\nIn this mode, the researcher's 'quest' will automatically progress (see quest config section)."
-                    + "If disabled, each instance of the researcher will have up to N random maps (see randomTradeMaxMaps) for sale, with no quest progress."
+                    + "If disabled, each instance of the researcher will have up to N random maps (see randomTradeMaxMaps) for sale, with no quest progress. "
                     + "Always true with a fixed order in Growsseth world preset.",
             translation = T_PREF + "singleResearcherProgress.comment"
     )
