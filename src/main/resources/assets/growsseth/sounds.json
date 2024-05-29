@@ -66,8 +66,7 @@
     "sounds": [
       {
         "name": "growsseth:disc_padre_mammonk",
-        "stream": true,
-        "encrypted": true
+        "stream": true
       }
     ]
   },
@@ -84,8 +83,7 @@
     "sounds": [
       {
         "name": "growsseth:disc_missiva_nell_ombra",
-        "stream": true,
-        "encrypted": true
+        "stream": true
       }
     ]
   },
@@ -93,8 +91,7 @@
     "sounds": [
       {
         "name": "growsseth:disc_oursteps",
-        "stream": true,
-        "encrypted": true
+        "stream": true
       }
     ]
   },
@@ -102,8 +99,7 @@
     "sounds": [
       {
         "name": "growsseth:disc_odi_et_amo",
-        "stream": true,
-        "encrypted": true
+        "stream": true
       }
     ]
   },
@@ -111,8 +107,7 @@
     "sounds": [
       {
         "name": "growsseth:disc_ancora_qui",
-        "stream": true,
-        "encrypted": true
+        "stream": true
       }
     ]
   },
@@ -120,8 +115,7 @@
     "sounds": [
       {
         "name": "growsseth:disc_ballata_del_respawn",
-        "stream": true,
-        "encrypted": true
+        "stream": true
       }
     ]
   },
@@ -129,8 +123,7 @@
     "sounds": [
       {
         "name": "growsseth:disc_caco_caco",
-        "stream": true,
-        "encrypted": true
+        "stream": true
       }
     ]
   },
@@ -138,8 +131,7 @@
     "sounds": [
       {
         "name": "growsseth:disc_pesci_strani",
-        "stream": true,
-        "encrypted": true
+        "stream": true
       }
     ]
   },
