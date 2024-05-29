@@ -34,8 +34,8 @@
             "conditions": {
                 "jigsawPiecePredicate": {
                     "jigsawPieceIds": [
-                        "growsseth:village/plains/plains_golem_street",
-                        "growsseth:village/plains/plains_golem_street_zombie"
+                        "growsseth:village/plains/plains_golem_house",
+                        "growsseth:village/plains/plains_golem_house_zombie"
                     ],
                     "structure": "minecraft:village_plains"
                 }
@@ -46,8 +46,8 @@
             "conditions": {
                 "jigsawPiecePredicate": {
                     "jigsawPieceIds": [
-                        "growsseth:village/desert/desert_golem_street",
-                        "growsseth:village/desert/desert_golem_street_zombie"
+                        "growsseth:village/desert/desert_golem_house",
+                        "growsseth:village/desert/desert_golem_house_zombie"
                     ],
                     "structure": "minecraft:village_desert"
                 }
@@ -58,8 +58,8 @@
             "conditions": {
                 "jigsawPiecePredicate": {
                     "jigsawPieceIds": [
-                        "growsseth:village/savanna/savanna_golem_street",
-                        "growsseth:village/savanna/savanna_golem_street_zombie"
+                        "growsseth:village/savanna/savanna_golem_house",
+                        "growsseth:village/savanna/savanna_golem_house_zombie"
                     ],
                     "structure": "minecraft:village_savanna"
                 }
@@ -70,8 +70,8 @@
             "conditions": {
                 "jigsawPiecePredicate": {
                     "jigsawPieceIds": [
-                        "growsseth:village/snowy/snowy_golem_street",
-                        "growsseth:village/snowy/snowy_golem_street_zombie"
+                        "growsseth:village/snowy/snowy_golem_house",
+                        "growsseth:village/snowy/snowy_golem_house_zombie"
                     ],
                     "structure": "minecraft:village_snowy"
                 }
@@ -82,8 +82,8 @@
             "conditions": {
                 "jigsawPiecePredicate": {
                     "jigsawPieceIds": [
-                        "growsseth:village/taiga/taiga_golem_street",
-                        "growsseth:village/taiga/taiga_golem_street_zombie"
+                        "growsseth:village/taiga/taiga_golem_house",
+                        "growsseth:village/taiga/taiga_golem_house_zombie"
                     ],
                     "structure": "minecraft:village_taiga"
                 }
