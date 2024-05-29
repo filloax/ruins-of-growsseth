@@ -15,7 +15,8 @@ per l'NPC del ricercatore.
 In ultimo, la mod include una *console da Gamemaster*, per "masterare" la run di un giocatore in modo simile
 alla run di Cydonia, con spawn di strutture, modifiche agli scambi, invio notifiche e altro.
 
-Vedi le pagine [Modrinth](#) e [Curseforge](#), e la [**WIKI**](#) per maggiori informazioni.
+Vedi le pagine [Modrinth](https://modrinth.com/mod/ruins-of-growsseth) e [Curseforge](https://curseforge.com/minecraft/mc-mods/ruins-of-growsseth), e la [**WIKI**](https://github.com/filloax/ruins-of-growsseth/wiki) per maggiori informazioni.
+Per segnalare bug c'è la sezione [Issues](https://github.com/filloax/ruins-of-growsseth/issues), per idee e suggerimenti la sezione [Discussions](https://github.com/filloax/ruins-of-growsseth/discussions).
 
 ![](../src/main/resources/assets/growsseth/textures/gui/advancements/backgrounds/advancements_background.png)
 
@@ -45,7 +46,7 @@ Collaboratori:
 - Farcr (Texture di Guber)
 
 Artisti musicali:
-- Il Coro di Mammonk (Ancora Qui, La Ballata Del Respawn, Il Tesoro Di CacoCaco, La Missiva Nell'Ombra, Odi et Amo, Oursteps, Elogio a Padre Mammonk, Pesci Strani)
+- Il Coro di Mammonk (**in arrivo!**) (Ancora Qui, La Ballata Del Respawn, Il Tesoro Di CacoCaco, La Missiva Nell'Ombra, Odi et Amo, Oursteps, Elogio a Padre Mammonk, Pesci Strani)
 - Singalek (Binobinooo, Giorgio Cubetti, Giorgio Lo-Fi)
 - HunterProduction (Giorgio Finding Home)
 - Hawkelele (Giorgio Cub8bit)
