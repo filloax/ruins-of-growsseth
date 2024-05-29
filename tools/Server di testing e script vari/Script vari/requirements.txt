@@ -1,3 +1,0 @@
-nbt
-nbt-structure-utils 
-ipykernel #consigliato usare venv

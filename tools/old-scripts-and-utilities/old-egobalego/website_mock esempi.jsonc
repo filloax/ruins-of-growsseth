@@ -1,0 +1,94 @@
+[
+    /* I dati vengono aggiornati ingame al caricamento del mondo e poi ogni 30 minuti, alternativamente con /reloadremote */
+
+    {
+        /* Template di default: */
+        "id": 0,
+        "structureID": "",
+        "name": "",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "active": false
+    },
+
+    {
+        /* Template delle strutture: */
+        "id": 1,    // Identificatore per l'elemento del json, evitare di ripeterlo più volte nello stesso file
+        "structureID": "growsseth:id_struttura", /* Quale struttura spawnare, gli id delle strutture presenti nella mod sono researcher_tent,
+        enchant_tower, cave_camp, golem_variants/nome bioma_golem_house, noteblock_lab, beekeeper_house e conduit_ruins */
+        "name": "id struttura o altro", // Nome che identifica l'evento nella mod, cambiandolo si può ri-spawnare la struttura ma non dà la mappa se diverso dall'id
+        // Coordinate di spawn (queste sono quelle della tenda, la y conta solo per la caverna):
+        "x": 1374,
+        "y": 0,
+        "z": 162,
+        "active": false, // Mettere a true per attivare l'evento, altrimenti non apparirà la modifica in gioco
+        "rotation": "none" /* Rotazione della struttura, "none" la fissa come quando la si spawna con structure block,
+        "clockwise_90", "counterclockwise_90" e "180" la ruotano, cancellare la riga lascia decidere la rotazione al gioco */
+    },
+
+    {
+        /* Template della quest finale: */
+        "id": 2,
+        "structureID": "event:nome_della_quest", /* I nomi delle quest sono researcher_end_quest_start, researcher_end_quest_zombie
+        e researcher_end_quest_leave, per l'ultimo bisogna aver però curato il ricercatore */
+        "name": "quello che si vuole",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "active": false
+    },
+
+    /* Template per i trade: */
+    {
+        "id": 3,
+        "structureID": "event:nome trade nel json della mod",   // I trade sbloccabili tramite evento sono sell_sherd, sell_trim_template e sell_all_extras
+        "name": "quello che si vuole",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "active": false
+    },
+    {
+        "id": 4,
+        "structureID": "event:sell/namespace/item_id/prezzo in smeraldi(/h)", // Per vendere qualsiasi cosa, mettere /h alla fine per non mandare notifica
+        "name": "quello che si vuole",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "active": false
+    },
+
+    /* Template per le comunicazioni: */
+    {
+        "id": 5,
+        "structureID": "event:toast/Titolo della notifica",
+        "name": "Contenuto della notifica",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "active": false
+    },
+    {
+        "id": 6,
+        "structureID": "event:rdialogue/Id del dialogo",    // Necessario cambiarlo per aggiungere dialoghi
+        "name": "Contenuto del dialogo",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "active": false
+    },
+
+    /* Template per le emergenze: */
+    {
+        "id": 7,
+        "structureID": "event:Nome dell'evento",    /* Gli eventi sono tpResearcher (teletrasporta il ricercatore alle coordinate indicate),
+        rmResearcher (lo rimuove, non servono le coordinate), rmTent (rimuove la tenda alle coordinate indicate e l'asino se non in prestito)
+        e spawnResearcher (spawna un ricercatore alle coordinate indicate) */
+        "name": "quello che si vuole", // Necessario cambiarlo per rieseguire il comando
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "active": false
+    }
+]

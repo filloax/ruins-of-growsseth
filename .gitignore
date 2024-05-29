@@ -25,13 +25,12 @@ run/
 
 #misc
 temp/**
-tools/Live-Update-Server/update.ps1
+tools/live-update-server/update.ps1
 **/.venv/**
 logs/*
 
 #egobalego
 */egobalego-at-home/last_id.txt
 */egobalego-at-home/server_data.json
-*/Server di testing e script vari/server_data.json
 
-music.key
+**/music.key
