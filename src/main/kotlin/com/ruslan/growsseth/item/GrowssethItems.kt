@@ -5,8 +5,10 @@ import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.entity.GrowssethEntities
 import com.ruslan.growsseth.sound.GrowssethSounds
 import com.ruslan.growsseth.utils.resLoc
+import net.minecraft.ChatFormatting
 import net.minecraft.core.Holder
 import net.minecraft.core.registries.Registries
+import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.sounds.SoundEvent
@@ -45,59 +47,69 @@ object GrowssethItems {
 		"Vocals, Mix & Master - Singalek",
 		"Lyrics - Singalek, Cydonia",
 		"Cover of 'If I Could, I Would' - MINDME"
-	))
+	),
+		ytChannel = "SingalekSMW"
+	)
 	val DISC_GIORGIO_LOFI 			= makeDisc("disc_giorgio_lofi", GrowssethSounds.DISC_GIORGIO_LOFI, 295, listOf(
 		"Instrumental, Vocals, Mix, Master - Singalek",
 		"Lyrics - Singalek, Cydonia"
-	))
-	val DISC_GIORGIO_LOFI_INST 		= makeDisc("disc_giorgio_lofi_inst", GrowssethSounds.DISC_GIORGIO_LOFI_INST, 295)
-	val DISC_GIORGIO_FINDING_HOME 	= makeDisc("disc_giorgio_finding_home", GrowssethSounds.DISC_GIORGIO_FINDING_HOME, 186)
+	),
+		ytChannel = "SingalekSMW"
+	)
+	val DISC_GIORGIO_LOFI_INST 		= makeDisc("disc_giorgio_lofi_inst", GrowssethSounds.DISC_GIORGIO_LOFI_INST, 295,
+		ytChannel = "SingalekSMW"
+	)
+	val DISC_GIORGIO_FINDING_HOME 	= makeDisc("disc_giorgio_finding_home", GrowssethSounds.DISC_GIORGIO_FINDING_HOME, 186,
+		ytChannel = "HunterProduction"
+	)
 	val DISC_GIORGIO_8BIT		 	= makeDisc("disc_giorgio_8bit", GrowssethSounds.DISC_GIORGIO_8BIT, 152, listOf(
 		"Music - Hawkelele",
 		"Based on 'Giorgio Cubetti' by Singalek",
 		"Cover of 'If I Could, I Would' - MINDME"
-	))
-	val DISC_BINOBINOOO 			= makeDisc("disc_binobinooo", GrowssethSounds.DISC_BINOBINOOO, 98)
+	), ytChannel = "IlCoroDiMammonk")
+	val DISC_BINOBINOOO 			= makeDisc("disc_binobinooo", GrowssethSounds.DISC_BINOBINOOO, 98,
+		ytChannel = "SingalekSMW"
+	)
 	val DISC_PADRE_MAMMONK 			= makeDisc("disc_padre_mammonk", GrowssethSounds.DISC_PADRE_MAMMONK, 74, listOf(
 		"Vocals - Emoon LeStrange, HunterProduction, KalarFenrir, Singalek",
 		"Chorus composed by Emoon LeStrange",
 		"Cover of 'All is Found' - Evan Rachel Wood"
-	))
+	), ytChannel = "IlCoroDiMammonk")
 	val DISC_ABBANDONATI 			= makeDisc("disc_abbandonati", GrowssethSounds.DISC_ABBANDONATI, 145, listOf(
 		"Lyrics - Cydonia",
 		"Vocals - Ako",
 		"Music, Mix & Master - R-E-M"
-	))
+	), ytChannel = "rem.producer")
 	val DISC_MISSIVA_NELL_OMBRA 	= makeDisc("disc_missiva_nell_ombra", GrowssethSounds.DISC_MISSIVA_NELL_OMBRA, 329, listOf(
 		"Vocals - Singalek",
 		"Music - Hawkelele, Monnui, AndreWharn, HunterProduction, 't Hooft",
 		"Cover of 'Sleepsong' - Secret Garden"
-	))
+	), ytChannel = "IlCoroDiMammonk")
 	val DISC_OURSTEPS 				= makeDisc("disc_oursteps", GrowssethSounds.DISC_OURSTEPS, 154, listOf(
 		"Vocals - Singalek, Blessing Of No One",
 		"Music - Lena Raine, IridioSound, Avage",
 		"Cover of 'Pigstep' - Lena Raine"
-	))
+	), ytChannel = "IlCoroDiMammonk")
 	val DISC_ODI_ET_AMO 			= makeDisc("disc_odi_et_amo", GrowssethSounds.DISC_ODI_ET_AMO, 191, listOf(
 		"Vocals - Jova117, Emoon LeStrange",
 		"Music - Hawkelele, Jova117"
-	))
+	), ytChannel = "IlCoroDiMammonk")
 	val DISC_ANCORA_QUI 			= makeDisc("disc_ancora_qui", GrowssethSounds.DISC_ANCORA_QUI, 145, listOf(
 		"Vocals - Avage, Emoon LeStrange, Singalek",
 		"Music - Avage"
-	))
+	), ytChannel = "IlCoroDiMammonk")
 	val DISC_BALLATA_DEL_RESPAWN 	= makeDisc("disc_ballata_del_respawn", GrowssethSounds.DISC_BALLATA_DEL_RESPAWN, 266, listOf(
 		"Vocals - Monnui",
 		"Music - Monnui, Singalek, IridioSound"
-	))
+	), ytChannel = "IlCoroDiMammonk")
 	val DISC_CACO_CACO 				= makeDisc("disc_caco_caco", GrowssethSounds.DISC_CACO_CACO, 145, listOf(
 		"Vocals - Blessing Of No One, HunterProduction, KalarFenrir, Singalek",
 		"Music - HunterProduction"
-	))
+	), ytChannel = "IlCoroDiMammonk")
 	val DISC_PESCI_STRANI 			= makeDisc("disc_pesci_strani", GrowssethSounds.DISC_PESCI_STRANI, 157, listOf(
 		"Vocals - Emoon LeStrange, Singalek",
 		"Music - Hawkelele, Emoon LeStrange, Monnui, Singalek"
-	))
+	), ytChannel = "IlCoroDiMammonk")
 
 
 	val DISCS_TO_VOCALS = mutableMapOf(
@@ -142,8 +154,16 @@ object GrowssethItems {
 		return item
 	}
 
-	private fun makeDisc(name: String, sound: SoundEvent, lengthInSeconds: Int, authors: List<String> = listOf(), properties: Properties = Properties()) =
-		make(name, RecordAuthorsItem(6, sound, properties.stacksTo(1), lengthInSeconds, authors))
+	private fun makeDisc(
+		name: String, sound: SoundEvent, lengthInSeconds: Int,
+		authors: List<String> = listOf(),
+		ytChannel: String? = null,
+		properties: Properties = Properties(),
+	) =
+		make(name, RecordCreditsItem(
+			6, sound, properties.stacksTo(1), lengthInSeconds,
+			authors, listOfNotNull(ytChannel?.let { Component.literal("YT: @$it").withStyle(ChatFormatting.RED) })
+		))
 
 	fun registerItems(registrator: (ResourceLocation, Item) -> Unit) {
 		all.forEach{

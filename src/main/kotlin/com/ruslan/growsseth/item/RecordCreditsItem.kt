@@ -8,9 +8,10 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.RecordItem
 import net.minecraft.world.item.TooltipFlag
 
-class RecordAuthorsItem(
+class RecordCreditsItem(
     analogOutput: Int, sound: SoundEvent, properties: Properties, lengthInSeconds: Int,
     val authors: List<String>,
+    val extra: List<Component> = listOf(),
 ) : RecordItem(analogOutput, sound, properties, lengthInSeconds) {
     override fun appendHoverText(
         stack: ItemStack,
@@ -20,12 +21,13 @@ class RecordAuthorsItem(
     ) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag) // <-- RecordItem appends name
 
-        if (authors.isNotEmpty())
+        if (authors.isNotEmpty() || extra.isNotEmpty())
             if (FxUtils.hasShiftDown()) {
                 tooltipComponents.addAll(authors
                     .flatMap { splitStringToMaxLength(it, 30).mapIndexed { index, s -> if (index >= 1) "  $s" else s } }
                     .map { Component.literal(it).withStyle(ChatFormatting.BLUE) }
                 )
+                tooltipComponents.addAll(extra)
             } else {
                 tooltipComponents.add(Component.translatable("item.growsseth.authors.pressShift").withStyle(ChatFormatting.BLUE))
             }

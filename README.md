@@ -2,7 +2,7 @@
 
 <img src="./src/main/resources/assets/growsseth/icon.png" alt="alt text" width="250" height="250">
 
-# [**DESCRIZIONE IN ITALIANO QUA!**](docs/README_ITA.md)
+## [**README IN ITALIANO QUA!**](docs/README_ITA.md)
 
 A highly configurable structures mod, with a smart NPC to sell maps and guide you in discovery, and structures 
 that hint to vanilla features taking inspiration from Broken Nether Portals. 
@@ -18,7 +18,8 @@ quest for the Researcher NPC.
 Finally, the mod includes a web-tool to act as a Gamemaster to another player's run, similarly to Cydonia's
 original run, being able to spawn structures, tweak trades, and send notifications.
 
-See the [Modrinth](https://modrinth.com/mod/ruins-of-growsseth) or [Curseforge](https://curseforge.com/minecraft/mc-mods/ruins-of-growsseth) page, and the [**WIKI**](https://github.com/filloax/ruins-of-growsseth/wiki) (currently Italian only until full release) for more information.
+See the [Modrinth](https://modrinth.com/mod/ruins-of-growsseth) or [Curseforge](https://curseforge.com/minecraft/mc-mods/ruins-of-growsseth) page, and the [**WIKI**](https://github.com/filloax/ruins-of-growsseth/wiki) for more information.
+For bug reports check the [Issues](https://github.com/filloax/ruins-of-growsseth/issues), for ideas and suggestions check the [Discussions](https://github.com/filloax/ruins-of-growsseth/discussions).
 
 ![](./src/main/resources/assets/growsseth/textures/gui/advancements/backgrounds/advancements_background.png)
 
@@ -50,7 +51,7 @@ Contributors:
 - Farcr (Guber texture)
 
 Musical artists:
-- Il Coro di Mammonk (Ancora Qui, La Ballata Del Respawn, Il Tesoro Di CacoCaco, La Missiva Nell'Ombra, Odi et Amo, Oursteps, Elogio a Padre Mammonk, Pesci Strani)
+- Il Coro di Mammonk (**coming soon!**) (Ancora Qui, La Ballata Del Respawn, Il Tesoro Di CacoCaco, La Missiva Nell'Ombra, Odi et Amo, Oursteps, Elogio a Padre Mammonk, Pesci Strani)
 - Singalek (Binobinooo, Giorgio Cubetti, Giorgio Lo-Fi)
 - HunterProduction (Giorgio Finding Home)
 - Hawkelele (Giorgio Cub8bit)

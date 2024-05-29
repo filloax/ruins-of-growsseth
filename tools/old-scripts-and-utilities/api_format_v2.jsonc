@@ -35,8 +35,8 @@
         "id": "2",
         "type": "questStep",
 
-        /* Nome dello step che si vuole attivare, sono (modificabili da opzioni) "researcher_end_quest_start",
-           "researcher_end_quest_zombie" e "researcher_end_quest_leave" (che richiede di aver curato il ricercatore): */
+        /* Nome dello step che si vuole attivare, sono "researcher_end_quest_start", "researcher_end_quest_zombie"
+           e "researcher_end_quest_leave" (che richiede di aver curato il ricercatore): */
         "name": "",
 
         "active": false
@@ -117,3 +117,27 @@
         "active": false
     }
 ]
+
+/*
+    Chiavi usate nel json (formato: Chiave (usata da)):
+
+    id (tutti)
+    type (tutti)
+    active (tutti)
+
+    structure (strutture, diari ricercatore, libri strutture)
+
+    rotation (strutture)
+
+    x (strutture, operazioni)
+    y (strutture, operazioni)
+    z (strutture, operazioni)
+
+    name (step della quest, scambi, operazioni)
+
+    content (scambi personalizzati, dialoghi, notifiche, diari ricercatore, libri strutture, comandi)
+
+    icon (notifiche)
+
+    title (notifiche, diari ricercatore, libri strutture)
+*/
