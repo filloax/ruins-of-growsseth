@@ -7,15 +7,16 @@ assignees: ''
 
 ---
 
+Guidelines
+1. Only bug reports are allowed here, suggestions should be brought to the discussions section.
+2. Issues must be written in english to allow everyone to partecipate. Italian is allowed, but you should also include a translation in english of what you wrote!
+3. You don't have to 100% follow this template, but it would make our work easier if you did! You can safely delete this section after you are done with it.
+
 **Describe the bug**
 A clear and concise description of what the bug is.
 
 **To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+Steps to reproduce the behavior.
 
 **Expected behavior**
 A clear and concise description of what you expected to happen.
