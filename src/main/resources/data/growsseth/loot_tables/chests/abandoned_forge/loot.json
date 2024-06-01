@@ -35,16 +35,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "growsseth:growsseth_trim_template",
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "min": 1,
-                "max": 2
-              }
-            }
-          ]
+          "name": "growsseth:growsseth_trim_template"
         }
       ]
     },
