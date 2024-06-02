@@ -15,6 +15,22 @@
         "frame": "challenge"
     },
     "criteria": {
+        "researcher_tent": {
+            "conditions": {
+                "player": [
+                    {
+                        "condition": "minecraft:entity_properties",
+                        "entity": "this",
+                        "predicate": {
+                            "location": {
+                                "structures": "#growsseth:researcher_tent"
+                            }
+                        }
+                    }
+                ]
+            },
+            "trigger": "minecraft:location"
+        },
         "abandoned_forge": {
             "conditions": {
                 "player": [
