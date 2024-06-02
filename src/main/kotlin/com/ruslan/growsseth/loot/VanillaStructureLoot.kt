@@ -3,7 +3,9 @@ package com.ruslan.growsseth.loot
 import com.ruslan.growsseth.config.MiscConfig
 import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.item.GrowssethItems.DISC_ABBANDONATI
+import com.ruslan.growsseth.item.GrowssethItems.DISC_BALLATA_DEL_RESPAWN
 import com.ruslan.growsseth.item.GrowssethItems.DISC_MISSIVA_NELL_OMBRA
+import com.ruslan.growsseth.item.GrowssethItems.FRAGMENT_BALLATA_DEL_RESPAWN
 import com.ruslan.growsseth.item.GrowssethItems.GROWSSETH_ARMOR_TRIM
 import com.ruslan.growsseth.item.GrowssethItems.GROWSSETH_BANNER_PATTERN
 import com.ruslan.growsseth.item.GrowssethItems.GROWSSETH_POTTERY_SHERD
@@ -25,6 +27,7 @@ object VanillaStructureLoot {
     private val STRONGHOLD_LOOT = BuiltInLootTables.STRONGHOLD_CORRIDOR
     private val DUNGEON_LOOT = BuiltInLootTables.SIMPLE_DUNGEON
     private val MANSION_LOOT = BuiltInLootTables.WOODLAND_MANSION
+    private val END_CITIES_LOOT = BuiltInLootTables.END_CITY_TREASURE
 
     private val SKULK_DISCS = setOf(
         DISC_ABBANDONATI,
@@ -34,28 +37,41 @@ object VanillaStructureLoot {
     private fun getDiscs() = GrowssethItems.all.values
         .filterIsInstance<RecordItem>()
         .minus(SKULK_DISCS)
+        .minus(DISC_BALLATA_DEL_RESPAWN)    // only fragments can be found
 
     fun onModifyLootTables(id: ResourceKey<LootTable>, tableBuilder: LootTable.Builder, source: LootTableSource) {
         if (MiscConfig.modLootInVanillaStructures) {
             val poolBuilder = LootPool.lootPool()
+
             if (STRONGHOLD_LOOT == id) {
                 getDiscs().forEach { poolBuilder.add(LootItem.lootTableItem(it)) }
                 poolBuilder
                     .add(LootItem.lootTableItem(RESEARCHER_DAGGER))
                     .add(LootItem.lootTableItem(RESEARCHER_HORN))
-            } else if (RUINED_PORTAL_LOOT == id) {
+            }
+            else if (RUINED_PORTAL_LOOT == id) {
                 poolBuilder
                     .add(LootItem.lootTableItem(GROWSSETH_BANNER_PATTERN))
-            } else if (ANCIENT_CITY_LOOT == id) {
+            }
+            else if (ANCIENT_CITY_LOOT == id) {
                 poolBuilder
                     .add(LootItem.lootTableItem(GROWSSETH_ARMOR_TRIM))
                 SKULK_DISCS.forEach { poolBuilder.add(LootItem.lootTableItem(it)) }
-            } else if (DUNGEON_LOOT == id || MANSION_LOOT == id) {
-                getDiscs().forEach { poolBuilder.add(LootItem.lootTableItem(it)) }
-            } else if (OCEAN_RUIN_COLD_LOOT == id || OCEAN_RUIN_WARM_LOOT == id) {
+            }
+            else if (DUNGEON_LOOT == id || MANSION_LOOT == id) {
+                getDiscs().forEach {
+                    poolBuilder.add(LootItem.lootTableItem(it))
+                }
+            }
+            else if (OCEAN_RUIN_COLD_LOOT == id || OCEAN_RUIN_WARM_LOOT == id) {
                 poolBuilder
                     .add(LootItem.lootTableItem(GROWSSETH_POTTERY_SHERD))
             }
+            else if (END_CITIES_LOOT == id) {
+                poolBuilder
+                    .add(LootItem.lootTableItem(FRAGMENT_BALLATA_DEL_RESPAWN))
+            }
+
             tableBuilder.pool(poolBuilder.build())
         }
     }
