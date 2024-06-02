@@ -227,9 +227,6 @@
     "growsseth.config.researcherTentSimpleEnabled.name": "Abilita spawn della tenda del ricercatore senza scantinato (variante)",
     "growsseth.config.researcherTentSimpleEnabled.comment": "Attenzione: con questa versione la quest finale potrebbe non funzionare correttamente. Inoltre è consigliabile non abilitarla insieme alla variante normale.",
 
-    "growsseth.config.buttons.updatedPreset": "Applica preset aggiornato",
-    "growsseth.config.buttons.originalPreset": "Applica preset originale",
-
     "growsseth.config.researcherTent.name": "Tenda del ricercatore",
     "growsseth.config.caveCamp.name": "Accampamento nella caverna",
     "growsseth.config.caveCampMarker.name": "Stendardo segnaletico dell'accampamento",
