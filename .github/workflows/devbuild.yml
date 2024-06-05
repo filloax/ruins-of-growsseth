@@ -1,4 +1,4 @@
-name: Publish Test Release (1.20.6)
+name: Publish Nightly Build (1.20.6)
  
 on:
   push:
@@ -16,6 +16,10 @@ jobs:
       - name: Print release num
         run: "echo Release num: ${{ env.TEST_RELEASE_NUM }}"
 
+      - name: Get current date
+        id: date
+        run: echo "date=$(date +'%Y-%m-%d')" >> "$GITHUB_OUTPUT"
+
       - uses: actions/checkout@v1  
 
       - name: Setup Java
@@ -29,7 +33,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build with Gradle
-        run: ./gradlew build -Pmod_version='1.20.6-${{ env.TEST_RELEASE_NUM }}'
+        run: ./gradlew build -Pmod_version='1.20.6-nightly-${{ steps.date.outputs.date }}-${{ env.TEST_RELEASE_NUM }}'
         env:
           GROWSSETH_MUSIC_PW: ${{ secrets.MUSIC_PW }}
 
@@ -37,9 +41,9 @@ jobs:
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.TOKEN_GITHUB }}"
-          automatic_release_tag: "test-release-1.20.6"
+          automatic_release_tag: "nightly-release-1.20.6"
           prerelease: true
-          title: "Test Release [${{ env.TEST_RELEASE_NUM }}] - 1.20.6"
+          title: "Nightly build [${{ steps.date.outputs.date }}-${{ env.TEST_RELEASE_NUM }}] - 1.20.6"
           files: |
             build/libs/*.jar
             build/egobalego-at-home/*.zip
@@ -47,7 +51,7 @@ jobs:
 
       - name: Increment release count
         id: get_release_count
-        run: echo "NEW_RELEASE_COUNT=$((${{ env.TEST_RELEASE_NUM }} + 1))" >> $GITHUB_ENV
+        run: echo "NEW_RELEASE_COUNT=$((${{ env.TEST_RELEASE_NUM }} + 1))" >> $GITHUB_OUTPUT
 
       - name: "Call API"
         uses: indiesdev/curl@v1.1
@@ -58,7 +62,7 @@ jobs:
               "Accept": "application/vnd.github+json",
               "X-GitHub-Api-Version": "2022-11-28"
             }'
-          body: '{ "name": "TEST_RELEASE_NUM",  "value": "${{ env.NEW_RELEASE_COUNT }}" }'
+          body: '{ "name": "TEST_RELEASE_NUM",  "value": "${{ steps.get_release_count.outputs.NEW_RELEASE_COUNT }}" }'
           timeout: 3000
           bearer-token: ${{ secrets.TOKEN_GITHUB }}
           retries: 3
