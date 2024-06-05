@@ -40,12 +40,12 @@ public class WorldPresetConfig {
         GrowssethStructures.CydoniaVersion.CONDUIT_CHURCH,  new PosPreset(-1553, 39, 2527, Rotation.CLOCKWISE_180)
     );
 
-    @ConfigButton(text = "Apply updated preset", target = "researcherTent", translation = T_PREF + "buttons.updatedPreset", position = Position.BEFORE)
+    @ConfigButton(text = "Apply updated preset", target = "researcherTent", position = Position.BEFORE)
     public static void useUpdatedPreset() {
         usePreset(PRESET_UPDATED);
     }
 
-    @ConfigButton(text = "Apply original preset", target = "researcherTent", translation = T_PREF + "buttons.originalPreset", position = Position.BEFORE)
+    @ConfigButton(text = "Apply original preset", target = "researcherTent", position = Position.BEFORE)
     public static void useOriginalPreset() {
         usePreset(PRESET_ORIGINAL);
     }

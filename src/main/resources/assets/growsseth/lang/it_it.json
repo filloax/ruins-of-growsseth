@@ -118,7 +118,7 @@
 
     "advancements.growsseth.start.title": "Un nuovo arrivo",
     "advancements.growsseth.start.description": "Qualcuno si è accampato da qualche parte a Growsseth...",
-    "advancements.growsseth.root.title": "Rovine di Growsseth",
+    "advancements.growsseth.root.title": "Colleghi",
     "advancements.growsseth.root.description": "Trova un collega in questo mondo in rovina",
     "advancements.growsseth.structures.cave_camp.title": "Giù per il buco",
     "advancements.growsseth.structures.cave_camp.description": "Trova il vecchio accampamento del ricercatore",
@@ -138,6 +138,8 @@
     "advancements.growsseth.structures.noteblock_ship.description": "Entra nell'aeronave schiantata (extra)",
     "advancements.growsseth.structures.conduit_ruins.title": "Forti correnti",
     "advancements.growsseth.structures.conduit_ruins.description": "Immergiti tra le rovine sommerse (extra)",
+    "advancements.growsseth.structures.all_structures.title": "Rovine di Growsseth",
+    "advancements.growsseth.structures.all_structures.description": "Esplora tutte le rovine dell'antico regno",
     "advancements.growsseth.horn.title": "Dono d'addio",
     "advancements.growsseth.horn.description": "Ricevi il misterioso corno del ricercatore",
 
@@ -226,9 +228,6 @@
     "growsseth.config.noteblockShipEnabled.name": "Abilita spawn della nave del musicista (extra)",
     "growsseth.config.researcherTentSimpleEnabled.name": "Abilita spawn della tenda del ricercatore senza scantinato (variante)",
     "growsseth.config.researcherTentSimpleEnabled.comment": "Attenzione: con questa versione la quest finale potrebbe non funzionare correttamente. Inoltre è consigliabile non abilitarla insieme alla variante normale.",
-
-    "growsseth.config.buttons.updatedPreset": "Applica preset aggiornato",
-    "growsseth.config.buttons.originalPreset": "Applica preset originale",
 
     "growsseth.config.researcherTent.name": "Tenda del ricercatore",
     "growsseth.config.caveCamp.name": "Accampamento nella caverna",

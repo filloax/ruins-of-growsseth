@@ -173,9 +173,7 @@ class ResearcherTent : GrTemplateStructurePiece {
                 val donkeyPos = pos.relative(placeSettings().rotation.rotate(Direction.SOUTH))
                 if (spawnEntities)
                     placeEntity(EntityType.DONKEY, donkeyPos, level) { donkey ->
-                        ScheduledServerTask.schedule(server, 10) {
-                            manageDonkey(level.level, donkey.uuid, pos)     // the instance changes and gets reset otherwise
-                        }
+                        manageDonkey(level.level, donkey.uuid, pos)     // the instance changes and gets reset otherwise
                     }
             }
             "jail" -> {
