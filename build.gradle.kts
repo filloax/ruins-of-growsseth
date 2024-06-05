@@ -105,7 +105,7 @@ dependencies {
 
 	"net.fabricmc:fabric-language-kotlin:${fabricKotlinVersion}".let{
 		modImplementation(it)
-		include(it)
+//		include(it)
 	}
 
 	modImplementation("net.fabricmc.fabric-api:fabric-api:${fabricApiVersion}") {
@@ -113,11 +113,11 @@ dependencies {
 	}
 	"com.terraformersmc:modmenu:${modMenuVersion}".let{
 		modImplementation(it)
-		include(it)
+//		include(it)
 	}
 	"com.teamresourceful.resourcefulconfig:resourcefulconfig-fabric-$resConfigMcVersion:$resConfigVersion".let{
 		modImplementation(it)
-		include(it)
+//		include(it)
 	}
 
 	val fxLib = (if (useLocalJarFxLib)
