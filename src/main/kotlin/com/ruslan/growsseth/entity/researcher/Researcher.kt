@@ -61,6 +61,7 @@ import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.entity.ai.goal.ClimbOnTopOfPowderSnowGoal
 import net.minecraft.world.entity.ai.goal.FloatGoal
 import net.minecraft.world.entity.ai.goal.MoveTowardsRestrictionGoal
 import net.minecraft.world.entity.ai.goal.OpenDoorGoal
@@ -314,6 +315,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
     override fun registerGoals() {
         goalSelector.addGoal(0, FloatGoal(this))
+        goalSelector.addGoal(0, ClimbOnTopOfPowderSnowGoal(this, level()))
         goalSelector.addGoal(1, OpenDoorGoal(this, true))
         goalSelector.addGoal(2, ResearcherAttackGoal(this, 0.7, true))
         goalSelector.addGoal(3, MoveTowardsRestrictionGoal(this, 0.6))

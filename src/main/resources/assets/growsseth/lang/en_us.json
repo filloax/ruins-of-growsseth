@@ -118,7 +118,7 @@
     
     "advancements.growsseth.start.title": "A new arrival",
     "advancements.growsseth.start.description": "Someone set up a camp somewhere in Growsseth...",
-    "advancements.growsseth.root.title": "Ruins of Growsseth",
+    "advancements.growsseth.root.title": "Colleagues",
     "advancements.growsseth.root.description": "Find a colleague in this world in ruins",
     "advancements.growsseth.structures.cave_camp.title": "Lava and fungi",
     "advancements.growsseth.structures.cave_camp.description": "Find the old camp of the researcher",
@@ -138,6 +138,8 @@
     "advancements.growsseth.structures.noteblock_ship.description": "Get inside the crashed airship (extra)",
     "advancements.growsseth.structures.conduit_ruins.title": "Strong currents",
     "advancements.growsseth.structures.conduit_ruins.description": "Submerge into the aquatic ruins (extra)",
+    "advancements.growsseth.structures.all_structures.title": "Ruins of Growsseth",
+    "advancements.growsseth.structures.all_structures.description": "Explore every structure from the Lost Kingdom",
     "advancements.growsseth.horn.title": "Goodbye gift",
     "advancements.growsseth.horn.description": "Receive the mysterious horn from the researcher",
 
@@ -226,9 +228,6 @@
     "growsseth.config.noteblockShipEnabled.name": "Enable spawn of the musician's ship (extra)",
     "growsseth.config.researcherTentSimpleEnabled.name": "Enable spawn of the researcher's tent with no cellar (variant)",
     "growsseth.config.researcherTentSimpleEnabled.comment": "Warning: with this version the final quest might work incorrectly. It's also recommended to enable only one variant.",
-
-    "growsseth.config.buttons.updatedPreset": "Apply updated preset",
-    "growsseth.config.buttons.originalPreset": "Apply original preset",
 
     "growsseth.config.researcherTent.name": "Researcher tent",
     "growsseth.config.caveCamp.name": "Cave camp",

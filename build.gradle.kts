@@ -140,7 +140,7 @@ tasks.register("zipEgobalegoFolder") {
 
 	val sourceDir = project.file("tools/egobalego-at-home")
 	val destinationDir = project.file("build/egobalego-at-home")
-	val zipFile = destinationDir.resolve("Egobalego At Home.zip")
+	val zipFile = destinationDir.resolve("Egobalego at Home.zip")
 
 	inputs.dir(sourceDir)
 	outputs.file(zipFile)
