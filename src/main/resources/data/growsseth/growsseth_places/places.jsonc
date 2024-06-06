@@ -18,7 +18,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 1,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -40,7 +40,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 0,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -62,7 +62,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 0,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -84,7 +84,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 0,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -326,7 +326,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 0,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -397,7 +397,8 @@
     },
     {
         "id": 63,
-        "name": "Casa della Setta in Fiamme",
+        "name_original": "Casa della Setta in Fiamme",
+        "name": "Casa della Setta",
         "x": "4088",
         "y": "96",
         "z": "2930",
@@ -1030,7 +1031,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 0,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -1052,7 +1053,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 0,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -1074,7 +1075,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 0,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -1096,7 +1097,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 0,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -1118,7 +1119,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 0,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -1140,7 +1141,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 0,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -1162,7 +1163,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 0,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -1184,7 +1185,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 0,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -1206,7 +1207,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 0,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -1580,7 +1581,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 0,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -1602,7 +1603,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 0,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -1624,7 +1625,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 0,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -1646,7 +1647,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 0,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -1668,7 +1669,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 1,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -1690,7 +1691,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 0,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -1712,7 +1713,7 @@
         "ostCredits": "",
         "isNew": false,
         "priority": 2,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -2355,7 +2356,8 @@
     },
     {
         "id": 2,
-        "name": "Villajjo - Casa",
+        "name_original": "Villajjo - Casa",
+        "name": "Villajjo",
         "x": "1344",
         "y": "68",
         "z": "240",
