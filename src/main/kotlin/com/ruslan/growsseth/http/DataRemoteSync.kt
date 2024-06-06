@@ -8,6 +8,7 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.config.WebConfig
+import kotlinx.atomicfu.atomic
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
@@ -18,15 +19,20 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.lang.reflect.Type
 import java.net.HttpURLConnection
-import java.net.URL
+import java.net.URI
 import java.time.Duration
-import java.time.LocalTime
+import java.time.LocalDateTime
 import java.util.concurrent.*
 import java.util.concurrent.atomic.AtomicInteger
 
 object DataRemoteSync {
-    var lastSyncSuccessful = false
-        private set
+    val lastSyncSuccessful get() = lastSyncSuccessful_.value
+    val lastUpdateTime get() = lastUpdateTime_.value
+    val lastSuccessfulUpdateTime get() = lastSuccessfulUpdateTime_.value
+
+    private val lastSyncSuccessful_ = atomic(false)
+    private val lastUpdateTime_ = atomic<LocalDateTime?>(null)
+    private val lastSuccessfulUpdateTime_ = atomic<LocalDateTime?>(null)
 
     private var tickUpdateRealTimeDistance: Duration =
         Duration.ofSeconds(((WebConfig.dataSyncReloadTime * 60).toLong()))   // how often the mod should query the server
@@ -46,8 +52,6 @@ object DataRemoteSync {
     private var didFirstLoad = mutableMapOf<String, Boolean>()
     private val doOnNextServerStart = LinkedBlockingQueue<(MinecraftServer) -> Unit>()
     private val logger = RuinsOfGrowsseth.LOGGER
-
-    private var lastUpdateTime: LocalTime? = null
 
     fun <T: Any>subscribe(endpoint: String, serializer: DeserializationStrategy<T>, callback: (T, MinecraftServer) -> Unit) {
         subscribeRaw(endpoint) { response, server ->
@@ -99,7 +103,7 @@ object DataRemoteSync {
             return CompletableFuture.completedFuture(false)
         }
 
-        lastUpdateTime = LocalTime.now()
+        val updateTime = LocalDateTime.now().also { lastUpdateTime_.value = it }
         val future = CompletableFuture<Boolean>()
         val successes = mutableMapOf<String, Boolean>()
         observersByEndpoint.forEach { (endpoint, callbacks) ->
@@ -110,37 +114,13 @@ object DataRemoteSync {
                 }
             }
         }
-        return future
-    }
-
-    fun checkTickSync(url: String, server: MinecraftServer) {
-        if (WebConfig.webDataSync) {
-            val time = LocalTime.now()
-            // check real time to make pause not affect it
-            if (lastUpdateTime != null && Duration.between(lastUpdateTime, time) >= tickUpdateRealTimeDistance) {
-                logger.info("Data sync: started periodic sync")
-                doSync(url, server)
+        return future.thenApply { success ->
+            lastSyncSuccessful_.value = success
+            if (success) {
+                lastSuccessfulUpdateTime_.value = updateTime
             }
+            success
         }
-    }
-
-    fun handleServerAboutToStartEvent(server: MinecraftServer) {
-        if (WebConfig.webDataSync)
-            setupExecutorService()
-        else
-            logger.info("Web data synchronization was disabled from settings, will not start")
-    }
-
-    fun handleWorldLoaded(server: MinecraftServer, level: ServerLevel) {
-        if (WebConfig.webDataSync && level.dimension() == Level.OVERWORLD) {
-            while (doOnNextServerStart.isNotEmpty()) {
-                doOnNextServerStart.poll()(server)
-            }
-        }
-    }
-
-    fun handleServerStoppingEvent() {
-        shutdownExecutorService()
     }
 
     private fun syncEndpoint(url: String, endpoint: String, callbacks: List<(String, MinecraftServer) -> Unit>, server: MinecraftServer): CompletableFuture<Boolean> {
@@ -212,7 +192,7 @@ object DataRemoteSync {
     }
 
     private fun makeConnection(url: String, params: EndpointParams = DEFAULT_PARAMS): HttpURLConnection {
-        val conn = URL(url).openConnection() as HttpURLConnection
+        val conn = URI(url).toURL().openConnection() as HttpURLConnection
         conn.requestMethod = "GET"
         conn.setRequestProperty("Content-Type", "application/json")
         conn.setRequestProperty("Accept-Charset", "UTF-8")
@@ -322,6 +302,35 @@ object DataRemoteSync {
     }
 
     val DEFAULT_PARAMS = EndpointParams()
+
+    object Callbacks {
+        fun handleServerAboutToStartEvent(server: MinecraftServer) {
+            setupExecutorService()
+        }
+
+        fun handleServerStoppingEvent() {
+            shutdownExecutorService()
+        }
+
+        fun onServerLevel(server: MinecraftServer, level: ServerLevel) {
+            if (WebConfig.webDataSync && level.dimension() == Level.OVERWORLD) {
+                while (doOnNextServerStart.isNotEmpty()) {
+                    doOnNextServerStart.poll()(server)
+                }
+            }
+        }
+
+        fun onServerTick(url: String, server: MinecraftServer) {
+            if (WebConfig.webDataSync) {
+                val time = LocalDateTime.now()
+                // check real time to make pause not affect it
+                if (lastUpdateTime_.value?.let{ Duration.between(it, time) >= tickUpdateRealTimeDistance } == true) {
+                    logger.info("Data sync: started periodic sync")
+                    doSync(url, server)
+                }
+            }
+        }
+    }
 }
 
 inline fun <reified T> genericType(): Type = object: TypeToken<T>() {}.type
