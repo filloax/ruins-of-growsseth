@@ -47,4 +47,8 @@ object GrowssethConfigHandler {
         loadCallbacks.add(event)
         config?.let { event(it) }
     }
+
+    fun saveConfig() {
+        config?.save() ?: throw IllegalStateException("No config loaded!")
+    }
 }
