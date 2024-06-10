@@ -465,7 +465,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
                 if (target is ServerPlayer) {
                     isStuck = true
                     showAngryParticles = true
-                    dialogues?.triggerDialogue(target as ServerPlayer, ResearcherDialoguesComponent.PLAYER_CHEATS)
+                    dialogues?.triggerDialogue(target as ServerPlayer, ResearcherDialoguesComponent.EV_PLAYER_CHEATS)
                 }
                 potion = Potions.STRONG_TURTLE_MASTER
             }
@@ -613,7 +613,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         val attacker = source.entity
 
         if (attacker is Player && ResearcherConfig.immortalResearcher && !attacker.isCreative)
-            dialogues?.triggerDialogue(attacker as ServerPlayer, ResearcherDialoguesComponent.HIT_BY_PLAYER_IMMORTAL)
+            dialogues?.triggerDialogue(attacker as ServerPlayer, ResearcherDialoguesComponent.EV_HIT_BY_PLAYER_IMMORTAL)
 
         val combatRet = combat.hurt(source, amount) { s, a -> super.hurt(s, a) }
 
