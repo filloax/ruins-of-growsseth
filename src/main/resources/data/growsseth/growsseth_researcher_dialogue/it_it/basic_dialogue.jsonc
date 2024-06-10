@@ -139,6 +139,16 @@
         "Da quanto tempo che non ci si vede, collega.",
         "Salve collega, è da tanto che sei via, come stai?"
     ],
+    "playerArriveNewLocation": [
+        {
+            "content": "Salve, non mi aspettavo di trovarti qua!\nAnche io viaggio, come sai, quindi ho diversi accampamenti sparsi per il mondo.\nSe ci incrocieremo altre volte sarò felice di scambiare informazioni come di consueto.",
+            "useLimit": 1,
+            "priority": 50,
+            "id": "researcher-arrive-new-loc-first"
+        },
+        "Il mondo è piccolo, collega. Come è andato il viaggio?",
+        "Collega? Sei arrivato fino qui? Complimenti, devi avere fatto molta strada."
+    ],
     "playerArriveSoon": [
         { "id": "no-dialogue-mess" },
         "Già di ritorno?",
