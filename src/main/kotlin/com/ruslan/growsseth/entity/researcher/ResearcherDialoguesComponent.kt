@@ -39,7 +39,7 @@ class ResearcherDialoguesComponent(
 ) : BasicDialoguesComponent(researcher, random) {
     companion object {
         // Stuff to persist in NBT (using DataFixerUpper because shorter to write even if complicated af to read)
-        val CODEC_PLAYERS_IN_CELLAR: Codec<MutableSet<UUID>> = CodecUtils.setOf(UUIDUtil.STRING_CODEC)
+        val CODEC_PLAYERSET: Codec<MutableSet<UUID>> = CodecUtils.setOf(UUIDUtil.STRING_CODEC)
 
         val EV_MAKE_MESS     = event("makeMess")
         val EV_FIX_MESS      = event("fixMess")
@@ -49,10 +49,11 @@ class ResearcherDialoguesComponent(
         val EV_RETURN_DONKEY = event("returnDonkey")
         val EV_CELLAR        = event("exploreCellar", ignoreNoDialogueWarning = true, count = false)
         val EV_CELLAR_EXIT   = event("exitCellar", ignoreNoDialogueWarning = true, count = false)
-        val PLAYER_CHEATS    = event("playerCheats")
-        val KILL_PLAYER      = event("killPlayer")
-        val PLAYER_ARRIVE_LAST_KILLED = event("playerArriveAfterKilled")
-        val HIT_BY_PLAYER_IMMORTAL    = event("hitByPlayerImmortal")
+        val EV_PLAYER_CHEATS                = event("playerCheats")
+        val EV_KILL_PLAYER                  = event("killPlayer")
+        val EV_PLAYER_ARRIVE_LAST_KILLED    = event("playerArriveAfterKilled")
+        val EV_HIT_BY_PLAYER_IMMORTAL       = event("hitByPlayerImmortal")
+        val EV_ARRIVE_NEW_LOCATION          = event("playerArriveNewLocation")
 
         // "true" or unset
         const val DDATA_MADE_MESS = "madeMess"
@@ -71,6 +72,9 @@ class ResearcherDialoguesComponent(
     // share between all players as it is related to the physical block state
     // Before we tracked player ids but that meant another player couldn't fix the issue
     private var playersMadeMess: Boolean = false
+    // If the player met this specific instance of the researcher (not other entities)
+    // meaningful only in single researcher mode
+    private val playersMetThisEntity: MutableSet<UUID> = mutableSetOf()
 
     init {
         secondsForAttackRepeat = combat.timeToCalmDown / 20
@@ -85,7 +89,7 @@ class ResearcherDialoguesComponent(
         if (researcher.isAggressive)
             for (dialogueEvent in dialogueEvents) {
                 val dialoguesForWhenAggressive =
-                    listOf(BasicDialogueEvents.DEATH, BasicDialogueEvents.LOW_HEALTH, PLAYER_CHEATS, KILL_PLAYER, BasicDialogueEvents.HIT_BY_PLAYER)
+                    listOf(BasicDialogueEvents.DEATH, BasicDialogueEvents.LOW_HEALTH, EV_PLAYER_CHEATS, EV_KILL_PLAYER, BasicDialogueEvents.HIT_BY_PLAYER)
                 if (dialoguesForWhenAggressive.all{ it != dialogueEvent } ||
                     (dialogueEvent == BasicDialogueEvents.HIT_BY_PLAYER && combat.wantsToKillPlayer(player)))
                     return false
@@ -173,12 +177,27 @@ class ResearcherDialoguesComponent(
     }
 
     override fun onPlayerArrive(player: ServerPlayer) {
+        val justMet = !playersMetThisEntity.contains(player.uuid)
+        playersMetThisEntity.add(player.uuid)
+
+        val triggeredArriveBefore = (playerData(player)?.eventTriggerCount
+            ?.filter { it.key in setOf(
+                BasicDialogueEvents.PLAYER_ARRIVE_SOON,
+                BasicDialogueEvents.PLAYER_ARRIVE_NIGHT,
+                BasicDialogueEvents.PLAYER_ARRIVE_LONG_TIME,
+                BasicDialogueEvents.PLAYER_ARRIVE,
+            ) }
+            ?.values?.sum()
+            ?: 0) > 0
+
         if (combat.lastKilledPlayers.contains(player)) {
-            triggerDialogue(player, PLAYER_ARRIVE_LAST_KILLED)
+            triggerDialogue(player, EV_PLAYER_ARRIVE_LAST_KILLED)
             combat.lastKilledPlayers.remove(player)
-        }
-        else
+        } else if (ResearcherConfig.singleResearcher && justMet && triggeredArriveBefore) {
+            triggerDialogue(player, EV_ARRIVE_NEW_LOCATION)
+        } else {
             super.onPlayerArrive(player)
+        }
     }
 
     override fun canTriggeredEventRun(player: ServerPlayer, dialogueEvent: DialogueEvent): Boolean {
@@ -217,7 +236,8 @@ class ResearcherDialoguesComponent(
         dialogueData.remove(DataFields.SAVED_PLAYERS_DATA)
 
         dialogueData.saveField("MessAngerActive", Codec.BOOL, this::playersMadeMess)
-        dialogueData.saveField("PlayersInCellar", CODEC_PLAYERS_IN_CELLAR, this::playersInCellar)
+        dialogueData.saveField("PlayersInCellar", CODEC_PLAYERSET, this::playersInCellar)
+        dialogueData.saveField("PlayersMetThisEntity", CODEC_PLAYERSET, this::playersMetThisEntity)
     }
 
     override fun readExtraNbtData(dialogueData: CompoundTag) {
@@ -228,7 +248,9 @@ class ResearcherDialoguesComponent(
         savedPlayersData.putAll(savedPlayersDataPre)
 
         dialogueData.loadField("MessAngerActive", Codec.BOOL) { playersMadeMess = it }
-        dialogueData.loadField("PlayersInCellar", CODEC_PLAYERS_IN_CELLAR) { playersInCellar = it.toMutableSet() }
+        dialogueData.loadField("PlayersInCellar", CODEC_PLAYERSET) { playersInCellar = it.toMutableSet() }
+        playersMetThisEntity.clear()
+        dialogueData.loadField("PlayersMetThisEntity", CODEC_PLAYERSET) { playersMetThisEntity.addAll(it) }
     }
 
     // Save nbt data to be shared between researcher entities in single researcher mode

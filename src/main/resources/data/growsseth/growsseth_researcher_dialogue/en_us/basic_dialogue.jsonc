@@ -139,6 +139,16 @@
         "Long time no see, colleague.",
         "Hello colleague, it's been a while since you've been away, how are you?"
     ],
+    "playerArriveNewLocation": [
+        {
+            "content": "Greetings, didn't expect to meet you here!\nAs you know, I also am a traveler, so I have various encampents around the world.\nIf we meet again, I'll be happy to share information as usual.",
+            "useLimit": 1,
+            "priority": 50,
+            "id": "researcher-arrive-new-loc-first"
+        },
+        "It's a small world, colleague. How did the journey go?",
+        "Colleague? You made it this far? Congratulations, it must have been a long journey."
+    ],
     "playerArriveSoon": [
         { "id": "no-dialogue-mess" },
         "Back already?",
