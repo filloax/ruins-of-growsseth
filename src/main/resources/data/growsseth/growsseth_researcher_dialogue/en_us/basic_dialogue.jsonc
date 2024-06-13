@@ -146,8 +146,6 @@
             "priority": 50,
             "id": "researcher-arrive-new-loc-first"
         },
-        "It's a small world, colleague. How did the journey go?",
-        "Colleague? You made it this far? Congratulations, it must have been a long journey."
     ],
     "playerArriveSoon": [
         { "id": "no-dialogue-mess" },

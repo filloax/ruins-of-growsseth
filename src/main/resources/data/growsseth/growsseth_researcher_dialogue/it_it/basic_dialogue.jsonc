@@ -146,8 +146,6 @@
             "priority": 50,
             "id": "researcher-arrive-new-loc-first"
         },
-        "Il mondo è piccolo, collega. Come è andato il viaggio?",
-        "Collega? Sei arrivato fino qui? Complimenti, devi avere fatto molta strada."
     ],
     "playerArriveSoon": [
         { "id": "no-dialogue-mess" },
