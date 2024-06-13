@@ -53,7 +53,7 @@ class ResearcherDialoguesComponent(
         val EV_KILL_PLAYER                  = event("killPlayer")
         val EV_PLAYER_ARRIVE_LAST_KILLED    = event("playerArriveAfterKilled")
         val EV_HIT_BY_PLAYER_IMMORTAL       = event("hitByPlayerImmortal")
-        val EV_ARRIVE_NEW_LOCATION          = event("playerArriveNewLocation")
+        val EV_ARRIVE_NEW_LOCATION          = event("playerArriveNewLocation", ignoreNoDialogueWarning = true)
 
         // "true" or unset
         const val DDATA_MADE_MESS = "madeMess"
