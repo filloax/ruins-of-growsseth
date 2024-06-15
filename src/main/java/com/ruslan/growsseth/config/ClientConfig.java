@@ -28,4 +28,7 @@ public class ClientConfig {
 
     @ConfigEntry(id = "disableNpcDialogues", type = EntryType.BOOLEAN, translation = T_PREF + "disableNpcDialogues.name")
     public static boolean disableNpcDialogues = false;
+
+    @ConfigEntry(id = "mapCornerIcons", type = EntryType.BOOLEAN, translation = T_PREF + "mapCornerIcons.name")
+    public static boolean mapCornerIcons = true;
 }

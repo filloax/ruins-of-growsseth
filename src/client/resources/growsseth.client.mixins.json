@@ -12,6 +12,7 @@
     "EncryptedSounds$SoundEventRegistrationSerializerMixin",
     "EncryptedSounds$SoundManager$PreparationsMixin",
     "EncryptedSounds$SoundMixin",
+    "RuinsMapIcon_GuiGraphicsMixin",
     "TitleScreenMixin",
     "VillagerModelMixin",
     "custommapitem.CartographyTableScreenMixin",
