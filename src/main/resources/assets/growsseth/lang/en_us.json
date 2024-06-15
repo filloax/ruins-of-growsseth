@@ -177,6 +177,7 @@
     "growsseth.config.newTradeNotifications.name": "Notifications on new trades unlocked",
     "growsseth.config.newTradeNotifications.comment": "Shows a small toast when the researcher unlocks new trades. Works only for web and progress trades.",
     "growsseth.config.disableNpcDialogues.name": "Disable NPC dialogues",
+    "growsseth.config.mapCornerIcons.name": "Enable mod maps corner icons",
 
     "growsseth.config.singleResearcher.name": "Single researcher",
     "growsseth.config.singleResearcher.comment": "Shares memory between all researcher entities (narratively assume it's the 'same' Researcher moving around). Applies on first spawn or with the command '/greset'. Will affect dialogues and trades (multiple researchers will always have a random selection of trades that do not change). In Growsseth world preset this will always be true.",
