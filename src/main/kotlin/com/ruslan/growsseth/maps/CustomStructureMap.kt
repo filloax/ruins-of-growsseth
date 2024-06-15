@@ -13,6 +13,7 @@ import kotlinx.atomicfu.update
 import kotlinx.datetime.Clock
 import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Holder
 import net.minecraft.core.HolderSet
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.Registries
@@ -24,6 +25,7 @@ import net.minecraft.tags.TagKey
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.MapItem
 import net.minecraft.world.item.component.CustomData
+import net.minecraft.world.item.component.MapDecorations
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.levelgen.structure.Structure
 import net.minecraft.world.level.saveddata.maps.MapDecorationType
@@ -39,6 +41,37 @@ fun ItemStack.createAndStoreMapData(
 ) {
     val newMapItem = MapItem.create(level, x, z, scale.toByte(), trackingPosition, unlimitedTracking)
     this[DataComponents.MAP_ID] = newMapItem[DataComponents.MAP_ID]
+}
+
+private val NON_TARGET_DECO_TYPES = setOf<Holder<MapDecorationType>>(
+    MapDecorationTypes.PLAYER,
+    MapDecorationTypes.FRAME,
+    MapDecorationTypes.PLAYER_OFF_MAP,
+    MapDecorationTypes.PLAYER_OFF_LIMITS,
+    MapDecorationTypes.WHITE_BANNER,
+    MapDecorationTypes.ORANGE_BANNER,
+    MapDecorationTypes.MAGENTA_BANNER,
+    MapDecorationTypes.LIGHT_BLUE_BANNER,
+    MapDecorationTypes.YELLOW_BANNER,
+    MapDecorationTypes.LIME_BANNER,
+    MapDecorationTypes.PINK_BANNER,
+    MapDecorationTypes.GRAY_BANNER,
+    MapDecorationTypes.LIGHT_GRAY_BANNER,
+    MapDecorationTypes.CYAN_BANNER,
+    MapDecorationTypes.PURPLE_BANNER,
+    MapDecorationTypes.BLUE_BANNER,
+    MapDecorationTypes.BROWN_BANNER,
+    MapDecorationTypes.GREEN_BANNER,
+    MapDecorationTypes.RED_BANNER,
+    MapDecorationTypes.BLACK_BANNER,
+)
+
+fun ItemStack.getMapTargetIcon(): DestinationType? {
+    return this[DataComponents.MAP_DECORATIONS]?.let { decorations ->
+        decorations.decorations.values.firstOrNull<MapDecorations.Entry> {
+            !NON_TARGET_DECO_TYPES.contains(it.type)
+        }?.let { DestinationType.withIcon(it.type) }
+    }
 }
 
 // Source: https://github.com/TelepathicGrunt/RepurposedStructures/blob/1.19.4-Arch/common/src/main/java/com/telepathicgrunt/repurposedstructures/misc/maptrades/MerchantMapUpdating.java
