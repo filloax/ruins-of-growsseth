@@ -167,6 +167,7 @@
     "growsseth.config.newTradeNotifications.name": "Notifiche per lo sblocco di nuovi scambi",
     "growsseth.config.newTradeNotifications.comment": "Mostra una piccola notifica quando il ricercatore sblocca nuovi scambi. Funziona solo con gli scambi web e a progresso.",
     "growsseth.config.disableNpcDialogues.name": "Disabilita dialoghi NPC",
+    "growsseth.config.mapCornerIcons.name": "Abilita icone all'angolo delle mappe",
 
     "growsseth.config.singleResearcher.name": "Ricercatore singolo",
     "growsseth.config.singleResearcher.comment": "Condivide la memoria tra tutte le entità ricercatore (assumi narrativamente che sia lo 'stesso' ricercatore che si sposta). Si applica al primo spawn o con il comando '/greset'. Influenzerà dialoghi e scambi (ricercatori multipli avranno sempre una offerta casuale di scambi che non cambia). Nel preset del mondo di Growsseth sarà sempre impostata a true.",
