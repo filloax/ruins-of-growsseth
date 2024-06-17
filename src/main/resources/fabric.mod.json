@@ -23,10 +23,11 @@
     "Ako & R-E-M",
     "Guber"
   ],
-  "contact": {},
-  "homepage": "https://modrinth.com/mod/ruins-of-growsseth",
-  "issues": "https://github.com/filloax/ruins-of-growsseth/issues",
-  "source": "https://github.com/filloax/ruins-of-growsseth",
+  "contact": {
+    "homepage": "https://github.com/filloax/ruins-of-growsseth",
+    "issues": "https://github.com/filloax/ruins-of-growsseth/issues",
+    "source": "https://github.com/filloax/ruins-of-growsseth"
+  },
   "license": "MIT",
   "icon": "assets/growsseth/icon.png",
   "environment": "*",
