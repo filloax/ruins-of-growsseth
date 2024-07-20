@@ -66,7 +66,8 @@
     "sounds": [
       {
         "name": "growsseth:disc_padre_mammonk",
-        "stream": true
+        "stream": true,
+        "encrypted": true
       }
     ]
   },
@@ -83,7 +84,8 @@
     "sounds": [
       {
         "name": "growsseth:disc_missiva_nell_ombra",
-        "stream": true
+        "stream": true,
+        "encrypted": true
       }
     ]
   },
@@ -91,7 +93,8 @@
     "sounds": [
       {
         "name": "growsseth:disc_oursteps",
-        "stream": true
+        "stream": true,
+        "encrypted": true
       }
     ]
   },
