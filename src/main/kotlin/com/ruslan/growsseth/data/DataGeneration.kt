@@ -5,6 +5,7 @@ import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.advancements.StructureAdvancements
 import com.ruslan.growsseth.item.GrowssethItems
+import com.ruslan.growsseth.item.GrowssethJukeboxSongs
 import com.ruslan.growsseth.structure.GrProcessorLists
 import com.ruslan.growsseth.structure.GrowssethStructures
 import com.ruslan.growsseth.utils.resLoc
@@ -73,6 +74,7 @@ class DataGeneration : DataGeneratorEntrypoint {
         registryBuilder.add(Registries.WORLD_PRESET, GrowssethModWorldPresets::bootstrap)
         registryBuilder.add(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST, GrowssethWorldPreset::bootstrapNoiseBiomeSourcesSettings)
         registryBuilder.add(Registries.BANNER_PATTERN, GrowssethBannerPatterns::bootstrap)
+        registryBuilder.add(Registries.JUKEBOX_SONG, GrowssethJukeboxSongs::bootstrap)
     }
 
     override fun getEffectiveModId(): String = RuinsOfGrowsseth.MOD_ID
@@ -88,6 +90,7 @@ class RegistriesProvider(output: FabricDataOutput, registries: CompletableFuture
         entries.addAll(registries.lookupOrThrow(Registries.WORLD_PRESET))
         entries.addAll(registries.lookupOrThrow(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST))
         entries.addAll(registries.lookupOrThrow(Registries.BANNER_PATTERN))
+        entries.addAll(registries.lookupOrThrow(Registries.JUKEBOX_SONG))
     }
 }
 
