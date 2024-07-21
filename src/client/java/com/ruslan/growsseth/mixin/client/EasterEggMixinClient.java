@@ -15,7 +15,7 @@ public class EasterEggMixinClient {
     @Mixin(AbstractZombieRenderer.class)
     public static class AbstractZombieRendererMixin {
         @Unique
-        private static final ResourceLocation GUBER_ZOMBIE_PATH = new ResourceLocation(RuinsOfGrowsseth.MOD_ID, "textures/entity/zombie/guber_zombie.png");
+        private static final ResourceLocation GUBER_ZOMBIE_PATH = ResourceLocation.fromNamespaceAndPath(RuinsOfGrowsseth.MOD_ID, "textures/entity/zombie/guber_zombie.png");
 
         @Inject(
             method = "getTextureLocation(Lnet/minecraft/world/entity/monster/Zombie;)Lnet/minecraft/resources/ResourceLocation;",

@@ -24,7 +24,9 @@ import net.minecraft.world.level.levelgen.structure.Structure
 import net.minecraft.world.level.levelgen.structure.StructureSet
 import net.minecraft.world.level.levelgen.structure.StructureType
 import net.minecraft.world.level.levelgen.structure.TerrainAdjustment
+import net.minecraft.world.level.levelgen.structure.pools.DimensionPadding
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool
+import net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSettings
 
 object GrowssethStructures {
     @JvmStatic
@@ -205,7 +207,7 @@ object GrowssethStructures {
         val entries = VillageBuildings.houseEntries[category] ?: throw IllegalArgumentException("Village category $category not found")
         return entries
             .groupBy{ it.kind }
-            .mapKeys { ResourceKey.create(Registries.STRUCTURE, ResourceLocation("minecraft", "village_${it.key}")) }
+            .mapKeys { ResourceKey.create(Registries.STRUCTURE, ResourceLocation.fromNamespaceAndPath("minecraft", "village_${it.key}")) }
             .mapValues { e -> e.value.flatMap { listOf(it.normalTemplate, it.zombieTemplate) } }
     }
 
@@ -322,7 +324,8 @@ object GrowssethStructures {
                 startPoolHolder, biomesHolder,
                 forcePosOffset = offset, projectStartToHeightmap = projectStartToHeightMap,
                 step = step, startHeight = startHeight,
-                size = size,
+                size = size, liquidSettings = LiquidSettings.APPLY_WATERLOGGING,
+                dimensionPadding = DimensionPadding.ZERO,
             ))
         }
 

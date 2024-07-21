@@ -11,9 +11,10 @@ import com.ruslan.growsseth.item.GrowssethItems.GROWSSETH_BANNER_PATTERN
 import com.ruslan.growsseth.item.GrowssethItems.GROWSSETH_POTTERY_SHERD
 import com.ruslan.growsseth.item.GrowssethItems.RESEARCHER_DAGGER
 import com.ruslan.growsseth.item.GrowssethItems.RESEARCHER_HORN
-import net.fabricmc.fabric.api.loot.v2.LootTableSource
+import net.fabricmc.fabric.api.loot.v3.LootTableSource
+import net.minecraft.core.HolderLookup
+import net.minecraft.core.component.DataComponents
 import net.minecraft.resources.ResourceKey
-import net.minecraft.world.item.RecordItem
 import net.minecraft.world.level.storage.loot.BuiltInLootTables
 import net.minecraft.world.level.storage.loot.LootPool
 import net.minecraft.world.level.storage.loot.LootTable
@@ -35,11 +36,11 @@ object VanillaStructureLoot {
     )
 
     private fun getDiscs() = GrowssethItems.all.values
-        .filterIsInstance<RecordItem>()
+        .filter { it.components().has(DataComponents.JUKEBOX_PLAYABLE) }
         .minus(SKULK_DISCS)
         .minus(DISC_BALLATA_DEL_RESPAWN)    // only fragments can be found
 
-    fun onModifyLootTables(id: ResourceKey<LootTable>, tableBuilder: LootTable.Builder, source: LootTableSource) {
+    fun onModifyLootTables(id: ResourceKey<LootTable>, tableBuilder: LootTable.Builder, source: LootTableSource, registries: HolderLookup.Provider) {
         if (MiscConfig.modLootInVanillaStructures) {
             val poolBuilder = LootPool.lootPool()
 

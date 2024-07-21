@@ -97,7 +97,7 @@ class RecipesProvider(output: FabricDataOutput, registriesFuture: CompletableFut
         listOf(
             GrowssethItems.GROWSSETH_ARMOR_TRIM,
         ).forEach {
-            val trimTemplate = TrimTemplate(it, ResourceLocation(getItemName(it) + "_smithing_trim"))
+            val trimTemplate = TrimTemplate(it, ResourceLocation.parse(getItemName(it) + "_smithing_trim"))
             RecipeProvider.trimSmithing(exporter, trimTemplate.template, trimTemplate.id)
         }
 
@@ -143,21 +143,21 @@ class TagProviderBlocks(output: FabricDataOutput, registries: CompletableFuture<
      */
     override fun addTags(arg: HolderLookup.Provider) {
         getOrCreateTagBuilder(GrowssethTags.TENT_MATERIALS_WHITELIST)
-            .addOptionalTag(ResourceLocation("planks"))
-            .addOptionalTag(ResourceLocation("wool"))
-            .addOptionalTag(ResourceLocation("wooden_stairs"))
-            .addOptionalTag(ResourceLocation("wooden_slabs"))
-            .addOptionalTag(ResourceLocation("wooden_pressure_plates"))
-            .addOptionalTag(ResourceLocation("trapdoors"))
-            .addOptionalTag(ResourceLocation("banners"))
-            .addOptionalTag(ResourceLocation("fences"))
-            .addOptionalTag(ResourceLocation("walls"))
-            .addOptionalTag(ResourceLocation("c", "chests"))
-            .addOptionalTag(ResourceLocation("wool_carpets"))
-            .addOptionalTag(ResourceLocation("campfires"))
-            .addOptionalTag(ResourceLocation("c", "villager_job_sites"))
-            .addOptionalTag(ResourceLocation("fence_gates"))
-            .addOptionalTag(ResourceLocation("logs"))
+            .addOptionalTag(ResourceLocation.parse("planks"))
+            .addOptionalTag(ResourceLocation.parse("wool"))
+            .addOptionalTag(ResourceLocation.parse("wooden_stairs"))
+            .addOptionalTag(ResourceLocation.parse("wooden_slabs"))
+            .addOptionalTag(ResourceLocation.parse("wooden_pressure_plates"))
+            .addOptionalTag(ResourceLocation.parse("trapdoors"))
+            .addOptionalTag(ResourceLocation.parse("banners"))
+            .addOptionalTag(ResourceLocation.parse("fences"))
+            .addOptionalTag(ResourceLocation.parse("walls"))
+            .addOptionalTag(ResourceLocation.fromNamespaceAndPath("c", "chests"))
+            .addOptionalTag(ResourceLocation.parse("wool_carpets"))
+            .addOptionalTag(ResourceLocation.parse("campfires"))
+            .addOptionalTag(ResourceLocation.fromNamespaceAndPath("c", "villager_job_sites"))
+            .addOptionalTag(ResourceLocation.parse("fence_gates"))
+            .addOptionalTag(ResourceLocation.parse("logs"))
             .add(Blocks.LECTERN)
             .add(Blocks.CARTOGRAPHY_TABLE)
             .add(Blocks.IRON_BARS)
@@ -260,7 +260,7 @@ class ModelGenerator constructor(generator: FabricDataOutput) : FabricModelProvi
                 val discsSongLayer = resLoc("item/music_discs/$item")
                 when (item) {       // if a disc can be crafted (or is Oursteps) it will get the glare
                     GrowssethItems.DISC_OURSTEPS ->
-                        itemModelGenerator.generateLayeredItem(model, ResourceLocation("item/music_disc_pigstep"), discsVocalsLayer)
+                        itemModelGenerator.generateLayeredItem(model, ResourceLocation.parse("item/music_disc_pigstep"), discsVocalsLayer)
                     in GrowssethItems.DISCS_TO_VOCALS.values ->
                         itemModelGenerator.generateLayeredItem(model, discsBaseLayer, discsVocalsLayer, discsSongLayer)
                     in GrowssethItems.DISCS_ORDERED ->

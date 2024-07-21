@@ -37,11 +37,11 @@ public class StructureConfig {
     public static boolean researcherTentSimpleEnabled = false;
 
 
-    @ConfigButton(text = "Disable all", target = "researcherTentEnabled", position = Position.BEFORE)
-    public static void disableAllStructures() { toggleAll(false); }
+    @ConfigButton(text = "Disable all")
+    public static final Runnable disableAllStructures = () -> toggleAll(false);
 
-    @ConfigButton(text = "Enable all", target = "researcherTentEnabled", position = Position.BEFORE)
-    public static void enableAllStructures() { toggleAll(true); }
+    @ConfigButton(text = "Enable all")
+    public static final Runnable enableAllStructures = () -> toggleAll(true);
 
     private static void toggleAll(boolean choice) {
         researcherTentEnabled = choice;

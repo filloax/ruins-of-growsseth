@@ -40,6 +40,7 @@ import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity
 import net.minecraft.world.level.chunk.ChunkGenerator
 import net.minecraft.world.level.levelgen.structure.BoundingBox
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext
+import net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSettings
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager
 import java.util.UUID
@@ -92,7 +93,7 @@ class ResearcherTent : GrTemplateStructurePiece {
         val DEFAULT_FENCE: Block = Blocks.SPRUCE_FENCE
 
         fun makeSettings(rotation: Rotation): StructurePlaceSettings
-            = defaultSettings().setRotation(rotation).setKeepLiquids(false)     // we don't want the cellar to be flooded
+            = defaultSettings().setRotation(rotation).setLiquidSettings(LiquidSettings.IGNORE_WATERLOGGING)
 
         private val removeReplaceBlocks = mutableMapOf<Block, Block>(
             Blocks.GREEN_WOOL to Blocks.COARSE_DIRT,

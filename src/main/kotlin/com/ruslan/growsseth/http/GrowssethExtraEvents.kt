@@ -141,7 +141,7 @@ object GrowssethExtraEvents {
             val path = match.groups["path"]?.value
             val title = match.groups["title"]?.value
             if (namespace != null && path != null && title != null) {
-                val itemId = ResourceLocation(namespace, path)
+                val itemId = ResourceLocation.fromNamespaceAndPath(namespace, path)
                 val registryAccess = server.registryAccess()
                 item = registryAccess.registry(Registries.ITEM).getOrNull()?.get(itemId)
                 if (item == null) {
