@@ -8,6 +8,7 @@ import com.ruslan.growsseth.events.LeashEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Leashable;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.LeadItem;
@@ -27,13 +28,13 @@ public abstract class LeadItemMixin {
         method = "bindPlayerMobs",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/Mob;setLeashedTo(Lnet/minecraft/world/entity/Entity;Z)V",
+            target = "Lnet/minecraft/world/entity/Leashable;setLeashedTo(Lnet/minecraft/world/entity/Entity;Z)V",
             shift = At.Shift.AFTER
         )
     )
     private static void triggerEventOnLeash(
             Player player, Level level, BlockPos pos, CallbackInfoReturnable<InteractionResult> cir,
-            @Local(ordinal = 0) Mob mob
+            @Local(ordinal = 0) Leashable mob
     ) {
         if (player instanceof ServerPlayer serverPlayer) {
             LeashEvents.FENCE_LEASH.invoker().apply(mob, pos, serverPlayer);
@@ -46,21 +47,20 @@ public abstract class LeadItemMixin {
         method = "bindPlayerMobs",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/level/Level;getEntitiesOfClass(Ljava/lang/Class;Lnet/minecraft/world/phys/AABB;Ljava/util/function/Predicate;)Ljava/util/List;"
+            target = "Lnet/minecraft/world/item/LeadItem;leashableInArea(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Ljava/util/function/Predicate;)Ljava/util/List;"
         )
     )
-    private static List<Mob> beforeLeadMob(
-            Level instance, Class<?> clazz, AABB aabb, Predicate<Mob> predicate, Operation<List<Mob>> original,
-            @Local(argsOnly = true) Player player,
-            @Local(argsOnly = true) BlockPos pos
+    private static List<Leashable> beforeLeadMob(
+            Level level, BlockPos pos, Predicate<Leashable> predicate, Operation<List<Leashable>> original,
+            @Local(argsOnly = true) Player player
     ) {
         if (player instanceof ServerPlayer serverPlayer) {
-            return original.call(instance, clazz, aabb, predicate.and(mob -> {
+            return original.call(level, pos, predicate.and(mob -> {
                 InteractionResult result = LeashEvents.BEFORE_FENCE_LEASH.invoker().apply(mob, pos, serverPlayer);
                 return result != InteractionResult.FAIL;
             }));
         } else {
-            return original.call(instance, clazz, aabb, predicate);
+            return original.call(level, pos, predicate);
         }
     }
 }

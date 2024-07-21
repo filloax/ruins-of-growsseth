@@ -35,6 +35,7 @@ import net.minecraft.server.network.ServerGamePacketListenerImpl
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.Leashable
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.player.Player
@@ -163,8 +164,8 @@ abstract class ModEvents {
     abstract fun afterPlayerPlaceBlock(event: (Player, Level, BlockPos, BlockPlaceContext, BlockState, BlockItem) -> Unit)
     abstract fun onPlayerServerJoin(event: (handler: ServerGamePacketListenerImpl, PacketSender, MinecraftServer) -> Unit)
     abstract fun onPlayerAdvancement(event: (ServerPlayer, AdvancementHolder, criterionString: String) -> Unit)
-    abstract fun onFenceLeash(event: (Mob, BlockPos, ServerPlayer) -> Unit)
-    abstract fun onFenceUnleash(event: (Mob, BlockPos) -> Unit)
+    abstract fun onFenceLeash(event: (Leashable, BlockPos, ServerPlayer) -> Unit)
+    abstract fun onFenceUnleash(event: (Leashable, BlockPos) -> Unit)
     abstract fun beforeNameTagRename(event: (target: LivingEntity, Component, ServerPlayer, ItemStack, InteractionHand) -> InteractionResultHolder<ItemStack>)
     abstract fun onLootTableModify(event: (key: ResourceKey<LootTable>, tableBuilder: LootTable.Builder, source: LootTableSource, registries: HolderLookup.Provider) -> Unit)
 }

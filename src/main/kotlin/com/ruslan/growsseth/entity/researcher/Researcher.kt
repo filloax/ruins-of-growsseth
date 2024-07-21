@@ -147,9 +147,9 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             "dinnerbone" to false
         )
 
-        val SPEED_MODIFIER_DRINKING = AttributeModifier(resLoc("Researcher drinking speed penalty"), -0.2, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+        val SPEED_MODIFIER_DRINKING = AttributeModifier(resLoc("researcher_drinking_speed_penalty"), -0.2, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
         // Used when fighting someone that is not running away (using this instead of sprinting for control over amount):
-        val SPEED_MODIFIER_FIGHTING = AttributeModifier(resLoc("Researcher fighting speed boost"), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+        val SPEED_MODIFIER_FIGHTING = AttributeModifier(resLoc("researcher_fight_speed_penalty"), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
 
         // Used for drinking potions:
         private val DATA_USING_ITEM: EntityDataAccessor<Boolean> = SynchedEntityData.defineId(Researcher::class.java, EntityDataSerializers.BOOLEAN)
