@@ -2,11 +2,8 @@
   "elements": [
     {
       "element": {
-        "element_type": "fxlib:single_pool_element",
+        "element_type": "minecraft:single_pool_element",
         "location": "growsseth:cydonia/misc/golem_house",
-        "placeSettingsDefaults": {
-          "keepLiquids": false
-        },
         "processors": "minecraft:mossify_10_percent",
         "projection": "rigid"
       },

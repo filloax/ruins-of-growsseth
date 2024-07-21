@@ -2,11 +2,8 @@
   "elements": [
     {
       "element": {
-        "element_type": "fxlib:single_pool_element",
+        "element_type": "minecraft:single_pool_element",
         "location": "growsseth:ruins/conduit_church/maze",
-        "placeSettingsDefaults": {
-          "keepLiquids": false
-        },
         "processors": "minecraft:empty",
         "projection": "rigid"
       },
