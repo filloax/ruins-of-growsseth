@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Leashable;
 import net.minecraft.world.entity.Mob;
 
 public class LeashEvents {
@@ -41,12 +42,12 @@ public class LeashEvents {
     );
 
     public interface BeforeFenceLeash {
-        InteractionResult apply(Mob mob, BlockPos pos, ServerPlayer player);
+        InteractionResult apply(Leashable mob, BlockPos pos, ServerPlayer player);
     }
     public interface FenceUnleash {
-        void apply(Mob mob, BlockPos pos); //, ServerPlayer player);
+        void apply(Leashable mob, BlockPos pos); //, ServerPlayer player);
     }
     public interface FenceLeash {
-        void apply(Mob mob, BlockPos pos, ServerPlayer player);
+        void apply(Leashable mob, BlockPos pos, ServerPlayer player);
     }
 }

@@ -9,6 +9,7 @@ import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.Leashable
 import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.animal.horse.Donkey
 import net.minecraft.world.entity.decoration.LeashFenceKnotEntity
@@ -43,7 +44,7 @@ object ResearcherDonkey {
         return false
     }
 
-    fun onFenceUnleash(mob: Mob, pos: BlockPos) {
+    fun onFenceUnleash(mob: Leashable, pos: BlockPos) {
         if (!(mob is Donkey && mob.tags.contains(Constants.TAG_RESEARCHER_DONKEY))) return
 
         val playerRadius = 15.0
@@ -64,7 +65,7 @@ object ResearcherDonkey {
         mob.tags.remove(Constants.TAG_RESEARCHER_DONKEY)
     }
 
-    fun onFenceLeash(mob: Mob, pos: BlockPos, player: ServerPlayer) {
+    fun onFenceLeash(mob: Leashable, pos: BlockPos, player: ServerPlayer) {
         if (!(mob is Donkey && !mob.tags.contains(Constants.TAG_RESEARCHER_DONKEY))) return
 
         val serverLevel = player.serverLevel()

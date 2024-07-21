@@ -20,6 +20,7 @@ import net.minecraft.server.network.ServerGamePacketListenerImpl
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.Leashable
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.player.Player
@@ -63,9 +64,9 @@ object FabricEvents : ModEvents() {
 
     override fun onPlayerAdvancement(event: (ServerPlayer, AdvancementHolder, criterionString: String) -> Unit) = PlayerAdvancementEvent.EVENT.register(event)
 
-    override fun onFenceLeash(event: (Mob, BlockPos, ServerPlayer) -> Unit) = LeashEvents.FENCE_LEASH.register(event)
+    override fun onFenceLeash(event: (Leashable, BlockPos, ServerPlayer) -> Unit) = LeashEvents.FENCE_LEASH.register(event)
 
-    override fun onFenceUnleash(event: (Mob, BlockPos) -> Unit) = LeashEvents.FENCE_UNLEASH.register(event)
+    override fun onFenceUnleash(event: (Leashable, BlockPos) -> Unit) = LeashEvents.FENCE_UNLEASH.register(event)
 
     override fun beforeNameTagRename(event: (target: LivingEntity, Component, ServerPlayer, ItemStack, InteractionHand) -> InteractionResultHolder<ItemStack>) = NameTagRenameEvent.BEFORE.register(event)
 

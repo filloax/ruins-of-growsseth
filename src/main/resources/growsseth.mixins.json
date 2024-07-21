@@ -6,7 +6,6 @@
     "EasterEggMixin$ZombieMixin",
     "PlaceCommandMixin",
     "PlayerAdvancementsMixin",
-    "block.EndPortalBlockMixin",
     "block.WitherRoseBlockMixin",
     "custommapitem.CartographyTableMenu_ConstructorSlot1Mixin",
     "custommapitem.CartographyTableMenuMixin",
