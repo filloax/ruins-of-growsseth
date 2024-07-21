@@ -4,12 +4,13 @@ import com.filloax.fxlib.platform.ServerEvent
 import com.ruslan.growsseth.events.*
 import net.fabricmc.fabric.api.event.lifecycle.v1.*
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents
-import net.fabricmc.fabric.api.loot.v2.LootTableEvents
-import net.fabricmc.fabric.api.loot.v2.LootTableSource
+import net.fabricmc.fabric.api.loot.v3.LootTableEvents
+import net.fabricmc.fabric.api.loot.v3.LootTableSource
 import net.fabricmc.fabric.api.networking.v1.PacketSender
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.minecraft.advancements.AdvancementHolder
 import net.minecraft.core.BlockPos
+import net.minecraft.core.HolderLookup
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.MinecraftServer
@@ -68,5 +69,5 @@ object FabricEvents : ModEvents() {
 
     override fun beforeNameTagRename(event: (target: LivingEntity, Component, ServerPlayer, ItemStack, InteractionHand) -> InteractionResultHolder<ItemStack>) = NameTagRenameEvent.BEFORE.register(event)
 
-    override fun onLootTableModify(event: (key: ResourceKey<LootTable>, tableBuilder: LootTable.Builder, source: LootTableSource) -> Unit) = LootTableEvents.MODIFY.register(event)
+    override fun onLootTableModify(event: (key: ResourceKey<LootTable>, tableBuilder: LootTable.Builder, source: LootTableSource, registries: HolderLookup.Provider) -> Unit) = LootTableEvents.MODIFY.register(event)
 }

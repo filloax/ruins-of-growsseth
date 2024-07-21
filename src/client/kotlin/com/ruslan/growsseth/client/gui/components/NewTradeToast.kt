@@ -18,7 +18,7 @@ class NewTradeToast(newTrades: List<ResearcherItemListing>) : Toast {
         private const val DISPLAY_TIME = 5000.0
         private val TITLE_TEXT = Component.translatable("growsseth.notif.researcher_updated.toast.title")
         private val DESCRIPTION_TEXT = Component.translatable("growsseth.notif.researcher_updated.toast.description")
-        private val BACKGROUND_SPRITE = ResourceLocation("toast/recipe")
+        private val BACKGROUND_SPRITE = ResourceLocation.parse("toast/recipe")
 
         fun ToastComponent.updateNewTradeToast(trades: List<ResearcherItemListing>) {
             val tradeToast = getToast(NewTradeToast::class.java, Toast.NO_TOKEN)

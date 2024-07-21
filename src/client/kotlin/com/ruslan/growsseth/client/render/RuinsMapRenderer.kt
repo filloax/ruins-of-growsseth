@@ -47,26 +47,22 @@ object RuinsMapRenderer {
         val zOffset = 0f
         val buffer = bufferSource.getBuffer(RenderType.text(texture.atlasLocation()))
         val light = 15728880
-        buffer.vertex(poseMatrix, -1.0f, 1.0f, zOffset)
-            .color(255, 255, 255, 255)
-            .uv(h, l)
-            .uv2(light)
-            .endVertex()
-        buffer.vertex(poseMatrix, 1.0f, 1.0f, zOffset)
-            .color(255, 255, 255, 255)
-            .uv(m, l)
-            .uv2(light)
-            .endVertex()
-        buffer.vertex(poseMatrix, 1.0f, -1.0f, zOffset)
-            .color(255, 255, 255, 255)
-            .uv(m, n)
-            .uv2(light)
-            .endVertex()
-        buffer.vertex(poseMatrix, -1.0f, -1.0f, zOffset)
-            .color(255, 255, 255, 255)
-            .uv(h, n)
-            .uv2(light)
-            .endVertex()
+        buffer.addVertex(poseMatrix, -1.0f, 1.0f, zOffset)
+            .setColor(255, 255, 255, 255)
+            .setUv(h, l)
+            .setLight(light);
+        buffer.addVertex(poseMatrix, 1.0f, 1.0f, zOffset)
+            .setColor(255, 255, 255, 255)
+            .setUv(m, l)
+            .setLight(light);
+        buffer.addVertex(poseMatrix, 1.0f, -1.0f, zOffset)
+            .setColor(255, 255, 255, 255)
+            .setUv(m, n)
+            .setLight(light);
+        buffer.addVertex(poseMatrix, -1.0f, -1.0f, zOffset)
+            .setColor(255, 255, 255, 255)
+            .setUv(h, n)
+            .setLight(light);
         pose.popPose()
     }
 }

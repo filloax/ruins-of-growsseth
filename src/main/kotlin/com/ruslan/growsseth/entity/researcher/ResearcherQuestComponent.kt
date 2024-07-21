@@ -33,6 +33,7 @@ import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.Clearable
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.npc.VillagerProfession
 import net.minecraft.world.item.InstrumentItem
 import net.minecraft.world.item.Items
@@ -283,7 +284,7 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
             }
         }
 
-        private fun createDiary(entity: Entity, tent: ResearcherTent) {
+        private fun createDiary(entity: LivingEntity, tent: ResearcherTent) {
             val diary = BookTemplates.createTemplatedBook("quest_zombie", edit = { withAuthor(entity.name.string) })
             if (diary == null) {
                 RuinsOfGrowsseth.LOGGER.error("No diary for quest_zombie!")

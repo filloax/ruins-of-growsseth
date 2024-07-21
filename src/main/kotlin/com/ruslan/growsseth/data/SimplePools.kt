@@ -1,6 +1,5 @@
 package com.ruslan.growsseth.data
 
-import com.filloax.fxlib.api.structure.pools.FxSinglePoolElement
 import com.mojang.datafixers.util.Either
 import com.mojang.datafixers.util.Pair
 import com.ruslan.growsseth.structure.GrProcessorLists
@@ -18,6 +17,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool.Projection
+import net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSettings
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList
 import java.util.*
 
@@ -58,7 +58,7 @@ class SimplePools(private val context: BootstrapContext<StructureTemplatePool>) 
     }
 
     private fun bootstrapConduitChurch() {
-        registerPoolElementsWithCydonia("ruins/conduit_church/main", keepLiquids = true)
+        registerPoolElementsWithCydonia("ruins/conduit_church/main", overrideLiquidSettings = LiquidSettings.APPLY_WATERLOGGING)
         registerPoolElementsWithCydonia(
             "ruins/conduit_church/maze_end",
             "ruins/conduit_church/maze",
@@ -67,7 +67,7 @@ class SimplePools(private val context: BootstrapContext<StructureTemplatePool>) 
         registerPoolElements(
             "cydonia/ruins/conduit_church/follonichese",
             "cydonia/ruins/conduit_church/follonichese_shell",
-            keepLiquids = true,
+            overrideLiquidSettings = LiquidSettings.APPLY_WATERLOGGING,
         )
     }
 
@@ -109,7 +109,7 @@ class SimplePools(private val context: BootstrapContext<StructureTemplatePool>) 
     private fun bootstrapMinorRuins() {
         registerPoolElements(
             "ruins/conduit_ruins",
-            keepLiquids = true,
+            overrideLiquidSettings = LiquidSettings.APPLY_WATERLOGGING,
         )
         registerPoolElements(
             "ruins/noteblock_ship",
@@ -142,62 +142,60 @@ class SimplePools(private val context: BootstrapContext<StructureTemplatePool>) 
 
 
     private fun registerPoolElementsWithCydonia(
-        vararg paths: String, templatePaths: List<String> = paths.toList(), processors: Holder<StructureProcessorList> = emptyProcessor,
-        keepLiquids: Boolean? = false,
+        vararg paths: String,
+        templatePaths: List<String> = paths.toList(),
+        processors: Holder<StructureProcessorList> = emptyProcessor,
+        overrideLiquidSettings: LiquidSettings? = null,
     ) {
-        registerPoolElements(paths.toList().flatMap { listOf(it, "cydonia/$it") }, templatePaths.flatMap { listOf(it, "cydonia/$it") }, processors, keepLiquids)
+        registerPoolElements(
+            paths.toList().flatMap { listOf(it, "cydonia/$it") }, templatePaths.flatMap { listOf(it, "cydonia/$it") },
+            processors, overrideLiquidSettings
+        )
     }
 
     private fun registerPoolElements(
-        vararg paths: String, templatePaths: List<String> = paths.toList(), processors: Holder<StructureProcessorList> = emptyProcessor,
-        keepLiquids: Boolean? = false,
+        vararg paths: String,
+        templatePaths: List<String> = paths.toList(),
+        processors: Holder<StructureProcessorList> = emptyProcessor,
+        overrideLiquidSettings: LiquidSettings? = null,
     ) {
-        registerPoolElements(paths.toList(), templatePaths, processors, keepLiquids)
+        registerPoolElements(paths.toList(), templatePaths, processors, overrideLiquidSettings)
     }
 
     private fun registerPoolElements(
-        paths: List<String>, templatePaths: List<String> = paths.toList(), processors: Holder<StructureProcessorList> = emptyProcessor,
-        keepLiquids: Boolean? = false,
+        paths: List<String>,
+        templatePaths: List<String> = paths.toList(),
+        processors: Holder<StructureProcessorList> = emptyProcessor,
+        overrideLiquidSettings: LiquidSettings? = null,
     ) {
         for ((path, templatePath) in paths.zip(templatePaths)) {
-            if (keepLiquids != null)
-                registerFxPoolElement(path, templatePath, processors, keepLiquids)
-            else
-                registerSimplePoolElement(path, templatePath, processors)
+            registerSimplePoolElement(path, templatePath, processors, overrideLiquidSettings)
         }
     }
 
-    private fun registerSimplePoolElement(path: String, templatePath: String = path, processors: Holder<StructureProcessorList> = emptyProcessor) {
-        context.register(ResourceKey.create(Registries.TEMPLATE_POOL, resLoc(path)), StructureTemplatePool(
-            emptyPool,
-            listOf(
-                // Why didn't Mojang expose a function to do this with any resloc goddammit
-                Pair(singlePoolElement(resLoc(templatePath), processors), 1),
-            ),
-            Projection.RIGID
-        ))
-    }
-
-    private fun registerFxPoolElement(
-        path: String, templatePath: String = path, processors: Holder<StructureProcessorList> = emptyProcessor,
-        keepLiquids: Boolean? = null
+    private fun registerSimplePoolElement(
+        path: String,
+        templatePath: String = path,
+        processors: Holder<StructureProcessorList> = emptyProcessor,
+        overrideLiquidSettings: LiquidSettings? = null,
     ) {
-        context.register(ResourceKey.create(Registries.TEMPLATE_POOL, resLoc(path)), StructureTemplatePool(
-            emptyPool,
-            listOf(
-                Pair(singlePoolElementFx(resLoc(templatePath), processors, FxSinglePoolElement.StructurePlaceSettingsDefaults(
-                    keepLiquids = keepLiquids,
-                )), 1)
-            ),
-            Projection.RIGID,
-        ))
+        context.register(
+            ResourceKey.create(Registries.TEMPLATE_POOL, resLoc(path)), StructureTemplatePool(
+                emptyPool,
+                listOf(
+                    // Why didn't Mojang expose a function to do this with any resloc goddammit
+                    Pair(singlePoolElement(resLoc(templatePath), processors, overrideLiquidSettings), 1, ),
+                ),
+                Projection.RIGID
+            )
+        )
     }
 
-    private fun singlePoolElement(id: ResourceLocation, processors: Holder<StructureProcessorList>) = java.util.function.Function<Projection, SinglePoolElement> { proj ->
-       SinglePoolElement(Either.left(id), processors, proj)
-    }
-
-    private fun singlePoolElementFx(id: ResourceLocation, processors: Holder<StructureProcessorList>, placeDefaults: FxSinglePoolElement.StructurePlaceSettingsDefaults) = java.util.function.Function<Projection, FxSinglePoolElement> { proj ->
-       FxSinglePoolElement(Either.left(id), processors, proj, Optional.of(placeDefaults))
+    private fun singlePoolElement(
+        id: ResourceLocation,
+        processors: Holder<StructureProcessorList>,
+        overrideLiquidSettings: LiquidSettings? = null,
+    ) = java.util.function.Function<Projection, SinglePoolElement> { proj ->
+        SinglePoolElement(Either.left(id), processors, proj, Optional.ofNullable(overrideLiquidSettings))
     }
 }

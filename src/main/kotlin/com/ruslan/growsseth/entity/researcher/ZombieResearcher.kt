@@ -10,6 +10,7 @@ import com.ruslan.growsseth.entity.SpawnTimeTracker
 import com.ruslan.growsseth.http.GrowssethExtraEvents
 import com.ruslan.growsseth.item.GrowssethItems
 import net.minecraft.core.BlockPos
+import net.minecraft.core.registries.Registries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.Difficulty
@@ -202,12 +203,14 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
         } }
     }
 
-    override fun dropCustomDeathLoot(damageSource: DamageSource, looting: Int, hitByPlayer: Boolean) {
-        super.dropCustomDeathLoot(damageSource, looting, hitByPlayer)
+
+    override fun dropCustomDeathLoot(level: ServerLevel, damageSource: DamageSource, hitByPlayer: Boolean) {
+        super.dropCustomDeathLoot(level, damageSource, hitByPlayer)
+        val registry = level.registryAccess().registryOrThrow(Registries.ENCHANTMENT)
         val daggerItem = ItemStack(GrowssethItems.RESEARCHER_DAGGER)
-        daggerItem.enchant(Enchantments.SMITE, 5)
-        daggerItem.enchant(Enchantments.UNBREAKING, 3)
-        daggerItem.enchant(Enchantments.MENDING, 1)
+        daggerItem.enchant(registry.getHolderOrThrow(Enchantments.SMITE), 5)
+        daggerItem.enchant(registry.getHolderOrThrow(Enchantments.UNBREAKING), 3)
+        daggerItem.enchant(registry.getHolderOrThrow(Enchantments.MENDING), 1)
         val itemEntity = ItemEntity(level(), position().x, position().y, position().z, daggerItem)
         level().addFreshEntity(itemEntity)
     }

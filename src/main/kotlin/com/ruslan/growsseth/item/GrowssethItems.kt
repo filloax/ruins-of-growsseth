@@ -7,6 +7,7 @@ import com.ruslan.growsseth.sound.GrowssethSounds
 import com.ruslan.growsseth.utils.resLoc
 import net.minecraft.ChatFormatting
 import net.minecraft.core.Holder
+import net.minecraft.core.Registry
 import net.minecraft.core.registries.Registries
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
@@ -15,6 +16,8 @@ import net.minecraft.sounds.SoundEvent
 import net.minecraft.world.item.*
 import net.minecraft.world.item.Item.Properties
 import net.minecraft.world.item.armortrim.TrimPattern
+import net.minecraft.world.level.block.entity.DecoratedPotPattern
+import net.minecraft.world.level.block.entity.DecoratedPotPatterns
 
 object GrowssethItems {
 	val all = mutableMapOf<ResourceLocation, Item>()
@@ -24,10 +27,13 @@ object GrowssethItems {
 	val ZOMBIE_RESEARCHER_SPAWN_EGG = make("zombie_researcher_spawn_egg", SpawnEggItem(GrowssethEntities.ZOMBIE_RESEARCHER, 16446952, 7115863, defaultBuilder()), autoGenerateJson = false)
 	val RESEARCHER_HORN = make("researcher_horn", ResearcherHornItem(defaultBuilder().rarity(Rarity.EPIC).stacksTo(1).fireResistant(), GrowssethTags.RESEARCHER_HORNS), autoGenerateJson = false)
 	// 5 attack (2 less than diamond sword), 2,5 attack speed (sword speed + 0,9) (sword modifiers: 3 and -2.4):
-	val RESEARCHER_DAGGER = make("researcher_dagger",
-		ResearcherDaggerItem(Tiers.DIAMOND, Properties()
-			.rarity(Rarity.EPIC)
-			.attributes(SwordItem.createAttributes(Tiers.DIAMOND, 1, -1.5F)),
+	val RESEARCHER_DAGGER = make(
+		"researcher_dagger",
+		ResearcherDaggerItem(
+			Tiers.DIAMOND,
+			Properties()
+				.rarity(Rarity.EPIC)
+				.attributes(SwordItem.createAttributes(Tiers.DIAMOND, 1, -1.5F)),
 		),
 		autoGenerateJson = false,
 	)
@@ -38,75 +44,75 @@ object GrowssethItems {
 	val FRAGMENT_BALLATA_DEL_RESPAWN = make("fragment_ballata_del_respawn", DiscFragmentItem(Properties()))
 
 	// Custom discs
-	val DISC_SEGA_DI_NIENTE 		= makeDisc("disc_sega_di_niente", GrowssethSounds.DISC_SEGA_DI_NIENTE, 119, listOf(
+	val DISC_SEGA_DI_NIENTE 		= makeDisc("disc_sega_di_niente", GrowssethJukeboxSongs.SEGA_DI_NIENTE, listOf(
 		"Vocals & Lyrics - Cydonia",
 		"Mixing - Guber",
 		"Cover of 'Labyrinthine', by Lena Raine"
 	))
-	val DISC_GIORGIO_CUBETTI 		= makeDisc("disc_giorgio_cubetti", GrowssethSounds.DISC_GIORGIO_CUBETTI, 161, listOf(
+	val DISC_GIORGIO_CUBETTI 		= makeDisc("disc_giorgio_cubetti", GrowssethJukeboxSongs.GIORGIO_CUBETTI, listOf(
 		"Vocals, Mix & Master - Singalek",
 		"Lyrics - Singalek, Cydonia",
 		"Cover of 'If I Could, I Would' - MINDME"
 	),
 		ytChannel = "SingalekSMW"
 	)
-	val DISC_GIORGIO_LOFI 			= makeDisc("disc_giorgio_lofi", GrowssethSounds.DISC_GIORGIO_LOFI, 295, listOf(
+	val DISC_GIORGIO_LOFI 			= makeDisc("disc_giorgio_lofi", GrowssethJukeboxSongs.GIORGIO_LOFI, listOf(
 		"Instrumental, Vocals, Mix, Master - Singalek",
 		"Lyrics - Singalek, Cydonia"
 	),
 		ytChannel = "SingalekSMW"
 	)
-	val DISC_GIORGIO_LOFI_INST 		= makeDisc("disc_giorgio_lofi_inst", GrowssethSounds.DISC_GIORGIO_LOFI_INST, 295,
+	val DISC_GIORGIO_LOFI_INST 		= makeDisc("disc_giorgio_lofi_inst", GrowssethJukeboxSongs.GIORGIO_LOFI_INST,
 		ytChannel = "SingalekSMW"
 	)
-	val DISC_GIORGIO_FINDING_HOME 	= makeDisc("disc_giorgio_finding_home", GrowssethSounds.DISC_GIORGIO_FINDING_HOME, 186,
+	val DISC_GIORGIO_FINDING_HOME 	= makeDisc("disc_giorgio_finding_home", GrowssethJukeboxSongs.GIORGIO_FINDING_HOME,
 		ytChannel = "HunterProduction"
 	)
-	val DISC_GIORGIO_8BIT		 	= makeDisc("disc_giorgio_8bit", GrowssethSounds.DISC_GIORGIO_8BIT, 152, listOf(
+	val DISC_GIORGIO_8BIT		 	= makeDisc("disc_giorgio_8bit", GrowssethJukeboxSongs.GIORGIO_8BIT, listOf(
 		"Music - Hawkelele",
 		"Based on 'Giorgio Cubetti' by Singalek",
 		"Cover of 'If I Could, I Would' - MINDME"
 	), ytChannel = "IlCoroDiMammonk")
-	val DISC_BINOBINOOO 			= makeDisc("disc_binobinooo", GrowssethSounds.DISC_BINOBINOOO, 98,
+	val DISC_BINOBINOOO 			= makeDisc("disc_binobinooo", GrowssethJukeboxSongs.BINOBINOOO,
 		ytChannel = "SingalekSMW"
 	)
-	val DISC_PADRE_MAMMONK 			= makeDisc("disc_padre_mammonk", GrowssethSounds.DISC_PADRE_MAMMONK, 74, listOf(
+	val DISC_PADRE_MAMMONK 			= makeDisc("disc_padre_mammonk", GrowssethJukeboxSongs.PADRE_MAMMONK, listOf(
 		"Vocals - Emoon LeStrange, HunterProduction, KalarFenrir, Singalek",
 		"Chorus composed by Emoon LeStrange",
 		"Cover of 'All is Found' - Evan Rachel Wood"
 	), ytChannel = "IlCoroDiMammonk")
-	val DISC_ABBANDONATI 			= makeDisc("disc_abbandonati", GrowssethSounds.DISC_ABBANDONATI, 145, listOf(
+	val DISC_ABBANDONATI 			= makeDisc("disc_abbandonati", GrowssethJukeboxSongs.ABBANDONATI, listOf(
 		"Lyrics - Cydonia",
 		"Vocals - Ako",
 		"Music, Mix & Master - R-E-M"
 	), ytChannel = "rem.producer")
-	val DISC_MISSIVA_NELL_OMBRA 	= makeDisc("disc_missiva_nell_ombra", GrowssethSounds.DISC_MISSIVA_NELL_OMBRA, 329, listOf(
+	val DISC_MISSIVA_NELL_OMBRA 	= makeDisc("disc_missiva_nell_ombra", GrowssethJukeboxSongs.MISSIVA_NELL_OMBRA, listOf(
 		"Vocals - Singalek",
 		"Music - Hawkelele, Monnui, AndreWharn, HunterProduction, 't Hooft",
 		"Cover of 'Sleepsong' - Secret Garden"
 	), ytChannel = "IlCoroDiMammonk")
-	val DISC_OURSTEPS 				= makeDisc("disc_oursteps", GrowssethSounds.DISC_OURSTEPS, 154, listOf(
+	val DISC_OURSTEPS 				= makeDisc("disc_oursteps", GrowssethJukeboxSongs.OURSTEPS, listOf(
 		"Vocals - Singalek, Blessing Of No One",
 		"Music - Lena Raine, IridioSound, Avage",
 		"Cover of 'Pigstep' - Lena Raine"
 	), ytChannel = "IlCoroDiMammonk")
-	val DISC_ODI_ET_AMO 			= makeDisc("disc_odi_et_amo", GrowssethSounds.DISC_ODI_ET_AMO, 191, listOf(
+	val DISC_ODI_ET_AMO 			= makeDisc("disc_odi_et_amo", GrowssethJukeboxSongs.ODI_ET_AMO, listOf(
 		"Vocals - Jova117, Emoon LeStrange",
 		"Music - Hawkelele, Jova117"
 	), ytChannel = "IlCoroDiMammonk")
-	val DISC_ANCORA_QUI 			= makeDisc("disc_ancora_qui", GrowssethSounds.DISC_ANCORA_QUI, 145, listOf(
+	val DISC_ANCORA_QUI 			= makeDisc("disc_ancora_qui", GrowssethJukeboxSongs.ANCORA_QUI, listOf(
 		"Vocals - Avage, Emoon LeStrange, Singalek",
 		"Music - Avage"
 	), ytChannel = "IlCoroDiMammonk")
-	val DISC_BALLATA_DEL_RESPAWN 	= makeDisc("disc_ballata_del_respawn", GrowssethSounds.DISC_BALLATA_DEL_RESPAWN, 266, listOf(
+	val DISC_BALLATA_DEL_RESPAWN 	= makeDisc("disc_ballata_del_respawn", GrowssethJukeboxSongs.BALLATA_DEL_RESPAWN, listOf(
 		"Vocals - Monnui",
 		"Music - Monnui, Singalek, IridioSound"
 	), ytChannel = "IlCoroDiMammonk")
-	val DISC_CACO_CACO 				= makeDisc("disc_caco_caco", GrowssethSounds.DISC_CACO_CACO, 145, listOf(
+	val DISC_CACO_CACO 				= makeDisc("disc_caco_caco", GrowssethJukeboxSongs.CACO_CACO, listOf(
 		"Vocals - Blessing Of No One, HunterProduction, KalarFenrir, Singalek",
 		"Music - HunterProduction"
 	), ytChannel = "IlCoroDiMammonk")
-	val DISC_PESCI_STRANI 			= makeDisc("disc_pesci_strani", GrowssethSounds.DISC_PESCI_STRANI, 157, listOf(
+	val DISC_PESCI_STRANI 			= makeDisc("disc_pesci_strani", GrowssethJukeboxSongs.PESCI_STRANI, listOf(
 		"Vocals - Emoon LeStrange, Singalek",
 		"Music - Hawkelele, Emoon LeStrange, Monnui, Singalek"
 	), ytChannel = "IlCoroDiMammonk")
@@ -156,13 +162,13 @@ object GrowssethItems {
 	}
 
 	private fun makeDisc(
-		name: String, sound: SoundEvent, lengthInSeconds: Int,
+		name: String, jukeboxSong: ResourceKey<JukeboxSong>,
 		authors: List<String> = listOf(),
 		ytChannel: String? = null,
 		properties: Properties = Properties(),
 	) =
 		make(name, RecordCreditsItem(
-			6, sound, properties.stacksTo(1), lengthInSeconds,
+			jukeboxSong, properties.stacksTo(1),
 			authors, listOfNotNull(ytChannel?.let { Component.literal("YT: @$it").withStyle(ChatFormatting.RED) })
 		))
 
@@ -170,7 +176,6 @@ object GrowssethItems {
 		all.forEach{
 			registrator(it.key, it.value)
 		}
-		SherdPatterns.registerSherds()
 	}
 
 	private fun defaultItem(): Item = Item(defaultBuilder())
@@ -182,11 +187,19 @@ object GrowssethItems {
 	}
 
 	object SherdPatterns {
-		val GROWSSETH = resLoc("growsseth_pottery_pattern")
+		val GROWSSETH = create("growsseth_pottery_pattern")
 
-		fun registerSherds() {
-			// Use the library, pattern pngs must be located in assets/<modid>/textures/entity/decorated_pot/<id>.png
-			PotPatternRegistry.register(GROWSSETH_POTTERY_SHERD, GROWSSETH)
+		@JvmField
+		val sherdToPattern = mapOf(
+			GROWSSETH_POTTERY_SHERD to GROWSSETH
+		)
+
+		private fun create(name: String) =
+			Pair(ResourceKey.create(Registries.DECORATED_POT_PATTERN, resLoc(name)), DecoratedPotPattern(resLoc(name)))
+
+
+		fun registerPotPatterns(registrator: (ResourceKey<DecoratedPotPattern>, DecoratedPotPattern) -> Unit) {
+			registrator(GROWSSETH.first, GROWSSETH.second)
 		}
 	}
 
