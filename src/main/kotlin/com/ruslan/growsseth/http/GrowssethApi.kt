@@ -1,6 +1,7 @@
 package com.ruslan.growsseth.http
 
 import com.mojang.datafixers.util.Either
+import com.ruslan.growsseth.RuinsOfGrowsseth
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.MinecraftServer
@@ -26,7 +27,10 @@ interface GrowssethApi {
 
     companion object {
         val current: GrowssethApi
-            get() = GrowssethApiV2
+            get() = if (!RuinsOfGrowsseth.cydoniaMode)
+                    GrowssethApiV2
+                else
+                    GrowssethApiV1
     }
 }
 
