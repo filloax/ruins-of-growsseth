@@ -7,6 +7,7 @@
     -10
   ],
   "force_pos_uses_y": true,
+  "liquid_settings": "ignore_waterlogging",
   "max_distance_from_center": 80,
   "normal_placement_uses_default_rotation": false,
   "size": 7,
