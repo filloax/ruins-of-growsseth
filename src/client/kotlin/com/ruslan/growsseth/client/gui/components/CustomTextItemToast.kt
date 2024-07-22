@@ -19,7 +19,7 @@ class CustomTextItemToast private constructor(
     private var messageLines: List<FormattedCharSequence>,
     private var item: ItemStack,
     private val width: Int,
-    val bgTexture: ResourceLocation = ResourceLocation("toast/advancement"),
+    val bgTexture: ResourceLocation = ResourceLocation.parse("toast/advancement"),
 ) : Toast {
     private var lastChanged: Long = 0
     private var changed = false

@@ -2,6 +2,7 @@ package com.ruslan.growsseth.item
 
 import net.fabricmc.fabric.api.item.v1.EnchantingContext
 import net.minecraft.ChatFormatting
+import net.minecraft.core.Holder
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 import net.minecraft.world.item.ItemStack
@@ -29,10 +30,10 @@ class ResearcherDaggerItem(tier: Tier, properties: Properties) : SwordItem(tier,
 
     override fun canBeEnchantedWith(
         stack: ItemStack,
-        enchantment: Enchantment,
+        enchantment: Holder<Enchantment>,
         context: EnchantingContext
     ): Boolean {
-        if (listOf(Enchantments.KNOCKBACK, Enchantments.SWEEPING_EDGE).contains(enchantment))
+        if (enchantment.unwrapKey().map { listOf(Enchantments.KNOCKBACK, Enchantments.SWEEPING_EDGE).contains(it) }.orElse(false))
             return false
         if (enchantment == Enchantments.BREACH)
             return true

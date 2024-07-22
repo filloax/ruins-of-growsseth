@@ -59,7 +59,7 @@ class ResearcherRenderer(context: EntityRendererProvider.Context) : MobRenderer<
 
     companion object {
         private val RESEARCHER_SKIN = resLoc("textures/entity/illager/researcher.png")
-        private val RESEARCHER_TYPE_SKIN = ResourceLocation("minecraft", "textures/entity/villager/type/plains.png")
+        private val RESEARCHER_TYPE_SKIN = ResourceLocation.fromNamespaceAndPath("minecraft", "textures/entity/villager/type/plains.png")
         private val RESEARCHER_CLOTHES = resLoc("textures/entity/villager/profession/researcher.png")
         private val RESEARCHER_CLOTHES_UNSHEATED_DAGGER = resLoc(
             "textures/entity/villager/profession/researcher_unsheated.png"

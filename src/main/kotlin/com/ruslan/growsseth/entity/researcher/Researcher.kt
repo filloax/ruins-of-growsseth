@@ -1,7 +1,6 @@
 package com.ruslan.growsseth.entity.researcher
 
 import com.filloax.fxlib.api.entity.delegate
-import com.filloax.fxlib.api.entity.fixedChangeDimension
 import com.filloax.fxlib.api.entity.getPersistData
 import com.filloax.fxlib.api.nbt.getCompoundOrNull
 import com.filloax.fxlib.api.nbt.loadField
@@ -32,6 +31,7 @@ import com.ruslan.growsseth.quests.QuestOwner
 import com.ruslan.growsseth.structure.pieces.ResearcherTent
 import com.ruslan.growsseth.structure.structure.ResearcherTentStructure
 import com.ruslan.growsseth.utils.GrowssethCodecs
+import com.ruslan.growsseth.utils.resLoc
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
 import net.minecraft.core.UUIDUtil
@@ -92,7 +92,7 @@ import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.level.levelgen.structure.Structure
 import net.minecraft.world.level.levelgen.structure.StructureStart
-import net.minecraft.world.level.portal.PortalInfo
+import net.minecraft.world.level.portal.DimensionTransition
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
@@ -147,9 +147,9 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             "dinnerbone" to false
         )
 
-        val SPEED_MODIFIER_DRINKING = AttributeModifier(UUID.randomUUID(), "Researcher drinking speed penalty", -0.2, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+        val SPEED_MODIFIER_DRINKING = AttributeModifier(resLoc("researcher_drinking_speed_penalty"), -0.2, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
         // Used when fighting someone that is not running away (using this instead of sprinting for control over amount):
-        val SPEED_MODIFIER_FIGHTING = AttributeModifier(UUID.randomUUID(), "Researcher fighting speed boost", 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+        val SPEED_MODIFIER_FIGHTING = AttributeModifier(resLoc("researcher_fight_speed_penalty"), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
 
         // Used for drinking potions:
         private val DATA_USING_ITEM: EntityDataAccessor<Boolean> = SynchedEntityData.defineId(Researcher::class.java, EntityDataSerializers.BOOLEAN)
@@ -394,7 +394,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     // Server side only
     private fun handleItems() {
         if (isUsingItem) {
-            if (!isSilent && itemUsingTime == (offhandItem.useDuration / 4)) {    // play drinking sound when item is halfway consumed
+            if (!isSilent && itemUsingTime == (offhandItem.getUseDuration(this) / 4)) {    // play drinking sound when item is halfway consumed
                 val itemStack = offhandItem
 
                 val sound = when (itemStack.item) {
@@ -437,8 +437,10 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
                     val targetLevel = server?.getLevel(startingDimension) ?:
                         throw IllegalStateException("Unkown level when researcher teleporting to start dimension $startingDimension")
 
-                    fixedChangeDimension(targetLevel, PortalInfo(
-                        startingPos!!.center, Vec3.ZERO, yRot, xRot
+                    changeDimension(DimensionTransition(
+                        targetLevel,
+                        startingPos!!.center, Vec3.ZERO, yRot, xRot,
+                        { }
                     ))
                     gameEvent(GameEvent.TELEPORT)
                 }
@@ -493,7 +495,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
                 itemUsingTime = if (offhandItem.`is`(Items.ENDER_PEARL))
                     1f.secondsToTicks()
                 else
-                    offhandItem.useDuration / 2
+                    offhandItem.getUseDuration(this) / 2
                 isUsingItem = true
 
                 val attributeInstance = getAttribute(Attributes.MOVEMENT_SPEED)
@@ -1017,12 +1019,11 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         } else SoundEvents.WANDERING_TRADER_AMBIENT
     }
 
-    override fun canBeLeashed(player: Player): Boolean = false
     override fun getVillagerXp(): Int = 0
     override fun overrideXp(i: Int) { }
     override fun showProgressBar(): Boolean = false
-    override fun getExperienceReward(): Int { return RESEARCHER_XP }
-    override fun canDisableShield(): Boolean { return true }
+    override fun getBaseExperienceReward(): Int = RESEARCHER_XP
+    override fun canDisableShield(): Boolean = true
 
     override fun getAttackBoundingBox(): AABB {
         val aABB3: AABB = super.getAttackBoundingBox()
@@ -1041,16 +1042,17 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         this.setItemSlot(EquipmentSlot.MAINHAND, combat.createWeapon())
     }
 
-    override fun dropCustomDeathLoot(damageSource: DamageSource, looting: Int, hitByPlayer: Boolean) {
+    override fun dropCustomDeathLoot(level: ServerLevel, damageSource: DamageSource, hitByPlayer: Boolean) {
+        val registry = level().registryAccess().registryOrThrow(Registries.ENCHANTMENT)
         val itemEntity = ItemEntity(level(), position().x, position().y, position().z, ItemStack(GrowssethItems.RESEARCHER_DAGGER).also { dagger ->
-            dagger.enchant(Enchantments.UNBREAKING, 3)
-            dagger.enchant(Enchantments.MENDING, 1)
-            dagger.enchant(Enchantments.SMITE, 5)       // smite only on drop to prevent exploits
+            dagger.enchant(registry.getHolderOrThrow(Enchantments.UNBREAKING), 3)
+            dagger.enchant(registry.getHolderOrThrow(Enchantments.MENDING), 1)
+            dagger.enchant(registry.getHolderOrThrow(Enchantments.SMITE), 5)       // smite only on drop to prevent exploits
         })
         level().addFreshEntity(itemEntity)
     }
 
-    override fun handleNetherPortal() {
+    override fun handlePortal() {
         if (ResearcherConfig.researcherTeleports) {
             return // prevent nether portal interaction
         }

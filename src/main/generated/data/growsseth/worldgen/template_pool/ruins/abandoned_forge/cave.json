@@ -2,11 +2,8 @@
   "elements": [
     {
       "element": {
-        "element_type": "fxlib:single_pool_element",
+        "element_type": "minecraft:single_pool_element",
         "location": "growsseth:ruins/abandoned_forge/cave",
-        "placeSettingsDefaults": {
-          "keepLiquids": false
-        },
         "processors": "growsseth:forge_degradation",
         "projection": "rigid"
       },

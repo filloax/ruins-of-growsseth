@@ -57,7 +57,7 @@ class ResearcherTentStructure(
 
         fun build(ctx: BootstrapContext<Structure>, templatePath: ResourceLocation = ResearcherTent.DEFAULT_ID, offsetY: Int = -BASEMENT_HEIGHT): ResearcherTentStructure {
             return ResearcherTentStructure(StructureSettings(
-                ctx.lookup(Registries.BIOME).getOrThrow(TagKey.create(Registries.BIOME, ResourceLocation("growsseth:has_structure/researcher_tent"))),
+                ctx.lookup(Registries.BIOME).getOrThrow(TagKey.create(Registries.BIOME, ResourceLocation.parse("growsseth:has_structure/researcher_tent"))),
                 mapOf(),
                 GenerationStep.Decoration.SURFACE_STRUCTURES,
                 TerrainAdjustment.NONE,

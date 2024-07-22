@@ -3,16 +3,17 @@ package com.ruslan.growsseth.item
 import com.filloax.fxlib.api.FxUtils
 import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
-import net.minecraft.sounds.SoundEvent
+import net.minecraft.resources.ResourceKey
+import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.RecordItem
+import net.minecraft.world.item.JukeboxSong
 import net.minecraft.world.item.TooltipFlag
 
 class RecordCreditsItem(
-    analogOutput: Int, sound: SoundEvent, properties: Properties, lengthInSeconds: Int,
+    jukeboxSong: ResourceKey<JukeboxSong>, properties: Properties,
     val authors: List<String>,
     val extra: List<Component> = listOf(),
-) : RecordItem(analogOutput, sound, properties, lengthInSeconds) {
+) : Item(properties.jukeboxPlayable(jukeboxSong)) {
     override fun appendHoverText(
         stack: ItemStack,
         context: TooltipContext,

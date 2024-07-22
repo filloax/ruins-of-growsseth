@@ -21,10 +21,11 @@ import com.ruslan.growsseth.structure.locate.StoppableAsyncLocator
 import com.ruslan.growsseth.utils.MixinHelpers
 import com.ruslan.growsseth.worldgen.worldpreset.GrowssethWorldPreset
 import com.ruslan.growsseth.worldgen.worldpreset.LocationNotifListener
-import net.fabricmc.fabric.api.loot.v2.LootTableSource
+import net.fabricmc.fabric.api.loot.v3.LootTableSource
 import net.fabricmc.fabric.api.networking.v1.PacketSender
 import net.minecraft.advancements.AdvancementHolder
 import net.minecraft.core.BlockPos
+import net.minecraft.core.HolderLookup
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.MinecraftServer
@@ -34,6 +35,7 @@ import net.minecraft.server.network.ServerGamePacketListenerImpl
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.Leashable
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.player.Player
@@ -134,8 +136,8 @@ abstract class ModEvents {
         // Register singularly because returns
         beforeNameTagRename(Researcher.Callbacks::nameTagRename)
 
-        onLootTableModify { key, tableBuilder, source ->
-            VanillaStructureLoot.onModifyLootTables(key, tableBuilder, source)
+        onLootTableModify { key, tableBuilder, source, registries ->
+            VanillaStructureLoot.onModifyLootTables(key, tableBuilder, source, registries)
         }
     }
 
@@ -162,8 +164,8 @@ abstract class ModEvents {
     abstract fun afterPlayerPlaceBlock(event: (Player, Level, BlockPos, BlockPlaceContext, BlockState, BlockItem) -> Unit)
     abstract fun onPlayerServerJoin(event: (handler: ServerGamePacketListenerImpl, PacketSender, MinecraftServer) -> Unit)
     abstract fun onPlayerAdvancement(event: (ServerPlayer, AdvancementHolder, criterionString: String) -> Unit)
-    abstract fun onFenceLeash(event: (Mob, BlockPos, ServerPlayer) -> Unit)
-    abstract fun onFenceUnleash(event: (Mob, BlockPos) -> Unit)
+    abstract fun onFenceLeash(event: (Leashable, BlockPos, ServerPlayer) -> Unit)
+    abstract fun onFenceUnleash(event: (Leashable, BlockPos) -> Unit)
     abstract fun beforeNameTagRename(event: (target: LivingEntity, Component, ServerPlayer, ItemStack, InteractionHand) -> InteractionResultHolder<ItemStack>)
-    abstract fun onLootTableModify(event: (key: ResourceKey<LootTable>, tableBuilder: LootTable.Builder, source: LootTableSource) -> Unit)
+    abstract fun onLootTableModify(event: (key: ResourceKey<LootTable>, tableBuilder: LootTable.Builder, source: LootTableSource, registries: HolderLookup.Provider) -> Unit)
 }

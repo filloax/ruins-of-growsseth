@@ -11,7 +11,7 @@ import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement
 
 
 fun resLoc(str: String): ResourceLocation {
-    return ResourceLocation(RuinsOfGrowsseth.MOD_ID, str)
+    return ResourceLocation.fromNamespaceAndPath(RuinsOfGrowsseth.MOD_ID, str)
 }
 
 fun MerchantOffer.contentEquals(other: Any?): Boolean {

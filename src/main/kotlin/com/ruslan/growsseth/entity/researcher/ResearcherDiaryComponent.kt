@@ -34,6 +34,7 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.tags.TagKey
 import net.minecraft.world.Container
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.targeting.TargetingConditions
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.item.ItemStack
@@ -378,7 +379,7 @@ object DiaryHelper {
         return true
     }
 
-    fun pushDiaryToContainers(book: ItemStack, level: ServerLevel, entity: Entity, lectern: LecternBlockEntity?, chest: ChestBlockEntity?, skipExisting: Boolean = false) {
+    fun pushDiaryToContainers(book: ItemStack, level: ServerLevel, entity: LivingEntity, lectern: LecternBlockEntity?, chest: ChestBlockEntity?, skipExisting: Boolean = false) {
         var currentItem: ItemStack? = book
 
         lectern?.let {

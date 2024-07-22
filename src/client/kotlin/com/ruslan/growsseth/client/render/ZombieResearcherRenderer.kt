@@ -26,7 +26,7 @@ class ZombieResearcherRenderer(context: EntityRendererProvider.Context) :
 
     companion object {
         val RESEARCHER_BASE_SKIN = resLoc("textures/entity/villager/researcher_zombie.png")
-        val RESEARCHER_TYPE_SKIN = ResourceLocation("minecraft", "textures/entity/zombie_villager/type/plains.png")
+        val RESEARCHER_TYPE_SKIN = ResourceLocation.fromNamespaceAndPath("minecraft", "textures/entity/zombie_villager/type/plains.png")
         val RESEARCHER_CLOTHES = resLoc("textures/entity/villager/profession/researcher_zombie.png") // different texture because elbows mess with zombie hands
     }
 

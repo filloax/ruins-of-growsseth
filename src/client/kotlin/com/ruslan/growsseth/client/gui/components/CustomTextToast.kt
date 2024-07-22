@@ -14,7 +14,7 @@ class CustomTextToast private constructor(
     private var title: Component,
     private var messageLines: List<FormattedCharSequence>,
     private val width: Int,
-    val bgTexture: ResourceLocation = ResourceLocation("toast/system"),
+    val bgTexture: ResourceLocation = ResourceLocation.parse("toast/system"),
 ) : Toast {
     private var lastChanged: Long = 0
     private var changed = false
