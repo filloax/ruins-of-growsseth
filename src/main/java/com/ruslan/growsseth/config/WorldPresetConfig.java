@@ -40,15 +40,11 @@ public class WorldPresetConfig {
         GrowssethStructures.CydoniaVersion.CONDUIT_CHURCH,  new PosPreset(-1553, 39, 2527, Rotation.CLOCKWISE_180)
     );
 
-    @ConfigButton(text = "Apply updated preset", target = "researcherTent", position = Position.BEFORE)
-    public static void useUpdatedPreset() {
-        usePreset(PRESET_UPDATED);
-    }
+    @ConfigButton(text = "Apply updated preset")
+    public static final Runnable useUpdatedPreset = () -> usePreset(PRESET_UPDATED);
 
-    @ConfigButton(text = "Apply original preset", target = "researcherTent", position = Position.BEFORE)
-    public static void useOriginalPreset() {
-        usePreset(PRESET_ORIGINAL);
-    }
+    @ConfigButton(text = "Apply original preset")
+    public static final Runnable useOriginalPreset = () -> usePreset(PRESET_ORIGINAL);
 
     private static void usePreset(Map<ResourceKey<Structure>, PosPreset> preset) {
         researcherTent.assign(new StructureInWorldConfig(GrowssethStructures.CydoniaVersion.RESEARCHER_TENT, preset));
@@ -114,7 +110,7 @@ public class WorldPresetConfig {
         public Rotation rotation;
 
         public ResourceLocation structureId() {
-            return new ResourceLocation(structureId);
+            return ResourceLocation.parse(structureId);
         }
         public ResourceKey<Structure> structureKey() {
             return ResourceKey.create(Registries.STRUCTURE, structureId());

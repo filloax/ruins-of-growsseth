@@ -29,15 +29,10 @@ class GrowssethSounds {
         val DISC_PESCI_STRANI = registerSoundEvent("disc_pesci_strani")
 
         val DEFLECT_ARROW_SOUND = registerSoundEvent("deflect_arrow_sound")
-        val RESEARCHER_HORN_SOUND = registerSoundEventHolder("researcher_horn_sound")
+        val RESEARCHER_HORN_SOUND = registerSoundEvent("researcher_horn_sound")
 
-        private fun registerSoundEvent(name: String): SoundEvent {
-            val id = ResourceLocation(RuinsOfGrowsseth.MOD_ID, name)
-            return Registry.register(BuiltInRegistries.SOUND_EVENT, id, SoundEvent.createVariableRangeEvent(id))
-        }
-
-        private fun registerSoundEventHolder(name: String): Holder<SoundEvent> {
-            val id = ResourceLocation(RuinsOfGrowsseth.MOD_ID, name)
+        private fun registerSoundEvent(name: String): Holder.Reference<SoundEvent> {
+            val id = ResourceLocation.fromNamespaceAndPath(RuinsOfGrowsseth.MOD_ID, name)
             return Registry.registerForHolder(BuiltInRegistries.SOUND_EVENT, id, SoundEvent.createVariableRangeEvent(id))
         }
     }

@@ -1,4 +1,5 @@
 import com.ruslan.gradle.TransformTokensTask
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.incremental.deleteDirectoryContents
 
@@ -18,6 +19,7 @@ val javaVersion: Int = (property("javaVersion")!! as String).toInt()
 val kotlinVersion: String by project
 val kotlinSerializationVersion: String by project
 val javaVersionEnum = JavaVersion.values().find { it.majorVersion == javaVersion.toString() } ?: throw Exception("Cannot find java version for $javaVersion")
+val jvmTargetEnum = JvmTarget.valueOf("JVM_$javaVersion")
 
 val useLocalJarFxLib = (property("useLocalJarFxLib") as String).toBoolean()
 val alwaysUseLocalMavenFXLib = (property("alwaysUseLocalMavenFXLib")!! as String).toBoolean()
@@ -115,7 +117,7 @@ dependencies {
 		modImplementation(it)
 //		include(it)
 	}
-	"com.teamresourceful.resourcefulconfig:resourcefulconfig-fabric-$resConfigMcVersion:$resConfigVersion".let{
+	"com.teamresourceful.resourcefulconfig:resourcefulconfig-fabric-${if (resConfigMcVersion == "") minecraftVersion else resConfigMcVersion}:$resConfigVersion".let{
 		modImplementation(it)
 //		include(it)
 	}
@@ -125,7 +127,7 @@ dependencies {
 		else if (useLocalMavenFxLib)
 			"com.filloax.fxlib:fx-lib:${fxLibVersion}-fabric"
 		else
-			"com.github.filloax:fx-lib:v${fxLibVersion}-fabric"
+			"com.github.filloax:FX-Lib:v${fxLibVersion}-fabric"
 		)
 
 	fxLib.let{
@@ -262,8 +264,11 @@ tasks.withType<JavaCompile> {
 	options.release = javaVersion
 	options.encoding = "UTF-8"
 }
+
 tasks.withType<KotlinCompile> {
-	kotlinOptions.jvmTarget = "$javaVersion"
+	compilerOptions {
+		jvmTarget = jvmTargetEnum
+	}
 }
 
 java {
@@ -288,12 +293,12 @@ publishing {
 	}
 }
 val compileKotlin: KotlinCompile by tasks
-compileKotlin.kotlinOptions {
-    jvmTarget = "$javaVersion"
+compileKotlin.compilerOptions {
+    jvmTarget = jvmTargetEnum
 }
 val compileTestKotlin: KotlinCompile by tasks
-compileTestKotlin.kotlinOptions {
-    jvmTarget = "$javaVersion"
+compileTestKotlin.compilerOptions {
+    jvmTarget = jvmTargetEnum
 }
 
 // Task defined in the custom plugin in buildSrc

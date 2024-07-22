@@ -58,7 +58,7 @@ object VillageBuildings {
         weight: Int,
     ) {
         val pool: StructureTemplatePool = templatePoolRegistry.getOrThrow(ResourceKey.create(Registries.TEMPLATE_POOL, poolId))
-        val emptyProcessor = ResourceLocation("minecraft", "empty")
+        val emptyProcessor = ResourceLocation.fromNamespaceAndPath("minecraft", "empty")
         val processorHolder: Holder<StructureProcessorList> = processorListRegistry.getHolderOrThrow(
             ResourceKey.create(
                 Registries.PROCESSOR_LIST, emptyProcessor
@@ -79,8 +79,8 @@ object VillageBuildings {
         val poolNameZombie = "$prefix/${name}_zombie".replace("house", "houses")
         return VillageEntry(
             kind,
-            ResourceLocation("minecraft", "$prefix/$kind/$pool"),
-            ResourceLocation("minecraft", "$prefix/$kind/zombie/$pool"),
+            ResourceLocation.fromNamespaceAndPath("minecraft", "$prefix/$kind/$pool"),
+            ResourceLocation.fromNamespaceAndPath("minecraft", "$prefix/$kind/zombie/$pool"),
             resLoc(poolName),
             resLoc(poolNameZombie),
             resLoc(templateName),

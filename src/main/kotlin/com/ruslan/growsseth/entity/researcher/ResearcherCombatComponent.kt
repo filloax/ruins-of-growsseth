@@ -6,6 +6,7 @@ import com.ruslan.growsseth.dialogues.BasicDialogueEvents
 import com.ruslan.growsseth.effect.GrowssethEffects
 import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.sound.GrowssethSounds
+import net.minecraft.core.registries.Registries
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.Difficulty
 import net.minecraft.world.damagesource.DamageSource
@@ -49,8 +50,9 @@ class ResearcherCombatComponent(
         get() = owner.health <= owner.maxHealth / 3
 
     fun createWeapon(): ItemStack = ItemStack(GrowssethItems.RESEARCHER_DAGGER).also { dagger ->
-        dagger.enchant(Enchantments.UNBREAKING, 3)
-        dagger.enchant(Enchantments.MENDING, 1)
+        val registry = level.registryAccess().registryOrThrow(Registries.ENCHANTMENT)
+        dagger.enchant(registry.getHolderOrThrow(Enchantments.UNBREAKING), 3)
+        dagger.enchant(registry.getHolderOrThrow(Enchantments.MENDING), 1)
     }
 
     fun hurt(source: DamageSource, amount: Float, superHurt: (DamageSource, Float) -> Boolean): Boolean? {
@@ -75,7 +77,7 @@ class ResearcherCombatComponent(
         if (owner.isAggressive && source.directEntity is AbstractArrow)
             if (deflectArrow(source)) {
                 owner.showArrowDeflectParticles = true
-                owner.playSound(GrowssethSounds.DEFLECT_ARROW_SOUND)
+                owner.playSound(GrowssethSounds.DEFLECT_ARROW_SOUND.value())
                 return false
             }
 

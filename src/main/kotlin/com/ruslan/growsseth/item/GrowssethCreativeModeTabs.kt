@@ -14,7 +14,7 @@ object GrowssethCreativeModeTabs {
 
     val GROWSSETH_ITEMS: CreativeModeTab = Registry.register(
         BuiltInRegistries.CREATIVE_MODE_TAB,
-        ResourceLocation(RuinsOfGrowsseth.MOD_ID, "growsseth"),
+        ResourceLocation.fromNamespaceAndPath(RuinsOfGrowsseth.MOD_ID, "growsseth"),
         FabricItemGroup.builder().title(Component.translatable("growsseth.creative_tab"))
             .icon{ItemStack(GrowssethItems.RESEARCHER_HORN)}
             .displayItems{ params, output ->

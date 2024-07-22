@@ -30,7 +30,7 @@ object RemoteStructures {
                 structsToSpawnById.clear()
 
                 newSpawns.forEach {
-                    val id = ResourceLocation(it.structureId)
+                    val id = ResourceLocation.parse(it.structureId)
                     if (it.active && id.namespace != Constants.EVENT_NAMESPACE) {
                         val structureRef = server.registryAccess().registryOrThrow(Registries.STRUCTURE).get(id)
                         if (structureRef == null) {

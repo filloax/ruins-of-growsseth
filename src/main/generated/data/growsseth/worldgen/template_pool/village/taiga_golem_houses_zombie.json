@@ -2,11 +2,8 @@
   "elements": [
     {
       "element": {
-        "element_type": "fxlib:single_pool_element",
+        "element_type": "minecraft:single_pool_element",
         "location": "growsseth:village/taiga/taiga_golem_house_zombie",
-        "placeSettingsDefaults": {
-          "keepLiquids": false
-        },
         "processors": "minecraft:empty",
         "projection": "rigid"
       },

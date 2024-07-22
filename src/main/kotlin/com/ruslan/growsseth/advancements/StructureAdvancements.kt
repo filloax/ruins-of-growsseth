@@ -113,7 +113,7 @@ object StructureAdvancements {
 
         val match = structureJigsawPieceAdvancementRegex.matchEntire(id.path)
         return match?.let { m -> Pair(
-            ResourceKey.create(Registries.STRUCTURE, ResourceLocation(m.groupValues[1], m.groupValues[2])),
+            ResourceKey.create(Registries.STRUCTURE, ResourceLocation.fromNamespaceAndPath(m.groupValues[1], m.groupValues[2])),
             ResourceKey.create(Registries.STRUCTURE, resLoc(m.groupValues[3])),
         ) }
     }
