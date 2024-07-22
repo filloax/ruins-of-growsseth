@@ -8,6 +8,7 @@ import net.minecraft.world.level.levelgen.structure.StructurePiece
 import net.minecraft.world.level.levelgen.structure.pools.ListPoolElement
 import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement
+import java.util.*
 
 
 fun resLoc(str: String): ResourceLocation {
@@ -55,4 +56,23 @@ fun StructurePoolElement.getTemplateIds(): Collection<ResourceLocation> {
         is ListPoolElement -> this.elements.flatMap { it.getTemplateIds() }
         else -> listOf()
     }
+}
+
+fun loadPropertiesFile(fileName: String): Map<String, String> {
+    val properties = Properties()
+    val propertiesMap = mutableMapOf<String, String>()
+
+    val classLoader = Thread.currentThread().contextClassLoader
+    val inputStream = classLoader.getResourceAsStream(fileName)
+        ?: throw IllegalArgumentException("Properties file not found: $fileName")
+
+    inputStream.use {
+        properties.load(it)
+    }
+
+    for (key in properties.stringPropertyNames()) {
+        propertiesMap[key] = properties.getProperty(key)
+    }
+
+    return propertiesMap
 }
