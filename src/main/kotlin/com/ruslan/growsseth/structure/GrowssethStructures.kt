@@ -316,6 +316,7 @@ object GrowssethStructures {
             step: Decoration = Decoration.SURFACE_STRUCTURES,
             startHeight: HeightProvider = ConstantHeight.ZERO,
             size: Int = 7,
+            liquidSettings: LiquidSettings = LiquidSettings.IGNORE_WATERLOGGING,
         ) {
             val startPoolHolder = templatePoolGetter.getOrThrow(ResourceKey.create(Registries.TEMPLATE_POOL, resLoc(startPool)))
             val name = key.location().path.split("/").last()
@@ -324,7 +325,7 @@ object GrowssethStructures {
                 startPoolHolder, biomesHolder,
                 forcePosOffset = offset, projectStartToHeightmap = projectStartToHeightMap,
                 step = step, startHeight = startHeight,
-                size = size, liquidSettings = LiquidSettings.APPLY_WATERLOGGING,
+                size = size, liquidSettings = liquidSettings,
                 dimensionPadding = DimensionPadding.ZERO,
             ))
         }
