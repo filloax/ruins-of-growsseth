@@ -34,7 +34,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build with Gradle
-        run: ./gradlew build -Pmod_version='${{ env.MC_VER }}-nightly-${{ steps.date.outputs.date }}-${{ env.TEST_RELEASE_NUM }}'
+        run: ./gradlew build -Pmod_version='${{ env.MC_VER }}-nightly-${{ steps.date.outputs.date }}.${{ env.TEST_RELEASE_NUM }}'
         env:
           GROWSSETH_MUSIC_PW: ${{ secrets.MUSIC_PW }}
 
@@ -44,7 +44,7 @@ jobs:
           repo_token: "${{ secrets.TOKEN_GITHUB }}"
           automatic_release_tag: "nightly-release-${{ env.MC_VER }}"
           prerelease: true
-          title: "Nightly build [${{ steps.date.outputs.date }}-${{ env.TEST_RELEASE_NUM }}] - ${{ env.MC_VER }}"
+          title: "Nightly build [${{ steps.date.outputs.date }}.${{ env.TEST_RELEASE_NUM }}] - ${{ env.MC_VER }}"
           files: |
             build/libs/*.jar
             build/egobalego-at-home/*.zip
