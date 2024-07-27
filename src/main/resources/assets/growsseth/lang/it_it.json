@@ -90,7 +90,7 @@
     "effect.growsseth.fighting_spirit": "Spirito Combattivo",
     "effect.growsseth.justice": "Giustizia",
 
-    "growsseth.commands.gmaster.help": "Permette di configurare il server per connettersi ad una console gamemaster di Ruins of Growsseth e abilitare la §5modalità gamemaster§r. §l§eAssicurati di connettersi solo a fonti fidate, perché potranno eseguire comandi a distanza e altro!§r Per maggiori informazioni, guarda le guide della console gamemaster, e la wiki (anche in italiano) a ",
+    "growsseth.commands.gmaster.help": "Permette di configurare il server per connettersi ad una console gamemaster di Ruins of Growsseth e abilitare la §5modalità gamemaster§r.\n§l§eAssicurati di connettersi solo a fonti fidate, perché potranno eseguire comandi a distanza e altro!§r\nPer maggiori informazioni, guarda le guide della console gamemaster, e la wiki (anche in italiano) a ",
     "growsseth.commands.gmaster.status_off": "La modalità gamemaster è disabilitata.",
     "growsseth.commands.gmaster.status_on_ok": "La modalità gamemaster è abilitata. Connesso all'URL '%s', l'ultimo aggiornamento ha avuto successo.",
     "growsseth.commands.gmaster.status_on_ko": "La modalità gamemaster è abilitata. Connesso all'URL '%s', §4l'ultimo aggiornamento non ha avuto successo.§r",
