@@ -11,8 +11,6 @@ import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands.*
 import net.minecraft.network.chat.ClickEvent
 import net.minecraft.network.chat.Component
-import net.minecraft.network.chat.Style
-import java.net.MalformedURLException
 import java.net.URI
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -98,11 +96,15 @@ object GamemasterCommand {
     }
 
     private fun setEnabled(source: CommandSourceStack, value: Boolean): Int {
-        WebConfig.webDataSync = value
-        GrowssethConfigHandler.saveConfig()
-        restartWebService()
         val suffix = if (value) "on" else "off"
-        source.sendSuccess({ Component.translatable("growsseth.commands.gmaster.set_$suffix", WebConfig.dataSyncUrl).withStyle(ChatFormatting.BOLD) }, true)
+        if (WebConfig.webDataSync != value) {
+            WebConfig.webDataSync = value
+            GrowssethConfigHandler.saveConfig()
+            restartWebService()
+            source.sendSuccess({Component.translatable("growsseth.commands.gmaster.set_$suffix", WebConfig.dataSyncUrl).withStyle(ChatFormatting.YELLOW)}, true)
+        } else {
+            source.sendSuccess({Component.translatable("growsseth.commands.gmaster.already_$suffix", WebConfig.dataSyncUrl)}, true)
+        }
         return 1
     }
 
