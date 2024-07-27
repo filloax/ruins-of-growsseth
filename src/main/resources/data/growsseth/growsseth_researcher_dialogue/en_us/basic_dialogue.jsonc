@@ -65,15 +65,15 @@
         "Good morning, colleague.",
         {
             "content": "Glad to see you're still alive, colleague.",
-            "afterRepeatsMin": 2,
+            "afterRepeatsMin": 2
         },
         "...maybe, with that ingredient... Oh, hello colleague.",
         "Good morning colleague, beautiful day today, isn't it?",
         "...but of course, now it makes sense... Oh, hello, go ahead.",
         {
             "content": "Hello colleague, always on the move, huh?",
-            "afterRepeatsMin": 2,
-        },
+            "afterRepeatsMin": 2
+        }
     ],
     "playerArriveNight": [
         { "id": "researcher-first" },
@@ -145,7 +145,7 @@
             "useLimit": 1,
             "priority": 50,
             "id": "researcher-arrive-new-loc-first"
-        },
+        }
     ],
     "playerArriveSoon": [
         { "id": "no-dialogue-mess" },
