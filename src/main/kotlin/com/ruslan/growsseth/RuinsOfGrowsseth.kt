@@ -128,8 +128,7 @@ object RuinsOfGrowsseth : ModInitializer {
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(FabricReloadListener(
             resLoc(Constants.TRADES_DATA_FOLDER),
             TradesListener(),
-        )
-        )
+        ))
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(FabricReloadListener(
             resLoc(Constants.RESEARCHER_DIALOGUE_DATA_FOLDER),
             ResearcherDialogueListener(),

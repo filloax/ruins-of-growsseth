@@ -196,7 +196,7 @@ class LiveUpdatesConnection private constructor(val server: MinecraftServer) : R
 
     private fun onRefreshMessage() {
         RuinsOfGrowsseth.LOGGER.info("LiveUpdatesConnection | Refresh command received, updating data sync...")
-        DataRemoteSync.doSync(WebConfig.dataSyncUrl, server).thenAccept { success ->
+        GrowssethApi.current.reload().thenAccept { success ->
             if (success) {
                 RuinsOfGrowsseth.LOGGER.info("LiveUpdatesConnection | Data sync update success")
                 sendSuccess()
