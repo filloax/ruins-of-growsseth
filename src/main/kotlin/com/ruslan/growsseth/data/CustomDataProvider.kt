@@ -7,11 +7,11 @@ import com.ruslan.growsseth.entity.researcher.trades.ResearcherTradeObj
 import com.ruslan.growsseth.entity.researcher.trades.TradeItemMapInfo
 import com.ruslan.growsseth.entity.researcher.trades.TradesListener
 import com.ruslan.growsseth.item.GrowssethItems
-import com.ruslan.growsseth.item.RecordCreditsItem
 import com.ruslan.growsseth.maps.GrowssethMapDecorations
 import com.ruslan.growsseth.structure.GrowssethStructures
 import com.ruslan.growsseth.structure.VillageBuildings
 import kotlinx.serialization.json.Json
+import net.minecraft.core.component.DataComponents
 import net.minecraft.data.CachedOutput
 import net.minecraft.data.DataProvider
 import net.minecraft.data.PackOutput
@@ -55,7 +55,7 @@ class CustomDataProvider(private val output: PackOutput) : DataProvider {
     private fun generateResearcherTradesRandomTrades(): List<ResearcherTradeObj> {
         val out = mutableListOf<ResearcherTradeObj>()
         val validDiscs = GrowssethItems.all
-            .filterValues { it is RecordCreditsItem && !GrowssethItems.DISCS_TO_VOCALS.values.contains(it) }
+            .filterValues { it.components().has(DataComponents.JUKEBOX_PLAYABLE) && !GrowssethItems.DISCS_TO_VOCALS.values.contains(it) }
             // discs obtained by fragments
             .filterValues { it != GrowssethItems.DISC_BALLATA_DEL_RESPAWN }
         out.addAll(validDiscs.map {
@@ -116,7 +116,7 @@ class CustomDataProvider(private val output: PackOutput) : DataProvider {
 
     private fun generateResearcherTradesProgressAfterStructRandom(): Map<String, List<ResearcherTradeObj>> {
         val discTrades = mutableListOf<ResearcherTradeObj>()
-        val validDiscs = GrowssethItems.all.filterValues { it is RecordCreditsItem && !GrowssethItems.DISCS_TO_VOCALS.values.contains(it) }
+        val validDiscs = GrowssethItems.all.filterValues { it.components().has(DataComponents.JUKEBOX_PLAYABLE) && !GrowssethItems.DISCS_TO_VOCALS.values.contains(it) }
             // discs already in guaranteed trade
             .filterValues { it != GrowssethItems.DISC_GIORGIO_LOFI_INST && it != GrowssethItems.DISC_GIORGIO_CUBETTI }
             // discs obtained by fragments
