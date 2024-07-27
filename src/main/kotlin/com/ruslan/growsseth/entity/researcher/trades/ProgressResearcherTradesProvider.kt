@@ -65,6 +65,10 @@ class ProgressResearcherTradesProvider(
         applyUpdatedTrades(server, fixedTrades)
     }
 
+    override fun reload(server: MinecraftServer) {
+        regenTrades(server)
+    }
+
     override fun getExtraPlayerTrades(player: ServerPlayer, researcher: Researcher, data: ResearcherTradesData): List<ResearcherTradeEntry> {
         val finishedQuest = researcher.quest!!.passedStage(ResearcherQuestComponent.Stages.HOME)
         val possibleTrades = getPossibleRandomTrades(player, researcher, finishedQuest)

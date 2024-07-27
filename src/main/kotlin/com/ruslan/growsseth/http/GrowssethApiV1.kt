@@ -1,5 +1,6 @@
 package com.ruslan.growsseth.http
 
+import com.filloax.fxlib.api.FxUtils
 import com.filloax.fxlib.api.getStructTagOrKey
 import com.filloax.fxlib.api.json.RotationSerializer
 import com.mojang.datafixers.util.Either
@@ -15,6 +16,7 @@ import net.minecraft.tags.TagKey
 import net.minecraft.world.level.block.Rotation
 import net.minecraft.world.level.levelgen.structure.Structure
 import java.util.*
+import java.util.concurrent.CompletableFuture
 
 object GrowssethApiV1 : AbstractGrowssethApi() {
     override val structureSpawns: List<ApiStructureSpawn>
@@ -76,6 +78,15 @@ object GrowssethApiV1 : AbstractGrowssethApi() {
                 RuinsOfGrowsseth.LOGGER.info("API data not changed, not triggering subscribers (hash = $hash)")
             }
         }
+    }
+
+    override fun reload(): CompletableFuture<Boolean> {
+        val server = FxUtils.getServer()
+        if (server == null) {
+            RuinsOfGrowsseth.LOGGER.error("Server is not running, cannot reload!")
+            return CompletableFuture.completedFuture(false)
+        }
+        return DataRemoteSync.doSync(WebConfig.dataSyncUrl, server)
     }
 
     object Callbacks {

@@ -8,6 +8,7 @@ import net.minecraft.server.MinecraftServer
 import net.minecraft.tags.TagKey
 import net.minecraft.world.level.block.Rotation
 import net.minecraft.world.level.levelgen.structure.Structure
+import java.util.concurrent.CompletableFuture
 import kotlin.concurrent.thread
 
 interface GrowssethApi {
@@ -24,6 +25,8 @@ interface GrowssethApi {
 
     fun subscribe(callback: (GrowssethApi, MinecraftServer) -> Unit)
     fun unsubscribe(callback: (GrowssethApi, MinecraftServer) -> Unit)
+
+    fun reload(): CompletableFuture<Boolean>
 
     companion object {
         val current: GrowssethApi
