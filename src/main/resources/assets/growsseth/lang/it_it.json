@@ -104,7 +104,7 @@
     "growsseth.commands.gmaster.set_off": "Modalità gamemaster disabilitata!",
     "growsseth.commands.gmaster.already_off": "La modalità gamemaster è già disabilitata.",
     "growsseth.commands.gmaster.url_set": "Imposta l'URL del gamemaster a '%s'. Assicurati di connetterti solo a fonti fidate!",
-    "growsseth.commands.gmaster.url_not_valid": "L'URL indicato non è valido: '%s'",
+    "growsseth.commands.gmaster.url_not_valid": "L'URL indicato non è valido: '%s'. Assicurati che sia tra virgolette e abbia il prefisso (esempio: \"http://localhost:5000\").",
     
     "growsseth.commands.givestructmap.invalidmap": "L'oggetto \"%s\" non è un oggetto mappa valido",
     "growsseth.commands.placetweak.fixedpos": "Fissata posizione struttura per \"%s\" a %s, %s, %s",
