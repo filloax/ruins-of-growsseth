@@ -116,7 +116,7 @@ object GamemasterCommand {
         WebConfig.dataSyncUrl = url
         GrowssethConfigHandler.saveConfig()
         restartWebService()
-        source.sendSuccess({ Component.translatable("growsseth.commands.gmaster.url_set", url).withStyle(ChatFormatting.BOLD) }, true)
+        source.sendSuccess({ Component.translatable("growsseth.commands.gmaster.url_set", url).withStyle(ChatFormatting.YELLOW) }, true)
         return 1
     }
 
