@@ -90,7 +90,7 @@
     "effect.growsseth.fighting_spirit": "Fighting Spirit",
     "effect.growsseth.justice": "Justice",
 
-    "growsseth.commands.gmaster.help": "Allows to configure the server to connect to a Ruins of Growsseth gamemaster console and enable §5gamemaster mode§r. §l§eMake sure to only connect to trusted sources, as they will be able to remotely run commands and more!§r For more information, see the gamemaster console's guides, and the wiki at ",
+    "growsseth.commands.gmaster.help": "Allows to configure the server to connect to a Ruins of Growsseth gamemaster console and enable §5gamemaster mode§r.\n§eMake sure to only connect to trusted sources, as they will be able to remotely run commands and more!§r\nFor more information, see the gamemaster console's guides, and the wiki at ",
     "growsseth.commands.gmaster.status_off": "Gamemaster mode is currently disabled.",
     "growsseth.commands.gmaster.status_on_ok": "Gamemaster mode is enabled. Connected to URL '%s', last update was successful.",
     "growsseth.commands.gmaster.status_on_ko": "Gamemaster mode is enabled. Connected to URL '%s', §4last update was not successful.§r",
