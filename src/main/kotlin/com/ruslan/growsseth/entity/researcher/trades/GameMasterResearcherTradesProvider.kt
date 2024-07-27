@@ -7,6 +7,7 @@ import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.advancements.StructureAdvancements
 import com.ruslan.growsseth.entity.researcher.Researcher
 import com.ruslan.growsseth.http.ApiEvent
+import com.ruslan.growsseth.http.DataRemoteSync
 import com.ruslan.growsseth.http.GrowssethApi
 import com.ruslan.growsseth.structure.RemoteStructures
 import kotlinx.serialization.json.Json
@@ -32,6 +33,10 @@ object GameMasterResearcherTradesProvider : GlobalResearcherTradesProvider() {
 
     override fun isValidTradeForPlayer(trade: ResearcherItemListing, player: ServerPlayer, entity: Researcher, data: ResearcherTradesData): Boolean {
         return !trade.isDiscoveredStructure(player)
+    }
+
+    override fun reload(server: MinecraftServer) {
+        GrowssethApi.current.reload()
     }
 
     private fun updateTrades(server: MinecraftServer, api: GrowssethApi = GrowssethApi.current) {
