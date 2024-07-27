@@ -104,7 +104,7 @@
     "growsseth.commands.gmaster.set_off": "Disabled gamemaster mode!",
     "growsseth.commands.gmaster.already_off": "Gamemaster mode is already disabled.",
     "growsseth.commands.gmaster.url_set": "Set gamemaster URL to '%s'. Make sure to only connect to trusted sources!",
-    "growsseth.commands.gmaster.url_not_valid": "The specified URL is not valid: '%s'",
+    "growsseth.commands.gmaster.url_not_valid": "The specified URL is not valid: '%s'. Make sure to put it in quotes and with the prefix (example: \"http://localhost:5000\").",
     
     "growsseth.commands.givestructmap.invalidmap": "Item \"%s\" is not a valid map item",
     "growsseth.commands.placetweak.fixedpos": "Fixed structure pos for \"%s\" at %s, %s, %s",
