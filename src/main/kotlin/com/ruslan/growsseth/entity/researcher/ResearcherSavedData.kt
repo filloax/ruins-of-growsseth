@@ -27,7 +27,7 @@ class ResearcherSavedData private constructor (
         private set
 
     companion object {
-        val CODEC: Codec<ResearcherSavedData> = RecordCodecBuilder.create { builder -> builder.group(
+        private val CODEC: Codec<ResearcherSavedData> = RecordCodecBuilder.create { builder -> builder.group(
             CompoundTag.CODEC.fieldOf("data").forGetter(ResearcherSavedData::data),
             ComponentSerialization.CODEC.optionalFieldOf("name").forNullableGetter(ResearcherSavedData::name),
             Codec.BOOL.fieldOf("isDead").forGetter(ResearcherSavedData::isDead)
