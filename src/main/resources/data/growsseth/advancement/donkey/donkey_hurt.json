@@ -1,0 +1,16 @@
+{
+  "criteria": {
+    "hurt_donkey": {
+      "trigger": "minecraft:player_hurt_entity",
+      "conditions": {
+        "entity": {
+          "type": "minecraft:donkey",
+          "nbt": "{Tags:[\"researcher_donkey\"]}"
+        }
+      }
+    }
+  },
+  "rewards": {
+    "function": "growsseth:donkey/donkey_hurt"
+  }
+}

@@ -44,78 +44,22 @@ object GrowssethItems {
 	val FRAGMENT_BALLATA_DEL_RESPAWN = make("fragment_ballata_del_respawn", DiscFragmentItem(Properties()))
 
 	// Custom discs
-	val DISC_SEGA_DI_NIENTE 		= makeDisc("disc_sega_di_niente", GrowssethJukeboxSongs.SEGA_DI_NIENTE, listOf(
-		"Vocals & Lyrics - Cydonia",
-		"Mixing - Guber",
-		"Cover of 'Labyrinthine', by Lena Raine"
-	))
-	val DISC_GIORGIO_CUBETTI 		= makeDisc("disc_giorgio_cubetti", GrowssethJukeboxSongs.GIORGIO_CUBETTI, listOf(
-		"Vocals, Mix & Master - Singalek",
-		"Lyrics - Singalek, Cydonia",
-		"Cover of 'If I Could, I Would' - MINDME"
-	),
-		ytChannel = "SingalekSMW"
-	)
-	val DISC_GIORGIO_LOFI 			= makeDisc("disc_giorgio_lofi", GrowssethJukeboxSongs.GIORGIO_LOFI, listOf(
-		"Instrumental, Vocals, Mix, Master - Singalek",
-		"Lyrics - Singalek, Cydonia"
-	),
-		ytChannel = "SingalekSMW"
-	)
-	val DISC_GIORGIO_LOFI_INST 		= makeDisc("disc_giorgio_lofi_inst", GrowssethJukeboxSongs.GIORGIO_LOFI_INST,
-		ytChannel = "SingalekSMW"
-	)
-	val DISC_GIORGIO_FINDING_HOME 	= makeDisc("disc_giorgio_finding_home", GrowssethJukeboxSongs.GIORGIO_FINDING_HOME,
-		ytChannel = "HunterProduction"
-	)
-	val DISC_GIORGIO_8BIT		 	= makeDisc("disc_giorgio_8bit", GrowssethJukeboxSongs.GIORGIO_8BIT, listOf(
-		"Music - Hawkelele",
-		"Based on 'Giorgio Cubetti' by Singalek",
-		"Cover of 'If I Could, I Would' - MINDME"
-	), ytChannel = "IlCoroDiMammonk")
-	val DISC_BINOBINOOO 			= makeDisc("disc_binobinooo", GrowssethJukeboxSongs.BINOBINOOO,
-		ytChannel = "SingalekSMW"
-	)
-	val DISC_PADRE_MAMMONK 			= makeDisc("disc_padre_mammonk", GrowssethJukeboxSongs.PADRE_MAMMONK, listOf(
-		"Vocals - Emoon LeStrange, HunterProduction, KalarFenrir, Singalek",
-		"Chorus composed by Emoon LeStrange",
-		"Cover of 'All is Found' - Evan Rachel Wood"
-	), ytChannel = "IlCoroDiMammonk")
-	val DISC_ABBANDONATI 			= makeDisc("disc_abbandonati", GrowssethJukeboxSongs.ABBANDONATI, listOf(
-		"Lyrics - Cydonia",
-		"Vocals - Ako",
-		"Music, Mix & Master - R-E-M"
-	), ytChannel = "rem.producer")
-	val DISC_MISSIVA_NELL_OMBRA 	= makeDisc("disc_missiva_nell_ombra", GrowssethJukeboxSongs.MISSIVA_NELL_OMBRA, listOf(
-		"Vocals - Singalek",
-		"Music - Hawkelele, Monnui, AndreWharn, HunterProduction, 't Hooft",
-		"Cover of 'Sleepsong' - Secret Garden"
-	), ytChannel = "IlCoroDiMammonk")
-	val DISC_OURSTEPS 				= makeDisc("disc_oursteps", GrowssethJukeboxSongs.OURSTEPS, listOf(
-		"Vocals - Singalek, Blessing Of No One",
-		"Music - Lena Raine, IridioSound, Avage",
-		"Cover of 'Pigstep' - Lena Raine"
-	), ytChannel = "IlCoroDiMammonk")
-	val DISC_ODI_ET_AMO 			= makeDisc("disc_odi_et_amo", GrowssethJukeboxSongs.ODI_ET_AMO, listOf(
-		"Vocals - Jova117, Emoon LeStrange",
-		"Music - Hawkelele, Jova117"
-	), ytChannel = "IlCoroDiMammonk")
-	val DISC_ANCORA_QUI 			= makeDisc("disc_ancora_qui", GrowssethJukeboxSongs.ANCORA_QUI, listOf(
-		"Vocals - Avage, Emoon LeStrange, Singalek",
-		"Music - Avage"
-	), ytChannel = "IlCoroDiMammonk")
-	val DISC_BALLATA_DEL_RESPAWN 	= makeDisc("disc_ballata_del_respawn", GrowssethJukeboxSongs.BALLATA_DEL_RESPAWN, listOf(
-		"Vocals - Monnui",
-		"Music - Monnui, Singalek, IridioSound"
-	), ytChannel = "IlCoroDiMammonk")
-	val DISC_CACO_CACO 				= makeDisc("disc_caco_caco", GrowssethJukeboxSongs.CACO_CACO, listOf(
-		"Vocals - Blessing Of No One, HunterProduction, KalarFenrir, Singalek",
-		"Music - HunterProduction"
-	), ytChannel = "IlCoroDiMammonk")
-	val DISC_PESCI_STRANI 			= makeDisc("disc_pesci_strani", GrowssethJukeboxSongs.PESCI_STRANI, listOf(
-		"Vocals - Emoon LeStrange, Singalek",
-		"Music - Hawkelele, Emoon LeStrange, Monnui, Singalek"
-	), ytChannel = "IlCoroDiMammonk")
+	val DISC_SEGA_DI_NIENTE 		= makeDisc("disc_sega_di_niente", GrowssethJukeboxSongs.SEGA_DI_NIENTE)
+	val DISC_GIORGIO_CUBETTI 		= makeDisc("disc_giorgio_cubetti", GrowssethJukeboxSongs.GIORGIO_CUBETTI)
+	val DISC_GIORGIO_LOFI 			= makeDisc("disc_giorgio_lofi", GrowssethJukeboxSongs.GIORGIO_LOFI)
+	val DISC_GIORGIO_LOFI_INST 		= makeDisc("disc_giorgio_lofi_inst", GrowssethJukeboxSongs.GIORGIO_LOFI_INST)
+	val DISC_GIORGIO_FINDING_HOME 	= makeDisc("disc_giorgio_finding_home", GrowssethJukeboxSongs.GIORGIO_FINDING_HOME)
+	val DISC_GIORGIO_8BIT		 	= makeDisc("disc_giorgio_8bit", GrowssethJukeboxSongs.GIORGIO_8BIT)
+	val DISC_BINOBINOOO 			= makeDisc("disc_binobinooo", GrowssethJukeboxSongs.BINOBINOOO)
+	val DISC_PADRE_MAMMONK 			= makeDisc("disc_padre_mammonk", GrowssethJukeboxSongs.PADRE_MAMMONK)
+	val DISC_ABBANDONATI 			= makeDisc("disc_abbandonati", GrowssethJukeboxSongs.ABBANDONATI)
+	val DISC_MISSIVA_NELL_OMBRA 	= makeDisc("disc_missiva_nell_ombra", GrowssethJukeboxSongs.MISSIVA_NELL_OMBRA)
+	val DISC_OURSTEPS 				= makeDisc("disc_oursteps", GrowssethJukeboxSongs.OURSTEPS)
+	val DISC_ODI_ET_AMO 			= makeDisc("disc_odi_et_amo", GrowssethJukeboxSongs.ODI_ET_AMO)
+	val DISC_ANCORA_QUI 			= makeDisc("disc_ancora_qui", GrowssethJukeboxSongs.ANCORA_QUI)
+	val DISC_BALLATA_DEL_RESPAWN 	= makeDisc("disc_ballata_del_respawn", GrowssethJukeboxSongs.BALLATA_DEL_RESPAWN)
+	val DISC_CACO_CACO 				= makeDisc("disc_caco_caco", GrowssethJukeboxSongs.CACO_CACO)
+	val DISC_PESCI_STRANI 			= makeDisc("disc_pesci_strani", GrowssethJukeboxSongs.PESCI_STRANI)
 
 
 	val DISCS_TO_VOCALS = mutableMapOf(
@@ -163,13 +107,10 @@ object GrowssethItems {
 
 	private fun makeDisc(
 		name: String, jukeboxSong: ResourceKey<JukeboxSong>,
-		authors: List<String> = listOf(),
-		ytChannel: String? = null,
 		properties: Properties = Properties(),
 	) =
-		make(name, RecordCreditsItem(
-			jukeboxSong, properties.stacksTo(1),
-			authors, listOfNotNull(ytChannel?.let { Component.literal("YT: @$it").withStyle(ChatFormatting.RED) })
+		make(name, Item(
+			properties.stacksTo(1).jukeboxPlayable(jukeboxSong),
 		))
 
 	fun registerItems(registrator: (ResourceLocation, Item) -> Unit) {

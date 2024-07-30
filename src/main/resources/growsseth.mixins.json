@@ -34,6 +34,7 @@
     "event.StructureSpawnMixins$ChunkGeneratorStructureStateMixin",
     "growssethworld.WorldDimensionsMixin",
     "item.DecoratedPotPatternsMixin",
+    "item.DiscCreditsMixin",
     "structurebook.ItemFrameStructureBookMixin",
     "structurebook.ItemStackStructureBookMixin",
     "structurebook.StructureTemplateMixin",

@@ -1,0 +1,23 @@
+{
+    "parent": "minecraft:recipes/root", 
+    "_comment": "Gamemaster mode only, unlocked when tent placed in world",
+    "display": {
+        "title": {
+            "translate": "advancements.growsseth.start.title"
+        },
+        "description": {
+            "translate": "advancements.growsseth.start.description"
+        },
+        "icon": {
+            "id": "minecraft:spyglass"
+        },
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": true
+    },
+    "criteria": {
+        "requirement": {
+            "trigger": "minecraft:impossible"
+        }
+    }
+}

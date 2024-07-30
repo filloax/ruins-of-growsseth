@@ -1,0 +1,28 @@
+{
+    "parent": "growsseth:growsseth/root",
+    "display": {
+        "title": {
+            "translate": "advancements.growsseth.horn.title"
+        },
+        "description": {
+            "translate": "advancements.growsseth.horn.description"
+        },
+        "icon": {
+            "id": "growsseth:researcher_horn"
+        },
+        "hidden": true,
+        "frame": "challenge"
+    },
+    "criteria": {
+        "diamond": {
+            "conditions": {
+                "items": [
+                    {
+                        "items": ["growsseth:researcher_horn"]
+                    }
+                ]
+            },
+            "trigger": "minecraft:inventory_changed"
+        }
+    }
+}

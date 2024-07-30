@@ -21,7 +21,7 @@ val includeDeps = (property("includeDeps") as String).toBoolean()
 
 // Main versions
 //val libs = project.versionCatalogs.find("libs").get()
-val modVersion = libs.versions.modversion.get()
+val modVersion = property("mod_version")!! as String
 val javaVersion = libs.versions.java.get()
 val kotlinVersion = libs.versions.kotlin.asProvider().get()
 val minecraftVersion = libs.versions.minecraft.asProvider().get()
@@ -31,7 +31,7 @@ val parchmentVersion = libs.versions.parchment.asProvider().get()
 val javaVersionEnum = JavaVersion.values().find { it.majorVersion == javaVersion } ?: throw Exception("Cannot find java version for $javaVersion")
 val jvmTargetEnum = JvmTarget.valueOf("JVM_$javaVersion")
 
-version = property("mod_version")!! as String
+version = modVersion
 
 base {
 	archivesName.set(property("archivesBaseName") as String)
@@ -294,6 +294,14 @@ java {
 
 	sourceCompatibility = javaVersionEnum
 	targetCompatibility = javaVersionEnum
+}
+
+tasks.withType<Jar> {
+	// Cydo version: remove structure spawns
+	if (cydoVersion) {
+		println("Cydo version: will exclude structure spawns...")
+		exclude("data/growsseth/worldgen/structure_set/**")
+	}
 }
 
 // configure the maven publication

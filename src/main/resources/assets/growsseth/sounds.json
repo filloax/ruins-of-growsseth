@@ -119,7 +119,8 @@
     "sounds": [
       {
         "name": "growsseth:disc_ballata_del_respawn",
-        "stream": true
+        "stream": true,
+        "encrypted": true
       }
     ]
   },
