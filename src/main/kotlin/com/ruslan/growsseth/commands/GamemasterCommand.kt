@@ -4,15 +4,16 @@ import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.ruslan.growsseth.config.GrowssethConfigHandler
 import com.ruslan.growsseth.config.WebConfig
+import com.ruslan.growsseth.entity.researcher.trades.GlobalResearcherTradesProvider
 import com.ruslan.growsseth.http.DataRemoteSync
+import com.ruslan.growsseth.http.GrowssethApi
 import net.minecraft.ChatFormatting
 import net.minecraft.commands.CommandBuildContext
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands.*
 import net.minecraft.network.chat.ClickEvent
 import net.minecraft.network.chat.Component
-import net.minecraft.network.chat.Style
-import java.net.MalformedURLException
+import net.minecraft.server.MinecraftServer
 import java.net.URI
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -83,12 +84,19 @@ object GamemasterCommand {
     private fun reload(source: CommandSourceStack): Int {
         if (WebConfig.webDataSync) {
             source.sendSystemMessage(Component.translatable("growsseth.commands.gmaster.reload_start"))
-            DataRemoteSync.doSync(WebConfig.dataSyncUrl, source.server).thenAccept {
-                if (it) {
-                    source.sendSuccess({ Component.translatable("growsseth.commands.gmaster.reload_success") }, true)
-                } else {
-                    source.sendFailure(Component.translatable("growsseth.commands.gmaster.reload_failure"))
+            try {
+                GrowssethApi.current.reload().thenAccept {
+                    if (it) {
+                        source.sendSuccess(
+                            { Component.translatable("growsseth.commands.gmaster.reload_success") }, true)
+                    } else {
+                        source.sendFailure(Component.translatable("growsseth.commands.gmaster.reload_failure"))
+                    }
                 }
+            } catch (e: Throwable) {
+                e.printStackTrace()
+                source.sendFailure(Component.translatable("growsseth.commands.gmaster.reload_failure"))
+                return 0
             }
             return 1
         } else {
@@ -98,11 +106,15 @@ object GamemasterCommand {
     }
 
     private fun setEnabled(source: CommandSourceStack, value: Boolean): Int {
-        WebConfig.webDataSync = value
-        GrowssethConfigHandler.saveConfig()
-        restartWebService()
         val suffix = if (value) "on" else "off"
-        source.sendSuccess({ Component.translatable("growsseth.commands.gmaster.set_$suffix", WebConfig.dataSyncUrl).withStyle(ChatFormatting.BOLD) }, true)
+        if (WebConfig.webDataSync != value) {
+            WebConfig.webDataSync = value
+            GrowssethConfigHandler.saveConfig()
+            restartAndReloadTrades(source.server)
+            source.sendSuccess({Component.translatable("growsseth.commands.gmaster.set_$suffix", WebConfig.dataSyncUrl).withStyle(ChatFormatting.YELLOW)}, true)
+        } else {
+            source.sendSuccess({Component.translatable("growsseth.commands.gmaster.already_$suffix", WebConfig.dataSyncUrl)}, true)
+        }
         return 1
     }
 
@@ -113,8 +125,8 @@ object GamemasterCommand {
         }
         WebConfig.dataSyncUrl = url
         GrowssethConfigHandler.saveConfig()
-        restartWebService()
-        source.sendSuccess({ Component.translatable("growsseth.commands.gmaster.url_set", url).withStyle(ChatFormatting.BOLD) }, true)
+        restartAndReloadTrades(source.server)
+        source.sendSuccess({ Component.translatable("growsseth.commands.gmaster.url_set", url).withStyle(ChatFormatting.YELLOW) }, true)
         return 1
     }
 
@@ -128,7 +140,8 @@ object GamemasterCommand {
         }
     }
 
-    private fun restartWebService() {
-
+    private fun restartAndReloadTrades(server: MinecraftServer) {
+        GlobalResearcherTradesProvider.reloadAll(server)
+        // GrowssethApi.current.reload() // Gamemaster trades reload already reloads API
     }
 }

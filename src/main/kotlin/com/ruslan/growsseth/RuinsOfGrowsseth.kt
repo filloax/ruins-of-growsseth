@@ -21,6 +21,7 @@ import com.ruslan.growsseth.platform.PlatformAbstractions
 import com.ruslan.growsseth.resource.MusicCommon
 import com.ruslan.growsseth.structure.*
 import com.ruslan.growsseth.templates.TemplateListener
+import com.ruslan.growsseth.utils.loadPropertiesFile
 import com.ruslan.growsseth.utils.resLoc
 import com.ruslan.growsseth.worldgen.worldpreset.LocationNotifListener
 import net.fabricmc.api.ModInitializer
@@ -37,6 +38,7 @@ import net.minecraft.world.item.Items
 import org.apache.logging.log4j.Level
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
+import java.util.*
 
 
 object RuinsOfGrowsseth : ModInitializer {
@@ -70,9 +72,10 @@ object RuinsOfGrowsseth : ModInitializer {
 
         MusicCommon.initCheck()
 
-        log(Level.INFO, "Initialized! :saidogPipo: :saidogRitto: :saidogMax:")
+        if (cydoniaMode)
+            log(Level.INFO, "Cydonia mode enabled, structures won't spawn and API v1 will be used")
 
-        log(Level.DEBUG, "In log debug mode!")
+        log(Level.INFO, "Initialized! :saidogPipo: :saidogRitto: :saidogMax:")
     }
 
     private fun initRegistries() {
@@ -125,8 +128,7 @@ object RuinsOfGrowsseth : ModInitializer {
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(FabricReloadListener(
             resLoc(Constants.TRADES_DATA_FOLDER),
             TradesListener(),
-        )
-        )
+        ))
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(FabricReloadListener(
             resLoc(Constants.RESEARCHER_DIALOGUE_DATA_FOLDER),
             ResearcherDialogueListener(),
@@ -150,4 +152,7 @@ object RuinsOfGrowsseth : ModInitializer {
             LOGGER.log(level, "[$MOD_NAME] $message")
         }
     }
+
+    val cydoniaProperties = loadPropertiesFile("cydonia.properties")
+    val cydoniaMode: Boolean = cydoniaProperties["cydoniaMode"]!!.toBoolean()
 }

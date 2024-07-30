@@ -44,7 +44,13 @@ abstract class GlobalResearcherTradesProvider protected constructor(
 
     companion object {
         private val instances = mutableListOf<GlobalResearcherTradesProvider>()
+
+        fun reloadAll(server: MinecraftServer) {
+            instances.forEach { it.reload(server) }
+        }
     }
+
+    abstract fun reload(server: MinecraftServer)
 
     final override fun getOffersImpl(
         researcher: Researcher,
