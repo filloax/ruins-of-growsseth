@@ -328,6 +328,10 @@ compileTestKotlin.compilerOptions {
     jvmTarget = jvmTargetEnum
 }
 
+tasks.register("modVersion") {
+    println("VERSION=$modVersion")
+}
+
 // Task defined in the custom plugin in buildSrc
 
 tasks.withType<TransformTokensTask> {
