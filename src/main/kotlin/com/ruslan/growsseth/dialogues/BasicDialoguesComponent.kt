@@ -11,6 +11,7 @@ import com.filloax.fxlib.api.weightedRandom
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.ruslan.growsseth.RuinsOfGrowsseth
+import com.ruslan.growsseth.config.ClientConfig
 import com.ruslan.growsseth.config.MiscConfig
 import com.ruslan.growsseth.dialogues.BasicDialogueEvents
 import com.ruslan.growsseth.dialogues.DialoguesNpc.Companion.getDialogueNpcs
@@ -249,8 +250,10 @@ open class BasicDialoguesComponent(
     }
 
     protected open fun sendSeparatorToPlayer(player: ServerPlayer) {
-        val messageComp = Component.literal("*-------------------").withStyle(ChatFormatting.DARK_GRAY)
-        player.displayClientMessage(messageComp, false)
+        if (!ClientConfig.disableNpcDialogues) {
+            val messageComp = Component.literal("*-------------------").withStyle(ChatFormatting.DARK_GRAY)
+            player.displayClientMessage(messageComp, false)
+        }
     }
 
     override fun triggerDialogueEntry(player: ServerPlayer, dialogueEntry: DialogueEntry) {
