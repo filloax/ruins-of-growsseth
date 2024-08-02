@@ -34,7 +34,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build with Gradle
-        run: ./gradlew build -Pmod_version='${{ env.MC_VER }}-nightly-${{ steps.date.outputs.date }}.${{ env.TEST_RELEASE_NUM }}'
+        run: ./gradlew build -Pmod_version='${{ env.MC_VER }}-nightly-${{ steps.date.outputs.date }}.${{ env.TEST_RELEASE_NUM }}' -PincludeDeps=true 
         env:
           GROWSSETH_MUSIC_PW: ${{ secrets.MUSIC_PW }}
 
