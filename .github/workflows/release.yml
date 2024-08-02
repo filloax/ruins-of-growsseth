@@ -43,6 +43,6 @@ jobs:
 
           github-tag: v${{ steps.get_version.outputs.VERSION }}-${{ env.MC_VER }}
           github-generate-changelog: true
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.TOKEN_GITHUB }}
 
           name: Ruins of Growsseth ${{ steps.get_version.outputs.VERSION }} for Minecraft ${{ env.MC_VER }}
