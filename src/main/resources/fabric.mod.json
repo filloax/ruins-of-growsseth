@@ -23,7 +23,11 @@
     "Ako & R-E-M",
     "Guber"
   ],
-  "contact": {},
+  "contact": {
+    "homepage": "https://github.com/filloax/ruins-of-growsseth",
+    "issues": "https://github.com/filloax/ruins-of-growsseth/issues",
+    "source": "https://github.com/filloax/ruins-of-growsseth"
+  },
   "license": "MIT",
   "icon": "assets/growsseth/icon.png",
   "environment": "*",
@@ -64,5 +68,10 @@
     "fabricloader": ">=${loader_version}",
     "fabric-api": ">=${fapi_version}",
     "fabric": "*"
+  },
+  "custom": {
+    "modmenu": {
+
+    }
   }
 }

@@ -61,6 +61,7 @@ import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.entity.ai.goal.ClimbOnTopOfPowderSnowGoal
 import net.minecraft.world.entity.ai.goal.FloatGoal
 import net.minecraft.world.entity.ai.goal.MoveTowardsRestrictionGoal
 import net.minecraft.world.entity.ai.goal.OpenDoorGoal
@@ -281,6 +282,8 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     private var tentCache: Optional<StructureStart>? = null
     private var lastRefusedTradeTimer: Int = 0
     private var clearFailedMapsTime: Int? = null
+    private var syncDataNoPlayersTimer: Int = 0
+    private var willReadWorldDataNextSync: Boolean = false
 
     private var itemUsingTime = 0
 
@@ -314,6 +317,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
     override fun registerGoals() {
         goalSelector.addGoal(0, FloatGoal(this))
+        goalSelector.addGoal(0, ClimbOnTopOfPowderSnowGoal(this, level()))
         goalSelector.addGoal(1, OpenDoorGoal(this, true))
         goalSelector.addGoal(2, ResearcherAttackGoal(this, 0.7, true))
         goalSelector.addGoal(3, MoveTowardsRestrictionGoal(this, 0.6))
@@ -463,7 +467,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
                 if (target is ServerPlayer) {
                     isStuck = true
                     showAngryParticles = true
-                    dialogues?.triggerDialogue(target as ServerPlayer, ResearcherDialoguesComponent.PLAYER_CHEATS)
+                    dialogues?.triggerDialogue(target as ServerPlayer, ResearcherDialoguesComponent.EV_PLAYER_CHEATS)
                 }
                 potion = Potions.STRONG_TURTLE_MASTER
             }
@@ -506,6 +510,34 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
         // Always passes as server code
         val serverLevel = level() as ServerLevel
+
+        if (ResearcherConfig.singleResearcher) {
+            // Handle more researchers far away but loaded at same time due to high sim distance
+            // when no players nearby, sync data if needed and become available to load data as soon as a player is nearby
+            val radius = dialogues!!.radiusForTriggerLeave * 2
+            val playersNearby = dialogues.nearbyPlayers().isEmpty() && serverLevel.getNearestPlayer(this.x, this.y, this.z, radius, true) == null
+            if (playersNearby) {
+                // no players including creative nearby
+                if (syncDataNoPlayersTimer == 0) {
+                    syncDataNoPlayersTimer = 2f.secondsToTicks()
+                } else {
+                    syncDataNoPlayersTimer--
+                    if (syncDataNoPlayersTimer == 0) {
+                        val savedData = ResearcherSavedData.getPersistent(serverLevel.server)
+                        if (isUpToDateWithWorldData(savedData)) {
+                            saveWorldData()
+                        }
+                        willReadWorldDataNextSync = true
+                    }
+                }
+            } else {
+                syncDataNoPlayersTimer = 0
+                if (willReadWorldDataNextSync) {
+                    willReadWorldDataNextSync = false
+                    readSavedData(ResearcherSavedData.getPersistent(serverLevel.server))
+                }
+            }
+        }
 
         if (this.startingPos == null)
             this.startingPos = this.blockPosition()
@@ -611,7 +643,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         val attacker = source.entity
 
         if (attacker is Player && ResearcherConfig.immortalResearcher && !attacker.isCreative)
-            dialogues?.triggerDialogue(attacker as ServerPlayer, ResearcherDialoguesComponent.HIT_BY_PLAYER_IMMORTAL)
+            dialogues?.triggerDialogue(attacker as ServerPlayer, ResearcherDialoguesComponent.EV_HIT_BY_PLAYER_IMMORTAL)
 
         val combatRet = combat.hurt(source, amount) { s, a -> super.hurt(s, a) }
 
@@ -771,6 +803,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     fun readSavedData(savedData: ResearcherSavedData) {
         readResearcherData(savedData.data)
         customName = savedData.name
+        lastWorldDataTime = savedData.lastChangeTimestamp
     }
 
     override fun addAdditionalSaveData(compoundTag: CompoundTag) {
@@ -844,7 +877,6 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             writeSavedData(savedData, data, force)
         } }
     }
-
 
     /* Trading methods */
 

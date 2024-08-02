@@ -18,29 +18,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 1,
-        "hidden": false,
-        "isFX": false
-    },
-    {
-        "id": 42,
-        "name": "? ? ?",
-        "x": "1368",
-        "y": "25",
-        "z": "190",
-        "x1": "1362",
-        "y1": "20",
-        "z1": "186",
-        "x2": "1375",
-        "y2": "27",
-        "z2": "194",
-        "description": "Nelle profondità più recondite della Fortezza del Sapere si trova una stanza diversa da tutte le altre, caratterizzata da una struttura circolare, apparentemente indistruttibile, su una pozza di lava.\n\nQuesta struttura è composta da 12 contenitori nei quali gli Occhi di Ender possono essere inseriti.",
-        "type": "STRUCTURE",
-        "imagePath": "/assets/places/end_portal.jpg",
-        "ostID": "",
-        "ostCredits": null,
-        "isNew": false,
-        "priority": 2,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -62,7 +40,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 0,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -84,7 +62,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 0,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -106,7 +84,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 0,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -348,7 +326,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 0,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -419,7 +397,8 @@
     },
     {
         "id": 63,
-        "name": "Casa della Setta in Fiamme",
+        "name_original": "Casa della Setta in Fiamme",
+        "name": "Casa della Setta",
         "x": "4088",
         "y": "96",
         "z": "2930",
@@ -1052,7 +1031,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 0,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -1074,7 +1053,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 0,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -1096,7 +1075,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 0,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -1118,7 +1097,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 0,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -1140,7 +1119,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 0,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -1162,7 +1141,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 0,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -1184,7 +1163,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 0,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -1206,7 +1185,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 0,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -1228,7 +1207,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 0,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -1320,6 +1299,28 @@
         "isFX": false
     },
     {
+        "id": 120,
+        "name": "Mondo di End: Limbo",
+        "x": "100",
+        "y": "49",
+        "z": "2",
+        "x1": "109",
+        "y1": "60",
+        "z1": "-6",
+        "x2": "87",
+        "y2": "45",
+        "z2": "13",
+        "description": "????",
+        "type": "END",
+        "imagePath": "/media/places/place.png",
+        "ostID": "",
+        "ostCredits": "",
+        "isNew": false,
+        "priority": 0,
+        "hidden": false,
+        "isFX": false
+    },
+    {
         "id": 117,
         "name": "Monte Bocca di Lava",
         "x": "814",
@@ -1375,7 +1376,7 @@
         "x2": "3790",
         "y2": "109",
         "z2": "2778",
-        "description": "Una delle vette più alte di Growsseth, perennemente ricoperta dalla neve.\n\nI venti freddi che soffiano tra questi ghiacci, sembrano portare candidi suoni.\n\nSi dice che la Divinità che ha abbandonato le Terre sia stata vista per l'ultima volta su una montagna.\n\nPossibile sia questa?",
+        "description": "Una delle vette più alte di Growsseth, perennemente ricoperta dalla neve.\nI venti freddi che soffiano tra questi ghiacci, sembrano portare candidi suoni.\n\nSi dice che la Divinità che ha abbandonato le Terre sia stata vista per l'ultima volta su una montagna.\n\nPossibile sia questa?\n\nNascosto tra le nevi c'è un piccolo varco, il quale conduce a una scalinata che si spinge fin nelle profondità della terra, oltre il pietrisco, oltre il granito, addirittura oltre lo Sculk; terminando in una sala rettangolare.\n\nIn tutta Growsseth si è venuto a sapere di una qualche divinità che ivi è stata evocata.\nBenigna? Malevola? Nessuna delle due?\n\nNessuno in tutta la landa, fatta eccezione del Ricercatore sembra saperlo.\n\nQuello che però è noto a tutti è che, qualsiasi cosa sia stata evocata nelle profondità della terra, ci è rimasta, sconfitta.",
         "type": "WORLD",
         "imagePath": "/assets/places/heineken.jpg",
         "ostID": null,
@@ -1580,7 +1581,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 0,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -1602,7 +1603,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 0,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -1624,7 +1625,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 0,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -1646,7 +1647,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 0,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -1668,7 +1669,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 1,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -1690,7 +1691,7 @@
         "ostCredits": null,
         "isNew": false,
         "priority": 0,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -1712,7 +1713,7 @@
         "ostCredits": "",
         "isNew": false,
         "priority": 2,
-        "hidden": false,
+        "hidden": true,
         "isFX": false
     },
     {
@@ -1734,6 +1735,28 @@
         "ostCredits": "",
         "isNew": false,
         "priority": 0,
+        "hidden": false,
+        "isFX": false
+    },
+    {
+        "id": 42,
+        "name": "Sala del Portale",
+        "x": "1368",
+        "y": "25",
+        "z": "190",
+        "x1": "1362",
+        "y1": "20",
+        "z1": "186",
+        "x2": "1375",
+        "y2": "27",
+        "z2": "194",
+        "description": "Nelle profondità più recondite della Fortezza del Sapere si trova una stanza diversa da tutte le altre, caratterizzata da una struttura circolare, apparentemente indistruttibile, su una pozza di lava.\n\nQuesta struttura è composta da 12 contenitori nei quali gli Occhi di Ender possono essere inseriti.",
+        "type": "STRUCTURE",
+        "imagePath": "/assets/places/end_portal.jpg",
+        "ostID": "",
+        "ostCredits": null,
+        "isNew": false,
+        "priority": 2,
         "hidden": false,
         "isFX": false
     },
@@ -2333,7 +2356,8 @@
     },
     {
         "id": 2,
-        "name": "Villajjo - Casa",
+        "name_original": "Villajjo - Casa",
+        "name": "Villajjo",
         "x": "1344",
         "y": "68",
         "z": "240",
@@ -2346,12 +2370,12 @@
         "description": "\"Pochi, ma buoni\"\n\nUn villaggio in una pianura costeggiata da fiumi, il posto ideale dove costruire la propria casa.\n\nLa vita procedeva tranquilla in quel di Villajjo, un tempo conosciuto sotto il nome di Noche, finché un prode guerriero decise di farsi carico della protezione e della crescita di questa comunità, al tempo guidata da Padre Mammonk.\n\nDopo la scomparsa di Padre Mammonk, che alcuni ritengono essere asceso al rango di Arcangelo, e di molti altri abitanti, venne avviata un'opera di ripopolamento, \"convincendo\" gli abitanti di altri villaggi a trasferirsi in Paese e trasportandoli con innovative barche di terra. L'arrivo di Simonetta, permise a Ricky di procreare, riportando la vita a Villajjo.\n\nAncora a lutto per la perdita di Padre Mammonk, il ricercatore si prodigò a lungo per ricostruire la comunità, narrando le sue grandi gesta, formando un nuovo padre e costruendo il \"Pilone di Mammonk\", per ricordarsi della sua protezione. \n\nMolti sono i suoni di Villajjo: le feste musicali in casa del ricercatore, con annesso tappetino di Just Dance; i versi dello zoo dentro e fuori la suddetta casa, i rumori inumani provenienti da poco lontano, i versi dei villici che popolano la città, ed, infine, i suoni delle nuove campane installate sulla vecchia dimora di Padre Mammonk.\n\nPer proteggere gli abitanti di Villajjo dai mostri, il ricercatore ne ha costruito a sua volta uno: una splendida, solidissima, bicromatica muraglia che ne avvolge il perimetro; fatta eccezione per un lato, sul mare, e di una casa, dichiarata in terra di nessuno.\n\nA questa cinta muraria è stata poi abbinata, ovviamente, una nuova abitazione, più sontuosa, temeraria ed ambiziosa della precedente, su 3 piani, con la facciata ricoperta di muschio, per darle un aspetto selvaggio. Voci di corridoio dicono che ci siano delle prigioni in costruzione.\n\nIl villaggio piange la perdita di Simoner, il maialino più simpatico di Growsseth la cui vita, breve ma intensa, è finita col botto.\n\nPer le lande di Growsseth si è diffusa la voce che la cura alla piaga sia gelosamente custodita a Villajjo, che è tra l'altro protetta dalla divinità del cuoio e del fuoco: il Cuoco.\n\nA seguito degli avvenimenti dei mesi scorsi: il continuo invadere gli avamposti dei Predoni Metallici, l'incendio alla Casa della Setta, la scoperta della Cura - poi celata al resto del mondo -, la scomparsa di Simonetta; questa ridente comunità si è trovata sotto l'attacco congiunto di Predoni e Cannibali della Setta.\n\nUn attacco, tuttavia, organizzato in modo non proprio efficiente, facilmente respinto dal ricercatore e dai suoi due Golem e dalle poderose mura che cingono il villaggio.\n\nRibadita a tutta Growsseth la sicurezza di Villajjo, i suoi abitanti, che ora si sentono estremamente al sicuro, hanno deciso di diventare Maestri nelle loro professioni.\n\nMolte lune sono passate da quando il Ricercatore si è stabilito a Villajjo, la sua Casa. \n\nIn questo periodo la popolazione è tornata ad essere numerosa e specializzata nelle proprie arti, l'agricoltura è tornata ad essere fiorente, così cone la cultura e l'istruzione, grazie al Pavimentum. \n\nI nemici, la non-morte, l'ignoto, ormai nulla fa più paura alla comunità, ed è anche merito del Ricercatore, al quale vanno onori e meriti per i grandiosi risultati che ha ottenuto in ogni campo.\n\n<i>*nota le costruzioni*</i>\n\nQuasi ogni campo...",
         "type": "VILLAGE",
         "imagePath": "/assets/places/villajjo_2.jpg",
-        "ostID": "egobalego:villajjo",
-        "ostCredits": "OST By Avage",
+        "ostID": "",
+        "ostCredits": "",
         "isNew": false,
         "priority": 1,
         "hidden": false,
-        "isFX": true
+        "isFX": false
     },
     {
         "id": 19,

@@ -3,6 +3,7 @@ package com.ruslan.growsseth.config;
 import com.teamresourceful.resourcefulconfig.api.annotations.Comment;
 import com.teamresourceful.resourcefulconfig.api.annotations.Config;
 import com.teamresourceful.resourcefulconfig.api.annotations.ConfigEntry;
+import com.teamresourceful.resourcefulconfig.api.annotations.ConfigInfo;
 import com.teamresourceful.resourcefulconfig.api.types.options.EntryType;
 
 @Config(
@@ -17,6 +18,29 @@ import com.teamresourceful.resourcefulconfig.api.types.options.EntryType;
         WorldPresetConfig.class,
         DebugConfig.class
     }
+)
+@ConfigInfo(
+        icon = "wrench",
+        title = "Ruins of Growsseth",
+        description = "A highly configurable structures mod to guide towards vanilla features",
+        descriptionTranslation = "growsseth.config.web.description",
+        links = {
+                @ConfigInfo.Link(
+                        value = "https://modrinth.com/mod/ruins-of-growsseth",
+                        icon = "modrinth",
+                        text = "Modrinth"
+                ),
+                @ConfigInfo.Link(
+                        value = "https://www.curseforge.com/minecraft/mc-mods/ruins-of-growsseth",
+                        icon = "curseforge",
+                        text = "Curseforge"
+                ),
+                @ConfigInfo.Link(
+                        value = "https://github.com/filloax/ruins-of-growsseth",
+                        icon = "github",
+                        text = "Github"
+                )
+        }
 )
 public final class GrowssethConfig {
     public static final String T_PREF = "growsseth.config.";

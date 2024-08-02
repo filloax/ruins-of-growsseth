@@ -65,15 +65,15 @@
         "Good morning, colleague.",
         {
             "content": "Glad to see you're still alive, colleague.",
-            "afterRepeatsMin": 2,
+            "afterRepeatsMin": 2
         },
         "...maybe, with that ingredient... Oh, hello colleague.",
         "Good morning colleague, beautiful day today, isn't it?",
         "...but of course, now it makes sense... Oh, hello, go ahead.",
         {
             "content": "Hello colleague, always on the move, huh?",
-            "afterRepeatsMin": 2,
-        },
+            "afterRepeatsMin": 2
+        }
     ],
     "playerArriveNight": [
         { "id": "researcher-first" },
@@ -138,6 +138,14 @@
         "Colleague...? Back from a long adventure I assume, do you have anything interesting to share?",
         "Long time no see, colleague.",
         "Hello colleague, it's been a while since you've been away, how are you?"
+    ],
+    "playerArriveNewLocation": [
+        {
+            "content": "Greetings, didn't expect to meet you here!\nAs you know, I also am a traveler, so I have various encampents around the world.\nIf we meet again, I'll be happy to share information as usual.",
+            "useLimit": 1,
+            "priority": 50,
+            "id": "researcher-arrive-new-loc-first"
+        }
     ],
     "playerArriveSoon": [
         { "id": "no-dialogue-mess" },

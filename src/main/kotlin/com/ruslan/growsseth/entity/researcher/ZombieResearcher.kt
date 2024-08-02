@@ -79,6 +79,7 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
 
     // same as zombie villagers, with some exceptions
     override fun registerGoals() {
+        goalSelector.addGoal(2, RestrictSunGoal(this))      // taken from skeleton behavior (like the next one)
         // same priority as attacking villagers and after attacking player, useful for simple tent variant:
         goalSelector.addGoal(3, FleeSunGoal(this, 1.0))
         // no destroy turtle egg goal

@@ -9,10 +9,7 @@ import com.ruslan.growsseth.dialogues.BasicDialoguesComponent
 import com.ruslan.growsseth.entity.researcher.*
 import com.ruslan.growsseth.entity.researcher.trades.GlobalResearcherTradesProvider
 import com.ruslan.growsseth.entity.researcher.trades.ProgressResearcherTradesProvider
-import com.ruslan.growsseth.http.DataRemoteSync
-import com.ruslan.growsseth.http.GrowssethApiV2
-import com.ruslan.growsseth.http.GrowssethExtraEvents
-import com.ruslan.growsseth.http.LiveUpdatesConnection
+import com.ruslan.growsseth.http.*
 import com.ruslan.growsseth.loot.VanillaStructureLoot
 import com.ruslan.growsseth.quests.QuestComponentEvents
 import com.ruslan.growsseth.structure.RemoteStructureBooks
@@ -27,12 +24,10 @@ import net.minecraft.advancements.AdvancementHolder
 import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.network.ServerGamePacketListenerImpl
-import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.entity.Entity
@@ -57,7 +52,7 @@ abstract class ModEvents {
     fun initCallbacks() {
         onServerStarting { server ->
             StoppableAsyncLocator.Callbacks.onServerStarting()
-            DataRemoteSync.handleServerAboutToStartEvent(server)
+            DataRemoteSync.Callbacks.handleServerAboutToStartEvent(server)
             DataRemoteSync.doSync(WebConfig.dataSyncUrl, server)
             MixinHelpers.serverInit(server)
             LiveUpdatesConnection.serverStart(server)
@@ -69,7 +64,7 @@ abstract class ModEvents {
         }
         onServerStopping { server ->
             StoppableAsyncLocator.Callbacks.onServerStopping()
-            DataRemoteSync.handleServerStoppingEvent()
+            DataRemoteSync.Callbacks.handleServerStoppingEvent()
             GrowssethApiV2.Callbacks.onServerStop(server)
             GlobalResearcherTradesProvider.Callbacks.onServerStop(server)
             LiveUpdatesConnection.serverStop(server)
@@ -82,11 +77,11 @@ abstract class ModEvents {
             ResearcherSavedData.Callbacks.onServerStopped(server)
         }
         onServerLevelLoad { server, level ->
-            DataRemoteSync.handleWorldLoaded(server, level)
+            DataRemoteSync.Callbacks.onServerLevel(server, level)
             ResearcherDiaryComponent.Callbacks.onServerLevel(level)
         }
         onStartServerTick { server ->
-            DataRemoteSync.checkTickSync(WebConfig.dataSyncUrl, server)
+            DataRemoteSync.Callbacks.onServerTick(WebConfig.dataSyncUrl, server)
             GrowssethAdvancements.Callbacks.onServerTick(server)
             ProgressResearcherTradesProvider.Callbacks.onServerTick(server)
         }
