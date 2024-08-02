@@ -1,0 +1,48 @@
+name: Release Mod (1.20.6)
+ 
+on:
+  push:
+    branches:
+      - 'release/1.20.6'
+env:
+  JAVA_VERSION: 21
+  MC_VER: 1.20.6
+
+jobs:
+  build:
+    if: "contains(github.event.head_commit.message, 'chore: release') && github.event_name != 'pull_request'"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1  
+
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: "temurin"
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Make Gradle Wrapper Executable
+        if: ${{ runner.os != 'Windows' }}
+        run: chmod +x ./gradlew
+      
+      - name: Get version from gradle
+        id: get_version
+        run: echo "VERSION=$(./gradlew modVersion | grep VERSION | awk -F'=' '{print $2}')" >> $GITHUB_OUTPUT
+  
+      - name: Build with Gradle
+        run: ./gradlew build
+        env:
+          GROWSSETH_MUSIC_PW: ${{ secrets.MUSIC_PW }}
+
+      - uses: Kir-Antipov/mc-publish@v3.3
+        with:
+          modrinth-token: ${{ secrets.TOKEN_MODRINTH }}
+
+          curseforge-token: ${{ secrets.TOKEN_CURSEFORGE }}
+
+          github-tag: v${{ steps.get_version.outputs.VERSION }}-${{ env.MC_VER }}
+          github-generate-changelog: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+          name: Ruins of Growsseth ${{ steps.get_version.outputs.VERSION }} for Minecraft ${{ env.MC_VER }}
