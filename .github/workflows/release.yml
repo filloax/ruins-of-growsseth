@@ -37,9 +37,9 @@ jobs:
 
       - uses: Kir-Antipov/mc-publish@v3.3
         with:
-          modrinth-token: ${{ secrets.TOKEN_MODRINTH }}
+          # modrinth-token: ${{ secrets.TOKEN_MODRINTH }}
 
-          curseforge-token: ${{ secrets.TOKEN_CURSEFORGE }}
+          # curseforge-token: ${{ secrets.TOKEN_CURSEFORGE }}
 
           github-tag: v${{ steps.get_version.outputs.VERSION }}-${{ env.MC_VER }}
           github-generate-changelog: true
