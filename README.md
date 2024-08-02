@@ -5,7 +5,9 @@
 ## [**README IN ITALIANO QUA!**](docs/README_ITA.md)
 
 A highly configurable structures mod, with a smart NPC to sell maps and guide you in discovery, and structures 
-that hint to vanilla features taking inspiration from Broken Nether Portals. 
+that hint to vanilla features taking inspiration from Broken Nether Portals.
+
+> Feeling brave? You can try the latest in-dev release [here](https://github.com/filloax/ruins-of-growsseth/releases/tag/nightly-release-1.20.6)!
 
 Adapted from a mod made for the italian streamer Cydonia, as such also contains discs, trims, and more 
 with content from his community and assorted easter eggs (also configurable). Also, it contains a custom

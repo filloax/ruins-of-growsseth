@@ -140,6 +140,7 @@ object GrowssethItems {
 		DISC_BALLATA_DEL_RESPAWN
 	)
 
+	@JvmField
 	val RUINS_MAP = make("ruins_map", MapItem(defaultBuilder().stacksTo(1)), autoGenerateJson = false)
 
 	private fun <T:Item> make(hashName: String, item: T, autoGenerateJson: Boolean = true): T {

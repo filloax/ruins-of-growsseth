@@ -2,8 +2,10 @@ package com.ruslan.growsseth.config;
 
 import com.teamresourceful.resourcefulconfig.api.annotations.Category;
 import com.teamresourceful.resourcefulconfig.api.annotations.Comment;
+import com.teamresourceful.resourcefulconfig.api.annotations.ConfigButton;
 import com.teamresourceful.resourcefulconfig.api.annotations.ConfigEntry;
 import com.teamresourceful.resourcefulconfig.api.types.options.EntryType;
+import com.teamresourceful.resourcefulconfig.api.types.options.Position;
 
 import static com.ruslan.growsseth.config.GrowssethConfig.T_PREF;
 
@@ -31,6 +33,29 @@ public class StructureConfig {
     @ConfigEntry(id = "noteblockShipEnabled", type = EntryType.BOOLEAN, translation = T_PREF + "noteblockShipEnabled.name")
     public static boolean noteblockShipEnabled = true;
     @ConfigEntry(id = "researcherTentSimpleEnabled", type = EntryType.BOOLEAN, translation = T_PREF + "researcherTentSimpleEnabled.name")
-    @Comment(value = "Warning: with this version the final quest might work incorrectly. It's also recommended to enable only one variant.",translation = T_PREF + "researcherTentSimpleEnabled.comment")
+    @Comment(value = "Warning: with this version the final quest might work incorrectly. It's also recommended to enable only one variant.", translation = T_PREF + "researcherTentSimpleEnabled.comment")
     public static boolean researcherTentSimpleEnabled = false;
+
+
+    @ConfigButton(text = "Disable all", target = "researcherTentEnabled", position = Position.BEFORE)
+    public static void disableAllStructures() { toggleAll(false); }
+
+    @ConfigButton(text = "Enable all", target = "researcherTentEnabled", position = Position.BEFORE)
+    public static void enableAllStructures() { toggleAll(true); }
+
+    private static void toggleAll(boolean choice) {
+        researcherTentEnabled = choice;
+        caveCampEnabled = choice;
+        beekeeperHouseEnabled = choice;
+        conduitChurchEnabled = choice;
+        enchantTowerEnabled = choice;
+        abandonedForgeEnabled = choice;
+        noteblockLabEnabled = choice;
+        golemHouseEnabled = choice;
+        conduitRuinsEnabled = choice;
+        noteblockShipEnabled = choice;
+        // The tent with no cellar should always be enabled manually
+        if (!choice)
+            researcherTentSimpleEnabled = false;
+    }
 }

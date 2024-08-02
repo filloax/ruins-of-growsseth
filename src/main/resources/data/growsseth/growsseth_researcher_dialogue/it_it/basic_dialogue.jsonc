@@ -65,15 +65,15 @@
         "Buongiorno, collega.",
         {
             "content": "Lieto di vederti ancora in vita, collega.",
-            "afterRepeatsMin": 2,
+            "afterRepeatsMin": 2
         },
         "...forse, con quell'ingrediente... Oh, salve collega.",
         "Buongiorno collega, bella giornata oggi, vero?",
         "...ma certo, ora ha senso... Oh, salve, dimmi pure.",
         {
             "content": "Salve collega, sempre in movimento eh?",
-            "afterRepeatsMin": 2,
-        },
+            "afterRepeatsMin": 2
+        }
     ],
     "playerArriveNight": [
         { "id": "researcher-first" },
@@ -138,6 +138,14 @@
         "Collega...? Sei di ritorno da una lunga avventura immagino, hai qualcosa di interessante da condividere?",
         "Da quanto tempo che non ci si vede, collega.",
         "Salve collega, è da tanto che sei via, come stai?"
+    ],
+    "playerArriveNewLocation": [
+        {
+            "content": "Salve, non mi aspettavo di trovarti qua!\nAnche io viaggio, come sai, quindi ho diversi accampamenti sparsi per il mondo.\nSe ci incroceremo altre volte sarò felice di scambiare informazioni come di consueto.",
+            "useLimit": 1,
+            "priority": 50,
+            "id": "researcher-arrive-new-loc-first"
+        }
     ],
     "playerArriveSoon": [
         { "id": "no-dialogue-mess" },
@@ -408,7 +416,7 @@
         {
             "content": "Grazie per avermelo riportato. Ti farò di nuovo i prezzi originali!",
             "immediate": true
-        },
+        }
     ],
     "exploreCellar": [
         {

@@ -49,5 +49,7 @@ accessible method net/minecraft/world/level/chunk/ChunkGenerator tryAddReference
 
 accessible method net/minecraft/server/commands/LocateCommand getHolders (Lnet/minecraft/commands/arguments/ResourceOrTagKeyArgument$Result;Lnet/minecraft/core/Registry;)Ljava/util/Optional;
 
+accessible method net/minecraft/client/resources/TextureAtlasHolder getSprite (Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;
+
 # enable when debugging concurrentmodificationexception
 # mutable field net/minecraft/util/ClassInstanceMultiMap allInstances Ljava/util/List;
