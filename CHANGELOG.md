@@ -3,10 +3,11 @@
 ## 0.10.0
 
 Added
-- Add all remaining except CacoCaco and Ancora Qui
+- Add all remaining discs except CacoCaco and Ancora Qui
+- Advancement for when you find all structures
 - Ruins map now have their target icon shown on the GUI map icon
 - Researcher: new dialogue event when finding new tent for the first time
-- `/gmaster` command to tweak gameamster website connections
+- `/gmaster` command to tweak gamemaster website connections
 
 Tweaked
 - Ballata disc fragments now found in End Cities
