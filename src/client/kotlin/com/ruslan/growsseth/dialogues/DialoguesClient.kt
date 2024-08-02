@@ -1,6 +1,5 @@
 package com.ruslan.growsseth.dialogues
 
-import com.filloax.fxlib.FxLib
 import com.filloax.fxlib.api.FxLibServices
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.config.ClientConfig
@@ -10,7 +9,6 @@ import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
 import net.minecraft.client.player.LocalPlayer
 import net.minecraft.network.chat.Component
-import net.minecraft.world.entity.player.Player
 
 private val client = Minecraft.getInstance()
 private val platform = FxLibServices.platform

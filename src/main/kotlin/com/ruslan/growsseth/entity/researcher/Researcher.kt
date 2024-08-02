@@ -282,6 +282,8 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     private var tentCache: Optional<StructureStart>? = null
     private var lastRefusedTradeTimer: Int = 0
     private var clearFailedMapsTime: Int? = null
+    private var syncDataNoPlayersTimer: Int = 0
+    private var willReadWorldDataNextSync: Boolean = false
 
     private var itemUsingTime = 0
 
@@ -508,6 +510,34 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
         // Always passes as server code
         val serverLevel = level() as ServerLevel
+
+        if (ResearcherConfig.singleResearcher) {
+            // Handle more researchers far away but loaded at same time due to high sim distance
+            // when no players nearby, sync data if needed and become available to load data as soon as a player is nearby
+            val radius = dialogues!!.radiusForTriggerLeave * 2
+            val playersNearby = dialogues.nearbyPlayers().isEmpty() && serverLevel.getNearestPlayer(this.x, this.y, this.z, radius, true) == null
+            if (playersNearby) {
+                // no players including creative nearby
+                if (syncDataNoPlayersTimer == 0) {
+                    syncDataNoPlayersTimer = 2f.secondsToTicks()
+                } else {
+                    syncDataNoPlayersTimer--
+                    if (syncDataNoPlayersTimer == 0) {
+                        val savedData = ResearcherSavedData.getPersistent(serverLevel.server)
+                        if (isUpToDateWithWorldData(savedData)) {
+                            saveWorldData()
+                        }
+                        willReadWorldDataNextSync = true
+                    }
+                }
+            } else {
+                syncDataNoPlayersTimer = 0
+                if (willReadWorldDataNextSync) {
+                    willReadWorldDataNextSync = false
+                    readSavedData(ResearcherSavedData.getPersistent(serverLevel.server))
+                }
+            }
+        }
 
         if (this.startingPos == null)
             this.startingPos = this.blockPosition()
@@ -773,6 +803,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     fun readSavedData(savedData: ResearcherSavedData) {
         readResearcherData(savedData.data)
         customName = savedData.name
+        lastWorldDataTime = savedData.lastChangeTimestamp
     }
 
     override fun addAdditionalSaveData(compoundTag: CompoundTag) {
@@ -846,7 +877,6 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             writeSavedData(savedData, data, force)
         } }
     }
-
 
     /* Trading methods */
 
