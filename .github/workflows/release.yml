@@ -3,7 +3,7 @@ name: Release Mod (1.21)
 on:
   push:
     branches:
-      - 'release/1.21'
+      - 'release/1.21.0'
 env:
   JAVA_VERSION: 21
   MC_VER: 1.21
