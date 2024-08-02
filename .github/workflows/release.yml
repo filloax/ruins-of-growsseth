@@ -46,3 +46,4 @@ jobs:
           github-token: ${{ secrets.TOKEN_GITHUB }}
 
           name: Ruins of Growsseth ${{ steps.get_version.outputs.VERSION }} for Minecraft ${{ env.MC_VER }}
+          version-type: beta
