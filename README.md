@@ -27,7 +27,7 @@ For bug reports check the [Issues](https://github.com/filloax/ruins-of-growsseth
 
 ### Requirements
 
-The mod currently is only available for 1.20.6 with Fabric, and requires [Fabric API](https://modrinth.com/mod/fabric-api) and [Resourceful Config](https://modrinth.com/mod/resourceful-config). 
+The mod currently is only available for Fabric, and requires [Fabric API](https://modrinth.com/mod/fabric-api) and [Resourceful Config](https://modrinth.com/mod/resourceful-config). 
 [Mod Menu](https://modrinth.com/mod/modmenu) is highly suggested for a simpler configuration UI ingame.
 
 Future plans include releasing the mod for Neoforge and other 1.20.x (and future versions) too.
