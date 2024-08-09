@@ -42,17 +42,23 @@ jobs:
           latest_changelog=$(sed -n "/## $latest_version/,/## /p" CHANGELOG.md | sed '$d')
           echo "$latest_changelog" > latest_changelog.txt
 
-      # - uses: Kir-Antipov/mc-publish@v3.3
-      #   id: mc_publish
-      #   with:
-      #     modrinth-token: ${{ secrets.TOKEN_MODRINTH }}
+      - uses: Kir-Antipov/mc-publish@v3.3
+        id: mc_publish
+        with:
+          modrinth-token: ${{ secrets.TOKEN_MODRINTH }}
+          curseforge-token: ${{ secrets.TOKEN_CURSEFORGE }}
 
-      #     curseforge-token: ${{ secrets.TOKEN_CURSEFORGE }}
+          name: Ruins of Growsseth ${{ steps.get_version.outputs.VERSION }} for Minecraft ${{ env.MC_VER }}
+          version-type: beta
+          
+          game-versions: ${{ env.MC_VER }}
+          dependencies: |
+            resourcefulconfig(required)
+            fabric-language-kotlin(required)
+            fabric(required)
+            modmenu(recommended)
 
-      #     name: Ruins of Growsseth ${{ steps.get_version.outputs.VERSION }} for Minecraft ${{ env.MC_VER }}
-      #     version-type: beta
-
-      #     changelog-file: latest_changelog.txt
+          changelog-file: latest_changelog.txt
 
       - name: Release
         uses: softprops/action-gh-release@v2
