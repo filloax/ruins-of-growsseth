@@ -34,16 +34,44 @@ jobs:
         run: ./gradlew build
         env:
           GROWSSETH_MUSIC_PW: ${{ secrets.MUSIC_PW }}
+      
+      - name: Extract latest changelog
+        id: changelog
+        run: |
+          latest_version=$(grep -m 1 -oP '(?<=##\s)\d+\.\d+\.\d+' CHANGELOG.md)
+          latest_changelog=$(sed -n "/## $latest_version/,/## /p" CHANGELOG.md | sed '$d')
+          echo "$latest_changelog" > latest_changelog.txt
 
       - uses: Kir-Antipov/mc-publish@v3.3
+        id: mc_publish
         with:
           modrinth-token: ${{ secrets.TOKEN_MODRINTH }}
 
           curseforge-token: ${{ secrets.TOKEN_CURSEFORGE }}
 
-          github-tag: v${{ steps.get_version.outputs.VERSION }}-${{ env.MC_VER }}
-          github-generate-changelog: true
-          github-token: ${{ secrets.TOKEN_GITHUB }}
-
           name: Ruins of Growsseth ${{ steps.get_version.outputs.VERSION }} for Minecraft ${{ env.MC_VER }}
           version-type: beta
+          
+          game-versions: ${{ env.MC_VER }}
+          dependencies: |
+            resourcefulconfig(required)
+            fabric-language-kotlin(required)
+            fabric(required)
+            modmenu(recommended)
+
+          changelog-file: latest_changelog.txt
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Ruins of Growsseth ${{ steps.get_version.outputs.VERSION }} for Minecraft ${{ env.MC_VER }}
+          body_path: latest_changelog.txt
+          token: ${{ secrets.TOKEN_GITHUB }}
+          make_latest: false
+          tag_name: v${{ steps.get_version.outputs.VERSION }}-${{ env.MC_VER }}
+          files: |
+            build/libs/*.jar
+            build/egobalego-at-home/*.zip
+            build/datapack/*.zip
+      
+      
