@@ -54,19 +54,12 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const tag = '${{ steps.mc_publish.outputs.github-tag }}';
-            const releases = await github.repos.listReleases({
+            const release = await github.rest.repos.getReleaseByTag({
               owner: context.repo.owner,
               repo: context.repo.repo,
+              tag: '${{ steps.mc_publish.outputs.github-tag }}'
             });
-
-            const release = releases.data.find(r => r.tag_name === tag);
-
-            if (!release) {
-              throw new Error(`Release with tag ${tag} not found`);
-            }
-
-            return release.data.id;
+            return release.id;
 
       - name: Upload Asset to Release
         uses: actions/upload-release-asset@v1
