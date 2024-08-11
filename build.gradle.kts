@@ -151,72 +151,50 @@ fun getRconfig(): String {
 }
 
 
-tasks.register("zipEgobalegoFolder") {
-	group = "custom"
-
-	val sourceDir = project.file("tools/egobalego-at-home")
-	val destinationDir = project.file("build/egobalego-at-home")
-	val zipFile = destinationDir.resolve("Egobalego at Home.zip")
-
-	inputs.dir(sourceDir)
-	outputs.file(zipFile)
-
-	doLast {
-		destinationDir.mkdirs()
-		project.exec {
-			workingDir = sourceDir.parentFile
-			commandLine("zip", "-r", "-x", "egobalego-at-home/.venv/**", "-o", zipFile.absolutePath, "egobalego-at-home")
-		}
-	}
+tasks.register<Zip>("zipEgobalegoFolder") {
+	from(project.file("tools/egobalego-at-home"))
+	exclude(".venv")
+	destinationDirectory.set(project.file("build/egobalego-at-home"))
+	archiveFileName.set("Egobalego at Home.zip")
 }
 
-tasks.register("makeReferenceDatapack") {
-	group = "custom"
 
+val packFormats = mapOf(		// used to set the pack format inside the pack.mcmeta file of the reference datapack
+	"1.20.6" to "41",
+	"1.21" to "48"
+)
+
+tasks.register<Zip>("makeReferenceDatapack") {
 	val sourceDir = project.file("src/main/")
 
-	val generatedRoot = sourceDir.resolve("generated/data/growsseth")
-	val generatedDir = generatedRoot.resolve("growsseth_researcher_trades")
-
-	val resourcesDir = sourceDir.resolve("resources/data/growsseth")
-	val resourcesDirs = listOf(
-		resourcesDir.resolve("growsseth_places"),
-		resourcesDir.resolve("growsseth_researcher_dialogue"),
-		resourcesDir.resolve("growsseth_researcher_trades"),
-		resourcesDir.resolve("growsseth_templates")
-	)
-
-	val destinationDir = project.file("build/datapack")
-	val zipFile = destinationDir.resolve("Reference Datapack.zip")
-
-	val packMeta = destinationDir.resolve("pack.mcmeta")
-
-	inputs.dir(generatedDir)
-	resourcesDirs.forEach { inputs.dir(it) }
-	outputs.file(zipFile)
-	outputs.file(packMeta)
-
-	doLast {
-		destinationDir.mkdirs()
-		destinationDir.deleteDirectoryContents()
-		packMeta.writeText("{\"pack\": {\"pack_format\": 41,\"description\": \"Edits Growsseth data\"}}")
-		generatedDir.copyRecursively(destinationDir.resolve("data/growsseth/growsseth_researcher_trades"))
-		for (dir in resourcesDirs){
-			dir.copyRecursively(destinationDir.resolve("data/growsseth/" + dir.name))
-		}
-		project.exec {
-			workingDir = destinationDir
-			commandLine("zip", "-r", "-o", zipFile.absolutePath, "data", "pack.mcmeta")
-		}
-		destinationDir.resolve("data").deleteRecursively()
-		destinationDir.resolve(File("pack.mcmeta")).delete()
+	from(sourceDir.resolve("generated/data/growsseth")) {
+		into("data/growsseth")
 	}
+	include("growsseth_researcher_trades/**")
+
+	from(sourceDir.resolve("resources/data/growsseth")) {
+		into("data/growsseth")
+	}
+	include("growsseth_places/**", "growsseth_researcher_dialogue/**", "growsseth_researcher_trades/**", "growsseth_templates/**")
+
+	val packMeta = project.file("pack.mcmeta")
+	packMeta.writeText("{\"pack\": {\"pack_format\": ${packFormats[minecraftVersion]},\"description\": \"Reference datapack for editing Growsseth data\"}}")
+
+	from(project.rootDir)
+	include("pack.mcmeta")
+
+	destinationDirectory.set(project.file("build/datapack"))
+	archiveFileName.set("Reference Datapack.zip")
+
+	doLast { project.file("pack.mcmeta").delete() }
 }
+
 
 tasks.named("build") {
 	dependsOn("zipEgobalegoFolder")
 	dependsOn("makeReferenceDatapack")
 }
+
 
 tasks.processResources {
 	mapOf(
