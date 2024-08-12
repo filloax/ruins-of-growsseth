@@ -31,7 +31,7 @@ val parchmentVersion = libs.versions.parchment.asProvider().get()
 val javaVersionEnum = JavaVersion.values().find { it.majorVersion == javaVersion } ?: throw Exception("Cannot find java version for $javaVersion")
 val jvmTargetEnum = JvmTarget.valueOf("JVM_$javaVersion")
 
-version = modVersion
+version = "$minecraftVersion-$modVersion"
 
 base {
 	archivesName.set(property("archivesBaseName") as String)
@@ -177,16 +177,14 @@ tasks.register<Zip>("makeReferenceDatapack") {
 	}
 	include("growsseth_places/**", "growsseth_researcher_dialogue/**", "growsseth_researcher_trades/**", "growsseth_templates/**")
 
-	val packMeta = project.file("pack.mcmeta")
+	val packMeta = project.file("build/datapack/pack.mcmeta")
 	packMeta.writeText("{\"pack\": {\"pack_format\": ${packFormats[minecraftVersion]},\"description\": \"Reference datapack for editing Growsseth data\"}}")
 
-	from(project.rootDir)
+	from(project.file("build/datapack/"))
 	include("pack.mcmeta")
 
 	destinationDirectory.set(project.file("build/datapack"))
 	archiveFileName.set("Reference Datapack.zip")
-
-	doLast { project.file("pack.mcmeta").delete() }
 }
 
 
