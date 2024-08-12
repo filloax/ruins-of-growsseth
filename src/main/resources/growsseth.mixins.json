@@ -35,6 +35,7 @@
     "growssethworld.WorldDimensionsMixin",
     "item.DecoratedPotPatternsMixin",
     "item.DiscCreditsMixin",
+    "item.MapItemInfoMixin",
     "structurebook.ItemFrameStructureBookMixin",
     "structurebook.ItemStackStructureBookMixin",
     "structurebook.StructureTemplateMixin",
