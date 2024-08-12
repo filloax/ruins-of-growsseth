@@ -117,6 +117,9 @@
     "growsseth.commands.gquest.back.failure": "Failed in reverting stage",
     "growsseth.commands.gquest.info": "%s quest data: Stage %s, History: %s",
     "growsseth.commands.booktemplate.invalidtemplate": "Invalid book template %s",
+    "growsseth.commands.glocate.stop.nonEntity": "Cannot run glocate stop with non entities!",
+    "growsseth.commands.glocate.stop.fail": "No locate tasks to stop",
+    "growsseth.commands.glocate.stop.success": "Stopped all your locate tasks",
 
     "entity.growsseth.researcher": "Researcher",
     "entity.growsseth.zombie_researcher": "Zombie Researcher",
