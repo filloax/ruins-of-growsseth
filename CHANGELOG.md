@@ -8,6 +8,9 @@ Tweaked
     position of the house/structure part in question
 - When F3 + H is on, maps show the position of the target in the tooltip
 
+Fixed
+- [1.21] Decorated pots crashing
+
 ## 0.10.0
 
 Added
