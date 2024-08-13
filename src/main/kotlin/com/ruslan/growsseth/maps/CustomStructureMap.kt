@@ -242,8 +242,8 @@ private fun ItemStack.updateMapToStructWithHolder(
     task.thenOnServerThread { result ->
         done.update { true }
         if (result != null) {
-            val pos = result.first
-            val finalDestType = context.overrideDestinationType ?: DestinationType.auto(result.second)
+            val pos = result.pos
+            val finalDestType = context.overrideDestinationType ?: DestinationType.auto(result.structure)
 
             updateMapToPos(level, pos, context.scale, finalDestType, context.displayName ?: "reset")
             RuinsOfGrowsseth.LOGGER.info("(async) Found '$destString' at $pos")

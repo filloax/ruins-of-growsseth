@@ -128,7 +128,8 @@
     "sounds": [
       {
         "name": "growsseth:disc_caco_caco",
-        "stream": true
+        "stream": true,
+        "encrypted": true
       }
     ]
   },
