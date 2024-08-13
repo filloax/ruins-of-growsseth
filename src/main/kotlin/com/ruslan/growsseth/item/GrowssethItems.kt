@@ -31,6 +31,8 @@ object GrowssethItems {
 		),
 		autoGenerateJson = false,
 	)
+	@JvmField
+	val RUINS_MAP = make("ruins_map", MapItem(defaultBuilder().stacksTo(1)), autoGenerateJson = false)
 
 	val GROWSSETH_BANNER_PATTERN = make("growsseth_banner_pattern", AutoBannerItem(GrowssethBannerPatterns.GROWSSETH.tag, defaultBuilder().rarity(Rarity.RARE)))
 	val GROWSSETH_ARMOR_TRIM = make("growsseth_trim_template", SmithingTemplateItem.createArmorTrimTemplate(TrimPatterns.GROWSSETH))
@@ -139,9 +141,6 @@ object GrowssethItems {
 		DISC_ODI_ET_AMO,
 		DISC_BALLATA_DEL_RESPAWN
 	)
-
-	@JvmField
-	val RUINS_MAP = make("ruins_map", MapItem(defaultBuilder().stacksTo(1)), autoGenerateJson = false)
 
 	private fun <T:Item> make(hashName: String, item: T, autoGenerateJson: Boolean = true): T {
 		val resourceLocation = resLoc(hashName)
