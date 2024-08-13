@@ -165,6 +165,7 @@
     "growsseth.notif.setLanguage.title": "Ruins of Growsseth Language Autodetect",
     "growsseth.notif.setLanguage.message": "Set mod structure texts to language %s",
 
+    "growsseth.filled_map.target": "[Growsseth] Target position: %d %d",
 
 
     "growsseth.config.needsWorldReload.comment": "If changed ingame, takes effect on world reload.",
@@ -259,6 +260,5 @@
     "growsseth.config.debugNpcDialogues.name": "Log NPC dialogues",
     "growsseth.config.structuresDebugMode.name": "Structures debug",
     "growsseth.config.structuresDebugMode.comment": "Make structures wildly more likely, for dev usage.",
-    "growsseth.config.researcherSpeedup.name": "Speedup researcher healing",
-    "growsseth.filled_map.target": "[Growsseth] Target position: %d %d"
+    "growsseth.config.researcherSpeedup.name": "Speedup researcher healing"
 }
