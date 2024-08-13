@@ -141,12 +141,12 @@ object ResearcherTradeUtils {
                 )
             ).thenAccept { result ->
                 if (result != null) {
-                    val pos = result.first
+                    val pos = result.pos
                     RuinsOfGrowsseth.LOGGER.info("Res.trades: found map to pos $pos struct ${mapData.structure}")
                     synchronized(researcher.storedMapLocations) {
                         researcher.storedMapLocations[mapData.structure] = Researcher.MapMemory(
                             pos,
-                            Either.right(result.second.unwrapKey().get()),
+                            Either.right(result.structure.unwrapKey().get()),
                             itemStack[DataComponents.MAP_ID]?.id ?: throw IllegalStateException("Map item has no id after updating! $itemStack"),
                         )
                     }

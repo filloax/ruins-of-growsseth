@@ -7,6 +7,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType
 import com.mojang.brigadier.exceptions.CommandSyntaxException
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType
 import com.ruslan.growsseth.RuinsOfGrowsseth
+import com.ruslan.growsseth.structure.locate.LocateTask
 import com.ruslan.growsseth.structure.locate.SignalProgressFun
 import com.ruslan.growsseth.structure.locate.StoppableAsyncLocator
 import net.minecraft.Util
@@ -23,8 +24,11 @@ import net.minecraft.server.commands.LocateCommand
 import net.minecraft.world.level.levelgen.structure.Structure
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
+import com.mojang.datafixers.util.Pair as MojPair
 
 object GrowssethLocateCommand {
+    private val locationTasks: MutableMap<UUID, MutableList<LocateTask>> = mutableMapOf()
+
     private val ERROR_STRUCTURE_INVALID: DynamicCommandExceptionType = DynamicCommandExceptionType {
         Component.translatableEscape("commands.locate.structure.invalid", it)
     }
@@ -79,6 +83,7 @@ object GrowssethLocateCommand {
                         )
                     ))
             ))
+            .then(literal("stop").executes { ctx -> stopLocating(ctx.source) })
         )
     }
 
@@ -90,21 +95,24 @@ object GrowssethLocateCommand {
         val serverLevel = source.level
         val stopwatch = Stopwatch.createStarted(Util.TICKER)
 
-        StoppableAsyncLocator.locate(
+        val task = StoppableAsyncLocator.locate(
             serverLevel, holderSet, blockPos,
-            100, false, null,
-            timeout, getSignalProgress(source, structure, logProgress, chatProgress)
-        ).thenOnServerThread {
+            100, false,
+            timeoutSeconds = timeout, signalProgress = getSignalProgress(source, structure, logProgress, chatProgress)
+        ).also { task -> task.thenOnServerThread {
             if (it == null) {
                 source.sendFailure(Component.translatable("commands.locate.structure.invalid", structure.asPrintable()))
             } else {
                 LocateCommand.showLocateResult(
-                    source, structure, blockPos, it, "commands.locate.structure.success", false, stopwatch.elapsed()
+                    source, structure, blockPos, MojPair(it.pos, it.structure), "commands.locate.structure.success", false, stopwatch.elapsed()
                 )
             }
         }.onExceptionOnServerThread {
             source.sendFailure(Component.literal("Error in async search: %s".format(it.message)))
-        }
+        } }
+
+        source.entity?.let {  locationTasks.computeIfAbsent(it.uuid, {mutableListOf()}).add(task) }
+
 
         return 1
     }
@@ -142,22 +150,43 @@ object GrowssethLocateCommand {
         val serverLevel = source.level
         val stopwatch = Stopwatch.createStarted(Util.TICKER)
 
-        StoppableAsyncLocator.locateJigsaw(
+        val task = StoppableAsyncLocator.locateJigsaw(
             serverLevel, holderSet, setOf(jigsawId), blockPos,
             100, false,
             timeout, getSignalProgress(source, structure, logProgress, chatProgress)
-        ).thenOnServerThread {
+        ).also { task -> task.thenOnServerThread {
             if (it == null) {
                 source.sendFailure(Component.translatable("commands.locate.structure.invalid", structure.asPrintable()))
             } else {
                 LocateCommand.showLocateResult(
-                    source, structure, blockPos, it, "commands.locate.structure.success", false, stopwatch.elapsed()
+                    source, structure, blockPos, MojPair(it.pos, it.structure), "commands.locate.structure.success", false, stopwatch.elapsed()
                 )
             }
         }.onExceptionOnServerThread {
             source.sendFailure(Component.literal("Error in async jigsaw search: %s".format(it.message)))
-        }
+        } }
+
+        source.entity?.let {  locationTasks.computeIfAbsent(it.uuid, {mutableListOf()}).add(task) }
 
         return 1
+    }
+
+    private fun stopLocating(source: CommandSourceStack): Int {
+        if (source.entity == null) {
+            source.sendFailure(Component.translatable("growsseth.commands.glocate.stop.nonEntity"))
+            return 0
+        }
+
+        val tasks = locationTasks[source.entityOrException.uuid]?.let { if (it.size > 0) it else null } ?: run {
+            source.sendFailure(Component.translatable("growsseth.commands.glocate.stop.fail"))
+            return 0
+        }
+
+        tasks.forEach { if (it.level.server == source.server) it.cancel("command") }
+        tasks.clear()
+
+        source.sendSuccess({ Component.translatable("growsseth.commands.glocate.stop.success") }, true)
+
+        return 0
     }
 }
