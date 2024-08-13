@@ -61,7 +61,7 @@
     "item.growsseth.disc_ancora_qui.desc": "Il Coro di Mammonk - Ancora Qui",
     "item.growsseth.disc_ballata_del_respawn": "§dMusic Disc",
     "item.growsseth.disc_ballata_del_respawn.desc": "Il Coro di Mammonk - La Ballata del Respawn",
-    "item.growsseth.disc_caco_caco": "§dMusic Disc (COMING SOON)",
+    "item.growsseth.disc_caco_caco": "§dMusic Disc",
     "item.growsseth.disc_caco_caco.desc": "Il Coro di Mammonk - Il Tesoro di Caco Caco",
     "item.growsseth.disc_pesci_strani": "§dMusic Disc",
     "item.growsseth.disc_pesci_strani.desc": "Il Coro di Mammonk - Pesci Strani",
@@ -117,6 +117,9 @@
     "growsseth.commands.gquest.back.failure": "Failed in reverting stage",
     "growsseth.commands.gquest.info": "%s quest data: Stage %s, History: %s",
     "growsseth.commands.booktemplate.invalidtemplate": "Invalid book template %s",
+    "growsseth.commands.glocate.stop.nonEntity": "Cannot run glocate stop with non entities!",
+    "growsseth.commands.glocate.stop.fail": "No locate tasks to stop",
+    "growsseth.commands.glocate.stop.success": "Stopped all your locate tasks",
 
     "entity.growsseth.researcher": "Researcher",
     "entity.growsseth.zombie_researcher": "Zombie Researcher",
@@ -162,6 +165,7 @@
     "growsseth.notif.setLanguage.title": "Ruins of Growsseth Language Autodetect",
     "growsseth.notif.setLanguage.message": "Set mod structure texts to language %s",
 
+    "growsseth.filled_map.target": "[Growsseth] Target position: %d %d",
 
 
     "growsseth.config.needsWorldReload.comment": "If changed ingame, takes effect on world reload.",
