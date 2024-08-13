@@ -50,8 +50,9 @@ jobs:
 
           name: Ruins of Growsseth ${{ steps.get_version.outputs.VERSION }} for Minecraft ${{ env.MC_VER }}
           version-type: beta
-          
-          game-versions: ${{ env.MC_VER }}
+
+          game-versions: |
+            ${{ env.MC_VER }}
           dependencies: |
             resourcefulconfig(required)
             fabric-language-kotlin(required)
