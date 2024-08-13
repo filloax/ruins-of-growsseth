@@ -117,6 +117,9 @@
     "growsseth.commands.gquest.back.failure": "Non è stato possibile riportare indietro la fase",
     "growsseth.commands.gquest.info": "Dati della quest di %s: Fase %s, Cronologia: %s",
     "growsseth.commands.booktemplate.invalidtemplate": "Template libro invalido %s",
+    "growsseth.commands.glocate.stop.nonEntity": "Impossibile eseguire glocate stop con non entità!",
+    "growsseth.commands.glocate.stop.fail": "Non c'è nessun task locate da interrompere",
+    "growsseth.commands.glocate.stop.success": "Tutti i tuoi task locate sono stati interrotti",
 
     "entity.growsseth.researcher": "Ricercatore",
     "entity.growsseth.zombie_researcher": "Ricercatore Zombi",
@@ -161,7 +164,8 @@
     "growsseth.notif.researcher_updated.toast.description": "Il ricercatore ti aspetta.",
     "growsseth.notif.setLanguage.title": "Ruins of Growsseth - Rilevamento Lingua",
     "growsseth.notif.setLanguage.message": "Impostata lingua dei testi della mod a %s",
-    
+
+    "growsseth.filled_map.target": "[Growsseth] Posizione obiettivo: %d %d",
 
 
     "growsseth.config.needsWorldReload.comment": "Se cambiata ingame farà effetto al ricaricamento del mondo.",
