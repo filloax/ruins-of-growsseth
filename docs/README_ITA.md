@@ -24,7 +24,7 @@ Per segnalare bug c'è la sezione [Issues](https://github.com/filloax/ruins-of-g
 
 ### Requisiti
 
-La mod è attualmente disponibile per 1.20.6 con Fabric, e richiede [Fabric API](https://modrinth.com/mod/fabric-api) e [Resourceful Config](https://modrinth.com/mod/resourceful-config). 
+La mod è attualmente disponibile per Fabric, e richiede [Fabric API](https://modrinth.com/mod/fabric-api) e [Resourceful Config](https://modrinth.com/mod/resourceful-config). 
 [Mod Menu](https://modrinth.com/mod/modmenu) è altamente consigliata per impostazioni visibili ingame.
 
 La mod include [Fx-Lib](https://github.com/filloax/FX-Lib/), ma in futuro potrebbe essere richiesta l'installazione a parte.
@@ -48,7 +48,7 @@ Collaboratori:
 - Farcr (Texture di Guber)
 
 Artisti musicali:
-- Il Coro di Mammonk (**in arrivo!**) (Ancora Qui, La Ballata Del Respawn, Il Tesoro Di CacoCaco, La Missiva Nell'Ombra, Odi et Amo, Oursteps, Elogio a Padre Mammonk, Pesci Strani)
+- Il Coro di Mammonk (Ancora Qui [**in arrivo!**], La Ballata Del Respawn, Il Tesoro Di CacoCaco, La Missiva Nell'Ombra, Odi et Amo, Oursteps, Elogio a Padre Mammonk, Pesci Strani)
 - Singalek (Binobinooo, Giorgio Cubetti, Giorgio Lo-Fi)
 - HunterProduction (Giorgio Finding Home)
 - Hawkelele (Giorgio Cub8bit)
