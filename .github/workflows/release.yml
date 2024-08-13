@@ -54,10 +54,11 @@ jobs:
           game-versions: |
             ${{ env.MC_VER }}
           dependencies: |
-            resourcefulconfig(required)
+            resourceful-config(required)
             fabric-language-kotlin(required)
-            fabric(required)
+            fabric-api(required)
             modmenu(recommended)
+          java: 21
 
           changelog-file: latest_changelog.txt
 
