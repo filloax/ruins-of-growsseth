@@ -9,7 +9,7 @@ Tweaked
 - When F3 + H is on, maps show the position of the target in the tooltip
 
 Fixed
-- Decorated pots crashing
+- [1.21] Decorated pots crashing
 
 ## 0.10.0
 
