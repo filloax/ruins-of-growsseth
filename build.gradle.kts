@@ -164,7 +164,15 @@ val packFormats = mapOf(		// used to set the pack format inside the pack.mcmeta 
 	"1.21" to "48"
 )
 
+val createDatapackTask = tasks.register("createDatapackMeta") {
+	val packMeta = project.file("build/datapack/pack.mcmeta")
+	packMeta.parentFile.mkdirs()
+	packMeta.writeText("{\"pack\": {\"pack_format\": ${packFormats[minecraftVersion]},\"description\": \"Reference datapack for editing Growsseth data\"}}")
+}
+
 tasks.register<Zip>("makeReferenceDatapack") {
+	dependsOn(createDatapackTask)
+
 	val sourceDir = project.file("src/main/")
 
 	from(sourceDir.resolve("generated/data/growsseth")) {
@@ -176,9 +184,6 @@ tasks.register<Zip>("makeReferenceDatapack") {
 		into("data/growsseth")
 	}
 	include("growsseth_places/**", "growsseth_researcher_dialogue/**", "growsseth_researcher_trades/**", "growsseth_templates/**")
-
-	val packMeta = project.file("build/datapack/pack.mcmeta")
-	packMeta.writeText("{\"pack\": {\"pack_format\": ${packFormats[minecraftVersion]},\"description\": \"Reference datapack for editing Growsseth data\"}}")
 
 	from(project.file("build/datapack/"))
 	include("pack.mcmeta")
