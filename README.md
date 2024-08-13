@@ -7,7 +7,7 @@
 A highly configurable structures mod, with a smart NPC to sell maps and guide you in discovery, and structures 
 that hint to vanilla features taking inspiration from Broken Nether Portals.
 
-> Feeling brave? You can try the latest in-dev release [here](https://github.com/filloax/ruins-of-growsseth/releases/tag/nightly-release-1.20.6)!
+> Feeling brave? You can try the latest in-dev release [here](https://github.com/filloax/ruins-of-growsseth/releases/tag/nightly-release-1.21)!
 
 Adapted from a mod made for the italian streamer Cydonia, as such also contains discs, trims, and more 
 with content from his community and assorted easter eggs (also configurable). Also, it contains a custom
@@ -27,7 +27,7 @@ For bug reports check the [Issues](https://github.com/filloax/ruins-of-growsseth
 
 ### Requirements
 
-The mod currently is only available for 1.20.6 with Fabric, and requires [Fabric API](https://modrinth.com/mod/fabric-api) and [Resourceful Config](https://modrinth.com/mod/resourceful-config). 
+The mod currently is only available for Fabric, and requires [Fabric API](https://modrinth.com/mod/fabric-api) and [Resourceful Config](https://modrinth.com/mod/resourceful-config). 
 [Mod Menu](https://modrinth.com/mod/modmenu) is highly suggested for a simpler configuration UI ingame.
 
 Future plans include releasing the mod for Neoforge and other 1.20.x (and future versions) too.
@@ -53,7 +53,7 @@ Contributors:
 - Farcr (Guber texture)
 
 Musical artists:
-- Il Coro di Mammonk (**coming soon!**) (Ancora Qui, La Ballata Del Respawn, Il Tesoro Di CacoCaco, La Missiva Nell'Ombra, Odi et Amo, Oursteps, Elogio a Padre Mammonk, Pesci Strani)
+- Il Coro di Mammonk (Ancora Qui [**coming soon!**], La Ballata Del Respawn, Il Tesoro Di CacoCaco, La Missiva Nell'Ombra, Odi et Amo, Oursteps, Elogio a Padre Mammonk, Pesci Strani)
 - Singalek (Binobinooo, Giorgio Cubetti, Giorgio Lo-Fi)
 - HunterProduction (Giorgio Finding Home)
 - Hawkelele (Giorgio Cub8bit)

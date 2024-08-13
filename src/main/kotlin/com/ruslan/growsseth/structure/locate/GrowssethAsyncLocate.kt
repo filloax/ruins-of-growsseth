@@ -30,8 +30,8 @@ import java.util.concurrent.*
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.concurrent.thread
 
-typealias LocateResult = Pair<BlockPos, Holder<Structure>>?
 typealias StructLocatePredicate = (StructureStart, ChunkPos) -> Boolean
+typealias PositionAdjustFunction = (LocateResult, StructureStart) -> LocateResult?
 
 // Adapted from AsyncLocator, move to kotlin and allow stopping
 // Original: https://github.com/thebrightspark/AsyncLocator/blob/1.19.x/src/main/java/brightspark/asynclocator/AsyncLocator.java
@@ -65,18 +65,24 @@ object StoppableAsyncLocator {
     /**
      * Queues a task to locate a feature and returns a
      * [LocateTask] that allows monitoring, cancelling it, and running code with futures.
+     *
+     * The targetFilter and positionAdjustment params only work with RandomSpread placements.
+     *
+     * @param targetFilter A predicate to filter only matching structures
+     * @param positionAdjustment Adjust the final result position depending on the StructureStart
      */
     fun locate(
         level: ServerLevel, structureSet: HolderSet<Structure>, pos: BlockPos,
         searchRadius: Int, skipKnownStructures: Boolean,
         targetFilter: StructLocatePredicate? = null,
+        positionAdjustment: PositionAdjustFunction? = null,
         timeoutSeconds: Int? = null,
         signalProgress: SignalProgressFun? = null,
     ): LocateTask {
         val task = LocateTask(
             level.chunkSource.generator, level, pos,
-            structureSet, targetFilter, searchRadius, skipKnownStructures,
-            signalProgress
+            structureSet, targetFilter, positionAdjustment,
+            searchRadius, skipKnownStructures, signalProgress,
         )
         val timeoutThread = timeoutSeconds?.let { timeout -> thread(start = false) {
             Thread.sleep(timeout * 1000L)
@@ -108,6 +114,11 @@ object StoppableAsyncLocator {
             { structureStart, _ -> structureStart.pieces.any { piece ->
                 piece.matchesJigsaw(jigsawIds)
             } },
+            { locateResult, structureStart ->
+                structureStart.pieces.first { piece ->
+                    piece.matchesJigsaw(jigsawIds)
+                }?.let { LocateResult(it.locatorPosition, locateResult.structure, structureStart) }
+            },
             timeoutSeconds, signalProgress
         )
     }
@@ -136,6 +147,7 @@ class LocateTask(
     val fromPos: BlockPos,
     val targetSet: HolderSet<Structure>,
     val targetFilter: StructLocatePredicate?,
+    val positionAdjustment: PositionAdjustFunction?,
     val searchRadius: Int,
     val skipKnownStructures: Boolean,
     private val signalProgress: SignalProgressFun?
@@ -174,17 +186,17 @@ class LocateTask(
         }
     }
 
-    fun then(action: (LocateResult) -> Unit): LocateTask {
+    fun then(action: (LocateResult?) -> Unit): LocateTask {
         future.thenAccept(action)
         return this
     }
 
-    fun thenOnServerThread(action: (LocateResult) -> Unit): LocateTask {
+    fun thenOnServerThread(action: (LocateResult?) -> Unit): LocateTask {
         future.thenAccept{ result -> server.submit{ simpleTryCatch{ action(result) } } }
         return this
     }
 
-    fun onException(action: (e: Throwable) -> Pair<BlockPos, Holder<Structure>>?) {
+    fun onException(action: (e: Throwable) -> LocateResult?) {
         future.exceptionally(action)
     }
 
@@ -229,7 +241,7 @@ class LocateTask(
         if (placementsSets.isEmpty()) {
             return Pair(true, null)
         } else {
-            var output: Pair<BlockPos, Holder<Structure>>? = null
+            var output: LocateResult? = null
             var currentDistance = Double.MAX_VALUE
             val structureManager = level.structureManager()
             val randomSpreadStructures: MutableList<Map.Entry<StructurePlacement, Set<Holder<Structure>>>> = ArrayList(placementsSets.size)
@@ -265,7 +277,7 @@ class LocateTask(
                         val dist = fromPos.distSqr(foundPos)
                         if (dist < currentDistance) {
                             currentDistance = dist
-                            output = ringsResult
+                            output = LocateResult(ringsResult.first, ringsResult.second)
                         }
                     }
 
@@ -301,7 +313,7 @@ class LocateTask(
                         )
                         if (spreadResult != null) {
                             found = true
-                            val dist = fromPos.distSqr(spreadResult.first)
+                            val dist = fromPos.distSqr(spreadResult.pos)
                             if (dist < currentDistance) {
                                 currentDistance = dist
                                 output = spreadResult
@@ -313,13 +325,19 @@ class LocateTask(
                     }
 
                     if (found) {
-                        return Pair(true, output)
+                        return Pair(true, finalizeResult(output!!))
                     }
                 }
             }
 
-            return Pair(true, output)
+            return Pair(true, finalizeResult(output!!))
         }
+    }
+
+    fun finalizeResult(result: LocateResult): LocateResult {
+        if (result.structureStart == null) return result
+
+        return positionAdjustment?.let { it(result, result.structureStart) } ?: result
     }
 
     // Same as vanilla code, but can call filter function
@@ -333,7 +351,7 @@ class LocateTask(
         skipKnownStructures: Boolean,
         seed: Long,
         spreadPlacement: RandomSpreadStructurePlacement
-    ): LocateResult {
+    ): LocateResult? {
         val i = spreadPlacement.spacing()
 
         for (j in -z..z) {
@@ -345,11 +363,11 @@ class LocateTask(
                     val l = x + i * j
                     val m = y + i * k
                     val chunkPos = spreadPlacement.getPotentialStructureChunk(seed, l, m)
-                    val structPos = getMatchingStructureGeneratingAt(
+                    val result = getMatchingStructureGeneratingAt(
                         structureHoldersSet, level, structureManager, skipKnownStructures, spreadPlacement, chunkPos
                     )
-                    if (structPos != null) {
-                        return Pair.of(structPos.first, structPos.second)
+                    if (result != null) {
+                        return result
                     }
                 }
             }
@@ -366,7 +384,7 @@ class LocateTask(
         skipKnownStructures: Boolean,
         placement: StructurePlacement,
         chunkPos: ChunkPos
-    ): LocateResult {
+    ): LocateResult? {
         for (holder in structureHoldersSet) {
             val structureCheckResult = structureManager.checkStructurePresence(chunkPos, holder.value(), placement, skipKnownStructures)
             if (structureCheckResult != StructureCheckResult.START_NOT_PRESENT) {
@@ -384,7 +402,7 @@ class LocateTask(
                     structureStart != null && structureStart.isValid && targetFilter?.let { it(structureStart, chunkPos) } != false
                     && (!skipKnownStructures || ChunkGenerator.tryAddReference(structureManager, structureStart))
                 ) {
-                    return Pair.of(placement.getLocatePos(structureStart.chunkPos), holder)
+                    return LocateResult(placement.getLocatePos(structureStart.chunkPos), holder, structureStart)
                 }
             }
         }
@@ -404,7 +422,7 @@ class LocateTask(
         future.complete(null)
     }
 
-    private fun onFinish(result: Pair<BlockPos, Holder<Structure>>?) {
+    private fun onFinish(result: LocateResult?) {
         val time = finalTimeMs.updateAndGet { timeElapsedMs() }!!
         RuinsOfGrowsseth.LOGGER.info("Finish async locate early from $fromPos to ${targetString()} in ${time / 1000.0}s" +
                 "params were searchRadius=$searchRadius skipKnownStructures=$skipKnownStructures")
@@ -423,3 +441,5 @@ class LocateTask(
         RANDOM_SPREAD(1),
     }
 }
+
+data class LocateResult(val pos: BlockPos, val structure: Holder<Structure>, val structureStart: StructureStart? = null)
