@@ -67,11 +67,16 @@
     "fabric-language-kotlin": ">=${fabric_kotlin_version}",
     "fabricloader": ">=${loader_version}",
     "fabric-api": ">=${fapi_version}",
-    "fabric": "*"
+    "fabric": "*",
+    "minecraft": "1.20.6"
   },
   "custom": {
     "modmenu": {
 
+    },
+    "mc-publish": {
+      "modrinth": "476XCS3C",
+      "curseforge": 1017555
     }
   }
 }
