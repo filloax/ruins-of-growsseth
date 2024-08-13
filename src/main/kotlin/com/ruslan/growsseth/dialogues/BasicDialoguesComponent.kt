@@ -353,10 +353,11 @@ open class BasicDialoguesComponent(
 
         val selected = validOptions.weightedRandom(DialogueEntry::weight::get, random)
 
-        playerDataOrCreate(player).lastEventDialogue[event] = selected
+        val playerData = playerDataOrCreate(player)
+        playerData.lastEventDialogue[event] = selected
 
         if (selected.id != null) {
-            playerDataOrCreate(player).dialogueCount.let{map -> map[selected.id] = map.getOrDefault(selected.id, 0) + 1 }
+            playerData.dialogueCount.let{map -> map[selected.id] = map.getOrDefault(selected.id, 0) + 1 }
         }
 
         onDialogueSelected(selected, event, eventParam, player)
@@ -586,6 +587,7 @@ open class BasicDialoguesComponent(
 
     protected open fun addExtraNbtData(dialogueData: CompoundTag) {}
     protected open fun readExtraNbtData(dialogueData: CompoundTag) {}
+    protected open val saveNbtPersistData: Boolean = false
 
     override fun writeNbt(tag: CompoundTag) {
         val data = CompoundTag()
@@ -594,7 +596,9 @@ open class BasicDialoguesComponent(
         data.saveField(DataFields.CLOSE_PLAYERS, UUIDUtil.STRING_CODEC.mutableSetOf(), ::closePlayers)
         data.saveField(DataFields.LEAVING_PLAYERS, mutableMapCodec(UUIDUtil.STRING_CODEC, Codec.INT), ::leavingPlayers)
         data.saveField(DataFields.PLAYERS_ARRIVED_SOON, mutableMapCodec(UUIDUtil.STRING_CODEC, Codec.BOOL), ::playersArrivedSoon)
-        data.saveField(DataFields.SAVED_PLAYERS_DATA, mutableMapCodec(UUIDUtil.STRING_CODEC, PLAYER_DATA_CODEC), ::savedPlayersData)
+
+        if (saveNbtPersistData)
+            data.saveField(DataFields.SAVED_PLAYERS_DATA, mutableMapCodec(UUIDUtil.STRING_CODEC, PLAYER_DATA_CODEC), ::savedPlayersData)
 
         addExtraNbtData(data)
     }
@@ -608,7 +612,9 @@ open class BasicDialoguesComponent(
             data.loadField(DataFields.CLOSE_PLAYERS, UUIDUtil.STRING_CODEC.mutableSetOf()) { closePlayers.addAll(it) }
             data.loadField(DataFields.LEAVING_PLAYERS, mutableMapCodec(UUIDUtil.STRING_CODEC, Codec.INT)) { leavingPlayers.putAll(it) }
             data.loadField(DataFields.PLAYERS_ARRIVED_SOON, mutableMapCodec(UUIDUtil.STRING_CODEC, Codec.BOOL)) { playersArrivedSoon.putAll(it) }
-            data.loadField(DataFields.SAVED_PLAYERS_DATA, mutableMapCodec(UUIDUtil.STRING_CODEC, PLAYER_DATA_CODEC)) { savedPlayersData.putAll(it) }
+
+            if (saveNbtPersistData)
+                data.loadField(DataFields.SAVED_PLAYERS_DATA, mutableMapCodec(UUIDUtil.STRING_CODEC, PLAYER_DATA_CODEC)) { savedPlayersData.putAll(it) }
 
             readExtraNbtData(data)
         }}

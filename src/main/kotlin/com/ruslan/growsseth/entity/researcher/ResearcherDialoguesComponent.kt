@@ -229,11 +229,10 @@ class ResearcherDialoguesComponent(
         }
     }
 
+    override val saveNbtPersistData: Boolean = false
+
     override fun addExtraNbtData(dialogueData: CompoundTag) {
         super.addExtraNbtData(dialogueData)
-
-        // Remove shared data, save separately
-        dialogueData.remove(DataFields.SAVED_PLAYERS_DATA)
 
         dialogueData.saveField("MessAngerActive", Codec.BOOL, this::playersMadeMess)
         dialogueData.saveField("PlayersInCellar", CODEC_PLAYERSET, this::playersInCellar)
@@ -242,10 +241,7 @@ class ResearcherDialoguesComponent(
 
     override fun readExtraNbtData(dialogueData: CompoundTag) {
         // prevent modifying shared data
-        val savedPlayersDataPre = savedPlayersData.mapValues { it.value.copy() }
         super.readExtraNbtData(dialogueData)
-        savedPlayersData.clear()
-        savedPlayersData.putAll(savedPlayersDataPre)
 
         dialogueData.loadField("MessAngerActive", Codec.BOOL) { playersMadeMess = it }
         dialogueData.loadField("PlayersInCellar", CODEC_PLAYERSET) { playersInCellar = it.toMutableSet() }
