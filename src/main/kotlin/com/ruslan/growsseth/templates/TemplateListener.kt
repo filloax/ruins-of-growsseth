@@ -5,14 +5,13 @@ import com.filloax.fxlib.api.withNullableDefault
 import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.config.GrowssethConfig
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonObject
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.util.profiling.ProfilerFiller
-import java.awt.print.Book
 
 private val JSON = Json
 
@@ -22,27 +21,31 @@ object TemplateListener : KotlinJsonResourceReloadListener(JSON, Constants.TEMPL
 
     // Template tables are created in such a way that they automatically try getting a sample from the default language
     // if you try to get a template from a language
-    private val TEMPLATES: MutableMap<TemplateKind, MutableMap<String, MutableMap<String, BookData>>> = mutableMapOf()
+    private val TEMPLATES: MutableMap<TemplateKind<out TemplateData>,MutableMap<String, out MutableMap<String, out TemplateData>>> = mutableMapOf()
 
-    // TODO: generalize better when signs are added
-    private val reloadActions = mutableMapOf<TemplateKind, MutableList<ReloadAction<BookData>>>()
+    private val reloadActions = mutableListOf<ReloadEntry<out TemplateData>>()
+
+    fun <T:TemplateData> templates(kind: TemplateKind<T>, lang: String): Map<String, T> {
+        return (TEMPLATES[kind] as Map<String, Map<String, T>>?)!!.let { templates ->
+            templates[lang]
+                ?: templates[Constants.DEFAULT_LANGUAGE]
+                ?: throw Exception("No default language (${Constants.DEFAULT_LANGUAGE}) books!")
+        }
+    }
 
     fun books() = books(GrowssethConfig.serverLanguage)
-    fun books(lang: String): Map<String, BookData> = TEMPLATES[TemplateKind.BOOK]!![lang] ?: TEMPLATES[TemplateKind.BOOK]!![Constants.DEFAULT_LANGUAGE]
-        ?: throw Exception("No default language (${Constants.DEFAULT_LANGUAGE}) books!")
+    fun books(lang: String): Map<String, BookData> = templates(TemplateKind.BOOK, lang)
+
+    fun signs() = signs(GrowssethConfig.serverLanguage)
+    fun signs(lang: String): Map<String, SimpleTemplateData> = templates(TemplateKind.SIGN, lang)
 
     /**
      * Subscribe to the reload of templates, action will be run every time they are loaded.
      * currentLangKeys param in action is useful to check keys included both in current lang and
      * missing from current lang but present in default lang
      */
-    fun onReload(kind: TemplateKind, action: ReloadAction<BookData>) {
-        val actions = reloadActions.computeIfAbsent(kind) { mutableListOf() }
-        actions.add(action)
-    }
-
-    enum class TemplateKind(val path: String) {
-        BOOK("book")
+    fun <T : TemplateData> onReload(kind: TemplateKind<T>, action: ReloadAction<T>) {
+        reloadActions.add(ReloadEntry(kind, action))
     }
 
     override fun apply(loader: Map<ResourceLocation, JsonElement>, manager: ResourceManager, profiler: ProfilerFiller) {
@@ -50,55 +53,64 @@ object TemplateListener : KotlinJsonResourceReloadListener(JSON, Constants.TEMPL
             .groupBy { (fileIdentifier, _) -> kindFromString(fileIdentifier.path.split("/")[0]) }
             .mapValues { (_, entries) -> entries.groupBy { (fileIdentifier, _) -> fileIdentifier.path.split("/")[1] } } // Lang
 
-        TemplateKind.entries.forEach { kind ->
-            // TODO: change loading when signs are added (common template data class with children? something else?)
-            val langTemplates = mutableMapOf<String, MutableMap<String, BookData>>()
+        TemplateKind.all.values.forEach { kind ->
+            val langTemplates = loaderEntriesByKindAndLanguage[kind]?.let { reloadTemplateKind(kind, it) } ?: mutableMapOf()
             TEMPLATES[kind] = langTemplates
+        }
+    }
 
-            loaderEntriesByKindAndLanguage[kind]?.let { byLanguage ->
-                val forDefaultLang = byLanguage[Constants.DEFAULT_LANGUAGE]
-                    ?: throw SerializationException("No entries for kind $kind for default language ${Constants.DEFAULT_LANGUAGE}")
-                processKindAndLanguageEntries(forDefaultLang, kind, Constants.DEFAULT_LANGUAGE, langTemplates)
+    private fun <T : TemplateData> reloadTemplateKind(kind: TemplateKind<T>, loaderEntriesByLanguage: Map<String, List<Pair<ResourceLocation, JsonElement>>>)
+        : MutableMap<String, MutableMap<String, T>>
+    {
+        val langTemplates = mutableMapOf<String, MutableMap<String, T>>()
 
-                // Do other languages after, so default lang is already loaded
-                byLanguage.keys.minus(Constants.DEFAULT_LANGUAGE).forEach { langCode ->
-                    processKindAndLanguageEntries(byLanguage[langCode]!!, kind, langCode, langTemplates, langTemplates[Constants.DEFAULT_LANGUAGE]!!)
-                }
-            }
+        val forDefaultLang = loaderEntriesByLanguage[Constants.DEFAULT_LANGUAGE]
+            ?: throw SerializationException("No entries for kind $kind for default language ${Constants.DEFAULT_LANGUAGE}")
+        processKindAndLanguageEntries(forDefaultLang, kind, Constants.DEFAULT_LANGUAGE, langTemplates)
 
-            val defaultLangTemplates = langTemplates[Constants.DEFAULT_LANGUAGE]!!
+        // Do other languages after, so default lang is already loaded
+        loaderEntriesByLanguage.keys.minus(Constants.DEFAULT_LANGUAGE).forEach { langCode ->
+            processKindAndLanguageEntries(loaderEntriesByLanguage[langCode]!!, kind, langCode, langTemplates, langTemplates[Constants.DEFAULT_LANGUAGE]!!)
+        }
 
-            reloadActions[kind]?.forEach {
-                it(
+        val defaultLangTemplates = langTemplates[Constants.DEFAULT_LANGUAGE]!!
+
+        reloadActions.forEach {
+            if (it.kind == kind) {
+                val action = it.action as ReloadAction<T>
+                action(
                     langTemplates.getOrDefault(GrowssethConfig.serverLanguage, defaultLangTemplates),
                     langTemplates.keys + defaultLangTemplates.keys,
                     langTemplates,
                 )
             }
         }
+
+//        TEMPLATES[kind] = langTemplates
+        return langTemplates
     }
 
-    private fun processKindAndLanguageEntries(
+    private fun <T : TemplateData> processKindAndLanguageEntries(
         entries: List<Pair<ResourceLocation, JsonElement>>,
-        kind: TemplateKind,
+        kind: TemplateKind<T>,
         langCode: String,
-        langTemplates: MutableMap<String, MutableMap<String, BookData>>,
-        defaultLangTemplates: Map<String, BookData>? = null,
+        langTemplates: MutableMap<String, MutableMap<String, T>>,
+        defaultLangTemplates: Map<String, T>? = null,
     ) {
         entries.forEach { (fileIdentifier, jsonElement) ->
             try {
-                val entry: BookData = JSON.decodeFromJsonElement(BookData.serializer(), jsonElement)
+                val entry: T = JSON.decodeFromJsonElement(kind.serializer, jsonElement)
                 val split = fileIdentifier.path.split("/")
                 // template id is file name
                 val templateId = split.subList(2, split.size).joinToString("/")
-                val books = langTemplates.computeIfAbsent(langCode) {
+                val templates = langTemplates.computeIfAbsent(langCode) {
                     if (defaultLangTemplates != null) {
-                        mutableMapOf<String, BookData>().withNullableDefault { defaultLangTemplates[it] }
+                        mutableMapOf<String, T>().withNullableDefault { defaultLangTemplates[it] }
                     } else {
                         mutableMapOf()
                     }
                 }
-                val existing = books.put(templateId, entry)
+                val existing = templates.put(templateId, entry)
                 if (existing != null) {
                     RuinsOfGrowsseth.LOGGER.warn("Book template $templateId inserted but already existed: $existing")
                 }
@@ -109,7 +121,9 @@ object TemplateListener : KotlinJsonResourceReloadListener(JSON, Constants.TEMPL
         }
     }
 
-    private fun kindFromString(str: String): TemplateKind {
-        return TemplateKind.entries.find { it.path == str } ?: throw Exception("Entry kind folder $str not recognized")
+    data class ReloadEntry<T : TemplateData>(val kind: TemplateKind<T>, val action: ReloadAction<T>)
+
+    private fun kindFromString(str: String): TemplateKind<out TemplateData> {
+        return TemplateKind.fromPath(str)
     }
 }
