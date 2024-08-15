@@ -57,7 +57,10 @@ object ResearcherDonkey {
         researchers.forEach { researcher ->
             if (!researcher.donkeyWasBorrowed) {
                 researcher.donkeyWasBorrowed = true
-                researcher.dialogues?.triggerDialogue(player, ResearcherDialoguesComponent.EV_BORROW_DONKEY)
+                if (researcher.healed)      // different dialogue since there is no penalty after healing researcher
+                    researcher.dialogues?.triggerDialogue(player, ResearcherDialoguesComponent.EV_BORROW_DONKEY_HEALED)
+                else
+                    researcher.dialogues?.triggerDialogue(player, ResearcherDialoguesComponent.EV_BORROW_DONKEY)
             }
         }
 
@@ -75,7 +78,8 @@ object ResearcherDonkey {
         researchers.forEach { researcher ->
             if (researcher.donkeyWasBorrowed) {
                 researcher.donkeyWasBorrowed = false
-                researcher.dialogues?.triggerDialogue(player, ResearcherDialoguesComponent.EV_RETURN_DONKEY)
+                if (!researcher.healed)
+                    researcher.dialogues?.triggerDialogue(player, ResearcherDialoguesComponent.EV_RETURN_DONKEY)
             }
         }
 
