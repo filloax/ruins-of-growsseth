@@ -1,0 +1,9 @@
+{
+    "entries": [
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"Trono del mare"}
+        }
+    ],
+    "glowing": true
+}

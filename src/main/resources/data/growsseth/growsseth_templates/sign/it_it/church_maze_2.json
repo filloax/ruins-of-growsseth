@@ -1,0 +1,17 @@
+{
+    "entries": [
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"di pietra marina"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"sua pelle e"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"vestigia"}
+        }
+    ],
+    "glowing": true
+}

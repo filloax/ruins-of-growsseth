@@ -83,7 +83,3 @@ object BookTemplates {
         return fixedBook
     }
 }
-
-
-
-
