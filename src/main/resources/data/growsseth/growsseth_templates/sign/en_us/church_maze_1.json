@@ -1,0 +1,21 @@
+{
+    "entries": [
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"three rings"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"intersecated body"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"soul and spirit to"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"god bound"}
+        }
+    ],
+    "glowing": true
+}
