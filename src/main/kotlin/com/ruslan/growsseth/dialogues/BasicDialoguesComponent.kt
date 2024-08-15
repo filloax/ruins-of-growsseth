@@ -156,7 +156,9 @@ open class BasicDialoguesComponent(
                     if (dialogueQueue.isNotEmpty()) {
                         val sameId = line.dialogue.id == dialogueQueue.peek().first.dialogue.id
                         dialogueQueueDelay = if (line.duration != null) {
-                            line.duration.secondsToTicks()
+                            if (MiscConfig.dialogueWordsPerMinute > 0)
+                                line.duration.secondsToTicks()
+                            else 0
                         } else if (sameId) {
                             val readingTime = if (MiscConfig.dialogueWordsPerMinute > 0) estimateReadingTime(line.content) else 0F
                             (dialogueSecondsSameId + readingTime).secondsToTicks()
