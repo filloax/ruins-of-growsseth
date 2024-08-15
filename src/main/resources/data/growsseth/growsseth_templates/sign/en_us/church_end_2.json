@@ -1,0 +1,21 @@
+{
+    "entries": [
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"go back up and"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"on the altar"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"conclude your"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"path"}
+        }
+    ],
+    "glowing": true
+}

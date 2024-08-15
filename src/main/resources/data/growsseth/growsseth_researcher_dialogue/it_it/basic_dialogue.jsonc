@@ -412,6 +412,17 @@
             "immediate": true
         }
     ],
+    "borrowDonkeyHealed": [
+        {
+            "content": [
+                "PLACEHOLDER PRESTITO DIALOGO DOPO CURA"
+            ],
+            "immediate": true,
+            "id": "first-donkey-borrow-healed",
+            "useLimit": 1,
+            "priority": 50
+        }
+    ],
     "returnDonkey": [
         {
             "content": "Grazie per avermelo riportato. Ti farò di nuovo i prezzi originali!",
