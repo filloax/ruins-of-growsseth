@@ -1,0 +1,21 @@
+{
+    "entries": [
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"tre anelli"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"intersecati corpo"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"anima e spirito a"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"dio vincolati"}
+        }
+    ],
+    "glowing": true
+}

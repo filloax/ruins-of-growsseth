@@ -34,7 +34,7 @@ object SignTemplates {
     fun getSignTemplate(templateId: String): SignText {
         if (templateExist(templateId)) {
             val template = templates[templateId]!!
-            val signLines = template.entries
+            val signLines = template.linesComponents
             val signColor = dyeColors[template.color]?: DyeColor.BLACK
             val isGlowing = template.glowing!!
 
@@ -42,7 +42,7 @@ object SignTemplates {
             for (i in 0..3) {       // extra lines in the json file will be ignored
                 if (signLines.getOrNull(i) == null)
                     break
-                newLines[i] = Component.literal(signLines[i].content)
+                newLines[i] = signLines[i].copy()
             }
 
             return SignText(newLines, newLines, signColor, isGlowing)
