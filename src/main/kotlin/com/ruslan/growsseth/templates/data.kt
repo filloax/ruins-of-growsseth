@@ -13,7 +13,6 @@ import kotlinx.serialization.json.*
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.ComponentSerialization
 import net.minecraft.world.entity.Entity
-import kotlin.reflect.KClass
 
 private val gson = Gson().newBuilder().setLenient().create()
 
@@ -26,7 +25,7 @@ interface TemplateData {
         else
             ComponentSerialization.CODEC
                 .decodeJson(gson.fromJson(it.content, com.google.gson.JsonElement::class.java)).result()
-                .orElseThrow { Exception("Couldn't parse book page component") }.first
+                .orElseThrow { Exception("Couldn't parse component") }.first
     }
 
     companion object {
@@ -47,7 +46,7 @@ class TemplateKind<T : TemplateData> private constructor(val path: String, val s
         private val instances = mutableMapOf<String, TemplateKind<out TemplateData>>()
         
         val BOOK = register(TemplateKind("book", BookData.serializer()))
-        val SIGN = register(TemplateKind("sign", SimpleTemplateData.serializer()))
+        val SIGN = register(TemplateKind("sign", SignData.serializer()))
 
         val all: Map<String, TemplateKind<out TemplateData>> get() = instances
 
@@ -133,7 +132,7 @@ private class TemplateEntriesSerializer : JsonTransformingSerializer<List<Templa
 @Serializable
 data class BookData(
     @Serializable(with = TemplateEntriesSerializer::class)
-    val pages: List<TemplateEntry>,
+    val pages: List<TemplateEntry>,     // for backward compatibility, use entries otherwise
     val name: String? = null,
     val author: String? = null,
     val writable: Boolean = false,
@@ -151,3 +150,13 @@ data class BookData(
         fun pageEntry(str: String) = TemplateData.singleEntry(str)
     }
 }
+
+
+@Serializable
+data class SignData(
+    @Serializable(with = TemplateEntriesSerializer::class)
+    override val entries: List<TemplateEntry>,
+    val color: String? = "black",
+    val glowing: Boolean? = false,
+    // signs should be waxed ingame
+) : TemplateData
