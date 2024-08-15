@@ -102,14 +102,16 @@ dependencies {
 	include("io.socket:socket.io-client:2.1.0")
 	// End Socketio dependencies
 
-	implementation( libs.kotlin.serialization )
-
 	modImplementation( libs.fabric )
+
+	implementation( libs.kotlin.serialization ) {
+		exclude(module = "kotlin-stdlib")
+	}
 
 	modImplementation( libs.fabric.api ) {
 		exclude(module = "fabric-api-deprecated")
 	}
-	libs.versions.rconfig
+
 	listOf(
 		libs.fabric.kotlin,
 		libs.modmenu,
@@ -121,11 +123,11 @@ dependencies {
 	}
 
 	getFxlib().let{
-		modImplementation(it)
+		modImplementation(it) {
+			exclude(module = "kotlin-stdlib")
+		}
 		include(it)
 	}
-
-    implementation(kotlin("stdlib-jdk8"))
 }
 
 fun getFxlib(): String {
