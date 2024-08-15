@@ -1,0 +1,21 @@
+{
+    "entries": [
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"e in petto il suo"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"cuore sopito"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"attende il"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"contatto del mare"}
+        }
+    ],
+    "glowing": true
+}

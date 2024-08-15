@@ -2,11 +2,17 @@
 
 ## 0.10.1
 
+Added
+- Sound for music disc "Il Tesoro di Caco Caco"
+
 Tweaked
 - `/glocate stop` subcommand to stop ongoing glocate runs you started
 - Maps for village houses and glocate for jigsaws lead to the exact
     position of the house/structure part in question
 - When F3 + H is on, maps show the position of the target in the tooltip
+
+Fixed
+- [1.21] Decorated pots crashing
 
 ## 0.10.0
 

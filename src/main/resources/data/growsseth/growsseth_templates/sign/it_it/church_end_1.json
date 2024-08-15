@@ -1,0 +1,21 @@
+{
+    "entries": [
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"erede del nostro"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"culto"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"prendi il cuore"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"nel suo guscio"}
+        }
+    ],
+    "glowing": true
+}
