@@ -200,6 +200,12 @@ class ResearcherDialoguesComponent(
         }
     }
 
+    override fun onPlayerLeave(player: ServerPlayer) {
+        playerDataOrCreate(player).lastSeenTimestamp = entity.level().gameTime
+        if (player !in researcher.combat.lastKilledPlayers)     // to avoid goodbye when player respawns after being killed by him
+            triggerDialogue(player, BasicDialogueEvents.PLAYER_LEAVE_SOON, BasicDialogueEvents.PLAYER_LEAVE_NIGHT, BasicDialogueEvents.PLAYER_LEAVE)
+    }
+
     override fun canTriggeredEventRun(player: ServerPlayer, dialogueEvent: DialogueEvent): Boolean {
         return super.canTriggeredEventRun(player, dialogueEvent) && when(dialogueEvent) {
             EV_MAKE_MESS   -> !playersMadeMess
