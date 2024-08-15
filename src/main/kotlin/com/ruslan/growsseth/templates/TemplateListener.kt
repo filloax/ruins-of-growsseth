@@ -5,7 +5,6 @@ import com.filloax.fxlib.api.withNullableDefault
 import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.config.GrowssethConfig
-import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
@@ -37,7 +36,7 @@ object TemplateListener : KotlinJsonResourceReloadListener(JSON, Constants.TEMPL
     fun books(lang: String): Map<String, BookData> = templates(TemplateKind.BOOK, lang)
 
     fun signs() = signs(GrowssethConfig.serverLanguage)
-    fun signs(lang: String): Map<String, SimpleTemplateData> = templates(TemplateKind.SIGN, lang)
+    fun signs(lang: String): Map<String, SignData> = templates(TemplateKind.SIGN, lang)
 
     /**
      * Subscribe to the reload of templates, action will be run every time they are loaded.
@@ -86,7 +85,7 @@ object TemplateListener : KotlinJsonResourceReloadListener(JSON, Constants.TEMPL
             }
         }
 
-//        TEMPLATES[kind] = langTemplates
+        //TEMPLATES[kind] = langTemplates
         return langTemplates
     }
 
