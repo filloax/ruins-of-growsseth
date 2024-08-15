@@ -1,0 +1,21 @@
+{
+    "entries": [
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"so then our"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"link our"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"conduit is"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"restored"}
+        }
+    ],
+    "glowing": true
+}

@@ -45,10 +45,11 @@ class ResearcherDialoguesComponent(
         val EV_FIX_MESS      = event("fixMess")
         val EV_REFUSE_TRADE  = event("refuseTrade")
         val EV_BREAK_TENT    = event("breakTent")
-        val EV_BORROW_DONKEY = event("borrowDonkey")
         val EV_RETURN_DONKEY = event("returnDonkey")
         val EV_CELLAR        = event("exploreCellar", ignoreNoDialogueWarning = true, count = false)
         val EV_CELLAR_EXIT   = event("exitCellar", ignoreNoDialogueWarning = true, count = false)
+        val EV_BORROW_DONKEY = event("borrowDonkey")
+        val EV_BORROW_DONKEY_HEALED         = event("borrowDonkeyHealed")
         val EV_PLAYER_CHEATS                = event("playerCheats")
         val EV_KILL_PLAYER                  = event("killPlayer")
         val EV_PLAYER_ARRIVE_LAST_KILLED    = event("playerArriveAfterKilled")
@@ -200,6 +201,12 @@ class ResearcherDialoguesComponent(
         }
     }
 
+    override fun onPlayerLeave(player: ServerPlayer) {
+        playerDataOrCreate(player).lastSeenTimestamp = entity.level().gameTime
+        if (player !in researcher.combat.lastKilledPlayers)     // to avoid goodbye when player respawns after being killed by him
+            triggerDialogue(player, BasicDialogueEvents.PLAYER_LEAVE_SOON, BasicDialogueEvents.PLAYER_LEAVE_NIGHT, BasicDialogueEvents.PLAYER_LEAVE)
+    }
+
     override fun canTriggeredEventRun(player: ServerPlayer, dialogueEvent: DialogueEvent): Boolean {
         return super.canTriggeredEventRun(player, dialogueEvent) && when(dialogueEvent) {
             EV_MAKE_MESS   -> !playersMadeMess
@@ -229,11 +236,10 @@ class ResearcherDialoguesComponent(
         }
     }
 
+    override val saveNbtPersistData: Boolean = false
+
     override fun addExtraNbtData(dialogueData: CompoundTag) {
         super.addExtraNbtData(dialogueData)
-
-        // Remove shared data, save separately
-        dialogueData.remove(DataFields.SAVED_PLAYERS_DATA)
 
         dialogueData.saveField("MessAngerActive", Codec.BOOL, this::playersMadeMess)
         dialogueData.saveField("PlayersInCellar", CODEC_PLAYERSET, this::playersInCellar)
@@ -242,10 +248,7 @@ class ResearcherDialoguesComponent(
 
     override fun readExtraNbtData(dialogueData: CompoundTag) {
         // prevent modifying shared data
-        val savedPlayersDataPre = savedPlayersData.mapValues { it.value.copy() }
         super.readExtraNbtData(dialogueData)
-        savedPlayersData.clear()
-        savedPlayersData.putAll(savedPlayersDataPre)
 
         dialogueData.loadField("MessAngerActive", Codec.BOOL) { playersMadeMess = it }
         dialogueData.loadField("PlayersInCellar", CODEC_PLAYERSET) { playersInCellar = it.toMutableSet() }

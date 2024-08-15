@@ -14,8 +14,6 @@ import com.ruslan.growsseth.config.QuestConfig
 import com.ruslan.growsseth.config.ResearcherConfig
 import com.ruslan.growsseth.entity.SerializableItemListing
 import com.ruslan.growsseth.entity.researcher.Researcher
-import kotlinx.collections.immutable.immutableListOf
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.builtins.ListSerializer

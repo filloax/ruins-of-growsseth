@@ -1,0 +1,9 @@
+{
+    "entries": [
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"Throne of the sea"}
+        }
+    ],
+    "glowing": true
+}

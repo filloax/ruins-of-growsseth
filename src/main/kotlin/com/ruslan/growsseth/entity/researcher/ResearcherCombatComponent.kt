@@ -151,6 +151,7 @@ class ResearcherCombatComponent(
 
     fun onPlayerKilled(player: ServerPlayer) {
         hitCounter[player]!!.setValue(0)
+        angerBuildupTimer[player]!!.setValue(-1)
         lastKilledPlayers.add(player)
         dialogues?.triggerDialogue(player, ResearcherDialoguesComponent.EV_KILL_PLAYER)
     }
