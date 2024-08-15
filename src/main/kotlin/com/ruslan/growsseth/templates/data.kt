@@ -109,14 +109,14 @@ private class TemplateEntriesSerializer : JsonTransformingSerializer<List<Templa
                     throw SerializationException("Unexpected non-string JsonPrimitive: $element")
                 }
             }
-            is JsonObject -> stringifyPageContent(element)
+            is JsonObject -> stringifyContent(element)
             else -> element // Will error, but the error message is clearer if the serializer fails instead of us
         }
     }
 
     // Stringify content so it can be loaded by the component parser
-    private fun stringifyPageContent(obj: JsonObject): JsonObject {
-        val content = obj["content"] ?: throw SerializationException("Page doesn't have content! Is $obj")
+    private fun stringifyContent(obj: JsonObject): JsonObject {
+        val content = obj["content"] ?: throw SerializationException("Page or line doesn't have content! Is $obj")
         val stringifiedContent = when(content) {
             is JsonObject, is JsonArray -> JsonPrimitive(content.toString())
             else -> content
@@ -159,4 +159,7 @@ data class SignData(
     val color: String? = "black",
     val glowing: Boolean? = false,
     // signs should be waxed ingame
-) : TemplateData
+) : TemplateData {
+    @Transient
+    val linesComponents = entriesComponents()
+}

@@ -1,0 +1,21 @@
+{
+    "entries": [
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"heir of our"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"cult"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"take the heart"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"in its shell"}
+        }
+    ],
+    "glowing": true
+}

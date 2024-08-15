@@ -1,0 +1,21 @@
+{
+    "entries": [
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"risali e sull"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"altare"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"concludi il tuo"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"percorso"}
+        }
+    ],
+    "glowing": true
+}
