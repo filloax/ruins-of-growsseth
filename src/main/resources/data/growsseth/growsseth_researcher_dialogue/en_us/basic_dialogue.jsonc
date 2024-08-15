@@ -406,6 +406,17 @@
             "immediate": true
         }
     ],
+    "borrowDonkeyHealed": [
+        {
+            "content": [
+                "PLACEHOLDER DONKEY BORROW AFTER HEALING"
+            ],
+            "immediate": true,
+            "id": "first-donkey-borrow-healed",
+            "useLimit": 1,
+            "priority": 50
+        }
+    ],
     "returnDonkey": [
         "Thank you for bringing it back. I'll charge you the original prices again!"
     ],
