@@ -127,10 +127,8 @@ class SimplePools(private val context: BootstrapContext<StructureTemplatePool>) 
         )
     }
 
-    /**
-     * Used by the street nbts that get added to village pools manually via code
-     * (see {@link VillageBuildings} and by standalone houses
-     */
+
+    // Used by the standalone houses
     private fun bootstrapVillageHouses() {
         VillageBuildings.houseEntries[CATEGORY_GOLEM_HOUSE]!!.forEach { entry ->
             registerPoolElements(
