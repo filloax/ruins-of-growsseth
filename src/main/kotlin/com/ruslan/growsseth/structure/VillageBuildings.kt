@@ -19,23 +19,15 @@ typealias BuildingKey = String
 object VillageBuildings {
     val houseEntries = mutableMapOf<BuildingKey, MutableList<VillageEntry>>()
 
-    const val CATEGORY_GOLEM_STREET: BuildingKey = "golem_street" // added to pool
-    const val CATEGORY_GOLEM_HOUSE:  BuildingKey = "golem_house" // already in pool referenced by street, used by advancements
+    const val CATEGORY_GOLEM_HOUSE:  BuildingKey = "golem_house" // added to pool and used by advancements
 
-    const val GOLEM_WEIGHT = 1      // golem street pools only have one house each
+    const val DEFAULT_GOLEM_WEIGHT = 3
 
-    // The weights are balanced for each biome (values adjusted by trial and error, sadly there's not much choice with the vanilla weights)
-    val DESERT_GOLEM_STREET    = register("desert_golem_street", CATEGORY_GOLEM_STREET, "desert", "streets", 1)
-    val PLAINS_GOLEM_STREET    = register("plains_golem_street", CATEGORY_GOLEM_STREET, "plains", "streets", 2)
-    val TAIGA_GOLEM_STREET     = register("taiga_golem_street",  CATEGORY_GOLEM_STREET, "taiga", "streets", 3)
-    val SAVANNA_GOLEM_STREET   = register("savanna_golem_street", CATEGORY_GOLEM_STREET, "savanna", "streets", 3)
-    val SNOWY_GOLEM_STREET     = register("snowy_golem_street", CATEGORY_GOLEM_STREET, "snowy", "streets", 1)
-
-    val DESERT_GOLEM    = register("desert_golem_house", CATEGORY_GOLEM_HOUSE, "desert", "house", GOLEM_WEIGHT)
-    val PLAINS_GOLEM    = register("plains_golem_house", CATEGORY_GOLEM_HOUSE, "plains", "house", GOLEM_WEIGHT)
-    val TAIGA_GOLEM     = register("taiga_golem_house",  CATEGORY_GOLEM_HOUSE, "taiga", "house", GOLEM_WEIGHT)
-    val SAVANNA_GOLEM   = register("savanna_golem_house", CATEGORY_GOLEM_HOUSE, "savanna", "house", GOLEM_WEIGHT)
-    val SNOWY_GOLEM     = register("snowy_golem_house", CATEGORY_GOLEM_HOUSE, "snowy", "house", GOLEM_WEIGHT)
+    val DESERT_GOLEM    = register("desert_golem_house", CATEGORY_GOLEM_HOUSE, "desert", "houses", DEFAULT_GOLEM_WEIGHT)
+    val PLAINS_GOLEM    = register("plains_golem_house", CATEGORY_GOLEM_HOUSE, "plains", "houses", DEFAULT_GOLEM_WEIGHT)
+    val TAIGA_GOLEM     = register("taiga_golem_house",  CATEGORY_GOLEM_HOUSE, "taiga", "houses", DEFAULT_GOLEM_WEIGHT)
+    val SAVANNA_GOLEM   = register("savanna_golem_house", CATEGORY_GOLEM_HOUSE, "savanna", "houses", DEFAULT_GOLEM_WEIGHT)
+    val SNOWY_GOLEM     = register("snowy_golem_house", CATEGORY_GOLEM_HOUSE, "snowy", "houses", DEFAULT_GOLEM_WEIGHT)
 
     fun onServerStarted(server: MinecraftServer) {
         val shouldAddBuildings = StructureConfig.golemHouseEnabled
@@ -46,7 +38,7 @@ object VillageBuildings {
         val templatePools: Registry<StructureTemplatePool> = server.registryAccess().registry(Registries.TEMPLATE_POOL).get()
         val processorLists: Registry<StructureProcessorList> = server.registryAccess().registry(Registries.PROCESSOR_LIST).get()
 
-        houseEntries[CATEGORY_GOLEM_STREET]!!.forEach { entry ->
+        houseEntries[CATEGORY_GOLEM_HOUSE]!!.forEach { entry ->
             addBuildingToPool(templatePools, processorLists, entry.parentPool, entry.normalTemplate, entry.weight)
             addBuildingToPool(templatePools, processorLists, entry.parentZombiePool, entry.zombieTemplate, entry.weight)
         }
@@ -58,13 +50,13 @@ object VillageBuildings {
         weight: Int,
     ) {
         val pool: StructureTemplatePool = templatePoolRegistry.getOrThrow(ResourceKey.create(Registries.TEMPLATE_POOL, poolId))
-        val emptyProcessor = ResourceLocation("minecraft", "empty")
+        val emptyProcessor = ResourceLocation("minecraft", "empty")     // some houses have mossify 10% percent, but for now we keep it simple
         val processorHolder: Holder<StructureProcessorList> = processorListRegistry.getHolderOrThrow(
             ResourceKey.create(
                 Registries.PROCESSOR_LIST, emptyProcessor
             )
         )
-        val piece = LegacySinglePoolElement.legacy(poolPieceId.toString()).apply(StructureTemplatePool.Projection.TERRAIN_MATCHING)
+        val piece = LegacySinglePoolElement.legacy(poolPieceId.toString()).apply(StructureTemplatePool.Projection.RIGID)
         for (i in 0 until weight) {
             pool.templates.add(piece)
         }
