@@ -804,6 +804,9 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         readResearcherData(savedData.data)
         customName = savedData.name
         lastWorldDataTime = savedData.lastChangeTimestamp
+
+        val player = server!!.playerList.players[0]!!
+        RuinsOfGrowsseth.LOGGER.info("READ WORLD: " + savedData.data.getCompound("SharedDialogueData").getCompound("savedPlayersData").getCompound(player.uuid.toString()))
     }
 
     override fun addAdditionalSaveData(compoundTag: CompoundTag) {
@@ -875,6 +878,9 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             val savedData = ResearcherSavedData.getPersistent(serv)
             val data = saveResearcherData()
             writeSavedData(savedData, data, force)
+
+            val player = serv.playerList.players[0]!!
+            RuinsOfGrowsseth.LOGGER.info("SAVE WORLD: " + data.getCompound("SharedDialogueData").getCompound("savedPlayersData").getCompound(player.uuid.toString()))
         } }
     }
 
