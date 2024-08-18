@@ -8,6 +8,8 @@ import net.minecraft.world.level.levelgen.structure.StructurePiece
 import net.minecraft.world.level.levelgen.structure.pools.ListPoolElement
 import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
 
 
 fun resLoc(str: String): ResourceLocation {
@@ -55,4 +57,46 @@ fun StructurePoolElement.getTemplateIds(): Collection<ResourceLocation> {
         is ListPoolElement -> this.elements.flatMap { it.getTemplateIds() }
         else -> listOf()
     }
+}
+
+/**
+ * Workaround for the IDE-only issue of marking == / != null as an error
+ * when it isn't
+ *
+ * DISABLED: cannot do this with 'this' (and so extension methods) for now
+ * in current version of contracts
+ */
+//@OptIn(ExperimentalContracts::class)
+//fun Any?.isNull(): Boolean {
+//    contract {
+//        returns(true) implies (this == null)
+//        returns(false) implies (this != null)
+//    }
+//    return this == null
+//}
+
+/**
+ * Workaround for the IDE-only issue of marking == / != null as an error
+ * when it isn't
+ */
+@OptIn(ExperimentalContracts::class)
+fun isNull(x: Any?): Boolean {
+    contract {
+        returns(true) implies (x == null)
+        returns(false) implies (x != null)
+    }
+    return x == null
+}
+
+/**
+ * Workaround for the IDE-only issue of marking == / != null as an error
+ * when it isn't
+ */
+@OptIn(ExperimentalContracts::class)
+fun notNull(x: Any?): Boolean {
+    contract {
+        returns(true) implies (x != null)
+        returns(false) implies (x == null)
+    }
+    return x != null
 }
