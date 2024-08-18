@@ -212,8 +212,8 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
                     null
                 }) ?:BookTemplates.createTemplatedBook(finalDiaryTemplate, edit = { withAuthor(researcherName.string) })
                 ?: Items.PAPER.defaultInstance.copyWithCount(1).also { itemStack ->
-                    itemStack[DataComponents.CUSTOM_NAME] = Component.literal("Per il mio collega")
-                    RuinsOfGrowsseth.LOGGER.warn("Couldn't load final diary!")
+                    itemStack[DataComponents.CUSTOM_NAME] = Component.translatable("growsseth.final_diary_fallback")
+                    RuinsOfGrowsseth.LOGGER.warn("Couldn't load final diary, researcher used a piece of paper instead!")
                 }
 
             blockEntity.setItem(4, endTextItem)
