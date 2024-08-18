@@ -1,4 +1,4 @@
-# Little script for substituting dirt blocks with paths in golem streets
+# Little script for substituting dirt blocks with paths in golem streets (not needed anymore since we removed the streets)
 
 from nbt import nbt
 import os

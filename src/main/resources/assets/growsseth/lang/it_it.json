@@ -159,6 +159,8 @@
     "advancements.growsseth.horn.title": "Dono d'addio",
     "advancements.growsseth.horn.description": "Ricevi il misterioso corno del ricercatore",
 
+    "growsseth.final_diary_fallback": "Per te, collega",
+
     "growsseth.notif.researcher_updated": "Il ricercatore ha qualcosa di nuovo per te.",
     "growsseth.notif.researcher_updated.toast.title": "Nuove scoperte!",
     "growsseth.notif.researcher_updated.toast.description": "Il ricercatore ti aspetta.",
