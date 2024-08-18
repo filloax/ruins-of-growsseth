@@ -8,6 +8,8 @@
             "useLimit": 1,
             "priority": 100,
             "id": "researcher-first",
+            "groups": "group-first-dialogue",
+            "groupUseLimit": 1,
             "requiresUntilQuestStage": "start",
             "data": {
                 "singleOnly": "true"
