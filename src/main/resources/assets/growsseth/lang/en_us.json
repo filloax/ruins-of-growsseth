@@ -159,6 +159,8 @@
     "advancements.growsseth.horn.title": "Goodbye gift",
     "advancements.growsseth.horn.description": "Receive the mysterious horn from the researcher",
 
+    "growsseth.final_diary_fallback": "For you, colleague",
+
     "growsseth.notif.researcher_updated": "The researcher has something new for you.",
     "growsseth.notif.researcher_updated.toast.title": "New discoveries!",
     "growsseth.notif.researcher_updated.toast.description": "The researcher awaits.",
