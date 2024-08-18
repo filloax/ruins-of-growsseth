@@ -17,6 +17,8 @@ import com.ruslan.growsseth.dialogues.BasicDialogueEvents
 import com.ruslan.growsseth.dialogues.DialoguesNpc.Companion.getDialogueNpcs
 import com.ruslan.growsseth.networking.DialoguePacket
 import com.ruslan.growsseth.quests.QuestOwner
+import com.ruslan.growsseth.utils.isNull
+import com.ruslan.growsseth.utils.notNull
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.ChatFormatting
 import net.minecraft.advancements.AdvancementHolder
@@ -43,18 +45,20 @@ open class BasicDialoguesComponent(
     companion object {
         val PLAYER_DATA_CODEC: Codec<PlayerData> = RecordCodecBuilder.create { builder -> builder.group(
             Codec.STRING.mapWithValueOf(Codec.INT).fieldOf("dialogueCount").forGetter(PlayerData::dialogueCount),
+            Codec.STRING.mapWithValueOf(Codec.INT).optionalFieldOf("dialogueGroupCount", mutableMapOf()).forGetter(PlayerData::dialogueGroupCount),
             DialogueEvent.CODEC.mapWithValueOf(Codec.INT).fieldOf("eventTriggerCount").forGetter(PlayerData::eventTriggerCount),
             DialogueEvent.CODEC.mapWithValueOf(Codec.INT).fieldOf("eventCloseTriggerCount").forGetter(PlayerData::eventCloseTriggerCount),
             DialogueEvent.CODEC.mapWithValueOf(Codec.LONG).fieldOf("eventLastTriggerTime").forGetter(PlayerData::eventLastTriggerTime),
             Codec.LONG.optionalFieldOf("lastSeenTimestamp").forGetter(PlayerData::lastSeenTimestamp.optional()),
             Codec.LONG.optionalFieldOf("lastArrivedTimestamp").forGetter(PlayerData::lastArrivedTimestamp.optional()),
-        ).apply(builder) { d, et, ec, el, ls, la ->  PlayerData(d, et, ec, el, ls.getOrNull(), la.getOrNull()) } }
+        ).apply(builder) { d, g, et, ec, el, ls, la ->  PlayerData(d, g, et, ec, el, ls.getOrNull(), la.getOrNull()) } }
 
         val TARGETING: TargetingConditions = TargetingConditions.forNonCombat().ignoreLineOfSight().ignoreInvisibilityTesting()
     }
 
     data class PlayerData(
         val dialogueCount: MutableMap<String, Int> = mutableMapOf(),
+        val dialogueGroupCount: MutableMap<String, Int> = mutableMapOf(),
         val eventTriggerCount: MutableMap<DialogueEvent, Int> = mutableMapOf(),
         val eventCloseTriggerCount: MutableMap<DialogueEvent, Int> = mutableMapOf(),
         val eventLastTriggerTime: MutableMap<DialogueEvent, Long> = mutableMapOf(),
@@ -143,7 +147,7 @@ open class BasicDialoguesComponent(
         for ((playerUuid, dialogueQueue) in dialogueQueues) {
             var dialogueQueueDelay = dialogueQueueDelays.computeIfAbsent(playerUuid) { 0 }
             val player = server.playerList.getPlayer(playerUuid)
-            if (player == null) {
+            if (isNull(player)) {
                 RuinsOfGrowsseth.LOGGER.warn("Player $playerUuid left while dialogues were still queued!")
                 dialogueQueue.clear()
                 continue
@@ -361,6 +365,9 @@ open class BasicDialoguesComponent(
         if (selected.id != null) {
             playerData.dialogueCount.let{map -> map[selected.id] = map.getOrDefault(selected.id, 0) + 1 }
         }
+        selected.groups?.forEach { group ->
+            playerData.dialogueGroupCount.let{ map -> map[group] = map.getOrDefault(group, 0) + 1 }
+        }
 
         onDialogueSelected(selected, event, eventParam, player)
 
@@ -480,6 +487,19 @@ open class BasicDialoguesComponent(
                 } else true
             },
             { entry ->
+                if (entry.groupUseLimit != null) {
+                    if (entry.groups == null) {
+                        RuinsOfGrowsseth.LOGGER.error("Dialogue has no groups but has groupUseLimit: $entry")
+                        false
+                    } else {
+                        entry.groups.all { group ->
+                            val count = pdata.dialogueGroupCount[group] ?: 0
+                            count < entry.groupUseLimit
+                        }
+                    }
+                } else true
+            },
+            { entry ->
                 entity is QuestOwner<*> && entity.quest?.let { quest ->
                     if (
                         (entry.requiresQuest != null || entry.requiresQuestStage != null || entry.requiresUntilQuestStage != null)
@@ -552,7 +572,7 @@ open class BasicDialoguesComponent(
 
     private fun getPlayerById(uuid: UUID): ServerPlayer? {
         val player = entity.level().getPlayerByUUID(uuid)
-        return if (player != null) {
+        return if (notNull(player)) {
             player as ServerPlayer
         } else {
             playerDataOrCreate(uuid).lastSeenTimestamp = entity.level().gameTime

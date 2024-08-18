@@ -13,7 +13,6 @@ import com.filloax.fxlib.api.nbt.getOrPut
 import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.RuinsOfGrowsseth
-import com.ruslan.growsseth.config.QuestConfig
 import com.ruslan.growsseth.config.ResearcherConfig
 import com.ruslan.growsseth.entity.GrowssethEntities
 import com.ruslan.growsseth.entity.researcher.trades.ProgressResearcherTradesProvider
@@ -33,6 +32,7 @@ import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.Clearable
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.npc.VillagerProfession
 import net.minecraft.world.item.InstrumentItem
 import net.minecraft.world.item.Items
@@ -93,6 +93,9 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
     companion object {
         const val QUEST_NAME = "researcherIllness"
         const val TAG_ALREADY_REMOVED_TENT = "alreadyRemovedTent"
+
+        // Used to change diaries and dialogues if the player explores all structures before meeting the researcher
+        private var playerSkippedQuest = false
 
         fun getPersistentData(server: MinecraftServer): QuestData {
             if (!ResearcherConfig.singleResearcher) {
@@ -201,14 +204,16 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
             hornItem.loreLines().add(Component.translatable("item.growsseth.researcher_horn.description1"))
             hornItem.loreLines().add(Component.translatable("item.growsseth.researcher_horn.description2"))
             val researcherName = ResearcherSavedData.getPersistent(level.server).name  ?: Component.translatable("entity.growsseth.researcher")
+
+            val finalDiaryTemplate = if (!playerSkippedQuest) "quest_good_ending" else "quest_good_ending_skip"
             val endTextItem = (if (DiaryHelper.hasCustomEndDiary()) {
                     DiaryHelper.getCustomEndDiary(researcherName)
                 } else {
                     null
-                }) ?:BookTemplates.createTemplatedBook("quest_good_ending", edit = { withAuthor(researcherName.string) })
+                }) ?:BookTemplates.createTemplatedBook(finalDiaryTemplate, edit = { withAuthor(researcherName.string) })
                 ?: Items.PAPER.defaultInstance.copyWithCount(1).also { itemStack ->
-                    itemStack[DataComponents.CUSTOM_NAME] = Component.literal("Per il mio collega")
-                    RuinsOfGrowsseth.LOGGER.warn("Couldn't load final diary!")
+                    itemStack[DataComponents.CUSTOM_NAME] = Component.translatable("growsseth.final_diary_fallback")
+                    RuinsOfGrowsseth.LOGGER.warn("Couldn't load final diary, researcher used a piece of paper instead!")
                 }
 
             blockEntity.setItem(4, endTextItem)
@@ -233,6 +238,9 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
 
         // Trigger on update too to cover multiple tent situations
         override fun onUpdate(entity: Researcher) {
+            if (entity.dialogues!!.getTriggeredDialogues().isEmpty())
+                playerSkippedQuest = true
+
             val tent = entity.tent
             val startingPos = entity.position()
             entity.dialogues?.resetNearbyPlayers()
@@ -283,8 +291,9 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
             }
         }
 
-        private fun createDiary(entity: Entity, tent: ResearcherTent) {
-            val diary = BookTemplates.createTemplatedBook("quest_zombie", edit = { withAuthor(entity.name.string) })
+        private fun createDiary(entity: LivingEntity, tent: ResearcherTent) {
+            val zombieDiaryTemplate = if (!playerSkippedQuest) "quest_zombie" else "quest_zombie_skip"
+            val diary = BookTemplates.createTemplatedBook(zombieDiaryTemplate, edit = { withAuthor(entity.name.string) })
             if (diary == null) {
                 RuinsOfGrowsseth.LOGGER.error("No diary for quest_zombie!")
                 return
@@ -340,7 +349,12 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
                 or TimeOrDayTimeTrigger(this@ResearcherQuestComponent, Constants.DAY_TICKS_DURATION * 5)
             )
             // You can find the dialogue in the quest dialogues json
-            .and(DialogueTrigger("researcher-quest-cure"))
+            .and(
+                if (!playerSkippedQuest)
+                    DialogueTrigger("researcher-quest-cure")
+                else
+                    DialogueTrigger("researcher-quest-cure-skip")
+            )
 
         override fun onActivated(entity: Researcher) {
             entity.startingPos?.let { entity.moveTo(it, entity.yRot, entity.xRot) }
@@ -364,6 +378,10 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
 
         // OnUpdate to also cover multiple tents
         override fun onUpdate(entity: Researcher) {
+            // for testing with gquest, without having to do the zombie stage first
+            if (entity.dialogues!!.getTriggeredDialogues().isEmpty())
+                playerSkippedQuest = true
+
             if (!alreadyRemovedTent)
                 removeTentAndResearcher(entity)
             else

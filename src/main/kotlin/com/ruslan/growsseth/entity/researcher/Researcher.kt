@@ -512,31 +512,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         val serverLevel = level() as ServerLevel
 
         if (ResearcherConfig.singleResearcher) {
-            // Handle more researchers far away but loaded at same time due to high sim distance
-            // when no players nearby, sync data if needed and become available to load data as soon as a player is nearby
-            val radius = dialogues!!.radiusForTriggerLeave * 2
-            val playersNearby = dialogues.nearbyPlayers().isEmpty() && serverLevel.getNearestPlayer(this.x, this.y, this.z, radius, true) == null
-            if (playersNearby) {
-                // no players including creative nearby
-                if (syncDataNoPlayersTimer == 0) {
-                    syncDataNoPlayersTimer = 2f.secondsToTicks()
-                } else {
-                    syncDataNoPlayersTimer--
-                    if (syncDataNoPlayersTimer == 0) {
-                        val savedData = ResearcherSavedData.getPersistent(serverLevel.server)
-                        if (isUpToDateWithWorldData(savedData)) {
-                            saveWorldData()
-                        }
-                        willReadWorldDataNextSync = true
-                    }
-                }
-            } else {
-                syncDataNoPlayersTimer = 0
-                if (willReadWorldDataNextSync) {
-                    willReadWorldDataNextSync = false
-                    readSavedData(ResearcherSavedData.getPersistent(serverLevel.server))
-                }
-            }
+            syncSharedData(serverLevel)
         }
 
         if (this.startingPos == null)
@@ -630,6 +606,39 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         if (shouldDespawn) {
             this.remove(RemovalReason.DISCARDED)
             RuinsOfGrowsseth.LOGGER.info("Removed $this because another researcher was killed somewhere else")
+        }
+    }
+
+    private fun syncSharedData(serverLevel: ServerLevel) {
+        // Handle more researchers far away but loaded at same time due to high sim distance
+        // when no players nearby, sync data if needed and become available to load data as soon as a player is nearby
+        val radius = dialogues!!.radiusForTriggerLeave * 2
+        val noPlayersNearby = dialogues.nearbyPlayers().isEmpty() && serverLevel.getNearestPlayer(this.x, this.y, this.z, radius, true) == null
+        if (noPlayersNearby) {
+            // no players including creative nearby
+            if (syncDataNoPlayersTimer == 0 && !willReadWorldDataNextSync) {
+                syncDataNoPlayersTimer = 2f.secondsToTicks()
+            } else {
+                syncDataNoPlayersTimer--
+                if (syncDataNoPlayersTimer == 0) {
+                    val savedData = ResearcherSavedData.getPersistent(serverLevel.server)
+                    if (isUpToDateWithWorldData(savedData)) {
+                        saveWorldData()
+                        RuinsOfGrowsseth.LOGGER.info("Researcher {}: synced world data (save)", this)
+                    }
+                    willReadWorldDataNextSync = true
+                }
+            }
+        } else {
+            syncDataNoPlayersTimer = 0
+            if (willReadWorldDataNextSync) {
+                willReadWorldDataNextSync = false
+                val savedData = ResearcherSavedData.getPersistent(serverLevel.server)
+                if (!isUpToDateWithWorldData(savedData)) {
+                    readSavedData(savedData)
+                    RuinsOfGrowsseth.LOGGER.info("Researcher {}: synced world data (read)", this)
+                }
+            }
         }
     }
 
@@ -732,15 +741,6 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     // Only NBT stuff of this class
     fun saveResearcherData(): CompoundTag {
         val researcherData = CompoundTag()
-
-        val persistMapMemory = if (!researcherData.contains("ResearcherMapMemory", Tag.TAG_COMPOUND.toInt())) {
-            val newTag = CompoundTag()
-            researcherData.put("ResearcherMapMemory", newTag)
-            newTag
-        } else {
-            researcherData.getCompound("ResearcherMapMemory")
-        }
-
         researcherData.putBoolean("Healed", healed)
         researcherData.putBoolean("AngryForMess", angryForMess)
         researcherData.putBoolean("DonkeyBorrowed", donkeyWasBorrowed)
@@ -804,6 +804,9 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         readResearcherData(savedData.data)
         customName = savedData.name
         lastWorldDataTime = savedData.lastChangeTimestamp
+
+        val player = server!!.playerList.players[0]!!
+        RuinsOfGrowsseth.LOGGER.info("READ WORLD: " + savedData.data.getCompound("SharedDialogueData").getCompound("savedPlayersData").getCompound(player.uuid.toString()))
     }
 
     override fun addAdditionalSaveData(compoundTag: CompoundTag) {
@@ -875,6 +878,9 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             val savedData = ResearcherSavedData.getPersistent(serv)
             val data = saveResearcherData()
             writeSavedData(savedData, data, force)
+
+            val player = serv.playerList.players[0]!!
+            RuinsOfGrowsseth.LOGGER.info("SAVE WORLD: " + data.getCompound("SharedDialogueData").getCompound("savedPlayersData").getCompound(player.uuid.toString()))
         } }
     }
 

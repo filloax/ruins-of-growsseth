@@ -31,6 +31,20 @@
             "useLimit": 1,
             "priority": 1050,
             "id": "researcher-quest-cure",
+            "groups": "group-cure-dialogue",
+            "groupUseLimit": 1,
+            "requiresQuestStage": "healed",
+            "requiresUntilQuestStage": "home"
+        },
+        {
+            "content": [
+                "PLACEHOLDER AND WHO ARE YOU"
+            ],
+            "useLimit": 1,
+            "priority": 1051,   // higher priority to override normal dialogue
+            "id": "researcher-quest-cure-skip",
+            "groups": ["group-first-dialogue", "group-cure-dialogue"],
+            "groupUseLimit": 1,
             "requiresQuestStage": "healed",
             "requiresUntilQuestStage": "home"
         },
@@ -50,6 +64,19 @@
             "useLimit": 1,
             "priority": 1100,
             "id": "researcher-quest-end",
+            "groups": "group-quest-last-dialogue",
+            "groupUseLimit": 1,
+            "requiresQuestStage": "home"
+        },
+        {
+            "content": [
+                "PLACEHOLDER THANKS GOODBYE"
+            ],
+            "useLimit": 1,
+            "priority": 1101,
+            "id": "researcher-quest-end-skip",
+            "groups": "group-quest-last-dialogue",
+            "groupUseLimit": 1,
             "requiresQuestStage": "home"
         }
     ],
@@ -61,7 +88,13 @@
             "id": "researcher-quest-cure"
         },
         {
+            "id": "researcher-quest-cure-skip"
+        },
+        {
             "id": "researcher-quest-end"
+        },
+        {
+            "id": "researcher-quest-end-skip"
         }
     ],
     "playerArrive": [
@@ -72,7 +105,13 @@
             "id": "researcher-quest-cure"
         },
         {
+            "id": "researcher-quest-cure-skip"
+        },
+        {
             "id": "researcher-quest-end"
+        },
+        {
+            "id": "researcher-quest-end-skip"
         }
     ],
     "playerArriveNight": [
@@ -83,7 +122,13 @@
             "id": "researcher-quest-cure"
         },
         {
+            "id": "researcher-quest-cure-skip"
+        },
+        {
             "id": "researcher-quest-end"
+        },
+        {
+            "id": "researcher-quest-end-skip"
         }
     ],
     "playerArriveSoon": [
@@ -94,7 +139,13 @@
             "id": "researcher-quest-cure"
         },
         {
+            "id": "researcher-quest-cure-skip"
+        },
+        {
             "id": "researcher-quest-end"
+        },
+        {
+            "id": "researcher-quest-end-skip"
         }
     ],
     "playerArriveLongTime": [
@@ -105,7 +156,13 @@
             "id": "researcher-quest-cure"
         },
         {
+            "id": "researcher-quest-cure-skip"
+        },
+        {
             "id": "researcher-quest-end"
+        },
+        {
+            "id": "researcher-quest-end-skip"
         }
     ],
     "playerLeave": [
@@ -123,7 +180,7 @@
     ],
     "playerLeaveSoon": [
         {
-            "content": "Goodbye colleague, I'll miss you.",
+            "content": "Goodbye colleague, again.",
             "priority": 1000,
             "requiresQuestStage": "home"
         }
