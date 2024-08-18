@@ -2,10 +2,11 @@ package com.ruslan.growsseth.templates;
 
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.DyeColor
+import net.minecraft.world.level.block.entity.SignBlockEntity
 import net.minecraft.world.level.block.entity.SignText
 
 object SignTemplates {
-    const val LINE_TEMPLATE_PREFIX = "%%TEMPLATE%%"
+    private const val LINE_TEMPLATE_PREFIX = "%TEMPLATE%"   // different from books to allow templates in hanging signs
 
     val templates get() = TemplateListener.signs()
 
@@ -31,8 +32,25 @@ object SignTemplates {
     )
 
     @JvmStatic
-    fun getSignTemplate(templateId: String): SignText {
-        if (templateExist(templateId)) {
+    fun processSign(sign: SignBlockEntity) {
+        // If first line is template prefix, the other lines get concatenated for the template id
+        val frontMessages: Array<Component> = sign.getText(true).getMessages(false)
+        val backMessages: Array<Component> = sign.getText(false).getMessages(false)
+
+        if (frontMessages[0].string == LINE_TEMPLATE_PREFIX) {
+            val templateIdFront = frontMessages[1].string + frontMessages[2].string + frontMessages[3].string
+            val newFrontText = getSignTemplate(templateIdFront)
+            sign.setText(newFrontText, true)
+        }
+        if (backMessages[0].string == LINE_TEMPLATE_PREFIX) {
+            val templateIdBack = backMessages[1].string + backMessages[2].string + backMessages[3].string
+            val newBackText = getSignTemplate(templateIdBack)
+            sign.setText(newBackText, false)
+        }
+    }
+
+    private fun getSignTemplate(templateId: String): SignText {
+        if (templateExists(templateId)) {
             val template = templates[templateId]!!
             val signLines = template.linesComponents
             val signColor = dyeColors[template.color]?: DyeColor.BLACK
@@ -49,12 +67,13 @@ object SignTemplates {
         }
         else {
             val errorLines = Array(4) { _ -> Component.empty() }
-            errorLines[1] = Component.literal("NO TEMPLATE")
+            errorLines[1] = Component.literal("TEMPLATE")
+            errorLines[2] = Component.literal("NOT FOUND")
             return SignText(errorLines, errorLines, DyeColor.RED, true)
         }
     }
 
-    private fun templateExist(templateId: String): Boolean {
+    private fun templateExists(templateId: String): Boolean {
         return templates[templateId] != null
     }
 }
