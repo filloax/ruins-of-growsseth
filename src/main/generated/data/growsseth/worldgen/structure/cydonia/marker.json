@@ -1,6 +1,6 @@
 {
   "type": "fxlib:jigsaw_forced_pos",
-  "biomes": "#growsseth:has_structure/marker",
+  "biomes": "#growsseth:has_structure/none",
   "force_pos_offset": [
     0,
     0,
