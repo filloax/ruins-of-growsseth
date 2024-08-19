@@ -6,7 +6,8 @@ on:
       - 'release/1.21.0'
 env:
   JAVA_VERSION: 21
-  MC_VER: 1.21
+  MC_VER: 1.21            # Main version
+  MC_VER_EXTRA: 1.21.1    # Minor releases that are still compatible
 
 jobs:
   build:
@@ -53,6 +54,7 @@ jobs:
 
           game-versions: |
             ${{ env.MC_VER }}
+            ${{ env.MC_VER_EXTRA }}
           dependencies: |
             resourceful-config(required)
             fabric-language-kotlin(required)
