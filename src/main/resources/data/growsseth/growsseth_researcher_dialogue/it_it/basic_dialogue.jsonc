@@ -410,7 +410,8 @@
     "borrowDonkeyHealed": [
         {
             "content": [
-                "PLACEHOLDER PRESTITO DIALOGO DOPO CURA"
+                "Oh, ti serve il mio asino? Prendilo pure, non preoccuparti.",
+                "Certo, gradirei che me lo riportassi prima della mia partenza, ma se non farai in tempo posso sempre trovarmene un altro."
             ],
             "immediate": true,
             "id": "first-donkey-borrow-healed",
