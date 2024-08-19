@@ -38,7 +38,20 @@
         },
         {
             "content": [
-                "PLACEHOLDER E TU CHI SEI"
+                "§o...anf... anf...§r Cosa? E tu chi sei..? Siamo... nel mio sotterraneo? Cosa ci fai qui? E cosa ci faccio io nella mia gabbia..?",
+                "Oh, ora ricordo, alla fine non sono riuscito a trovare quel maledetto ingrediente...",
+                "Aspetta... questo odore... questo sapore... §lADESSO HO CAPITO!§r",
+                "Era la pozione di debolezza, vero? E quest'altro sapore... una mela d'oro? Non posso crederci, era una delle ultime combinazioni che mi restavano da provare!",
+                {
+                    "content": "...",
+                    "duration": 4
+                },
+                "Oh giusto, scusami! Mi sono fatto prendere dall'emozione e non mi sono presentato né ti ho ringraziato!",
+                "Sono un ricercatore, ti direi il mio nome ma purtroppo lo ho dimenticato da tempo, forse per i sintomi della non morte...",
+                "Da tempo cercavo una cura per la non morte, ma sembra che tu mi abbia battuto sul tempo su quest'ultima parte... Immagino che tu sia un collega ricercatore viste le tue doti, giusto?",
+                "Ti ringrazio infinitamente, ero sicuro che fosse arrivata la fine per me, avevo pure scritto un diario di addio, e invece sono qui, vivo.",
+                "Non potrò mai ripagarti abbastanza ma ti prego, se hai bisogno di qualche mia ricerca non esitare a chiedere, è il minimo che possa fare.",
+                "Tornerò di sopra una volta che mi sarò ripreso del tutto... vorrei preparare alcune cose."
             ],
             "useLimit": 1,
             "priority": 1051,   // higher priority to override normal dialogue
@@ -70,7 +83,11 @@
         },
         {
             "content": [
-                "PLACEHOLDER GRAZIE ADDIO"
+                "Sai, dopo quello che è successo ho pensato che fosse arrivato il momento di ritirarmi... Per anni ho vagato in queste terre senza risultati, e alla fine ho fallito pure nel mio unico vero obiettivo.",
+                "Ci ho quindi riflettuto su, e sono arrivato ad una conclusione... No, il mio viaggio non si è concluso, c'è ancora qualcosa che posso fare.",
+                "Ora che hai scoperto la cura serve che qualcuno la diffonda, no? Ci penserò io, andrò in posti lontani e la porterò a chiunque ne abbia bisogno. Sarà questo il mio riscatto.",
+                "Comunque, volevo ringraziarti di nuovo. Se non ci fossi stato tu non sarei qui, in piedi, a respirare, e soprattutto non ci sarebbe la speranza di un mondo nuovo. Per tutto questo, grazie.",
+                "§lEhm ehm§r, comunque partirò a breve, quindi se vuoi chiedermi ancora qualcosa, questo è il momento giusto."
             ],
             "useLimit": 1,
             "priority": 1101,
