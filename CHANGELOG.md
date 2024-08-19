@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.11.0
+
+Added
+- Dialogues and diaries variations for players who complete the main quest without meeting the Researcher, changed dialogue for another situation
+- `groups` and `groupUseLimit` fields for dialogues data, allowing to make dialogues mutually exclusive (datapack customization)
+- Templates now support signs and hanging signs (datapack customization)
+
+Tweaked
+- The Conduit Church structure now can spawn with signs in both italian and english, making the mod fully localized (translation is still wip)
+- Golem houses no longer need custom streets to spawn, and instead spawn from vanilla ones, improving compatibility with other mods
+
+Fixed
+- Various bugs related to Researcher's dialogue and persistence introduced in version 0.10 have been fixed
+- `dialogueWordsPerMinute` option now also skips dialogues with specified duration
+
 ## 0.10.1
 
 Added
