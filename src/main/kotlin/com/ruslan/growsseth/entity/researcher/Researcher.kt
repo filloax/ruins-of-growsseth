@@ -674,7 +674,14 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
                     if (lastRefusedTradeTimer == 0) {
                         lastRefusedTradeTimer = 40
                         setUnhappy()
-                        val reason = if (blockTrades) "angry" else "noTrades"
+                        val reason =
+                            if (blockTrades) {
+                                if (dialogues!!.playerMadeMess(player.uuid))
+                                    "angry-at-player"
+                                else
+                                    "angry-at-others"
+                            }
+                            else "noTrades"
                         dialogues?.triggerDialogue(player, ResearcherDialoguesComponent.EV_REFUSE_TRADE, eventParam = reason)
                         return InteractionResult.sidedSuccess(level().isClientSide)
                     } else
