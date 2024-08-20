@@ -1,11 +1,11 @@
 package com.ruslan.growsseth.entity.researcher
 
 import com.filloax.fxlib.api.EventUtil
-import com.filloax.fxlib.api.enums.SetBlockFlag
 import com.filloax.fxlib.api.alwaysTruePredicate
 import com.filloax.fxlib.api.codec.decodeNbt
 import com.filloax.fxlib.api.codec.encodeNbt
 import com.filloax.fxlib.api.codec.throwableCodecErr
+import com.filloax.fxlib.api.enums.SetBlockFlag
 import com.filloax.fxlib.api.iterBlocks
 import com.filloax.fxlib.api.loreLines
 import com.filloax.fxlib.api.nbt.getCompoundOrNull
@@ -22,6 +22,7 @@ import com.ruslan.growsseth.quests.*
 import com.ruslan.growsseth.structure.pieces.ResearcherTent
 import com.ruslan.growsseth.templates.BookTemplates
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
@@ -37,6 +38,8 @@ import net.minecraft.world.entity.npc.VillagerProfession
 import net.minecraft.world.item.InstrumentItem
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.block.Blocks
+import net.minecraft.world.level.block.ChestBlock
+import net.minecraft.world.level.block.Rotation
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity
 import net.minecraft.world.level.block.entity.ChestBlockEntity
 import net.minecraft.world.level.block.entity.LecternBlockEntity
@@ -162,8 +165,9 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
             level.server.run {
                 researcher.tent?.let { tent ->
                     val giftPos = tent.boundingBox.center.above(2)
+                    val tentRotation = tent.placeSettings().rotation
                     tent.remove(level, replaceUndergroundEntrance = true)
-                    spawnRewardChest(level, giftPos)
+                    spawnRewardChest(level, giftPos, tentRotation)
                 }
                 removeResearcher(researcher)
             }
@@ -180,11 +184,12 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
             researcher.discard()
         }
 
-        fun spawnRewardChest(level: ServerLevel, pos: BlockPos) {
+        fun spawnRewardChest(level: ServerLevel, pos: BlockPos, tentRotation: Rotation) {
             val prevBlockEntity = level.getBlockEntity(pos)
             Clearable.tryClear(prevBlockEntity)
 
-            val chestState: BlockState = Blocks.CHEST.defaultBlockState()
+            // chest always spawns facing the campfire
+            val chestState: BlockState = Blocks.CHEST.defaultBlockState().setValue(ChestBlock.FACING, tentRotation.rotate(Direction.NORTH))
 
             level.setBlock(pos, chestState, SetBlockFlag.or(
                 SetBlockFlag.NOTIFY_CLIENTS,
