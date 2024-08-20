@@ -1,5 +1,6 @@
 package com.ruslan.growsseth.templates;
 
+import com.filloax.fxlib.api.EventUtil
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.DyeColor
 import net.minecraft.world.level.block.entity.SignBlockEntity
@@ -40,12 +41,16 @@ object SignTemplates {
         if (frontMessages[0].string == LINE_TEMPLATE_PREFIX) {
             val templateIdFront = frontMessages[1].string + frontMessages[2].string + frontMessages[3].string
             val newFrontText = getSignTemplate(templateIdFront)
-            sign.setText(newFrontText, true)
+            EventUtil.runAtServerTickEnd {          // to avoid crash when structure spawns naturally
+                sign.setText(newFrontText, true)
+            }
         }
         if (backMessages[0].string == LINE_TEMPLATE_PREFIX) {
             val templateIdBack = backMessages[1].string + backMessages[2].string + backMessages[3].string
             val newBackText = getSignTemplate(templateIdBack)
-            sign.setText(newBackText, false)
+            EventUtil.runAtServerTickEnd {
+                sign.setText(newBackText, false)
+            }
         }
     }
 
