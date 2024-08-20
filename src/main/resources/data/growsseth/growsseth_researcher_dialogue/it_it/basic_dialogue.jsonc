@@ -356,7 +356,7 @@
             "content": "Fratello.\nCugino.\nCompagno.\nCompare.\nMa ti pare che mi rubi le cose e poi ti vendo pure le mie ricerche?\nRIMETTI A POSTO.",
             "priority": 0,
             "immediate": true,
-            "requiresEventParam": "angry",
+            "requiresEventParam": "angry-at-player",
             "afterRepeatsMax": 1,
             "data": {
                 "sound": "none"
@@ -366,8 +366,17 @@
             "content": "Hai ancora i miei strumenti da lavoro, ricordi? Rimettili a posto.",
             "priority": 0,
             "immediate": true,
-            "requiresEventParam": "angry",
+            "requiresEventParam": "angry-at-player",
             "afterRepeatsMin": 2,
+            "data": {
+                "sound": "none"
+            }
+        },
+        {
+            "content": "Scusa collega, purtroppo qualcuno ha rubato i miei strumenti da lavoro, finché non li avrò indietro non potrò venderti niente.",
+            "priority": 0,
+            "immediate": true,
+            "requiresEventParam": "angry-at-others",
             "data": {
                 "sound": "none"
             }
