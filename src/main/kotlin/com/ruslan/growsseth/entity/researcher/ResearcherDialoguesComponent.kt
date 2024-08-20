@@ -73,6 +73,8 @@ class ResearcherDialoguesComponent(
     // share between all players as it is related to the physical block state
     // Before we tracked player ids but that meant another player couldn't fix the issue
     private var playersMadeMess: Boolean = false
+    // Used for different trade refusal dialogue when another player made a mess
+    private val playersWhoMadeMess: MutableSet<UUID> = mutableSetOf()
     // If the player met this specific instance of the researcher (not other entities)
     // meaningful only in single researcher mode
     private val playersMetThisEntity: MutableSet<UUID> = mutableSetOf()
@@ -242,6 +244,7 @@ class ResearcherDialoguesComponent(
         super.addExtraNbtData(dialogueData)
 
         dialogueData.saveField("MessAngerActive", Codec.BOOL, this::playersMadeMess)
+        dialogueData.saveField("PlayersWhoMadeMess", CODEC_PLAYERSET, this::playersWhoMadeMess)
         dialogueData.saveField("PlayersInCellar", CODEC_PLAYERSET, this::playersInCellar)
         dialogueData.saveField("PlayersMetThisEntity", CODEC_PLAYERSET, this::playersMetThisEntity)
     }
@@ -251,6 +254,7 @@ class ResearcherDialoguesComponent(
         super.readExtraNbtData(dialogueData)
 
         dialogueData.loadField("MessAngerActive", Codec.BOOL) { playersMadeMess = it }
+        dialogueData.loadField("PlayersWhoMadeMess", CODEC_PLAYERSET) { playersWhoMadeMess.addAll(it)}
         dialogueData.loadField("PlayersInCellar", CODEC_PLAYERSET) { playersInCellar = it.toMutableSet() }
         playersMetThisEntity.clear()
         dialogueData.loadField("PlayersMetThisEntity", CODEC_PLAYERSET) { playersMetThisEntity.addAll(it) }
@@ -273,6 +277,10 @@ class ResearcherDialoguesComponent(
         }
     }
 
+    fun playerMadeMess(playerUuid: UUID): Boolean {
+        return playersWhoMadeMess.contains(playerUuid)
+    }
+
     override fun sendDialogueToPlayer(player: ServerPlayer, line: DialogueLine) {
         super.sendDialogueToPlayer(player, line)
         val soundData = line.dialogue.data[DDATA_SOUND]
@@ -292,6 +300,7 @@ class ResearcherDialoguesComponent(
                 val researchersInBounds = getResearchersNearTentAt(level, pos) ?: return
                 researchersInBounds.forEach {
                     it.dialogues?.triggerDialogue(player as ServerPlayer, EV_MAKE_MESS)
+                    it.dialogues?.playersWhoMadeMess!!.add(player.uuid)
                 }
             } else if (state.`is`(TENT_MATERIALS_WHITELIST) && !BREAK_BLOCK_BLACKLIST.contains(state.block)) {
                 val researchersInBounds = getResearchersNearTentAt(level, pos) ?: return
@@ -309,6 +318,7 @@ class ResearcherDialoguesComponent(
             val researchersInBounds = getResearchersNearTentAt(level, pos) ?: return
             researchersInBounds.forEach {
                 it.dialogues?.triggerDialogue(player as ServerPlayer, EV_FIX_MESS)
+                it.dialogues?.playersWhoMadeMess!!.clear()
             }
         }
 
