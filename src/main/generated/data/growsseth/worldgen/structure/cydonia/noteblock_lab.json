@@ -1,6 +1,6 @@
 {
   "type": "fxlib:jigsaw_forced_pos",
-  "biomes": "#growsseth:has_structure/noteblock_lab",
+  "biomes": "#growsseth:has_structure/none",
   "force_pos_offset": [
     -8,
     0,

@@ -1,6 +1,6 @@
 {
   "type": "fxlib:jigsaw_forced_pos",
-  "biomes": "#minecraft:is_overworld",
+  "biomes": "#growsseth:has_structure/none",
   "force_pos_offset": [
     -10,
     -7,
