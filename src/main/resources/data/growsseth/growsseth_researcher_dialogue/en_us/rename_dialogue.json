@@ -3,6 +3,8 @@
         {
             "content": "Mh..? Is that a nametag?\nQuite a... uh... peculiar gift, colleague. I guess you really cared that I don't remember my name.\nI certainly won't start wearing a leash with this attached, but sure, call me whatever you want.",
             "id": "rename-first",
+            "groups": "group-first-nametag",
+            "groupUseLimit": 1,
             "useLimit": 1,
             "priority": -100
         },
@@ -72,19 +74,27 @@
         },
         {
             "content": "Jeb_, huh? Sorry colleague, my lab coat doesn't have the ability to change color if that's what you were hoping for, but the name fits me anyway.",
-            "requiresEventParam": "jeb_"
+            "requiresEventParam": "jeb_",
+            "groups": "group-first-nametag",
+            "groupUseLimit": 1
         },
         {
             "content": "Oh, funny that you chose this name for me, it was the name of the bunny I had when I was little.\nNow that I think about it, it's strange that I remember his name but not mine, don't you think?\nI accept it gladly, in his honor...",
-            "requiresEventParam": "toast"
+            "requiresEventParam": "toast",
+            "groups": "group-first-nametag",
+            "groupUseLimit": 1
         },
         {
             "content": "Johnny? How strange, just the thought of being called that excites me, I feel like I can face any enemy, hostile or not!\nI accept it gladly, this grit might save me in desperate situations.",
-            "requiresEventParam": "johnny"
+            "requiresEventParam": "johnny",
+            "groups": "group-first-nametag",
+            "groupUseLimit": 1
         },
         {
             "content": "The name on this nametag... It's so... familiar...\nManfredo, Manfredo... repeating it gives me a strange feeling... Could it be my old name? Damn, I can't remember...\nOh, sorry, I was babbling to myself.\nI accept it gladly, I don't mind it as a name.",
-            "requiresEventParam": "manfredo"
+            "requiresEventParam": "manfredo",
+            "groups": "group-first-nametag",
+            "groupUseLimit": 1
         }
     ]
 }

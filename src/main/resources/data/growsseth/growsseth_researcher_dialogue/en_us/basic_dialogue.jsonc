@@ -357,7 +357,7 @@
             "content": "Brother.\nCousin.\nCompanion.\nPal.\nDo you really think you can steal my things and then sell me your research?\nPUT IT BACK.",
             "priority": 0,
             "immediate": true,
-            "requiresEventParam": "angry",
+            "requiresEventParam": "angry-at-player",
             "afterRepeatsMax": 1,
             "data": {
                 "sound": "none"
@@ -367,8 +367,17 @@
             "content": "You still have my work tools, remember? Put them back.",
             "priority": 0,
             "immediate": true,
-            "requiresEventParam": "angry",
+            "requiresEventParam": "angry-at-player",
             "afterRepeatsMin": 2,
+            "data": {
+                "sound": "none"
+            }
+        },
+        {
+            "content": "I'm sorry collegue, someone stole my work tools, until I'll get them back I won't be able to sell you anything.",
+            "priority": 0,
+            "immediate": true,
+            "requiresEventParam": "angry-at-others",
             "data": {
                 "sound": "none"
             }
@@ -411,7 +420,8 @@
     "borrowDonkeyHealed": [
         {
             "content": [
-                "PLACEHOLDER DONKEY BORROW AFTER HEALING"
+                "Oh, do you need my donkey? Take it, and don't worry about it.",
+                "I would be grateful if you would bring it back before my departure, but if you won't make in time I can always find another."
             ],
             "immediate": true,
             "id": "first-donkey-borrow-healed",

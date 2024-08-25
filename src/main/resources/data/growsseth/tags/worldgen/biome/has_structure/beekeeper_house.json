@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-    "minecraft:meadow",
-    "minecraft:flower_forest"
+    "#c:is_flower_forest",
+    "minecraft:meadow"
   ]
 }
