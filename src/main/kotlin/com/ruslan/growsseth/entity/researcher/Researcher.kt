@@ -1085,16 +1085,6 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         this.setItemSlot(EquipmentSlot.MAINHAND, combat.createWeapon())
     }
 
-    override fun dropCustomDeathLoot(level: ServerLevel, damageSource: DamageSource, hitByPlayer: Boolean) {
-        val registry = level().registryAccess().registryOrThrow(Registries.ENCHANTMENT)
-        val itemEntity = ItemEntity(level(), position().x, position().y, position().z, ItemStack(GrowssethItems.RESEARCHER_DAGGER).also { dagger ->
-            dagger.enchant(registry.getHolderOrThrow(Enchantments.UNBREAKING), 3)
-            dagger.enchant(registry.getHolderOrThrow(Enchantments.MENDING), 1)
-            dagger.enchant(registry.getHolderOrThrow(Enchantments.SMITE), 5)       // smite only on drop to prevent exploits
-        })
-        level().addFreshEntity(itemEntity)
-    }
-
     override fun handlePortal() {
         if (ResearcherConfig.researcherTeleports) {
             return // prevent nether portal interaction
