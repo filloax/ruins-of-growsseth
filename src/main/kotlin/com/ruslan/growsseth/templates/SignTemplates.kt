@@ -2,7 +2,6 @@ package com.ruslan.growsseth.templates;
 
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.DyeColor
-import net.minecraft.world.level.block.entity.SignBlockEntity
 import net.minecraft.world.level.block.entity.SignText
 
 object SignTemplates {
@@ -32,21 +31,15 @@ object SignTemplates {
     )
 
     @JvmStatic
-    fun processSign(sign: SignBlockEntity) {
+    fun processSign(originalText: SignText): SignText {
         // If first line is template prefix, the other lines get concatenated for the template id
-        val frontMessages: Array<Component> = sign.getText(true).getMessages(false)
-        val backMessages: Array<Component> = sign.getText(false).getMessages(false)
-
-        if (frontMessages[0].string == LINE_TEMPLATE_PREFIX) {
-            val templateIdFront = frontMessages[1].string + frontMessages[2].string + frontMessages[3].string
-            val newFrontText = getSignTemplate(templateIdFront)
-            sign.setText(newFrontText, true)
+        val messages: Array<Component> = originalText.getMessages(false)
+        if (messages[0].string == LINE_TEMPLATE_PREFIX) {
+            val templateId = messages[1].string + messages[2].string + messages[3].string
+            val newFrontText = getSignTemplate(templateId)
+            return newFrontText
         }
-        if (backMessages[0].string == LINE_TEMPLATE_PREFIX) {
-            val templateIdBack = backMessages[1].string + backMessages[2].string + backMessages[3].string
-            val newBackText = getSignTemplate(templateIdBack)
-            sign.setText(newBackText, false)
-        }
+        return originalText
     }
 
     private fun getSignTemplate(templateId: String): SignText {
