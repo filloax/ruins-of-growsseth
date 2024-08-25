@@ -203,18 +203,6 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
         } }
     }
 
-
-    override fun dropCustomDeathLoot(level: ServerLevel, damageSource: DamageSource, hitByPlayer: Boolean) {
-        super.dropCustomDeathLoot(level, damageSource, hitByPlayer)
-        val registry = level.registryAccess().registryOrThrow(Registries.ENCHANTMENT)
-        val daggerItem = ItemStack(GrowssethItems.RESEARCHER_DAGGER)
-        daggerItem.enchant(registry.getHolderOrThrow(Enchantments.SMITE), 5)
-        daggerItem.enchant(registry.getHolderOrThrow(Enchantments.UNBREAKING), 3)
-        daggerItem.enchant(registry.getHolderOrThrow(Enchantments.MENDING), 1)
-        val itemEntity = ItemEntity(level(), position().x, position().y, position().z, daggerItem)
-        level().addFreshEntity(itemEntity)
-    }
-
     override fun removeWhenFarAway(distanceToClosestPlayer: Double): Boolean = false
     override fun requiresCustomPersistence(): Boolean = true
 
