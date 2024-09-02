@@ -8,6 +8,7 @@ Added
 - [Data] `groups` and `groupUseLimit` fields for dialogues data, allowing to make dialogues mutually exclusive
 - [Data] Templates now support signs and hanging signs
 - Researcher now changes expression when aggressive
+- Sound for music disc "Ancora Qui"
 - [1.21] 1.21.1 support
 
 Tweaked
