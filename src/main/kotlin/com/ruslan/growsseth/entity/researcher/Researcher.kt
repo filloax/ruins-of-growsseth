@@ -133,6 +133,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         val RENAME_BLACKLIST = mutableMapOf(
             // True if it should check word parts
             "ricercatore" to false,
+            "researcher" to false,
             "franco" to false,
             "folgo" to false,
             "foldo" to false,

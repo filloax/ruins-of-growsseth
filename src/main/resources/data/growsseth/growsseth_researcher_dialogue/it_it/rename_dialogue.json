@@ -17,6 +17,10 @@
             "requiresEventParam": "ricercatore"
         },
         {
+            "content": "Uh, abbastanza autoesplicativo devo dire. Forse è meglio se ti inventi effettivamente un nome proprio di persona.",
+            "requiresEventParam": "researcher"
+        },
+        {
             "content": "Collega, so che forse ti sei impegnato con tutto te stesso nello scegliere questo nome, ma anche io ho degli standard.",
             "requiresEventParam": "franco"
         },
