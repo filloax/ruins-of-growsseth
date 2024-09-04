@@ -1,7 +1,7 @@
 {
     "rename": [
         {
-            "content": "Mh..? Is that a nametag?\nQuite a... uh... peculiar gift, colleague. I guess you really cared that I don't remember my name.\nI certainly won't start wearing a leash with this attached, but sure, call me whatever you want.",
+            "content": "Mh..? Is that a name tag?\nQuite a... uh... peculiar gift, colleague. I guess you really care about the fact that I don't remember my name.\nI won't certainly start wearing a leash with this attached, but sure, call me whatever you want.",
             "id": "rename-first",
             "groups": "group-first-nametag",
             "groupUseLimit": 1,
@@ -9,12 +9,16 @@
             "priority": -100
         },
         {
-            "content": "Another nametag? You have a very unique way of letting me know you want to call me something else, colleague.\nSure, it makes no difference to me anyway.",
+            "content": "Another name tag? You have a unique way of telling me that you want to call me something else, colleague.\nSure, it makes no difference to me anyway.",
             "priority": -500
         },
         {
             "content": "Uh, quite self-explanatory I must say. Maybe it's better if you actually come up with a proper personal name.",
             "requiresEventParam": "ricercatore"
+        },
+        {
+            "content": "Uh, quite self-explanatory I must say. Maybe it's better if you actually come up with a proper personal name.",
+            "requiresEventParam": "researcher"
         },
         {
             "content": "Colleague, I know you may have put your heart into choosing this name, but I also have standards.",
@@ -33,65 +37,65 @@
             "requiresEventParam": "palle"
         },
         {
-            "content": "Sabaku? In a distant language, it roughly means 'desert,' am I right? In some old fables, there was talk of a certain 'Sabaku II' as a hero with a golden helmet in a dark world.\nThe fable also spoke of his apprentice, but his name has been lost to time.\nAnyway, this name seems dear to you, colleague, but it doesn't belong to me, I'm sorry.",
+            "content": "Sabaku? Isn't there a language from a distant place in which it means \"desert\"? I recall some old fables where a certain 'Sabaku II' was a hero with a golden helmet, wandering through a dark world.\nThe fable also spoke of his apprentice, but his name has been lost to time.\nAnyway, this name seems dear to you, colleague, but it doesn't belong to me, I'm sorry.",
             "requiresEventParam": "sabaku"
         },
         {
-            "content": "The name of the old king? I don't want to have the name of someone who abandoned his people when they needed him, I'm sorry, colleague.",
+            "content": "The name of the old king? I don't want the name of someone who abandoned his people when they most needed him, Sorry, colleague.",
             "requiresEventParam": "lucio"
         },
         {
-            "content": "The name of the ancient archer? Colleague, perhaps you overestimated me, my aim is comparable to a landslide in the middle of a desert. Please, think of something else.",
+            "content": "The name of the Ancient Archer? Colleague, perhaps you overestimated me, the effects of my aim are comparable to those of a landslide in the middle of a desert. Please, think of something else.",
             "requiresEventParam": "lionel"
         },
         {
-            "content": "The name of the cursed wolf? Colleague, as much as I like dogs, I'd prefer to avoid being called like the mastiff that slaughtered enemy legions.\n...And in all this, I'm assuming you didn't expect me to start barking for you.",
+            "content": "The name of the Cursed Wolf? Colleague, as much as I like dogs, I'd prefer to avoid being called like the mastiff that used to slaughter the enemy legions.\n...And in all this, I'm assuming you didn't expect me to start barking for you.",
             "requiresEventParam": "julius"
         },
         {
-            "content": "The name of the explosive cube? Colleague, have I ever given you the impression that I want to blow up? I purposely scattered the surroundings with anti-Creeper excrement, no thank you.",
+            "content": "The name of the Explosive Cube? Colleague, have I ever given the impression of wanting to blow up? I purposely scattered the surroundings with anti-Creeper excrements, no thank you.",
             "requiresEventParam": "nicolaos"
         },
         {
-            "content": "The name of the one who died first on the night of the diamond swords? It was a terrible event, one of many in that war...\nForgive me, but I don't want a name that recalls such a tragic event.",
+            "content": "The name of the first victim of the Night of the Diamond Swords? It was a terrible event, one of many from that war...\nForgive me, but I don't want a name that recalls such a tragic event.",
             "requiresEventParam": "wazo"
         },
         {
-            "content": "The name of the lava eater? Colleague, I certainly don't share his fetish, nor his mastery in forging weapons, why should I use his name?\nUnless this is a wish to end up roasted, I find it rather senseless.",
+            "content": "The name of the Lava Eater? Colleague, I certainly don't share his fetish, nor his mastery in forging weapons, why should I use his name?\nUnless this is a wish for me to end up roasted, I find it rather senseless.",
             "requiresEventParam": "efisio"
         },
         {
-            "content": "The name of the builder of everything, eh? I must say, as a child, I admired him a lot, in my village there was a huge statue in his image.\nSurely it's thanks to him that civilization has remained intact to this day, although not as splendid as before. It's said that Ruslan went mad some time ago, that he might have found something bigger than himself?\nOh, sorry colleague, I'm rambling. Anyway, I don't feel worthy of bearing such a name.",
+            "content": "The name of the Builder of Everything, eh? I must say, I admired him a lot as a child, in my village we had a huge statue in his image.\nSurely it's thanks to him that civilization has remained intact to this day, although not as splendid as before. It's said that Ruslan went mad a long time ago, maybe he found something bigger than him?\nOh, sorry colleague, I'm rambling. Anyway, I don't feel worthy of bearing such a name.",
             "requiresEventParam": "ruslan"
         },
         {
-            "content": "Colleague, no. I know very well what that nametag does, and I don't want to suffer its effects, thank you.",
+            "content": "Colleague, no. I know very well what that name tag does, and I don't want to suffer its effects, thank you.",
             "requiresEventParam": "grumm"
         },
         {
-            "content": "Colleague, no. I know very well what that nametag does, and I don't want to suffer its effects, thank you.",
+            "content": "Colleague, no. I know very well what that name tag does, and I don't want to suffer its effects, thank you.",
             "requiresEventParam": "dinnerbone"
         },
         {
-            "content": "Jeb_, huh? Sorry colleague, my lab coat doesn't have the ability to change color if that's what you were hoping for, but the name fits me anyway.",
+            "content": "Jeb_, huh? Sorry colleague, my lab coat doesn't have the ability to change color, if that's what you were hoping for. The name fits me, though.",
             "requiresEventParam": "jeb_",
             "groups": "group-first-nametag",
             "groupUseLimit": 1
         },
         {
-            "content": "Oh, funny that you chose this name for me, it was the name of the bunny I had when I was little.\nNow that I think about it, it's strange that I remember his name but not mine, don't you think?\nI accept it gladly, in his honor...",
+            "content": "Oh, funny that you chose this name for me, it was the name of the bunny I had when I was little.\nNow that I think about it, it's strange that I remember his name but not mine, don't you think?\nI gladly accept it, in his honor...",
             "requiresEventParam": "toast",
             "groups": "group-first-nametag",
             "groupUseLimit": 1
         },
         {
-            "content": "Johnny? How strange, just the thought of being called that excites me, I feel like I can face any enemy, hostile or not!\nI accept it gladly, this grit might save me in desperate situations.",
+            "content": "Johnny? How strange, just the thought of being called that excites me, I feel like I can face any enemy, hostile or not!\nI gladly accept it, this grit might save me in desperate situations.",
             "requiresEventParam": "johnny",
             "groups": "group-first-nametag",
             "groupUseLimit": 1
         },
         {
-            "content": "The name on this nametag... It's so... familiar...\nManfredo, Manfredo... repeating it gives me a strange feeling... Could it be my old name? Damn, I can't remember...\nOh, sorry, I was babbling to myself.\nI accept it gladly, I don't mind it as a name.",
+            "content": "The name on this name tag... It's so... familiar...\nManfredo, Manfredo... repeating it gives me a strange feeling... Could it be my old name? Damn, I can't remember...\nOh, sorry, I was babbling to myself.\nI gladly accept it, I don't mind having it as a name.",
             "requiresEventParam": "manfredo",
             "groups": "group-first-nametag",
             "groupUseLimit": 1
