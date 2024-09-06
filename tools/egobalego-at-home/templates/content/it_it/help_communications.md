@@ -3,7 +3,7 @@ Questa è la sezione delle comunicazioni, le quali si dividono in tre categorie 
 Le **notifiche** sono le più semplici: hanno un **titolo**, un'**icona** (se si seleziona la tipologia corrispondente) e un **testo**. Titolo e testo sono autoesplicativi, mentre l'icona è indicata dall'id dell'item che si vuole usare preceduto dal suo namespace, quindi si possono utilizzare anche item di altre mod se si vuole.  
 <u>Nota</u>: le notifiche con icona hanno uno sfondo nero come gli obiettivi, mentre quelle senza hanno uno sfondo blu come gli avvisi della chat non sicura.
 
-Con i **dialoghi** si può decidere cosa si vuole che dica il ricercatore in chat quando ci si avvicina. Per un dialogo semplice basta scrivere il suo contenuto separandolo in più messaggi con gli **\\n** (il simbolo per le andate a capo), come in questo esempio:
+Con i **dialoghi** si può decidere cosa si vuole che dica il ricercatore in chat quando ci si avvicina (o appena i dati vengono sincronizzati se è già vicino al giocatore). Per un dialogo semplice basta scrivere il suo contenuto separandolo in più messaggi con gli **\n** (il simbolo per le andate a capo), come in questo esempio:
 
     Salve collega, bla bla bla...\nA proposito, ha sentito di...
 
@@ -30,7 +30,7 @@ Infine si arriva alla categoria dei **diari / libri**, che include tre diverse a
 
 Negli ultimi due casi, oltre a titolo, autore (solo per i libri delle strutture) e contenuto, bisognerà anche scegliere a quale struttura ci si riferisce.
 
-Il contenuto è quello delle pagine, per le quali puoi usare **\\n** per andare a capo e **%PAGEBREAK%** per andare alla pagina successiva, come in questo esempio:
+Il contenuto è quello delle pagine, per le quali puoi usare **\n** per andare a capo e **%PAGEBREAK%** per andare alla pagina successiva, come in questo esempio:
 
     Caro diario.\n\nOggi ho visto un creeper.%PAGEBREAK%Era molto §overde§r.",
 
