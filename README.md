@@ -4,6 +4,8 @@
 
 ## [**README IN ITALIANO QUA!**](docs/README_ITA.md)
 
+Developer note: This branch automatically creates and overrides the [Nightly Build](https://github.com/filloax/ruins-of-growsseth/releases/tag/nightly-release-1.20.6) with every push.
+
 A highly configurable structures mod, with a smart NPC to sell maps and guide you in discovery, and structures 
 that hint to vanilla features taking inspiration from Broken Nether Portals.
 
