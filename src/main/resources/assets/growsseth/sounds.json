@@ -111,7 +111,8 @@
     "sounds": [
       {
         "name": "growsseth:disc_ancora_qui",
-        "stream": true
+        "stream": true,
+        "encrypted": true
       }
     ]
   },

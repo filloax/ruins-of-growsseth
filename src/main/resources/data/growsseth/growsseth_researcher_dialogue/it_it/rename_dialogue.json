@@ -17,6 +17,10 @@
             "requiresEventParam": "ricercatore"
         },
         {
+            "content": "Uh, abbastanza autoesplicativo devo dire. Forse è meglio se ti inventi effettivamente un nome proprio di persona.",
+            "requiresEventParam": "researcher"
+        },
+        {
             "content": "Collega, so che forse ti sei impegnato con tutto te stesso nello scegliere questo nome, ma anche io ho degli standard.",
             "requiresEventParam": "franco"
         },
@@ -31,6 +35,14 @@
         {
             "content": "...collega, no.",
             "requiresEventParam": "palle"
+        },
+        {
+            "content": "...collega, no.",
+            "requiresEventParam": "balls"
+        },
+        {
+            "content": "Ho già sentito l'espressione \"uomo Synergo\" in passato da dei ragazzini di un villaggio. Mi sono sembrati molto... intrattenuti nel chiamarmi così, preferirei non ripetere l'esperienza.",
+            "requiresEventParam": "synergo"
         },
         {
             "content": "Sabaku? In una lingua lontana significa più o meno \"deserto\", dico bene? In alcune vecchie favole si parlava di un certo \"Sabaku II\" come eroe dall'elmo dorato in un mondo oscuro.\nNella favola si parlava anche del suo allievo, ma il suo nome è andato perso nel tempo.\nIn ogni caso, questo nome sembra starti a cuore collega, ma non mi appartiene, mi dispiace.",

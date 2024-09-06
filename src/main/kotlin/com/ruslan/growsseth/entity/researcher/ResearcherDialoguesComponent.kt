@@ -14,6 +14,7 @@ import com.ruslan.growsseth.dialogues.*
 import com.ruslan.growsseth.dialogues.DialogueEvent.Companion.event
 import com.ruslan.growsseth.networking.AmbientSoundsPacket
 import com.ruslan.growsseth.networking.StopMusicPacket
+import com.ruslan.growsseth.utils.notNull
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.core.BlockPos
 import net.minecraft.core.UUIDUtil
@@ -109,7 +110,7 @@ class ResearcherDialoguesComponent(
         farPlayers.removeIf {
             val struct = structureManager.getStructureWithPieceAt(it.blockPosition(), GrowssethTags.StructTags.RESEARCHER_TENT)
             if (struct.isValid) {
-                struct.boundingBox.isInside(it.blockPosition())
+                struct.boundingBox.inflatedBy(5).isInside(it.blockPosition())
             } else {
                 false
             }
@@ -119,8 +120,8 @@ class ResearcherDialoguesComponent(
     private fun isInCellar(player: ServerPlayer): Boolean {
         val tent = researcher.tent
         val cellarTrapdoorPos = tent?.cellarTrapdoorPos
-        if (cellarTrapdoorPos != null) {
-            val areaCheck = tent.cellarBoundingBox != null
+        if (notNull(cellarTrapdoorPos)) {
+            val areaCheck = notNull(tent.cellarBoundingBox)
             // double check if in tent, just in case
             return (tent.boundingBox.isInside(player.blockPosition())
                 && (
