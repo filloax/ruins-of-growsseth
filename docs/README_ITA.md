@@ -2,6 +2,8 @@
 
 <img src="../src/main/resources/assets/growsseth/icon.png" alt="alt text" width="250" height="250">
 
+Nota per gli sviluppatori: questo branch crea e sovrascrive automaticamente la [build nightly](https://github.com/filloax/ruins-of-growsseth/releases/tag/nightly-release-1.20.6) a ogni push.
+
 Una mod di strutture altamente configurabile, con un NPC intelligente per vendere mappe e guidare nel
 percorso, e strutture che suggeriscono feature vanilla allo stesso modo dei Portali del Nether Rotti.
 
