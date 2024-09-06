@@ -139,6 +139,8 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             "folgo" to false,
             "foldo" to false,
             "palle" to true,
+            "balls" to true,
+            "synergo" to true,
             "sabaku" to true,
             "lucio" to true,
             "lionel" to false,
