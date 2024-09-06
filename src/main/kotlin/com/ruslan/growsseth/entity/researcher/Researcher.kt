@@ -32,6 +32,9 @@ import com.ruslan.growsseth.quests.QuestOwner
 import com.ruslan.growsseth.structure.pieces.ResearcherTent
 import com.ruslan.growsseth.structure.structure.ResearcherTentStructure
 import com.ruslan.growsseth.utils.GrowssethCodecs
+import com.ruslan.growsseth.utils.isNull
+import com.ruslan.growsseth.utils.notNull
+import com.ruslan.growsseth.utils.resLoc
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
 import net.minecraft.core.UUIDUtil
@@ -131,10 +134,13 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         val RENAME_BLACKLIST = mutableMapOf(
             // True if it should check word parts
             "ricercatore" to false,
+            "researcher" to false,
             "franco" to false,
             "folgo" to false,
             "foldo" to false,
             "palle" to true,
+            "balls" to true,
+            "synergo" to true,
             "sabaku" to true,
             "lucio" to true,
             "lionel" to false,
@@ -328,11 +334,12 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             { player -> combat.wantsToKillPlayer((player as Player)) })
         if (ResearcherConfig.researcherInteractsWithMobs) {
             targetSelector.addGoal(1, NearestAttackableTargetGoal(this, Mob::class.java, 0, false, true)
-                { livingEntity: LivingEntity? -> livingEntity is Mob && livingEntity.target == this })
+            // notNull + equals to avoid the intellij-only bug showing this as error (likely wonky build)
+                { livingEntity: LivingEntity? -> livingEntity is Mob && livingEntity.target.let { notNull(it) && it.equals(this) } })
             targetSelector.addGoal(2, ResearcherHurtByTargetGoal(this))
             if (ResearcherConfig.researcherStrikesFirst)
                 targetSelector.addGoal(2, NearestAttackableTargetGoal(this, Mob::class.java, 0, true, true)
-                    { livingEntity: LivingEntity? -> ( (livingEntity != null && this.distanceTo(livingEntity) < distanceForUnjustifiedAggression) &&
+                    { livingEntity: LivingEntity? -> ( (notNull(livingEntity) && this.distanceTo(livingEntity) < distanceForUnjustifiedAggression) &&
                             (livingEntity is Raider || livingEntity is Vex || livingEntity is Zombie || livingEntity is AbstractSkeleton) ) }
                 )
         }
@@ -515,7 +522,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             syncSharedData(serverLevel)
         }
 
-        if (this.startingPos == null)
+        if (isNull(this.startingPos))
             this.startingPos = this.blockPosition()
 
         if (ResearcherConfig.singleResearcher) { // && this.tickCount % 5 == 0) {
@@ -613,7 +620,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         // Handle more researchers far away but loaded at same time due to high sim distance
         // when no players nearby, sync data if needed and become available to load data as soon as a player is nearby
         val radius = dialogues!!.radiusForTriggerLeave * 2
-        val noPlayersNearby = dialogues.nearbyPlayers().isEmpty() && serverLevel.getNearestPlayer(this.x, this.y, this.z, radius, true) == null
+        val noPlayersNearby = dialogues.nearbyPlayers().isEmpty() && isNull(serverLevel.getNearestPlayer(this.x, this.y, this.z, radius, true))
         if (noPlayersNearby) {
             // no players including creative nearby
             if (syncDataNoPlayersTimer == 0 && !willReadWorldDataNextSync) {
@@ -893,7 +900,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
     /* Trading methods */
 
-    fun isTrading(): Boolean { return tradingPlayer != null }
+    fun isTrading(): Boolean { return notNull(tradingPlayer) }
 
     private fun tradesData() = tradesData ?: throw IllegalStateException("Accessed tradesData in client!")
 
