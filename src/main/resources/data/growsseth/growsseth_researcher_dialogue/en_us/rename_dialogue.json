@@ -37,6 +37,14 @@
             "requiresEventParam": "palle"
         },
         {
+            "content": "...colleague, no.",
+            "requiresEventParam": "balls"
+        },
+        {
+            "content": "I already heard about that expression in a distant land long ago, and I prefer not to use that name. Don't ask why, you wouldn't get it.",
+            "requiresEventParam": "synergo"
+        },
+        {
             "content": "Sabaku? Isn't there a language from a distant place in which it means \"desert\"? I recall some old fables where a certain 'Sabaku II' was a hero with a golden helmet, wandering through a dark world.\nThe fable also spoke of his apprentice, but his name has been lost to time.\nAnyway, this name seems dear to you, colleague, but it doesn't belong to me, I'm sorry.",
             "requiresEventParam": "sabaku"
         },
