@@ -1,4 +1,6 @@
 {
+    "name": "Forgotten Notes",
+    "author": "???",
     "pages": [
         "Travel diary n° 113\n\nI had intended to continue my journey eastward, but a sudden storm forced me to seek shelter in one of these caves.\n\nI was hoping to reach the settlement before sunset, but I'll have to wait for the weather to clear up. I know",
         "well that storms like these can last for a whole week.\n\nI don't have many supplies with me. I'm soaked. And without charcoal.\n\nThe only company I find in these tunnels are small colonies of fungi that seem to enjoy the darkness.",
@@ -15,7 +17,5 @@
         "",
         "",
         "The storm has passed;\n\nIt's time to go and check if the rumors I heard from that traveler are true."
-    ],
-    "name": "Forgotten Notes",
-    "author": "???"
+    ]
 }
