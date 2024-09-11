@@ -33,6 +33,7 @@ import com.ruslan.growsseth.structure.structure.ResearcherTentStructure
 import com.ruslan.growsseth.utils.GrowssethCodecs
 import com.ruslan.growsseth.utils.isNull
 import com.ruslan.growsseth.utils.notNull
+import com.ruslan.growsseth.utils.resLoc
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
 import net.minecraft.core.UUIDUtil
