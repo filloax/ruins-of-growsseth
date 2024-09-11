@@ -156,5 +156,95 @@
         "name": "growsseth:researcher_horn_sound"
       }
     ]
+  },
+  "researcher.yes": {
+    "sounds": [
+      {
+        "name": "growsseth:researcher/yes1"
+      },
+      {
+        "name": "growsseth:researcher/yes2"
+      },
+      {
+        "name": "growsseth:researcher/yes3"
+      },
+      {
+        "name": "growsseth:researcher/yes4"
+      }
+    ]
+  },
+  "researcher.no": {
+    "sounds": [
+      {
+        "name": "growsseth:researcher/no1"
+      },
+      {
+        "name": "growsseth:researcher/no2"
+      },
+      {
+        "name": "growsseth:researcher/no3"
+      },
+      {
+        "name": "growsseth:researcher/no4"
+      },
+      {
+        "name": "growsseth:researcher/no5"
+      }
+    ]
+  },
+  "researcher.trade": {
+    "sounds": [
+      {
+        "name": "growsseth:researcher/haggle1"
+      },
+      {
+        "name": "growsseth:researcher/haggle2"
+      },
+      {
+        "name": "growsseth:researcher/haggle3"
+      }
+    ]
+  },
+  "researcher.ambient": {
+    "sounds": [
+      {
+        "name": "growsseth:researcher/idle1"
+      },
+      {
+        "name": "growsseth:researcher/idle2"
+      },
+      {
+        "name": "growsseth:researcher/idle3"
+      },
+      {
+        "name": "growsseth:researcher/idle4"
+      },
+      {
+        "name": "growsseth:researcher/idle5"
+      }
+    ]
+  },
+  "researcher.hurt": {
+    "sounds": [
+      {
+        "name": "growsseth:researcher/hurt1"
+      },
+      {
+        "name": "growsseth:researcher/hurt2"
+      },
+      {
+        "name": "growsseth:researcher/hurt3"
+      },
+      {
+        "name": "growsseth:researcher/hurt4"
+      }
+    ]
+  },
+  "researcher.death": {
+    "sounds": [
+      {
+        "name": "growsseth:researcher/death"
+      }
+    ]
   }
 }
