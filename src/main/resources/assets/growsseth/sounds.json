@@ -246,5 +246,35 @@
         "name": "growsseth:researcher/death"
       }
     ]
+  },
+  "zombie_researcher.ambient": {
+    "sounds": [
+      {
+        "name": "growsseth:zombie_researcher/say1"
+      },
+      {
+        "name": "growsseth:zombie_researcher/say2"
+      },
+      {
+        "name": "growsseth:zombie_researcher/say3"
+      }
+    ]
+  },
+  "zombie_researcher.hurt": {
+    "sounds": [
+      {
+        "name": "growsseth:zombie_researcher/hurt1"
+      },
+      {
+        "name": "growsseth:zombie_researcher/hurt2"
+      }
+    ]
+  },
+  "zombie_researcher.death": {
+    "sounds": [
+      {
+        "name": "growsseth:zombie_researcher/death"
+      }
+    ]
   }
 }
