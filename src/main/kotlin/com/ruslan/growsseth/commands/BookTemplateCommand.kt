@@ -69,6 +69,7 @@ object BookTemplateCommand {
                 0.2f,
                 ((player.random.nextFloat() - player.random.nextFloat()) * 0.7f + 1.0f) * 2.0f
             )
+            player.sendSystemMessage(Component.translatable("growsseth.commands.booktemplate.success", templateName))
         }
 
         return 1
