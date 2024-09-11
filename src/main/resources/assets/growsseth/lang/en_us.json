@@ -165,7 +165,7 @@
     "growsseth.notif.researcher_updated.toast.title": "New discoveries!",
     "growsseth.notif.researcher_updated.toast.description": "The researcher awaits.",
     "growsseth.notif.setLanguage.title": "Ruins of Growsseth Language Autodetect",
-    "growsseth.notif.setLanguage.message": "Set mod structure texts to language %s",
+    "growsseth.notif.setLanguage.message": "Set mod texts to language %s",
 
     "growsseth.filled_map.target": "[Growsseth] Target position: %d %d",
 
