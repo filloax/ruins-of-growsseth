@@ -8,10 +8,11 @@ import com.ruslan.growsseth.config.ResearcherConfig
 import com.ruslan.growsseth.entity.GrowssethEntities
 import com.ruslan.growsseth.entity.SpawnTimeTracker
 import com.ruslan.growsseth.http.GrowssethExtraEvents
-import com.ruslan.growsseth.item.GrowssethItems
+import com.ruslan.growsseth.sound.GrowssethSounds
 import net.minecraft.core.BlockPos
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.sounds.SoundEvent
 import net.minecraft.world.Difficulty
 import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
@@ -27,19 +28,15 @@ import net.minecraft.world.entity.ai.goal.*
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.animal.IronGolem
-import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.entity.monster.Zombie
 import net.minecraft.world.entity.monster.ZombieVillager
 import net.minecraft.world.entity.monster.ZombifiedPiglin
 import net.minecraft.world.entity.npc.AbstractVillager
 import net.minecraft.world.entity.npc.VillagerProfession
 import net.minecraft.world.entity.player.Player
-import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.enchantment.Enchantments
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.block.LevelEvent
-import net.minecraft.world.level.entity.EntityTypeTest
 import java.time.LocalDateTime
 import kotlin.math.min
 
@@ -231,5 +228,16 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
                 return false        // to allow completing the quest even in peaceful
             return super.canUse()
         }
+    }
+
+    // No need to also override step sounds (I hope)
+    override fun getAmbientSound(): SoundEvent? {
+        return GrowssethSounds.ZOMBIE_RESEARCHER_AMBIENT
+    }
+    override fun getHurtSound(damageSource: DamageSource): SoundEvent? {
+        return GrowssethSounds.ZOMBIE_RESEARCHER_HURT
+    }
+    override fun getDeathSound(): SoundEvent? {
+        return GrowssethSounds.ZOMBIE_RESEARCHER_DEATH
     }
 }

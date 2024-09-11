@@ -31,6 +31,17 @@ class GrowssethSounds {
         val DEFLECT_ARROW_SOUND = registerSoundEvent("deflect_arrow_sound")
         val RESEARCHER_HORN_SOUND = registerSoundEventHolder("researcher_horn_sound")
 
+        val RESEARCHER_YES = registerSoundEvent("researcher.yes")
+        val RESEARCHER_NO = registerSoundEvent("researcher.no")
+        val RESEARCHER_TRADE = registerSoundEvent("researcher.trade")
+        val RESEARCHER_AMBIENT = registerSoundEvent("researcher.ambient")
+        val RESEARCHER_HURT = registerSoundEvent("researcher.hurt")
+        val RESEARCHER_DEATH = registerSoundEvent("researcher.death")
+
+        val ZOMBIE_RESEARCHER_AMBIENT = registerSoundEvent("zombie_researcher.ambient")
+        val ZOMBIE_RESEARCHER_HURT = registerSoundEvent("zombie_researcher.hurt")
+        val ZOMBIE_RESEARCHER_DEATH = registerSoundEvent("zombie_researcher.death")
+
         private fun registerSoundEvent(name: String): SoundEvent {
             val id = ResourceLocation(RuinsOfGrowsseth.MOD_ID, name)
             return Registry.register(BuiltInRegistries.SOUND_EVENT, id, SoundEvent.createVariableRangeEvent(id))
