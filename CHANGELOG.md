@@ -12,8 +12,9 @@ Added
 - [1.21] 1.21.1 support
 
 Tweaked
-- The Conduit Church structure now can spawn with signs in both italian and english, making the mod fully localized (translation is still wip)
-- Conduit Church has been updated to also spawns on deep lukewarm oceans
+- The Conduit Church structure now can spawn with signs in both italian and english, making the mod fully localized
+- The English translation has been improved (it's no longer wonky)
+- The Conduit Church has been updated to also spawn on deep lukewarm oceans
 - Golem houses no longer need custom streets to spawn, and instead spawn from vanilla ones, improving compatibility with other mods
 - If a player stole the researcher's work tools, he will accuse only them when trying to trade instead of everyone
 - [Data] Researcher's loot table is now editable by datapack
@@ -21,7 +22,7 @@ Tweaked
 Fixed
 - Various bugs related to Researcher's dialogue and persistence introduced in version 0.10 have been fixed
 - Fixed researcher behavior for players stealing his work tools, now he gets angry only when left without lecterns or cartography tables
-- Researcher's type skin is now separated from vanilla, to avoid it breaking when resource packs override it
+- Researcher's type skin and sounds are now separated from vanilla, to avoid them breaking when resource packs override them
 - `dialogueWordsPerMinute` option now also skips dialogues with specified duration
 
 ## 0.10.1
