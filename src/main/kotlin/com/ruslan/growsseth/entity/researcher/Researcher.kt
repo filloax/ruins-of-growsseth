@@ -27,14 +27,13 @@ import com.ruslan.growsseth.entity.researcher.trades.ResearcherTradeMode
 import com.ruslan.growsseth.entity.researcher.trades.ResearcherTradeUtils
 import com.ruslan.growsseth.entity.researcher.trades.ResearcherTradesData
 import com.ruslan.growsseth.http.GrowssethExtraEvents
-import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.quests.QuestOwner
+import com.ruslan.growsseth.sound.GrowssethSounds
 import com.ruslan.growsseth.structure.pieces.ResearcherTent
 import com.ruslan.growsseth.structure.structure.ResearcherTentStructure
 import com.ruslan.growsseth.utils.GrowssethCodecs
 import com.ruslan.growsseth.utils.isNull
 import com.ruslan.growsseth.utils.notNull
-import com.ruslan.growsseth.utils.resLoc
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
 import net.minecraft.core.UUIDUtil
@@ -43,7 +42,6 @@ import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.core.registries.Registries
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.nbt.Tag
 import net.minecraft.network.chat.Component
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
@@ -71,7 +69,6 @@ import net.minecraft.world.entity.ai.goal.OpenDoorGoal
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.ai.navigation.PathNavigation
 import net.minecraft.world.entity.ai.navigation.WallClimberNavigation
-import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.entity.monster.AbstractIllager.IllagerArmPose
 import net.minecraft.world.entity.monster.AbstractSkeleton
 import net.minecraft.world.entity.monster.Vex
@@ -86,7 +83,6 @@ import net.minecraft.world.item.Items
 import net.minecraft.world.item.alchemy.Potion
 import net.minecraft.world.item.alchemy.PotionContents
 import net.minecraft.world.item.alchemy.Potions
-import net.minecraft.world.item.enchantment.Enchantments
 import net.minecraft.world.item.trading.MerchantOffer
 import net.minecraft.world.item.trading.MerchantOffers
 import net.minecraft.world.level.ClipContext
@@ -952,7 +948,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
     override fun notifyTradeUpdated(itemStack: ItemStack) {
         if (!this.level().isClientSide && this.ambientSoundTime > -this.ambientSoundInterval + 20) {
-            val sound = if (itemStack.isEmpty) SoundEvents.WANDERING_TRADER_NO else SoundEvents.WANDERING_TRADER_YES
+            val sound = if (itemStack.isEmpty) GrowssethSounds.RESEARCHER_NO else GrowssethSounds.RESEARCHER_YES
             this.playSound(sound, this.soundVolume, this.voicePitch)
             ambientSoundTime = -this.ambientSoundInterval
         }
@@ -1034,7 +1030,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     fun setUnhappy() {
         unhappyCounter = 40
         if (!level().isClientSide()) {
-            this.playSound(SoundEvents.WANDERING_TRADER_NO, this.soundVolume, this.voicePitch)
+            this.playSound(GrowssethSounds.RESEARCHER_NO, this.soundVolume, this.voicePitch)
         }
     }
 
@@ -1051,14 +1047,14 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     override fun setTradingPlayer(player: Player?) { tradingPlayer = player }
     override fun getTradingPlayer(): Player? = tradingPlayer
 
-    override fun getNotifyTradeSound(): SoundEvent = SoundEvents.WANDERING_TRADER_YES
-    override fun getHurtSound(damageSource: DamageSource): SoundEvent = SoundEvents.WANDERING_TRADER_HURT
-    override fun getDeathSound(): SoundEvent = SoundEvents.WANDERING_TRADER_DEATH
+    override fun getNotifyTradeSound(): SoundEvent = GrowssethSounds.RESEARCHER_YES
+    override fun getHurtSound(damageSource: DamageSource): SoundEvent = GrowssethSounds.RESEARCHER_HURT
+    override fun getDeathSound(): SoundEvent = GrowssethSounds.RESEARCHER_DEATH
     override fun getAmbientSoundInterval(): Int = super.getAmbientSoundInterval() * 3
     override fun getAmbientSound(): SoundEvent? {
         return if (isTrading()) {
-            SoundEvents.WANDERING_TRADER_TRADE
-        } else SoundEvents.WANDERING_TRADER_AMBIENT
+            GrowssethSounds.RESEARCHER_TRADE
+        } else GrowssethSounds.RESEARCHER_AMBIENT
     }
 
     override fun canBeLeashed(player: Player): Boolean = false

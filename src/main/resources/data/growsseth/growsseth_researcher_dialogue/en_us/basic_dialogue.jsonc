@@ -351,7 +351,10 @@
         {
             "content": "I'm finishing up some research and I don't have anything to offer you yet. Try again later.",
             "priority": -100,
-            "immediate": true
+            "immediate": true,
+            "data": {
+                "sound": "none"
+            }
         },
         {
             "content": "Brother.\nCousin.\nCompanion.\nPal.\nDo you really think you can steal my things and then sell me your research?\nPUT IT BACK.",

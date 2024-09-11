@@ -14,6 +14,7 @@ import com.ruslan.growsseth.dialogues.*
 import com.ruslan.growsseth.dialogues.DialogueEvent.Companion.event
 import com.ruslan.growsseth.networking.AmbientSoundsPacket
 import com.ruslan.growsseth.networking.StopMusicPacket
+import com.ruslan.growsseth.sound.GrowssethSounds
 import com.ruslan.growsseth.utils.notNull
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.core.BlockPos
@@ -21,7 +22,6 @@ import net.minecraft.core.UUIDUtil
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
-import net.minecraft.sounds.SoundEvents
 import net.minecraft.util.RandomSource
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.BlockItem
@@ -294,7 +294,7 @@ class ResearcherDialoguesComponent(
         val soundData = line.dialogue.data[DDATA_SOUND]
         if (soundData != "none") {
             when (soundData) {
-                "angry" -> researcher.playSound(SoundEvents.WANDERING_TRADER_NO)
+                "angry" -> researcher.playSound(GrowssethSounds.RESEARCHER_NO)
                 else -> researcher.playAmbientSound()
             }
             researcher.resetAmbientSoundTime()
