@@ -37,11 +37,11 @@ public abstract class CreeperMixin extends Monster {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;explode(Lnet/minecraft/world/entity/Entity;DDDFLnet/minecraft/world/level/Level$ExplosionInteraction;)Lnet/minecraft/world/level/Explosion;")
     )
     private Explosion preventExplosionInTent(Level instance, @Nullable Entity source, double x, double y, double z, float radius, Level.ExplosionInteraction explosionInteraction, Operation<Explosion> original) {
-        // already client side from vanilla code
+        // already server side from vanilla code
         ServerLevel serverLevel = (ServerLevel) instance;
         StructureManager structureManager = serverLevel.structureManager();
         if (structureManager.getStructureAt(source.getOnPos(), MixinHelpers.researcherTent).isValid()) {
-            return serverLevel.explode(source, x, y, z, radius, Level.ExplosionInteraction.NONE);
+            return serverLevel.explode(source, x, y, z, 0, Level.ExplosionInteraction.MOB);    // 0 radius to avoid damaging the donkey or leash
         } else {
             return original.call(instance, source, x, y, z, radius, explosionInteraction);
         }
