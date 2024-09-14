@@ -209,7 +209,8 @@ class ResearcherDialoguesComponent(
 
     override fun onPlayerLeave(player: ServerPlayer) {
         playerDataOrCreate(player).lastSeenTimestamp = entity.level().gameTime
-        if (player !in researcher.combat.lastKilledPlayers)     // to avoid goodbye when player respawns after being killed by him
+        // Second check to avoid goodbye when player respawns after being killed by him:
+        if (!player.isDeadOrDying && player !in researcher.combat.lastKilledPlayers)
             triggerDialogue(player, BasicDialogueEvents.PLAYER_LEAVE_SOON, BasicDialogueEvents.PLAYER_LEAVE_NIGHT, BasicDialogueEvents.PLAYER_LEAVE)
     }
 
@@ -348,13 +349,13 @@ class ResearcherDialoguesComponent(
         // Also checks if pos is in the tent
         private fun getResearchersNearTentAt(level: ServerLevel, pos: BlockPos): List<Researcher>? {
             val structureManager = level.structureManager()
-
             val structureStart = structureManager.getStructureWithPieceAt(pos, GrowssethTags.StructTags.RESEARCHER_TENT)
             if (structureStart.isValid) {
-                val bbox = structureStart.boundingBox
+                val tentBbox = structureStart.boundingBox
+                val bboxInflation = Researcher.WALK_LIMIT_DISTANCE.toDouble()   // can break only by moving the researcher away with a boat
                 return level.getEntitiesOfClass(
                     Researcher::class.java,
-                    AABB.of(bbox).expandTowards(Researcher.WALK_LIMIT_DISTANCE.toDouble(), 0.0, Researcher.WALK_LIMIT_DISTANCE.toDouble())
+                    AABB.of(tentBbox).inflate(bboxInflation, 0.0, bboxInflation)
                 )
             }
             return null
