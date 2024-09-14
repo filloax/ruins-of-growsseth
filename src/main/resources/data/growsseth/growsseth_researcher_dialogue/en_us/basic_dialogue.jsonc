@@ -159,7 +159,8 @@
             "content": "Greetings, didn't expect to meet you here!\nAs you know, I also am a traveler, so I have various encampents around the world.\nIf we meet again, I'll be happy to share information as usual.",
             "useLimit": 1,
             "priority": 50,
-            "id": "researcher-arrive-new-loc-first"
+            "id": "researcher-arrive-new-loc-first",
+            "requiresUntilQuestStage": "healed"
         }
     ],
     "playerArriveSoon": [
