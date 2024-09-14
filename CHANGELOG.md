@@ -17,6 +17,7 @@ Tweaked
 - The Conduit Church has been updated to also spawn on deep lukewarm oceans
 - Golem houses no longer need custom streets to spawn, and instead spawn from vanilla ones, improving compatibility with other mods
 - If a player stole the researcher's work tools, he will accuse only them when trying to trade instead of everyone
+- Creeper's explosions inside researcher tents are now harmless even to entities, to avoid breaking the donkey's leash
 - [Data] Researcher's loot table is now editable by datapack
 
 Fixed
@@ -24,6 +25,8 @@ Fixed
 - Fixed researcher behavior for players stealing his work tools, now he gets angry only when left without lecterns or cartography tables
 - Researcher's type skin and sounds are now separated from vanilla, to avoid them breaking when resource packs override them
 - `dialogueWordsPerMinute` option now also skips dialogues with specified duration
+- [1.21] fixed researcher being leashable
+
 
 ## 0.10.1
 
@@ -38,6 +41,7 @@ Tweaked
 
 Fixed
 - [1.21] Decorated pots crashing
+
 
 ## 0.10.0
 
@@ -58,6 +62,7 @@ Tweaked
 Fixed
 - Fix some dialogues and messages
 - Fix researcher sync when two far away tents are loaded at the same time because of high simulation distance
+
 
 ## 0.9.0
 

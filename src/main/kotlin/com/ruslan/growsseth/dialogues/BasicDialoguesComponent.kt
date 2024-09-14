@@ -109,7 +109,8 @@ open class BasicDialoguesComponent(
 
     open fun onPlayerLeave(player: ServerPlayer) {
         playerDataOrCreate(player).lastSeenTimestamp = entity.level().gameTime
-        triggerDialogue(player, Events.PLAYER_LEAVE_SOON, Events.PLAYER_LEAVE_NIGHT, Events.PLAYER_LEAVE)
+        if (!player.isDeadOrDying)  // to avoid goodbye when the npc gets away from the place where player died (and did not respawn yet)
+            triggerDialogue(player, Events.PLAYER_LEAVE_SOON, Events.PLAYER_LEAVE_NIGHT, Events.PLAYER_LEAVE)
     }
 
     override fun resetNearbyPlayers() {
@@ -662,8 +663,7 @@ open class BasicDialoguesComponent(
         }*/
 
         fun onAdvancement(player: ServerPlayer, advancement: AdvancementHolder, criterionKey: String) {
-            // Rather than search dialogue npcs on every event, mark the player for checking stuff
-            // later (better for performance?)
+            // Rather than search dialogue npcs on every event, mark the player for checking stuff later (better for performance?)
             val level = player.serverLevel()
             val searchRadius = 80.0
             val dialoguesNpcs = level.getDialogueNpcs(AABB.ofSize(player.position(), searchRadius, searchRadius, searchRadius))
