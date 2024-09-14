@@ -65,13 +65,13 @@
         { "id": "researcher-first" },
         { "id": "no-dialogue-mess" },
         "Good morning, colleague.",
+        "...maybe, with that ingredient... Oh, hello colleague.",
+        "Good morning colleague, beautiful day today, isn't it?",
+        "...but of course, now it makes sense... Oh, hello, go ahead.",
         {
             "content": "Glad to see you're still alive, colleague.",
             "afterRepeatsMin": 2
         },
-        "...maybe, with that ingredient... Oh, hello colleague.",
-        "Good morning colleague, beautiful day today, isn't it?",
-        "...but of course, now it makes sense... Oh, hello, go ahead.",
         {
             "content": "Hello colleague, always on the move, huh?",
             "afterRepeatsMin": 2
@@ -130,6 +130,8 @@
         { "id": "goodbye-made-mess-2" }
     ],
     "playerArriveLongTime": [
+        { "id": "researcher-first" },   // just for /greset consistency
+        { "id": "no-dialogue-mess" },
         {
             "content": "Long time no see! I wasn't sure if you were still alive.",
             "useLimit": 1,
@@ -139,9 +141,20 @@
         "Colleague...? Is that really you? I haven't seen you in a long time.",
         "Colleague...? Back from a long adventure I assume, do you have anything interesting to share?",
         "Long time no see, colleague.",
-        "Hello colleague, it's been a while since you've been away, how are you?"
+        "Hello colleague, it's been a while since you've been away, how are you?",
+        {
+            "content": "Hello, it's been a long time...\nYou know, I'm still waiting for you to give me back my work tools.",
+            "id": "long-time-after-mess",
+            "priority": 60,
+            "data": {
+                "madeMess": "true"
+            },
+            "requiresUntilQuestStage": "healed"
+        }
     ],
     "playerArriveNewLocation": [
+        { "id": "researcher-first" },   // just for /greset consistency
+        { "id": "no-dialogue-mess" },   // only possible if player breaks tools before being seen
         {
             "content": "Greetings, didn't expect to meet you here!\nAs you know, I also am a traveler, so I have various encampents around the world.\nIf we meet again, I'll be happy to share information as usual.",
             "useLimit": 1,
@@ -150,6 +163,7 @@
         }
     ],
     "playerArriveSoon": [
+        { "id": "researcher-first" },   // just for /greset consistency
         { "id": "no-dialogue-mess" },
         "Back already?",
         "Forgot something?",
@@ -179,6 +193,7 @@
         }
     ],
     "playerLeaveSoon": [
+        { "id": "researcher-first-leave" },     // just for /greset consistency
         "So long!",
         "Alright, see you soon!",
         "Goodbye colleague, again.",
