@@ -1059,6 +1059,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         } else GrowssethSounds.RESEARCHER_AMBIENT
     }
 
+    override fun canBeLeashed(): Boolean = false
     override fun getVillagerXp(): Int = 0
     override fun overrideXp(i: Int) { }
     override fun showProgressBar(): Boolean = false
