@@ -662,8 +662,7 @@ open class BasicDialoguesComponent(
         }*/
 
         fun onAdvancement(player: ServerPlayer, advancement: AdvancementHolder, criterionKey: String) {
-            // Rather than search dialogue npcs on every event, mark the player for checking stuff
-            // later (better for performance?)
+            // Rather than search dialogue npcs on every event, mark the player for checking stuff later (better for performance?)
             val level = player.serverLevel()
             val searchRadius = 80.0
             val dialoguesNpcs = level.getDialogueNpcs(AABB.ofSize(player.position(), searchRadius, searchRadius, searchRadius))
