@@ -151,7 +151,8 @@
             "content": "Salve, non mi aspettavo di trovarti qua!\nAnche io viaggio, come sai, quindi ho diversi accampamenti sparsi per il mondo.\nSe ci incroceremo altre volte sarò felice di scambiare informazioni come di consueto.",
             "useLimit": 1,
             "priority": 50,
-            "id": "researcher-arrive-new-loc-first"
+            "id": "researcher-arrive-new-loc-first",
+            "requiresUntilQuestStage": "healed"
         }
     ],
     "playerArriveSoon": [
