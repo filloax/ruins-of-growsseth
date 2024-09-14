@@ -109,7 +109,7 @@ open class BasicDialoguesComponent(
 
     open fun onPlayerLeave(player: ServerPlayer) {
         playerDataOrCreate(player).lastSeenTimestamp = entity.level().gameTime
-        if (!player.isDeadOrDying)
+        if (!player.isDeadOrDying)  // to avoid goodbye when the npc gets away from the place where player died (and did not respawn yet)
             triggerDialogue(player, Events.PLAYER_LEAVE_SOON, Events.PLAYER_LEAVE_NIGHT, Events.PLAYER_LEAVE)
     }
 
