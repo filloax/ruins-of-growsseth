@@ -210,7 +210,7 @@ class ResearcherDialoguesComponent(
     override fun onPlayerLeave(player: ServerPlayer) {
         playerDataOrCreate(player).lastSeenTimestamp = entity.level().gameTime
         // Second check to avoid goodbye when player respawns after being killed by him:
-        if (!player.isDeadOrDying && player !in researcher.combat.lastKilledPlayers)
+        if (!player.isDeadOrDying && player !in researcher.combat.lastKilledPlayers && !player.isSpectator)
             triggerDialogue(player, BasicDialogueEvents.PLAYER_LEAVE_SOON, BasicDialogueEvents.PLAYER_LEAVE_NIGHT, BasicDialogueEvents.PLAYER_LEAVE)
     }
 

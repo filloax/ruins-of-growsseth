@@ -83,7 +83,6 @@ open class BasicDialoguesComponent(
 
     open var nearbyRadius = 12.0
     open var radiusForTriggerLeave = 17.0
-    open var maxDialogueRadius = 50.0 // Radius before any dialogue event is prevented from triggering
     open var secondsForTriggerLeave = 0   // waiting time before saying goodbye when a player leaves
     open var checkLineOfSight = true
     /** Set to 0 to disable "soon" events: */
