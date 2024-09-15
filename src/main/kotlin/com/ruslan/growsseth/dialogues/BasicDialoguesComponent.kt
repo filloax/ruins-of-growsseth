@@ -324,6 +324,8 @@ open class BasicDialoguesComponent(
         eventParam: String?,
         ignoreEventConditions: Boolean,
     ) : Boolean {
+        if (player.isSpectator)
+            return false
         return triggerDialogueInternal(player, *dialogueEvents, eventParam=eventParam, ignoreEventConditions=ignoreEventConditions)
     }
 
