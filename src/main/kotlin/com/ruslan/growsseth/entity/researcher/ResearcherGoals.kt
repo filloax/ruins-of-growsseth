@@ -14,11 +14,6 @@ class ResearcherRandomStrollGoal(private val researcher: Researcher, speedModifi
         }
         return super.canUse()
     }
-
-    override fun start() {
-        // 0 accuracy to reduce chance of spinning
-        mob.navigation.moveTo(mob.navigation.createPath(wantedX, wantedY, wantedZ, 0), speedModifier)
-    }
 }
 
 class ResearcherLookAtPlayerGoal(private val researcher: Researcher, lookDistance: Float, lookChance: Float) :
