@@ -54,7 +54,7 @@ public final class ResearcherConfig {
 
     @ConfigEntry(id = "researcherTeleports", type = EntryType.BOOLEAN, translation = T_PREF + "researcherTeleports.name")
     @Comment(
-            value = "The researcher teleports back to his original position after five minutes away from it, and avoids interacting with Nether and End portals to prevent cheese.",
+            value = "The researcher teleports back to his original position after five minutes away from it (or after suffocating for 3 seconds inside a wall), and avoids interacting with Nether and End portals to prevent cheese.",
             translation = T_PREF + "researcherTeleports.comment"
     )
     public static boolean researcherTeleports = true;
