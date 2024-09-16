@@ -77,7 +77,7 @@
             "useLimit": 1,
             "priority": 1100,
             "id": "researcher-quest-end",
-            "groups": "group-quest-last-dialogue",
+            "groups": ["group-first-dialogue", "group-quest-last-dialogue"],
             "groupUseLimit": 1,
             "requiresQuestStage": "home"
         },
@@ -96,7 +96,7 @@
             "useLimit": 1,
             "priority": 1101,
             "id": "researcher-quest-end-skip",
-            "groups": "group-quest-last-dialogue",
+            "groups": ["group-first-dialogue", "group-quest-last-dialogue"],
             "groupUseLimit": 1,
             "requiresQuestStage": "home"
         }

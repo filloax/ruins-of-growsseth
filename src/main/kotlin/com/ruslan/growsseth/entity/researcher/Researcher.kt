@@ -618,7 +618,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         val radius = dialogues!!.radiusForTriggerLeave * 2
         val noPlayersNearby = dialogues.nearbyPlayers().isEmpty() && isNull(serverLevel.getNearestPlayer(this.x, this.y, this.z, radius, true))
         if (noPlayersNearby) {
-            // no players including creative nearby
+            // no players (including creative and spectator) nearby
             if (syncDataNoPlayersTimer == 0 && !willReadWorldDataNextSync) {
                 syncDataNoPlayersTimer = 2f.secondsToTicks()
             } else {
