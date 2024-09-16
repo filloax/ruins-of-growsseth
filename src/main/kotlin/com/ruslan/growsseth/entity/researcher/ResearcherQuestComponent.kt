@@ -243,7 +243,7 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
 
         // Trigger on update too to cover multiple tent situations
         override fun onUpdate(entity: Researcher) {
-            if (entity.dialogues!!.getTriggeredDialogues().isEmpty())
+            if (entity.dialogues?.getTriggeredDialogues()?.isEmpty() == true)
                 playerSkippedQuest = true
 
             val tent = entity.tent
