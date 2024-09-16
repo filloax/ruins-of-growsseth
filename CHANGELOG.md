@@ -18,8 +18,9 @@ Tweaked
 - Golem houses no longer need custom streets to spawn, and instead spawn from vanilla ones, improving compatibility with other mods
 - If a player stole the researcher's work tools, he will accuse only them when trying to trade instead of everyone
 - Creeper's explosions inside researcher tents are now harmless even to entities, to avoid breaking the donkey's leash
+- The researcher will try to get out from walls when suffocating, and if not possible he will teleport back to the tent (if tp is enabled)
+- The researcher will not take any damage from suffocation if below 50% health and anti-cheat is enabled
 - [Data] Researcher's loot table is now editable by datapack
-- Researcher tries to get out from walls when suffocating
 
 Fixed
 - Various bugs related to researcher's dialogue and persistence introduced in version 0.10 have been fixed
