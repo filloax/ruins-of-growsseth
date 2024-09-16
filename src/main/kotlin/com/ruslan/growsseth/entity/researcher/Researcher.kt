@@ -320,6 +320,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     override fun registerGoals() {
         goalSelector.addGoal(0, FloatGoal(this))
         goalSelector.addGoal(0, ClimbOnTopOfPowderSnowGoal(this, level()))
+        goalSelector.addGoal(0, ResearcherBreatheAirGoal(this))
         goalSelector.addGoal(1, OpenDoorGoal(this, true))
         goalSelector.addGoal(2, ResearcherAttackGoal(this, 0.7, true))
         goalSelector.addGoal(3, MoveTowardsRestrictionGoal(this, 0.6))
@@ -618,7 +619,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         val radius = dialogues!!.radiusForTriggerLeave * 2
         val noPlayersNearby = dialogues.nearbyPlayers().isEmpty() && isNull(serverLevel.getNearestPlayer(this.x, this.y, this.z, radius, true))
         if (noPlayersNearby) {
-            // no players including creative nearby
+            // no players (including creative and spectator) nearby
             if (syncDataNoPlayersTimer == 0 && !willReadWorldDataNextSync) {
                 syncDataNoPlayersTimer = 2f.secondsToTicks()
             } else {
