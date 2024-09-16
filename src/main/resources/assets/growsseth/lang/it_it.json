@@ -203,7 +203,7 @@
     "growsseth.config.researcherTeleports.name": "Ricercatore si teletrasporta al punto di restrizione",
     "growsseth.config.researcherTeleports.comment": "Il ricercatore si teletrasporta alla sua posizione originale dopo 5 minuti passati lontano da essa, e non interagisce con i portali del Nether e dell'End per impedire cheese.",
     "growsseth.config.researcherAntiCheat.name": "Anti-cheat del ricercatore",
-    "growsseth.config.researcherAntiCheat.comment": "Se il giocatore cerca di barare nell'affrontare il ricercatore, egli berrà una pozione del maestro delle tartarughe e attiverà una regen passiva per impedirgli di morire.",
+    "growsseth.config.researcherAntiCheat.comment": "Se il giocatore cerca di barare nell'affrontare il ricercatore, egli berrà una pozione del maestro delle tartarughe e attiverà una regen passiva per impedirgli di morire. Inoltre gli impedisce di soffocare quando ha poca vita.",
     "growsseth.config.researcherInteractsWithMobs.name": "Ricercatore interagisce con altri mob",
     "growsseth.config.researcherInteractsWithMobs.comment": "Zombi, scheletri, raider e vex saranno ostili verso il ricercatore, e lui reagirà a loro e ad altri mob che lo attaccano. Se cambiata ingame farà effetto al ricaricamento del mondo.",
     "growsseth.config.researcherStrikesFirst.name": "Ricercatore attacca per primo",
