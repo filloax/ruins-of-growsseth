@@ -294,6 +294,8 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     private var secondsAwayFromTent = 0
     private val maxSecondsAwayFromTent = 60 * 5
     private val maxDistanceFromStartingPos = 20
+    private var secondsInWall = 0
+    private val maxSecondsInWall = 3
     private var needsToTpBack = false
 
     // For cheese prevention
@@ -440,6 +442,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
                     showTeleportParticles = true
                     needsToTpBack = false
                     secondsAwayFromTent = 0
+                    secondsInWall = 0
 
                     val targetLevel = server?.getLevel(startingDimension) ?:
                         throw IllegalStateException("Unkown level when researcher teleporting to start dimension $startingDimension")
@@ -580,6 +583,14 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
                         needsToTpBack = true
                 } else
                     secondsAwayFromTent = 0
+
+                if (isInWall && blockPosition() != startingPos) {
+                    secondsInWall++
+                    if (secondsInWall >= maxSecondsInWall)
+                        needsToTpBack = true
+                }
+                else
+                    secondsInWall = 0
             }
         }
 
