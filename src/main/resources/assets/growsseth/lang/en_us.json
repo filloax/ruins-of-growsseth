@@ -201,7 +201,7 @@
     "growsseth.config.researcherBorrowPenalty.name": "Donkey borrow penalty",
     "growsseth.config.researcherBorrowPenalty.comment": "Trade price multiplier for borrowing the researcher's donkey. Only affects emeralds.",
     "growsseth.config.researcherTeleports.name": "Researcher teleports back to restriction",
-    "growsseth.config.researcherTeleports.comment": "The researcher teleports back to his original position after five minutes away from it, and avoids interacting with Nether and End portals to prevent cheese.",
+    "growsseth.config.researcherTeleports.comment": "The researcher teleports back to his original position after five minutes away from it (or after suffocating for 3 seconds inside a wall), and avoids interacting with Nether and End portals to prevent cheese.",
     "growsseth.config.researcherAntiCheat.name": "Researcher anti-cheat",
     "growsseth.config.researcherAntiCheat.comment": "If the player tries to cheat while fighting the researcher he will drink a turtle master potion and enable a passive regen to prevent him from dying. Also prevents him from suffocating when on low health.",
     "growsseth.config.researcherInteractsWithMobs.name": "Researcher interacts with other mobs",
