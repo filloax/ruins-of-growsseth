@@ -320,6 +320,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     override fun registerGoals() {
         goalSelector.addGoal(0, FloatGoal(this))
         goalSelector.addGoal(0, ClimbOnTopOfPowderSnowGoal(this, level()))
+        goalSelector.addGoal(0, ResearcherBreatheAirGoal(this))
         goalSelector.addGoal(1, OpenDoorGoal(this, true))
         goalSelector.addGoal(2, ResearcherAttackGoal(this, 0.7, true))
         goalSelector.addGoal(3, MoveTowardsRestrictionGoal(this, 0.6))
