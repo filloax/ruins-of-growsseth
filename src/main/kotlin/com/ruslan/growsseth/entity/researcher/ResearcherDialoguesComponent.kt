@@ -118,6 +118,7 @@ class ResearcherDialoguesComponent(
     }
 
     private fun isInCellar(player: ServerPlayer): Boolean {
+        // double check if in tent, just in case
         val tent = researcher.tent
         val cellarTrapdoorPos = tent?.cellarTrapdoorPos
         if (notNull(cellarTrapdoorPos)) {
@@ -139,11 +140,12 @@ class ResearcherDialoguesComponent(
     ) {
         val players = nearPlayers + inbetweenPlayers
         for (player in players) {
-            // double check if in tent, just in case
-            if (isInCellar(player)) {
-                triggerDialogue(player, EV_CELLAR)
-            } else if (researcher.hasLineOfSight(player)) {
-                triggerDialogue(player, EV_CELLAR_EXIT)
+            if (!player.isSpectator) {
+                if (isInCellar(player)) {
+                    triggerDialogue(player, EV_CELLAR)
+                } else if (researcher.hasLineOfSight(player)) {
+                    triggerDialogue(player, EV_CELLAR_EXIT)
+                }
             }
         }
     }
