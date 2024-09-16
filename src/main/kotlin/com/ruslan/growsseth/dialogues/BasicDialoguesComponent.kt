@@ -195,6 +195,7 @@ open class BasicDialoguesComponent(
 
         // Bounding box inside of which players are considered "near" (triggering hello dialogue)
         val nearbyBoundingBox = AABB.ofSize(entity.position(), nearbyRadius, nearbyRadius, nearbyRadius)
+
         // Bounding box outside of which players are considered "far" (triggering goodbye dialogue)
         val farBoundingBox = AABB.ofSize(entity.position(), radiusForTriggerLeave, nearbyRadius, radiusForTriggerLeave)
 
@@ -203,6 +204,7 @@ open class BasicDialoguesComponent(
             nearbyBoundingBox.contains(it.position())
             && (!checkLineOfSight || entity.hasLineOfSight(it))
         }.toMutableSet()
+
         // Players far enough to trigger leave
         val farPlayers = possiblePlayers.filterNot { farBoundingBox.contains(it.position()) }.toMutableSet()
         changeNearPlayers(nearPlayers, farPlayers)
@@ -211,9 +213,12 @@ open class BasicDialoguesComponent(
         val inbetweenPlayers = possiblePlayers - nearPlayers - farPlayers
 
         for (player in nearPlayers) {
-            if (player.uuid !in closePlayers) {
+            if (player.uuid !in closePlayers && !player.isSpectator) {
                 closePlayers.add(player.uuid)
                 onPlayerArrive(player)
+            }
+            if (player.uuid in closePlayers && player.isSpectator) {
+                closePlayers.remove(player.uuid)
             }
             if (player.uuid in leavingPlayers) {
                 leavingPlayers.remove(player.uuid)
@@ -630,7 +635,6 @@ open class BasicDialoguesComponent(
     override fun readNbt(tag: CompoundTag) {
         closePlayers.clear()
         leavingPlayers.clear()
-        closePlayers.clear()
         savedPlayersData.clear()
         tag.get("DialogueData")?.let { data -> if (data is CompoundTag) {
             data.loadField(DataFields.CLOSE_PLAYERS, UUIDUtil.STRING_CODEC.mutableSetOf()) { closePlayers.addAll(it) }
