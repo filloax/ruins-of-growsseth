@@ -56,6 +56,7 @@ import net.minecraft.tags.TagKey
 import net.minecraft.util.RandomSource
 import net.minecraft.world.*
 import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.*
@@ -293,6 +294,8 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     private var secondsAwayFromTent = 0
     private val maxSecondsAwayFromTent = 60 * 5
     private val maxDistanceFromStartingPos = 20
+    private var secondsInWall = 0
+    private val maxSecondsInWall = 3
     private var needsToTpBack = false
 
     // For cheese prevention
@@ -331,7 +334,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             { player -> combat.wantsToKillPlayer((player as Player)) })
         if (ResearcherConfig.researcherInteractsWithMobs) {
             targetSelector.addGoal(1, NearestAttackableTargetGoal(this, Mob::class.java, 0, false, true)
-            // notNull + equals to avoid the intellij-only bug showing this as error (likely wonky build)
+                // notNull + equals to avoid the intellij-only bug showing this as error (likely wonky build)
                 { livingEntity: LivingEntity? -> livingEntity is Mob && livingEntity.target.let { notNull(it) && it.equals(this) } })
             targetSelector.addGoal(2, ResearcherHurtByTargetGoal(this))
             if (ResearcherConfig.researcherStrikesFirst)
@@ -439,6 +442,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
                     showTeleportParticles = true
                     needsToTpBack = false
                     secondsAwayFromTent = 0
+                    secondsInWall = 0
 
                     val targetLevel = server?.getLevel(startingDimension) ?:
                         throw IllegalStateException("Unkown level when researcher teleporting to start dimension $startingDimension")
@@ -577,6 +581,14 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
                         needsToTpBack = true
                 } else
                     secondsAwayFromTent = 0
+
+                if (isInWall && blockPosition() != startingPos) {
+                    secondsInWall++
+                    if (secondsInWall >= maxSecondsInWall)
+                        needsToTpBack = true
+                }
+                else
+                    secondsInWall = 0
             }
         }
 
@@ -653,6 +665,9 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     }
 
     override fun hurt(source: DamageSource, amount: Float): Boolean {
+        if (ResearcherConfig.researcherAntiCheat && source.`is`(DamageTypes.IN_WALL) && health <= maxHealth / 2)
+            return false    // mostly to prevent him dying from glitching out
+
         val attacker = source.entity
 
         if (attacker is Player && ResearcherConfig.immortalResearcher && !attacker.isCreative)
