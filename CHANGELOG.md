@@ -19,11 +19,13 @@ Tweaked
 - If a player stole the researcher's work tools, he will accuse only them when trying to trade instead of everyone
 - Creeper's explosions inside researcher tents are now harmless even to entities, to avoid breaking the donkey's leash
 - [Data] Researcher's loot table is now editable by datapack
+- Researcher tries to get out from walls when suffocating
 
 Fixed
-- Various bugs related to Researcher's dialogue and persistence introduced in version 0.10 have been fixed
+- Various bugs related to researcher's dialogue and persistence introduced in version 0.10 have been fixed
 - Fixed researcher behavior for players stealing his work tools, now he gets angry only when left without lecterns or cartography tables
 - Researcher's type skin and sounds are now separated from vanilla, to avoid them breaking when resource packs override them
+- The researcher can roam even if spectator players are nearby, and won't talk to them
 - `dialogueWordsPerMinute` option now also skips dialogues with specified duration
 - [1.21] fixed researcher being leashable
 

@@ -174,7 +174,7 @@ class ResearcherCombatComponent(
                 !mob.navigation.isDone
                 // Removed the check for being away from the restriction
             } else {
-                livingEntity !is Player || !livingEntity.isSpectator() && !livingEntity.isCreative
+                livingEntity !is Player || !livingEntity.isSpectator && !livingEntity.isCreative
             }
         }
     }
