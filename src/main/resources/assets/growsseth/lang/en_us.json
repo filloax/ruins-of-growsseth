@@ -263,5 +263,17 @@
     "growsseth.config.debugNpcDialogues.name": "Log NPC dialogues",
     "growsseth.config.structuresDebugMode.name": "Structures debug",
     "growsseth.config.structuresDebugMode.comment": "Make structures wildly more likely, for dev usage.",
-    "growsseth.config.researcherSpeedup.name": "Speedup researcher healing"
+    "growsseth.config.researcherSpeedup.name": "Speedup researcher healing",
+
+    "growsseth.subtitles.deflect_arrow_sound": "Researcher deflects arrow",
+    "growsseth.subtitles.researcher_horn_sound": "Researcher's horn plays",
+    "growsseth.subtitles.researcher.yes": "Researcher agrees",
+    "growsseth.subtitles.researcher.no": "Researcher disagrees",
+    "growsseth.subtitles.researcher.trade": "Researcher trades",
+    "growsseth.subtitles.researcher.ambient": "Researcher mumbles",
+    "growsseth.subtitles.researcher.hurt": "Researcher hurts",
+    "growsseth.subtitles.researcher.death": "Researcher dies",
+    "growsseth.subtitles.zombie_researcher.ambient": "Zombie Researcher groans",
+    "growsseth.subtitles.zombie_researcher.hurt": "Zombie Researcher hurts",
+    "growsseth.subtitles.zombie_researcher.death": "Zombie Researcher dies"
 }
