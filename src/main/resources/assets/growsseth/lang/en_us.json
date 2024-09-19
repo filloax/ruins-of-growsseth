@@ -115,7 +115,7 @@
     "growsseth.commands.gquest.stage.failure": "Failed in setting stage",
     "growsseth.commands.gquest.back.success": "Correctly reverted stage to %s, history is: %s",
     "growsseth.commands.gquest.back.failure": "Failed in reverting stage",
-    "growsseth.commands.gquest.info": "%s quest data: Stage %s, History: %s",
+    "growsseth.commands.gquest.info": "%s quest data:\nStage %s, History: %s",
     "growsseth.commands.booktemplate.success": "Received book template \"%s\"",
     "growsseth.commands.booktemplate.invalidtemplate": "Invalid book template %s",
     "growsseth.commands.glocate.stop.nonEntity": "Cannot run glocate stop with non entities!",
