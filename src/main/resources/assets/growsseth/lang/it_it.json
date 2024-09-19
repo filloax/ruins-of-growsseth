@@ -115,7 +115,7 @@
     "growsseth.commands.gquest.stage.failure": "Non è stato possibile impostare la fase",
     "growsseth.commands.gquest.back.success": "Riportata correttamente la fase a %s, la cronologia è: %s",
     "growsseth.commands.gquest.back.failure": "Non è stato possibile riportare indietro la fase",
-    "growsseth.commands.gquest.info": "Dati della quest di %s: Fase %s, Cronologia: %s",
+    "growsseth.commands.gquest.info": "Dati della quest di %s:\nFase %s, Cronologia: %s",
     "growsseth.commands.booktemplate.success": "Ricevuto template libro \"%s\"",
     "growsseth.commands.booktemplate.invalidtemplate": "Template libro invalido %s",
     "growsseth.commands.glocate.stop.nonEntity": "Impossibile eseguire glocate stop con non entità!",
