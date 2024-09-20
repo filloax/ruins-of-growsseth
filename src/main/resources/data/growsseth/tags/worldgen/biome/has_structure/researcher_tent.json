@@ -1,14 +1,13 @@
 {
   "replace": false,
   "values": [
-    "#minecraft:is_forest",
-    "#minecraft:is_hill",
-    "#minecraft:is_jungle",
-    "#minecraft:is_savanna",
-    "#minecraft:is_taiga",
-    "minecraft:plains",
-    "minecraft:sunflower_plains",
-    "minecraft:snowy_plains",
+    "#c:is_forest",
+    "#c:is_hill",
+    "#c:is_jungle",
+    "#c:is_plains",
+    "#c:is_savanna",
+    "#c:is_snowy_plains",
+    "#c:is_taiga",
     "minecraft:ice_spikes"
   ]
 }

@@ -22,6 +22,7 @@ interface NpcDialoguesComponent {
     fun sendDialogueToPlayer(player: ServerPlayer, line: DialogueLine)
     fun dialoguesStep()
     fun nearbyPlayers(): List<ServerPlayer>
+    fun playersStillAround(): Boolean
 
     /**
      * Reset nearby players, use to clear the list and allow new greetings

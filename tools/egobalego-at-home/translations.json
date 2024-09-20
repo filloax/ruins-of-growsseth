@@ -85,7 +85,7 @@
         "quest_good_ending": "(Quest) Finale buono",
 
         "quest_step_start": "Ricercatore malato",
-        "quest_step_start_desc": "Triggera il dialogo dei sintomi della non morte la volta successiva in cui si incontra il ricercatore (si può saltare attivando il seguente).",
+        "quest_step_start_desc": "Triggera il dialogo dei sintomi della non morte la volta successiva in cui si incontra il ricercatore (si può saltare attivando anche il seguente).",
         "quest_step_zombie": "Ricercatore zombie",
         "quest_step_zombie_desc": "Zombifica il ricercatore e lo teletrasporta nella gabbia dello scantinato, oltre a mostrare la botola e generare il diario collegato (sempre di sotto).",
         "quest_step_end": "Ricercatore se ne va",
@@ -117,7 +117,7 @@
     "en_us": {
         "home_greeting": "Greetings, Game Master!",
         "home_click_section": "Click on one of the sections above to begin",
-        "home_read_guide_1": "If you haven't already, read the",
+        "home_read_guide_1": "If you haven't already, check the",
         "home_read_guide_2": "guide!",
     
         "add_command": "Add command",
@@ -184,15 +184,15 @@
         "content": "Content",
     
         "structure_researcher_tent": "Researcher's Tent",
-        "structure_cave_camp": "Cave Base Camp",
+        "structure_cave_camp": "Cave Camp",
         "structure_marker": "Waypoint Marker",
-        "structure_golem_house": "Builder's House",
+        "structure_golem_house": "Golem Forger House",
         "structure_enchant_tower": "Ruined Tower",
         "structure_abandoned_forge": "Abandoned Forge",
         "structure_beekeeper_house": "Beekeeper's House",
         "structure_noteblock_lab": "Musical Laboratory",
         "structure_conduit_church": "Conduit Church",
-        "structure_noteblock_ship": "Music Ship (extra)",
+        "structure_noteblock_ship": "Musical Ship (extra)",
         "structure_conduit_ruins": "Conduit Ruins (extra)",
         "structure_researcher_tent_simple": "Tent without Laboratory (variant)",
     
@@ -200,12 +200,12 @@
         "quest_good_ending": "(Quest) Good Ending",
     
         "quest_step_start": "Sick Researcher",
-        "quest_step_start_desc": "Triggers the undead symptoms dialogue next time you encounter the researcher (can be skipped by activating the following).",
+        "quest_step_start_desc": "Triggers the undead symptoms dialogue the next time the player encounters the researcher (can be skipped by also activating the following step).",
         "quest_step_zombie": "Zombie Researcher",
-        "quest_step_zombie_desc": "Turns the researcher into a zombie and teleports them to the basement cage, also showing the trapdoor and generating the linked diary (below).",
+        "quest_step_zombie_desc": "Turns the researcher into a zombie and teleports him to the cellar cage, while exposing the trapdoor and generating the corresponding diary (in the cellar).",
         "quest_step_end": "Researcher Leaves",
-        "quest_step_end_desc": "Makes the tent, researcher, and tethered donkey disappear, and spawns the crate with the gift and goodbye diary (requires curing the researcher).",
-        "quest_step_enable_previous": "Must activate the previous",
+        "quest_step_end_desc": "Makes the tent, researcher, and donkey (if leashed) disappear, and spawns the chest with the gift and goodbye diary (requires curing the researcher).",
+        "quest_step_enable_previous": "Must activate the previous step",
     
         "structure_type_not_set": "Structure type not set",
     
@@ -222,9 +222,9 @@
         "trade": "Trade",
         "trade_banner_pattern": "Banner Pattern",
         "trade_pottery_sherd": "Sherd with Logo",
-        "trade_trim_template": "Armor Trim Template",
-        "trade_enchant_dictionary": "Ancient Alphabet Dictionary",
-        "trade_all_extras": "All non-secret mod items (\"free\")",
+        "trade_trim_template": "Smithing Template",
+        "trade_enchant_dictionary": "Enchanting Alphabet Dictionary",
+        "trade_all_extras": "All non-secret mod items (for \"free\")",
         "trade_json": "Trade JSON"
     }
 }

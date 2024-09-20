@@ -1,0 +1,21 @@
+{
+    "entries": [
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"thus at last"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"our bond"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"our conduit"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"is restored"}
+        }
+    ],
+    "glowing": true
+}

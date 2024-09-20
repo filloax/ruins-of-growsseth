@@ -26,11 +26,13 @@ import com.ruslan.growsseth.entity.researcher.trades.ResearcherTradeMode
 import com.ruslan.growsseth.entity.researcher.trades.ResearcherTradeUtils
 import com.ruslan.growsseth.entity.researcher.trades.ResearcherTradesData
 import com.ruslan.growsseth.http.GrowssethExtraEvents
-import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.quests.QuestOwner
+import com.ruslan.growsseth.sound.GrowssethSounds
 import com.ruslan.growsseth.structure.pieces.ResearcherTent
 import com.ruslan.growsseth.structure.structure.ResearcherTentStructure
 import com.ruslan.growsseth.utils.GrowssethCodecs
+import com.ruslan.growsseth.utils.isNull
+import com.ruslan.growsseth.utils.notNull
 import com.ruslan.growsseth.utils.resLoc
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
@@ -40,7 +42,6 @@ import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.core.registries.Registries
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.nbt.Tag
 import net.minecraft.network.chat.Component
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
@@ -55,6 +56,7 @@ import net.minecraft.tags.TagKey
 import net.minecraft.util.RandomSource
 import net.minecraft.world.*
 import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.*
@@ -68,7 +70,6 @@ import net.minecraft.world.entity.ai.goal.OpenDoorGoal
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.ai.navigation.PathNavigation
 import net.minecraft.world.entity.ai.navigation.WallClimberNavigation
-import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.entity.monster.AbstractIllager.IllagerArmPose
 import net.minecraft.world.entity.monster.AbstractSkeleton
 import net.minecraft.world.entity.monster.Vex
@@ -83,7 +84,6 @@ import net.minecraft.world.item.Items
 import net.minecraft.world.item.alchemy.Potion
 import net.minecraft.world.item.alchemy.PotionContents
 import net.minecraft.world.item.alchemy.Potions
-import net.minecraft.world.item.enchantment.Enchantments
 import net.minecraft.world.item.trading.MerchantOffer
 import net.minecraft.world.item.trading.MerchantOffers
 import net.minecraft.world.level.ClipContext
@@ -131,10 +131,13 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         val RENAME_BLACKLIST = mutableMapOf(
             // True if it should check word parts
             "ricercatore" to false,
+            "researcher" to false,
             "franco" to false,
             "folgo" to false,
             "foldo" to false,
             "palle" to true,
+            "balls" to true,
+            "synergo" to true,
             "sabaku" to true,
             "lucio" to true,
             "lionel" to false,
@@ -291,6 +294,8 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     private var secondsAwayFromTent = 0
     private val maxSecondsAwayFromTent = 60 * 5
     private val maxDistanceFromStartingPos = 20
+    private var secondsInWall = 0
+    private val maxSecondsInWall = 3
     private var needsToTpBack = false
 
     // For cheese prevention
@@ -318,6 +323,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     override fun registerGoals() {
         goalSelector.addGoal(0, FloatGoal(this))
         goalSelector.addGoal(0, ClimbOnTopOfPowderSnowGoal(this, level()))
+        goalSelector.addGoal(0, ResearcherBreatheAirGoal(this))
         goalSelector.addGoal(1, OpenDoorGoal(this, true))
         goalSelector.addGoal(2, ResearcherAttackGoal(this, 0.7, true))
         goalSelector.addGoal(3, MoveTowardsRestrictionGoal(this, 0.6))
@@ -328,11 +334,12 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             { player -> combat.wantsToKillPlayer((player as Player)) })
         if (ResearcherConfig.researcherInteractsWithMobs) {
             targetSelector.addGoal(1, NearestAttackableTargetGoal(this, Mob::class.java, 0, false, true)
-                { livingEntity: LivingEntity? -> livingEntity is Mob && livingEntity.target == this })
+                // notNull + equals to avoid the intellij-only bug showing this as error (likely wonky build)
+                { livingEntity: LivingEntity? -> livingEntity is Mob && livingEntity.target.let { notNull(it) && it.equals(this) } })
             targetSelector.addGoal(2, ResearcherHurtByTargetGoal(this))
             if (ResearcherConfig.researcherStrikesFirst)
                 targetSelector.addGoal(2, NearestAttackableTargetGoal(this, Mob::class.java, 0, true, true)
-                    { livingEntity: LivingEntity? -> ( (livingEntity != null && this.distanceTo(livingEntity) < distanceForUnjustifiedAggression) &&
+                    { livingEntity: LivingEntity? -> ( (notNull(livingEntity) && this.distanceTo(livingEntity) < distanceForUnjustifiedAggression) &&
                             (livingEntity is Raider || livingEntity is Vex || livingEntity is Zombie || livingEntity is AbstractSkeleton) ) }
                 )
         }
@@ -435,6 +442,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
                     showTeleportParticles = true
                     needsToTpBack = false
                     secondsAwayFromTent = 0
+                    secondsInWall = 0
 
                     val targetLevel = server?.getLevel(startingDimension) ?:
                         throw IllegalStateException("Unkown level when researcher teleporting to start dimension $startingDimension")
@@ -514,34 +522,10 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         val serverLevel = level() as ServerLevel
 
         if (ResearcherConfig.singleResearcher) {
-            // Handle more researchers far away but loaded at same time due to high sim distance
-            // when no players nearby, sync data if needed and become available to load data as soon as a player is nearby
-            val radius = dialogues!!.radiusForTriggerLeave * 2
-            val playersNearby = dialogues.nearbyPlayers().isEmpty() && serverLevel.getNearestPlayer(this.x, this.y, this.z, radius, true) == null
-            if (playersNearby) {
-                // no players including creative nearby
-                if (syncDataNoPlayersTimer == 0) {
-                    syncDataNoPlayersTimer = 2f.secondsToTicks()
-                } else {
-                    syncDataNoPlayersTimer--
-                    if (syncDataNoPlayersTimer == 0) {
-                        val savedData = ResearcherSavedData.getPersistent(serverLevel.server)
-                        if (isUpToDateWithWorldData(savedData)) {
-                            saveWorldData()
-                        }
-                        willReadWorldDataNextSync = true
-                    }
-                }
-            } else {
-                syncDataNoPlayersTimer = 0
-                if (willReadWorldDataNextSync) {
-                    willReadWorldDataNextSync = false
-                    readSavedData(ResearcherSavedData.getPersistent(serverLevel.server))
-                }
-            }
+            syncSharedData(serverLevel)
         }
 
-        if (this.startingPos == null)
+        if (isNull(this.startingPos))
             this.startingPos = this.blockPosition()
 
         if (ResearcherConfig.singleResearcher) { // && this.tickCount % 5 == 0) {
@@ -599,6 +583,14 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
                         needsToTpBack = true
                 } else
                     secondsAwayFromTent = 0
+
+                if (isInWall && blockPosition() != startingPos) {
+                    secondsInWall++
+                    if (secondsInWall >= maxSecondsInWall)
+                        needsToTpBack = true
+                }
+                else
+                    secondsInWall = 0
             }
         }
 
@@ -635,6 +627,39 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         }
     }
 
+    private fun syncSharedData(serverLevel: ServerLevel) {
+        // Handle more researchers far away but loaded at same time due to high sim distance
+        // when no players nearby, sync data if needed and become available to load data as soon as a player is nearby
+        val radius = dialogues!!.radiusForTriggerLeave * 2
+        val noPlayersNearby = dialogues.nearbyPlayers().isEmpty() && isNull(serverLevel.getNearestPlayer(this.x, this.y, this.z, radius, true))
+        if (noPlayersNearby) {
+            // no players (including creative and spectator) nearby
+            if (syncDataNoPlayersTimer == 0 && !willReadWorldDataNextSync) {
+                syncDataNoPlayersTimer = 2f.secondsToTicks()
+            } else {
+                syncDataNoPlayersTimer--
+                if (syncDataNoPlayersTimer == 0) {
+                    val savedData = ResearcherSavedData.getPersistent(serverLevel.server)
+                    if (isUpToDateWithWorldData(savedData)) {
+                        saveWorldData()
+                        RuinsOfGrowsseth.LOGGER.info("Researcher {}: synced world data (save)", this)
+                    }
+                    willReadWorldDataNextSync = true
+                }
+            }
+        } else {
+            syncDataNoPlayersTimer = 0
+            if (willReadWorldDataNextSync) {
+                willReadWorldDataNextSync = false
+                val savedData = ResearcherSavedData.getPersistent(serverLevel.server)
+                if (!isUpToDateWithWorldData(savedData)) {
+                    readSavedData(savedData)
+                    RuinsOfGrowsseth.LOGGER.info("Researcher {}: synced world data (read)", this)
+                }
+            }
+        }
+    }
+
     override fun tick() {
         super.tick()
         if (unhappyCounter > 0)
@@ -642,6 +667,9 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     }
 
     override fun hurt(source: DamageSource, amount: Float): Boolean {
+        if (ResearcherConfig.researcherAntiCheat && source.`is`(DamageTypes.IN_WALL) && health <= maxHealth / 2)
+            return false    // mostly to prevent him dying from glitching out
+
         val attacker = source.entity
 
         if (attacker is Player && ResearcherConfig.immortalResearcher && !attacker.isCreative)
@@ -667,7 +695,14 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
                     if (lastRefusedTradeTimer == 0) {
                         lastRefusedTradeTimer = 40
                         setUnhappy()
-                        val reason = if (blockTrades) "angry" else "noTrades"
+                        val reason =
+                            if (blockTrades) {
+                                if (dialogues!!.playerMadeMess(player.uuid))
+                                    "angry-at-player"
+                                else
+                                    "angry-at-others"
+                            }
+                            else "noTrades"
                         dialogues?.triggerDialogue(player, ResearcherDialoguesComponent.EV_REFUSE_TRADE, eventParam = reason)
                         return InteractionResult.sidedSuccess(level().isClientSide)
                     } else
@@ -734,15 +769,6 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     // Only NBT stuff of this class
     fun saveResearcherData(): CompoundTag {
         val researcherData = CompoundTag()
-
-        val persistMapMemory = if (!researcherData.contains("ResearcherMapMemory", Tag.TAG_COMPOUND.toInt())) {
-            val newTag = CompoundTag()
-            researcherData.put("ResearcherMapMemory", newTag)
-            newTag
-        } else {
-            researcherData.getCompound("ResearcherMapMemory")
-        }
-
         researcherData.putBoolean("Healed", healed)
         researcherData.putBoolean("AngryForMess", angryForMess)
         researcherData.putBoolean("DonkeyBorrowed", donkeyWasBorrowed)
@@ -882,7 +908,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
     /* Trading methods */
 
-    fun isTrading(): Boolean { return tradingPlayer != null }
+    fun isTrading(): Boolean { return notNull(tradingPlayer) }
 
     private fun tradesData() = tradesData ?: throw IllegalStateException("Accessed tradesData in client!")
 
@@ -940,7 +966,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
     override fun notifyTradeUpdated(itemStack: ItemStack) {
         if (!this.level().isClientSide && this.ambientSoundTime > -this.ambientSoundInterval + 20) {
-            val sound = if (itemStack.isEmpty) SoundEvents.WANDERING_TRADER_NO else SoundEvents.WANDERING_TRADER_YES
+            val sound = if (itemStack.isEmpty) GrowssethSounds.RESEARCHER_NO else GrowssethSounds.RESEARCHER_YES
             this.playSound(sound, this.soundVolume, this.voicePitch)
             ambientSoundTime = -this.ambientSoundInterval
         }
@@ -1022,7 +1048,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     fun setUnhappy() {
         unhappyCounter = 40
         if (!level().isClientSide()) {
-            this.playSound(SoundEvents.WANDERING_TRADER_NO, this.soundVolume, this.voicePitch)
+            this.playSound(GrowssethSounds.RESEARCHER_NO, this.soundVolume, this.voicePitch)
         }
     }
 
@@ -1039,16 +1065,17 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     override fun setTradingPlayer(player: Player?) { tradingPlayer = player }
     override fun getTradingPlayer(): Player? = tradingPlayer
 
-    override fun getNotifyTradeSound(): SoundEvent = SoundEvents.WANDERING_TRADER_YES
-    override fun getHurtSound(damageSource: DamageSource): SoundEvent = SoundEvents.WANDERING_TRADER_HURT
-    override fun getDeathSound(): SoundEvent = SoundEvents.WANDERING_TRADER_DEATH
+    override fun getNotifyTradeSound(): SoundEvent = GrowssethSounds.RESEARCHER_YES
+    override fun getHurtSound(damageSource: DamageSource): SoundEvent = GrowssethSounds.RESEARCHER_HURT
+    override fun getDeathSound(): SoundEvent = GrowssethSounds.RESEARCHER_DEATH
     override fun getAmbientSoundInterval(): Int = super.getAmbientSoundInterval() * 3
     override fun getAmbientSound(): SoundEvent? {
         return if (isTrading()) {
-            SoundEvents.WANDERING_TRADER_TRADE
-        } else SoundEvents.WANDERING_TRADER_AMBIENT
+            GrowssethSounds.RESEARCHER_TRADE
+        } else GrowssethSounds.RESEARCHER_AMBIENT
     }
 
+    override fun canBeLeashed(): Boolean = false
     override fun getVillagerXp(): Int = 0
     override fun overrideXp(i: Int) { }
     override fun showProgressBar(): Boolean = false
@@ -1070,16 +1097,6 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
     override fun populateDefaultEquipmentSlots(random: RandomSource, difficulty: DifficultyInstance) {
         this.setItemSlot(EquipmentSlot.MAINHAND, combat.createWeapon())
-    }
-
-    override fun dropCustomDeathLoot(level: ServerLevel, damageSource: DamageSource, hitByPlayer: Boolean) {
-        val registry = level().registryAccess().registryOrThrow(Registries.ENCHANTMENT)
-        val itemEntity = ItemEntity(level(), position().x, position().y, position().z, ItemStack(GrowssethItems.RESEARCHER_DAGGER).also { dagger ->
-            dagger.enchant(registry.getHolderOrThrow(Enchantments.UNBREAKING), 3)
-            dagger.enchant(registry.getHolderOrThrow(Enchantments.MENDING), 1)
-            dagger.enchant(registry.getHolderOrThrow(Enchantments.SMITE), 5)       // smite only on drop to prevent exploits
-        })
-        level().addFreshEntity(itemEntity)
     }
 
     override fun handlePortal() {

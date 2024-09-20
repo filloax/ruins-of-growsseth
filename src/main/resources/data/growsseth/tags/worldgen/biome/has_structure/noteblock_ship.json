@@ -1,13 +1,11 @@
 {
   "replace": false,
   "values": [
-    "#minecraft:is_hill",
-    "#minecraft:is_savanna",
-    "minecraft:meadow",
-    "minecraft:forest",
-    "minecraft:flower_forest",
-    "minecraft:bamboo_jungle",
-    "minecraft:jungle",
-    "minecraft:plains"
+    "#c:is_hill",
+    "#c:is_forest",
+    "#c:is_jungle",
+    "#c:is_plains",
+    "#c:is_savanna",
+    "minecraft:meadow"
   ]
 }

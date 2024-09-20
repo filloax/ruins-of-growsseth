@@ -14,13 +14,14 @@ import com.ruslan.growsseth.dialogues.*
 import com.ruslan.growsseth.dialogues.DialogueEvent.Companion.event
 import com.ruslan.growsseth.networking.AmbientSoundsPacket
 import com.ruslan.growsseth.networking.StopMusicPacket
+import com.ruslan.growsseth.sound.GrowssethSounds
+import com.ruslan.growsseth.utils.notNull
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.core.BlockPos
 import net.minecraft.core.UUIDUtil
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
-import net.minecraft.sounds.SoundEvents
 import net.minecraft.util.RandomSource
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.BlockItem
@@ -45,10 +46,11 @@ class ResearcherDialoguesComponent(
         val EV_FIX_MESS      = event("fixMess")
         val EV_REFUSE_TRADE  = event("refuseTrade")
         val EV_BREAK_TENT    = event("breakTent")
-        val EV_BORROW_DONKEY = event("borrowDonkey")
         val EV_RETURN_DONKEY = event("returnDonkey")
         val EV_CELLAR        = event("exploreCellar", ignoreNoDialogueWarning = true, count = false)
         val EV_CELLAR_EXIT   = event("exitCellar", ignoreNoDialogueWarning = true, count = false)
+        val EV_BORROW_DONKEY = event("borrowDonkey")
+        val EV_BORROW_DONKEY_HEALED         = event("borrowDonkeyHealed")
         val EV_PLAYER_CHEATS                = event("playerCheats")
         val EV_KILL_PLAYER                  = event("killPlayer")
         val EV_PLAYER_ARRIVE_LAST_KILLED    = event("playerArriveAfterKilled")
@@ -72,6 +74,11 @@ class ResearcherDialoguesComponent(
     // share between all players as it is related to the physical block state
     // Before we tracked player ids but that meant another player couldn't fix the issue
     private var playersMadeMess: Boolean = false
+    // Used for different trade refusal dialogue when another player made a mess
+    private val playersWhoMadeMess: MutableSet<UUID> = mutableSetOf()
+    // Variables for keeping count of items inside tent for madeMess trigger
+    private var cartographyTablesInTent: Int = 1
+    private var lecternsInTent: Int = 1
     // If the player met this specific instance of the researcher (not other entities)
     // meaningful only in single researcher mode
     private val playersMetThisEntity: MutableSet<UUID> = mutableSetOf()
@@ -103,7 +110,7 @@ class ResearcherDialoguesComponent(
         farPlayers.removeIf {
             val struct = structureManager.getStructureWithPieceAt(it.blockPosition(), GrowssethTags.StructTags.RESEARCHER_TENT)
             if (struct.isValid) {
-                struct.boundingBox.isInside(it.blockPosition())
+                struct.boundingBox.inflatedBy(5).isInside(it.blockPosition())
             } else {
                 false
             }
@@ -111,10 +118,11 @@ class ResearcherDialoguesComponent(
     }
 
     private fun isInCellar(player: ServerPlayer): Boolean {
+        // double check if in tent, just in case
         val tent = researcher.tent
         val cellarTrapdoorPos = tent?.cellarTrapdoorPos
-        if (cellarTrapdoorPos != null) {
-            val areaCheck = tent.cellarBoundingBox != null
+        if (notNull(cellarTrapdoorPos)) {
+            val areaCheck = notNull(tent.cellarBoundingBox)
             // double check if in tent, just in case
             return (tent.boundingBox.isInside(player.blockPosition())
                 && (
@@ -132,11 +140,12 @@ class ResearcherDialoguesComponent(
     ) {
         val players = nearPlayers + inbetweenPlayers
         for (player in players) {
-            // double check if in tent, just in case
-            if (isInCellar(player)) {
-                triggerDialogue(player, EV_CELLAR)
-            } else if (researcher.hasLineOfSight(player)) {
-                triggerDialogue(player, EV_CELLAR_EXIT)
+            if (!player.isSpectator) {
+                if (isInCellar(player)) {
+                    triggerDialogue(player, EV_CELLAR)
+                } else if (researcher.hasLineOfSight(player)) {
+                    triggerDialogue(player, EV_CELLAR_EXIT)
+                }
             }
         }
     }
@@ -200,6 +209,13 @@ class ResearcherDialoguesComponent(
         }
     }
 
+    override fun onPlayerLeave(player: ServerPlayer) {
+        playerDataOrCreate(player).lastSeenTimestamp = entity.level().gameTime
+        // Second check to avoid goodbye when player respawns after being killed by him:
+        if (!player.isDeadOrDying && player !in researcher.combat.lastKilledPlayers)
+            triggerDialogue(player, BasicDialogueEvents.PLAYER_LEAVE_SOON, BasicDialogueEvents.PLAYER_LEAVE_NIGHT, BasicDialogueEvents.PLAYER_LEAVE)
+    }
+
     override fun canTriggeredEventRun(player: ServerPlayer, dialogueEvent: DialogueEvent): Boolean {
         return super.canTriggeredEventRun(player, dialogueEvent) && when(dialogueEvent) {
             EV_MAKE_MESS   -> !playersMadeMess
@@ -229,25 +245,27 @@ class ResearcherDialoguesComponent(
         }
     }
 
+    override val saveNbtPersistData: Boolean = false
+
     override fun addExtraNbtData(dialogueData: CompoundTag) {
         super.addExtraNbtData(dialogueData)
 
-        // Remove shared data, save separately
-        dialogueData.remove(DataFields.SAVED_PLAYERS_DATA)
-
         dialogueData.saveField("MessAngerActive", Codec.BOOL, this::playersMadeMess)
+        dialogueData.saveField("PlayersWhoMadeMess", CODEC_PLAYERSET, this::playersWhoMadeMess)
+        dialogueData.saveField("CartographyTablesInTent", Codec.INT, this::cartographyTablesInTent)
+        dialogueData.saveField("LecternsInTent", Codec.INT, this::lecternsInTent)
         dialogueData.saveField("PlayersInCellar", CODEC_PLAYERSET, this::playersInCellar)
         dialogueData.saveField("PlayersMetThisEntity", CODEC_PLAYERSET, this::playersMetThisEntity)
     }
 
     override fun readExtraNbtData(dialogueData: CompoundTag) {
         // prevent modifying shared data
-        val savedPlayersDataPre = savedPlayersData.mapValues { it.value.copy() }
         super.readExtraNbtData(dialogueData)
-        savedPlayersData.clear()
-        savedPlayersData.putAll(savedPlayersDataPre)
 
         dialogueData.loadField("MessAngerActive", Codec.BOOL) { playersMadeMess = it }
+        dialogueData.loadField("PlayersWhoMadeMess", CODEC_PLAYERSET) { playersWhoMadeMess.addAll(it)}
+        dialogueData.loadField("CartographyTablesInTent", Codec.INT) { cartographyTablesInTent = it }
+        dialogueData.loadField("LecternsInTent", Codec.INT) { lecternsInTent = it }
         dialogueData.loadField("PlayersInCellar", CODEC_PLAYERSET) { playersInCellar = it.toMutableSet() }
         playersMetThisEntity.clear()
         dialogueData.loadField("PlayersMetThisEntity", CODEC_PLAYERSET) { playersMetThisEntity.addAll(it) }
@@ -270,12 +288,16 @@ class ResearcherDialoguesComponent(
         }
     }
 
+    fun playerMadeMess(playerUuid: UUID): Boolean {
+        return playersWhoMadeMess.contains(playerUuid)
+    }
+
     override fun sendDialogueToPlayer(player: ServerPlayer, line: DialogueLine) {
         super.sendDialogueToPlayer(player, line)
         val soundData = line.dialogue.data[DDATA_SOUND]
         if (soundData != "none") {
             when (soundData) {
-                "angry" -> researcher.playSound(SoundEvents.WANDERING_TRADER_NO)
+                "angry" -> researcher.playSound(GrowssethSounds.RESEARCHER_NO)
                 else -> researcher.playAmbientSound()
             }
             researcher.resetAmbientSoundTime()
@@ -288,9 +310,18 @@ class ResearcherDialoguesComponent(
             if (state.`is`(RESEARCHER_MESS_TRIGGER)) {
                 val researchersInBounds = getResearchersNearTentAt(level, pos) ?: return
                 researchersInBounds.forEach {
-                    it.dialogues?.triggerDialogue(player as ServerPlayer, EV_MAKE_MESS)
+                    val dialogues = it.dialogues!!
+                    if (state.`is`(Blocks.CARTOGRAPHY_TABLE))
+                        dialogues.cartographyTablesInTent--
+                    else if (state.`is`(Blocks.LECTERN))
+                        dialogues.lecternsInTent--
+                    if (dialogues.cartographyTablesInTent < 1 || dialogues.lecternsInTent < 1) {
+                        dialogues.triggerDialogue(player as ServerPlayer, EV_MAKE_MESS)
+                        dialogues.playersWhoMadeMess.add(player.uuid)
+                    }
                 }
-            } else if (state.`is`(TENT_MATERIALS_WHITELIST) && !BREAK_BLOCK_BLACKLIST.contains(state.block)) {
+            }
+            else if (state.`is`(TENT_MATERIALS_WHITELIST) && !BREAK_BLOCK_BLACKLIST.contains(state.block)) {
                 val researchersInBounds = getResearchersNearTentAt(level, pos) ?: return
                 researchersInBounds.forEach {
                     it.dialogues?.triggerDialogue(player as ServerPlayer, EV_BREAK_TENT)
@@ -305,20 +336,28 @@ class ResearcherDialoguesComponent(
 
             val researchersInBounds = getResearchersNearTentAt(level, pos) ?: return
             researchersInBounds.forEach {
-                it.dialogues?.triggerDialogue(player as ServerPlayer, EV_FIX_MESS)
+                val dialogues = it.dialogues!!
+                if (blockState.`is`(Blocks.CARTOGRAPHY_TABLE))
+                    dialogues.cartographyTablesInTent++
+                else if (blockState.`is`(Blocks.LECTERN))
+                    dialogues.lecternsInTent++
+                if (dialogues.cartographyTablesInTent >= 1 && dialogues.lecternsInTent >= 1) {
+                    dialogues.triggerDialogue(player as ServerPlayer, EV_FIX_MESS)
+                    dialogues.playersWhoMadeMess.clear()
+                }
             }
         }
 
         // Also checks if pos is in the tent
         private fun getResearchersNearTentAt(level: ServerLevel, pos: BlockPos): List<Researcher>? {
             val structureManager = level.structureManager()
-
             val structureStart = structureManager.getStructureWithPieceAt(pos, GrowssethTags.StructTags.RESEARCHER_TENT)
             if (structureStart.isValid) {
-                val bbox = structureStart.boundingBox
+                val tentBbox = structureStart.boundingBox
+                val bboxInflation = Researcher.WALK_LIMIT_DISTANCE.toDouble()   // can break only by moving the researcher away with a boat
                 return level.getEntitiesOfClass(
                     Researcher::class.java,
-                    AABB.of(bbox).expandTowards(Researcher.WALK_LIMIT_DISTANCE.toDouble(), 0.0, Researcher.WALK_LIMIT_DISTANCE.toDouble())
+                    AABB.of(tentBbox).inflate(bboxInflation, 0.0, bboxInflation)
                 )
             }
             return null
