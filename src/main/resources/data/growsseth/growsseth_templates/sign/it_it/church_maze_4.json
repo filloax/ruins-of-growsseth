@@ -10,11 +10,11 @@
         },
         {
             "type": "component",
-            "content": {"font":"minecraft:alt","text":"nostro condotto e"}
+            "content": {"font":"minecraft:alt","text":"nostro condotto"}
         },
         {
             "type": "component",
-            "content": {"font":"minecraft:alt","text":"ristabilito"}
+            "content": {"font":"minecraft:alt","text":"e ristabilito"}
         }
     ],
     "glowing": true

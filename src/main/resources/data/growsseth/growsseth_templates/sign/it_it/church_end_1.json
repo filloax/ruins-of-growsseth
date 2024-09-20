@@ -2,11 +2,11 @@
     "entries": [
         {
             "type": "component",
-            "content": {"font":"minecraft:alt","text":"erede del nostro"}
+            "content": {"font":"minecraft:alt","text":"erede del"}
         },
         {
             "type": "component",
-            "content": {"font":"minecraft:alt","text":"culto"}
+            "content": {"font":"minecraft:alt","text":"nostro culto"}
         },
         {
             "type": "component",

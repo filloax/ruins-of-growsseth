@@ -10,7 +10,7 @@
         },
         {
             "type": "component",
-            "content": {"font":"minecraft:alt","text":"vestige"}
+            "content": {"font":"minecraft:alt","text":"clothes"}
         }
     ],
     "glowing": true
