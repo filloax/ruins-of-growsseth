@@ -6,15 +6,15 @@
         },
         {
             "type": "component",
-            "content": {"font":"minecraft:alt","text":"intersecated body"}
+            "content": {"font":"minecraft:alt","text":"intertwined soul"}
         },
         {
             "type": "component",
-            "content": {"font":"minecraft:alt","text":"soul and spirit to"}
+            "content": {"font":"minecraft:alt","text":"body and spirit"}
         },
         {
             "type": "component",
-            "content": {"font":"minecraft:alt","text":"god bound"}
+            "content": {"font":"minecraft:alt","text":"bound to god"}
         }
     ],
     "glowing": true

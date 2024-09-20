@@ -115,7 +115,7 @@
     "growsseth.commands.gquest.stage.failure": "Non è stato possibile impostare la fase",
     "growsseth.commands.gquest.back.success": "Riportata correttamente la fase a %s, la cronologia è: %s",
     "growsseth.commands.gquest.back.failure": "Non è stato possibile riportare indietro la fase",
-    "growsseth.commands.gquest.info": "Dati della quest di %s: Fase %s, Cronologia: %s",
+    "growsseth.commands.gquest.info": "Dati della quest di %s:\nFase %s, Cronologia: %s",
     "growsseth.commands.booktemplate.success": "Ricevuto template libro \"%s\"",
     "growsseth.commands.booktemplate.invalidtemplate": "Template libro invalido %s",
     "growsseth.commands.glocate.stop.nonEntity": "Impossibile eseguire glocate stop con non entità!",
@@ -263,5 +263,17 @@
     "growsseth.config.debugNpcDialogues.name": "Segnala dialoghi NPC nei log",
     "growsseth.config.structuresDebugMode.name": "Debug strutture",
     "growsseth.config.structuresDebugMode.comment": "Rende le strutture molto più frequenti, per sviluppatori.",
-    "growsseth.config.researcherSpeedup.name": "Velocizza guarigione ricercatore"
+    "growsseth.config.researcherSpeedup.name": "Velocizza guarigione ricercatore",
+
+    "growsseth.subtitles.deflect_arrow_sound": "Ricercatore devia freccia",
+    "growsseth.subtitles.researcher_horn_sound": "Corno del Ricercatore suonato",
+    "growsseth.subtitles.researcher.yes": "Ricercatore accetta",
+    "growsseth.subtitles.researcher.no": "Ricercatore rifiuta",
+    "growsseth.subtitles.researcher.trade": "Ricercatore scambia",
+    "growsseth.subtitles.researcher.ambient": "Ricercatore mormora",
+    "growsseth.subtitles.researcher.hurt": "Ricercatore ferito",
+    "growsseth.subtitles.researcher.death": "Ricercatore muore",
+    "growsseth.subtitles.zombie_researcher.ambient": "Ricercatore zombi geme",
+    "growsseth.subtitles.zombie_researcher.hurt": "Ricercatore zombi ferito",
+    "growsseth.subtitles.zombie_researcher.death": "Ricercatore zombi muore"
 }
