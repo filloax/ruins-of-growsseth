@@ -2,19 +2,19 @@
     "entries": [
         {
             "type": "component",
-            "content": {"font":"minecraft:alt","text":"risali e sull"}
+            "content": {"font":"minecraft:alt","text":"risali e"}
         },
         {
             "type": "component",
-            "content": {"font":"minecraft:alt","text":"altare"}
+            "content": {"font":"minecraft:alt","text":"sull altare"}
         },
         {
             "type": "component",
-            "content": {"font":"minecraft:alt","text":"concludi il tuo"}
+            "content": {"font":"minecraft:alt","text":"concludi il"}
         },
         {
             "type": "component",
-            "content": {"font":"minecraft:alt","text":"percorso"}
+            "content": {"font":"minecraft:alt","text":"tuo percorso"}
         }
     ],
     "glowing": true

@@ -2,19 +2,19 @@
     "entries": [
         {
             "type": "component",
-            "content": {"font":"minecraft:alt","text":"so then our"}
+            "content": {"font":"minecraft:alt","text":"thus at last"}
         },
         {
             "type": "component",
-            "content": {"font":"minecraft:alt","text":"link our"}
+            "content": {"font":"minecraft:alt","text":"our bond"}
         },
         {
             "type": "component",
-            "content": {"font":"minecraft:alt","text":"conduit is"}
+            "content": {"font":"minecraft:alt","text":"our conduit"}
         },
         {
             "type": "component",
-            "content": {"font":"minecraft:alt","text":"restored"}
+            "content": {"font":"minecraft:alt","text":"is restored"}
         }
     ],
     "glowing": true

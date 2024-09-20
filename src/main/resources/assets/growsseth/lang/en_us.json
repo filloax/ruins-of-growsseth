@@ -115,7 +115,7 @@
     "growsseth.commands.gquest.stage.failure": "Failed in setting stage",
     "growsseth.commands.gquest.back.success": "Correctly reverted stage to %s, history is: %s",
     "growsseth.commands.gquest.back.failure": "Failed in reverting stage",
-    "growsseth.commands.gquest.info": "%s quest data: Stage %s, History: %s",
+    "growsseth.commands.gquest.info": "%s quest data:\nStage %s, History: %s",
     "growsseth.commands.booktemplate.success": "Received book template \"%s\"",
     "growsseth.commands.booktemplate.invalidtemplate": "Invalid book template %s",
     "growsseth.commands.glocate.stop.nonEntity": "Cannot run glocate stop with non entities!",
@@ -263,5 +263,17 @@
     "growsseth.config.debugNpcDialogues.name": "Log NPC dialogues",
     "growsseth.config.structuresDebugMode.name": "Structures debug",
     "growsseth.config.structuresDebugMode.comment": "Make structures wildly more likely, for dev usage.",
-    "growsseth.config.researcherSpeedup.name": "Speedup researcher healing"
+    "growsseth.config.researcherSpeedup.name": "Speedup researcher healing",
+
+    "growsseth.subtitles.deflect_arrow_sound": "Researcher deflects arrow",
+    "growsseth.subtitles.researcher_horn_sound": "Researcher's horn plays",
+    "growsseth.subtitles.researcher.yes": "Researcher agrees",
+    "growsseth.subtitles.researcher.no": "Researcher disagrees",
+    "growsseth.subtitles.researcher.trade": "Researcher trades",
+    "growsseth.subtitles.researcher.ambient": "Researcher mumbles",
+    "growsseth.subtitles.researcher.hurt": "Researcher hurts",
+    "growsseth.subtitles.researcher.death": "Researcher dies",
+    "growsseth.subtitles.zombie_researcher.ambient": "Zombie Researcher groans",
+    "growsseth.subtitles.zombie_researcher.hurt": "Zombie Researcher hurts",
+    "growsseth.subtitles.zombie_researcher.death": "Zombie Researcher dies"
 }
