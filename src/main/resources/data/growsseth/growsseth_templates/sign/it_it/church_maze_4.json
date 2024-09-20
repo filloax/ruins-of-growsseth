@@ -1,0 +1,21 @@
+{
+    "entries": [
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"cosi infine il"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"nostro legame il"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"nostro condotto"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"e ristabilito"}
+        }
+    ],
+    "glowing": true
+}

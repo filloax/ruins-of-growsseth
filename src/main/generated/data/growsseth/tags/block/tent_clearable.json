@@ -56,10 +56,7 @@
       "id": "#minecraft:fence_gates",
       "required": false
     },
-    {
-      "id": "#minecraft:logs",
-      "required": false
-    },
+    "minecraft:stripped_spruce_log",
     "minecraft:lectern",
     "minecraft:cartography_table",
     "minecraft:iron_bars",

@@ -4,7 +4,6 @@ import com.filloax.fxlib.api.getBookText
 import com.filloax.fxlib.api.setBookTags
 import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.RuinsOfGrowsseth
-import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 
@@ -84,7 +83,3 @@ object BookTemplates {
         return fixedBook
     }
 }
-
-
-
-

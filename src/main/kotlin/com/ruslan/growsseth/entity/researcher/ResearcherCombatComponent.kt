@@ -151,6 +151,7 @@ class ResearcherCombatComponent(
 
     fun onPlayerKilled(player: ServerPlayer) {
         hitCounter[player]!!.setValue(0)
+        angerBuildupTimer[player]!!.setValue(-1)
         lastKilledPlayers.add(player)
         dialogues?.triggerDialogue(player, ResearcherDialoguesComponent.EV_KILL_PLAYER)
     }
@@ -175,7 +176,7 @@ class ResearcherCombatComponent(
                 !mob.navigation.isDone
                 // Removed the check for being away from the restriction
             } else {
-                livingEntity !is Player || !livingEntity.isSpectator() && !livingEntity.isCreative
+                livingEntity !is Player || !livingEntity.isSpectator && !livingEntity.isCreative
             }
         }
     }

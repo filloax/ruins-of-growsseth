@@ -111,7 +111,8 @@
     "sounds": [
       {
         "name": "growsseth:disc_ancora_qui",
-        "stream": true
+        "stream": true,
+        "encrypted": true
       }
     ]
   },
@@ -147,13 +148,144 @@
       {
         "name": "growsseth:deflect_arrow_sound"
       }
-    ]
+    ],
+    "subtitle": "growsseth.subtitles.deflect_arrow_sound"
   },
   "researcher_horn_sound": {
     "sounds": [
       {
         "name": "growsseth:researcher_horn_sound"
       }
-    ]
+    ],
+    "subtitle": "growsseth.subtitles.researcher_horn_sound"
+  },
+  "researcher.yes": {
+    "sounds": [
+      {
+        "name": "growsseth:researcher/yes1"
+      },
+      {
+        "name": "growsseth:researcher/yes2"
+      },
+      {
+        "name": "growsseth:researcher/yes3"
+      },
+      {
+        "name": "growsseth:researcher/yes4"
+      }
+    ],
+    "subtitle": "growsseth.subtitles.researcher.yes"
+  },
+  "researcher.no": {
+    "sounds": [
+      {
+        "name": "growsseth:researcher/no1"
+      },
+      {
+        "name": "growsseth:researcher/no2"
+      },
+      {
+        "name": "growsseth:researcher/no3"
+      },
+      {
+        "name": "growsseth:researcher/no4"
+      },
+      {
+        "name": "growsseth:researcher/no5"
+      }
+    ],
+    "subtitle": "growsseth.subtitles.researcher.no"
+  },
+  "researcher.trade": {
+    "sounds": [
+      {
+        "name": "growsseth:researcher/haggle1"
+      },
+      {
+        "name": "growsseth:researcher/haggle2"
+      },
+      {
+        "name": "growsseth:researcher/haggle3"
+      }
+    ],
+    "subtitle": "growsseth.subtitles.researcher.trade"
+  },
+  "researcher.ambient": {
+    "sounds": [
+      {
+        "name": "growsseth:researcher/idle1"
+      },
+      {
+        "name": "growsseth:researcher/idle2"
+      },
+      {
+        "name": "growsseth:researcher/idle3"
+      },
+      {
+        "name": "growsseth:researcher/idle4"
+      },
+      {
+        "name": "growsseth:researcher/idle5"
+      }
+    ],
+    "subtitle": "growsseth.subtitles.researcher.ambient"
+  },
+  "researcher.hurt": {
+    "sounds": [
+      {
+        "name": "growsseth:researcher/hurt1"
+      },
+      {
+        "name": "growsseth:researcher/hurt2"
+      },
+      {
+        "name": "growsseth:researcher/hurt3"
+      },
+      {
+        "name": "growsseth:researcher/hurt4"
+      }
+    ],
+    "subtitle": "growsseth.subtitles.researcher.hurt"
+  },
+  "researcher.death": {
+    "sounds": [
+      {
+        "name": "growsseth:researcher/death"
+      }
+    ],
+    "subtitle": "growsseth.subtitles.researcher.death"
+  },
+  "zombie_researcher.ambient": {
+    "sounds": [
+      {
+        "name": "growsseth:zombie_researcher/say1"
+      },
+      {
+        "name": "growsseth:zombie_researcher/say2"
+      },
+      {
+        "name": "growsseth:zombie_researcher/say3"
+      }
+    ],
+    "subtitle": "growsseth.subtitles.zombie_researcher.ambient"
+  },
+  "zombie_researcher.hurt": {
+    "sounds": [
+      {
+        "name": "growsseth:zombie_researcher/hurt1"
+      },
+      {
+        "name": "growsseth:zombie_researcher/hurt2"
+      }
+    ],
+    "subtitle": "growsseth.subtitles.zombie_researcher.hurt"
+  },
+  "zombie_researcher.death": {
+    "sounds": [
+      {
+        "name": "growsseth:zombie_researcher/death"
+      }
+    ],
+    "subtitle": "growsseth.subtitles.zombie_researcher.death"
   }
 }

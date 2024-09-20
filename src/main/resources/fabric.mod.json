@@ -68,7 +68,7 @@
     "fabricloader": ">=${loader_version}",
     "fabric-api": ">=${fapi_version}",
     "fabric": "*",
-    "minecraft": "1.21"
+    "minecraft": ["1.21", "1.21.1"]
   },
   "custom": {
     "modmenu": {

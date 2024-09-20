@@ -5,16 +5,18 @@
             "content": [
                 "What..? Someone wandering these lands who isn't a merchant?",
                 "It can't be... Listen, are you perhaps a researcher, or some kind of explorer?",
-                "So it's really true, unbelievable... Let me explain, I'm both, a researcher §land§r an explorer. I've been wandering these lands for years, but I've never encountered anyone of my profession. You see, what happened after the Plague... I thought there were no more people like me.",
-                "Well, nice to meet you then, let me introduce myself... Or at least that's what I would like to say. It's been so long since I've used my name that I've ended up forgetting it...",
-                "Anyway, let's change the subject. Researcher or explorer, I suppose we can still consider ourselves colleagues.",
-                "Me? Personally, I don't stick to a specific branch. Having to constantly move and survive alone in the wilderness has made me a kind of 'jack-of-all-trades'. I imagine it's the same for you, given the courage you show in venturing out here.",
-                "And speaking of adventures, during my explorations I've often come across places and relics from the fallen kingdom. I presume that would interest you, right?",
-                "Normally, I wouldn't part with my discoveries, not even for payment, but I believe collaborating could bring mutual benefit, so take a look!"
+                "So it's true, unbelievable... Let me explain: I'm both, a researcher §land§r an explorer. I've been wandering these lands for years, but I've never encountered anyone of my profession. You know, after the Plague... I thought there were no more people like me.",
+                "Well, nice to meet you then. Let me introduce myself... Or at least, that's what I would like to say. It's been so long since I've used my name that I've ended up forgetting it...",
+                "Anyway, let's change the subject. Whether you're a researcher or an explorer, I suppose we can still consider ourselves colleagues.",
+                "Me? Personally, I don't belong to any specific branch of research. Having to constantly wander and survive alone in the wilderness has made me something of a 'jack-of-all-trades'. I imagine it's the same for you, given the courage you show in venturing out here.",
+                "And speaking of adventures, during my explorations I've often come across places and relics from the now fallen kingdom. I presume they'd interest you, right?",
+                "Normally, I wouldn't part with my discoveries, not even for payment, but I believe collaborating could bring us mutual benefits. So, take a look!"
             ],
             "useLimit": 1,
             "priority": 100,
             "id": "researcher-first",
+            "groups": "group-first-dialogue",
+            "groupUseLimit": 1,
             "requiresUntilQuestStage": "start",
             "data": {
                 "singleOnly": "true"
@@ -28,7 +30,7 @@
             "requiresUntilQuestStage": "start"
         },
         {
-            "content": "Hey, come back here! You need to put things back in place!",
+            "content": "Hey, come back here! You need to put those back!",
             "id": "goodbye-made-mess-1",
             "priority": 60,
             "data": {
@@ -63,13 +65,13 @@
         { "id": "researcher-first" },
         { "id": "no-dialogue-mess" },
         "Good morning, colleague.",
+        "...maybe, with that ingredient... Oh, hello colleague.",
+        "Good morning colleague, beautiful day today, isn't it?",
+        "...but of course, now it makes sense... Oh, hello, ask ahead.",
         {
             "content": "Glad to see you're still alive, colleague.",
             "afterRepeatsMin": 2
         },
-        "...maybe, with that ingredient... Oh, hello colleague.",
-        "Good morning colleague, beautiful day today, isn't it?",
-        "...but of course, now it makes sense... Oh, hello, go ahead.",
         {
             "content": "Hello colleague, always on the move, huh?",
             "afterRepeatsMin": 2
@@ -84,12 +86,12 @@
             "priority": 20,
             "id": "researcher-dialogue-night-first"
         },
-        "Strange time for a visit, I hope you haven't attracted any night creatures here.",
-        "Hello colleague, are you also enjoying the starry sky?",
+        "Strange time for a visit, I hope you didn't bring any night creatures with you.",
+        "Hello colleague, are you enjoying the starry sky too?",
         "Snore... AH! What are you doing here at this hour?",
         "Colleague, are you sleeping enough? Insomnia tends to attract trouble...",
         {
-            "content": "Fearless as always I see, just be careful not to attract any creepers.\n...Not that those pests have the courage to explode in my presence, it's obvious.",
+            "content": "Fearless as always I see, just be careful not to bring creepers here.\n...Not that those pests would have the courage to explode in my presence, but still...",
             "useLimit": 1,
             "id": "researcher-arrive-night-creeper"
         }
@@ -120,14 +122,16 @@
     ],
     "playerLeaveNight": [
         { "id": "researcher-first-leave" },
-        "Goodbye, and safe journey home.",
+        "Goodbye, have a safe journey home.",
         "Watch out for monsters on the way back, colleague.",
-        "I recommend staying away from the demons' gaze!",
+        "Be careful, and don't look at the demons!",
         "Goodbye, and goodnight!",
         { "id": "goodbye-made-mess-1" },
         { "id": "goodbye-made-mess-2" }
     ],
     "playerArriveLongTime": [
+        { "id": "researcher-first" },   // just for /greset consistency
+        { "id": "no-dialogue-mess" },
         {
             "content": "Long time no see! I wasn't sure if you were still alive.",
             "useLimit": 1,
@@ -137,17 +141,30 @@
         "Colleague...? Is that really you? I haven't seen you in a long time.",
         "Colleague...? Back from a long adventure I assume, do you have anything interesting to share?",
         "Long time no see, colleague.",
-        "Hello colleague, it's been a while since you've been away, how are you?"
+        "Hello colleague, it's been a while since your last visit, how are you?",
+        {
+            "content": "Hello, it's been a long time...\nYou know, I'm still waiting for you to give me back my work tools.",
+            "id": "long-time-after-mess",
+            "priority": 60,
+            "data": {
+                "madeMess": "true"
+            },
+            "requiresUntilQuestStage": "healed"
+        }
     ],
     "playerArriveNewLocation": [
+        { "id": "researcher-first" },   // just for /greset consistency
+        { "id": "no-dialogue-mess" },   // only possible if player breaks tools before being seen
         {
-            "content": "Greetings, didn't expect to meet you here!\nAs you know, I also am a traveler, so I have various encampents around the world.\nIf we meet again, I'll be happy to share information as usual.",
+            "content": "Greetings, didn't expect to meet you here!\nAs you know, I also am a traveler, so I have various encampments around the world.\nIf we meet again, I'll be happy to share information as usual.",
             "useLimit": 1,
             "priority": 50,
-            "id": "researcher-arrive-new-loc-first"
+            "id": "researcher-arrive-new-loc-first",
+            "requiresUntilQuestStage": "healed"
         }
     ],
     "playerArriveSoon": [
+        { "id": "researcher-first" },   // just for /greset consistency
         { "id": "no-dialogue-mess" },
         "Back already?",
         "Forgot something?",
@@ -155,7 +172,7 @@
         "Do you need something else?",
         "Did you want to tell me something else, colleague?",
         "Oh, you're back already.",
-        "...Okay, now that he's gone... Oh! Hello again colleague.",
+        "...Okay, now that they're gone... Oh! Hello again colleague.",
         "Wow, that was fast, did you want to see me again by any chance?",
         "...Let's see, now I should work on... Oh! You're still here colleague.",
         {
@@ -177,7 +194,8 @@
         }
     ],
     "playerLeaveSoon": [
-        "So long!",
+        { "id": "researcher-first-leave" },     // just for /greset consistency
+        "So long, then!",
         "Alright, see you soon!",
         "Goodbye colleague, again.",
         "Have a good one!",
@@ -241,7 +259,7 @@
             }
         },
         {
-            "content": "Ooh, I see! You want to test my resilience, huh huh. Go ahead then.\nJust know that my body has been tempered by the cold of the icy lands of Polar'Hetty and by countless enemies, I doubt you'll be able to scratch me!",
+            "content": "Ooh, I see! You want to test my resilience, he he. Go ahead then.\nJust know that my body has been tempered by the cold of the Icy Lands and the clashes with countless enemies, I doubt you'll be able to scratch me!",
             "useLimit": 1,
             "afterRepeatsMin": 5,
             "afterRepeatsMax": 5,
@@ -252,7 +270,7 @@
     ],
     "killPlayer": [
         {
-            "content": "Why... It wasn't supposed to end like this...",
+            "content": "Why... It shouldn't have ended like this...",
             "immediate": true,
             "useLimit": 1,
             "priority": 20,
@@ -265,7 +283,7 @@
     ],
     "playerCheats": [
         {
-            "content": "I won't fall for these mere tricks!",
+            "content": "I won't fall for these cowardly tricks!",
             "immediate": true,
             "afterCloseRepeatsMax": 1,
             "data": {
@@ -285,7 +303,7 @@
     ],
     "death": [
         {
-            "content": "Perhaps... this world isn't meant to change...",
+            "content": "Maybe... this world isn't meant to change...",
             "immediate": true,
             "data": {
                 "sound": "none"
@@ -305,7 +323,7 @@
     ],
     "makeMess": [
         {
-            "content": "Please keep your hands off my things, colleague. I can't afford to deal with both a donkey and a monkey.",
+            "content": "Please keep your hands off my things, colleague. I can't afford to look after a donkey §land§r a monkey.",
             "immediate": true,
             "data": {
                 "sound": "none"
@@ -332,7 +350,7 @@
         }
     ],
     "fixMess": [
-        "Thank you, I see that perhaps there is still some civility in this world.",
+        "Thank you, I see that civility may still exist in this world.",
         {
             "content": "Good...",
             "priority": 50,
@@ -347,15 +365,18 @@
     ],
     "refuseTrade": [
         {
-            "content": "I'm finishing up some research and I don't have anything to offer you yet. Try again later.",
+            "content": "I'm finishing up a research and I don't have anything to offer you yet. Try again later.",
             "priority": -100,
-            "immediate": true
+            "immediate": true,
+            "data": {
+                "sound": "none"
+            }
         },
         {
-            "content": "Brother.\nCousin.\nCompanion.\nPal.\nDo you really think you can steal my things and then sell me your research?\nPUT IT BACK.",
+            "content": "Brother.\nCousin.\nCompanion.\nPal.\nDo you really think you can steal my things and then buy my research?\nPUT THEM BACK.",
             "priority": 0,
             "immediate": true,
-            "requiresEventParam": "angry",
+            "requiresEventParam": "angry-at-player",
             "afterRepeatsMax": 1,
             "data": {
                 "sound": "none"
@@ -365,8 +386,17 @@
             "content": "You still have my work tools, remember? Put them back.",
             "priority": 0,
             "immediate": true,
-            "requiresEventParam": "angry",
+            "requiresEventParam": "angry-at-player",
             "afterRepeatsMin": 2,
+            "data": {
+                "sound": "none"
+            }
+        },
+        {
+            "content": "I'm sorry collegue, someone stole my work tools, until I'll get them back I won't be able to sell you anything.",
+            "priority": 0,
+            "immediate": true,
+            "requiresEventParam": "angry-at-others",
             "data": {
                 "sound": "none"
             }
@@ -392,8 +422,8 @@
     "borrowDonkey": [
         {
             "content": [
-                "Oh, do you need my donkey by any chance? Go ahead, I don't plan on moving anytime soon.",
-                "But I'll have to charge you more until you bring it back safe and sound, see it as some sort of deposit.",
+                "Oh, do you need my donkey by any chance? Go ahead, I don't think I'll need it anytime soon.",
+                "Still, I'll have to charge you more until you bring it back safe, see it as some sort of deposit.",
                 "These lands are very dangerous after all, and you never know what might happen..."
             ],
             "immediate": true,
@@ -404,6 +434,18 @@
         {
             "content": "Oh, do you need my donkey again? Go ahead, you know the rules!",
             "immediate": true
+        }
+    ],
+    "borrowDonkeyHealed": [
+        {
+            "content": [
+                "Oh, do you need my donkey? Take it, and don't worry about it.",
+                "I would be grateful if you could bring it back before I leave, but if you can't make it in time I can always find another."
+            ],
+            "immediate": true,
+            "id": "first-donkey-borrow-healed",
+            "useLimit": 1,
+            "priority": 50
         }
     ],
     "returnDonkey": [
@@ -429,7 +471,7 @@
         {
             "id": "exit-cellar",
             "useLimit": 1,
-            "content": "I'm sorry, I know you probably have many questions about it but I can't tell you anything, it's a personal matter...\nIf possible I'd like you to pretend you haven't seen anything, and not to talk about it with anyone... Thank you.",
+            "content": "I'm sorry, I know you probably have many questions, but I can't tell you anything, it's a personal matter...\nIf possible, I'd like you to pretend you didn't see anything and not mention it to anyone... Thank you.",
             "requiresUntilQuestStage": "healed"
         }
     ]

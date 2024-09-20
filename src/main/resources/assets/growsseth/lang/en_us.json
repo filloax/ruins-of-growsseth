@@ -57,7 +57,7 @@
     "jukebox_song.growsseth.oursteps": "Il Coro di Mammonk - Oursteps",
     "item.growsseth.disc_odi_et_amo": "§dMusic Disc",
     "jukebox_song.growsseth.odi_et_amo": "Il Coro di Mammonk - Odi et Amo",
-    "item.growsseth.disc_ancora_qui": "§dMusic Disc (COMING SOON)",
+    "item.growsseth.disc_ancora_qui": "§dMusic Disc",
     "jukebox_song.growsseth.ancora_qui": "Il Coro di Mammonk - Ancora Qui",
     "item.growsseth.disc_ballata_del_respawn": "§dMusic Disc",
     "jukebox_song.growsseth.ballata_del_respawn": "Il Coro di Mammonk - La Ballata del Respawn",
@@ -115,7 +115,8 @@
     "growsseth.commands.gquest.stage.failure": "Failed in setting stage",
     "growsseth.commands.gquest.back.success": "Correctly reverted stage to %s, history is: %s",
     "growsseth.commands.gquest.back.failure": "Failed in reverting stage",
-    "growsseth.commands.gquest.info": "%s quest data: Stage %s, History: %s",
+    "growsseth.commands.gquest.info": "%s quest data:\nStage %s, History: %s",
+    "growsseth.commands.booktemplate.success": "Received book template \"%s\"",
     "growsseth.commands.booktemplate.invalidtemplate": "Invalid book template %s",
     "growsseth.commands.glocate.stop.nonEntity": "Cannot run glocate stop with non entities!",
     "growsseth.commands.glocate.stop.fail": "No locate tasks to stop",
@@ -159,11 +160,13 @@
     "advancements.growsseth.horn.title": "Goodbye gift",
     "advancements.growsseth.horn.description": "Receive the mysterious horn from the researcher",
 
+    "growsseth.final_diary_fallback": "For you, colleague",
+
     "growsseth.notif.researcher_updated": "The researcher has something new for you.",
     "growsseth.notif.researcher_updated.toast.title": "New discoveries!",
     "growsseth.notif.researcher_updated.toast.description": "The researcher awaits.",
     "growsseth.notif.setLanguage.title": "Ruins of Growsseth Language Autodetect",
-    "growsseth.notif.setLanguage.message": "Set mod structure texts to language %s",
+    "growsseth.notif.setLanguage.message": "Set mod texts to language %s",
 
     "growsseth.filled_map.target": "[Growsseth] Target position: %d %d",
 
@@ -198,9 +201,9 @@
     "growsseth.config.researcherBorrowPenalty.name": "Donkey borrow penalty",
     "growsseth.config.researcherBorrowPenalty.comment": "Trade price multiplier for borrowing the researcher's donkey. Only affects emeralds.",
     "growsseth.config.researcherTeleports.name": "Researcher teleports back to restriction",
-    "growsseth.config.researcherTeleports.comment": "The researcher teleports back to his original position after five minutes away from it, and avoids interacting with Nether and End portals to prevent cheese.",
+    "growsseth.config.researcherTeleports.comment": "The researcher teleports back to his original position after five minutes away from it (or after suffocating for 3 seconds inside a wall), and avoids interacting with Nether and End portals to prevent cheese.",
     "growsseth.config.researcherAntiCheat.name": "Researcher anti-cheat",
-    "growsseth.config.researcherAntiCheat.comment": "If the player tries to cheat while fighting the researcher he will drink a turtle master potion and enable a passive regen to prevent him from dying.",
+    "growsseth.config.researcherAntiCheat.comment": "If the player tries to cheat while fighting the researcher he will drink a turtle master potion and enable a passive regen to prevent him from dying. Also prevents him from suffocating when on low health.",
     "growsseth.config.researcherInteractsWithMobs.name": "Researcher interacts with other mobs",
     "growsseth.config.researcherInteractsWithMobs.comment": "Zombies, skeletons, raiders and vexes will be hostile towards the researcher, and he will react to them and other mobs who attack him. If changed ingame, takes effect on world reload.",
     "growsseth.config.researcherStrikesFirst.name": "Researcher strikes first",
@@ -260,5 +263,17 @@
     "growsseth.config.debugNpcDialogues.name": "Log NPC dialogues",
     "growsseth.config.structuresDebugMode.name": "Structures debug",
     "growsseth.config.structuresDebugMode.comment": "Make structures wildly more likely, for dev usage.",
-    "growsseth.config.researcherSpeedup.name": "Speedup researcher healing"
+    "growsseth.config.researcherSpeedup.name": "Speedup researcher healing",
+
+    "growsseth.subtitles.deflect_arrow_sound": "Researcher deflects arrow",
+    "growsseth.subtitles.researcher_horn_sound": "Researcher's horn plays",
+    "growsseth.subtitles.researcher.yes": "Researcher agrees",
+    "growsseth.subtitles.researcher.no": "Researcher disagrees",
+    "growsseth.subtitles.researcher.trade": "Researcher trades",
+    "growsseth.subtitles.researcher.ambient": "Researcher mumbles",
+    "growsseth.subtitles.researcher.hurt": "Researcher hurts",
+    "growsseth.subtitles.researcher.death": "Researcher dies",
+    "growsseth.subtitles.zombie_researcher.ambient": "Zombie Researcher groans",
+    "growsseth.subtitles.zombie_researcher.hurt": "Zombie Researcher hurts",
+    "growsseth.subtitles.zombie_researcher.death": "Zombie Researcher dies"
 }
