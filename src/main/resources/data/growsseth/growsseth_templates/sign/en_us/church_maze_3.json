@@ -2,19 +2,19 @@
     "entries": [
         {
             "type": "component",
-            "content": {"font":"minecraft:alt","text":"and in chest its"}
+            "content": {"font":"minecraft:alt","text":"in the chest"}
         },
         {
             "type": "component",
-            "content": {"font":"minecraft:alt","text":"dormant heart"}
+            "content": {"font":"minecraft:alt","text":"its dormant heart"}
         },
         {
             "type": "component",
-            "content": {"font":"minecraft:alt","text":"waits for the"}
+            "content": {"font":"minecraft:alt","text":"awaits the touch"}
         },
         {
             "type": "component",
-            "content": {"font":"minecraft:alt","text":"contact of the sea"}
+            "content": {"font":"minecraft:alt","text":"of the sea"}
         }
     ],
     "glowing": true
