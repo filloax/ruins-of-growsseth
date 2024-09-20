@@ -1,6 +1,6 @@
 Questa è la sezione degli scambi, i quali si dividono in due categorie: **preimpostati** e **personalizzati**.
 
-Gli scambi **preimpostati** sono scambi preconfezionati presenti all'interno dei dati della mod, già pronti per l'attivazione senza che serva impostare niente. Per vedere cosa fanno di preciso o modificarli li puoi trovare nella cartella degli scambi del ricercatore del datapack (data/growsseth/growsseth\_researcher\_trades).
+Gli scambi **preimpostati** sono scambi preconfezionati presenti all'interno dei dati della mod, già pronti per l'attivazione senza che serva impostare niente. Per vedere cosa fanno di preciso o modificarli li puoi trovare nella cartella degli scambi del ricercatore del datapack (_data/growsseth/growsseth_researcher_trades_). Internamente seguono lo stesso formato degli scambi personalizzati.
 
 Gli scambi **personalizzati** sono scambi liberamente impostabili. Danno molta più libertà di quelli preimpostati, ma richiedono di conoscere la sintassi JSON.  
 Seguono questo template:
@@ -9,9 +9,9 @@ Seguono questo template:
         "gives": //TradeItemEntry,
         "wants": [
             //TradeItemEntry1,
-            //TradeItemEntry2 (optional)
+            //TradeItemEntry2 (opzionale)
         ],
-        // OPTIONALS:
+        // OPZIONALI:
         "priority": 0,
         "noNotification": false,
         "replace": false,
@@ -32,18 +32,18 @@ Al posto dei commenti con "<u>TradeItemEntry</u>" bisogna inserire un oggetto JS
         "amount": 5,
     }
 
-In **"id"** va l'id dell'item che si vuole dare con lo scambio, mentre in **"amount"** va la quantità offerta (se l'item sta in "gives") o richiesta (se l'item sta in "wants").
+In **"id"** va l'id dell'item, mentre in **"amount"** va la quantità offerta (se l'item sta in "gives") o richiesta (se l'item sta in "wants").
 
 <u>Nota 1</u>: se l'oggetto venduto è una mappa del tesoro (per strutture vanilla o della mod), bisogna aggiungere ai valori dell'item un elemento "map" con questo formato:
 
         "map": {
-            "name": "Mappa per la fortezza",
-            // CHOOSE:
+            "name": "Mappa per qualcosa",
+            // SCEGLI TRA:
             "structure": "minecraft:stronghold",
             "fixedStructure": "growsseth:cave_camp",
             "x": 0,
             "z": 0,
-            // OPTIONALS:
+            // OPZIONALI:
             "description": [
                 "Riga 1",
                 "Riga 2",
@@ -59,14 +59,14 @@ In **"name"** va il titolo della mappa, poi bisogna lasciare uno (due per le coo
 
 I seguenti campi sono invece opzionali:
 
-*   **"description"** è la descrizione dell'oggetto (quello che appare sotto il nome quando si passa il mouse sopra) e può essere composta da più righe (se si vuole usare una riga sola si può anche usare una stringa al posto della lista);
+*   **"description"** è la descrizione dell'oggetto (quello che appare sotto il nome quando si passa il mouse sopra) e può essere composta da più righe (se si vuole usare una riga sola si può anche usare una stringa al posto della lista nell'esempio);
 *   **"scale"** è lo zoom della mappa, più il valore è alto e più ampia sarà l'area mostrata. Va da 1 a 4 come per le mappe vanilla.
 
-<u>Nota 2</u>: se si vuole vendere uno dei **diari del ricercatore** presenti nella mod si deve aggiungere ai valore dell'item questo elemento:
+<u>Nota 2</u>: se si vuole vendere uno dei **diari del ricercatore** presenti nella mod si deve aggiungere ai valori dell'item questo elemento:
 
         "diaryId": "enchantment_dictionary"
 
-In **"diaryID"** va semplicemente l'id del diario nei dati della mod. Per vedere quali sono disponibili o aggiungerne di tuoi puoi guardare il datapack (data/growsseth/growsseth\_researcher\_diary/it\_it).
+In **"diaryID"** va semplicemente l'id del diario nei dati della mod. Per vedere quali sono disponibili o aggiungerne di tuoi puoi guardare il datapack (_data/growsseth/growsseth_researcher_diary/it_it_).
 
 Per concludere, ecco un esempio di scambio in cui si offrono 15 TNT per 3 bastoni e 10 carote:
 

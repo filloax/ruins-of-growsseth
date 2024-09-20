@@ -1,0 +1,17 @@
+{
+    "entries": [
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"of sea stone"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"its skin and"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"clothes"}
+        }
+    ],
+    "glowing": true
+}

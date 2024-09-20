@@ -17,6 +17,9 @@ bin/
 .classpath
 .project
 
+#kotlin
+.kotlin/sessions/
+
 #fabric
 run/
 

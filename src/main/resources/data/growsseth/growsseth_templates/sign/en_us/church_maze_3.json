@@ -1,0 +1,21 @@
+{
+    "entries": [
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"in the chest"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"its dormant heart"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"awaits the touch"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"of the sea"}
+        }
+    ],
+    "glowing": true
+}

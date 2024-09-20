@@ -1,7 +1,6 @@
 {
   "replace": false,
   "values": [
-    "minecraft:frozen_peaks",
-    "minecraft:stony_peaks"
+    "#c:is_mountain/peak"
   ]
 }
