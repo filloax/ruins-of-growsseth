@@ -74,6 +74,7 @@ open class BasicDialoguesComponent(
     protected val leavingPlayers = mutableMapOf<UUID, Int>()
     protected val playersArrivedSoon = mutableMapOf<UUID, Boolean>()
     protected val savedPlayersData = mutableMapOf<UUID, PlayerData>()
+    protected var numOfInbetweenPlayers: Int = 0
 
     // UUID is player's
     protected val dialogueQueues = mutableMapOf<UUID, Deque<Pair<DialogueLine, DialogueEvent>>>()
@@ -211,6 +212,7 @@ open class BasicDialoguesComponent(
 
         // Player not in either area
         val inbetweenPlayers = possiblePlayers - nearPlayers - farPlayers
+        numOfInbetweenPlayers = inbetweenPlayers.size
 
         for (player in nearPlayers) {
             if (player.uuid !in closePlayers && !player.isSpectator) {
@@ -590,6 +592,8 @@ open class BasicDialoguesComponent(
     }
 
     override fun nearbyPlayers(): List<ServerPlayer> = closePlayers.toList().mapNotNull { getPlayerById(it) }
+    // needed to avoid npcs getting away from players before saying goodbye
+    override fun playersStillAround(): Boolean = closePlayers.size + numOfInbetweenPlayers > 0
 
     private fun eventInQueue(event: DialogueEvent): Boolean {
         return dialogueQueues.any { e -> e.value.any { it.second == event } }

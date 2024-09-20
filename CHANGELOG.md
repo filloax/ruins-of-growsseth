@@ -9,6 +9,7 @@ Added
 - [Data] Templates now support signs and hanging signs
 - Researcher now changes expression when aggressive
 - Sound for music disc "Ancora Qui"
+- Subtitles for mod sounds
 - [1.21] 1.21.1 support
 
 Tweaked
