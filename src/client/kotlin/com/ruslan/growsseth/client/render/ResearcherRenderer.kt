@@ -54,16 +54,18 @@ class ResearcherRenderer(context: EntityRendererProvider.Context) : MobRenderer<
     }
 
     override fun getTextureLocation(entity: Researcher): ResourceLocation {
-        return RESEARCHER_SKIN
+        return if (entity.isAggressive)
+            RESEARCHER_SKIN_ANGRY
+        else
+            RESEARCHER_SKIN
     }
 
     companion object {
         private val RESEARCHER_SKIN = resLoc("textures/entity/illager/researcher.png")
-        private val RESEARCHER_TYPE_SKIN = ResourceLocation("minecraft", "textures/entity/villager/type/plains.png")
+        private val RESEARCHER_SKIN_ANGRY = resLoc("textures/entity/illager/researcher_angry.png")
+        private val RESEARCHER_TYPE_SKIN = resLoc("textures/entity/villager/type/researcher.png")
         private val RESEARCHER_CLOTHES = resLoc("textures/entity/villager/profession/researcher.png")
-        private val RESEARCHER_CLOTHES_UNSHEATED_DAGGER = resLoc(
-            "textures/entity/villager/profession/researcher_unsheated.png"
-        )
+        private val RESEARCHER_CLOTHES_UNSHEATED_DAGGER = resLoc("textures/entity/villager/profession/researcher_unsheated.png")
     }
 
     override fun scale(livingEntity: Researcher, matrixStack: PoseStack, partialTickTime: Float) {

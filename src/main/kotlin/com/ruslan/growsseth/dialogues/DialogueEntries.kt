@@ -9,6 +9,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.Transient
 import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.*
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.packs.resources.ResourceManager
@@ -52,7 +53,10 @@ data class DialogueEntry(
     val content: List<DialogueLine>,
     val weight: Float = 1f,
     val id: String? = null,
+    @Serializable(with = ListStringSerializer::class)
+    val groups: List<String>? = null,
     val useLimit: Int? = null,
+    val groupUseLimit: Int? = null,
     val afterRepeatsMin: Int = 1, //event-wide
     val afterRepeatsMax: Int? = null,
     val afterCloseRepeatsMin: Int = 1, //event-wide
@@ -156,6 +160,18 @@ class DialogueLineStringsSerializer : JsonTransformingSerializer<List<DialogueLi
     // Make sure "content" matches the name of the property in DialogueLine
     private fun fromString(str: String) =
         JsonObject(mutableMapOf("content" to JsonPrimitive(str)))
+}
+
+class ListStringSerializer : JsonTransformingSerializer<List<String>>(ListSerializer(String.serializer())) {
+    override fun transformDeserialize(element: JsonElement): JsonElement {
+        return when (element) {
+            is JsonArray -> element
+            is JsonPrimitive -> JsonArray(listOf(element))
+            else -> {
+                throw SerializationException("Unrecognized element $element")
+            }
+        }
+    }
 }
 
 class ResearcherDialogueListener : KotlinJsonResourceReloadListener(JSON, Constants.RESEARCHER_DIALOGUE_DATA_FOLDER) {

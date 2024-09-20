@@ -15,6 +15,8 @@
             "useLimit": 1,
             "priority": 100,
             "id": "researcher-first",
+            "groups": "group-first-dialogue",
+            "groupUseLimit": 1,
             "requiresUntilQuestStage": "start",
             "data": {
                 "singleOnly": "true"
@@ -63,13 +65,13 @@
         { "id": "researcher-first" },
         { "id": "no-dialogue-mess" },
         "Buongiorno, collega.",
+        "...forse, con quell'ingrediente... Oh, salve collega.",
+        "Buongiorno collega, bella giornata oggi, vero?",
+        "...ma certo, ora ha senso... Oh, salve, dimmi pure.",
         {
             "content": "Lieto di vederti ancora in vita, collega.",
             "afterRepeatsMin": 2
         },
-        "...forse, con quell'ingrediente... Oh, salve collega.",
-        "Buongiorno collega, bella giornata oggi, vero?",
-        "...ma certo, ora ha senso... Oh, salve, dimmi pure.",
         {
             "content": "Salve collega, sempre in movimento eh?",
             "afterRepeatsMin": 2
@@ -128,6 +130,7 @@
         { "id": "goodbye-made-mess-2" }
     ],
     "playerArriveLongTime": [
+        { "id": "researcher-first" },   // just for /greset consistency
         {
             "content": "Da quanto tempo! Ormai non ero più sicuro che fossi ancora in vita.",
             "useLimit": 1,
@@ -137,17 +140,30 @@
         "Collega...? Sei davvero tu? Non ti vedevo da molto tempo.",
         "Collega...? Sei di ritorno da una lunga avventura immagino, hai qualcosa di interessante da condividere?",
         "Da quanto tempo che non ci si vede, collega.",
-        "Salve collega, è da tanto che sei via, come stai?"
+        "Salve collega, è da tanto che sei via, come stai?",
+        {
+            "content": "Salve, ne è passato di tempo...\nSai, sto ancora aspettando che tu mi restituisca gli strumenti da lavoro.",
+            "id": "long-time-after-mess",
+            "priority": 60,
+            "data": {
+                "madeMess": "true"
+            },
+            "requiresUntilQuestStage": "healed"
+        }
     ],
     "playerArriveNewLocation": [
+        { "id": "researcher-first" },   // just for /greset consistency
+        { "id": "no-dialogue-mess" },   // only possible if player breaks tools before being seen
         {
             "content": "Salve, non mi aspettavo di trovarti qua!\nAnche io viaggio, come sai, quindi ho diversi accampamenti sparsi per il mondo.\nSe ci incroceremo altre volte sarò felice di scambiare informazioni come di consueto.",
             "useLimit": 1,
             "priority": 50,
-            "id": "researcher-arrive-new-loc-first"
+            "id": "researcher-arrive-new-loc-first",
+            "requiresUntilQuestStage": "healed"
         }
     ],
     "playerArriveSoon": [
+        { "id": "researcher-first" },   // just for /greset consistency
         { "id": "no-dialogue-mess" },
         "Già di ritorno?",
         "Dimenticato qualcosa?",
@@ -183,6 +199,7 @@
         }
     ],
     "playerLeaveSoon": [
+        { "id": "researcher-first-leave" },     // just for /greset consistency
         "Allora a presto!",
         "Bene, a presto!",
         "Arrivederci collega, di nuovo.",
@@ -355,13 +372,16 @@
         {
             "content": "Mi dispiace, sto finendo alcune ricerche e non ho ancora niente da offrirti. Prova a ripassare più tardi.",
             "priority": -100,
-            "immediate": true
+            "immediate": true,
+            "data": {
+                "sound": "none"
+            }
         },
         {
             "content": "Fratello.\nCugino.\nCompagno.\nCompare.\nMa ti pare che mi rubi le cose e poi ti vendo pure le mie ricerche?\nRIMETTI A POSTO.",
             "priority": 0,
             "immediate": true,
-            "requiresEventParam": "angry",
+            "requiresEventParam": "angry-at-player",
             "afterRepeatsMax": 1,
             "data": {
                 "sound": "none"
@@ -371,8 +391,17 @@
             "content": "Hai ancora i miei strumenti da lavoro, ricordi? Rimettili a posto.",
             "priority": 0,
             "immediate": true,
-            "requiresEventParam": "angry",
+            "requiresEventParam": "angry-at-player",
             "afterRepeatsMin": 2,
+            "data": {
+                "sound": "none"
+            }
+        },
+        {
+            "content": "Scusa collega, purtroppo qualcuno ha rubato i miei strumenti da lavoro, finché non li avrò indietro non potrò venderti niente.",
+            "priority": 0,
+            "immediate": true,
+            "requiresEventParam": "angry-at-others",
             "data": {
                 "sound": "none"
             }
@@ -398,7 +427,7 @@
     "borrowDonkey": [
         {
             "content": [
-                "Oh, ti serve il mio asino per caso? Fai pure, tanto non ho intenzione di trasferirmi presto.",
+                "Oh, ti serve il mio asino per caso? Fai pure, tanto non credo che ne avrò bisogno presto.",
                 "Però dovrò farti pagare di più finché non lo riporti sano e salvo, vedila come una specie di cauzione.",
                 "Queste terre sono molto pericolose dopo tutto, e non si sa mai cosa possa accadere..."
             ],
@@ -410,6 +439,18 @@
         {
             "content": "Oh, ti serve di nuovo il mio asino? Fai pure, le regole le conosci!",
             "immediate": true
+        }
+    ],
+    "borrowDonkeyHealed": [
+        {
+            "content": [
+                "Oh, ti serve il mio asino? Prendilo pure, non preoccuparti.",
+                "Certo, gradirei che me lo riportassi prima della mia partenza, ma se non farai in tempo posso sempre trovarmene un altro."
+            ],
+            "immediate": true,
+            "id": "first-donkey-borrow-healed",
+            "useLimit": 1,
+            "priority": 50
         }
     ],
     "returnDonkey": [

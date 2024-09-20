@@ -19,10 +19,26 @@ import kotlin.jvm.optionals.getOrNull
  * (such that different entities can know another entity updated the data after them and update themselves accordingly).
  */
 class ResearcherSavedData private constructor (
-    var data: CompoundTag = CompoundTag(),
-    var name: Component? = null,
-    var isDead: Boolean = false,
+    data: CompoundTag = CompoundTag(),
+    name: Component? = null,
+    isDead: Boolean = false,
 ) : FxSavedData<ResearcherSavedData>(CODEC) {
+    // Inner class is its own class for easier tracking of changes
+    // for sync purposes; this is NOT efficient when setting these
+    // fields often but that should not be happening
+    private var currentData = InnerData(data, name, isDead)
+    private var previousData: InnerData = currentData.copy()
+
+    var data
+        get() = currentData.data
+        set(value) { currentData = currentData.copy(data = value) }
+    var name
+        get() = currentData.name
+        set(value) { currentData = currentData.copy(name = value) }
+    var isDead
+        get() = currentData.isDead
+        set(value) { currentData = currentData.copy(isDead = value) }
+
     var lastChangeTimestamp: LocalDateTime = LocalDateTime.now()
         private set
 
@@ -58,8 +74,30 @@ class ResearcherSavedData private constructor (
     }
 
     override fun setDirty() {
-        super.setDirty()
-        lastChangeTimestamp = LocalDateTime.now()
+        if (currentData != previousData) {
+            super.setDirty()
+            previousData = currentData.copy(data = currentData.data.copy(), name = currentData.name?.copy())
+            lastChangeTimestamp = LocalDateTime.now()
+        }
+    }
+
+    // Make inner data its own class so we can more easily check if data was changed before
+    // updating last change time
+    data class InnerData(val data: CompoundTag, val name: Component?, val isDead: Boolean) {
+        override fun equals(other: Any?): Boolean {
+            if (other !is InnerData) return false
+
+            return name == other.name
+                && isDead == other.isDead
+                && data == other.data
+        }
+
+        override fun hashCode(): Int {
+            var result = data.hashCode()
+            result = 31 * result + (name?.hashCode() ?: 0)
+            result = 31 * result + isDead.hashCode()
+            return result
+        }
     }
 
     object Callbacks {

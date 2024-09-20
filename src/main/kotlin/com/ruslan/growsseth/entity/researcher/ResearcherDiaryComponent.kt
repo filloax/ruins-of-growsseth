@@ -17,6 +17,7 @@ import com.ruslan.growsseth.http.GrowssethApi
 import com.ruslan.growsseth.structure.GrowssethStructures
 import com.ruslan.growsseth.templates.BookData
 import com.ruslan.growsseth.templates.BookTemplates
+import com.ruslan.growsseth.templates.TemplateKind
 import com.ruslan.growsseth.templates.TemplateListener
 import com.ruslan.growsseth.utils.*
 import com.ruslan.growsseth.worldgen.worldpreset.GrowssethWorldPreset.isGrowssethPreset
@@ -75,7 +76,7 @@ class ResearcherDiaryComponent(val researcher: Researcher) {
 
         fun init() {
             val prefix ="$TEMPLATE_DIARY_FOLDER/"
-            TemplateListener.onReload(TemplateListener.TemplateKind.BOOK) { langTemplates, keys, _ ->
+            TemplateListener.onReload(TemplateKind.BOOK) { langTemplates, keys, _ ->
                 val diaries = mutableMapOf<TagKey<Structure>, BookData>()
                 val langCode = GrowssethConfig.serverLanguage
                 lastLanguageCode = langCode

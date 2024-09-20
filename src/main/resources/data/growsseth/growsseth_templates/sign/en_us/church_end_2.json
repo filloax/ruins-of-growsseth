@@ -1,0 +1,21 @@
+{
+    "entries": [
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"ascend and"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"upon the altar"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"complete your"}
+        },
+        {
+            "type": "component",
+            "content": {"font":"minecraft:alt","text":"path"}
+        }
+    ],
+    "glowing": true
+}

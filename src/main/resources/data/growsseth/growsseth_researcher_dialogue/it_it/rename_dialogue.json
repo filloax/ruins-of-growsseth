@@ -3,6 +3,8 @@
         {
             "content": "Mh..? Quella è una targhetta?\nUn regalo piuttosto... uhm... singolare, collega. Ti è rimasto a cuore il fatto che non ricordi il mio nome, presumo.\nDi certo non inizierò ad indossare un guinzaglio con questa attaccata, però va bene, chiamami pure come vuoi.",
             "id": "rename-first",
+            "groups": "group-first-nametag",
+            "groupUseLimit": 1,
             "useLimit": 1,
             "priority": -100
         },
@@ -13,6 +15,10 @@
         {
             "content": "Uh, abbastanza autoesplicativo devo dire. Forse è meglio se ti inventi effettivamente un nome proprio di persona.",
             "requiresEventParam": "ricercatore"
+        },
+        {
+            "content": "Uh, abbastanza autoesplicativo devo dire. Forse è meglio se ti inventi effettivamente un nome proprio di persona.",
+            "requiresEventParam": "researcher"
         },
         {
             "content": "Collega, so che forse ti sei impegnato con tutto te stesso nello scegliere questo nome, ma anche io ho degli standard.",
@@ -29,6 +35,14 @@
         {
             "content": "...collega, no.",
             "requiresEventParam": "palle"
+        },
+        {
+            "content": "...collega, no.",
+            "requiresEventParam": "balls"
+        },
+        {
+            "content": "Ho già sentito l'espressione \"uomo Synergo\" in passato da dei ragazzini di un villaggio. Mi sono sembrati molto... intrattenuti nel chiamarmi così, preferirei non ripetere l'esperienza.",
+            "requiresEventParam": "synergo"
         },
         {
             "content": "Sabaku? In una lingua lontana significa più o meno \"deserto\", dico bene? In alcune vecchie favole si parlava di un certo \"Sabaku II\" come eroe dall'elmo dorato in un mondo oscuro.\nNella favola si parlava anche del suo allievo, ma il suo nome è andato perso nel tempo.\nIn ogni caso, questo nome sembra starti a cuore collega, ma non mi appartiene, mi dispiace.",
@@ -72,19 +86,27 @@
         },
         {
             "content": "Jeb_, eh? Scusa collega, il mio camice non possiede la capacità di cambiare colore se ci stavi sperando, ma il nome mi sta comunque bene.",
-            "requiresEventParam": "jeb_"
+            "requiresEventParam": "jeb_",
+            "groups": "group-first-nametag",
+            "groupUseLimit": 1
         },
         {
             "content": "Oh, buffo che tu abbia scelto per me questo nome, era il nome del coniglietto che avevo quando ero piccolo.\nOra che ci penso, è strano che mi ricordi il suo nome ma non il mio, non trovi?\nLo accetto volentieri, in suo onore...",
-            "requiresEventParam": "toast"
+            "requiresEventParam": "toast",
+            "groups": "group-first-nametag",
+            "groupUseLimit": 1
         },
         {
             "content": "Johnny? Che strano, il solo pensare di farmi chiamare così mi eccita, mi sento come se fossi in grado di affrontare qualsiasi nemico, ostile o meno che sia!\nLo accetto volentieri, questa grinta potrebbe salvarmi in situazioni disperate.",
-            "requiresEventParam": "johnny"
+            "requiresEventParam": "johnny",
+            "groups": "group-first-nametag",
+            "groupUseLimit": 1
         },
         {
             "content": "Il nome su questa targhetta... È così... familiare...\nManfredo, Manfredo... ripeterlo mi dà una strana sensazione... Che fosse il mio vecchio nome? Dannazione, non riesco a ricordare...\nOh, scusa, stavo blaterando tra me e me.\nLo accetto volentieri, non mi dispiace come nome.",
-            "requiresEventParam": "manfredo"
+            "requiresEventParam": "manfredo",
+            "groups": "group-first-nametag",
+            "groupUseLimit": 1
         }
     ]
 }

@@ -19,14 +19,14 @@ import net.minecraft.world.phys.AABB
 
 object ResearcherDonkey {
     @JvmStatic
-    fun shouldProtectDonkey(level: Level, entity: Entity): Boolean {
+    fun shouldProtectDonkey(level: Level, donkey: Entity): Boolean {
         if (!level.isClientSide()) {
             // large bounding box because there are already other checks
-            val nearbyResearchers = level.getEntitiesOfClass(Researcher::class.java, AABB.ofSize(entity.position(), 50.0, 50.0, 50.0))
+            val nearbyResearchers = level.getEntitiesOfClass(Researcher::class.java, AABB.ofSize(donkey.position(), 80.0, 80.0, 80.0))
             if (nearbyResearchers.size == 0)
                 return false
 
-            val pos = entity.blockPosition()
+            val pos = donkey.blockPosition()
             val serverLevel = level as ServerLevel
             val structures = serverLevel.structureManager()
 
@@ -46,10 +46,11 @@ object ResearcherDonkey {
     fun onFenceUnleash(mob: Mob, pos: BlockPos) {
         if (!(mob is Donkey && mob.tags.contains(Constants.TAG_RESEARCHER_DONKEY))) return
 
-        val playerRadius = 15.0
         // We're getting the player, as no easy way to make this event return it
+        val playerRadius = 15.0
         val player = (mob.level() as ServerLevel).getNearestPlayer(mob, playerRadius) as ServerPlayer?
             ?: return
+
         val searchRadius = 80.0
         val searchArea = AABB.ofSize(player.position(), searchRadius, searchRadius, searchRadius)
         val researchers = player.level().getEntitiesOfClass(Researcher::class.java, searchArea)
@@ -57,10 +58,12 @@ object ResearcherDonkey {
         researchers.forEach { researcher ->
             if (!researcher.donkeyWasBorrowed) {
                 researcher.donkeyWasBorrowed = true
-                researcher.dialogues?.triggerDialogue(player, ResearcherDialoguesComponent.EV_BORROW_DONKEY)
+                if (researcher.healed)      // different dialogue since there is no penalty after healing researcher
+                    researcher.dialogues?.triggerDialogue(player, ResearcherDialoguesComponent.EV_BORROW_DONKEY_HEALED)
+                else
+                    researcher.dialogues?.triggerDialogue(player, ResearcherDialoguesComponent.EV_BORROW_DONKEY)
             }
         }
-
         mob.tags.remove(Constants.TAG_RESEARCHER_DONKEY)
     }
 
@@ -75,10 +78,10 @@ object ResearcherDonkey {
         researchers.forEach { researcher ->
             if (researcher.donkeyWasBorrowed) {
                 researcher.donkeyWasBorrowed = false
-                researcher.dialogues?.triggerDialogue(player, ResearcherDialoguesComponent.EV_RETURN_DONKEY)
+                if (!researcher.healed)
+                    researcher.dialogues?.triggerDialogue(player, ResearcherDialoguesComponent.EV_RETURN_DONKEY)
             }
         }
-
         mob.tags.add(Constants.TAG_RESEARCHER_DONKEY)
     }
 
