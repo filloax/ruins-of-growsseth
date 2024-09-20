@@ -2,10 +2,10 @@
     "shared": [
         {
             "content": [
-                "Oh... hello colleague. §o*yawn*§r uh... lately I've been feeling sleepy all the time, even though I'm sleeping more than usual.",
+                "Oh... hello colleague. §o*yawn*§r uh... lately I've been feeling sleepy all the time, even though I've been sleeping more than usual.",
                 "Perhaps my relentless research is wearing me out more than usual. §o*yawn*§r",
-                "Tell me... have you found any information about the symptoms of the Plague by any chance? There are rumors going around that maybe, and I repeat maybe, there might be a cure. Not that I really believe it, haha!",
-                "Me? I'm doing great §o*yawn*§r ...don't worry, I'm following my intuition, but staying in a tent might have made me sick, after all, I'm not getting any younger! Haha... §o*yawn*§r"
+                "Tell me... have you come across any information about the symptoms of the Plague, by any chance? There are rumors that maybe, just maybe, there could be a cure. Not that I really believe it, haha!",
+                "Me? I'm doing great §o*yawn*§r ...don't worry, I'm following my instincts. But staying in a tent might have made me sick. After all, I'm not getting any younger! Haha... §o*yawn*§r"
             ],
             "useLimit": 1,
             "priority": 1000,
@@ -15,17 +15,17 @@
         },
         {
             "content": [
-                "§o...pant... pant...§r Colleague? Is that you..? Are we... in my cellar? What are you doing here? And what am I doing in my cage..?",
-                "Oh, I remember now, in the end, I couldn't find that cursed ingredient...",
+                "§o...pant... pant...§r Colleague? Is that you..? Are we... in my cellar? What are you doing here? And why am I in my cage..?",
+                "Oh, I remember now. In the end, I couldn't find that cursed ingredient...",
                 "Wait... this smell... this taste... §lNOW I UNDERSTAND!§r",
-                "It was the weakness potion, right? And this other taste... a golden apple? I can't believe it, it was one of the last combinations I had left to try!",
+                "It was the weakness potion, wasn't it? And this other taste... a golden apple? I can't believe it, that was one of the last combinations I had left to try!",
                 {
                     "content": "...",
                     "duration": 4
                 },
-                "Oh right, sorry! I got carried away by the excitement and forgot to thank you!",
-                "I thank you infinitely, colleague, I was sure my end had come, I even wrote a farewell diary, and yet here I am, alive.",
-                "I can never repay you enough but please, if you need any of my research, don't hesitate to ask, it's the least I can do.",
+                "Oh right, sorry! I got so caught up in the excitement that I forgot to thank you!",
+                "Thank you so much, colleague. I was sure my end had come, I even wrote a farewell diary, and yet here I am, alive.",
+                "I can never repay you enough but please, if you need any of my research, don't hesitate to ask. It's the least I can do.",
                 "I'll go back up once I've fully recovered... I'd like to prepare a few things."
             ],
             "useLimit": 1,
@@ -38,19 +38,19 @@
         },
         {
             "content": [
-                "§o...pant... pant...§r What? Who are you..? Are we... in my cellar? What are you doing here? And what am I doing in my cage..?",
-                "Oh, I remember now, in the end, I couldn't find that cursed ingredient...",
+                "§o...pant... pant...§r What? Who are you..? Are we... in my cellar? What are you doing here? And why am I in my cage..?",
+                "Oh, I remember now. In the end, I couldn't find that cursed ingredient...",
                 "Wait... this smell... this taste... §lNOW I UNDERSTAND!§r",
-                "It was the weakness potion, right? And this other taste... a golden apple? I can't believe it, it was one of the last combinations I had left to try!",
+                "It was the weakness potion, wasn't it? And this other taste... a golden apple? I can't believe it, that was one of the last combinations I had left to try!",
                 {
                     "content": "...",
                     "duration": 4
                 },
-                "Oh right, sorry! I got carried away by the excitement and forgot to introduce myself and thank you!",
-                "I am a researcher, I would tell you my name, but unfortunately, I have long forgotten it, perhaps due to the symptoms of undeath...",
-                "For a long time, I sought a cure for undeath, but it seems you have beaten me to it on this last part... I imagine you are a fellow researcher, given your skills, right?",
-                "I thank you infinitely, I was sure my end had come, I even wrote a farewell diary, and yet here I am, alive.",
-                "I can never repay you enough but please, if you need any of my research, don't hesitate to ask, it's the least I can do.",
+                "Oh right, sorry! I got so caught up in the excitement that I forgot to introduce myself and thank you!",
+                "I'm a researcher... I would tell you my name, but unfortunately, I have long forgotten it, perhaps due to the symptoms of undeath...",
+                "For a long time, I sought a cure for undeath, but it seems you've beaten me to it... I imagine you're a fellow researcher, given your skills. Am I right?",
+                "Thank you so much. I was sure my end had come, I even wrote a farewell diary, and yet here I am, alive.",
+                "I can never repay you enough but please, if you need any of my research, don't hesitate to ask. It's the least I can do.",
                 "I'll go back up once I've fully recovered... I'd like to prepare a few things."
             ],
             "useLimit": 1,
@@ -64,15 +64,15 @@
         {
             "content": [
                 {
-                    "content": "Hello colleague.",
+                    "content": "Hello, colleague.",
                     "duration": 4
                 },
-                "You know, after what happened, I thought it was time to retire... For years I've wandered these lands with no results, and in the end, I even failed in my one true goal.",
-                "So I reflected on it, and I came to a conclusion... No, my journey is not over, there is still something I can do.",
-                "Now that you've found the cure, someone needs to spread it, right? I'll do it, I'll go to faraway places and bring it to anyone who needs it. That'll be my redemption.",
-                "But don't be sad about my departure, colleague! Sooner or later our paths will cross again, I'm sure of it.",
-                "Anyway, I wanted to thank you again. If it weren't for you, I wouldn't be here, standing, breathing, and above all, there wouldn't be hope for a new world. For all this, thank you.",
-                "§lAhem ahem§r, anyway, I'll be leaving soon, so if you want to ask me anything else, now's the right time."
+                "You know, after everything that happened, I thought it was time to retire... For years I've wandered these lands with no results, and in the end, I even failed in my one true goal.",
+                "So I thought about it, and I came to a conclusion... No, my journey isn't over yet, there's still something I can do.",
+                "Now that you've found the cure, someone needs to spread it, right? I'll do it. I'll travel to faraway places and bring it to anyone who needs it. That will be my redemption.",
+                "But don't be sad about my departure, colleague! Sooner or later, our paths will cross again. I'm sure of it.",
+                "Anyway, I wanted to thank you once more. If it weren't for you, I wouldn't be here, standing, breathing, and above all, there wouldn't be hope for a new world. For all this, thank you.",
+                "§lAhem ahem§r, anyway, I'll be leaving soon, so if there's anything else you want to ask, now's the time."
             ],
             "useLimit": 1,
             "priority": 1100,
@@ -87,11 +87,11 @@
                     "content": "Hello colleague.",
                     "duration": 4
                 },
-                "You know, after what happened, I thought it was time to retire... For years I've wandered these lands with no results, and in the end, I even failed in my one true goal.",
-                "So I reflected on it, and I came to a conclusion... No, my journey is not over, there is still something I can do.",
-                "Now that you've found the cure, someone needs to spread it, right? I'll do it, I'll go to faraway places and bring it to anyone who needs it. That'll be my redemption.",
-                "Anyway, I wanted to thank you again. If it weren't for you, I wouldn't be here, standing, breathing, and above all, there wouldn't be hope for a new world. For all this, thank you.",
-                "§lAhem ahem§r, anyway, I'll be leaving soon, so if you want to ask me anything else, now's the right time."
+                "You know, after everything that happened, I thought it was time to retire... For years I've wandered these lands with no results, and in the end, I even failed in my one true goal.",
+                "So I thought about it, and I came to a conclusion... No, my journey isn't over yet, there's still something I can do.",
+                "Now that you've found the cure, someone needs to spread it, right? I'll do it. I'll travel to faraway places and bring it to anyone who needs it. That will be my redemption.",
+                "Anyway, I wanted to thank you once more. If it weren't for you, I wouldn't be here, standing, breathing, and above all, there wouldn't be hope for a new world. For all this, thank you.",
+                "§lAhem ahem§r, anyway, I'll be leaving soon, so if there's anything else you want to ask, now's the time."
             ],
             "useLimit": 1,
             "priority": 1101,
@@ -188,7 +188,7 @@
     ],
     "playerLeave": [
         {
-            "content": "Goodbye colleague, don't you dare become an undead, huh!",
+            "content": "Goodbye colleague. And don't you dare become an undead, huh!",
             "priority": 1000,
             "requiresQuestStage": "start",
             "requiresUntilQuestStage": "healed"
