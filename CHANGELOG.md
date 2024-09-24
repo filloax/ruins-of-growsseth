@@ -1,5 +1,11 @@
 # Changelog
 
+# 0.11.1
+
+Tweaked
+- First advancement now requires interacting with the researcher, instead of just finding his tent
+
+
 ## 0.11.0
 
 Added
