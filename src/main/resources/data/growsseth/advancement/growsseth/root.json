@@ -12,21 +12,13 @@
         "background": "growsseth:textures/gui/advancements/backgrounds/advancements_background.png"
     },
     "criteria": {
-        "in_researcher_tent": {
+        "requirement": {
+            "trigger": "minecraft:player_interacted_with_entity",
             "conditions": {
-                "player": [
-                    {
-                        "condition": "minecraft:entity_properties",
-                        "entity": "this",
-                        "predicate": {
-                            "location": {
-                                "structures": "#growsseth:researcher_tent"
-                            }
-                        }
-                    }
-                ]
-            },
-            "trigger": "minecraft:location"
+                "entity": {
+                    "type": "growsseth:researcher"
+                }
+            }
         }
     }
 }

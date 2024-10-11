@@ -81,6 +81,7 @@ open class BasicDialoguesComponent(
     protected var dialogueQueueDelays = mutableMapOf<UUID, Int>()
     protected val serverLevel: ServerLevel get() = entity.level() as ServerLevel
     protected val server get() = serverLevel.server
+    protected var skipNextMessage: Boolean = false
 
     open var nearbyRadius = 12.0
     open var radiusForTriggerLeave = 17.0
@@ -139,6 +140,15 @@ open class BasicDialoguesComponent(
         }
     }
 
+    fun emptyQueue(playerUUID: UUID): Boolean {
+        val playerQueue = dialogueQueues.getOrDefault(playerUUID, null)
+        return (playerQueue == null || playerQueue.isEmpty())
+    }
+
+    fun skipCurrentMessage() {
+        skipNextMessage = true
+    }
+
     override fun dialoguesStep() {
         // Run every 2 ticks for better performance
         if (entity.tickCount % 2 == 0) {
@@ -155,7 +165,8 @@ open class BasicDialoguesComponent(
             }
             if (dialogueQueue.isNotEmpty()) {
                 dialogueQueueDelay--
-                if (dialogueQueueDelay <= 0) {
+                if (dialogueQueueDelay <= 0 || skipNextMessage) {
+                    skipNextMessage = false
                     val (line, _) = dialogueQueue.remove()
                     sendDialogueToPlayer(player, line)
                     if (dialogueQueue.isNotEmpty()) {
