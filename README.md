@@ -76,3 +76,9 @@ As this mod wouldn't have been possible without the help of the community, and m
 I plan to release some of the mod features (like language settings for structure texts, NPCs, and such) as 
 a library sooner or after; for now the mod is not available with maven to add support, will try to do it as it
 gets out of pre-release.
+
+---
+
+## Source code structure
+
+Uses [Favouriteless's template](https://github.com/Favouriteless/ML-Template), with added kotlin mod stuff.

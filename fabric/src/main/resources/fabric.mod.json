@@ -40,7 +40,7 @@
     ],
     "client": [
       {
-        "value": "com.ruslan.growsseth.GrowssethClient",
+        "value": "com.ruslan.growsseth.client.GrowssethClient",
         "adapter": "kotlin"
       }
     ],
@@ -51,14 +51,10 @@
         "adapter": "kotlin"
       }
     ],
-    "modmenu": [ "com.ruslan.growsseth.GrowssethModMenu" ]
+    "modmenu": [ "com.ruslan.growsseth.client.GrowssethModMenu" ]
   },
   "mixins": [
-    "growsseth.mixins.json",
-    {
-      "config": "growsseth.client.mixins.json",
-      "environment": "client"
-    }
+    "growsseth.mixins.json"
   ],
   "accessWidener": "growsseth.accesswidener",
   "depends": {

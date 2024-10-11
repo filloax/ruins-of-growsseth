@@ -8,12 +8,9 @@ plugins {
 }
 
 loom {
-	splitEnvironmentSourceSets()
-
 	mods {
 		register("growsseth") {
 			sourceSet(sourceSets.main.get())
-			sourceSet(sourceSets["client"])
 		}
 	}
 
