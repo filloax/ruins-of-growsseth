@@ -1,4 +1,6 @@
 [versions]
+modversion = "0.11.0"
+
 java = "21"
 
 # Minecraft dependencies
