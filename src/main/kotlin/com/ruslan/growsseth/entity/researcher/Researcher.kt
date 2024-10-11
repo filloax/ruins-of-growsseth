@@ -689,30 +689,33 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             player.getPersistData().putBoolean(Constants.DATA_PLAYER_MET_RESEARCHER, true)
 
             if (player is ServerPlayer) {
-                val offers = getOffers(player)
-                val blockTrades = angryForMess && !healed
-                if (offers.isEmpty() || blockTrades) {
-                    if (lastRefusedTradeTimer == 0) {
-                        lastRefusedTradeTimer = 40
-                        setUnhappy()
-                        val reason =
-                            if (blockTrades) {
-                                if (dialogues!!.playerMadeMess(player.uuid))
-                                    "angry-at-player"
-                                else
-                                    "angry-at-others"
-                            }
-                            else "noTrades"
-                        dialogues?.triggerDialogue(player, ResearcherDialoguesComponent.EV_REFUSE_TRADE, eventParam = reason)
-                        return InteractionResult.sidedSuccess(level().isClientSide)
-                    } else
-                        return InteractionResult.FAIL
+                if (!dialogues!!.emptyQueue(player.uuid)){
+                    dialogues.skipCurrentMessage()
                 }
-
-                setTradingPlayer(player)
-                openTradingScreen(player, this.displayName ?: this.name, 1)
+                else {
+                    val offers = getOffers(player)
+                    val blockTrades = angryForMess && !healed
+                    if (offers.isEmpty() || blockTrades) {
+                        if (lastRefusedTradeTimer == 0) {
+                            lastRefusedTradeTimer = 40
+                            setUnhappy()
+                            val reason =
+                                if (blockTrades) {
+                                    if (dialogues.playerMadeMess(player.uuid))
+                                        "angry-at-player"
+                                    else
+                                        "angry-at-others"
+                                }
+                                else "noTrades"
+                            dialogues.triggerDialogue(player, ResearcherDialoguesComponent.EV_REFUSE_TRADE, eventParam = reason)
+                            return InteractionResult.sidedSuccess(level().isClientSide)
+                        } else
+                            return InteractionResult.FAIL
+                    }
+                    tradingPlayer = player
+                    openTradingScreen(player, this.displayName ?: this.name, 1)
+                }
             }
-
             return InteractionResult.sidedSuccess(level().isClientSide)
         }
         return super.mobInteract(player, interactionHand)
