@@ -38,6 +38,7 @@ dependencies {
 
 sourceSets.main.get().resources.srcDir(project(":base").file("src/generated/resources"))
 
+// custom tasks
 
 tasks.register<Zip>("zipEgobalegoFolder") {
 	from(project.file("tools/egobalego-at-home"))

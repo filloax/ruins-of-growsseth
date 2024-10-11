@@ -42,6 +42,23 @@
     "structurebook.StructureTemplateMixin",
     "vanillafixes.PaintingFixesStructureTemplateMixin"
   ],
+  "client": [
+    "client.AdvancementTabMixin",
+    "client.EasterEggMixinClient$AbstractZombieRendererMixin",
+    "client.EncryptedSounds$SoundBufferLibraryMixin",
+    "client.EncryptedSounds$SoundEventRegistrationSerializerMixin",
+    "client.EncryptedSounds$SoundManager$PreparationsMixin",
+    "client.EncryptedSounds$SoundMixin",
+    "client.RuinsMapIcon_GuiGraphicsMixin",
+    "client.TitleScreenMixin",
+    "client.VillagerModelMixin",
+    "client.custommapitem.CartographyTableScreenMixin",
+    "client.custommapitem.ItemFrameRendererMixin",
+    "client.custommapitem.ItemInHandRendererMixin",
+    "client.growssethworld.EditBoxMixin",
+    "client.growssethworld.GrowssethSeedMixins$WorldCreationUiStateMixin",
+    "client.growssethworld.GrowssethSeedMixins$WorldTabMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   },

@@ -1,7 +1,6 @@
-package com.ruslan.growsseth
+package com.ruslan.growsseth.client
 
-import com.ruslan.growsseth.client.GrowssethItemsClient
-import com.ruslan.growsseth.client.GrowssethRenderers
+import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.client.network.GrowssethNetworkingClient
 import com.ruslan.growsseth.client.resource.EncryptedMusicResources
 import com.ruslan.growsseth.client.worldpreset.GrowssethWorldPresetClient
