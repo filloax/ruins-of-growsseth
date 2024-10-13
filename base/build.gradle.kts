@@ -8,6 +8,9 @@ plugins {
     id("com.ruslan.gradle.multiloader-convention")
     id("com.ruslan.gradle.token-replacement")
 
+	kotlin("jvm")
+	alias(libs.plugins.kotlin.serialization)
+
 	alias(libs.plugins.moddevgradle)
 }
 
