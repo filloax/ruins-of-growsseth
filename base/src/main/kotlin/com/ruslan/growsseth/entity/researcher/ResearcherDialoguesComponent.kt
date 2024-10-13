@@ -4,6 +4,7 @@ import com.filloax.fxlib.api.codec.CodecUtils
 import com.filloax.fxlib.api.codec.mutableMapCodec
 import com.filloax.fxlib.api.nbt.loadField
 import com.filloax.fxlib.api.nbt.saveField
+import com.filloax.fxlib.api.networking.sendPacket
 import com.mojang.serialization.Codec
 import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.GrowssethTags.RESEARCHER_MESS_TRIGGER
@@ -16,7 +17,6 @@ import com.ruslan.growsseth.networking.AmbientSoundsPacket
 import com.ruslan.growsseth.networking.StopMusicPacket
 import com.ruslan.growsseth.sound.GrowssethSounds
 import com.ruslan.growsseth.utils.notNull
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.core.BlockPos
 import net.minecraft.core.UUIDUtil
 import net.minecraft.nbt.CompoundTag
@@ -173,8 +173,8 @@ class ResearcherDialoguesComponent(
             EV_CELLAR      -> {
                 playersInCellar.add(player.uuid)
                 if (triggerSuccess) {
-                    ServerPlayNetworking.send(player, StopMusicPacket())
-                    ServerPlayNetworking.send(player, AmbientSoundsPacket())
+                    player.sendPacket(StopMusicPacket())
+                    player.sendPacket(AmbientSoundsPacket())
                 }
             }
             EV_CELLAR_EXIT -> playersInCellar.remove(player.uuid)

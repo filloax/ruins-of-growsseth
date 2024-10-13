@@ -5,6 +5,7 @@ import com.filloax.fxlib.api.codec.decodeNbtNullable
 import com.filloax.fxlib.api.codec.encodeNbt
 import com.filloax.fxlib.api.entity.getPersistData
 import com.filloax.fxlib.api.nbt.getListOrNull
+import com.filloax.fxlib.api.networking.sendPacket
 import com.filloax.fxlib.api.savedata.FxSavedData
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
@@ -12,8 +13,6 @@ import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.entity.researcher.Researcher
 import com.ruslan.growsseth.networking.ResearcherTradesNotifPacket
-import net.fabricmc.fabric.api.networking.v1.PacketSender
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.Tag
 import net.minecraft.network.PacketSendListener
@@ -125,10 +124,9 @@ abstract class GlobalResearcherTradesProvider protected constructor(
         val notifiableNewTrades = newTrades.filterNot { it.noNotification }
         if (notifiableNewTrades.isEmpty()) return
 
-        // TODO: non-fabric specific sendPacket
-//        sender.sendPacket(ResearcherTradesNotifPacket(notifiableNewTrades), object : PacketSendListener {
-//            override fun onSuccess() = after()
-//        })
+        player.sendPacket(ResearcherTradesNotifPacket(notifiableNewTrades), object : PacketSendListener {
+            override fun onSuccess() = after()
+        })
     }
 
     private fun onServerStop(server: MinecraftServer) {
