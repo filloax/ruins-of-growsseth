@@ -7,6 +7,7 @@ import com.filloax.fxlib.api.entity.getPersistData
 import com.filloax.fxlib.api.nbt.putIfAbsent
 import com.filloax.fxlib.api.savedata.FxSavedData
 import com.filloax.fxlib.api.codec.*
+import com.filloax.fxlib.api.networking.sendPacket
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.ruslan.growsseth.RuinsOfGrowsseth
@@ -18,8 +19,6 @@ import com.ruslan.growsseth.entity.researcher.ResearcherQuestComponent
 import com.ruslan.growsseth.structure.pieces.ResearcherTent
 import com.ruslan.growsseth.networking.CustomToastPacket
 import com.ruslan.growsseth.utils.*
-import net.fabricmc.fabric.api.networking.v1.PacketSender
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.core.BlockPos
 import net.minecraft.core.registries.Registries
 import net.minecraft.nbt.CompoundTag
@@ -180,7 +179,7 @@ object GrowssethExtraEvents {
         val id = packet.title.string + seqId
 
         if (!memory.contains(id)) {
-            ServerPlayNetworking.send(player, packet)
+            player.sendPacket(packet)
             memory.put(id, IntTag.valueOf(1))
         }
     }
@@ -189,7 +188,7 @@ object GrowssethExtraEvents {
     private fun handleTeleportResearcher(event: ApiEvent, server: MinecraftServer, api: GrowssethApi) {
         val pos = event.pos
         val id = event.desc?.let { "tp-$it" }
-        if (pos == null || id == null) {
+        if (isNull(pos) || id == null) {
             RuinsOfGrowsseth.LOGGER.error("Teleport researcher event must have a position and desc! $event")
             return
         }
@@ -282,7 +281,7 @@ object GrowssethExtraEvents {
     fun handleRemoveTent(event: ApiEvent, server: MinecraftServer, api: GrowssethApi) {
         val id = event.desc?.let { "rmTent-$it" }
         val pos = event.pos
-        if (pos == null || id == null) {
+        if (isNull(pos) || id == null) {
             RuinsOfGrowsseth.LOGGER.error("Remove tent event must have a position and desc! $event")
             return
         }
@@ -378,7 +377,7 @@ object GrowssethExtraEvents {
     fun handleSpawnResearcher(event: ApiEvent, server: MinecraftServer, api: GrowssethApi) {
         val id = event.desc?.let { "spawnRes-$it" }
         val pos = event.pos
-        if (pos == null || id == null) {
+        if (isNull(pos) || id == null) {
             RuinsOfGrowsseth.LOGGER.error("spawn Researcher event must have a position and desc! $event")
             return
         }
