@@ -51,7 +51,9 @@
         "adapter": "kotlin"
       }
     ],
-    "modmenu": [ "com.ruslan.growsseth.client.GrowssethModMenu" ]
+    "modmenu": [
+      "com.ruslan.growsseth.client.GrowssethModMenu"
+    ]
   },
   "mixins": [
     "growsseth.mixins.json"

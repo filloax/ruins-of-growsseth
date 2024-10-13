@@ -10,6 +10,7 @@ plugins {
 
 	kotlin("jvm")
 	alias(libs.plugins.kotlin.serialization)
+	alias(libs.plugins.kotlin.atomicfu)
 
 	alias(libs.plugins.moddevgradle)
 }
@@ -43,16 +44,7 @@ neoForge {
 	// access transformers use default path so no need to config
 }
 
-// #region setup remapped libs (otherwise messes up with minivan)
-val remapDir: Path = project.layout.buildDirectory.asFile.map { it.toPath() }.get().resolve("growsseth_remaps")
-// if below errors with "no value found", minecraftVersion is wrong
-//val fxlib = files(Remapper.remap(project, minecraftVersion, dependencies.create(getFxlib()) {
-//		isTransitive = false
-//	}, remapDir.resolve("fxlib_int2moj.jar")))
-//
-//println("FXLIB remapped: ${fxlib.joinToString { it.name }}")
-
-// #endregion
+val socketIoLibs = ext.get("socketio-libs") as List<String>
 
 dependencies {
 	compileOnly( libs.jsr305 )
@@ -61,9 +53,12 @@ dependencies {
 	compileOnly( libs.kotlin.stdlib )
 	compileOnly( libs.kotlin.reflect )
 	compileOnly( libs.kotlin.serialization )
+	compileOnly( libs.kotlin.datetime )
 
     compileOnly( libs.mixin )
     compileOnly( libs.mixinextras.common )
+
+	socketIoLibs.forEach(this::compileOnly)
 
 	compileOnly(getResourcefulConfig())
 	compileOnly(getFxlib())

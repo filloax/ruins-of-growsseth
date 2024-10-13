@@ -1,6 +1,5 @@
 package com.ruslan.growsseth.data
 
-import com.ruslan.growsseth.GrowssethBannerPatterns
 import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.advancements.StructureAdvancements
@@ -44,6 +43,7 @@ import net.minecraft.world.level.block.Blocks
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
+// TODO: move what can be moved to common, there
 
 // BIG thanks to https://github.com/Ayutac/fabric-example-worldgen
 // fixed my headache
@@ -69,11 +69,11 @@ class DataGeneration : DataGeneratorEntrypoint {
 
     override fun buildRegistry(registryBuilder: RegistrySetBuilder) {
         registryBuilder.add(Registries.PROCESSOR_LIST, GrProcessorLists::bootstrap)
-        registryBuilder.add(Registries.TEMPLATE_POOL, SimplePools::bootstrap)
+        registryBuilder.add(Registries.TEMPLATE_POOL, SimplePools.Companion::bootstrap)
         registryBuilder.add(Registries.STRUCTURE, GrowssethStructures::bootstrap)
         registryBuilder.add(Registries.WORLD_PRESET, GrowssethModWorldPresets::bootstrap)
         registryBuilder.add(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST, GrowssethWorldPreset::bootstrapNoiseBiomeSourcesSettings)
-        registryBuilder.add(Registries.BANNER_PATTERN, GrowssethBannerPatterns::bootstrap)
+        registryBuilder.add(Registries.BANNER_PATTERN, com.ruslan.growsseth.GrowssethBannerPatterns::bootstrap)
         registryBuilder.add(Registries.JUKEBOX_SONG, GrowssethJukeboxSongs::bootstrap)
     }
 
@@ -212,7 +212,7 @@ class TagProviderWorldPresets(output: FabricDataOutput, registries: CompletableF
 
 class TagProviderBannerPatterns(output: FabricDataOutput, registries: CompletableFuture<HolderLookup.Provider>): BannerPatternTagsProvider(output, registries) {
     override fun addTags(arg: HolderLookup.Provider) {
-        GrowssethBannerPatterns.all.forEach { banner ->
+        com.ruslan.growsseth.GrowssethBannerPatterns.all.forEach { banner ->
             getOrCreateRawBuilder(banner.tag)
                 .addElement(banner.id().location())
         }

@@ -4,9 +4,6 @@ import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.client.gui.components.NewTradeToast.Companion.updateNewTradeToast
 import com.ruslan.growsseth.client.gui.components.updateCustomToast
 import com.ruslan.growsseth.client.worldpreset.GrowssethWorldPresetClient
-import com.ruslan.growsseth.config.ClientConfig
-import com.ruslan.growsseth.config.GrowssethConfig
-import com.ruslan.growsseth.config.ResearcherConfig
 import com.ruslan.growsseth.dialogues.handleNpcDialogueLine
 import com.ruslan.growsseth.networking.*
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
@@ -14,6 +11,7 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.sounds.SoundEvents
 
+// TODO: abstract away into common module
 object GrowssethNetworkingClient {
     fun init() {
         val client = Minecraft.getInstance()
@@ -23,7 +21,7 @@ object GrowssethNetworkingClient {
         }
 
         ClientPlayNetworking.registerGlobalReceiver(ResearcherTradesNotifPacket.TYPE) { packet, context ->
-            if (ClientConfig.newTradeNotifications) {
+            if (com.ruslan.growsseth.config.ClientConfig.newTradeNotifications) {
                 client.toasts.updateNewTradeToast(packet.newTrades)
                 RuinsOfGrowsseth.LOGGER.info("Received trade notification")
             } else {
