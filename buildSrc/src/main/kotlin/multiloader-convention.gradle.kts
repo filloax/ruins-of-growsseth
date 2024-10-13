@@ -104,6 +104,19 @@ val fxlibVersion = libs.get().findVersion("fxlib").get().toString()
 val rconfigVersion = libs.get().findVersion("rconfig").get().toString()
 val rconfigMcVersion = libs.get().findVersion("rconfigMc").get().toString()
 
+// Socketio libs
+ext.set("socketio-libs", listOf(
+    "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5",
+    "org.json:json:20231013",
+    "org.java-websocket:Java-WebSocket:1.5.4",
+    "com.squareup.okio:okio:3.4.0",
+    "com.squareup.okhttp3:okhttp:4.11.0",
+    "io.socket:engine.io-client:2.1.0",
+    "io.socket:socket.io-client:2.1.0"
+))
+
+// Task configuration
+
 tasks.withType<Jar>().configureEach {
     from(rootProject.file("LICENSE")) {
         rename { "${it}_${modName}" }

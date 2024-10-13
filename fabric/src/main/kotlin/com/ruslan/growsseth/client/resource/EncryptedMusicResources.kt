@@ -4,17 +4,15 @@ import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.resource.MusicCommon
 import com.ruslan.growsseth.utils.DecryptUtil
 import com.ruslan.growsseth.utils.resLoc
-import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener
 import net.minecraft.resources.FileToIdConverter
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.packs.resources.ResourceManager
-import net.minecraft.util.profiling.ProfilerFiller
 import java.io.IOException
 import java.io.InputStream
-import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executor
 import javax.crypto.SecretKey
+
+// TODO: separate into common, issue is resource listeners
 
 /**
  * Used to load encrypted music files that would normally be monetized, at the

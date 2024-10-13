@@ -2,7 +2,6 @@ package com.ruslan.growsseth.events;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.server.level.ServerPlayer;
 

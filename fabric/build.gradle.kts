@@ -52,6 +52,8 @@ val baseProject = project(":base")
 
 if (includeDeps) println("Including dependencies for test mode")
 
+val socketIoLibs = ext.get("socketio-libs") as List<String>
+
 dependencies {
 	minecraft( libs.minecraft )
 	implementation( libs.jsr305 )
@@ -67,21 +69,10 @@ dependencies {
 	compileOnly(baseProject)
 
 	// Socketio dependencies
-	implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5")
-	implementation("org.json:json:20231013")
-	implementation("org.java-websocket:Java-WebSocket:1.5.4")
-	implementation("com.squareup.okio:okio:3.4.0")
-	implementation("com.squareup.okhttp3:okhttp:4.11.0")
-	implementation("io.socket:engine.io-client:2.1.0")
-	implementation("io.socket:socket.io-client:2.1.0")
-
-	include("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5")
-	include("org.json:json:20231013")
-	include("org.java-websocket:Java-WebSocket:1.5.4")
-	include("com.squareup.okio:okio:3.4.0")
-	include("com.squareup.okhttp3:okhttp:4.11.0")
-	include("io.socket:engine.io-client:2.1.0")
-	include("io.socket:socket.io-client:2.1.0")
+	socketIoLibs.forEach {
+		implementation(it)
+		include(it)
+	}
 	// End Socketio dependencies
 
 	modImplementation( libs.fabric )
