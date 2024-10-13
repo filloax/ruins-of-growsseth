@@ -22,7 +22,6 @@ import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.Leashable
 import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.ItemStack
@@ -54,21 +53,21 @@ object FabricEvents : ModEvents() {
 
     override fun onEntityUnload(event: (entity: Entity, level: ServerLevel) -> Unit) = ServerEntityEvents.ENTITY_UNLOAD.register(event)
 
-    override fun onEntityDestroyed(event: (entity: Entity, level: ServerLevel) -> Unit) = ServerEntityLifecycleEvents.ENTITY_DESTROYED.register(event)
+    override fun onEntityDestroyed(event: (entity: Entity, level: ServerLevel) -> Unit) = com.ruslan.growsseth.events.ServerEntityLifecycleEvents.ENTITY_DESTROYED.register(event)
 
     override fun afterPlayerBlockBreak(event: (Level, Player, BlockPos, BlockState, BlockEntity?) -> Unit) = PlayerBlockBreakEvents.AFTER.register(event)
 
-    override fun afterPlayerPlaceBlock(event: (Player, Level, BlockPos, BlockPlaceContext, BlockState, BlockItem) -> Unit) = PlaceBlockEvent.AFTER.register(event)
+    override fun afterPlayerPlaceBlock(event: (Player, Level, BlockPos, BlockPlaceContext, BlockState, BlockItem) -> Unit) = com.ruslan.growsseth.events.PlaceBlockEvent.AFTER.register(event)
 
     override fun onPlayerServerJoin(event: (handler: ServerGamePacketListenerImpl, PacketSender, MinecraftServer) -> Unit) = ServerPlayConnectionEvents.JOIN.register(event)
 
-    override fun onPlayerAdvancement(event: (ServerPlayer, AdvancementHolder, criterionString: String) -> Unit) = PlayerAdvancementEvent.EVENT.register(event)
+    override fun onPlayerAdvancement(event: (ServerPlayer, AdvancementHolder, criterionString: String) -> Unit) = com.ruslan.growsseth.events.PlayerAdvancementEvent.EVENT.register(event)
 
-    override fun onFenceLeash(event: (Leashable, BlockPos, ServerPlayer) -> Unit) = LeashEvents.FENCE_LEASH.register(event)
+    override fun onFenceLeash(event: (Leashable, BlockPos, ServerPlayer) -> Unit) = com.ruslan.growsseth.events.LeashEvents.FENCE_LEASH.register(event)
 
-    override fun onFenceUnleash(event: (Leashable, BlockPos) -> Unit) = LeashEvents.FENCE_UNLEASH.register(event)
+    override fun onFenceUnleash(event: (Leashable, BlockPos) -> Unit) = com.ruslan.growsseth.events.LeashEvents.FENCE_UNLEASH.register(event)
 
-    override fun beforeNameTagRename(event: (target: LivingEntity, Component, ServerPlayer, ItemStack, InteractionHand) -> InteractionResultHolder<ItemStack>) = NameTagRenameEvent.BEFORE.register(event)
+    override fun beforeNameTagRename(event: (target: LivingEntity, Component, ServerPlayer, ItemStack, InteractionHand) -> InteractionResultHolder<ItemStack>) = com.ruslan.growsseth.events.NameTagRenameEvent.BEFORE.register(event)
 
     override fun onLootTableModify(event: (key: ResourceKey<LootTable>, tableBuilder: LootTable.Builder, source: LootTableSource, registries: HolderLookup.Provider) -> Unit) = LootTableEvents.MODIFY.register(event)
 }

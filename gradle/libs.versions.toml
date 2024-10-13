@@ -13,14 +13,16 @@ parchment = "2024.07.07"
 neoform = "1.21-20240613.152323" # vanilla neoforge configuration
 
 # Mod dependencies
-fxlib = "0.28.0-1.21"
+fxlib = "0.28.2-rev0-1.21" #"0.28.1-1.21"
 modmenu = "11.0.1"
-rconfig = "3.0.2"
+rconfig = "3.0.7"
 rconfigMc = "1.21"
 
 # Kotlin
 kotlin = "2.0.0"
 kotlin-serialization = "1.7.1"
+kotlin-atomicfu = "0.25.0"
+kotlin-datetime = "0.6.1"
 
 # Fabric Settings
 fabric = "0.15.11"
@@ -55,6 +57,7 @@ kotlin-jvm = { group = "org.jetbrains.kotlin.jvm", name = "org.jetbrains.kotlin.
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
 kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
 kotlin-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlin-serialization" }
+kotlin-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlin-datetime" }
 
 # Platform
 fabric = { group = "net.fabricmc", name = "fabric-loader", version.ref = "fabric" }
@@ -70,6 +73,7 @@ log4j = { group = "org.apache.logging.log4j", name = "log4j-core", version.ref =
 # Kotlin
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kotlin-atomicfu = { id = "org.jetbrains.kotlinx.atomicfu", version.ref = "kotlin-atomicfu" }
 
 # Platform
 moddevgradle = { id = "net.neoforged.moddev", version.ref = "plugin-moddev" }
