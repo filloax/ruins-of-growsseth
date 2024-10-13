@@ -1,5 +1,7 @@
 package com.ruslan.gradle
 
+import gradle.kotlin.dsl.accessors._a3cefda71dba795f6746bc36999f0190.versionCatalogs
+import org.gradle.api.Project
 import java.io.File
 
 
@@ -31,4 +33,33 @@ fun File.copyRecursivelyWithTransform(target: File, transform: (String) -> Strin
 //            println("Copied $file to $destFile")
         }
     }
+}
+
+fun Project.getFxlib(loader: String = "common"): String {
+    val useLocalJarFxLib = (property("useLocalJarFxLib") as String).toBoolean()
+    val alwaysUseLocalMavenFXLib = (property("alwaysUseLocalMavenFXLib")!! as String).toBoolean()
+
+    val libs = versionCatalogs.find("libs").get()
+    val fxlibVersion = libs.findVersion("fxlib").get().toString()
+    val useLocalMavenFxLib = alwaysUseLocalMavenFXLib || fxlibVersion.contains(Regex("rev\\d+"))
+
+    return (if (useLocalJarFxLib)
+        ":fx-lib-${fxlibVersion}-${loader}"
+    else if (useLocalMavenFxLib)
+        "com.filloax.fxlib:fx-lib-${loader}:${fxlibVersion}"
+    else
+        "com.github.filloax:fx-lib:v${fxlibVersion}-${loader}"
+            )
+}
+
+// neoforge doesn't have mapping issues
+fun Project.getResourcefulConfig(loader: String = "neoforge"): String {
+    val libs = versionCatalogs.find("libs").get()
+    val mcVersion = libs.findVersion("minecraft").get().toString()
+    val rmcVersion = libs.findVersion("rconfigMc").get().toString()
+    val version = libs.findVersion("rconfig").get().toString()
+
+    return "com.teamresourceful.resourcefulconfig" +
+            ":resourcefulconfig-${loader}-${if (rmcVersion == "") mcVersion else rmcVersion}" +
+            ":$version"
 }

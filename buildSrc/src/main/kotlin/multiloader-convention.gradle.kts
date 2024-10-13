@@ -24,6 +24,55 @@ java {
     targetCompatibility = javaVersionEnum
 }
 
+repositories {
+    mavenCentral()
+    mavenLocal()
+    maven("https://jitpack.io")
+    flatDir {
+        dirs("libs")
+    }
+
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Sponge"
+                url = uri("https://repo.spongepowered.org/repository/maven-public")
+            }
+        }
+        filter { includeGroupAndSubgroups("org.spongepowered") }
+    }
+
+    exclusiveContent {
+        forRepositories(
+            maven {
+                name = "ParchmentMC"
+                url = uri("https://maven.parchmentmc.org/")
+            },
+            maven {
+                name = "NeoForge"
+                url = uri("https://maven.neoforged.net/releases")
+            }
+        )
+        filter { includeGroup("org.parchmentmc.data") }
+    }
+
+    exclusiveContent {
+        forRepositories(
+            maven {
+                name = "Team Resourceful Maven"
+                url = uri("https://maven.teamresourceful.com/repository/maven-public/")
+            }
+        )
+        filter { includeGroup("com.teamresourceful.resourcefulconfig") }
+    }
+
+    maven {
+        name = "BlameJared"
+        url = uri("https://maven.blamejared.com")
+    }
+}
+
+
 val libs = project.versionCatalogs.find("libs")
 
 // Project settings
@@ -51,8 +100,9 @@ val fabricVersion = libs.get().findVersion("fabric").get()
 val fabricKotlinVersion = libs.get().findVersion("fabric.language.kotlin").get()
 
 // Libraries
-val fxlibVersion = libs.get().findVersion("fxlib").get()
-val rconfigVersion = libs.get().findVersion("rconfig").get()
+val fxlibVersion = libs.get().findVersion("fxlib").get().toString()
+val rconfigVersion = libs.get().findVersion("rconfig").get().toString()
+val rconfigMcVersion = libs.get().findVersion("rconfigMc").get().toString()
 
 tasks.withType<Jar>().configureEach {
     from(rootProject.file("LICENSE")) {

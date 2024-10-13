@@ -1,3 +1,6 @@
+import com.ruslan.gradle.getFxlib
+import com.ruslan.gradle.getResourcefulConfig
+
 plugins {
 	// see buildSrc
 	id("com.ruslan.gradle.multiloader-convention")
@@ -7,18 +10,20 @@ plugins {
 	alias(libs.plugins.loom)
 }
 
+val modid: String by project
+
 loom {
+	accessWidenerPath = project(":base").file("src/main/resources/${modid}.accesswidener")
+	mixin.defaultRefmapName = "${modid}.refmap.json"
+
 	mods {
-		register("growsseth") {
+		register(modid) {
 			sourceSet(sourceSets.main.get())
 		}
 	}
-
-	accessWidenerPath = file("src/main/resources/growsseth.accesswidener")
 }
 
 // Project settings
-val modid: String by project
 val useLocalJarFxLib = (property("useLocalJarFxLib") as String).toBoolean()
 val alwaysUseLocalMavenFXLib = (property("alwaysUseLocalMavenFXLib")!! as String).toBoolean()
 val includeDeps = (property("includeDeps") as String).toBoolean()
@@ -26,24 +31,9 @@ val includeDeps = (property("includeDeps") as String).toBoolean()
 val modVersion = libs.versions.modversion.get()
 
 repositories {
-	mavenCentral()
-	mavenLocal()
-
 	maven("https://api.modrinth.com/maven")
 	maven("https://maven.terraformersmc.com/releases")
-	maven {
-		name = "ParchmentMC"
-		url = uri("https://maven.parchmentmc.org")
-	}
 	maven("https://jitpack.io")
-	maven {
-		// Location of the maven that hosts Team Resourceful's jars.
-		name = "Team Resourceful Maven"
-		url = uri("https://maven.teamresourceful.com/repository/maven-public/")
-	}
-	flatDir {
-		dirs("libs")
-	}
 }
 
 // Main versions
@@ -74,6 +64,8 @@ dependencies {
 		}
 	})
 
+	compileOnly(baseProject)
+
 	// Socketio dependencies
 	implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5")
 	implementation("org.json:json:20231013")
@@ -100,7 +92,7 @@ dependencies {
 	listOf(
 		libs.fabric.kotlin,
 		libs.modmenu,
-		getRconfig(),
+		getResourcefulConfig("fabric"),
 	).forEach {
 		modImplementation(it)
 		if (includeDeps)
@@ -109,32 +101,10 @@ dependencies {
 
 	implementation( libs.kotlin.serialization ) { exclude(module = "kotlin-stdlib") }
 
-	getFxlib().let{
+	getFxlib("fabric").let{
 		modImplementation(it) { exclude(module = "kotlin-stdlib") }
 		include(it)
 	}
-}
-
-fun getFxlib(): String {
-	val fxLibVersion = libs.versions.fxlib.get()
-	val useLocalMavenFxLib = alwaysUseLocalMavenFXLib || fxLibVersion.contains(Regex("rev\\d+"))
-
-	return (if (useLocalJarFxLib)
-		":fx-lib-${fxLibVersion}-fabric"
-	else if (useLocalMavenFxLib)
-		"com.filloax.fxlib:fx-lib:${fxLibVersion}-fabric"
-	else
-		"com.github.filloax:FX-Lib:v${fxLibVersion}-fabric"
-	)
-}
-
-fun getRconfig(): String {
-	val mcVersion = libs.versions.rconfigMc.get()
-	val version = libs.versions.rconfig.get()
-
-	return "com.teamresourceful.resourcefulconfig" +
-			":resourcefulconfig-fabric-${if (mcVersion == "") minecraftVersion else mcVersion}" +
-			":$version"
 }
 
 tasks.compileJava {

@@ -1,17 +1,23 @@
 import com.ruslan.gradle.TransformTokensTask
+import com.ruslan.gradle.getFxlib
+import com.ruslan.gradle.getResourcefulConfig
+import java.nio.file.Path
 
 plugins {
     // see buildSrc
     id("com.ruslan.gradle.multiloader-convention")
     id("com.ruslan.gradle.token-replacement")
 
-    alias(libs.plugins.vanillagradle)
+	alias(libs.plugins.moddevgradle)
 }
 
 val modid: String by project
 val modVersion = libs.versions.modversion.get()
 val minecraftVersion = libs.versions.minecraft.asProvider().get()
 
+// Project settings
+val useLocalJarFxLib = (property("useLocalJarFxLib") as String).toBoolean()
+val alwaysUseLocalMavenFXLib = (property("alwaysUseLocalMavenFXLib")!! as String).toBoolean()
 val cydoVersion = (property("cydoVersion") as String).toBoolean()
 
 version = "$modVersion-${minecraftVersion}-base"
@@ -20,20 +26,44 @@ base {
     archivesName = modid
 }
 
-minecraft {
-    version(minecraftVersion)
-    accessWideners(file("src/main/resources/${modid}.accesswidener"))
+neoForge {
+	// vanilla mode, see moddevgradle docs
+	neoFormVersion = libs.versions.neoform
+
+	validateAccessTransformers = true
+
+	parchment {
+		minecraftVersion = libs.versions.parchment.minecraft
+		mappingsVersion = libs.versions.parchment.asProvider()
+	}
+
+	// access transformers use default path so no need to config
 }
 
-dependencies {
-    implementation( libs.jsr305 )
+// #region setup remapped libs (otherwise messes up with minivan)
+val remapDir: Path = project.layout.buildDirectory.asFile.map { it.toPath() }.get().resolve("growsseth_remaps")
+// if below errors with "no value found", minecraftVersion is wrong
+//val fxlib = files(Remapper.remap(project, minecraftVersion, dependencies.create(getFxlib()) {
+//		isTransitive = false
+//	}, remapDir.resolve("fxlib_int2moj.jar")))
+//
+//println("FXLIB remapped: ${fxlib.joinToString { it.name }}")
 
-    implementation( libs.kotlin.stdlib )
-    implementation( libs.kotlin.reflect )
-    implementation( libs.kotlin.serialization )
+// #endregion
+
+dependencies {
+	compileOnly( libs.jsr305 )
+	compileOnly( libs.log4j )
+
+	compileOnly( libs.kotlin.stdlib )
+	compileOnly( libs.kotlin.reflect )
+	compileOnly( libs.kotlin.serialization )
 
     compileOnly( libs.mixin )
     compileOnly( libs.mixinextras.common )
+
+	compileOnly(getResourcefulConfig())
+	compileOnly(getFxlib())
 }
 
 sourceSets.main.get().resources.srcDir(project(":base").file("src/generated/resources"))
