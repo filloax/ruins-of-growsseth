@@ -5,6 +5,7 @@ import com.filloax.fxlib.api.codec.mutableMapCodec
 import com.filloax.fxlib.api.codec.mutableSetOf
 import com.filloax.fxlib.api.nbt.loadField
 import com.filloax.fxlib.api.nbt.saveField
+import com.filloax.fxlib.api.networking.sendPacket
 import com.filloax.fxlib.api.optional
 import com.filloax.fxlib.api.secondsToTicks
 import com.filloax.fxlib.api.weightedRandom
@@ -17,7 +18,6 @@ import com.ruslan.growsseth.networking.DialoguePacket
 import com.ruslan.growsseth.quests.QuestOwner
 import com.ruslan.growsseth.utils.isNull
 import com.ruslan.growsseth.utils.notNull
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.ChatFormatting
 import net.minecraft.advancements.AdvancementHolder
 import net.minecraft.core.UUIDUtil
@@ -269,7 +269,7 @@ open class BasicDialoguesComponent(
 //            val nameComp = Component.literal("<").append(entity.name.copy().withStyle(ChatFormatting.YELLOW)).append("> ")
 //            val messageComp = nameComp.append(Component.translatable(line.content))
 //            player.displayClientMessage(messageComp, false)
-            ServerPlayNetworking.send(player, DialoguePacket(line, entity.name))
+            player.sendPacket(DialoguePacket(line, entity.name))
         }
     }
 

@@ -2,6 +2,7 @@ package com.ruslan.growsseth.http
 
 import com.filloax.fxlib.api.json.ItemByNameSerializer
 import com.filloax.fxlib.api.json.SimpleComponentSerializer
+import com.filloax.fxlib.api.networking.sendPacket
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.dialogues.DialogueEntry
 import com.ruslan.growsseth.entity.researcher.Researcher
@@ -11,7 +12,6 @@ import io.socket.client.Socket
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.network.PacketSendListener
 import net.minecraft.network.chat.Component
 import net.minecraft.network.protocol.Packet
@@ -262,7 +262,7 @@ class LiveUpdatesConnection private constructor(val server: MinecraftServer) : R
 
         val packet = CustomToastPacket(toastData.title, toastData.message, toastData.item?.defaultInstance ?: ItemStack.EMPTY)
         server.playerList.players.forEach { player ->
-            ServerPlayNetworking.getSender(player).sendPacket(packet, object : PacketSendListener {
+            player.sendPacket(packet, object : PacketSendListener {
                 override fun onSuccess() = sendSuccess()
                 override fun onFailure(): Packet<*>? {
                     sendFailure()

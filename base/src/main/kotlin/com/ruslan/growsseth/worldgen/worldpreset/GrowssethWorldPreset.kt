@@ -1,12 +1,12 @@
 package com.ruslan.growsseth.worldgen.worldpreset
 
 import com.filloax.fxlib.api.FxLibServices
+import com.filloax.fxlib.api.networking.sendPacket
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.config.WorldPresetConfig
 import com.ruslan.growsseth.networking.PlacesInfoPacket
 import com.ruslan.growsseth.worldgen.GrowssethModBiomeSources
 import com.ruslan.growsseth.worldgen.GrowssethModWorldPresets
-import net.fabricmc.fabric.api.networking.v1.PacketSender
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
 import net.minecraft.core.registries.Registries
@@ -44,10 +44,10 @@ object GrowssethWorldPreset {
         fun onServerPlayerJoin(handler: ServerGamePacketListenerImpl, server: MinecraftServer) {
             if (isGrowssethPreset(server)) {
                 if (LocationNotifListener.loaded) {
-                    sender.sendPacket(PlacesInfoPacket(LocationNotifListener.PLACES_DATA))
+                    handler.sendPacket(PlacesInfoPacket(LocationNotifListener.PLACES_DATA))
                 } else {
                     LocationNotifListener.onNextReload {
-                        sender.sendPacket(PlacesInfoPacket(it))
+                        handler.sendPacket(PlacesInfoPacket(it))
                     }
                 }
             }
