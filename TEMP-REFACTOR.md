@@ -15,3 +15,4 @@ Cose più complesse da ricontrollare in prossimi commit che al momento usano fab
     - onLootTableModify
     - onPlayerServerJoin
 - Gestione registri
+- Eventi fabric vanno poi portati su forge? vedremo
