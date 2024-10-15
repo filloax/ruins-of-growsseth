@@ -66,6 +66,16 @@ repositories {
         filter { includeGroup("com.teamresourceful.resourcefulconfig") }
     }
 
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Modrinth"
+                url = uri("https://api.modrinth.com/maven")
+            }
+        }
+        filter { includeGroup("maven.modrinth") }
+    }
+
     maven {
         name = "BlameJared"
         url = uri("https://maven.blamejared.com")

@@ -38,3 +38,4 @@ logs/*
 
 **/music.key
 tools/egobalego-no-gui/server_data.json
+*.log
