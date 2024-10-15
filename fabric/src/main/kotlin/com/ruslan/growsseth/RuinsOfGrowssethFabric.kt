@@ -48,7 +48,7 @@ object RuinsOfGrowssethFabric : ModInitializer, RuinsOfGrowsseth() {
     }
 
     override fun initRegistries() {
-        GrowssethCreativeModeTabs.registerCreativeModeTabs()
+        GrowssethCreativeModeTabs.registerCreativeModeTabs { id, value -> Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, id, value) }
         GrowssethItems.registerItems{ id, value -> Registry.register(BuiltInRegistries.ITEM, id, value) }
         GrowssethItems.Instruments.registerInstruments{ id, value -> Registry.register(BuiltInRegistries.INSTRUMENT, id, value) }
         GrowssethItems.SherdPatterns.registerPotPatterns { id, value -> Registry.register(BuiltInRegistries.DECORATED_POT_PATTERN, id, value) }
