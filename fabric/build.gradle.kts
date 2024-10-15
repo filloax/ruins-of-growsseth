@@ -1,4 +1,4 @@
-import com.ruslan.gradle.getFxlib
+import com.ruslan.gradle.getFilloaxlib
 import com.ruslan.gradle.getResourcefulConfig
 
 plugins {
@@ -24,8 +24,6 @@ loom {
 }
 
 // Project settings
-val useLocalJarFxLib = (property("useLocalJarFxLib") as String).toBoolean()
-val alwaysUseLocalMavenFXLib = (property("alwaysUseLocalMavenFXLib")!! as String).toBoolean()
 val includeDeps = (property("includeDeps") as String).toBoolean()
 
 val modVersion = libs.versions.modversion.get()
@@ -92,7 +90,7 @@ dependencies {
 
 	implementation( libs.kotlin.serialization ) { exclude(module = "kotlin-stdlib") }
 
-	getFxlib("fabric").let{
+	getFilloaxlib("fabric").let{
 		modImplementation(it) { exclude(module = "kotlin-stdlib") }
 		include(it)
 	}
