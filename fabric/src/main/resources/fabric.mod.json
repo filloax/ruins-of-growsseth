@@ -60,7 +60,7 @@
   ],
   "accessWidener": "growsseth.accesswidener",
   "depends": {
-    "fx-lib": ">=${fxlib_version}",
+    "fx-lib": ">=${filloaxlib_version}",
     "resourcefulconfig": ">=${rconfig_version}",
     "fabric-language-kotlin": ">=${fabric_kotlin_version}",
     "fabricloader": ">=${fabric_loader_version}",

@@ -13,7 +13,7 @@ parchment = "2024.07.07"
 neoform = "1.21-20240613.152323" # vanilla neoforge configuration
 
 # Mod dependencies
-fxlib = "0.29.0-1.21" #"0.28.1-1.21"
+filloaxlib = "0.30.0-1.21" #"0.28.1-1.21"
 modmenu = "11.0.1"
 rconfig = "3.0.7"
 rconfigMc = "1.21"
@@ -43,7 +43,7 @@ plugin-moddev = "2.0.36-beta"
 
 [libraries]
 # Mods
-# fxlib depends on various things, so define in build.gradle
+# filloaxlib depends on various things, so define in build.gradle
 modmenu = { group = "com.terraformersmc", name = "modmenu", version.ref = "modmenu" }
 # name depends on mc version, so define in build.gradle
 # rconfig = { group = "com.teamresourceful.resourcefulconfig", name = "resourcefulconfig-common-", version.ref = "modmenu" }
