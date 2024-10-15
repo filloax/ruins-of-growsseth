@@ -43,13 +43,14 @@ fun Project.getFilloaxlib(loader: String = "common"): String {
     val filloaxlibVersion = libs.findVersion("filloaxlib").get().toString()
     val useLocalMavenFilloaxLib = alwaysUseLocalMavenFilloaxLib || filloaxlibVersion.contains(Regex("rev\\d+"))
 
-    return (if (useLocalJarFilloaxLib)
+    return if (useLocalJarFilloaxLib)
         ":filloaxlib-${filloaxlibVersion}-${loader}"
     else if (useLocalMavenFilloaxLib)
         "com.filloax.filloaxlib:filloaxlib-${loader}:${filloaxlibVersion}"
+    else if (loader == "common")
+        "com.github.filloax.filloaxlib:filloaxlib-${loader}:v${filloaxlibVersion}-${loader}"
     else
-        "com.github.filloax:filloaxlib:v${filloaxlibVersion}-${loader}"
-    )
+        "maven.modrinth:filloaxlib:${filloaxlibVersion}-${loader}"
 }
 
 // neoforge doesn't have mapping issues
