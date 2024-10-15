@@ -86,9 +86,6 @@ val license: String by project
 val displayUrl: String by project
 
 val cydoVersion = (property("cydoVersion") as String).toBoolean()
-val useLocalJarFxLib = (property("useLocalJarFxLib") as String).toBoolean()
-val alwaysUseLocalMavenFXLib = (property("alwaysUseLocalMavenFXLib")!! as String).toBoolean()
-val includeDeps = (property("includeDeps") as String).toBoolean()
 
 // Main versions
 val modVersion = libs.get().findVersion("modversion").get()
@@ -100,7 +97,7 @@ val fabricVersion = libs.get().findVersion("fabric").get()
 val fabricKotlinVersion = libs.get().findVersion("fabric.language.kotlin").get()
 
 // Libraries
-val fxlibVersion = libs.get().findVersion("fxlib").get().toString()
+val filloaxlibVersion = libs.get().findVersion("filloaxlib").get().toString()
 val rconfigVersion = libs.get().findVersion("rconfig").get().toString()
 val rconfigMcVersion = libs.get().findVersion("rconfigMc").get().toString()
 
@@ -161,7 +158,7 @@ tasks.withType<ProcessResources>().configureEach {
         "fabric_loader_version" to fabricVersion,
         "fapi_version" to fapiVersion,
 
-        "fxlib_version" to fxlibVersion,
+        "filloaxlib_version" to filloaxlibVersion,
         "rconfig_version" to rconfigVersion,
 
         "mod_name" to modName,

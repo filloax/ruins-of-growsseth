@@ -35,21 +35,21 @@ fun File.copyRecursivelyWithTransform(target: File, transform: (String) -> Strin
     }
 }
 
-fun Project.getFxlib(loader: String = "common"): String {
-    val useLocalJarFxLib = (property("useLocalJarFxLib") as String).toBoolean()
-    val alwaysUseLocalMavenFXLib = (property("alwaysUseLocalMavenFXLib")!! as String).toBoolean()
+fun Project.getFilloaxlib(loader: String = "common"): String {
+    val useLocalJarFilloaxLib = (property("useLocalJarFilloaxLib") as String).toBoolean()
+    val alwaysUseLocalMavenFilloaxLib = (property("alwaysUseLocalMavenFilloaxLib")!! as String).toBoolean()
 
     val libs = versionCatalogs.find("libs").get()
-    val fxlibVersion = libs.findVersion("fxlib").get().toString()
-    val useLocalMavenFxLib = alwaysUseLocalMavenFXLib || fxlibVersion.contains(Regex("rev\\d+"))
+    val filloaxlibVersion = libs.findVersion("filloaxlib").get().toString()
+    val useLocalMavenFilloaxLib = alwaysUseLocalMavenFilloaxLib || filloaxlibVersion.contains(Regex("rev\\d+"))
 
-    return (if (useLocalJarFxLib)
-        ":fx-lib-${fxlibVersion}-${loader}"
-    else if (useLocalMavenFxLib)
-        "com.filloax.fxlib:fx-lib-${loader}:${fxlibVersion}"
+    return (if (useLocalJarFilloaxLib)
+        ":filloaxlib-${filloaxlibVersion}-${loader}"
+    else if (useLocalMavenFilloaxLib)
+        "com.filloax.filloaxlib:filloaxlib-${loader}:${filloaxlibVersion}"
     else
-        "com.github.filloax:fx-lib:v${fxlibVersion}-${loader}"
-            )
+        "com.github.filloax:filloaxlib:v${filloaxlibVersion}-${loader}"
+    )
 }
 
 // neoforge doesn't have mapping issues

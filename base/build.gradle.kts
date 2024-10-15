@@ -1,7 +1,6 @@
 import com.ruslan.gradle.TransformTokensTask
-import com.ruslan.gradle.getFxlib
+import com.ruslan.gradle.getFilloaxlib
 import com.ruslan.gradle.getResourcefulConfig
-import java.nio.file.Path
 
 plugins {
     // see buildSrc
@@ -20,8 +19,6 @@ val modVersion = libs.versions.modversion.get()
 val minecraftVersion = libs.versions.minecraft.asProvider().get()
 
 // Project settings
-val useLocalJarFxLib = (property("useLocalJarFxLib") as String).toBoolean()
-val alwaysUseLocalMavenFXLib = (property("alwaysUseLocalMavenFXLib")!! as String).toBoolean()
 val cydoVersion = (property("cydoVersion") as String).toBoolean()
 
 version = "$modVersion-${minecraftVersion}-base"
@@ -61,7 +58,7 @@ dependencies {
 	socketIoLibs.forEach(this::compileOnly)
 
 	compileOnly(getResourcefulConfig())
-	compileOnly(getFxlib())
+	compileOnly(getFilloaxlib())
 }
 
 sourceSets.main.get().resources.srcDir(project(":base").file("src/generated/resources"))
