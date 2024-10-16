@@ -94,7 +94,8 @@ dependencies {
 		modImplementation(it) { exclude(module = "kotlin-stdlib") }
 		include(it)
 	}
-	compileOnly( libs.kotlinevents )
+	implementation( libs.kotlinevents )
+	include( libs.kotlinevents )
 }
 
 tasks.compileJava {

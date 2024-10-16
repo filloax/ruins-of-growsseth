@@ -16,7 +16,7 @@ import net.minecraft.server.packs.PackType
 import org.apache.logging.log4j.Level
 
 
-object GrowssethClient : ClientModInitializer {
+object GrowssethClientFabric : ClientModInitializer {
     override fun onInitializeClient() {
         GrowssethRenderers.init()
         GrowssethNetworkingClient.init()

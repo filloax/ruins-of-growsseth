@@ -83,7 +83,7 @@ repositories {
 }
 
 
-val libs = project.versionCatalogs.find("libs")
+val libs = project.versionCatalogs.find("libs").get()
 
 // Project settings
 val modid: String by project
@@ -98,18 +98,19 @@ val displayUrl: String by project
 val cydoVersion = (property("cydoVersion") as String).toBoolean()
 
 // Main versions
-val modVersion = libs.get().findVersion("modversion").get()
-val kotlinVersion = libs.get().findVersion("kotlin").get()
-val minecraftVersion = libs.get().findVersion("minecraft").get()
-val minecraftVersionRange = libs.get().findVersion("minecraft.range").get()
-val fapiVersion = libs.get().findVersion("fabric.api").get()
-val fabricVersion = libs.get().findVersion("fabric").get()
-val fabricKotlinVersion = libs.get().findVersion("fabric.language.kotlin").get()
+val modVersion = libs.findVersion("modversion").get()
+val kotlinVersion = libs.findVersion("kotlin").get()
+val minecraftVersion = libs.findVersion("minecraft").get()
+val minecraftVersionRange = libs.findVersion("minecraft.range").get()
+val fabricMinecraftVersionRange = libs.findVersion("minecraft.range.fabric").get()
+val fapiVersion = libs.findVersion("fabric.api").get()
+val fabricVersion = libs.findVersion("fabric").get()
+val fabricKotlinVersion = libs.findVersion("fabric.language.kotlin").get()
 
 // Libraries
-val filloaxlibVersion = libs.get().findVersion("filloaxlib").get().toString()
-val rconfigVersion = libs.get().findVersion("rconfig").get().toString()
-val rconfigMcVersion = libs.get().findVersion("rconfigMc").get().toString()
+val filloaxlibVersion = libs.findVersion("filloaxlib").get().toString()
+val rconfigVersion = libs.findVersion("rconfig").get().toString()
+val rconfigMcVersion = libs.findVersion("rconfigMc").get().toString()
 
 // Socketio libs
 ext.set("socketio-libs", listOf(
@@ -164,6 +165,7 @@ tasks.withType<ProcessResources>().configureEach {
         "display_url" to displayUrl, // Else we target the task's group.
         "minecraft_version" to minecraftVersion,
         "minecraft_version_range" to minecraftVersionRange,
+        "fabric_minecraft_version_range" to fabricMinecraftVersionRange,
         "fabric_kotlin_version" to fabricKotlinVersion,
         "fabric_loader_version" to fabricVersion,
         "fapi_version" to fapiVersion,
