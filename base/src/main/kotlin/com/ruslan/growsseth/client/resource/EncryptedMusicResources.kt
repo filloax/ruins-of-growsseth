@@ -4,15 +4,13 @@ import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.resource.MusicCommon
 import com.ruslan.growsseth.utils.DecryptUtil
 import com.ruslan.growsseth.utils.resLoc
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener
 import net.minecraft.resources.FileToIdConverter
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.packs.resources.ResourceManager
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener
 import java.io.IOException
 import java.io.InputStream
 import javax.crypto.SecretKey
-
-// TODO: separate into common, issue is resource listeners
 
 /**
  * Used to load encrypted music files that would normally be monetized, at the
@@ -21,8 +19,6 @@ import javax.crypto.SecretKey
  * (If it does, please report!)
  * Yes, it's possible to reverse this with some effort, but please support the official (free)
  * release on spotify by Il Coro di Mammonk rather than doing that!
- * ---
- * Might reimplement with fabric sound library later,for now this works and is even loader-independent!
  */
 object EncryptedMusicResources {
     @JvmField
@@ -44,9 +40,8 @@ object EncryptedMusicResources {
         }
     }
 
-    class KeyListener : SimpleSynchronousResourceReloadListener {
-        override fun getFabricId() = resLoc("sounds_key_listener")
-
+    // self-mixinned in fabric module to use fabric's resource reload listener interfaces
+    class KeyListener : ResourceManagerReloadListener {
         override fun onResourceManagerReload(resourceManager: ResourceManager) {
             if (MusicCommon.hasMusicKey) {
                 key = DecryptUtil.readKey(resourceManager.open(resLoc(KEY_PATH)), MusicCommon.musicPw)
