@@ -38,8 +38,6 @@ import net.minecraft.world.level.chunk.LevelChunk
 import net.minecraft.world.level.levelgen.Heightmap
 import kotlin.jvm.optionals.getOrNull
 
-// TODO: handle networking
-
 /**
  * Miscellaneous events that do not fit in another specific class
  */
