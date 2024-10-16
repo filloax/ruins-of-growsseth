@@ -19,7 +19,7 @@ class FabricResearcherDaggerItem : FabricItem, AbstractResearcherDaggerItem() {
         if (allow.isPresent) {
             return allow.orElseThrow()
         } else {
-            return super.canBeEnchantedWith(stack, enchantment, context)
+            return super<FabricItem>.canBeEnchantedWith(stack, enchantment, context)
         }
     }
 }

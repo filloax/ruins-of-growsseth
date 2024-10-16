@@ -57,6 +57,10 @@ afterEvaluate {
         finalizedBy(RESTORE)
     }
 
+    project.tasks.withType<Javadoc> {
+        dependsOn(RESTORE)
+    }
+
     project.tasks.named("kotlinSourcesJar") {
         dependsOn(RESTORE)
     }
