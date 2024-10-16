@@ -42,7 +42,7 @@ public class DebugMixins {
 //        at = @At("HEAD")
 //    )
         // Result: TEST IS EXPERIMENTAL RegistryEntry[key=ResourceKey[minecraft:root / minecraft:dimension], value=Registry[ResourceKey[minecraft:root / minecraft:dimension] (Experimental)]]: Experimental
-        private static void test(RegistryAccess.RegistryEntry registryEntry, CallbackInfoReturnable<Lifecycle> cir) {
+        private static void test(RegistryAccess.RegistryEntry<?> registryEntry, CallbackInfoReturnable<Lifecycle> cir) {
             RuinsOfGrowsseth.getLOGGER().info("TEST IS EXPERIMENTAL " + registryEntry + ": " + registryEntry.value().registryLifecycle());
         }
     }
