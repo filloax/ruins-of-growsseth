@@ -32,7 +32,7 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.chunk.LevelChunk
 import net.minecraft.world.level.storage.loot.LootTable
 
-object FabricEvents : ModEvents() {
+class FabricEvents : ModEvents() {
     override fun onServerStarting(event: ServerEvent) = ServerLifecycleEvents.SERVER_STARTING.register(event)
 
     override fun onServerStarted(event: ServerEvent) = ServerLifecycleEvents.SERVER_STARTED.register(event)

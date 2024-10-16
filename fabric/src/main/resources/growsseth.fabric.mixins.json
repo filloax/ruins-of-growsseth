@@ -5,7 +5,7 @@
   "mixins": [
   ],
   "client": [
-    "com.ruslan.growsseth.mixin.client.FabricClientReloadListenerMixins.EncryptedMusicListenerMixin"
+    "client.FabricClientReloadListenerMixins$EncryptedMusicListenerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
