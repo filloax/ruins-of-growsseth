@@ -37,6 +37,7 @@
     "item.DecoratedPotPatternsMixin",
     "item.DiscCreditsMixin",
     "item.MapItemInfoMixin",
+    "item.EnableEnchantmentMixin",
     "structurebook.ItemFrameStructureBookMixin",
     "structurebook.ItemStackStructureBookMixin",
     "structurebook.StructureTemplateMixin",

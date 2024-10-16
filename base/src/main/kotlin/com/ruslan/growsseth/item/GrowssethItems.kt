@@ -24,12 +24,7 @@ object GrowssethItems {
 	// 5 attack (2 less than diamond sword), 2,5 attack speed (sword speed + 0,9) (sword modifiers: 3 and -2.4):
 	val RESEARCHER_DAGGER = make(
 		"researcher_dagger",
-		ResearcherDaggerItem(
-			Tiers.DIAMOND,
-			Properties()
-				.rarity(Rarity.EPIC)
-				.attributes(SwordItem.createAttributes(Tiers.DIAMOND, 1, -1.5F)),
-		),
+		AbstractResearcherDaggerItem.create(),
 		autoGenerateJson = false,
 	)
 	@JvmField
