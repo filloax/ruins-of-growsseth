@@ -1,6 +1,5 @@
 package com.ruslan.growsseth.loot
 
-import com.ruslan.growsseth.config.MiscConfig
 import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.item.GrowssethItems.DISC_ABBANDONATI
 import com.ruslan.growsseth.item.GrowssethItems.DISC_BALLATA_DEL_RESPAWN
@@ -72,7 +71,7 @@ object VanillaStructureLoot {
                     .add(LootItem.lootTableItem(FRAGMENT_BALLATA_DEL_RESPAWN))
             }
 
-            tableBuilder.pool(poolBuilder.build())
+            tableBuilder.withPool(poolBuilder)
         }
     }
 }
