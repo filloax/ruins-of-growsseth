@@ -55,7 +55,11 @@ object FabricEvents : ModEvents() {
 
     override fun afterPlayerBlockBreak(event: (Level, Player, BlockPos, BlockState, BlockEntity?) -> Unit) = PlayerBlockBreakEvents.AFTER.register(event)
 
-    override fun onPlayerServerJoin(event: (handler: ServerGamePacketListenerImpl, PacketSender, MinecraftServer) -> Unit) = ServerPlayConnectionEvents.JOIN.register(event)
+    override fun onPlayerServerJoin(event: (handler: ServerGamePacketListenerImpl, MinecraftServer) -> Unit) = ServerPlayConnectionEvents.JOIN.register { handler, _, server ->
+        event(handler, server)
+    }
 
-    override fun onLootTableModify(event: (key: ResourceKey<LootTable>, tableBuilder: LootTable.Builder, source: LootTableSource, registries: HolderLookup.Provider) -> Unit) = LootTableEvents.MODIFY.register(event)
+    override fun onLootTableModify(event: (key: ResourceKey<LootTable>, tableBuilder: LootTable.Builder, registries: HolderLookup.Provider) -> Unit) = LootTableEvents.MODIFY.register { key, tableBuilder, _, registries ->
+        event(key, tableBuilder, registries)
+    }
 }

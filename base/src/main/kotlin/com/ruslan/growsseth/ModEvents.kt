@@ -119,7 +119,10 @@ abstract class ModEvents {
             VanillaStructureLoot.onModifyLootTables(key, tableBuilder, registries)
         }
 
-        //region custom events
+        registerCustomEvents()
+    }
+
+    private fun registerCustomEvents() {
         Events.PLACE_BLOCK += { ev ->
             ResearcherDialoguesComponent.Callbacks.onPlaceBlock(ev.player, ev.world, ev.pos, ev.placeContext, ev.blockState, ev.item)
         }
@@ -137,7 +140,6 @@ abstract class ModEvents {
             ResearcherDonkey.onFenceUnleash(mob, pos)
         }
         Events.NAMETAG_PRE += { Researcher.Callbacks.nameTagRename(it.target, it.name, it.player, it.stack, it.usedHand) }
-        //endregion
     }
 
     private fun onServerPlayerTick(player: ServerPlayer) {
