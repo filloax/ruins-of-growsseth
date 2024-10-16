@@ -4,7 +4,8 @@ modversion = "0.11.0"
 java = "21"
 
 # Minecraft dependencies
-minecraft-range = "[1.21]"
+minecraft-range = "[1.21, 1.21.1]"
+minecraft-range-fabric = "[\"1.21\", \"1.21.1\"]"
 minecraft = "1.21"
 # Get versions from https://parchmentmc.org/docs/getting-started
 parchment-minecraft = "1.21"

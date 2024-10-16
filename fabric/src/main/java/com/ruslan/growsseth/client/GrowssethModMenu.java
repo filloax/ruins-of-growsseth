@@ -7,6 +7,6 @@ public class GrowssethModMenu implements ModMenuApi {
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory()
     {
-        return GrowssethClient::configScreen;
+        return GrowssethClientFabric::configScreen;
     }
 }

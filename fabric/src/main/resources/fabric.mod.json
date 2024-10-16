@@ -34,13 +34,13 @@
   "entrypoints": {
     "main": [
       {
-        "value": "com.ruslan.growsseth.RuinsOfGrowsseth",
+        "value": "com.ruslan.growsseth.RuinsOfGrowssethFabric",
         "adapter": "kotlin"
       }
     ],
     "client": [
       {
-        "value": "com.ruslan.growsseth.client.GrowssethClient",
+        "value": "com.ruslan.growsseth.client.GrowssethClientFabric",
         "adapter": "kotlin"
       }
     ],
@@ -61,13 +61,13 @@
   ],
   "accessWidener": "growsseth.accesswidener",
   "depends": {
-    "fx-lib": ">=${filloaxlib_version}",
+    "filloaxlib": ">=${filloaxlib_version}",
     "resourcefulconfig": ">=${rconfig_version}",
     "fabric-language-kotlin": ">=${fabric_kotlin_version}",
     "fabricloader": ">=${fabric_loader_version}",
     "fabric-api": ">=${fapi_version}",
     "fabric": "*",
-    "minecraft": ["1.21", "1.21.1"]
+    "minecraft": ${fabric_minecraft_version_range}
   },
   "custom": {
     "modmenu": {
