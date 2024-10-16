@@ -9,6 +9,7 @@ import com.teamresourceful.resourcefulconfig.client.ConfigScreen
 
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
+import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.server.packs.PackType
@@ -21,7 +22,7 @@ object GrowssethClient : ClientModInitializer {
         GrowssethNetworkingClient.init()
         GrowssethItemsClient.init()
 
-        ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(EncryptedMusicResources.KeyListener())
+        ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(EncryptedMusicResources.KeyListener() as IdentifiableResourceReloadListener)
 
         initEvents()
 
