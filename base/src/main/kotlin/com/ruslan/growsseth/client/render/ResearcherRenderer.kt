@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.math.Axis
 import com.ruslan.growsseth.client.model.ResearcherModel
 import com.ruslan.growsseth.entity.researcher.Researcher
-import com.ruslan.growsseth.item.ResearcherDaggerItem
+import com.ruslan.growsseth.item.AbstractResearcherDaggerItem
 import com.ruslan.growsseth.utils.resLoc
 import net.minecraft.client.model.ArmedModel
 import net.minecraft.client.model.geom.ModelLayers
@@ -36,7 +36,7 @@ class ResearcherRenderer(context: EntityRendererProvider.Context) : MobRenderer<
                 arm: HumanoidArm, poseStack: PoseStack, buffer: MultiBufferSource, packedLight: Int
             ) {
                 researcher as Researcher
-                if (itemStack.item is ResearcherDaggerItem && researcher.isAggressive) {
+                if (itemStack.item is AbstractResearcherDaggerItem && researcher.isAggressive) {
                     poseStack.pushPose()
                     (this.parentModel as ArmedModel).translateToHand(arm, poseStack)
                     poseStack.mulPose(Axis.XP.rotationDegrees(90.0f))     // 90 instead of -90

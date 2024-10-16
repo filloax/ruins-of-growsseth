@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "com.ruslan.growsseth.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "refmap": "growsseth.refmap.json"
+}

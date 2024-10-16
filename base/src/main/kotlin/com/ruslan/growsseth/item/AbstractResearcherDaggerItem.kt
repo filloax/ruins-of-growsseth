@@ -1,18 +1,30 @@
 package com.ruslan.growsseth.item
 
-import net.fabricmc.fabric.api.item.v1.EnchantingContext
+import com.filloax.fxlib.api.platform.ServiceUtil
 import net.minecraft.ChatFormatting
 import net.minecraft.core.Holder
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
-import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.SwordItem
-import net.minecraft.world.item.Tier
-import net.minecraft.world.item.TooltipFlag
+import net.minecraft.world.item.*
 import net.minecraft.world.item.enchantment.Enchantment
 import net.minecraft.world.item.enchantment.Enchantments
+import java.util.*
 
-class ResearcherDaggerItem(tier: Tier, properties: Properties) : SwordItem(tier, properties){
+/**
+ * To be implemented in loader-specific versions
+ * that use their enchantment methods
+ */
+abstract class AbstractResearcherDaggerItem() : SwordItem(Tiers.DIAMOND, properties()){
+    companion object {
+        fun create(): AbstractResearcherDaggerItem {
+            return ServiceUtil.findService(AbstractResearcherDaggerItem::class.java)
+        }
+
+        private fun properties() = Properties()
+            .rarity(Rarity.EPIC)
+            .attributes(SwordItem.createAttributes(Tiers.DIAMOND, 1, -1.5F))
+    }
+
     override fun appendHoverText(
         stack: ItemStack,
         context: TooltipContext,
@@ -28,17 +40,14 @@ class ResearcherDaggerItem(tier: Tier, properties: Properties) : SwordItem(tier,
         super.appendHoverText(stack, context, tooltipComponents, isAdvanced)
     }
 
-    // TODO: rework this to be either in loader-specific code or using common code like mixins
-
-    override fun canBeEnchantedWith(
+    protected fun allowEnchantment(
         stack: ItemStack,
         enchantment: Holder<Enchantment>,
-        context: EnchantingContext
-    ): Boolean {
+    ): Optional<Boolean> {
         if (enchantment.unwrapKey().map { listOf(Enchantments.KNOCKBACK, Enchantments.SWEEPING_EDGE).contains(it) }.orElse(false))
-            return false
+            return Optional.of(false)
         if (enchantment == Enchantments.BREACH)
-            return true
-        return super.canBeEnchantedWith(stack, enchantment, context)
+            return Optional.of(true)
+        return Optional.empty()
     }
 }

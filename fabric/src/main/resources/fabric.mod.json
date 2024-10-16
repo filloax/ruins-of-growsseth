@@ -56,7 +56,8 @@
     ]
   },
   "mixins": [
-    "growsseth.mixins.json"
+    "growsseth.mixins.json",
+    "growsseth.fabric.mixins.json"
   ],
   "accessWidener": "growsseth.accesswidener",
   "depends": {
