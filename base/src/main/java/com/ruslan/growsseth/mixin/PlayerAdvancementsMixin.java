@@ -1,5 +1,6 @@
 package com.ruslan.growsseth.mixin;
 
+import com.ruslan.growsseth.events.Events;
 import com.ruslan.growsseth.events.PlayerAdvancementEvent;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.server.PlayerAdvancements;
@@ -20,6 +21,6 @@ public abstract class PlayerAdvancementsMixin {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/advancements/AdvancementRewards;grant(Lnet/minecraft/server/level/ServerPlayer;)V")
     )
     private void awardEvent(AdvancementHolder advancement, String criterionKey, CallbackInfoReturnable<Boolean> cir) {
-        PlayerAdvancementEvent.EVENT.invoker().apply(player, advancement, criterionKey);
+        Events.PLAYER_ADVANCEMENT.invoke(new PlayerAdvancementEvent.Post(player, advancement, criterionKey));
     }
 }

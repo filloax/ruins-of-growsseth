@@ -10,6 +10,7 @@ import com.ruslan.growsseth.dialogues.BasicDialoguesComponent
 import com.ruslan.growsseth.entity.researcher.*
 import com.ruslan.growsseth.entity.researcher.trades.GlobalResearcherTradesProvider
 import com.ruslan.growsseth.entity.researcher.trades.ProgressResearcherTradesProvider
+import com.ruslan.growsseth.events.Events
 import com.ruslan.growsseth.http.*
 import com.ruslan.growsseth.loot.VanillaStructureLoot
 import com.ruslan.growsseth.platform.PlatformAbstractions
@@ -101,14 +102,9 @@ abstract class ModEvents {
         onEntityUnload { entity, level ->
 //            QuestComponentEvents.onUnloadEntity(entity, level)
         }
-        onEntityDestroyed { entity, level ->
-        }
 
         afterPlayerBlockBreak { level, player, pos, state, entity ->
             ResearcherDialoguesComponent.Callbacks.onBlockBreak(level, player, pos, state, entity)
-        }
-        afterPlayerPlaceBlock { player, world, pos, placeContext, blockState, item ->
-            ResearcherDialoguesComponent.Callbacks.onPlaceBlock(player, world, pos, placeContext, blockState, item)
         }
 
         onPlayerServerJoin { handler, server ->
@@ -117,24 +113,31 @@ abstract class ModEvents {
             GrowssethWorldPreset.Callbacks.onServerPlayerJoin(handler, server)
         }
 
-        onPlayerAdvancement { player, advancement, criterionString ->
-            BasicDialoguesComponent.Callbacks.onAdvancement(player, advancement, criterionString)
-            StructureAdvancements.Callbacks.onAdvancement(player, advancement, criterionString)
-        }
-
-        onFenceLeash { mob, pos, player ->
-            ResearcherDonkey.onFenceLeash(mob, pos, player)
-        }
-        onFenceUnleash { mob, pos ->
-            ResearcherDonkey.onFenceUnleash(mob, pos)
-        }
-
         // Register singularly because returns
-        beforeNameTagRename(Researcher.Callbacks::nameTagRename)
 
         onLootTableModify { key, tableBuilder, registries ->
             VanillaStructureLoot.onModifyLootTables(key, tableBuilder, registries)
         }
+
+        //region custom events
+        Events.PLACE_BLOCK += { ev ->
+            ResearcherDialoguesComponent.Callbacks.onPlaceBlock(ev.player, ev.world, ev.pos, ev.placeContext, ev.blockState, ev.item)
+        }
+        Events.PLAYER_ADVANCEMENT += { ev ->
+            val player = ev.player; val advancement = ev.advancement; val criterionString = ev.criterionKey;
+            BasicDialoguesComponent.Callbacks.onAdvancement(player, advancement, criterionString)
+            StructureAdvancements.Callbacks.onAdvancement(player, advancement, criterionString)
+        }
+        Events.FENCE_LEASH += { ev ->
+            val mob = ev.mob; val pos = ev.pos; val player = ev.player;
+            ResearcherDonkey.onFenceLeash(mob, pos, player)
+        }
+        Events.FENCE_UNLEASH += { ev ->
+            val mob = ev.mob; val pos = ev.pos;
+            ResearcherDonkey.onFenceUnleash(mob, pos)
+        }
+        Events.NAMETAG_PRE += { Researcher.Callbacks.nameTagRename(it.target, it.name, it.player, it.stack, it.usedHand) }
+        //endregion
     }
 
     private fun onServerPlayerTick(player: ServerPlayer) {
@@ -144,7 +147,7 @@ abstract class ModEvents {
     fun triggerOnStructureFound(player: ServerPlayer, structId: ResourceKey<Structure>, isJigsawPart: Boolean) {
         ProgressResearcherTradesProvider.Callbacks.onStructureFound(player, structId, isJigsawPart)
     }
-    
+
     abstract fun onServerStarting(event: ServerEvent)
     abstract fun onServerStarted(event: ServerEvent)
     abstract fun onServerStopping(event: ServerEvent)
@@ -155,13 +158,7 @@ abstract class ModEvents {
     abstract fun onLoadChunk(event: (level: ServerLevel, chunk: LevelChunk) -> Unit)
     abstract fun onEntityLoad(event: (entity: Entity, level: ServerLevel) -> Unit)
     abstract fun onEntityUnload(event: (entity: Entity, level: ServerLevel) -> Unit)
-    abstract fun onEntityDestroyed(event: (entity: Entity, level: ServerLevel) -> Unit)
     abstract fun afterPlayerBlockBreak(event: (Level, Player, BlockPos, BlockState, BlockEntity?) -> Unit)
-    abstract fun afterPlayerPlaceBlock(event: (Player, Level, BlockPos, BlockPlaceContext, BlockState, BlockItem) -> Unit)
     abstract fun onPlayerServerJoin(event: (handler: ServerGamePacketListenerImpl, MinecraftServer) -> Unit)
-    abstract fun onPlayerAdvancement(event: (ServerPlayer, AdvancementHolder, criterionString: String) -> Unit)
-    abstract fun onFenceLeash(event: (Leashable, BlockPos, ServerPlayer) -> Unit)
-    abstract fun onFenceUnleash(event: (Leashable, BlockPos) -> Unit)
-    abstract fun beforeNameTagRename(event: (target: LivingEntity, Component, ServerPlayer, ItemStack, InteractionHand) -> InteractionResultHolder<ItemStack>)
     abstract fun onLootTableModify(event: (key: ResourceKey<LootTable>, tableBuilder: LootTable.Builder, registries: HolderLookup.Provider) -> Unit)
 }

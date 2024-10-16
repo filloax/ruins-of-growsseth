@@ -1,10 +1,10 @@
 package com.ruslan.growsseth.mixin.event;
 
+import com.filloax.fxlib.api.FxUtils;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.ruslan.growsseth.RuinsOfGrowsseth;
 import com.ruslan.growsseth.structure.StructureDisabler;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.SectionPos;
@@ -47,7 +47,7 @@ public class StructureSpawnMixins {
             ServerLevel level = ((ServerLevelAccessor) structureManager).getLevel();
 
             if (StructureDisabler.Mixins.shouldDisableStructure(structureSetEntry.structure(), level)) {
-                if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+                if (FxUtils.isDevEnvironment()) {
                     RuinsOfGrowsseth.getLOGGER().info("Disabled spawn for structure " + structureSetEntry.structure());
                 }
                 cir.setReturnValue(false);

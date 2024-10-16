@@ -1,6 +1,8 @@
 package com.ruslan.growsseth.mixin.event;
 
-import com.ruslan.growsseth.events.NameTagRenameEvent;
+import com.filloax.fxlib.api.TriState;
+import com.ruslan.growsseth.events.Events;
+import com.ruslan.growsseth.events.NameTagEvent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -21,12 +23,12 @@ public abstract class NameTagItemMixin {
             method = "interactLivingEntity", cancellable = true
     )
     private void checkBeforeUse(ItemStack stack, Player player, LivingEntity interactionTarget, InteractionHand usedHand, CallbackInfoReturnable<InteractionResult> cir) {
-        InteractionResultHolder<ItemStack> result = NameTagRenameEvent.BEFORE.invoker().rename(interactionTarget, stack.getHoverName(), (ServerPlayer) player, stack, usedHand);
-
-        if (result.getResult() != InteractionResult.PASS) {
-            cir.setReturnValue(result.getResult());
+        var event = new NameTagEvent.Pre(interactionTarget, stack.getHoverName(), (ServerPlayer) player, stack, usedHand);
+        Events.NAMETAG_PRE.invoke(event);
+        event.getResult().ifPresent(r -> {
+            cir.setReturnValue(r ? InteractionResult.PASS : InteractionResult.FAIL);
             cir.cancel();
-        }
+        });
     }
 
     // Invoke before stack is shrunk (aka name tag is consumed)
@@ -35,6 +37,6 @@ public abstract class NameTagItemMixin {
         method = "interactLivingEntity"
     )
     private void checkAfterUse(ItemStack stack, Player player, LivingEntity interactionTarget, InteractionHand usedHand, CallbackInfoReturnable<InteractionResult> cir) {
-        NameTagRenameEvent.AFTER.invoker().rename(interactionTarget, stack.getHoverName(), (ServerPlayer) player, stack, usedHand);
+        Events.NAMETAG_POST.invoke(new NameTagEvent.Post(interactionTarget, stack.getHoverName(), (ServerPlayer) player, stack, usedHand));
     }
 }

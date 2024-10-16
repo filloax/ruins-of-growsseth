@@ -1,10 +1,12 @@
 package com.ruslan.growsseth.mixin.event;
 
+import com.filloax.fxlib.api.TriState;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.ruslan.growsseth.RuinsOfGrowsseth;
-import com.ruslan.growsseth.events.LeashEvents;
+import com.ruslan.growsseth.events.Events;
+import com.ruslan.growsseth.events.FenceLeashEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
@@ -35,7 +37,7 @@ public abstract class LeadItemMixin {
             @Local(ordinal = 0) Leashable mob
     ) {
         if (player instanceof ServerPlayer serverPlayer) {
-            LeashEvents.FENCE_LEASH.invoker().apply(mob, pos, serverPlayer);
+            Events.FENCE_LEASH.invoke(new FenceLeashEvent.Leash(mob, pos, serverPlayer));
         } else {
             RuinsOfGrowsseth.getLOGGER().error("Cannot run leash mixin, not on server side (shouldn't happen)");
         }
@@ -54,8 +56,9 @@ public abstract class LeadItemMixin {
     ) {
         if (player instanceof ServerPlayer serverPlayer) {
             return original.call(level, pos, predicate.and(mob -> {
-                InteractionResult result = LeashEvents.BEFORE_FENCE_LEASH.invoker().apply(mob, pos, serverPlayer);
-                return result != InteractionResult.FAIL;
+                var event = new FenceLeashEvent.PreLeash(mob, pos, serverPlayer);
+                Events.FENCE_LEASH_PRE.invoke(event);
+                return event.getResult() != TriState.FALSE;
             }));
         } else {
             return original.call(level, pos, predicate);

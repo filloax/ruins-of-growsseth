@@ -1,6 +1,7 @@
 package com.ruslan.growsseth.mixin.event;
 
-import com.ruslan.growsseth.events.LeashEvents;
+import com.ruslan.growsseth.events.Events;
+import com.ruslan.growsseth.events.FenceLeashEvent;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.decoration.LeashFenceKnotEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,7 +19,7 @@ public abstract class LeashMobMixin {
             && th1s.getLeashHolder() instanceof LeashFenceKnotEntity knot
             && !th1s.level().isClientSide()
         ) {
-            LeashEvents.FENCE_UNLEASH.invoker().apply(th1s, knot.getPos());
+            Events.FENCE_UNLEASH.invoke(new FenceLeashEvent.Unleash(th1s, knot.getPos()));
         }
     }
 }

@@ -46,6 +46,7 @@ val socketIoLibs = ext.get("socketio-libs") as List<String>
 dependencies {
 	compileOnly( libs.jsr305 )
 	compileOnly( libs.log4j )
+	compileOnly( libs.ow.asm )
 
 	compileOnly( libs.kotlin.stdlib )
 	compileOnly( libs.kotlin.reflect )
