@@ -1,5 +1,6 @@
 package com.ruslan.growsseth.mixin.client;
 
+import com.ruslan.growsseth.config.ClientConfigHandler;
 import com.ruslan.growsseth.config.GrowssethConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.TitleScreen;

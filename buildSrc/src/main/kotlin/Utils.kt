@@ -48,7 +48,7 @@ fun Project.getFilloaxlib(loader: String = "common"): String {
     else if (useLocalMavenFilloaxLib)
         "com.filloax.filloaxlib:filloaxlib-${loader}:${filloaxlibVersion}"
     else if (loader == "common")
-        "com.github.filloax.filloaxlib:filloaxlib-${loader}:v${filloaxlibVersion}-${loader}"
+        "com.github.filloax.filloaxlib:filloaxlib-${loader}:${filloaxlibVersion}"
     else
         "maven.modrinth:filloaxlib:${filloaxlibVersion}-${loader}"
 }

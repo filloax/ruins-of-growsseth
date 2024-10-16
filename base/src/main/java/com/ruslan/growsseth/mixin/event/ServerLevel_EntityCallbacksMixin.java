@@ -1,6 +1,7 @@
 package com.ruslan.growsseth.mixin.event;
 
-import com.ruslan.growsseth.events.ServerEntityLifecycleEvents;
+import com.ruslan.growsseth.events.Events;
+import com.ruslan.growsseth.events.ServerEntityLifecycleEvent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Final;
@@ -18,6 +19,6 @@ public abstract class ServerLevel_EntityCallbacksMixin {
 
     @Inject(method = "onDestroyed(Lnet/minecraft/world/entity/Entity;)V", at = @At("TAIL"))
     private void onDestroyed(Entity entity, CallbackInfo ci) {
-        ServerEntityLifecycleEvents.ENTITY_DESTROYED.invoker().apply(entity, field_26936);
+        Events.SERVER_ENTITY_DESTROYED.invoke(new ServerEntityLifecycleEvent.Destroyed(entity, field_26936));
     }
 }

@@ -1,5 +1,6 @@
 package com.ruslan.growsseth.mixin.event;
 
+import com.ruslan.growsseth.events.Events;
 import com.ruslan.growsseth.events.PlaceBlockEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
@@ -17,6 +18,6 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 public abstract class PlaceBlockMixin {
     @Inject(at = @At("TAIL"), method = "place", locals = LocalCapture.CAPTURE_FAILHARD)
     public void onPlaceItemTrigger(BlockPlaceContext __, CallbackInfoReturnable<InteractionResult> cir, BlockPlaceContext context, BlockState blockState, BlockPos blockPos, Level level) {
-        PlaceBlockEvent.AFTER.invoker().place(context.getPlayer(), level, blockPos, context, blockState, (BlockItem) (Object) this);
+        Events.PLACE_BLOCK.invoke(new PlaceBlockEvent.Post(context.getPlayer(), level, blockPos, context, blockState, (BlockItem) (Object) this));
     }
 }
