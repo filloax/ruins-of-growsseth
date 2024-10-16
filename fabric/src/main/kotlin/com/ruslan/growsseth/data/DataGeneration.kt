@@ -43,8 +43,7 @@ import net.minecraft.world.level.block.Blocks
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
-// TODO: move what can be moved to common, there
-
+// Datagen in fabric, arbitrary whether to do it here or in neforge
 // BIG thanks to https://github.com/Ayutac/fabric-example-worldgen
 // fixed my headache
 class DataGeneration : DataGeneratorEntrypoint {

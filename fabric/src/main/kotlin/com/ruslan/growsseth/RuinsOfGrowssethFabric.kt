@@ -64,7 +64,7 @@ object RuinsOfGrowssethFabric : ModInitializer, RuinsOfGrowsseth() {
     }
 
     override fun initItemGroups() {
-        // TODO: make this abstracted in the common module
+        // More convenient to do this per-loader than AT all the creativeModeTabs entries (which are private by default)
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.INGREDIENTS)
             .register(ModifyEntries {
                 // Piglin is last pattern

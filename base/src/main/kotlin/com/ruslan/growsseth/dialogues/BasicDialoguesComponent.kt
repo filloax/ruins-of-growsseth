@@ -36,8 +36,6 @@ import kotlin.jvm.optionals.getOrNull
 import com.ruslan.growsseth.dialogues.BasicDialogueEvents as Events
 import org.apache.logging.log4j.Level as LogLevel
 
-// TODO: handle packet sending in a non-fabric way
-
 // Server side only
 open class BasicDialoguesComponent(
     val entity: LivingEntity, val random: RandomSource,

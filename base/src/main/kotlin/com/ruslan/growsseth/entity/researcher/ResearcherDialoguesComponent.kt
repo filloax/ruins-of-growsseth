@@ -34,8 +34,6 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.AABB
 import java.util.*
 
-// TODO: handle packet sending in a non-fabric way
-
 class ResearcherDialoguesComponent(
     val researcher: Researcher, random: RandomSource,
     private val combat: ResearcherCombatComponent,

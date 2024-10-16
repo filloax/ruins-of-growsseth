@@ -25,8 +25,6 @@ import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.thread
 
-// TODO: handle networking
-
 /**
  * Connect to an endpoint to be able to remotely trigger an
  * update to the EgoBalego API past the usual methods (which
