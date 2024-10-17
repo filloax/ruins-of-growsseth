@@ -35,7 +35,7 @@ object GrowssethWorldPreset {
     object Callbacks {
         fun onServerStarted(server: MinecraftServer) {
             if (isGrowssethPreset(server)) {
-                com.ruslan.growsseth.config.WorldPresetConfig.getAll().forEach { cfg ->
+                WorldPresetConfig.getAll().forEach { cfg ->
                     fixedStructureGeneration.register(server.overworld(), cfg.structureId + "_grworldgen", BlockPos(cfg.x, cfg.y, cfg.z), cfg.structureId(), cfg.rotation)
                 }
             }

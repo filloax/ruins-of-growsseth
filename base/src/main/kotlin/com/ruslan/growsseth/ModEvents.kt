@@ -13,38 +13,28 @@ import com.ruslan.growsseth.entity.researcher.trades.ProgressResearcherTradesPro
 import com.ruslan.growsseth.events.Events
 import com.ruslan.growsseth.http.*
 import com.ruslan.growsseth.loot.VanillaStructureLoot
-import com.ruslan.growsseth.platform.PlatformAbstractions
 import com.ruslan.growsseth.quests.QuestComponentEvents
 import com.ruslan.growsseth.structure.RemoteStructureBooks
 import com.ruslan.growsseth.structure.VillageBuildings
 import com.ruslan.growsseth.structure.locate.StoppableAsyncLocator
-import com.ruslan.growsseth.utils.MixinHelpers
 import com.ruslan.growsseth.worldgen.worldpreset.GrowssethWorldPreset
 import com.ruslan.growsseth.worldgen.worldpreset.LocationNotifListener
-import net.minecraft.advancements.AdvancementHolder
 import net.minecraft.core.BlockPos
 import net.minecraft.core.HolderLookup
-import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.network.ServerGamePacketListenerImpl
-import net.minecraft.world.InteractionHand
-import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.entity.Entity
-import net.minecraft.world.entity.Leashable
-import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
-import net.minecraft.world.item.BlockItem
-import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.context.BlockPlaceContext
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.chunk.LevelChunk
 import net.minecraft.world.level.levelgen.structure.Structure
 import net.minecraft.world.level.storage.loot.LootTable
+
 
 abstract class ModEvents {
     companion object {
@@ -55,7 +45,7 @@ abstract class ModEvents {
         onServerStarting { server ->
             StoppableAsyncLocator.Callbacks.onServerStarting()
             DataRemoteSync.Callbacks.handleServerAboutToStartEvent(server)
-            DataRemoteSync.doSync(com.ruslan.growsseth.config.WebConfig.dataSyncUrl, server)
+            DataRemoteSync.doSync(WebConfig.dataSyncUrl, server)
             com.ruslan.growsseth.utils.MixinHelpers.serverInit(server)
             LiveUpdatesConnection.serverStart(server)
         }
@@ -83,7 +73,7 @@ abstract class ModEvents {
             ResearcherDiaryComponent.Callbacks.onServerLevel(level)
         }
         onStartServerTick { server ->
-            DataRemoteSync.Callbacks.onServerTick(com.ruslan.growsseth.config.WebConfig.dataSyncUrl, server)
+            DataRemoteSync.Callbacks.onServerTick(WebConfig.dataSyncUrl, server)
             GrowssethAdvancements.Callbacks.onServerTick(server)
             ProgressResearcherTradesProvider.Callbacks.onServerTick(server)
         }

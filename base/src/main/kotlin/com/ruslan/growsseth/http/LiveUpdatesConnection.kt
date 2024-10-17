@@ -4,6 +4,7 @@ import com.filloax.fxlib.api.json.ItemByNameSerializer
 import com.filloax.fxlib.api.json.SimpleComponentSerializer
 import com.filloax.fxlib.api.networking.sendPacket
 import com.ruslan.growsseth.RuinsOfGrowsseth
+import com.ruslan.growsseth.config.WebConfig
 import com.ruslan.growsseth.dialogues.DialogueEntry
 import com.ruslan.growsseth.entity.researcher.Researcher
 import com.ruslan.growsseth.networking.CustomToastPacket
@@ -60,17 +61,17 @@ class LiveUpdatesConnection private constructor(val server: MinecraftServer) : R
         private var activeConnection: LiveUpdatesConnection? = null
 
         fun serverStart(server: MinecraftServer) {
-            if (activeConnection == null && com.ruslan.growsseth.config.WebConfig.liveUpdateService) {
+            if (activeConnection == null && WebConfig.liveUpdateService) {
                 val conn = LiveUpdatesConnection(server)
                 conn.start()
                 activeConnection = conn
             }
-            else if (!com.ruslan.growsseth.config.WebConfig.liveUpdateService)
+            else if (!WebConfig.liveUpdateService)
                 RuinsOfGrowsseth.LOGGER.info("LiveUpdatesConnection was disabled from mod settings, will not start")
         }
 
         fun serverStop(server: MinecraftServer) {
-            if (com.ruslan.growsseth.config.WebConfig.liveUpdateService) {
+            if (WebConfig.liveUpdateService) {
                 activeConnection?.stop()
                 activeConnection = null
             }
@@ -85,8 +86,8 @@ class LiveUpdatesConnection private constructor(val server: MinecraftServer) : R
     private fun connect() {
         var interrupted = false
         while (running && socket == null && !interrupted) {
-            val host = com.ruslan.growsseth.config.WebConfig.liveUpdateUrl
-            val port = com.ruslan.growsseth.config.WebConfig.liveUpdatePort
+            val host = WebConfig.liveUpdateUrl
+            val port = WebConfig.liveUpdatePort
             val uri = if (port > 0) URI("$host:$port") else URI(host)
             var success = false
 
@@ -105,7 +106,7 @@ class LiveUpdatesConnection private constructor(val server: MinecraftServer) : R
 
                 val options = IO.Options.builder()
                     .setExtraHeaders(mapOf(
-                        "apiKey" to listOf(com.ruslan.growsseth.config.WebConfig.dataSyncApiKey),
+                        "apiKey" to listOf(WebConfig.dataSyncApiKey),
                     ))
                     .build()
                 val newSocket = IO.socket(uri, options)

@@ -156,7 +156,7 @@ class ResearcherTent : GrTemplateStructurePiece {
 
         val server = level.level.server
         val researcherData = ResearcherSavedData.getPersistent(server)
-        val spawnEntities = !(com.ruslan.growsseth.config.ResearcherConfig.singleResearcher && ResearcherQuestComponent.shouldRemoveTent(server)) && !(researcherData.isDead)
+        val spawnEntities = !(ResearcherConfig.singleResearcher && ResearcherQuestComponent.shouldRemoveTent(server)) && !(researcherData.isDead)
 
         when (name) {
             "researcher" -> {

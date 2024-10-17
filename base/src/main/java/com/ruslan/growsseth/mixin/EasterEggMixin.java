@@ -35,7 +35,6 @@ public class EasterEggMixin {
             super(entityType, level);
         }
 
-
         @Override
         public boolean gr$isGuber() {
             return getIsGuber();

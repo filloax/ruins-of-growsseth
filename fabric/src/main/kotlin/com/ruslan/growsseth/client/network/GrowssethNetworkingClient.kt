@@ -4,6 +4,7 @@ import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.client.gui.components.NewTradeToast.Companion.updateNewTradeToast
 import com.ruslan.growsseth.client.gui.components.updateCustomToast
 import com.ruslan.growsseth.client.worldpreset.GrowssethWorldPresetClient
+import com.ruslan.growsseth.config.ClientConfig
 import com.ruslan.growsseth.dialogues.handleNpcDialogueLine
 import com.ruslan.growsseth.networking.*
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
@@ -21,7 +22,7 @@ object GrowssethNetworkingClient {
         }
 
         ClientPlayNetworking.registerGlobalReceiver(ResearcherTradesNotifPacket.TYPE) { packet, context ->
-            if (com.ruslan.growsseth.config.ClientConfig.newTradeNotifications) {
+            if (ClientConfig.newTradeNotifications) {
                 client.toasts.updateNewTradeToast(packet.newTrades)
                 RuinsOfGrowsseth.LOGGER.info("Received trade notification")
             } else {

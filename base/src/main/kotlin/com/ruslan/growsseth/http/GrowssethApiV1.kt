@@ -41,9 +41,9 @@ object GrowssethApiV1 : AbstractGrowssethApi() {
 
     override fun init() {
         DataRemoteSync.endpointParams(
-            com.ruslan.growsseth.config.WebConfig.dataSyncEndpoint).headers["apiKey"] = com.ruslan.growsseth.config.WebConfig.dataSyncApiKey
+            WebConfig.dataSyncEndpoint).headers["apiKey"] = WebConfig.dataSyncApiKey
 
-        DataRemoteSync.subscribe(com.ruslan.growsseth.config.WebConfig.dataSyncEndpoint, ListSerializer(Entry.serializer())) { list, server ->
+        DataRemoteSync.subscribe(WebConfig.dataSyncEndpoint, ListSerializer(Entry.serializer())) { list, server ->
             val (events, structSpawns) = list.partition { decomposeId(it.structureId).first == Constants.EVENT_NAMESPACE }
 
             structSpawnsList.clear()
@@ -87,7 +87,7 @@ object GrowssethApiV1 : AbstractGrowssethApi() {
             RuinsOfGrowsseth.LOGGER.error("Server is not running, cannot reload!")
             return CompletableFuture.completedFuture(false)
         }
-        return DataRemoteSync.doSync(com.ruslan.growsseth.config.WebConfig.dataSyncUrl, server)
+        return DataRemoteSync.doSync(WebConfig.dataSyncUrl, server)
     }
 
     object Callbacks {

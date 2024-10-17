@@ -23,7 +23,7 @@ object RuinsMapRenderer {
     */
     @JvmStatic
     fun ItemStack.renderRuinsMapIcon(pose: PoseStack, bufferSource: MultiBufferSource.BufferSource, x: Int, y: Int) {
-        if (!com.ruslan.growsseth.config.ClientConfig.mapCornerIcons) return
+        if (!ClientConfig.mapCornerIcons) return
 
         val mapIcon = this.getMapTargetIcon()?.type ?: return
         val texture = mapDecorations.getSprite(mapIcon.value().assetId)

@@ -62,7 +62,7 @@ class ResearcherCombatComponent(
         if (attacker is WitherBoss)
             return superHurt(source, amount * 2)
 
-        if (attacker is Player && !(attacker.isCreative || level.difficulty == Difficulty.PEACEFUL || com.ruslan.growsseth.config.ResearcherConfig.immortalResearcher)) {
+        if (attacker is Player && !(attacker.isCreative || level.difficulty == Difficulty.PEACEFUL || ResearcherConfig.immortalResearcher)) {
             if (lowHealthCondition)
                 dialogues?.triggerDialogue(attacker as ServerPlayer, BasicDialogueEvents.LOW_HEALTH)
             else
@@ -95,7 +95,7 @@ class ResearcherCombatComponent(
                     owner.addEffect(MobEffectInstance(GrowssethEffects.FIGHTING_SPIRIT, 15, 0, false, false))
 
                 // Hardcoded regen when fighting mobs and being cheesed by the player:
-                if ((!com.ruslan.growsseth.config.ResearcherConfig.immortalResearcher && com.ruslan.growsseth.config.ResearcherConfig.researcherAntiCheat &&
+                if ((!ResearcherConfig.immortalResearcher && ResearcherConfig.researcherAntiCheat &&
                             owner.hasEffect(MobEffects.DAMAGE_RESISTANCE) && owner.hasEffect(MobEffects.MOVEMENT_SLOWDOWN))
                     || (owner.target !is Player && owner.target !is WitherBoss)) {
                     owner.addEffect(MobEffectInstance(GrowssethEffects.JUSTICE, 15, 0, false, false))
@@ -110,7 +110,7 @@ class ResearcherCombatComponent(
                 owner.needsJumpBoost = false
 
             // Used for cheese prevention:
-            if (com.ruslan.growsseth.config.ResearcherConfig.researcherAntiCheat) {
+            if (ResearcherConfig.researcherAntiCheat) {
                 if (owner.stuckCounter < owner.maxStuckCounter &&
                     owner.tickCount - owner.lastHurtByMobTimestamp < 2.0f.secondsToTicks() &&
                     owner.tickCount - owner.lastHurtMobTimestamp > 5.0f.secondsToTicks() &&
