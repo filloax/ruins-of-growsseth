@@ -10,6 +10,7 @@ Tweaked
 
 Fixed
 - Fixed researcher's tent notes not using templates
+- Lowered water level of conduit church nbt, to avoid water blobs when it spawns too high up
 
 
 ## 0.11.0
