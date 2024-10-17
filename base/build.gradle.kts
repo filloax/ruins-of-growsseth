@@ -21,10 +21,10 @@ val minecraftVersion = libs.versions.minecraft.asProvider().get()
 // Project settings
 val cydoVersion = (property("cydoVersion") as String).toBoolean()
 
-version = "$modVersion-${minecraftVersion}-base"
+version = "$modVersion-$minecraftVersion-base"
 
 base {
-    archivesName = modid
+	archivesName = property("archives_base_name") as String
 }
 
 neoForge {
