@@ -1,5 +1,5 @@
 {
-  "type": "fxlib:jigsaw_forced_pos",
+  "type": "filloaxlib:jigsaw_forced_pos",
   "biomes": "#growsseth:has_structure/conduit_ruins",
   "force_pos_offset": [
     -16,

@@ -1,5 +1,5 @@
 {
-  "type": "fxlib:jigsaw_forced_pos",
+  "type": "filloaxlib:jigsaw_forced_pos",
   "biomes": "#growsseth:has_structure/enchant_tower",
   "force_pos_offset": [
     -5,

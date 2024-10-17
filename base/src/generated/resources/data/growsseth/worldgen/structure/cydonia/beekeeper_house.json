@@ -1,5 +1,5 @@
 {
-  "type": "fxlib:jigsaw_forced_pos",
+  "type": "filloaxlib:jigsaw_forced_pos",
   "biomes": "#growsseth:has_structure/beekeeper_house",
   "force_pos_offset": [
     -11,

@@ -1,5 +1,5 @@
 {
-  "type": "fxlib:jigsaw_forced_pos",
+  "type": "filloaxlib:jigsaw_forced_pos",
   "biomes": "#minecraft:is_overworld",
   "force_pos_offset": [
     -10,
