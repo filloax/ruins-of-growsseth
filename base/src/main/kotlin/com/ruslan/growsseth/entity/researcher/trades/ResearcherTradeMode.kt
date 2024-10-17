@@ -28,11 +28,11 @@ enum class ResearcherTradeMode(val id: String) : StringRepresentable {
             GROWSSETH_PROGRESS to ProgressResearcherTradesProvider(GrowssethStructures.ORIGINAL_STRUCTURES, inOrder = true),
         )
 
-        fun getFromSettings(server: MinecraftServer) = if (com.ruslan.growsseth.config.WebConfig.webDataSync && com.ruslan.growsseth.config.ResearcherConfig.webTrades) {
+        fun getFromSettings(server: MinecraftServer) = if (WebConfig.webDataSync && ResearcherConfig.webTrades) {
                 GAME_MASTER
             } else if (GrowssethWorldPreset.isGrowssethPreset(server)) {
                 GROWSSETH_PROGRESS
-            } else if (!com.ruslan.growsseth.config.ResearcherConfig.singleResearcher || !com.ruslan.growsseth.config.ResearcherConfig.singleResearcherProgress) {
+            } else if (!ResearcherConfig.singleResearcher || !ResearcherConfig.singleResearcherProgress) {
                 RANDOM
             } else {
                 PROGRESS

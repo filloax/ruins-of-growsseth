@@ -168,8 +168,8 @@ class ProgressResearcherTradesProvider(
             possibleTrades
         } else {
             val amount = IntRange(
-                min(com.ruslan.growsseth.config.ResearcherConfig.randomTradeNumItems.min, possibleTrades.size),
-                min(com.ruslan.growsseth.config.ResearcherConfig.randomTradeNumItems.max, possibleTrades.size),
+                min(ResearcherConfig.randomTradeNumItems.min, possibleTrades.size),
+                min(ResearcherConfig.randomTradeNumItems.max, possibleTrades.size),
             ).random(random)
 
             return if (amount > 0)

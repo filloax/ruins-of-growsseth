@@ -19,7 +19,7 @@ object ClientConfigHandler {
     fun setServerLangFromClient() {
         val client = Minecraft.getInstance()
         val lang = client.languageManager.selected
-        com.ruslan.growsseth.config.GrowssethConfig.serverLanguage = if (GrowssethConfigHandler.INCLUDED_LANGUAGES.contains(lang))
+        GrowssethConfig.serverLanguage = if (GrowssethConfigHandler.INCLUDED_LANGUAGES.contains(lang))
             lang
         else
             GrowssethConfigHandler.DEFAULT_LANGUAGE
@@ -29,7 +29,7 @@ object ClientConfigHandler {
         client.toasts.addToast(SystemToast.multiline(
             client, SET_LANGUAGE_TOAST_ID,
             Component.translatable("growsseth.notif.setLanguage.title"),
-            Component.translatable("growsseth.notif.setLanguage.message", com.ruslan.growsseth.config.GrowssethConfig.serverLanguage),
+            Component.translatable("growsseth.notif.setLanguage.message", GrowssethConfig.serverLanguage),
         ))
     }
 }

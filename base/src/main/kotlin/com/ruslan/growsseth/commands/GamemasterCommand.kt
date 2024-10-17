@@ -61,14 +61,14 @@ object GamemasterCommand {
     }
 
     private fun printStatus(source: CommandSourceStack): Int {
-        if (!com.ruslan.growsseth.config.WebConfig.webDataSync) {
+        if (!WebConfig.webDataSync) {
             source.sendSystemMessage(Component.translatable("growsseth.commands.gmaster.status_off"))
             return 0
         }
         val suffix = if (DataRemoteSync.lastSyncSuccessful) "ok" else "ko"
         source.sendSystemMessage(Component.translatable(
             "growsseth.commands.gmaster.status_on_$suffix",
-            com.ruslan.growsseth.config.WebConfig.dataSyncUrl, DataRemoteSync.lastSyncSuccessful
+            WebConfig.dataSyncUrl, DataRemoteSync.lastSyncSuccessful
         ))
         source.sendSystemMessage(Component.translatable(
             "growsseth.commands.gmaster.status_time",
@@ -82,7 +82,7 @@ object GamemasterCommand {
         time?.let { DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(it) } ?: "-"
 
     private fun reload(source: CommandSourceStack): Int {
-        if (com.ruslan.growsseth.config.WebConfig.webDataSync) {
+        if (WebConfig.webDataSync) {
             source.sendSystemMessage(Component.translatable("growsseth.commands.gmaster.reload_start"))
             try {
                 GrowssethApi.current.reload().thenAccept {
@@ -107,13 +107,13 @@ object GamemasterCommand {
 
     private fun setEnabled(source: CommandSourceStack, value: Boolean): Int {
         val suffix = if (value) "on" else "off"
-        if (com.ruslan.growsseth.config.WebConfig.webDataSync != value) {
-            com.ruslan.growsseth.config.WebConfig.webDataSync = value
+        if (WebConfig.webDataSync != value) {
+            WebConfig.webDataSync = value
             GrowssethConfigHandler.saveConfig()
             restartAndReloadTrades(source.server)
-            source.sendSuccess({Component.translatable("growsseth.commands.gmaster.set_$suffix", com.ruslan.growsseth.config.WebConfig.dataSyncUrl).withStyle(ChatFormatting.YELLOW)}, true)
+            source.sendSuccess({Component.translatable("growsseth.commands.gmaster.set_$suffix", WebConfig.dataSyncUrl).withStyle(ChatFormatting.YELLOW)}, true)
         } else {
-            source.sendSuccess({Component.translatable("growsseth.commands.gmaster.already_$suffix", com.ruslan.growsseth.config.WebConfig.dataSyncUrl)}, true)
+            source.sendSuccess({Component.translatable("growsseth.commands.gmaster.already_$suffix", WebConfig.dataSyncUrl)}, true)
         }
         return 1
     }
@@ -123,7 +123,7 @@ object GamemasterCommand {
             source.sendFailure(Component.translatable("growsseth.commands.gmaster.url_not_valid", url))
             return 0
         }
-        com.ruslan.growsseth.config.WebConfig.dataSyncUrl = url
+        WebConfig.dataSyncUrl = url
         GrowssethConfigHandler.saveConfig()
         restartAndReloadTrades(source.server)
         source.sendSuccess({ Component.translatable("growsseth.commands.gmaster.url_set", url).withStyle(ChatFormatting.YELLOW) }, true)

@@ -1,6 +1,5 @@
 package com.ruslan.growsseth.mixin.entity.mob;
 
-import com.ruslan.growsseth.config.GrowssethConfig;
 import com.ruslan.growsseth.config.ResearcherConfig;
 import com.ruslan.growsseth.entity.researcher.Researcher;
 import net.minecraft.world.entity.EntityType;

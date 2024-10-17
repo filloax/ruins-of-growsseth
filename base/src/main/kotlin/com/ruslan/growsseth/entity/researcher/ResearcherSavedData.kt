@@ -65,7 +65,7 @@ class ResearcherSavedData private constructor (
 
         @JvmStatic
         fun create(): ResearcherSavedData {
-            if (com.ruslan.growsseth.config.ResearcherConfig.singleResearcher) {
+            if (ResearcherConfig.singleResearcher) {
                 // Ensure we don't get more than one instance
                 throw IllegalStateException("Cannot create saved data when in single researcher mode!")
             }

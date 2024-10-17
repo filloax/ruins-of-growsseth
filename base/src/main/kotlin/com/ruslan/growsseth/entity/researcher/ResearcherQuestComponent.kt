@@ -103,7 +103,7 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
         private var playerSkippedQuest = false
 
         fun getPersistentData(server: MinecraftServer): QuestData {
-            if (!com.ruslan.growsseth.config.ResearcherConfig.singleResearcher) {
+            if (!ResearcherConfig.singleResearcher) {
                 RuinsOfGrowsseth.LOGGER.error("Tried getting researcher quest data when not in single researcher mode!")
                 return QuestData()
             }
@@ -115,7 +115,7 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
         }
 
         fun writePersistentData(server: MinecraftServer, data: QuestData) {
-            if (!com.ruslan.growsseth.config.ResearcherConfig.singleResearcher) {
+            if (!ResearcherConfig.singleResearcher) {
                 RuinsOfGrowsseth.LOGGER.error("Tried writing researcher quest data when not in single researcher mode!")
             }
             val researcherData = ResearcherSavedData.getPersistent(server)

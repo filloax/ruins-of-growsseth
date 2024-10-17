@@ -29,31 +29,31 @@ object StructureDisabler {
     }
 
     private val structToConfigMap = mapOf<ResourceKey<Structure>, () -> Boolean>(
-        GrowssethStructures.RESEARCHER_TENT to com.ruslan.growsseth.config.StructureConfig::researcherTentEnabled,
-        GrowssethStructures.RESEARCHER_TENT_SIMPLE to com.ruslan.growsseth.config.StructureConfig::researcherTentSimpleEnabled,
-        GrowssethStructures.CAVE_CAMP to com.ruslan.growsseth.config.StructureConfig::caveCampEnabled,
-        GrowssethStructures.MARKER to com.ruslan.growsseth.config.StructureConfig::caveCampEnabled,
-        GrowssethStructures.BEEKEEPER_HOUSE to com.ruslan.growsseth.config.StructureConfig::beekeeperHouseEnabled,
-        GrowssethStructures.CONDUIT_CHURCH to com.ruslan.growsseth.config.StructureConfig::conduitChurchEnabled,
-        GrowssethStructures.CONDUIT_RUINS to com.ruslan.growsseth.config.StructureConfig::conduitRuinsEnabled,
-        GrowssethStructures.ENCHANT_TOWER to com.ruslan.growsseth.config.StructureConfig::enchantTowerEnabled,
-        GrowssethStructures.ABANDONED_FORGE to com.ruslan.growsseth.config.StructureConfig::abandonedForgeEnabled,
+        GrowssethStructures.RESEARCHER_TENT to StructureConfig::researcherTentEnabled,
+        GrowssethStructures.RESEARCHER_TENT_SIMPLE to StructureConfig::researcherTentSimpleEnabled,
+        GrowssethStructures.CAVE_CAMP to StructureConfig::caveCampEnabled,
+        GrowssethStructures.MARKER to StructureConfig::caveCampEnabled,
+        GrowssethStructures.BEEKEEPER_HOUSE to StructureConfig::beekeeperHouseEnabled,
+        GrowssethStructures.CONDUIT_CHURCH to StructureConfig::conduitChurchEnabled,
+        GrowssethStructures.CONDUIT_RUINS to StructureConfig::conduitRuinsEnabled,
+        GrowssethStructures.ENCHANT_TOWER to StructureConfig::enchantTowerEnabled,
+        GrowssethStructures.ABANDONED_FORGE to StructureConfig::abandonedForgeEnabled,
         // Doesn't spawn as standalone structure naturally
 //        GrowssethStructures.GOLEM_HOUSE to StructureConfig::golemHouseEnabled,
-        GrowssethStructures.NOTEBLOCK_LAB to com.ruslan.growsseth.config.StructureConfig::noteblockLabEnabled,
-        GrowssethStructures.NOTEBLOCK_SHIP to com.ruslan.growsseth.config.StructureConfig::noteblockShipEnabled,
+        GrowssethStructures.NOTEBLOCK_LAB to StructureConfig::noteblockLabEnabled,
+        GrowssethStructures.NOTEBLOCK_SHIP to StructureConfig::noteblockShipEnabled,
     )
     private val structSetToConfigMap = mapOf<ResourceKey<StructureSet>, () -> Boolean>(
-        structSet(GrowssethStructures.RESEARCHER_TENT) to com.ruslan.growsseth.config.StructureConfig::researcherTentEnabled,
-        structSet(GrowssethStructures.RESEARCHER_TENT_SIMPLE) to com.ruslan.growsseth.config.StructureConfig::researcherTentSimpleEnabled,
-        structSet(GrowssethStructures.CAVE_CAMP) to com.ruslan.growsseth.config.StructureConfig::caveCampEnabled,
-        structSet(GrowssethStructures.BEEKEEPER_HOUSE) to com.ruslan.growsseth.config.StructureConfig::beekeeperHouseEnabled,
-        structSet(GrowssethStructures.CONDUIT_CHURCH) to com.ruslan.growsseth.config.StructureConfig::conduitChurchEnabled,
-        structSet(GrowssethStructures.CONDUIT_RUINS) to com.ruslan.growsseth.config.StructureConfig::conduitRuinsEnabled,
-        structSet(GrowssethStructures.ENCHANT_TOWER) to com.ruslan.growsseth.config.StructureConfig::enchantTowerEnabled,
-        structSet(GrowssethStructures.ABANDONED_FORGE) to com.ruslan.growsseth.config.StructureConfig::abandonedForgeEnabled,
-        structSet(GrowssethStructures.NOTEBLOCK_LAB) to com.ruslan.growsseth.config.StructureConfig::noteblockLabEnabled,
-        structSet(GrowssethStructures.NOTEBLOCK_SHIP) to com.ruslan.growsseth.config.StructureConfig::noteblockShipEnabled,
+        structSet(GrowssethStructures.RESEARCHER_TENT) to StructureConfig::researcherTentEnabled,
+        structSet(GrowssethStructures.RESEARCHER_TENT_SIMPLE) to StructureConfig::researcherTentSimpleEnabled,
+        structSet(GrowssethStructures.CAVE_CAMP) to StructureConfig::caveCampEnabled,
+        structSet(GrowssethStructures.BEEKEEPER_HOUSE) to StructureConfig::beekeeperHouseEnabled,
+        structSet(GrowssethStructures.CONDUIT_CHURCH) to StructureConfig::conduitChurchEnabled,
+        structSet(GrowssethStructures.CONDUIT_RUINS) to StructureConfig::conduitRuinsEnabled,
+        structSet(GrowssethStructures.ENCHANT_TOWER) to StructureConfig::enchantTowerEnabled,
+        structSet(GrowssethStructures.ABANDONED_FORGE) to StructureConfig::abandonedForgeEnabled,
+        structSet(GrowssethStructures.NOTEBLOCK_LAB) to StructureConfig::noteblockLabEnabled,
+        structSet(GrowssethStructures.NOTEBLOCK_SHIP) to StructureConfig::noteblockShipEnabled,
     )
 
     private fun isConfigDisabled(structure: Holder<Structure>): Boolean {

@@ -117,7 +117,7 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
         }
         researcher.finalizeSpawn(serverLevel, serverLevel.getCurrentDifficultyAt(researcher.blockPosition()), MobSpawnType.CONVERSION, null)
 
-        val useResData = if (com.ruslan.growsseth.config.ResearcherConfig.singleResearcher) {
+        val useResData = if (ResearcherConfig.singleResearcher) {
             ResearcherSavedData.getPersistent(serverLevel.server).data
         } else researcherData
 
@@ -143,7 +143,7 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
         super.tick()
         // Make conversion quicker (more or less two times as fast, since we tick it a second time)
         if (!level().isClientSide && this.isAlive && this.isConverting) {
-            if (com.ruslan.growsseth.config.DebugConfig.researcherSpeedup)
+            if (DebugConfig.researcherSpeedup)
                 villagerConversionTime = min(10, villagerConversionTime)
             villagerConversionTime--
         }
@@ -154,7 +154,7 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
 
         val server = server!!
 
-        if (com.ruslan.growsseth.config.ResearcherConfig.singleResearcher) { // && this.tickCount % 5 == 0) {
+        if (ResearcherConfig.singleResearcher) { // && this.tickCount % 5 == 0) {
             // make sure we are up to date in case more researcher entities are loaded
             // (edge case, but just in case)
             // Note that this does not load from nbt every time, but uses the single instance
@@ -193,7 +193,7 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
 
     override fun die(damageSource: DamageSource) {
         super.die(damageSource)
-        if (com.ruslan.growsseth.config.ResearcherConfig.singleResearcher) { server?.let { serv ->
+        if (ResearcherConfig.singleResearcher) { server?.let { serv ->
             val savedData = ResearcherSavedData.getPersistent(serv)
             savedData.isDead = true
             savedData.setDirty()

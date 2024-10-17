@@ -16,7 +16,7 @@ object RandomResearcherTradesProvider : AbstractResearcherTradesProvider() {
         val time = researcher.level().gameTime
         val redoTrades = tradesData.randomTrades == null
                 || tradesData.lastRandomTradeChangeTime < 0
-                || com.ruslan.growsseth.config.ResearcherConfig.randomTradesRefreshTime > 0 && time - tradesData.lastRandomTradeChangeTime > com.ruslan.growsseth.config.ResearcherConfig.randomTradesRefreshTime * Constants.DAY_TICKS_DURATION
+                || ResearcherConfig.randomTradesRefreshTime > 0 && time - tradesData.lastRandomTradeChangeTime > ResearcherConfig.randomTradesRefreshTime * Constants.DAY_TICKS_DURATION
         val trades = if (redoTrades) {
             val out = pickTrades(researcher, player)
             tradesData.randomTrades = out
@@ -38,7 +38,7 @@ object RandomResearcherTradesProvider : AbstractResearcherTradesProvider() {
         val structures = pickStructures(researcher, player)
 
         val maxTradesItems = TradesListener.RANDOM_TRADES_POOL.size
-        var amount = com.ruslan.growsseth.config.ResearcherConfig.randomTradeNumItems.range().random(random)
+        var amount = ResearcherConfig.randomTradeNumItems.range().random(random)
         if (amount > maxTradesItems)
             amount = maxTradesItems
 
@@ -52,7 +52,7 @@ object RandomResearcherTradesProvider : AbstractResearcherTradesProvider() {
     private fun pickStructures(researcher: Researcher, player: ServerPlayer): List<String> {
         val available = TradesListener.TRADES_BEFORE_STRUCTURE.keys
         val random = Random(researcher.random.nextInt())
-        var amount = com.ruslan.growsseth.config.ResearcherConfig.randomTradeNumMaps.range().random(random)
+        var amount = ResearcherConfig.randomTradeNumMaps.range().random(random)
         val maxTradesMaps = available.size
         if (amount > maxTradesMaps)
             amount = available.size

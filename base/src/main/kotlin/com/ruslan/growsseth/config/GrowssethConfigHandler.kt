@@ -24,9 +24,9 @@ object GrowssethConfigHandler {
     val DEFAULT_LANGUAGE = "en_us"
 
     fun initConfig() {
-        CONFIGURATOR.register(com.ruslan.growsseth.config.GrowssethConfig::class.java)
+        CONFIGURATOR.register(GrowssethConfig::class.java)
         config = CONFIGURATOR.getConfig(
-            com.ruslan.growsseth.config.GrowssethConfig::class.java).also { c ->
+            GrowssethConfig::class.java).also { c ->
             c.load { }
             afterLoadConfig(c)
         }
@@ -35,11 +35,11 @@ object GrowssethConfigHandler {
     private fun afterLoadConfig(config: ResourcefulConfig) {
         loadCallbacks.forEach { it(config) }
 
-        if (com.ruslan.growsseth.config.GrowssethConfig.serverLanguage == "client") {
+        if (GrowssethConfig.serverLanguage == "client") {
             val server = FxUtils.getServer()
             if (server != null && server is DedicatedServer) {
                 // if in server, cannot detect language so default to specific language
-                com.ruslan.growsseth.config.GrowssethConfig.serverLanguage = DEFAULT_LANGUAGE
+                GrowssethConfig.serverLanguage = DEFAULT_LANGUAGE
             }
         }
     }

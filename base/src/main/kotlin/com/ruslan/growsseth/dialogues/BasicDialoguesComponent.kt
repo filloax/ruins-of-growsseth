@@ -12,6 +12,8 @@ import com.filloax.fxlib.api.weightedRandom
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.ruslan.growsseth.RuinsOfGrowsseth
+import com.ruslan.growsseth.config.ClientConfig
+import com.ruslan.growsseth.config.MiscConfig
 import com.ruslan.growsseth.dialogues.BasicDialogueEvents
 import com.ruslan.growsseth.dialogues.DialoguesNpc.Companion.getDialogueNpcs
 import com.ruslan.growsseth.networking.DialoguePacket
@@ -170,11 +172,11 @@ open class BasicDialoguesComponent(
                     if (dialogueQueue.isNotEmpty()) {
                         val sameId = line.dialogue.id == dialogueQueue.peek().first.dialogue.id
                         dialogueQueueDelay = if (line.duration != null) {
-                            if (com.ruslan.growsseth.config.MiscConfig.dialogueWordsPerMinute > 0)
+                            if (MiscConfig.dialogueWordsPerMinute > 0)
                                 line.duration.secondsToTicks()
                             else 0
                         } else if (sameId) {
-                            val readingTime = if (com.ruslan.growsseth.config.MiscConfig.dialogueWordsPerMinute > 0) estimateReadingTime(line.content) else 0F
+                            val readingTime = if (MiscConfig.dialogueWordsPerMinute > 0) estimateReadingTime(line.content) else 0F
                             (dialogueSecondsSameId + readingTime).secondsToTicks()
                         } else {
                             // Shorter delay in consecutive dialogues
@@ -272,7 +274,7 @@ open class BasicDialoguesComponent(
     }
 
     protected open fun sendSeparatorToPlayer(player: ServerPlayer) {
-        if (!com.ruslan.growsseth.config.ClientConfig.disableNpcDialogues) {
+        if (!ClientConfig.disableNpcDialogues) {
             val messageComp = Component.literal("*-------------------").withStyle(ChatFormatting.DARK_GRAY)
             player.displayClientMessage(messageComp, false)
         }
@@ -306,7 +308,7 @@ open class BasicDialoguesComponent(
                     } else {
                         dialogueQueue.offerFirst(Pair(it, event))
                         // Since first dialogue is played immediately, delay the second
-                        if (idx == lines.size - 2 && com.ruslan.growsseth.config.MiscConfig.dialogueWordsPerMinute > 0) {
+                        if (idx == lines.size - 2 && MiscConfig.dialogueWordsPerMinute > 0) {
                             val readingTime = estimateReadingTime(lines[0].content)
                             dialogueQueueDelays[player.uuid] = (dialogueSecondsSameId + readingTime).secondsToTicks()
                         }
@@ -616,7 +618,7 @@ open class BasicDialoguesComponent(
         return (entity.level().gameTime - time) / 20.0
     }
 
-    protected fun estimateReadingTime(text: String, wordsPerMinute: Int = com.ruslan.growsseth.config.MiscConfig.dialogueWordsPerMinute): Float {
+    protected fun estimateReadingTime(text: String, wordsPerMinute: Int = MiscConfig.dialogueWordsPerMinute): Float {
         // Calculate the number of words in the text, ignore small words (<=2 chars)
         val wordCount = text.split(Regex("\\s+")).filter { it.replace(Regex("[^A-Za-z0-9\\\\s]"), "").length > 2 }.size
 

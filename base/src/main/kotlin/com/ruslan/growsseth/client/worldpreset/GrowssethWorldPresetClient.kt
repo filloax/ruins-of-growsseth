@@ -3,6 +3,7 @@ package com.ruslan.growsseth.client.worldpreset
 import com.filloax.fxlib.api.secondsToTicks
 import com.filloax.fxlib.api.vec3
 import com.ruslan.growsseth.client.gui.locationtitles.LocationTitlesController
+import com.ruslan.growsseth.config.ClientConfig
 import com.ruslan.growsseth.utils.notNull
 import com.ruslan.growsseth.worldgen.worldpreset.LocationData
 import net.minecraft.client.Minecraft
@@ -28,7 +29,7 @@ object GrowssethWorldPresetClient {
 
     object Callbacks {
         fun onClientTick(client: Minecraft) {
-            if (!com.ruslan.growsseth.config.ClientConfig.enableLocationTitles) return
+            if (!ClientConfig.enableLocationTitles) return
             val player = client.player ?: return
 
             if (lastShowTime > player.tickCount) lastShowTime = 0

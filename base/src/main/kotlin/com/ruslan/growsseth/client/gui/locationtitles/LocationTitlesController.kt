@@ -10,7 +10,7 @@ interface LocationTitlesController {
     companion object {
         private val instances = mutableMapOf<TitleMode, LocationTitlesController>()
 
-        fun get() = com.ruslan.growsseth.config.ClientConfig.locationTitlesMode?.let { mode ->
+        fun get() = ClientConfig.locationTitlesMode?.let { mode ->
             instances.computeIfAbsent(mode) {
                 when(mode) {
                     TitleMode.TITLE -> LocationTitlesControllerTitle()

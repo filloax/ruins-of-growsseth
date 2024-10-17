@@ -86,7 +86,7 @@ data class DialogueEntry(
         }
 
         fun getAllForEvent(event: DialogueEvent): List<DialogueEntry> {
-            val out = ResearcherDialogueListener.DIALOGUE_OPTIONS[com.ruslan.growsseth.config.GrowssethConfig.serverLanguage]?.get(event.id)?.toMutableList() ?:
+            val out = ResearcherDialogueListener.DIALOGUE_OPTIONS[GrowssethConfig.serverLanguage]?.get(event.id)?.toMutableList() ?:
                         ResearcherDialogueListener.DIALOGUE_OPTIONS[DEFAULT_LANGUAGE]?.get(event.id)?.toMutableList() ?:
                         mutableListOf()
             if (event in ResearcherDialogueApiListener.API_DIALOGUES_EVENTS) {
@@ -96,7 +96,7 @@ data class DialogueEntry(
         }
 
         fun getWithId(id: String): DialogueEntry? {
-            return ResearcherDialogueListener.BY_ID[com.ruslan.growsseth.config.GrowssethConfig.serverLanguage]?.get(id)?:
+            return ResearcherDialogueListener.BY_ID[GrowssethConfig.serverLanguage]?.get(id)?:
                     ResearcherDialogueListener.BY_ID[DEFAULT_LANGUAGE]?.get(id)
         }
 
@@ -241,9 +241,9 @@ class ResearcherDialogueListener : KotlinJsonResourceReloadListener(JSON, Consta
             }
         }
 
-        sharedEntriesReferences[com.ruslan.growsseth.config.GrowssethConfig.serverLanguage]?.forEach { (event, sharedRefs) ->
-            DIALOGUE_OPTIONS[com.ruslan.growsseth.config.GrowssethConfig.serverLanguage]?.get(event)?.addAll(sharedRefs.map {
-                SHARED_DIALOGUES[com.ruslan.growsseth.config.GrowssethConfig.serverLanguage]?.get(it) ?: throw SerializationException("Unknown id $it of shared dialogue reference in event $event")
+        sharedEntriesReferences[GrowssethConfig.serverLanguage]?.forEach { (event, sharedRefs) ->
+            DIALOGUE_OPTIONS[GrowssethConfig.serverLanguage]?.get(event)?.addAll(sharedRefs.map {
+                SHARED_DIALOGUES[GrowssethConfig.serverLanguage]?.get(it) ?: throw SerializationException("Unknown id $it of shared dialogue reference in event $event")
             })
         }
     }

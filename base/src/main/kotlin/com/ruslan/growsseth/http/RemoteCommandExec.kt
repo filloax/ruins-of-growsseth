@@ -18,7 +18,7 @@ object RemoteCommandExec {
     }
 
     fun handleCommandExec(event: ApiEvent, server: MinecraftServer, api: GrowssethApi) {
-        if (!com.ruslan.growsseth.config.WebConfig.remoteCommandExecution) {
+        if (!WebConfig.remoteCommandExecution) {
             RuinsOfGrowsseth.LOGGER.warn("Received command event but disabled in config, ignoring! $event")
             return
         }
@@ -54,7 +54,7 @@ object RemoteCommandExec {
     fun handleCommandMessage(message: String, server: MinecraftServer, responseSender: ResponseSender) {
         RuinsOfGrowsseth.LOGGER.info("LiveUpdatesConnection | Received command message $message")
 
-        if (!com.ruslan.growsseth.config.WebConfig.remoteCommandExecution) {
+        if (!WebConfig.remoteCommandExecution) {
             RuinsOfGrowsseth.LOGGER.warn("Received command message but disabled in config, ignoring! $message")
             responseSender.sendFailure("config_disabled")
             return
