@@ -1,5 +1,6 @@
 package com.ruslan.growsseth.loot
 
+import com.ruslan.growsseth.config.MiscConfig
 import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.item.GrowssethItems.DISC_ABBANDONATI
 import com.ruslan.growsseth.item.GrowssethItems.DISC_BALLATA_DEL_RESPAWN
@@ -39,7 +40,7 @@ object VanillaStructureLoot {
         .minus(DISC_BALLATA_DEL_RESPAWN)    // only fragments can be found
 
     fun onModifyLootTables(id: ResourceKey<LootTable>, tableBuilder: LootTable.Builder, registries: HolderLookup.Provider) {
-        if (com.ruslan.growsseth.config.MiscConfig.modLootInVanillaStructures) {
+        if (MiscConfig.modLootInVanillaStructures) {
             val poolBuilder = LootPool.lootPool()
 
             if (STRONGHOLD_LOOT == id) {

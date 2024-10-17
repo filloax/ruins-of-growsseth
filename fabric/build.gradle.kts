@@ -40,10 +40,10 @@ val minecraftVersion = libs.versions.minecraft.asProvider().get()
 val parchmentMcVersion = libs.versions.parchment.minecraft.get()
 val parchmentVersion = libs.versions.parchment.asProvider().get()
 
-version = "$minecraftVersion-$modVersion-fabric"
+version = "$modVersion-$minecraftVersion-fabric"
 
 base {
-	archivesName = modid
+	archivesName = property("archives_base_name") as String
 }
 
 val baseProject = project(":base")
@@ -55,8 +55,6 @@ val socketIoLibs = ext.get("socketio-libs") as List<String>
 dependencies {
 	minecraft( libs.minecraft )
 	implementation( libs.jsr305 )
-
-	//mappings("net.fabricmc:yarn:${property("yarnMappings")}:v2")
 	mappings(loom.layered() {
 		officialMojangMappings()
 		if (parchmentVersion.isNotBlank()) {
