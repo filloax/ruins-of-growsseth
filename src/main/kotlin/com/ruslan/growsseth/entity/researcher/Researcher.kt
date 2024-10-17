@@ -688,7 +688,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
             if (player is ServerPlayer) {
                 if (!dialogues!!.emptyQueue(player.uuid)){
-                    dialogues.skipCurrentMessage()
+                    dialogues.skipCurrentMessage(player.uuid)
                 }
                 else {
                     val offers = getOffers(player)
