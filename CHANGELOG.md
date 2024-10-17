@@ -2,8 +2,15 @@
 
 # 0.11.1
 
+Added
+- Right-clicking the researcher when he is still speaking will skip the current chat message
+
 Tweaked
 - First advancement now requires interacting with the researcher, instead of just finding his tent
+
+Fixed
+- Fixed researcher's tent notes not using templates
+- Lowered water level of conduit church nbt, to avoid water blobs when it spawns too high up
 
 
 ## 0.11.0
