@@ -8,6 +8,9 @@ Added
 Tweaked
 - First advancement now requires interacting with the researcher, instead of just finding his tent
 
+Fixed
+- Fixed researcher's tent notes not using templates
+
 
 ## 0.11.0
 
