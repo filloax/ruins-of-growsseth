@@ -33,10 +33,10 @@ object TemplateListener : KotlinJsonResourceReloadListener(JSON, Constants.TEMPL
         }
     }
 
-    fun books() = books(com.ruslan.growsseth.config.GrowssethConfig.serverLanguage)
+    fun books() = books(GrowssethConfig.serverLanguage)
     fun books(lang: String): Map<String, BookData> = templates(TemplateKind.BOOK, lang)
 
-    fun signs() = signs(com.ruslan.growsseth.config.GrowssethConfig.serverLanguage)
+    fun signs() = signs(GrowssethConfig.serverLanguage)
     fun signs(lang: String): Map<String, SignData> = templates(TemplateKind.SIGN, lang)
 
     /**
@@ -80,7 +80,7 @@ object TemplateListener : KotlinJsonResourceReloadListener(JSON, Constants.TEMPL
                 @Suppress("UNCHECKED_CAST")
                 val action = it.action as ReloadAction<T>
                 action(
-                    langTemplates.getOrDefault(com.ruslan.growsseth.config.GrowssethConfig.serverLanguage, defaultLangTemplates),
+                    langTemplates.getOrDefault(GrowssethConfig.serverLanguage, defaultLangTemplates),
                     langTemplates.keys + defaultLangTemplates.keys,
                     langTemplates,
                 )

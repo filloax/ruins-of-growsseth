@@ -332,12 +332,12 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
         targetSelector.addGoal(0, NearestAttackableTargetGoal(this, Player::class.java, 0, true, true)
             { player -> combat.wantsToKillPlayer((player as Player)) })
-        if (com.ruslan.growsseth.config.ResearcherConfig.researcherInteractsWithMobs) {
+        if (ResearcherConfig.researcherInteractsWithMobs) {
             targetSelector.addGoal(1, NearestAttackableTargetGoal(this, Mob::class.java, 0, false, true)
                 // notNull + equals to avoid the intellij-only bug showing this as error (likely wonky build)
                 { livingEntity: LivingEntity? -> livingEntity is Mob && livingEntity.target.let { notNull(it) && it.equals(this) } })
             targetSelector.addGoal(2, ResearcherHurtByTargetGoal(this))
-            if (com.ruslan.growsseth.config.ResearcherConfig.researcherStrikesFirst)
+            if (ResearcherConfig.researcherStrikesFirst)
                 targetSelector.addGoal(2, NearestAttackableTargetGoal(this, Mob::class.java, 0, true, true)
                     { livingEntity: LivingEntity? -> ( (notNull(livingEntity) && this.distanceTo(livingEntity) < distanceForUnjustifiedAggression) &&
                             (livingEntity is Raider || livingEntity is Vex || livingEntity is Zombie || livingEntity is AbstractSkeleton) ) }
@@ -349,7 +349,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     override fun finalizeSpawn(level: ServerLevelAccessor, difficulty: DifficultyInstance, mobSpawnType: MobSpawnType, spawnGroupData: SpawnGroupData?): SpawnGroupData? {
         val savedData = server?.let{ serv ->
             // Load data from previous researchers
-            if (com.ruslan.growsseth.config.ResearcherConfig.singleResearcher) {
+            if (ResearcherConfig.singleResearcher) {
                 ResearcherSavedData.getPersistent(serv)
             } else {
                 ResearcherSavedData.create()
@@ -468,7 +468,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
                 potion = Potions.STRONG_LEAPING
 
             else if (       // trying to counter cheese attempts
-                com.ruslan.growsseth.config.ResearcherConfig.researcherAntiCheat &&
+                ResearcherConfig.researcherAntiCheat &&
                 stuckCounter >= maxStuckCounter &&
                 ((!hasEffect(MobEffects.DAMAGE_RESISTANCE) || !hasEffect(MobEffects.MOVEMENT_SLOWDOWN)) ||
                         (hasEffect(MobEffects.DAMAGE_RESISTANCE) && hasEffect(MobEffects.MOVEMENT_SLOWDOWN)
@@ -521,14 +521,14 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         // Always passes as server code
         val serverLevel = level() as ServerLevel
 
-        if (com.ruslan.growsseth.config.ResearcherConfig.singleResearcher) {
+        if (ResearcherConfig.singleResearcher) {
             syncSharedData(serverLevel)
         }
 
         if (isNull(this.startingPos))
             this.startingPos = this.blockPosition()
 
-        if (com.ruslan.growsseth.config.ResearcherConfig.singleResearcher) { // && this.tickCount % 5 == 0) {
+        if (ResearcherConfig.singleResearcher) { // && this.tickCount % 5 == 0) {
             // make sure we are up to date in case more researcher entities are loaded
             // (edge case, but just in case)
             // Note that this does not load from nbt every time, but uses the single instance
@@ -576,7 +576,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
                 GrowssethExtraEvents.researcherRemoveCheck(this, this)
             }
 
-            if (com.ruslan.growsseth.config.ResearcherConfig.researcherTeleports) {
+            if (ResearcherConfig.researcherTeleports) {
                 if (position().distanceTo(startingPos!!.center) > maxDistanceFromStartingPos) {
                     secondsAwayFromTent++
                     if (secondsAwayFromTent >= maxSecondsAwayFromTent)
@@ -595,7 +595,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         }
 
         if (this.tickCount % 10 == 0) {
-            if (com.ruslan.growsseth.config.ResearcherConfig.immortalResearcher) {
+            if (ResearcherConfig.immortalResearcher) {
                 addEffect(MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 15, 4, false, false))
                 addEffect(MobEffectInstance(MobEffects.REGENERATION, 15, 4, false, false))
             }
@@ -667,12 +667,12 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     }
 
     override fun hurt(source: DamageSource, amount: Float): Boolean {
-        if (com.ruslan.growsseth.config.ResearcherConfig.researcherAntiCheat && source.`is`(DamageTypes.IN_WALL) && health <= maxHealth / 2)
+        if (ResearcherConfig.researcherAntiCheat && source.`is`(DamageTypes.IN_WALL) && health <= maxHealth / 2)
             return false    // mostly to prevent him dying from glitching out
 
         val attacker = source.entity
 
-        if (attacker is Player && com.ruslan.growsseth.config.ResearcherConfig.immortalResearcher && !attacker.isCreative)
+        if (attacker is Player && ResearcherConfig.immortalResearcher && !attacker.isCreative)
             dialogues?.triggerDialogue(attacker as ServerPlayer, ResearcherDialoguesComponent.EV_HIT_BY_PLAYER_IMMORTAL)
 
         val combatRet = combat.hurt(source, amount) { s, a -> super.hurt(s, a) }
@@ -825,7 +825,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
         savedData.data = existingDataTag ?: saveResearcherData()
         savedData.name = customName
-        if (this.isDeadOrDying && com.ruslan.growsseth.config.ResearcherConfig.singleResearcher)
+        if (this.isDeadOrDying && ResearcherConfig.singleResearcher)
             savedData.isDead = true
         savedData.setDirty()
         lastWorldDataTime = savedData.lastChangeTimestamp
@@ -846,7 +846,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
         val data = saveResearcherData()
 
-        if (com.ruslan.growsseth.config.ResearcherConfig.singleResearcher) {
+        if (ResearcherConfig.singleResearcher) {
             server?.let { serv ->
                 val savedData = ResearcherSavedData.getPersistent(serv)
                 writeSavedData(savedData, data)
@@ -874,7 +874,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
         dialogues?.readNbt(compoundTag)
 
-        if (com.ruslan.growsseth.config.ResearcherConfig.singleResearcher) {
+        if (ResearcherConfig.singleResearcher) {
             server?.let { serv ->
                 val savedData = ResearcherSavedData.getPersistent(serv)
                 readSavedData(savedData)
@@ -902,7 +902,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     }
 
     fun saveWorldData(force: Boolean = false) {
-        if (com.ruslan.growsseth.config.ResearcherConfig.singleResearcher) { server?.let { serv ->
+        if (ResearcherConfig.singleResearcher) { server?.let { serv ->
             val savedData = ResearcherSavedData.getPersistent(serv)
             val data = saveResearcherData()
             writeSavedData(savedData, data, force)
@@ -939,7 +939,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         if (
             currentProvider.mode != tradesData.mode
             || offers.isEmpty()
-            || com.ruslan.growsseth.config.ResearcherConfig.tradesRestockTime > 0 && time - tradesData.lastTradeRefreshTime > com.ruslan.growsseth.config.ResearcherConfig.tradesRestockTime * Constants.DAY_TICKS_DURATION
+            || ResearcherConfig.tradesRestockTime > 0 && time - tradesData.lastTradeRefreshTime > ResearcherConfig.tradesRestockTime * Constants.DAY_TICKS_DURATION
             || !ResearcherTradeUtils.offersMatch(offers, updatedOffers)
         ) {
             // Refresh offers
@@ -1103,7 +1103,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     }
 
     override fun handlePortal() {
-        if (com.ruslan.growsseth.config.ResearcherConfig.researcherTeleports) {
+        if (ResearcherConfig.researcherTeleports) {
             return // prevent nether portal interaction
         }
     }

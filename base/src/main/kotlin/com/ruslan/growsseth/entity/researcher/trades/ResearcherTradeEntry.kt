@@ -108,8 +108,8 @@ class ResearcherItemListing(
         var costMultiplier = 1f
         if (trader is Researcher) {
             // No donkey penalty while healed
-            if (trader.donkeyWasBorrowed && !trader.healed) costMultiplier *= com.ruslan.growsseth.config.ResearcherConfig.researcherBorrowPenalty
-            if (trader.healed) costMultiplier *= com.ruslan.growsseth.config.QuestConfig.researcherCuredDiscount
+            if (trader.donkeyWasBorrowed && !trader.healed) costMultiplier *= ResearcherConfig.researcherBorrowPenalty
+            if (trader.healed) costMultiplier *= QuestConfig.researcherCuredDiscount
         } else {
             RuinsOfGrowsseth.LOGGER.warn("ResearcherTradeEntry used for non-Researcher!")
         }

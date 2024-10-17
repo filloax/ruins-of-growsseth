@@ -77,7 +77,7 @@ class ResearcherDiaryComponent(val researcher: Researcher) {
             val prefix ="$TEMPLATE_DIARY_FOLDER/"
             TemplateListener.onReload(TemplateKind.BOOK) { langTemplates, keys, _ ->
                 val diaries = mutableMapOf<TagKey<Structure>, BookData>()
-                val langCode = com.ruslan.growsseth.config.GrowssethConfig.serverLanguage
+                val langCode = GrowssethConfig.serverLanguage
                 lastLanguageCode = langCode
                 keys.filter { it.startsWith(prefix) }.forEach { key ->
                     val structTag = TagKey.create(Registries.STRUCTURE, resLoc(key.replace(prefix, "")))
@@ -89,7 +89,7 @@ class ResearcherDiaryComponent(val researcher: Researcher) {
         }
 
         private fun checkLanguageChanged() {
-            val langCode = com.ruslan.growsseth.config.GrowssethConfig.serverLanguage
+            val langCode = GrowssethConfig.serverLanguage
             if (lastLanguageCode != langCode) {
                 lastLanguageCode = langCode
                 val diaries = mutableMapOf<TagKey<Structure>, BookData>()
@@ -122,14 +122,14 @@ class ResearcherDiaryComponent(val researcher: Researcher) {
     private var didFirstStructSearch = false
 
     fun aiStep() {
-        if (!com.ruslan.growsseth.config.ResearcherConfig.researcherWritesDiaries) return
+        if (!ResearcherConfig.researcherWritesDiaries) return
         /*
         FOR NOW: Outright disable with non-single researcher mode
         TODO: make multiple researchers mode make each researcher have diaries only
         for his structures and only if they're (re)discovered after a player reached that
         specific entity (harder part is the 2nd as we couldn't rely on just "player has discovered"
          */
-        if (!com.ruslan.growsseth.config.ResearcherConfig.singleResearcher) return
+        if (!ResearcherConfig.singleResearcher) return
 
         if (researcher.tickCount % updatePeriod == 0) {
             checkLanguageChanged()

@@ -30,7 +30,7 @@ object VillageBuildings {
     val SNOWY_GOLEM     = register("snowy_golem_house", CATEGORY_GOLEM_HOUSE, "snowy", "houses", DEFAULT_GOLEM_WEIGHT)
 
     fun onServerStarted(server: MinecraftServer) {
-        val shouldAddBuildings = com.ruslan.growsseth.config.StructureConfig.golemHouseEnabled
+        val shouldAddBuildings = StructureConfig.golemHouseEnabled
                 && !GrowssethWorldPreset.isGrowssethPreset(server)
 
         if (!shouldAddBuildings) return

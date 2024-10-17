@@ -202,7 +202,7 @@ class ResearcherDialoguesComponent(
         if (combat.lastKilledPlayers.contains(player)) {
             triggerDialogue(player, EV_PLAYER_ARRIVE_LAST_KILLED)
             combat.lastKilledPlayers.remove(player)
-        } else if (com.ruslan.growsseth.config.ResearcherConfig.singleResearcher && justMet && triggeredArriveBefore) {
+        } else if (ResearcherConfig.singleResearcher && justMet && triggeredArriveBefore) {
             triggerDialogue(player, EV_ARRIVE_NEW_LOCATION)
         } else {
             super.onPlayerArrive(player)
@@ -235,7 +235,7 @@ class ResearcherDialoguesComponent(
     ) {
         super.addDialogueOptionFilters(filters, player, event, eventParam)
 
-        filters.add { entry -> entry.data[DDATA_SINGLE_ONLY] != "true" || com.ruslan.growsseth.config.ResearcherConfig.singleResearcher }
+        filters.add { entry -> entry.data[DDATA_SINGLE_ONLY] != "true" || ResearcherConfig.singleResearcher }
 
         // Check made mess dialogue - only negatively, so remove madeMess dialogue if not angry
         // but not normal dialogue if angry, as doing so would remove also higher priority dialogue.

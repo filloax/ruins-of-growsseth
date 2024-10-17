@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.ruslan.growsseth.RuinsOfGrowsseth
+import com.ruslan.growsseth.config.WebConfig
 import kotlinx.atomicfu.atomic
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.SerializationException
@@ -34,7 +35,7 @@ object DataRemoteSync {
     private val lastSuccessfulUpdateTime_ = atomic<LocalDateTime?>(null)
 
     private var tickUpdateRealTimeDistance: Duration =
-        Duration.ofSeconds(((com.ruslan.growsseth.config.WebConfig.dataSyncReloadTime * 60).toLong()))   // how often the mod should query the server
+        Duration.ofSeconds(((WebConfig.dataSyncReloadTime * 60).toLong()))   // how often the mod should query the server
         set(value) {
             if (value > Duration.ofSeconds(10)) {
                 throw IllegalArgumentException("Duration too short, must be at least 10s: $value")
@@ -93,7 +94,7 @@ object DataRemoteSync {
      * @return A completable future that completes when all endpoints do, and is true if all endpoints had a success
      */
     fun doSync(url: String, server: MinecraftServer): CompletableFuture<Boolean> {
-        if (!com.ruslan.growsseth.config.WebConfig.webDataSync) {
+        if (!WebConfig.webDataSync) {
             return CompletableFuture.completedFuture(false)
         }
 
@@ -312,7 +313,7 @@ object DataRemoteSync {
         }
 
         fun onServerLevel(server: MinecraftServer, level: ServerLevel) {
-            if (com.ruslan.growsseth.config.WebConfig.webDataSync && level.dimension() == Level.OVERWORLD) {
+            if (WebConfig.webDataSync && level.dimension() == Level.OVERWORLD) {
                 while (doOnNextServerStart.isNotEmpty()) {
                     doOnNextServerStart.poll()(server)
                 }
@@ -320,7 +321,7 @@ object DataRemoteSync {
         }
 
         fun onServerTick(url: String, server: MinecraftServer) {
-            if (com.ruslan.growsseth.config.WebConfig.webDataSync) {
+            if (WebConfig.webDataSync) {
                 val time = LocalDateTime.now()
                 // check real time to make pause not affect it
                 if (lastUpdateTime_.value?.let{ Duration.between(it, time) >= tickUpdateRealTimeDistance } == true) {

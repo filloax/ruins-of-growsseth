@@ -22,7 +22,7 @@ object ResearcherResetCommand {
     fun register(dispatcher: CommandDispatcher<CommandSourceStack>, registryAccess: CommandBuildContext, environment: CommandSelection) {
         dispatcher.register(literal("greset").requires{ it.hasPermission(2) }
             .then(literal("researcher").executes { ctx ->
-                if (com.ruslan.growsseth.config.ResearcherConfig.singleResearcher) {
+                if (ResearcherConfig.singleResearcher) {
                     resetResearcherData(ctx, ctx.source.server)
                     ctx.source.sendSuccess({ Component.translatable("growsseth.commands.greset.done") }, true)
                     1
@@ -32,7 +32,7 @@ object ResearcherResetCommand {
                 }
             })
             .then(literal("structures").executes { ctx ->
-                if (com.ruslan.growsseth.config.ResearcherConfig.singleResearcher) {
+                if (ResearcherConfig.singleResearcher) {
                     resetStructureProgress(ctx, ctx.source.server)
                     ctx.source.sendSuccess({ Component.translatable("growsseth.commands.greset.done") }, true)
                     1
@@ -42,7 +42,7 @@ object ResearcherResetCommand {
                 }
             })
             .then(literal("all").executes { ctx ->
-                if (com.ruslan.growsseth.config.ResearcherConfig.singleResearcher) {
+                if (ResearcherConfig.singleResearcher) {
                     resetAll(ctx, ctx.source.server)
                     ctx.source.sendSuccess({ Component.translatable("growsseth.commands.greset.done") }, true)
                     1
@@ -52,7 +52,7 @@ object ResearcherResetCommand {
                 }
             })
             .executes { ctx ->
-                if (com.ruslan.growsseth.config.ResearcherConfig.singleResearcher) {
+                if (ResearcherConfig.singleResearcher) {
                     resetAll(ctx, ctx.source.server)
                     ctx.source.sendSuccess({ Component.translatable("growsseth.commands.greset.done") }, true)
                     1
