@@ -2,6 +2,9 @@
 
 # 0.11.1
 
+Added
+- Right-clicking the researcher when he is still speaking will skip the current chat message
+
 Tweaked
 - First advancement now requires interacting with the researcher, instead of just finding his tent
 
