@@ -10,22 +10,6 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 
 class PlatformAbstractionsFabric : PlatformAbstractions {
-    override val packetRegistratorC2S = object : PlatformAbstractions.PacketRegistrator<RegistryFriendlyByteBuf> {
-        val payloadRegistry = PayloadTypeRegistry.playC2S()
-        override fun <T : CustomPacketPayload> register(
-            id: CustomPacketPayload.Type<T>,
-            codec: StreamCodec<in RegistryFriendlyByteBuf, T>
-        ): CustomPacketPayload.TypeAndCodec<in RegistryFriendlyByteBuf, T> = payloadRegistry.register(id, codec)
-    }
-
-    override val packetRegistratorS2C = object : PlatformAbstractions.PacketRegistrator<RegistryFriendlyByteBuf> {
-        val payloadRegistry = PayloadTypeRegistry.playS2C()
-        override fun <T : CustomPacketPayload> register(
-            id: CustomPacketPayload.Type<T>,
-            codec: StreamCodec<in RegistryFriendlyByteBuf, T>
-        ): CustomPacketPayload.TypeAndCodec<in RegistryFriendlyByteBuf, T> = payloadRegistry.register(id, codec)
-    }
-
     override fun <T : LivingEntity> registerEntDefaultAttribute(entityType: EntityType<T>, attributeBuilder: AttributeSupplier.Builder) {
         FabricDefaultAttributeRegistry.register(entityType, attributeBuilder)
     }

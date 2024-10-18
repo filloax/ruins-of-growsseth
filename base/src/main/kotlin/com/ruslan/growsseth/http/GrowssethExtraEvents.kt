@@ -1,12 +1,10 @@
 package com.ruslan.growsseth.http
 
-import com.filloax.fxlib.*
 import com.filloax.fxlib.api.*
 import com.filloax.fxlib.api.codec.mutableSetOf
 import com.filloax.fxlib.api.entity.getPersistData
 import com.filloax.fxlib.api.nbt.putIfAbsent
 import com.filloax.fxlib.api.savedata.FxSavedData
-import com.filloax.fxlib.api.codec.*
 import com.filloax.fxlib.api.networking.sendPacket
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
@@ -17,7 +15,7 @@ import com.ruslan.growsseth.entity.researcher.Researcher
 import com.ruslan.growsseth.entity.researcher.ResearcherDonkey
 import com.ruslan.growsseth.entity.researcher.ResearcherQuestComponent
 import com.ruslan.growsseth.structure.pieces.ResearcherTent
-import com.ruslan.growsseth.networking.CustomToastPacket
+import com.ruslan.growsseth.network.CustomToastPacket
 import com.ruslan.growsseth.utils.*
 import net.minecraft.core.BlockPos
 import net.minecraft.core.registries.Registries

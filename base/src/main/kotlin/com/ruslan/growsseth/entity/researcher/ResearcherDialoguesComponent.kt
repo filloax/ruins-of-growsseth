@@ -13,8 +13,8 @@ import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.config.ResearcherConfig
 import com.ruslan.growsseth.dialogues.*
 import com.ruslan.growsseth.dialogues.DialogueEvent.Companion.event
-import com.ruslan.growsseth.networking.AmbientSoundsPacket
-import com.ruslan.growsseth.networking.StopMusicPacket
+import com.ruslan.growsseth.network.AmbientSoundsPacket
+import com.ruslan.growsseth.network.StopMusicPacket
 import com.ruslan.growsseth.sound.GrowssethSounds
 import com.ruslan.growsseth.utils.notNull
 import net.minecraft.core.BlockPos
