@@ -1,7 +1,6 @@
 package com.ruslan.growsseth.client
 
 import com.ruslan.growsseth.RuinsOfGrowsseth
-import com.ruslan.growsseth.client.network.GrowssethNetworkingClient
 import com.ruslan.growsseth.client.resource.EncryptedMusicResources
 import com.ruslan.growsseth.client.worldpreset.GrowssethWorldPresetClient
 import com.ruslan.growsseth.config.ClientConfigHandler
@@ -19,7 +18,6 @@ import org.apache.logging.log4j.Level
 object GrowssethClientFabric : ClientModInitializer {
     override fun onInitializeClient() {
         GrowssethRenderers.init()
-        GrowssethNetworkingClient.init()
         GrowssethItemsClient.init()
 
         ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(EncryptedMusicResources.KeyListener() as IdentifiableResourceReloadListener)
