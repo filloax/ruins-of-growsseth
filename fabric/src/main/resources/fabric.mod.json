@@ -67,7 +67,7 @@
     "fabricloader": ">=${fabric_loader_version}",
     "fabric-api": ">=${fapi_version}",
     "fabric": "*",
-    "minecraft": ${fabric_minecraft_version_range}
+    "minecraft": "${fabric_minecraft_version_range}"
   },
   "custom": {
     "modmenu": {
