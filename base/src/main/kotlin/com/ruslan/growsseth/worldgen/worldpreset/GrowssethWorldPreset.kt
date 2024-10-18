@@ -4,7 +4,7 @@ import com.filloax.fxlib.api.FxLibServices
 import com.filloax.fxlib.api.networking.sendPacket
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.config.WorldPresetConfig
-import com.ruslan.growsseth.networking.PlacesInfoPacket
+import com.ruslan.growsseth.network.PlacesInfoPacket
 import com.ruslan.growsseth.worldgen.GrowssethModBiomeSources
 import com.ruslan.growsseth.worldgen.GrowssethModWorldPresets
 import net.minecraft.core.BlockPos

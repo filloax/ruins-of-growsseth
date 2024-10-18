@@ -7,7 +7,7 @@ import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.config.WebConfig
 import com.ruslan.growsseth.dialogues.DialogueEntry
 import com.ruslan.growsseth.entity.researcher.Researcher
-import com.ruslan.growsseth.networking.CustomToastPacket
+import com.ruslan.growsseth.network.CustomToastPacket
 import io.socket.client.IO
 import io.socket.client.Socket
 import kotlinx.serialization.Serializable
