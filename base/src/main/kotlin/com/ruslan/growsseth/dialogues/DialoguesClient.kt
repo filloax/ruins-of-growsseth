@@ -4,7 +4,7 @@ import com.filloax.fxlib.api.FxLibServices
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.config.ClientConfig
 import com.ruslan.growsseth.config.DebugConfig
-import com.ruslan.growsseth.networking.DialoguePacket
+import com.ruslan.growsseth.network.DialoguePacket
 import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
 import net.minecraft.client.player.LocalPlayer

@@ -16,7 +16,7 @@ import com.ruslan.growsseth.config.ClientConfig
 import com.ruslan.growsseth.config.MiscConfig
 import com.ruslan.growsseth.dialogues.BasicDialogueEvents
 import com.ruslan.growsseth.dialogues.DialoguesNpc.Companion.getDialogueNpcs
-import com.ruslan.growsseth.networking.DialoguePacket
+import com.ruslan.growsseth.network.DialoguePacket
 import com.ruslan.growsseth.quests.QuestOwner
 import com.ruslan.growsseth.utils.isNull
 import com.ruslan.growsseth.utils.notNull

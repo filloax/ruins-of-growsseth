@@ -8,6 +8,7 @@ import com.ruslan.growsseth.entity.researcher.ResearcherDiaryComponent
 import com.ruslan.growsseth.entity.researcher.trades.GameMasterResearcherTradesProvider
 import com.ruslan.growsseth.http.GrowssethApi
 import com.ruslan.growsseth.http.GrowssethExtraEvents
+import com.ruslan.growsseth.network.GrowssethPackets
 import com.ruslan.growsseth.resource.MusicCommon
 import com.ruslan.growsseth.structure.*
 import com.ruslan.growsseth.utils.loadPropertiesFile
@@ -51,6 +52,8 @@ abstract class RuinsOfGrowsseth {
         GrowssethExtraEvents.init()
         ResearcherDialogueApiListener.init()
         ResearcherDiaryComponent.init()
+        GrowssethPackets.registerPacketsC2S()
+        GrowssethPackets.registerPacketsS2C()
 
         initItemGroups()
         registerResourceListeners()

@@ -9,8 +9,6 @@ import com.ruslan.growsseth.entity.researcher.trades.TradesListener
 import com.ruslan.growsseth.item.GrowssethCreativeModeTabs
 import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.maps.GrowssethMapDecorations
-import com.ruslan.growsseth.networking.GrowssethPackets
-import com.ruslan.growsseth.platform.platform
 import com.ruslan.growsseth.structure.*
 import com.ruslan.growsseth.templates.TemplateListener
 import com.ruslan.growsseth.utils.resLoc
@@ -43,8 +41,6 @@ object RuinsOfGrowssethFabric : ModInitializer, RuinsOfGrowsseth() {
         GrowssethStructures.registerStructureTypes{ id, value -> Registry.register(BuiltInRegistries.STRUCTURE_TYPE, id, value) }
         GrowssethCriterions.registerCriterions { id, value -> Registry.register(BuiltInRegistries.TRIGGER_TYPES, id, value) }
         GrowssethCommands.ArgumentTypes.registerArgumentTypes(BuiltInRegistries.COMMAND_ARGUMENT_TYPE)
-        GrowssethPackets.registerPacketsC2S(platform.packetRegistratorC2S)
-        GrowssethPackets.registerPacketsS2C(platform.packetRegistratorS2C)
     }
 
     override fun initItemGroups() {

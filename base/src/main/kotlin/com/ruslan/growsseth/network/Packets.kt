@@ -1,7 +1,9 @@
-package com.ruslan.growsseth.networking
+package com.ruslan.growsseth.network
 
+import com.filloax.fxlib.api.FxLibServices
 import com.filloax.fxlib.api.codec.streamCodec
 import com.filloax.fxlib.api.optional
+import com.filloax.fxlib.api.networking.playS2C
 import com.mojang.serialization.Codec
 import com.ruslan.growsseth.dialogues.DialogueLine
 import com.ruslan.growsseth.entity.researcher.trades.ResearcherItemListing
@@ -37,18 +39,18 @@ object GrowssethPackets {
     val FORCE_AMBIENT_SOUND = AmbientSoundsPacket.ENTRY
     val PLACES_DATA         = PlacesInfoPacket.ENTRY
 
-    fun registerPacketsS2C(registrator: PlatformAbstractions.PacketRegistrator<RegistryFriendlyByteBuf>) {
-        registrator.apply {
-            register(DIALOGUE)
-            register(TRADE_NOTIF)
-            register(CUSTOM_TOAST)
-            register(STOP_MUSIC)
-            register(FORCE_AMBIENT_SOUND)
-            register(PLACES_DATA)
+    fun registerPacketsS2C() {
+        FxLibServices.networking.packetRegistrator.apply {
+            playS2C(DIALOGUE, ClientPacketHandlers::handleDialogue)
+            playS2C(TRADE_NOTIF, ClientPacketHandlers::handleTradeNotification)
+            playS2C(CUSTOM_TOAST, ClientPacketHandlers::handleCustomToast)
+            playS2C(STOP_MUSIC, ClientPacketHandlers::handleStopMusic)
+            playS2C(FORCE_AMBIENT_SOUND, ClientPacketHandlers::handleAmbientSounds)
+            playS2C(PLACES_DATA, ClientPacketHandlers::handlePlacesInfo)
         }
     }
 
-    fun registerPacketsC2S(registrator: PlatformAbstractions.PacketRegistrator<RegistryFriendlyByteBuf>) {
+    fun registerPacketsC2S() {
     }
 }
 

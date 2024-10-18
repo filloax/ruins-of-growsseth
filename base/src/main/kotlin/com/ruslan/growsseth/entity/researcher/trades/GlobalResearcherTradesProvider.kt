@@ -12,15 +12,13 @@ import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.entity.researcher.Researcher
-import com.ruslan.growsseth.networking.ResearcherTradesNotifPacket
+import com.ruslan.growsseth.network.ResearcherTradesNotifPacket
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.Tag
 import net.minecraft.network.PacketSendListener
-import net.minecraft.network.protocol.Packet
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.network.ServerGamePacketListenerImpl
-import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.trading.MerchantOffers
 import kotlin.jvm.optionals.getOrDefault
 
