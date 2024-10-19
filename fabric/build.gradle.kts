@@ -31,7 +31,6 @@ val modVersion = libs.versions.modversion.get()
 repositories {
 	maven("https://api.modrinth.com/maven")
 	maven("https://maven.terraformersmc.com/releases")
-	maven("https://jitpack.io")
 }
 
 // Main versions
