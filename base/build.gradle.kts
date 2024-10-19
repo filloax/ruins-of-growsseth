@@ -7,11 +7,11 @@ plugins {
     id("com.ruslan.gradle.multiloader-convention")
     id("com.ruslan.gradle.token-replacement")
 
+	alias(libs.plugins.moddevgradle)
+
 	kotlin("jvm")
 	alias(libs.plugins.kotlin.serialization)
 	alias(libs.plugins.kotlin.atomicfu)
-
-	alias(libs.plugins.moddevgradle)
 }
 
 val modid: String by project
