@@ -27,9 +27,13 @@ java {
 repositories {
     mavenCentral()
     mavenLocal()
-    maven("https://jitpack.io")
     flatDir {
         dirs("libs")
+    }
+
+    exclusiveContent {
+        forRepository { maven("https://jitpack.io") }
+        filter { includeGroupByRegex("com\\.github\\.(stuhlmeier|filloax).*") }
     }
 
     exclusiveContent {
