@@ -6,10 +6,6 @@ pluginManagement {
             name = "Fabric"
             url = uri("https://maven.fabricmc.net/")
         }
-        maven { // used by vanillagradle for ForgeAutoRenamingTool
-            name = "Forge"
-            url = uri("https://maven.minecraftforge.net/")
-        }
         maven {
             name = "Parchment"
             url = uri("https://maven.parchmentmc.org")
@@ -44,5 +40,6 @@ rootProject.name = modid
 
 listOf(
     "base",
-    "fabric"
+    "neoforge",
+    "fabric",
 ).forEach { include(it) }

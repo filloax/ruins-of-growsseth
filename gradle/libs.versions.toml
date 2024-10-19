@@ -30,6 +30,13 @@ fabric = "0.15.11"
 fabric-api = "0.100.7+1.21"
 fabric-language-kotlin = "1.11.0+kotlin.2.0.0"
 
+# Neoforge Settings
+neoforge = "21.0.167"
+neoforge-range = "[21.0.0,)"
+kotlinforge = "5.3.0"
+kotlinforge-range = "[5.3,)"
+fml-range = "[4,)"
+
 # Other dependencies
 mixin = "0.8.5"
 mixinextras = "0.4.0"
@@ -43,6 +50,7 @@ kotlinevents = "v2.0"
 plugin-mixin = "0.7.+"
 plugin-loom = "1.7-SNAPSHOT"
 plugin-moddev = "2.0.36-beta"
+plugin-idea-ext = "1.1.8"
 
 [libraries]
 # Mods
@@ -66,6 +74,7 @@ kotlin-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", 
 fabric = { group = "net.fabricmc", name = "fabric-loader", version.ref = "fabric" }
 fabric-api = { group = "net.fabricmc.fabric-api", name = "fabric-api", version.ref = "fabric-api" }
 fabric-kotlin = { group = "net.fabricmc", name = "fabric-language-kotlin", version.ref = "fabric-language-kotlin" }
+kotlinforge = { group = "thedarkcolour", name = "kotlinforforge-neoforge", version.ref = "kotlinforge" }
 minecraft = { group = "com.mojang", name = "minecraft", version.ref = "minecraft" }
 
 # Misc
@@ -85,4 +94,5 @@ moddevgradle = { id = "net.neoforged.moddev", version.ref = "plugin-moddev" }
 loom = { id = "fabric-loom", version.ref = "plugin-loom" }
 
 # Misc
+ideaext = { id = "org.jetbrains.gradle.plugin.idea-ext", version.ref = "plugin-idea-ext" }
 mixin = { id = "org.spongepowered.mixin", version.ref = "plugin-mixin" }
