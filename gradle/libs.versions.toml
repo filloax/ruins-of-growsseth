@@ -14,7 +14,7 @@ parchment = "2024.07.07"
 neoform = "1.21-20240613.152323" # vanilla neoforge configuration
 
 # Mod dependencies
-filloaxlib = "0.32.0-1.21" #"0.28.1-1.21"
+filloaxlib = "0.32.1-1.21" #"0.28.1-1.21"
 modmenu = "11.0.1"
 rconfig = "3.0.7"
 rconfigMc = "1.21"
