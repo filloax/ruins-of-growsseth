@@ -106,6 +106,11 @@ val fabricMinecraftVersionRange = libs.findVersion("minecraft.range.fabric").get
 val fapiVersion = libs.findVersion("fabric.api").get()
 val fabricVersion = libs.findVersion("fabric").get()
 val fabricKotlinVersion = libs.findVersion("fabric.language.kotlin").get()
+val neoforgeVersion = libs.findVersion("neoforge").get()
+val neoforgeVersionRange = libs.findVersion("neoforge.range").get()
+val fmlVersionRange = libs.findVersion("fml.range").get()
+val kotlinforgeVersion = libs.findVersion("kotlinforge").get()
+val kotlinforgeVersionRange = libs.findVersion("kotlinforge.range").get()
 
 // Libraries
 val filloaxlibVersion = libs.findVersion("filloaxlib").get().toString()
@@ -169,6 +174,12 @@ tasks.withType<ProcessResources>().configureEach {
         "fabric_kotlin_version" to fabricKotlinVersion,
         "fabric_loader_version" to fabricVersion,
         "fapi_version" to fapiVersion,
+
+        "neoforge_version" to neoforgeVersion,
+        "neoforge_version_range" to neoforgeVersionRange,
+        "fml_version_range" to fmlVersionRange,
+        "kotlinforge_version" to kotlinforgeVersion,
+        "kotlinforge_version_range" to kotlinforgeVersionRange,
 
         "filloaxlib_version" to filloaxlibVersion,
         "rconfig_version" to rconfigVersion,
