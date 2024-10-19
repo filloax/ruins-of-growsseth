@@ -129,8 +129,8 @@ object GrowssethItems {
 			Pair(ResourceKey.create(Registries.DECORATED_POT_PATTERN, resLoc(name)), DecoratedPotPattern(resLoc(name)))
 
 
-		fun registerPotPatterns(registrator: (ResourceKey<DecoratedPotPattern>, DecoratedPotPattern) -> Unit) {
-			registrator(GROWSSETH.first, GROWSSETH.second)
+		fun registerPotPatterns(registrator: (ResourceLocation, DecoratedPotPattern) -> Unit) {
+			registrator(GROWSSETH.first.location(), GROWSSETH.second)
 		}
 	}
 
