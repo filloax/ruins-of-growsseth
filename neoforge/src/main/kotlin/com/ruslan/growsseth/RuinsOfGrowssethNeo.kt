@@ -2,13 +2,17 @@ package com.ruslan.growsseth
 
 import com.ruslan.growsseth.advancements.GrowssethCriterions
 import com.ruslan.growsseth.client.GrowssethClientNeo
+import com.ruslan.growsseth.dialogues.ResearcherDialogueListener
 import com.ruslan.growsseth.effect.GrowssethEffects
 import com.ruslan.growsseth.entity.GrowssethEntities
+import com.ruslan.growsseth.entity.researcher.trades.TradesListener
 import com.ruslan.growsseth.item.GrowssethCreativeModeTabs
 import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.maps.GrowssethMapDecorations
 import com.ruslan.growsseth.structure.GrowssethStructurePieceTypes
 import com.ruslan.growsseth.structure.GrowssethStructures
+import com.ruslan.growsseth.templates.TemplateListener
+import com.ruslan.growsseth.worldgen.worldpreset.LocationNotifListener
 import net.minecraft.client.Minecraft
 import net.minecraft.core.Holder
 import net.minecraft.core.Registry
@@ -20,6 +24,7 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.Items
 import net.neoforged.bus.api.IEventBus
 import net.neoforged.fml.common.Mod
+import net.neoforged.neoforge.event.AddReloadListenerEvent
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent
 import net.neoforged.neoforge.registries.DeferredRegister
 import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
@@ -90,7 +95,12 @@ object RuinsOfGrowssethNeo : RuinsOfGrowsseth() {
     }
 
     override fun registerResourceListeners() {
-        // TODO
+        MOD_BUS.register { ev: AddReloadListenerEvent ->
+            ev.addListener(TradesListener())
+            ev.addListener(ResearcherDialogueListener())
+            ev.addListener(TemplateListener)
+            ev.addListener(LocationNotifListener())
+        }
     }
 
     override fun initRegistries() {
