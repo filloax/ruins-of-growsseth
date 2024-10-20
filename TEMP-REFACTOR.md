@@ -8,8 +8,8 @@ Conversione a neoforge
     - Platform abstractions (regis. renderer e attributi entità custom)
     - Pugnale ricercatore
     - Networking (tramite fxlib)
-- Da fare
-    - Eventi
     - Reload listener (sia client che data)
-    - Menu configurazione
     - Client: evento start tick
+Da fare
+    - Eventi
+    - Menu configurazione
