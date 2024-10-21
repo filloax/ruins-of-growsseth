@@ -10,6 +10,6 @@ Conversione a neoforge
     - Networking (tramite fxlib)
     - Reload listener (sia client che data)
     - Client: evento start tick
-Da fare
     - Eventi
+Da fare
     - Menu configurazione
