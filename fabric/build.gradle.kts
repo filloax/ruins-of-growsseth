@@ -1,3 +1,4 @@
+import com.ruslan.gradle.addExtraResourceProp
 import com.ruslan.gradle.getFilloaxlib
 import com.ruslan.gradle.getResourcefulConfig
 
@@ -162,4 +163,14 @@ loom {
 
 loom.runs.matching{ it.name != "datagenClient" }.configureEach {
 	this.vmArg("-Dmixin.debug.export=true")
+}
+
+// Mod description handling
+val rootDirectory = project.rootDir
+val modDescriptionFile = rootDirectory.resolve("mod-description.txt")
+
+project.addExtraResourceProp("description",  modDescriptionFile.readText().replace("\r", "").replace("\n", "\\n"))
+
+tasks.withType<ProcessResources>().configureEach {
+	inputs.file(modDescriptionFile)
 }

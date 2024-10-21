@@ -1,5 +1,6 @@
 package com.ruslan.gradle
 
+import gradle.kotlin.dsl.accessors._a3cefda71dba795f6746bc36999f0190.ext
 import gradle.kotlin.dsl.accessors._a3cefda71dba795f6746bc36999f0190.versionCatalogs
 import org.gradle.api.Project
 import java.io.File
@@ -63,4 +64,17 @@ fun Project.getResourcefulConfig(loader: String = "neoforge"): String {
     return "com.teamresourceful.resourcefulconfig" +
             ":resourcefulconfig-${loader}-${if (rmcVersion == "") mcVersion else rmcVersion}" +
             ":$version"
+}
+
+fun Project.addExtraResourceProp(key: String, value: String) {
+    val extraProps = if (this.ext.has("extraProps")) {
+        this.ext["extraProps"] as MutableMap<String, String>
+    } else {
+        mutableMapOf<String, String>().also { this.ext["extraProps"] = it }
+    }
+    extraProps[key] = value
+}
+
+val Project.extraResourceProps: Map<String, String> get() {
+    return (this.ext["extraProps"] as MutableMap<String, String>?) ?: mapOf()
 }
