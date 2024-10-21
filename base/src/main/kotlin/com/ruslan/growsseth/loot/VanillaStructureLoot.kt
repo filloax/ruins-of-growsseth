@@ -14,6 +14,7 @@ import com.ruslan.growsseth.item.GrowssethItems.RESEARCHER_HORN
 import net.minecraft.core.HolderLookup
 import net.minecraft.core.component.DataComponents
 import net.minecraft.resources.ResourceKey
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.storage.loot.BuiltInLootTables
 import net.minecraft.world.level.storage.loot.LootPool
 import net.minecraft.world.level.storage.loot.LootTable
@@ -39,40 +40,40 @@ object VanillaStructureLoot {
         .minus(SKULK_DISCS)
         .minus(DISC_BALLATA_DEL_RESPAWN)    // only fragments can be found
 
-    fun onModifyLootTables(id: ResourceKey<LootTable>, tableBuilder: LootTable.Builder, registries: HolderLookup.Provider) {
+    fun onModifyLootTables(id: ResourceLocation, tableBuilder: LootTableModifier) {
         if (MiscConfig.modLootInVanillaStructures) {
             val poolBuilder = LootPool.lootPool()
 
-            if (STRONGHOLD_LOOT == id) {
+            if (STRONGHOLD_LOOT.location() == id) {
                 getDiscs().forEach { poolBuilder.add(LootItem.lootTableItem(it)) }
                 poolBuilder
                     .add(LootItem.lootTableItem(RESEARCHER_DAGGER))
                     .add(LootItem.lootTableItem(RESEARCHER_HORN))
             }
-            else if (RUINED_PORTAL_LOOT == id) {
+            else if (RUINED_PORTAL_LOOT.location() == id) {
                 poolBuilder
                     .add(LootItem.lootTableItem(GROWSSETH_BANNER_PATTERN))
             }
-            else if (ANCIENT_CITY_LOOT == id) {
+            else if (ANCIENT_CITY_LOOT.location() == id) {
                 poolBuilder
                     .add(LootItem.lootTableItem(GROWSSETH_ARMOR_TRIM))
                 SKULK_DISCS.forEach { poolBuilder.add(LootItem.lootTableItem(it)) }
             }
-            else if (DUNGEON_LOOT == id || MANSION_LOOT == id) {
+            else if (DUNGEON_LOOT.location() == id || MANSION_LOOT.location() == id) {
                 getDiscs().forEach {
                     poolBuilder.add(LootItem.lootTableItem(it))
                 }
             }
-            else if (OCEAN_RUIN_COLD_LOOT == id || OCEAN_RUIN_WARM_LOOT == id) {
+            else if (OCEAN_RUIN_COLD_LOOT.location() == id || OCEAN_RUIN_WARM_LOOT.location() == id) {
                 poolBuilder
                     .add(LootItem.lootTableItem(GROWSSETH_POTTERY_SHERD))
             }
-            else if (END_CITIES_LOOT == id) {
+            else if (END_CITIES_LOOT.location() == id) {
                 poolBuilder
                     .add(LootItem.lootTableItem(FRAGMENT_BALLATA_DEL_RESPAWN))
             }
 
-            tableBuilder.withPool(poolBuilder)
+            tableBuilder.addPool(poolBuilder)
         }
     }
 }

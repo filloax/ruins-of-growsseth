@@ -140,12 +140,11 @@ abstract class GlobalResearcherTradesProvider protected constructor(
         loaded = false
     }
 
-    private fun onServerPlayerJoin(handler: ServerGamePacketListenerImpl, server: MinecraftServer) {
+    private fun onServerPlayerJoin(player: ServerPlayer, server: MinecraftServer) {
         if (!isEnabled(server)) {
             return
         }
 
-        val player = handler.player
         val data = player.getPersistData()
         val metResearcher = player.getPersistData().getBoolean(Constants.DATA_PLAYER_MET_RESEARCHER)
         val itemListingTrades by lazy { trades.map{ it.itemListing } }
@@ -197,8 +196,8 @@ abstract class GlobalResearcherTradesProvider protected constructor(
             instances.removeIf { it.deinitOnServerStop }
         }
 
-        fun onServerPlayerJoin(handler: ServerGamePacketListenerImpl, server: MinecraftServer) {
-            instances.forEach { it.onServerPlayerJoin(handler, server) }
+        fun onServerPlayerJoin(player: ServerPlayer, server: MinecraftServer) {
+            instances.forEach { it.onServerPlayerJoin(player, server) }
         }
     }
 }

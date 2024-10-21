@@ -13,6 +13,7 @@ import net.minecraft.core.registries.Registries
 import net.minecraft.data.worldgen.BootstrapContext
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.network.ServerGamePacketListenerImpl
 import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.biome.*
@@ -41,13 +42,13 @@ object GrowssethWorldPreset {
             }
         }
 
-        fun onServerPlayerJoin(handler: ServerGamePacketListenerImpl, server: MinecraftServer) {
+        fun onServerPlayerJoin(player: ServerPlayer, server: MinecraftServer) {
             if (isGrowssethPreset(server)) {
                 if (LocationNotifListener.loaded) {
-                    handler.sendPacket(PlacesInfoPacket(LocationNotifListener.PLACES_DATA))
+                    player.sendPacket(PlacesInfoPacket(LocationNotifListener.PLACES_DATA))
                 } else {
                     LocationNotifListener.onNextReload {
-                        handler.sendPacket(PlacesInfoPacket(it))
+                        player.sendPacket(PlacesInfoPacket(it))
                     }
                 }
             }

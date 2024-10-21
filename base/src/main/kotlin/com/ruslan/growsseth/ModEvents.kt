@@ -12,6 +12,7 @@ import com.ruslan.growsseth.entity.researcher.trades.GlobalResearcherTradesProvi
 import com.ruslan.growsseth.entity.researcher.trades.ProgressResearcherTradesProvider
 import com.ruslan.growsseth.events.Events
 import com.ruslan.growsseth.http.*
+import com.ruslan.growsseth.loot.LootTableModifier
 import com.ruslan.growsseth.loot.VanillaStructureLoot
 import com.ruslan.growsseth.quests.QuestComponentEvents
 import com.ruslan.growsseth.structure.RemoteStructureBooks
@@ -22,6 +23,7 @@ import com.ruslan.growsseth.worldgen.worldpreset.LocationNotifListener
 import net.minecraft.core.BlockPos
 import net.minecraft.core.HolderLookup
 import net.minecraft.resources.ResourceKey
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
@@ -93,20 +95,20 @@ abstract class ModEvents {
 //            QuestComponentEvents.onUnloadEntity(entity, level)
         }
 
-        afterPlayerBlockBreak { level, player, pos, state, entity ->
-            ResearcherDialoguesComponent.Callbacks.onBlockBreak(level, player, pos, state, entity)
+        afterPlayerBlockBreak { level, player, pos, state ->
+            ResearcherDialoguesComponent.Callbacks.onBlockBreak(level, player, pos, state)
         }
 
-        onPlayerServerJoin { handler, server ->
-            GlobalResearcherTradesProvider.Callbacks.onServerPlayerJoin(handler, server)
-            GrowssethExtraEvents.onServerPlayerJoin(handler, server)
-            GrowssethWorldPreset.Callbacks.onServerPlayerJoin(handler, server)
+        onPlayerServerJoin { player, server ->
+            GlobalResearcherTradesProvider.Callbacks.onServerPlayerJoin(player, server)
+            GrowssethExtraEvents.onServerPlayerJoin(player, server)
+            GrowssethWorldPreset.Callbacks.onServerPlayerJoin(player, server)
         }
 
         // Register singularly because returns
 
-        onLootTableModify { key, tableBuilder, registries ->
-            VanillaStructureLoot.onModifyLootTables(key, tableBuilder, registries)
+        onLootTableModify { key, table ->
+            VanillaStructureLoot.onModifyLootTables(key, table)
         }
 
         registerCustomEvents()
@@ -150,7 +152,7 @@ abstract class ModEvents {
     abstract fun onLoadChunk(event: (level: ServerLevel, chunk: LevelChunk) -> Unit)
     abstract fun onEntityLoad(event: (entity: Entity, level: ServerLevel) -> Unit)
     abstract fun onEntityUnload(event: (entity: Entity, level: ServerLevel) -> Unit)
-    abstract fun afterPlayerBlockBreak(event: (Level, Player, BlockPos, BlockState, BlockEntity?) -> Unit)
-    abstract fun onPlayerServerJoin(event: (handler: ServerGamePacketListenerImpl, MinecraftServer) -> Unit)
-    abstract fun onLootTableModify(event: (key: ResourceKey<LootTable>, tableBuilder: LootTable.Builder, registries: HolderLookup.Provider) -> Unit)
+    abstract fun afterPlayerBlockBreak(event: (Level, Player, BlockPos, BlockState) -> Unit)
+    abstract fun onPlayerServerJoin(event: (player: ServerPlayer, MinecraftServer) -> Unit)
+    abstract fun onLootTableModify(event: (key: ResourceLocation, table: LootTableModifier) -> Unit)
 }
