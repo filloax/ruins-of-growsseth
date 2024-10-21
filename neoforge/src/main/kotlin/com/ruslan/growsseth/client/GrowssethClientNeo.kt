@@ -10,10 +10,13 @@ import net.minecraft.client.Minecraft
 
 import net.minecraft.client.gui.screens.Screen
 import net.neoforged.bus.api.SubscribeEvent
+import net.neoforged.fml.ModContainer
+import net.neoforged.fml.ModLoadingContext
 import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent
 import net.neoforged.neoforge.client.event.ClientTickEvent
 import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory
 import org.apache.logging.log4j.Level
 
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
@@ -22,6 +25,12 @@ object GrowssethClientNeo {
         FxLib.logger.info("Initializing client...")
         GrowssethRenderers.init()
         GrowssethItemsClient.init()
+
+        ModLoadingContext.get().registerExtensionPoint(IConfigScreenFactory::class.java) {
+            IConfigScreenFactory { _: ModContainer, _: Screen ->
+                configScreen() ?: throw Exception("Config not initialized yet during loading")
+            }
+        }
 
         RuinsOfGrowsseth.log(Level.INFO, "Initialized Client!")
     }
@@ -36,6 +45,5 @@ object GrowssethClientNeo {
         GrowssethWorldPresetClient.Callbacks.onClientTick(Minecraft.getInstance())
     }
 
-    @JvmStatic
     fun configScreen(parent: Screen? = null): ConfigScreen? = ClientConfigHandler.configScreen(parent)
 }
