@@ -11,5 +11,4 @@ Conversione a neoforge
     - Reload listener (sia client che data)
     - Client: evento start tick
     - Eventi
-Da fare
     - Menu configurazione
