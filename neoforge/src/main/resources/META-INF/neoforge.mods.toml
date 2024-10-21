@@ -1,0 +1,54 @@
+modLoader="kotlinforforge"
+loaderVersion="${fml_version_range}"
+
+license="${license}"
+issueTrackerURL="https://github.com/filloax/ruins-of-growsseth/issues"
+
+# A list of mods - how many allowed here is determined by the individual mod loader
+[[mods]]
+    modId="${mod_id}"
+    version="${version_prefix}-neoforge"
+    displayName="${mod_name}"
+
+    # A URL to query for updates for this mod. See the JSON update specification https://docs.neoforged.net/docs/misc/updatechecker/
+    #updateJSONURL="https://change.me.example.invalid/updates.json" #optional
+
+    displayURL="https://github.com/filloax/filloax-lib"
+    logoFile="${mod_icon}"
+    #credits=""
+    authors='''Filloax
+Krozzt
+Reivaxelain
+bb01
+SkullFury
+Vovalcool'''
+    description='''${description}'''
+
+[[mixins]]
+    config="${mod_id}.mixins.json"
+
+#ATs from default path
+
+[[dependencies]]
+    modId="neoforge"
+    type="required"
+    versionRange="${neoforge_version_range}"
+
+[[dependencies]]
+    modId="minecraft"
+    type="required"
+    versionRange="${minecraft_version_range}"
+
+[[dependencies]]
+    modId="filloaxlib"
+    type="required"
+    versionRange="[${filloaxlib_version},)"
+
+[[dependencies]]
+    modId="resourcefulconfig"
+    type="required"
+    versionRange="[${rconfig_version},)"
+
+[mc-publish]
+    modrinth="476XCS3C"
+    curseforge=1017555
