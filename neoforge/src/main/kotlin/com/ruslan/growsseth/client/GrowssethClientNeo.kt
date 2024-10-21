@@ -15,7 +15,6 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent
 import net.neoforged.neoforge.client.event.ClientTickEvent
 import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent
 import org.apache.logging.log4j.Level
-import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
 
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
 object GrowssethClientNeo {
@@ -23,8 +22,6 @@ object GrowssethClientNeo {
         FxLib.logger.info("Initializing client...")
         GrowssethRenderers.init()
         GrowssethItemsClient.init()
-
-        initEvents()
 
         RuinsOfGrowsseth.log(Level.INFO, "Initialized Client!")
     }
