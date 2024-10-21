@@ -1,6 +1,7 @@
 package com.ruslan.growsseth
 
 import com.filloax.fxlib.platform.ServerEvent
+import com.ruslan.growsseth.loot.LootTableModifier
 import net.fabricmc.fabric.api.event.lifecycle.v1.*
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents
@@ -8,8 +9,10 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.minecraft.core.BlockPos
 import net.minecraft.core.HolderLookup
 import net.minecraft.resources.ResourceKey
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.network.ServerGamePacketListenerImpl
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.player.Player
@@ -40,13 +43,15 @@ class FabricEvents : ModEvents() {
 
     override fun onEntityUnload(event: (entity: Entity, level: ServerLevel) -> Unit) = ServerEntityEvents.ENTITY_UNLOAD.register(event)
 
-    override fun afterPlayerBlockBreak(event: (Level, Player, BlockPos, BlockState, BlockEntity?) -> Unit) = PlayerBlockBreakEvents.AFTER.register(event)
-
-    override fun onPlayerServerJoin(event: (handler: ServerGamePacketListenerImpl, MinecraftServer) -> Unit) = ServerPlayConnectionEvents.JOIN.register { handler, _, server ->
-        event(handler, server)
+    override fun afterPlayerBlockBreak(event: (Level, Player, BlockPos, BlockState) -> Unit) = PlayerBlockBreakEvents.AFTER.register { level, player, pos, state, _ ->
+        event(level, player, pos, state)
     }
 
-    override fun onLootTableModify(event: (key: ResourceKey<LootTable>, tableBuilder: LootTable.Builder, registries: HolderLookup.Provider) -> Unit) = LootTableEvents.MODIFY.register { key, tableBuilder, _, registries ->
-        event(key, tableBuilder, registries)
+    override fun onPlayerServerJoin(event: (ServerPlayer, MinecraftServer) -> Unit) = ServerPlayConnectionEvents.JOIN.register { handler, _, server ->
+        event(handler.player, server)
+    }
+
+    override fun onLootTableModify(event: (key: ResourceLocation, table: LootTableModifier) -> Unit) = LootTableEvents.MODIFY.register { key, tableBuilder, _, registries ->
+        event(key.location(), LootTableModifier.ForLootTableBuilder(tableBuilder))
     }
 }

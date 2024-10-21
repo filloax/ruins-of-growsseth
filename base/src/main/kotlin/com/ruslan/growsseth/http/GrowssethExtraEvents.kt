@@ -91,8 +91,7 @@ object GrowssethExtraEvents {
         }
     }
 
-    fun onServerPlayerJoin(handler: ServerGamePacketListenerImpl, server: MinecraftServer) {
-        val player = handler.player
+    fun onServerPlayerJoin(player: ServerPlayer, server: MinecraftServer) {
         GrowssethApi.current.events.forEach { event ->
             if (event.active) {
                 val prefix = event.name.split("/")[0]

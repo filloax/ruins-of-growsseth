@@ -305,7 +305,7 @@ class ResearcherDialoguesComponent(
     }
 
     object Callbacks {
-        fun onBlockBreak(level: Level, player: Player, pos: BlockPos, state: BlockState, entity: BlockEntity?) {
+        fun onBlockBreak(level: Level, player: Player, pos: BlockPos, state: BlockState) {
             if (level !is ServerLevel) return
             if (state.`is`(RESEARCHER_MESS_TRIGGER)) {
                 val researchersInBounds = getResearchersNearTentAt(level, pos) ?: return
