@@ -1,3 +1,5 @@
+import com.ruslan.gradle.addExtraResourceProp
+import com.ruslan.gradle.extraResourceProps
 import com.ruslan.gradle.getFilloaxlib
 import com.ruslan.gradle.getResourcefulConfig
 
@@ -106,7 +108,6 @@ dependencies {
 
     listOf(
         libs.kotlinforge,
-        libs.modmenu,
         getResourcefulConfig("neoforge"),
     ).forEach {
         implementation(it)
@@ -155,4 +156,15 @@ tasks.withType<Javadoc>().configureEach {
 
 tasks.processResources {
     from(baseProject.sourceSets.getByName("main").resources)
+}
+
+
+// Mod description handling
+val rootDirectory = project.rootDir
+val modDescriptionFile = rootDirectory.resolve("mod-description.txt")
+
+project.addExtraResourceProp("description", modDescriptionFile.readText().replace("\r", ""))
+
+tasks.withType<ProcessResources>().configureEach {
+    inputs.file(modDescriptionFile)
 }
