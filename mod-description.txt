@@ -1,0 +1,24 @@
+Explore the ruins of the lost kingdom of Growsseth, with a smart
+NPC to guide you along the way
+
+Credits: Ruslan Fanclub
+- Filloax (Lead Programmer)
+- Krozzzt (Programming and Writing)
+- Reivaxelain (Art, Structures and Writing)
+- bb01 (Structures and Additional Writing)
+- SkullFury (Original member, Datapack Management)
+- Vovalcool (Original member, Structures)
+Everyone: Design and Testing
+
+Contributors:
+- Sync_Gabri (Supervisor, Coordinator and Writer for the Cydonia's version)
+- Worgage (API Integration, Testing and Writing for the Cydonia's version)
+- Simone Russo (Sound Effect)
+- Farcr (Guber texture)
+
+Musical artists:
+- Il Coro di Mammonk (Ancora Qui, La Ballata Del Respawn, Il Tesoro Di CacoCaco, La Missiva Nell'Ombra, Odi et Amo, Oursteps, Elogio a Padre Mammonk, Pesci Strani)
+- Singalek (Binobinooo, Giorgio Cubetti, Giorgio Lo-Fi)
+- HunterProduction (Giorgio Finding Home)
+- Ako & R-E-M (Abbandonati)
+- Guber (Una sega di niente)

@@ -92,7 +92,7 @@ val libs = project.versionCatalogs.find("libs").get()
 // Project settings
 val modid: String by project
 val modName: String by project
-val modDescription: String by project
+val modIcon: String by project
 val mavenGroup: String by project
 val baseName: String by project
 val author: String by project
@@ -165,8 +165,14 @@ tasks.withType<JavaCompile>().configureEach {
 //    options.compilerArgs.addAll(listOf("-Werror")) // cannot use werror as false positives obtained from mixin (maybe)
 }
 
+// mod description handling
+val rootDirectory = project.rootDir
+val modDescriptionFile = rootDirectory.resolve("mod-description.txt")
+
+
 tasks.withType<ProcessResources>().configureEach {
     exclude(".cache")
+    inputs.file(modDescriptionFile)
 
     val expandProps = mapOf(
         "version_prefix" to "$modVersion-$minecraftVersion",
@@ -191,14 +197,15 @@ tasks.withType<ProcessResources>().configureEach {
         "mod_name" to modName,
         "author" to author,
         "mod_id" to modid,
+        "mod_icon" to modIcon,
         "license" to license,
-        "description" to modDescription,
+        "description" to modDescriptionFile.readText().replace("\r", "").replace("\n", "\\n"),
 
         // non-meta, functional config
         "cydoniaMode" to cydoVersion,
     )
 
-    filesMatching(listOf("pack.mcmeta", "fabric.mod.json", "META-INF/mods.toml", "cydonia.properties")) {
+    filesMatching(listOf("pack.mcmeta", "fabric.mod.json", "META-INF/neoforge.mods.toml", "cydonia.properties")) {
         expand(expandProps)
     }
 

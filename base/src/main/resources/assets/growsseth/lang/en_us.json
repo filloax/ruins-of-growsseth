@@ -171,6 +171,8 @@
     "growsseth.filled_map.target": "[Growsseth] Target position: %d %d",
 
 
+    "growsseth.config.web.description": "A structures mod to guide in vanilla features, with a smart NPC",
+
     "growsseth.config.needsWorldReload.comment": "If changed ingame, takes effect on world reload.",
 
     "growsseth.config.serverLanguage.name": "Server language",

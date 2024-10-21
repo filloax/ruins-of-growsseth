@@ -170,6 +170,7 @@
 
     "growsseth.filled_map.target": "[Growsseth] Posizione obiettivo: %d %d",
 
+    "growsseth.config.web.description": "Una mod di strutture per guidare in feature vanilla, con un NPC intelligente",
 
     "growsseth.config.needsWorldReload.comment": "Se cambiata ingame farà effetto al ricaricamento del mondo.",
 
