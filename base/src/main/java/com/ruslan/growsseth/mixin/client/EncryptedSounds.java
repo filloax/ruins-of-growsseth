@@ -30,7 +30,7 @@ import java.util.Map;
  */
 public class EncryptedSounds {
     @Mixin(targets = "net.minecraft.client.sounds.SoundManager$Preparations")
-    public static class SoundManager$PreparationsMixin {
+    public static class SoundManager_PreparationsMixin {
         @ModifyExpressionValue(
             method = "listResources",
             at = @At(
