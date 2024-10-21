@@ -76,5 +76,5 @@ fun Project.addExtraResourceProp(key: String, value: String) {
 }
 
 val Project.extraResourceProps: Map<String, String> get() {
-    return (this.ext["extraProps"] as MutableMap<String, String>?) ?: mapOf()
+    return "extraProps".let{ if (this.ext.has(it)) this.ext[it] as Map<String, String> else mapOf() }
 }
