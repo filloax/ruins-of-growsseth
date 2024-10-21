@@ -47,7 +47,7 @@
     "client.EasterEggMixinClient$AbstractZombieRendererMixin",
     "client.EncryptedSounds$SoundBufferLibraryMixin",
     "client.EncryptedSounds$SoundEventRegistrationSerializerMixin",
-    "client.EncryptedSounds$SoundManager$PreparationsMixin",
+    "client.EncryptedSounds$SoundManager_PreparationsMixin",
     "client.EncryptedSounds$SoundMixin",
     "client.RuinsMapIcon_GuiGraphicsMixin",
     "client.TitleScreenMixin",
