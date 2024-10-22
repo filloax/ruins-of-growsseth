@@ -112,7 +112,8 @@ class SimplePools(private val context: BootstrapContext<StructureTemplatePool>) 
             overrideLiquidSettings = LiquidSettings.APPLY_WATERLOGGING,
         )
         registerPoolElements(
-            "ruins/noteblock_ship",
+            "ruins/noteblock_ship/top",
+            "ruins/noteblock_ship/bottom",
         )
     }
 
