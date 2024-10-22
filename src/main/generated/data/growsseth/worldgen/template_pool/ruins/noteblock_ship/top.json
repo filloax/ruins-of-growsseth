@@ -3,7 +3,7 @@
     {
       "element": {
         "element_type": "fxlib:single_pool_element",
-        "location": "growsseth:ruins/noteblock_ship",
+        "location": "growsseth:ruins/noteblock_ship/top",
         "placeSettingsDefaults": {
           "keepLiquids": false
         },

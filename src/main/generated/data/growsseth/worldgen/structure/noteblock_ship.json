@@ -3,7 +3,7 @@
   "biomes": "#growsseth:has_structure/noteblock_ship",
   "force_pos_offset": [
     -19,
-    -2,
+    0,
     -15
   ],
   "force_pos_uses_y": true,
@@ -13,9 +13,10 @@
   "size": 7,
   "spawn_overrides": {},
   "start_height": {
-    "absolute": -2
+    "absolute": 0
   },
-  "start_pool": "growsseth:ruins/noteblock_ship",
+  "start_pool": "growsseth:ruins/noteblock_ship/top",
   "step": "surface_structures",
+  "terrain_adaptation": "beard_thin",
   "use_expansion_hack": false
 }
