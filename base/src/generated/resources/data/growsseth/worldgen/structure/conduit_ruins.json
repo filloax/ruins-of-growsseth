@@ -18,5 +18,6 @@
   },
   "start_pool": "growsseth:ruins/conduit_ruins",
   "step": "surface_structures",
+  "terrain_adaptation": "beard_thin",
   "use_expansion_hack": false
 }
