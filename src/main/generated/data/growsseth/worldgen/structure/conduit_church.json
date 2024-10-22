@@ -3,7 +3,7 @@
   "biomes": "#growsseth:has_structure/conduit_church",
   "force_pos_offset": [
     -15,
-    -2,
+    0,
     -14
   ],
   "force_pos_uses_y": true,
@@ -13,9 +13,10 @@
   "size": 7,
   "spawn_overrides": {},
   "start_height": {
-    "absolute": -2
+    "absolute": 0
   },
   "start_pool": "growsseth:ruins/conduit_church/main",
   "step": "surface_structures",
+  "terrain_adaptation": "beard_thin",
   "use_expansion_hack": false
 }
