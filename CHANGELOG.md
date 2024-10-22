@@ -7,6 +7,7 @@ Added
 
 Tweaked
 - First advancement now requires interacting with the researcher, instead of just finding his tent
+- Improved terrain adaptation for most of the structures, should fix the "half of the structure spawns in midair" problem
 
 Fixed
 - Fixed researcher's tent notes not using templates
