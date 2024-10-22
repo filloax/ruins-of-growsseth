@@ -216,8 +216,11 @@ object GrowssethStructures {
         val NONE_BIOMES = TagKey.create(Registries.BIOME, resLoc("has_structure/none"))
 
         private fun registerJigsaws() {
+            // The beard_thin adaptation smooths out the terrain around the structures, but makes single jigsaw
+            // structures not respect the y offset, and in some cases it might just look weird
             registerSimpleJigsaw(BEEKEEPER_HOUSE, "ruins/beekeeper_house/house",
                 offset = Vec3i(-11, 0, -9),
+                terrainAdaptation = TerrainAdjustment.BEARD_THIN
             )
             registerSimpleJigsaw(CAVE_CAMP, "misc/cave_camp",
                 startHeight = UniformHeight.of(VerticalAnchor.absolute(20), VerticalAnchor.absolute(50)),
@@ -240,9 +243,11 @@ object GrowssethStructures {
             )
             registerSimpleJigsaw(ABANDONED_FORGE, "ruins/abandoned_forge/base",
                 offset = Vec3i(-9, 0, -9),
+                terrainAdaptation = TerrainAdjustment.BEARD_THIN
             )
             registerSimpleJigsaw(NOTEBLOCK_LAB, "ruins/noteblock_lab/house",
                 offset = Vec3i(-8, 0, -9),
+                terrainAdaptation = TerrainAdjustment.BEARD_THIN
             )
             registerSimpleJigsaw(NOTEBLOCK_SHIP, "ruins/noteblock_ship",
                 startHeight = ConstantHeight.of(VerticalAnchor.absolute(-2)),
@@ -251,6 +256,7 @@ object GrowssethStructures {
             registerSimpleJigsaw(CONDUIT_RUINS, "ruins/conduit_ruins",
                 offset = Vec3i(-16, 0, -16),
                 projectStartToHeightMap = Heightmap.Types.OCEAN_FLOOR,
+                terrainAdaptation = TerrainAdjustment.BEARD_THIN
             )
         }
 
@@ -313,6 +319,7 @@ object GrowssethStructures {
             projectStartToHeightMap: Heightmap.Types? = Heightmap.Types.WORLD_SURFACE_WG,
             step: Decoration = Decoration.SURFACE_STRUCTURES,
             startHeight: HeightProvider = ConstantHeight.ZERO,
+            terrainAdaptation: TerrainAdjustment = TerrainAdjustment.NONE,
             size: Int = 7,
         ) {
             val startPoolHolder = templatePoolGetter.getOrThrow(ResourceKey.create(Registries.TEMPLATE_POOL, resLoc(startPool)))
@@ -321,8 +328,8 @@ object GrowssethStructures {
             ctx.register(key, ForcePosJigsawStructure.build(
                 startPoolHolder, biomesHolder,
                 forcePosOffset = offset, projectStartToHeightmap = projectStartToHeightMap,
-                step = step, startHeight = startHeight,
-                size = size,
+                startHeight = startHeight, terrainAdaptation = terrainAdaptation,
+                step = step, size = size,
             ))
         }
 
