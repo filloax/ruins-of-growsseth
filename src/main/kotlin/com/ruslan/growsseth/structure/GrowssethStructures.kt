@@ -231,9 +231,9 @@ object GrowssethStructures {
                 step = Decoration.UNDERGROUND_STRUCTURES,
             )
             registerSimpleJigsaw(CONDUIT_CHURCH, "ruins/conduit_church/main",
-                offset = Vec3i(-15, -2, -14),
-                startHeight = ConstantHeight.of(VerticalAnchor.absolute(-2)),
+                offset = Vec3i(-15, 0, -14),
                 projectStartToHeightMap = Heightmap.Types.OCEAN_FLOOR,
+                terrainAdaptation = TerrainAdjustment.BEARD_THIN
             )
             registerSimpleJigsaw(ENCHANT_TOWER, "ruins/enchant_tower/base",
                 offset = Vec3i(-5, 0, -4),
@@ -251,9 +251,9 @@ object GrowssethStructures {
                 offset = Vec3i(-8, 0, -9),
                 terrainAdaptation = TerrainAdjustment.BEARD_THIN
             )
-            registerSimpleJigsaw(NOTEBLOCK_SHIP, "ruins/noteblock_ship",
-                startHeight = ConstantHeight.of(VerticalAnchor.absolute(-2)),
-                offset = Vec3i(-19, -2, -15),
+            registerSimpleJigsaw(NOTEBLOCK_SHIP, "ruins/noteblock_ship/top",
+                offset = Vec3i(-19, 0, -15),
+                terrainAdaptation = TerrainAdjustment.BEARD_THIN
             )
             registerSimpleJigsaw(CONDUIT_RUINS, "ruins/conduit_ruins",
                 offset = Vec3i(-16, 0, -16),
