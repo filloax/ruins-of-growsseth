@@ -18,5 +18,6 @@
   },
   "start_pool": "growsseth:ruins/beekeeper_house/house",
   "step": "surface_structures",
+  "terrain_adaptation": "beard_thin",
   "use_expansion_hack": false
 }
