@@ -10,8 +10,9 @@ Tweaked
 - Improved terrain adaptation for most of the structures, should fix the "half of the structure spawns in midair" problem
 
 Fixed
-- Fixed researcher's tent notes not using templates
-- Lowered water level of conduit church nbt, to avoid water blobs when it spawns too high up
+- Fixed an instance of the researcher's tent notes not using templates (they always appeared in italian)
+- Lowered water level of the conduit church nbt, to avoid water blobs when it spawns too high up
+- Fixed expected durability of certain items obtainable in enchanting tower and conduit church
 
 
 ## 0.11.0
