@@ -1,5 +1,11 @@
 package com.ruslan.gradle
 
+import gradle.kotlin.dsl.accessors._258ea003d60887ae6eb7b6ddf797da1b.build
+import gradle.kotlin.dsl.accessors._258ea003d60887ae6eb7b6ddf797da1b.dokkaJavadoc
+import gradle.kotlin.dsl.accessors._258ea003d60887ae6eb7b6ddf797da1b.javadoc
+import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.dokka.gradle.formats.DokkaJavadocPlugin
+
 plugins {
     id("com.ruslan.gradle.multiloader-convention")
 }
@@ -48,14 +54,31 @@ tasks.processResources {
     from(configurations.getByName(COMMON_RESOURCES))
 }
 
-//tasks.javadoc.configure {
-//    dependsOn(configurations.getByName(COMMON_JAVA))
-//    source(configurations.getByName(COMMON_JAVA))
-//}
-
 tasks.named<Jar>("sourcesJar") {
     dependsOn(configurations.getByName(COMMON_JAVA))
     from(configurations.getByName(COMMON_JAVA))
     dependsOn(configurations.getByName(COMMON_RESOURCES))
     from(configurations.getByName(COMMON_RESOURCES))
+}
+
+
+
+// replaces javaDoc with kotlin
+tasks.withType<DokkaTask>().configureEach {
+    dependsOn(configurations.getByName(COMMON_RESOURCES))
+    dokkaSourceSets {
+        named("main") {
+            sourceRoots.from(configurations.getByName(COMMON_JAVA))
+        }
+    }
+}
+
+val dokkaJavadocJar = tasks.register<Jar>("dokkaJavadocJar") {
+    dependsOn(tasks.dokkaJavadoc)
+    from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
+    archiveClassifier.set("javadoc")
+}
+
+tasks.build {
+    dependsOn(dokkaJavadocJar)
 }
