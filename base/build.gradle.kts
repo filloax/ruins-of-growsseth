@@ -1,11 +1,10 @@
-import com.ruslan.gradle.TransformTokensTask
-import com.ruslan.gradle.getFilloaxlib
-import com.ruslan.gradle.getResourcefulConfig
+//import com.ruslan.gradle.TransformTokensTask
+import com.ruslan.gradle.*
 
 plugins {
     // see buildSrc
     id("com.ruslan.gradle.multiloader-convention")
-    id("com.ruslan.gradle.token-replacement")
+//    id("com.ruslan.gradle.token-replacement")
 
 	alias(libs.plugins.moddevgradle)
 
@@ -18,8 +17,8 @@ val modid: String by project
 val modVersion = libs.versions.modversion.get()
 val minecraftVersion = libs.versions.minecraft.asProvider().get()
 
-// Project settings
 val cydoVersion = (property("cydoVersion") as String).toBoolean()
+
 
 version = "$modVersion-$minecraftVersion-base"
 
@@ -40,8 +39,6 @@ neoForge {
 
 	// access transformers use default path so no need to config
 }
-
-val socketIoLibs = ext.get("socketio-libs") as List<String>
 
 dependencies {
 	compileOnly( libs.jsr305 )
@@ -64,7 +61,36 @@ dependencies {
 
 sourceSets.main.get().resources.srcDir(project(":base").file("src/generated/resources"))
 
-// custom tasks
+configurations {
+	create(COMMON_JAVA) {
+		isCanBeResolved = false
+		isCanBeConsumed = true
+	}
+	create(COMMON_RESOURCES) {
+		isCanBeResolved = false
+		isCanBeConsumed = true
+	}
+}
+
+artifacts {
+	sourceSets.main.get().java.sourceDirectories.forEach { add(COMMON_JAVA, it) }
+	sourceSets.main.get().kotlin.sourceDirectories.forEach { add(COMMON_JAVA, it) }
+	sourceSets.main.get().resources.sourceDirectories.forEach { add(COMMON_RESOURCES, it) }
+}
+
+// Task defined in the custom plugin in buildSrc
+
+//tasks.withType<TransformTokensTask> {
+//	val env = System.getenv()
+//	replaceTokens(mapOf(
+//		"$@MUSIC_PW@" to (env["GROWSSETH_MUSIC_PW"] ?: run {
+//			project.logger.error("Music key not set up in env variable GROWSSETH_MUSIC_PW, music in builds won't work!")
+//			""
+//		}),
+//	))
+//}
+
+//region custom tasks
 
 tasks.register<Zip>("zipEgobalegoFolder") {
 	from(project.file("tools/egobalego-at-home"))
@@ -112,24 +138,4 @@ tasks.named("build") {
 	dependsOn("zipEgobalegoFolder")
 	dependsOn("makeReferenceDatapack")
 }
-
-tasks.withType<Jar> {
-	// Cydo version: remove structure spawns
-	if (cydoVersion) {
-		println("Cydo version: will exclude structure spawns...")
-		exclude("data/growsseth/worldgen/structure_set/**")
-	}
-}
-
-
-// Task defined in the custom plugin in buildSrc
-
-tasks.withType<TransformTokensTask> {
-	val env = System.getenv()
-	replaceTokens(mapOf(
-		"$@MUSIC_PW@" to (env["GROWSSETH_MUSIC_PW"] ?: run {
-			project.logger.error("Music key not set up in env variable GROWSSETH_MUSIC_PW, music in builds won't work!")
-			""
-		}),
-	))
-}
+//endregion
