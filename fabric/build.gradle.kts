@@ -4,15 +4,24 @@ plugins {
 	// see buildSrc
 	id("com.ruslan.gradle.multiloader-loader")
 
-	kotlin("jvm")
-	alias(libs.plugins.kotlin.serialization)
 	alias(libs.plugins.loom)
 }
 
+val utils = project.utils(versionCatalogs, ext)
+
 val modid: String by project
+val modVersion = libs.versions.modversion.get()
+val minecraftVersion = libs.versions.minecraft.asProvider().get()
+val parchmentMcVersion = libs.versions.parchment.minecraft.get()
+val parchmentVersion = libs.versions.parchment.asProvider().get()
+val includeDeps = (property("includeDeps") as String).toBoolean()
+
+version = "$modVersion-$minecraftVersion-fabric"
+
+if (includeDeps) println("Including dependencies for test mode")
 
 loom {
-	accessWidenerPath = project(":base").file("src/main/resources/${modid}.accesswidener")
+	accessWidenerPath = project(BASE_PROJECT).file("src/main/resources/${modid}.accesswidener")
 	mixin.defaultRefmapName = "${modid}.refmap.json"
 
 	mods {
@@ -20,22 +29,40 @@ loom {
 			sourceSet(sourceSets.main.get())
 		}
 	}
+
+	runs {
+		create("data") {
+			client()
+
+			name("Data Generation")
+			vmArg("-Dfabric-api.datagen")
+			vmArg("-Dfabric-api.datagen.output-dir=${file("../base/src/generated/resources")}")
+			vmArg("-Dfabric-api.datagen.modid=${modid}")
+
+			runDir("build/datagen")
+		}
+
+		create("musicKey") {
+			client()
+			mainClass = "com.ruslan.growsseth.data.MusicKeyCreateKt"
+
+			name("Create music key")
+			runDir("run/musicencrypt")
+		}
+
+		create("musicEncrypt") {
+			client()
+			mainClass = "com.ruslan.growsseth.data.MusicEncryptKt"
+
+			name("Encrypt music")
+			runDir("run/musicencrypt")
+		}
+
+		matching{ it.name == "client" || it.name == "server" }.configureEach {
+			vmArg("-Dmixin.debug.export=true")
+		}
+	}
 }
-val utils = project.utils(versionCatalogs, ext)
-
-// Project settings
-val includeDeps = (property("includeDeps") as String).toBoolean()
-
-val modVersion = libs.versions.modversion.get()
-
-// Main versions
-val minecraftVersion = libs.versions.minecraft.asProvider().get()
-val parchmentMcVersion = libs.versions.parchment.minecraft.get()
-val parchmentVersion = libs.versions.parchment.asProvider().get()
-
-version = "$modVersion-$minecraftVersion-fabric"
-
-if (includeDeps) println("Including dependencies for test mode")
 
 dependencies {
 	minecraft( libs.minecraft )
@@ -75,41 +102,6 @@ dependencies {
 	}
 	implementation( libs.kotlinevents )
 	include( libs.kotlinevents )
-}
-
-loom {
-	runs {
-		create("data") {
-			client()
-
-			name("Data Generation")
-			vmArg("-Dfabric-api.datagen")
-			vmArg("-Dfabric-api.datagen.output-dir=${file("../base/src/generated/resources")}")
-			vmArg("-Dfabric-api.datagen.modid=${modid}")
-
-			runDir("build/datagen")
-		}
-
-		create("musicKey") {
-			client()
-			mainClass = "com.ruslan.growsseth.data.MusicKeyCreateKt"
-
-			name("Create music key")
-			runDir("run/musicencrypt")
-		}
-
-		create("musicEncrypt") {
-			client()
-			mainClass = "com.ruslan.growsseth.data.MusicEncryptKt"
-
-			name("Encrypt music")
-			runDir("run/musicencrypt")
-		}
-	}
-}
-
-loom.runs.matching{ it.name != "datagenClient" }.configureEach {
-	this.vmArg("-Dmixin.debug.export=true")
 }
 
 // Mod description handling (different in loaders due to formatting)

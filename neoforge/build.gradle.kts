@@ -1,13 +1,10 @@
 import com.ruslan.gradle.*
 
 plugins {
+    // see buildSrc
     id("com.ruslan.gradle.multiloader-loader")
 
     alias(libs.plugins.moddevgradle)
-
-    kotlin("jvm")
-    alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.kotlin.atomicfu)
 }
 
 val utils = project.utils(versionCatalogs, ext)
@@ -15,20 +12,11 @@ val utils = project.utils(versionCatalogs, ext)
 val modid: String by project
 val modVersion = libs.versions.modversion.get()
 val minecraftVersion = libs.versions.minecraft.asProvider().get()
+val parchmentMcVersion = libs.versions.parchment.minecraft.get()
+val parchmentVersion = libs.versions.parchment.asProvider().get()
 val includeDeps = (property("includeDeps") as String).toBoolean()
 
 version = "$modVersion-${minecraftVersion}-neoforge"
-
-repositories {
-    maven("https://api.modrinth.com/maven")
-    maven("https://maven.terraformersmc.com/releases")
-    maven {
-        name = "Kotlin for Forge"
-        setUrl("https://thedarkcolour.github.io/KotlinForForge/")
-    }
-}
-
-val baseProject = project(BASE_PROJECT)
 
 if (includeDeps) println("Including dependencies for test mode")
 
@@ -36,33 +24,29 @@ neoForge {
     version.set(libs.versions.neoforge.asProvider())
 
     validateAccessTransformers = true
-    accessTransformers.files.setFrom(baseProject.file("src/main/resources/META-INF/accesstransformer.cfg"))
+    accessTransformers.files.setFrom( project(BASE_PROJECT).file("src/main/resources/META-INF/accesstransformer.cfg"))
 
     parchment {
-        minecraftVersion = libs.versions.parchment.minecraft
-        mappingsVersion = libs.versions.parchment.asProvider()
+        minecraftVersion = parchmentMcVersion
+        mappingsVersion = parchmentVersion
     }
 
     runs {
         create("client") {
             client()
-
-            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
-            systemProperty("neoforge.enabledGameTestNamespaces", modid)
         }
 
         create("server") {
             server()
-            programArgument("--nogui")
-            systemProperty("neoforge.enabledGameTestNamespaces", modid)
         }
 
-//        create("gameTestServer") {
-//            type = "gameTestServer"
-//            systemProperty("neoforge.enabledGameTestNamespaces", modid)
-//        }
+        /*
+        create("gameTestServer") {
+            type = "gameTestServer"
+            systemProperty("neoforge.enabledGameTestNamespaces", modid)
+        }
+        */
 
-        // applies to all the run configs above
         configureEach {
             // Recommended logging data for a userdev environment
             // The markers can be added/remove as needed separated by commas.
@@ -70,6 +54,7 @@ neoForge {
             // "REGISTRIES": For firing of registry events.
             // "REGISTRYDUMP": For getting the contents of all registries.
             systemProperty("forge.logging.markers", "REGISTRIES")
+            systemProperty("neoforge.enabledGameTestNamespaces", modid)
             logLevel = org.slf4j.event.Level.DEBUG
         }
     }

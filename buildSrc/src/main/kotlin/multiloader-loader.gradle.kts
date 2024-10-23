@@ -1,8 +1,5 @@
 package com.ruslan.gradle
 
-import gradle.kotlin.dsl.accessors._258ea003d60887ae6eb7b6ddf797da1b.build
-import gradle.kotlin.dsl.accessors._258ea003d60887ae6eb7b6ddf797da1b.dokkaJavadoc
-import gradle.kotlin.dsl.accessors._258ea003d60887ae6eb7b6ddf797da1b.javadoc
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.dokka.gradle.formats.DokkaJavadocPlugin
 
