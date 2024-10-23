@@ -1,7 +1,4 @@
-import com.ruslan.gradle.addExtraResourceProp
-import com.ruslan.gradle.extraResourceProps
-import com.ruslan.gradle.getFilloaxlib
-import com.ruslan.gradle.getResourcefulConfig
+import com.ruslan.gradle.*
 
 plugins {
     id("com.ruslan.gradle.multiloader-convention")
@@ -39,8 +36,6 @@ base {
 val baseProject = project(":base")
 
 if (includeDeps) println("Including dependencies for test mode")
-
-val socketIoLibs = ext.get("socketio-libs") as List<String>
 
 neoForge {
     version.set(libs.versions.neoforge.asProvider())
@@ -129,8 +124,9 @@ tasks.compileJava {
     source(baseProject.sourceSets.getByName("main").allSource)
 }
 
-val preCompileTasks = listOf("restoreSourcesKotlin", "restoreSourcesJava")
-    .map { baseProject.tasks.getByName(it) }
+//val preCompileTasks = listOf("restoreSourcesKotlin", "restoreSourcesJava")
+//    .map { baseProject.tasks.getByName(it) }
+val preCompileTasks = listOf<Task>()
 
 tasks.compileKotlin  {
     preCompileTasks.forEach { dependsOn(it) }

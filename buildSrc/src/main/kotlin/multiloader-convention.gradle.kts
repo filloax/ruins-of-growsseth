@@ -12,24 +12,23 @@ plugins {
 }
 
 val javaVersion: Int = (property("javaVersion")!! as String).toInt()
-val javaVersionEnum = JavaVersion.values().find { it.majorVersion == javaVersion.toString() } ?: throw Exception("Cannot find java version for $javaVersion")
+
+base {
+    archivesName = property("archives_base_name") as String
+}
 
 java {
     toolchain.languageVersion = JavaLanguageVersion.of(javaVersion)
-
     withSourcesJar()
     withJavadocJar()
-
-    sourceCompatibility = javaVersionEnum
-    targetCompatibility = javaVersionEnum
 }
 
 repositories {
     mavenCentral()
     mavenLocal()
-    flatDir {
-        dirs("libs")
-    }
+//    flatDir {
+//        dirs("libs")
+//    }
 
     exclusiveContent {
         forRepository { maven("https://jitpack.io") }
@@ -80,13 +79,11 @@ repositories {
         filter { includeGroup("maven.modrinth") }
     }
 
-    maven {
-        name = "BlameJared"
-        url = uri("https://maven.blamejared.com")
-    }
+    maven("https://api.modrinth.com/maven")
+    maven("https://maven.terraformersmc.com/releases")
 }
 
-
+//region Libs and props
 val libs = project.versionCatalogs.find("libs").get()
 
 // Project settings
@@ -120,23 +117,40 @@ val kotlinforgeVersionRange = libs.findVersion("kotlinforge.range").get()
 val filloaxlibVersion = libs.findVersion("filloaxlib").get().toString()
 val rconfigVersion = libs.findVersion("rconfig").get().toString()
 val rconfigMcVersion = libs.findVersion("rconfigMc").get().toString()
+//endregion
 
-// Socketio libs
-ext.set("socketio-libs", listOf(
-    "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5",
-    "org.json:json:20231013",
-    "org.java-websocket:Java-WebSocket:1.5.4",
-    "com.squareup.okio:okio:3.4.0",
-    "com.squareup.okhttp3:okhttp:4.11.0",
-    "io.socket:engine.io-client:2.1.0",
-    "io.socket:socket.io-client:2.1.0"
-))
+//region Artifacts
+// Declare capabilities on the outgoing configurations.
+// Read more about capabilities here: https://docs.gradle.org/current/userguide/component_capabilities.html#sec:declaring-additional-capabilities-for-a-local-component
+listOf("apiElements", "runtimeElements", "sourcesElements", "javadocElements").forEach { variant ->
+    configurations.getByName(variant).outgoing {
+        capability("$group:${base.archivesName.get()}:$version")
+        capability("$group:$modid-${project.name}-${minecraftVersion}:$version")
+        capability("$group:$modid:$version")
+    }
+    publishing.publications.withType<MavenPublication>().configureEach {
+        suppressPomMetadataWarningsFor(variant)
+    }
+}
+//endregion
 
-// Task configuration
+//region Task configuration
 
-tasks.withType<Jar>().configureEach {
+tasks.named<Jar>("sourcesJar") {
     from(rootProject.file("LICENSE")) {
         rename { "${it}_${modName}" }
+    }
+}
+
+tasks.jar {
+    from(rootProject.file("LICENSE")) {
+        rename { "${it}_${modName}" }
+    }
+
+    // Cydo version: remove structure spawns
+    if (cydoVersion) {
+        println("Cydo version: will exclude structure spawns...")
+        exclude("data/growsseth/worldgen/structure_set/**")
     }
 
     manifest {
@@ -168,7 +182,7 @@ tasks.withType<JavaCompile>().configureEach {
 tasks.withType<ProcessResources>().configureEach {
     exclude(".cache")
 
-    val expandProps = mapOf(
+    val metaProps = mapOf(
         "version_prefix" to "$modVersion-$minecraftVersion",
         "group" to project.group, // Else we target the task's group.
         "display_url" to displayUrl, // Else we target the task's group.
@@ -193,18 +207,25 @@ tasks.withType<ProcessResources>().configureEach {
         "mod_id" to modid,
         "mod_icon" to modIcon,
         "license" to license,
-
+    )
+    val cydoProps = mapOf(
         // non-meta, functional config
         "cydoniaMode" to cydoVersion,
     )
 
-    filesMatching(listOf("pack.mcmeta", "fabric.mod.json", "META-INF/neoforge.mods.toml", "cydonia.properties")) {
-        expand(expandProps + project.extraResourceProps)
+    filesMatching(listOf("pack.mcmeta", "fabric.mod.json", "META-INF/neoforge.mods.toml")) {
+        expand(metaProps + project.extraResourceProps)
+    }
+    filesMatching(listOf("cydonia.properties")) {
+        expand(cydoProps)
     }
 
-    inputs.properties(expandProps)
+    inputs.properties(metaProps)
+    inputs.properties(cydoProps)
 }
+//endregion
 
+// Publishing
 publishing {
     repositories {
         mavenLocal()
