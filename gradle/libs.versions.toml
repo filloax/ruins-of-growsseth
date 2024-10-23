@@ -47,6 +47,7 @@ ow-asm = "9.6"
 kotlinevents = "v2.0"
 
 # Plugins
+plugin-dokka = "2.0.0-Beta"
 plugin-mixin = "0.7.+"
 plugin-loom = "1.7-SNAPSHOT"
 plugin-moddev = "2.0.36-beta"
@@ -64,7 +65,6 @@ mixin = { group = "org.spongepowered", name = "mixin", version.ref = "mixin" }
 mixinextras-common = { group = "io.github.llamalad7", name = "mixinextras-common", version.ref = "mixinextras" }
 
 # Kotlin
-kotlin-jvm = { group = "org.jetbrains.kotlin.jvm", name = "org.jetbrains.kotlin.jvm.gradle.plugin", version.ref = "kotlin" }
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
 kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
 kotlin-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlin-serialization" }
@@ -82,6 +82,12 @@ jsr305 = { group = "com.google.code.findbugs", name = "jsr305", version.ref = "j
 log4j = { group = "org.apache.logging.log4j", name = "log4j-core", version.ref = "log4j" }
 ow-asm = { group = "org.ow2.asm", name = "asm", version.ref = "ow-asm" }
 kotlinevents = { group = "com.github.stuhlmeier", name = "kotlin-events", version.ref = "kotlinevents" }
+
+# Plugin dependencies (for buildSrc)
+plugin-kotlin-jvm = { group = "org.jetbrains.kotlin.jvm", name = "org.jetbrains.kotlin.jvm.gradle.plugin", version.ref = "kotlin" }
+plugin-kotlin-serialization = { group = "org.jetbrains.kotlin", name = "kotlin-serialization", version.ref = "kotlin" }
+plugin-kotlin-atomicfu = { group = "org.jetbrains.kotlin", name = "atomicfu", version.ref = "kotlin-atomicfu" }
+plugin-dokka = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref = "plugin-dokka" }
 
 [plugins]
 # Kotlin
