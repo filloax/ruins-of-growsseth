@@ -7,10 +7,6 @@ plugins {
 //    id("com.ruslan.gradle.token-replacement")
 
 	alias(libs.plugins.moddevgradle)
-
-	kotlin("jvm")
-	alias(libs.plugins.kotlin.serialization)
-	alias(libs.plugins.kotlin.atomicfu)
 }
 val utils = project.utils(versionCatalogs, ext)
 

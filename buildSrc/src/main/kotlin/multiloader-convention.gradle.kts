@@ -9,6 +9,8 @@ plugins {
     idea
 
     kotlin("jvm")
+    kotlin("plugin.serialization")
+    kotlin("plugin.atomicfu")
 
     // kotlin-compatible javadoc, cannot use base as it errors with kotlin
     id("org.jetbrains.dokka")
@@ -32,11 +34,6 @@ repositories {
 //    flatDir {
 //        dirs("libs")
 //    }
-
-    exclusiveContent {
-        forRepository { maven("https://jitpack.io") }
-        filter { includeGroupByRegex("com\\.github\\.(stuhlmeier|filloax).*") }
-    }
 
     exclusiveContent {
         forRepository {
@@ -63,16 +60,6 @@ repositories {
     }
 
     exclusiveContent {
-        forRepositories(
-            maven {
-                name = "Team Resourceful Maven"
-                url = uri("https://maven.teamresourceful.com/repository/maven-public/")
-            }
-        )
-        filter { includeGroup("com.teamresourceful.resourcefulconfig") }
-    }
-
-    exclusiveContent {
         forRepository {
             maven {
                 name = "Modrinth"
@@ -82,8 +69,28 @@ repositories {
         filter { includeGroup("maven.modrinth") }
     }
 
-    maven("https://api.modrinth.com/maven")
+    maven {
+        name = "Kotlin for Forge"
+        setUrl("https://thedarkcolour.github.io/KotlinForForge/")
+    }
+
     maven("https://maven.terraformersmc.com/releases")
+
+    exclusiveContent {
+        forRepository { maven("https://jitpack.io") }
+        filter { includeGroupByRegex("com\\.github\\.(stuhlmeier|filloax).*") }
+    }
+
+    exclusiveContent {
+        forRepositories(
+            maven {
+                name = "Team Resourceful Maven"
+                url = uri("https://maven.teamresourceful.com/repository/maven-public/")
+            }
+        )
+        filter { includeGroup("com.teamresourceful.resourcefulconfig") }
+    }
+
 }
 
 //region Libs and props
