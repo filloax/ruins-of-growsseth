@@ -1,7 +1,7 @@
 import com.ruslan.gradle.*
 
 plugins {
-    id("com.ruslan.gradle.multiloader-convention")
+    id("com.ruslan.gradle.multiloader-loader")
 
     alias(libs.plugins.moddevgradle)
 
@@ -9,9 +9,8 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.atomicfu)
 }
-neoForge {
-    version.set(libs.versions.neoforge.asProvider())
-}
+
+val utils = project.utils(versionCatalogs, ext)
 
 val modid: String by project
 val modVersion = libs.versions.modversion.get()
@@ -29,11 +28,7 @@ repositories {
     }
 }
 
-base {
-    archivesName = property("archives_base_name") as String
-}
-
-val baseProject = project(":base")
+val baseProject = project(BASE_PROJECT)
 
 if (includeDeps) println("Including dependencies for test mode")
 
@@ -94,8 +89,6 @@ dependencies {
     implementation( libs.kotlin.serialization )
     implementation( libs.kotlin.datetime )
 
-    compileOnly(baseProject)
-
     socketIoLibs.forEach {
         implementation(it)
         jarJar(it)
@@ -103,7 +96,7 @@ dependencies {
 
     listOf(
         libs.kotlinforge,
-        getResourcefulConfig("neoforge"),
+        utils.getResourcefulConfig("neoforge"),
     ).forEach {
         implementation(it)
         if (includeDeps)
@@ -112,7 +105,7 @@ dependencies {
 
     implementation( libs.kotlin.serialization ) { exclude(module = "kotlin-stdlib") }
 
-    getFilloaxlib("neoforge").let{
+    utils.getFilloaxlib("neoforge").let{
         implementation(it) { exclude(module = "kotlin-stdlib") }
         jarJar(it)
     }
@@ -120,46 +113,12 @@ dependencies {
     jarJar( libs.kotlinevents )
 }
 
-tasks.compileJava {
-    source(baseProject.sourceSets.getByName("main").allSource)
-}
 
-//val preCompileTasks = listOf("restoreSourcesKotlin", "restoreSourcesJava")
-//    .map { baseProject.tasks.getByName(it) }
-val preCompileTasks = listOf<Task>()
-
-tasks.compileKotlin  {
-    preCompileTasks.forEach { dependsOn(it) }
-    source(baseProject.sourceSets.getByName("main").allSource)
-}
-
-tasks.getByName<Jar>("sourcesJar") {
-    preCompileTasks.forEach { dependsOn(it) }
-
-    val mainSourceSet = baseProject.sourceSets.getByName("main")
-    from(mainSourceSet.allSource)
-}
-tasks.kotlinSourcesJar {
-    preCompileTasks.forEach { dependsOn(it) }
-
-    val mainSourceSet = baseProject.sourceSets.getByName("main")
-    from(mainSourceSet.allSource)
-}
-
-tasks.withType<Javadoc>().configureEach {
-    source(baseProject.sourceSets.getByName("main").allJava)
-}
-
-tasks.processResources {
-    from(baseProject.sourceSets.getByName("main").resources)
-}
-
-
-// Mod description handling
+// Mod description handling (depends on loader)
 val rootDirectory = project.rootDir
 val modDescriptionFile = rootDirectory.resolve("mod-description.txt")
 
-project.addExtraResourceProp("description", modDescriptionFile.readText().replace("\r", ""))
+utils.addExtraResourceProp("description", modDescriptionFile.readText().replace("\r", ""))
 
 tasks.withType<ProcessResources>().configureEach {
     inputs.file(modDescriptionFile)
