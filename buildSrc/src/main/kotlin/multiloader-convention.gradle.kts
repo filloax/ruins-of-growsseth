@@ -9,6 +9,9 @@ plugins {
     idea
 
     kotlin("jvm")
+
+    // kotlin-compatible javadoc, cannot use base as it errors with kotlin
+    id("org.jetbrains.dokka")
 }
 
 val javaVersion: Int = (property("javaVersion")!! as String).toInt()
@@ -20,7 +23,7 @@ base {
 java {
     toolchain.languageVersion = JavaLanguageVersion.of(javaVersion)
     withSourcesJar()
-    withJavadocJar()
+//    withJavadocJar() // uses dokka for kotlin compat
 }
 
 repositories {
@@ -122,7 +125,7 @@ val rconfigMcVersion = libs.findVersion("rconfigMc").get().toString()
 //region Artifacts
 // Declare capabilities on the outgoing configurations.
 // Read more about capabilities here: https://docs.gradle.org/current/userguide/component_capabilities.html#sec:declaring-additional-capabilities-for-a-local-component
-listOf("apiElements", "runtimeElements", "sourcesElements", "javadocElements").forEach { variant ->
+listOf("apiElements", "runtimeElements", "sourcesElements"/*, "javadocElements"*/).forEach { variant ->
     configurations.getByName(variant).outgoing {
         capability("$group:${base.archivesName.get()}:$version")
         capability("$group:$modid-${project.name}-${minecraftVersion}:$version")

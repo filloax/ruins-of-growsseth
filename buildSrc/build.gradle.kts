@@ -14,4 +14,5 @@ dependencies {
 
     implementation("org.jetbrains.kotlin.jvm:org.jetbrains.kotlin.jvm.gradle.plugin:2.0.0")
     implementation(libs.kotlin.jvm)
+    implementation("org.jetbrains.dokka:dokka-gradle-plugin:2.0.0-Beta")
 }
