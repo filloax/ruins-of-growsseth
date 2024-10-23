@@ -1,10 +1,11 @@
 import com.ruslan.gradle.addExtraResourceProp
 import com.ruslan.gradle.getFilloaxlib
 import com.ruslan.gradle.getResourcefulConfig
+import com.ruslan.gradle.socketIoLibs
 
 plugins {
 	// see buildSrc
-	id("com.ruslan.gradle.multiloader-convention")
+	id("com.ruslan.gradle.multiloader-loader")
 
 	kotlin("jvm")
 	alias(libs.plugins.kotlin.serialization)
@@ -29,28 +30,14 @@ val includeDeps = (property("includeDeps") as String).toBoolean()
 
 val modVersion = libs.versions.modversion.get()
 
-repositories {
-	maven("https://api.modrinth.com/maven")
-	maven("https://maven.terraformersmc.com/releases")
-}
-
 // Main versions
-//val libs = project.versionCatalogs.find("libs").get()
 val minecraftVersion = libs.versions.minecraft.asProvider().get()
 val parchmentMcVersion = libs.versions.parchment.minecraft.get()
 val parchmentVersion = libs.versions.parchment.asProvider().get()
 
 version = "$modVersion-$minecraftVersion-fabric"
 
-base {
-	archivesName = property("archives_base_name") as String
-}
-
-val baseProject = project(":base")
-
 if (includeDeps) println("Including dependencies for test mode")
-
-val socketIoLibs = ext.get("socketio-libs") as List<String>
 
 dependencies {
 	minecraft( libs.minecraft )
@@ -62,14 +49,10 @@ dependencies {
 		}
 	})
 
-	compileOnly(baseProject)
-
-	// Socketio dependencies
 	socketIoLibs.forEach {
 		implementation(it)
 		include(it)
 	}
-	// End Socketio dependencies
 
 	modImplementation( libs.fabric )
 	modImplementation( libs.fabric.api ) {
@@ -94,40 +77,6 @@ dependencies {
 	}
 	implementation( libs.kotlinevents )
 	include( libs.kotlinevents )
-}
-
-tasks.compileJava {
-	source(baseProject.sourceSets.getByName("main").allSource)
-}
-
-val preCompileTasks = listOf("restoreSourcesKotlin", "restoreSourcesJava")
-	.map { baseProject.tasks.getByName(it) }
-
-tasks.compileKotlin  {
-	preCompileTasks.forEach { dependsOn(it) }
-
-	source(baseProject.sourceSets.getByName("main").allSource)
-}
-
-tasks.getByName<Jar>("sourcesJar") {
-	preCompileTasks.forEach { dependsOn(it) }
-
-	val mainSourceSet = baseProject.sourceSets.getByName("main")
-	from(mainSourceSet.allSource)
-}
-tasks.kotlinSourcesJar {
-	preCompileTasks.forEach { dependsOn(it) }
-
-	val mainSourceSet = baseProject.sourceSets.getByName("main")
-	from(mainSourceSet.allSource)
-}
-
-tasks.withType<Javadoc>().configureEach {
-	source(baseProject.sourceSets.getByName("main").allJava)
-}
-
-tasks.processResources {
-	from(baseProject.sourceSets.getByName("main").resources)
 }
 
 loom {
@@ -165,7 +114,7 @@ loom.runs.matching{ it.name != "datagenClient" }.configureEach {
 	this.vmArg("-Dmixin.debug.export=true")
 }
 
-// Mod description handling
+// Mod description handling (different in loaders due to formatting)
 val rootDirectory = project.rootDir
 val modDescriptionFile = rootDirectory.resolve("mod-description.txt")
 
