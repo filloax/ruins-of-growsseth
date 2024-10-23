@@ -1,7 +1,4 @@
-import com.ruslan.gradle.addExtraResourceProp
-import com.ruslan.gradle.getFilloaxlib
-import com.ruslan.gradle.getResourcefulConfig
-import com.ruslan.gradle.socketIoLibs
+import com.ruslan.gradle.*
 
 plugins {
 	// see buildSrc
@@ -24,6 +21,7 @@ loom {
 		}
 	}
 }
+val utils = project.utils(versionCatalogs, ext)
 
 // Project settings
 val includeDeps = (property("includeDeps") as String).toBoolean()
@@ -62,7 +60,7 @@ dependencies {
 	listOf(
 		libs.fabric.kotlin,
 		libs.modmenu,
-		getResourcefulConfig("fabric"),
+		utils.getResourcefulConfig("fabric"),
 	).forEach {
 		modImplementation(it)
 		if (includeDeps)
@@ -71,7 +69,7 @@ dependencies {
 
 	implementation( libs.kotlin.serialization ) { exclude(module = "kotlin-stdlib") }
 
-	getFilloaxlib("fabric").let{
+	utils.getFilloaxlib("fabric").let{
 		modImplementation(it) { exclude(module = "kotlin-stdlib") }
 		include(it)
 	}
@@ -118,7 +116,7 @@ loom.runs.matching{ it.name != "datagenClient" }.configureEach {
 val rootDirectory = project.rootDir
 val modDescriptionFile = rootDirectory.resolve("mod-description.txt")
 
-project.addExtraResourceProp("description",  modDescriptionFile.readText().replace("\r", "").replace("\n", "\\n"))
+utils.addExtraResourceProp("description",  modDescriptionFile.readText().replace("\r", "").replace("\n", "\\n"))
 
 tasks.withType<ProcessResources>().configureEach {
 	inputs.file(modDescriptionFile)

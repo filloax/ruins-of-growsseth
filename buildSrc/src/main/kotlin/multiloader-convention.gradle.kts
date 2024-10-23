@@ -214,7 +214,7 @@ tasks.withType<ProcessResources>().configureEach {
     )
 
     filesMatching(listOf("pack.mcmeta", "fabric.mod.json", "META-INF/neoforge.mods.toml")) {
-        expand(metaProps + project.extraResourceProps)
+        expand(metaProps + project.utils(versionCatalogs, ext).extraResourceProps)
     }
     filesMatching(listOf("cydonia.properties")) {
         expand(cydoProps)

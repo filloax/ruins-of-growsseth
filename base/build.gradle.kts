@@ -12,6 +12,7 @@ plugins {
 	alias(libs.plugins.kotlin.serialization)
 	alias(libs.plugins.kotlin.atomicfu)
 }
+val utils = project.utils(versionCatalogs, ext)
 
 val modid: String by project
 val modVersion = libs.versions.modversion.get()
@@ -55,8 +56,8 @@ dependencies {
 
 	socketIoLibs.forEach(this::compileOnly)
 
-	compileOnly(getResourcefulConfig())
-	compileOnly(getFilloaxlib())
+	compileOnly(utils.getResourcefulConfig())
+	compileOnly(utils.getFilloaxlib())
 }
 
 sourceSets.main.get().resources.srcDir(project(":base").file("src/generated/resources"))
