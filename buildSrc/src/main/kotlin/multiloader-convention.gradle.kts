@@ -1,5 +1,6 @@
 package com.ruslan.gradle
 
+import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -247,4 +248,27 @@ idea {
         isDownloadSources = true
         isDownloadJavadoc = true
     }
+}
+
+// Use dokka for kotlin-compatible javadoc
+
+// Make sure our token replacement runs first
+val baseTasks = if (name == "base") tasks else project(BASE_PROJECT).tasks
+val preCompileTasks = PRE_COMPILE_TASKS.mapNotNull { try { baseTasks.getByName(it) } catch (e: Exception) {
+        println("WARNING: ${e.message}")
+        null
+    } }
+
+tasks.withType<DokkaTask>().configureEach {
+    preCompileTasks.forEach { dependsOn(it) }
+}
+
+val dokkaJavadocJar = tasks.register<Jar>("dokkaJavadocJar") {
+    dependsOn(tasks.dokkaJavadoc)
+    from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
+    archiveClassifier.set("javadoc")
+}
+
+tasks.build {
+    dependsOn(dokkaJavadocJar)
 }

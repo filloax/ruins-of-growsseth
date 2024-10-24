@@ -28,8 +28,7 @@ dependencies {
     COMMON_RESOURCES(project(path = BASE_PROJECT, configuration = COMMON_RESOURCES))
 }
 
-val preCompileTasks = listOf("restoreSourcesKotlin", "restoreSourcesJava")
-	.mapNotNull { try { project(BASE_PROJECT).tasks.getByName(it) } catch (e: Exception) {
+val preCompileTasks = PRE_COMPILE_TASKS.mapNotNull { try { project(BASE_PROJECT).tasks.getByName(it) } catch (e: Exception) {
         println("WARNING: ${e.message}")
         null
     } }
@@ -52,6 +51,17 @@ tasks.processResources {
 }
 
 tasks.named<Jar>("sourcesJar") {
+    preCompileTasks.forEach { dependsOn(it) }
+
+    dependsOn(configurations.getByName(COMMON_JAVA))
+    from(configurations.getByName(COMMON_JAVA))
+    dependsOn(configurations.getByName(COMMON_RESOURCES))
+    from(configurations.getByName(COMMON_RESOURCES))
+}
+
+tasks.kotlinSourcesJar {
+    preCompileTasks.forEach { dependsOn(it) }
+
     dependsOn(configurations.getByName(COMMON_JAVA))
     from(configurations.getByName(COMMON_JAVA))
     dependsOn(configurations.getByName(COMMON_RESOURCES))
@@ -60,7 +70,7 @@ tasks.named<Jar>("sourcesJar") {
 
 
 
-// replaces javaDoc with kotlin
+// configure dokka to use our tasks
 tasks.withType<DokkaTask>().configureEach {
     dependsOn(configurations.getByName(COMMON_RESOURCES))
     dokkaSourceSets {
@@ -68,14 +78,4 @@ tasks.withType<DokkaTask>().configureEach {
             sourceRoots.from(configurations.getByName(COMMON_JAVA))
         }
     }
-}
-
-val dokkaJavadocJar = tasks.register<Jar>("dokkaJavadocJar") {
-    dependsOn(tasks.dokkaJavadoc)
-    from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
-    archiveClassifier.set("javadoc")
-}
-
-tasks.build {
-    dependsOn(dokkaJavadocJar)
 }
