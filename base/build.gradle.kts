@@ -3,8 +3,8 @@ import com.ruslan.gradle.*
 
 plugins {
     // see buildSrc
-    id("com.ruslan.gradle.multiloader-convention")
-//    id("com.ruslan.gradle.token-replacement")
+	id("com.ruslan.gradle.token-replacement")
+	id("com.ruslan.gradle.multiloader-convention")
 
 	alias(libs.plugins.moddevgradle)
 }
@@ -129,7 +129,6 @@ tasks.register<Zip>("makeReferenceDatapack") {
 	destinationDirectory.set(project.file("build/datapack"))
 	archiveFileName.set("Reference Datapack.zip")
 }
-
 
 tasks.named("build") {
 	dependsOn("zipEgobalegoFolder")
