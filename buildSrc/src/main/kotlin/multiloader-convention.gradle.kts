@@ -10,7 +10,6 @@ plugins {
 
     kotlin("jvm")
     kotlin("plugin.serialization")
-    kotlin("plugin.atomicfu")
 
     // kotlin-compatible javadoc, cannot use base as it errors with kotlin
     id("org.jetbrains.dokka")

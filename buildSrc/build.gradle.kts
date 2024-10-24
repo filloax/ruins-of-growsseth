@@ -14,7 +14,6 @@ dependencies {
 
     implementation(libs.plugin.kotlin.jvm)
     implementation(libs.plugin.kotlin.serialization)
-    implementation(libs.plugin.kotlin.atomicfu)
     implementation(libs.plugin.dokka)
 
 }
