@@ -89,31 +89,22 @@ public class EncryptedSounds {
 
     @Mixin(SoundBufferLibrary.class)
     public static class SoundBufferLibraryMixin {
+        // inside getStream and getCompleteBuffer
+        @SuppressWarnings("UnresolvedMixinReference")
         @WrapOperation(
-                method = "method_19745",
+                method = {
+                    "method_19745",
+                    "lambda$getStream$2",
+                    "method_19747",
+                    "lambda$getCompleteBuffer$0"
+                },
                 at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/server/packs/resources/ResourceProvider;open(Lnet/minecraft/resources/ResourceLocation;)Ljava/io/InputStream;"
                 )
         )
         private InputStream wrapSoundReadingStream(ResourceProvider instance, ResourceLocation resourceLocation, Operation<InputStream> original) {
-            return checkEncryptedSoundStream(resourceLocation, original.call(instance, resourceLocation));
-        }
-
-        @WrapOperation(
-                method = "method_19747",
-                at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/server/packs/resources/ResourceProvider;open(Lnet/minecraft/resources/ResourceLocation;)Ljava/io/InputStream;"
-                )
-        )
-        private InputStream wrapSoundReadingStreamBuffer(ResourceProvider instance, ResourceLocation resourceLocation, Operation<InputStream> original) {
-            return checkEncryptedSoundStream(resourceLocation, original.call(instance, resourceLocation));
-        }
-
-        @Unique
-        private InputStream checkEncryptedSoundStream(ResourceLocation resourceLocation, InputStream inputStream) {
-            return EncryptedMusicResources.checkEncryptedSoundStream(resourceLocation, inputStream);
+            return EncryptedMusicResources.checkEncryptedSoundStream(resourceLocation, original.call(instance, resourceLocation));
         }
     }
 }
