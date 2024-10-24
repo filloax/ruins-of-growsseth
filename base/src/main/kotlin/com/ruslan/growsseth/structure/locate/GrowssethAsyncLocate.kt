@@ -6,9 +6,6 @@ import com.ruslan.growsseth.structure.locate.LocateTask.Phase
 import com.ruslan.growsseth.utils.matchesJigsaw
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap
 import it.unimi.dsi.fastutil.objects.ObjectArraySet
-import kotlinx.atomicfu.atomic
-import kotlinx.atomicfu.update
-import kotlinx.atomicfu.updateAndGet
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import net.minecraft.core.BlockPos
@@ -28,6 +25,7 @@ import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStruct
 import net.minecraft.world.level.levelgen.structure.placement.StructurePlacement
 import java.util.concurrent.*
 import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.thread
 
 typealias StructLocatePredicate = (StructureStart, ChunkPos) -> Boolean
@@ -154,13 +152,14 @@ class LocateTask(
 ) {
     private val server = level.server
     private lateinit var startTime: Instant
-    private val isCancelled = atomic<Boolean>(false)
-    private val cancelReason = atomic<String?>(null)
-    private val finalTimeMs = atomic<Long?>(null)
     private val future = CompletableFuture<LocateResult>()
-    private val done_ = atomic<Boolean>(false)
+    var done = false
+        private set
+    private var isCancelled = false
+    private var cancelReason: String? = null
+    private var finalTimeMs: Long? = null
 
-    val done get() = done_.value
+    private val cancelLock = ReentrantLock()
 
     fun start() {
         try {
@@ -182,7 +181,7 @@ class LocateTask(
             e.printStackTrace()
             future.complete(null)
         } finally {
-            done_.update { true }
+            done = true
         }
     }
 
@@ -220,8 +219,10 @@ class LocateTask(
         RuinsOfGrowsseth.LOGGER.warn("Stopping async locate for structure ${targetString()} from pos $fromPos after ${timeElapsedMs() / 1000.0}s, " +
                 (if (reason != null) "reason: $reason, " else "") +
                 "params were searchRadius=$searchRadius skipKnownStructures=$skipKnownStructures")
-        cancelReason.update { reason }
-        isCancelled.update { true }
+        cancelLock.apply {
+            cancelReason = reason
+            isCancelled = true
+        }
     }
 
     /**
@@ -411,11 +412,11 @@ class LocateTask(
     }
 
     private fun shouldStop(): Boolean {
-        return isCancelled.value
+        return cancelLock.let { isCancelled }
     }
 
     private fun onCancel() {
-        val reason = cancelReason.value
+        val reason = cancelLock.let { cancelReason }
         RuinsOfGrowsseth.LOGGER.error("Stopped async locate early from $fromPos to ${targetString()} " +
                 (if (reason != null) "reason: $reason, " else "") +
                 "params were searchRadius=$searchRadius skipKnownStructures=$skipKnownStructures")
@@ -423,7 +424,8 @@ class LocateTask(
     }
 
     private fun onFinish(result: LocateResult?) {
-        val time = finalTimeMs.updateAndGet { timeElapsedMs() }!!
+        val time = timeElapsedMs()
+        finalTimeMs = time
         RuinsOfGrowsseth.LOGGER.info("Finish async locate early from $fromPos to ${targetString()} in ${time / 1000.0}s" +
                 "params were searchRadius=$searchRadius skipKnownStructures=$skipKnownStructures")
         if (result != null) {

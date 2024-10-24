@@ -8,8 +8,6 @@ import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.structure.locate.LocateResult
 import com.ruslan.growsseth.structure.locate.SignalProgressFun
 import com.ruslan.growsseth.structure.locate.StoppableAsyncLocator
-import kotlinx.atomicfu.atomic
-import kotlinx.atomicfu.update
 import kotlinx.datetime.Clock
 import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
@@ -198,71 +196,63 @@ private fun ItemStack.updateMapToStructWithHolder(
     // callback here
     val future = CompletableFuture<LocateResult>()
 
-    // Inner class to make use of atomic (can only be used in initializers of classes)
-    // yes, this is ugly, might improve later (why did it work in the fabric-only module?
-    class UpdateMapTask {
-        private val done = atomic<Boolean>(false)
+    var done = false
+    this.setLoadingName(context.displayName)
 
-        fun run() {
-            val destString = destinationHolderSet.toString()
-            RuinsOfGrowsseth.LOGGER.info("Starting async structure '$destString' search...")
+    val destString = destinationHolderSet.toString()
+    RuinsOfGrowsseth.LOGGER.info("Starting async structure '$destString' search...")
 
-            val startTime = Clock.System.now()
+    val startTime = Clock.System.now()
 
-            thread(name="locator-timing-thread", start = true, isDaemon = true){
-                while (!done.value) {
-                    Thread.sleep(10000)
-                    if (!done.value) {
-                        val time = Clock.System.now()
-                        RuinsOfGrowsseth.LOGGER.info("Async structure '$destString' search still running, took ${(time - startTime).inWholeMilliseconds/1000}s")
-                    }
-                }
-            }
-
-            val signalProgress: SignalProgressFun? = if (FxLibServices.platform.isDevEnvironment()) { { task, phase, pct ->
-                RuinsOfGrowsseth.LOGGER.info("Locate $destString progress: phase %s | %.2f%% | %.2fs".format(phase, pct * 100, task.timeElapsedMs() / 1000.0))
-            } } else null
-
-            val task = if (context.mustContainJigsawIds == null)
-                StoppableAsyncLocator.locate(
-                    level,
-                    destinationHolderSet,
-                    context.searchFromPos,
-                    context.searchRadius,
-                    doSkipExploredChunks,
-                    timeoutSeconds = context.searchTimeoutSeconds,
-                    signalProgress = signalProgress,
-                )
-            else
-                StoppableAsyncLocator.locateJigsaw(
-                    level,
-                    destinationHolderSet,
-                    context.mustContainJigsawIds,
-                    context.searchFromPos,
-                    context.searchRadius,
-                    doSkipExploredChunks,
-                    timeoutSeconds = context.searchTimeoutSeconds,
-                    signalProgress = signalProgress,
-                )
-            task.thenOnServerThread { result ->
-                done.update { true }
-                if (result != null) {
-                    val pos = result.pos
-                    val finalDestType = context.overrideDestinationType ?: DestinationType.auto(result.structure)
-
-                    updateMapToPos(level, pos, context.scale, finalDestType, context.displayName ?: "reset")
-                    RuinsOfGrowsseth.LOGGER.info("(async) Found '$destString' at $pos")
-                } else {
-                    invalidateMap()
-                    RuinsOfGrowsseth.LOGGER.info("(async) '$destString' not found!")
-                }
-                future.complete(result)
+    thread(name="locator-timing-thread", start = true, isDaemon = true){
+        while (!done) {
+            Thread.sleep(10000)
+            if (!done) {
+                val time = Clock.System.now()
+                RuinsOfGrowsseth.LOGGER.info("Async structure '$destString' search still running, took ${(time - startTime).inWholeMilliseconds/1000}s")
             }
         }
     }
 
-    this.setLoadingName(context.displayName)
-    UpdateMapTask().run()
+    val signalProgress: SignalProgressFun? = if (FxLibServices.platform.isDevEnvironment()) { { task, phase, pct ->
+        RuinsOfGrowsseth.LOGGER.info("Locate $destString progress: phase %s | %.2f%% | %.2fs".format(phase, pct * 100, task.timeElapsedMs() / 1000.0))
+    } } else null
+
+    val task = if (context.mustContainJigsawIds == null)
+        StoppableAsyncLocator.locate(
+            level,
+            destinationHolderSet,
+            context.searchFromPos,
+            context.searchRadius,
+            doSkipExploredChunks,
+            timeoutSeconds = context.searchTimeoutSeconds,
+            signalProgress = signalProgress,
+        )
+    else
+        StoppableAsyncLocator.locateJigsaw(
+            level,
+            destinationHolderSet,
+            context.mustContainJigsawIds,
+            context.searchFromPos,
+            context.searchRadius,
+            doSkipExploredChunks,
+            timeoutSeconds = context.searchTimeoutSeconds,
+            signalProgress = signalProgress,
+        )
+    task.thenOnServerThread { result ->
+        done = true
+        if (result != null) {
+            val pos = result.pos
+            val finalDestType = context.overrideDestinationType ?: DestinationType.auto(result.structure)
+
+            updateMapToPos(level, pos, context.scale, finalDestType, context.displayName ?: "reset")
+            RuinsOfGrowsseth.LOGGER.info("(async) Found '$destString' at $pos")
+        } else {
+            invalidateMap()
+            RuinsOfGrowsseth.LOGGER.info("(async) '$destString' not found!")
+        }
+        future.complete(result)
+    }
 
     return future
 }
