@@ -8,7 +8,6 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.config.WebConfig
-import kotlinx.atomicfu.atomic
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
@@ -23,16 +22,17 @@ import java.net.URI
 import java.time.Duration
 import java.time.LocalDateTime
 import java.util.concurrent.*
+import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.atomic.AtomicReference
 
 object DataRemoteSync {
-    val lastSyncSuccessful get() = lastSyncSuccessful_.value
-    val lastUpdateTime get() = lastUpdateTime_.value
-    val lastSuccessfulUpdateTime get() = lastSuccessfulUpdateTime_.value
-
-    private val lastSyncSuccessful_ = atomic(false)
-    private val lastUpdateTime_ = atomic<LocalDateTime?>(null)
-    private val lastSuccessfulUpdateTime_ = atomic<LocalDateTime?>(null)
+    var lastSyncSuccessful = false
+        private set
+    var lastUpdateTime: LocalDateTime? = null
+        private set
+    var lastSuccessfulUpdateTime: LocalDateTime? = null
+        private set
 
     private var tickUpdateRealTimeDistance: Duration =
         Duration.ofSeconds(((WebConfig.dataSyncReloadTime * 60).toLong()))   // how often the mod should query the server
@@ -103,7 +103,7 @@ object DataRemoteSync {
             return CompletableFuture.completedFuture(false)
         }
 
-        val updateTime = LocalDateTime.now().also { lastUpdateTime_.value = it }
+        val updateTime = LocalDateTime.now().also { lastUpdateTime = it }
         val future = CompletableFuture<Boolean>()
         val successes = mutableMapOf<String, Boolean>()
         observersByEndpoint.forEach { (endpoint, callbacks) ->
@@ -115,9 +115,9 @@ object DataRemoteSync {
             }
         }
         return future.thenApply { success ->
-            lastSyncSuccessful_.value = success
+            lastSyncSuccessful = success
             if (success) {
-                lastSuccessfulUpdateTime_.value = updateTime
+                lastSuccessfulUpdateTime = updateTime
             }
             success
         }
@@ -324,7 +324,7 @@ object DataRemoteSync {
             if (WebConfig.webDataSync) {
                 val time = LocalDateTime.now()
                 // check real time to make pause not affect it
-                if (lastUpdateTime_.value?.let{ Duration.between(it, time) >= tickUpdateRealTimeDistance } == true) {
+                if (lastUpdateTime?.let{ Duration.between(it, time) >= tickUpdateRealTimeDistance } == true) {
                     logger.info("Data sync: started periodic sync")
                     doSync(url, server)
                 }

@@ -22,7 +22,6 @@ rconfigMc = "1.21"
 # Kotlin
 kotlin = "2.0.0"
 kotlin-serialization = "1.7.1"
-kotlin-atomicfu = "0.25.0"
 kotlin-datetime = "0.6.1"
 
 # Fabric Settings
@@ -33,8 +32,8 @@ fabric-language-kotlin = "1.11.0+kotlin.2.0.0"
 # Neoforge Settings
 neoforge = "21.0.167"
 neoforge-range = "[21.0.0,)"
-kotlinforge = "5.5.0"
-kotlinforge-range = "[5.5,)"
+kotlinforge = "5.6.0"
+kotlinforge-range = "[5.6,)"
 fml-range = "[4,)"
 
 # Other dependencies
@@ -86,14 +85,12 @@ kotlinevents = { group = "com.github.stuhlmeier", name = "kotlin-events", versio
 # Plugin dependencies (for buildSrc)
 plugin-kotlin-jvm = { group = "org.jetbrains.kotlin.jvm", name = "org.jetbrains.kotlin.jvm.gradle.plugin", version.ref = "kotlin" }
 plugin-kotlin-serialization = { group = "org.jetbrains.kotlin", name = "kotlin-serialization", version.ref = "kotlin" }
-plugin-kotlin-atomicfu = { group = "org.jetbrains.kotlin", name = "atomicfu", version.ref = "kotlin-atomicfu" }
 plugin-dokka = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref = "plugin-dokka" }
 
 [plugins]
 # Kotlin
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-kotlin-atomicfu = { id = "org.jetbrains.kotlinx.atomicfu", version.ref = "kotlin-atomicfu" }
 
 # Platform
 moddevgradle = { id = "net.neoforged.moddev", version.ref = "plugin-moddev" }
