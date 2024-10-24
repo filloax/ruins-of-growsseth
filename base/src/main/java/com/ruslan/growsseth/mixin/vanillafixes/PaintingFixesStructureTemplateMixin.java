@@ -19,7 +19,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(StructureTemplate.class)
 public abstract class PaintingFixesStructureTemplateMixin {
     // Injects into StructureTemplate#placeEntities, inside the lambda of createEntityIgnoreException
-    @Inject(method = "method_17917", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;moveTo(DDDFF)V", shift = At.Shift.AFTER))
+    @SuppressWarnings("UnresolvedMixinReference")
+    @Inject(
+        method = {"method_17917", "lambda$placeEntities$5"},
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;moveTo(DDDFF)V", shift = At.Shift.AFTER)
+    )
     private static void fixPaintingPlacement(Rotation rotation, Mirror mirror, Vec3 vec3, boolean bl, ServerLevelAccessor serverLevelAccessor, Entity entity, CallbackInfo ci) {
         if (entity instanceof Painting painting) {
             var pos = new BlockPos.MutableBlockPos();

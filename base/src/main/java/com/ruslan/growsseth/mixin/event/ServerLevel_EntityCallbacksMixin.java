@@ -14,11 +14,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ServerLevel.EntityCallbacks.class)
 public abstract class ServerLevel_EntityCallbacksMixin {
     @Final
-    @Shadow
-    ServerLevel field_26936;
+    @Shadow(aliases = {"field_26936", "this$0"})
+    ServerLevel this$ServerLevel;
 
     @Inject(method = "onDestroyed(Lnet/minecraft/world/entity/Entity;)V", at = @At("TAIL"))
     private void onDestroyed(Entity entity, CallbackInfo ci) {
-        Events.SERVER_ENTITY_DESTROYED.invoke(new ServerEntityLifecycleEvent.Destroyed(entity, field_26936));
+        Events.SERVER_ENTITY_DESTROYED.invoke(new ServerEntityLifecycleEvent.Destroyed(entity, this$ServerLevel));
     }
 }
