@@ -22,7 +22,8 @@ public abstract class PaintingFixesStructureTemplateMixin {
     @SuppressWarnings("UnresolvedMixinReference")
     @Inject(
         method = {"method_17917", "lambda$placeEntities$5"},
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;moveTo(DDDFF)V", shift = At.Shift.AFTER)
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;moveTo(DDDFF)V", shift = At.Shift.AFTER),
+        remap = false // lambdas and similar not remapped in modern forge/fabric
     )
     private static void fixPaintingPlacement(Rotation rotation, Mirror mirror, Vec3 vec3, boolean bl, ServerLevelAccessor serverLevelAccessor, Entity entity, CallbackInfo ci) {
         if (entity instanceof Painting painting) {

@@ -19,7 +19,8 @@ public class DiscCreditsMixin {
     @SuppressWarnings("UnresolvedMixinReference")
     @Inject(
         method = { "lambda$addToTooltip$1", "method_60748" },
-        at = @At(value = "INVOKE", shift = At.Shift.AFTER, target = "Ljava/util/function/Consumer;accept(Ljava/lang/Object;)V")
+        at = @At(value = "INVOKE", shift = At.Shift.AFTER, target = "Ljava/util/function/Consumer;accept(Ljava/lang/Object;)V"),
+        remap = false // lambdas and similar not remapped in modern forge/fabric
     )
     private static void addExtraCredits(Consumer<Component> tooltipAdder, Holder<JukeboxSong> holder, CallbackInfo ci) {
         if (holder.unwrapKey().map(GrowssethJukeboxSongs.credits::containsKey).orElse(false)) {
