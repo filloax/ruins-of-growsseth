@@ -32,7 +32,7 @@ public abstract class RuinsMapIcon_GuiGraphicsMixin {
         )
     )
     private void onRenderItemDecorations(Font font, ItemStack stack, int x, int y, String text, CallbackInfo ci) {
-        if (stack.is(GrowssethItems.RUINS_MAP)) {
+        if (stack.is(GrowssethItems.INSTANCE.getRUINS_MAP())) {
             RuinsMapRenderer.renderRuinsMapIcon(stack, pose, bufferSource(), x, y);
         }
     }

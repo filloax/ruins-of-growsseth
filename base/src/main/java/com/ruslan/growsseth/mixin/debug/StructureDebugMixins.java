@@ -51,7 +51,8 @@ public class StructureDebugMixins {
     public static class RegistryDataLoaderMixin {
         @WrapOperation(
             method = "loadElementFromResource",
-            at = @At(value = "INVOKE", target = "Lcom/mojang/serialization/Decoder;parse(Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;")
+            at = @At(value = "INVOKE", target = "Lcom/mojang/serialization/Decoder;parse(Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;"),
+            remap = false
         )
         private static DataResult<?> loadRegistryContents(
                 Decoder<?> instance, DynamicOps<?> ops, Object jsonElement, Operation<DataResult<?>> original,
@@ -62,7 +63,8 @@ public class StructureDebugMixins {
 
         @WrapOperation(
             method = "loadContentsFromNetwork",
-            at = @At(value = "INVOKE", target = "Lcom/mojang/serialization/Decoder;parse(Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;")
+            at = @At(value = "INVOKE", target = "Lcom/mojang/serialization/Decoder;parse(Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;"),
+            remap = false
         )
         private static DataResult<?> loadRegistryContentsFromNetwork(
                 Decoder<?> instance, DynamicOps<?> ops, Object jsonElement, Operation<DataResult<?>> original,

@@ -52,5 +52,7 @@ accessible method net/minecraft/server/commands/LocateCommand getHolders (Lnet/m
 
 accessible method net/minecraft/client/resources/TextureAtlasHolder getSprite (Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;
 
+accessible class net/minecraft/client/sounds/SoundManager$Preparations
+
 # enable when debugging concurrentmodificationexception
 # mutable field net/minecraft/util/ClassInstanceMultiMap allInstances Ljava/util/List;
