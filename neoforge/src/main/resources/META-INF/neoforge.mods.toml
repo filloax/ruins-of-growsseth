@@ -1,5 +1,5 @@
 modLoader="kotlinforforge"
-loaderVersion="${fml_version_range}"
+loaderVersion="${kotlinforge_version_range}"
 
 license="${license}"
 issueTrackerURL="https://github.com/filloax/ruins-of-growsseth/issues"
