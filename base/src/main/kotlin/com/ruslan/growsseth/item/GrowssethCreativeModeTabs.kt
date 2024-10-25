@@ -15,7 +15,7 @@ import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType
 object GrowssethCreativeModeTabs {
     private val all = mutableMapOf<ResourceLocation, CreativeModeTab>()
 
-    val GROWSSETH_ITEMS = make("growsseth", CreativeModeTab.builder(CreativeModeTab.Row.TOP, 0)
+    val GROWSSETH_ITEMS = make("growsseth", buildCreativeTab()
         .title(Component.translatable("growsseth.creative_tab"))
         .icon{ItemStack(GrowssethItems.RESEARCHER_HORN)}
         .displayItems{ _, output ->
@@ -35,6 +35,13 @@ object GrowssethCreativeModeTabs {
 
     fun registerCreativeModeTabs(registrator: (ResourceLocation, CreativeModeTab) -> Unit) {
         all.forEach { t, u -> registrator(t, u) }
+    }
+
+    private fun buildCreativeTab(): CreativeModeTab.Builder {
+        // forge would offer a blank builder, but it's not available in xplat,
+        // and gives warning there in neo without suppression
+        @Suppress("DEPRECATION")
+        return CreativeModeTab.builder(CreativeModeTab.Row.TOP, 0)
     }
 
     private fun make(id: String, creativeModeTab: CreativeModeTab): CreativeModeTab {

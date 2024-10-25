@@ -45,11 +45,13 @@ import kotlin.math.min
 class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
     ZombieVillager(entityType, level), SpawnTimeTracker, ResearcherDataUser {
     companion object {
-        fun createAttributes(): AttributeSupplier.Builder {
-            return ZombieVillager.createAttributes()
-                // taken from non zombie researcher
-                .add(Attributes.MAX_HEALTH, 40.0)
-                .add(Attributes.ARMOR, 10.0)
+        fun createAttributes(): () -> AttributeSupplier.Builder {
+            return {
+                ZombieVillager.createAttributes()
+                    // taken from non zombie researcher
+                    .add(Attributes.MAX_HEALTH, 40.0)
+                    .add(Attributes.ARMOR, 10.0)
+            }
         }
         const val SPAWN_TIME_TAG = "ResearcherSpawnTime"
     }

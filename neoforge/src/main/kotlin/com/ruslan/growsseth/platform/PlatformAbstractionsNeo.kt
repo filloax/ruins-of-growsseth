@@ -10,19 +10,19 @@ import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent
 class PlatformAbstractionsNeo : PlatformAbstractions {
     @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
     companion object {
-        private val queuedRegistrations = mutableMapOf<EntityType<out LivingEntity>, AttributeSupplier>()
+        private val queuedRegistrations = mutableMapOf<EntityType<out LivingEntity>, () -> AttributeSupplier.Builder>()
 
         @SubscribeEvent
         fun registerAttributes(event: EntityAttributeCreationEvent) {
-            queuedRegistrations.forEach { (t, a) -> event.put(t, a) }
+            queuedRegistrations.forEach { (t, a) -> event.put(t, a().build()) }
         }
     }
 
     // Should be called in init BEFORE the event
     override fun <T : LivingEntity> registerEntDefaultAttribute(
         entityType: EntityType<T>,
-        attributeBuilder: AttributeSupplier.Builder
+        attributeSupplier: () -> AttributeSupplier.Builder,
     ) {
-        queuedRegistrations[entityType] = attributeBuilder.build()
+        queuedRegistrations[entityType] = attributeSupplier
     }
 }

@@ -11,7 +11,7 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 
 interface PlatformAbstractions {
-    fun <T : LivingEntity>  registerEntDefaultAttribute(entityType: EntityType<T>, attributeBuilder: AttributeSupplier.Builder)
+    fun <T : LivingEntity>  registerEntDefaultAttribute(entityType: EntityType<T>, attributeSupplier: () -> AttributeSupplier.Builder)
 }
 
 val platform: PlatformAbstractions by lazy { ServiceUtil.findService(PlatformAbstractions::class.java) }

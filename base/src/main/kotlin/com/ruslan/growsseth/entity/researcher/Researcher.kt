@@ -107,13 +107,16 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 {
 
     companion object {
-        fun createAttributes(): AttributeSupplier.Builder {
-            return createMobAttributes()
+        fun createAttributes(): () -> AttributeSupplier.Builder {
+            return { createMobAttributes()
                 .add(Attributes.MOVEMENT_SPEED, 0.5)    // same of a villager
                 .add(Attributes.MAX_HEALTH, 40.0)       // double of a villager
                 .add(Attributes.ATTACK_DAMAGE, 13.0)    // (+ 5 of dagger = 18 total)
                 .add(Attributes.ARMOR, 10.0)
-                .add(Attributes.FOLLOW_RANGE, 20.0)     // goodbye range is 17, if lower he would say goodbye even when aggressive
+                .add(
+                    Attributes.FOLLOW_RANGE, 20.0
+                )     // goodbye range is 17, if lower he would say goodbye even when aggressive
+            }
         }
         const val RESEARCHER_XP = 25
         const val WALK_LIMIT_DISTANCE = 15
