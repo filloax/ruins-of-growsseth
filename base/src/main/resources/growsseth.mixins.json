@@ -39,8 +39,7 @@
     "item.MapItemInfoMixin",
     "structurebook.ItemFrameStructureBookMixin",
     "structurebook.ItemStackStructureBookMixin",
-    "structurebook.StructureTemplateMixin",
-    "vanillafixes.PaintingFixesStructureTemplateMixin"
+    "structurebook.StructureTemplateMixin"
   ],
   "client": [
     "client.AdvancementTabMixin",

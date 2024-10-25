@@ -21,9 +21,8 @@ public class GrowssethSeedMixins {
     @Mixin(targets = "net.minecraft.client.gui.screens.worldselection.CreateWorldScreen$WorldTab")
     public static class WorldTabMixin {
 
-        @Final @Shadow
-        // CreateWorldScreen.this
-        CreateWorldScreen field_42182;
+        @Final @Shadow(aliases = {"field_42182", "this$0"})
+        CreateWorldScreen this_CreateWorldScreen;
 
         @Final @Shadow
         private EditBox seedEdit;
@@ -33,7 +32,7 @@ public class GrowssethSeedMixins {
                 at = @At("RETURN")
         )
         private void onInitialize(CreateWorldScreen createWorldScreen, CallbackInfo ci) {
-            field_42182.getUiState().addListener(worldCreationUiState -> {
+            this_CreateWorldScreen.getUiState().addListener(worldCreationUiState -> {
                 WorldCreationUiState.WorldTypeEntry worldType = worldCreationUiState.getWorldType();
 
                 if (GrowssethWorldPreset.isGrowssethPreset(worldType.preset())) {

@@ -1,10 +1,14 @@
 package com.ruslan.growsseth.utils;
 
 import com.ruslan.growsseth.structure.GrowssethStructures;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.decoration.Painting;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,5 +44,33 @@ public class MixinHelpers {
         }
 
         public @Nullable ResourceLocation getCurrent() { return currentlyDecoding; }
+    }
+
+
+    public static final void fixPaintingPlacement(Entity entity) {
+        if (entity instanceof Painting painting) {
+            var pos = new BlockPos.MutableBlockPos();
+            pos.set(painting.getPos());
+            var variant = painting.getVariant().value();
+
+            var width = variant.width() / 16;
+            var height = variant.height() / 16;
+            var direction = painting.getDirection();
+
+            // paintings with an even height seem to always be moved upwards...
+            if (height % 2 == 0) {
+                pos.move(0, -1, 0);
+            }
+
+            // paintings with an even width seem to be moved in the clockwise direction of their facing direction,
+            // if they're west or south.
+            if (width % 2 == 0 && (direction == Direction.WEST || direction == Direction.SOUTH)) {
+                var moveTo = direction.getClockWise().getNormal();
+                pos.move(moveTo);
+            }
+
+            painting.setPos(pos.getCenter());
+        }
+
     }
 }
