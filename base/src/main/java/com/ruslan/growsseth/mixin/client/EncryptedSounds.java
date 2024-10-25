@@ -11,6 +11,7 @@ import com.ruslan.growsseth.client.resource.EncryptedMusicResources;
 import net.minecraft.client.resources.sounds.Sound;
 import net.minecraft.client.resources.sounds.SoundEventRegistrationSerializer;
 import net.minecraft.client.sounds.SoundBufferLibrary;
+import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -29,7 +30,7 @@ import java.util.Map;
  * See [EncryptedMusicResources].
  */
 public class EncryptedSounds {
-    @Mixin(targets = "net.minecraft.client.sounds.SoundManager$Preparations")
+    @Mixin(SoundManager.Preparations.class)
     public static class SoundManager_PreparationsMixin {
         @ModifyExpressionValue(
             method = "listResources",
