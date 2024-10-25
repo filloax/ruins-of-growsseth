@@ -52,9 +52,6 @@
     "client.RuinsMapIcon_GuiGraphicsMixin",
     "client.TitleScreenMixin",
     "client.VillagerModelMixin",
-    "client.custommapitem.CartographyTableScreenMixin",
-    "client.custommapitem.ItemFrameRendererMixin",
-    "client.custommapitem.ItemInHandRendererMixin",
     "client.growssethworld.EditBoxMixin",
     "client.growssethworld.GrowssethSeedMixins$WorldCreationUiStateMixin",
     "client.growssethworld.GrowssethSeedMixins$WorldTabMixin"
