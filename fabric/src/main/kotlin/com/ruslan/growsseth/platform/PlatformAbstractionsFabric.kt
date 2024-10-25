@@ -6,7 +6,7 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 
 class PlatformAbstractionsFabric : PlatformAbstractions {
-    override fun <T : LivingEntity> registerEntDefaultAttribute(entityType: EntityType<T>, attributeBuilder: AttributeSupplier.Builder) {
-        FabricDefaultAttributeRegistry.register(entityType, attributeBuilder)
+    override fun <T : LivingEntity> registerEntDefaultAttribute(entityType: EntityType<T>, attributeSupplier: () -> AttributeSupplier.Builder) {
+        FabricDefaultAttributeRegistry.register(entityType, attributeSupplier())
     }
 }

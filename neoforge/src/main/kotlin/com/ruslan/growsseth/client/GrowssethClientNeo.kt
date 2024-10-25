@@ -18,8 +18,9 @@ import net.neoforged.neoforge.client.event.ClientTickEvent
 import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory
 import org.apache.logging.log4j.Level
+import thedarkcolour.kotlinforforge.neoforge.forge.FORGE_BUS
+import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
 
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
 object GrowssethClientNeo {
     fun initializeClient(event: FMLClientSetupEvent) {
         FxLib.logger.info("Initializing client...")
@@ -32,17 +33,15 @@ object GrowssethClientNeo {
             }
         }
 
+        MOD_BUS.addListener<RegisterClientReloadListenersEvent> { ev ->
+            ev.registerReloadListener(EncryptedMusicResources.KeyListener())
+        }
+
+        FORGE_BUS.addListener<ClientTickEvent.Pre> { ev ->
+            GrowssethWorldPresetClient.Callbacks.onClientTick(Minecraft.getInstance())
+        }
+
         RuinsOfGrowsseth.log(Level.INFO, "Initialized Client!")
-    }
-
-    @SubscribeEvent
-    fun registerResourceReloadListeners(ev: RegisterClientReloadListenersEvent) {
-        ev.registerReloadListener(EncryptedMusicResources.KeyListener())
-    }
-
-    @SubscribeEvent
-    fun clientTickEventPre(ev: ClientTickEvent.Pre) {
-        GrowssethWorldPresetClient.Callbacks.onClientTick(Minecraft.getInstance())
     }
 
     fun configScreen(parent: Screen? = null): ConfigScreen? = ClientConfigHandler.configScreen(parent)

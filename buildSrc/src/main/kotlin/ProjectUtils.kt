@@ -30,7 +30,7 @@ class ProjectUtils(
         return if (useLocalJarFilloaxLib)
             ":filloaxlib-${filloaxlibVersion}-${loader}"
         else if (useLocalMavenFilloaxLib)
-            "com.filloax.filloaxlib:filloaxlib-${loader}:${filloaxlibVersion}"
+            "com.filloax.filloaxlib:filloaxlib:${filloaxlibVersion}-${loader}"
         else if (loader == "common")
             "com.github.filloax.filloaxlib:filloaxlib-${loader}:${filloaxlibVersion}"
         else

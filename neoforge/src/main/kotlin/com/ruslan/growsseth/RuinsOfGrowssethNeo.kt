@@ -1,5 +1,7 @@
 package com.ruslan.growsseth
 
+import com.ruslan.growsseth.RuinsOfGrowssethNeo.register
+import com.ruslan.growsseth.RuinsOfGrowssethNeo.registerHolder
 import com.ruslan.growsseth.advancements.GrowssethCriterions
 import com.ruslan.growsseth.client.GrowssethClientNeo
 import com.ruslan.growsseth.dialogues.ResearcherDialogueListener
@@ -16,39 +18,25 @@ import com.ruslan.growsseth.worldgen.worldpreset.LocationNotifListener
 import net.minecraft.client.Minecraft
 import net.minecraft.core.Holder
 import net.minecraft.core.Registry
-import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.core.registries.Registries
+import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.CreativeModeTabs
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.Items
-import net.neoforged.bus.api.IEventBus
+import net.neoforged.bus.api.SubscribeEvent
+import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.fml.common.Mod
 import net.neoforged.neoforge.event.AddReloadListenerEvent
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent
-import net.neoforged.neoforge.registries.DeferredRegister
+import net.neoforged.neoforge.registries.RegisterEvent
+import thedarkcolour.kotlinforforge.neoforge.forge.FORGE_BUS
 import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
 import thedarkcolour.kotlinforforge.neoforge.forge.runForDist
-import java.util.function.Supplier
 
 @Mod(RuinsOfGrowsseth.MOD_ID)
 object RuinsOfGrowssethNeo : RuinsOfGrowsseth() {
-    //region registries
-    private val registries = mutableListOf<DeferredRegister<*>>()
-
-    private val CREATIVE_MODE_TAB = createReg(BuiltInRegistries.CREATIVE_MODE_TAB)
-    private val ITEM = createReg(BuiltInRegistries.ITEM)
-    private val INSTRUMENT = createReg(BuiltInRegistries.INSTRUMENT)
-    private val DECORATED_POT_PATTERN = createReg(BuiltInRegistries.DECORATED_POT_PATTERN)
-    private val MAP_DECORATION_TYPE = createReg(BuiltInRegistries.MAP_DECORATION_TYPE)
-    private val MOB_EFFECT = createReg(BuiltInRegistries.MOB_EFFECT)
-    private val ENTITY_TYPE = createReg(BuiltInRegistries.ENTITY_TYPE)
-    private val STRUCTURE_PIECE = createReg(BuiltInRegistries.STRUCTURE_PIECE)
-    private val STRUCTURE_TYPE = createReg(BuiltInRegistries.STRUCTURE_TYPE)
-    private val TRIGGER_TYPES = createReg(BuiltInRegistries.TRIGGER_TYPES)
-    private val COMMAND_ARGUMENT_TYPE = createReg(BuiltInRegistries.COMMAND_ARGUMENT_TYPE)
-    //endregion registries
-
     init {
         initialize()
 
@@ -62,7 +50,7 @@ object RuinsOfGrowssethNeo : RuinsOfGrowsseth() {
     }
 
     override fun initItemGroups() {
-        MOD_BUS.register { ev: BuildCreativeModeTabContentsEvent ->
+        MOD_BUS.addListener { ev: BuildCreativeModeTabContentsEvent ->
             val entries = ev.searchEntries.associateBy { it.item }
             val addAfter = { item: Item, new: Item ->
                 ev.insertAfter(entries[item]!!, new.defaultInstance, CreativeModeTab.TabVisibility.PARENT_TAB_ONLY)
@@ -95,7 +83,7 @@ object RuinsOfGrowssethNeo : RuinsOfGrowsseth() {
     }
 
     override fun registerResourceListeners() {
-        MOD_BUS.register { ev: AddReloadListenerEvent ->
+        FORGE_BUS.addListener { ev: AddReloadListenerEvent ->
             ev.addListener(TradesListener())
             ev.addListener(ResearcherDialogueListener())
             ev.addListener(TemplateListener)
@@ -104,29 +92,27 @@ object RuinsOfGrowssethNeo : RuinsOfGrowsseth() {
     }
 
     override fun initRegistries() {
-        GrowssethCreativeModeTabs.registerCreativeModeTabs(CREATIVE_MODE_TAB::doRegister)
-        GrowssethItems.registerItems(ITEM::doRegister)
-        GrowssethItems.Instruments.registerInstruments(INSTRUMENT::doRegister)
-        GrowssethItems.SherdPatterns.registerPotPatterns(DECORATED_POT_PATTERN::doRegister)
-        GrowssethMapDecorations.registerMapDecorations(MAP_DECORATION_TYPE::doRegister)
-        GrowssethEffects.registerEffects(MOB_EFFECT::doRegister)
-        GrowssethEntities.registerEntityTypes(ENTITY_TYPE::doRegister)
-        GrowssethStructurePieceTypes.registerStructurePieces(STRUCTURE_PIECE::doRegister)
-        GrowssethStructures.registerStructureTypes(STRUCTURE_TYPE::doRegister)
-        GrowssethCriterions.registerCriterions(TRIGGER_TYPES::doRegister)
-        // TODO
-//        GrowssethCommands.ArgumentTypes.registerArgumentTypes(BuiltInRegistries.COMMAND_ARGUMENT_TYPE)
-
-        registerRegistries(MOD_BUS)
+        MOD_BUS.addListener { ev: RegisterEvent ->
+            ev.register(Registries.CREATIVE_MODE_TAB, GrowssethCreativeModeTabs::registerCreativeModeTabs)
+            ev.register(Registries.ITEM, GrowssethItems::registerItems)
+            ev.register(Registries.INSTRUMENT, GrowssethItems.Instruments::registerInstruments)
+            ev.register(Registries.DECORATED_POT_PATTERN, GrowssethItems.SherdPatterns::registerPotPatterns)
+            ev.registerHolder(Registries.MAP_DECORATION_TYPE, GrowssethMapDecorations::registerMapDecorations)
+            ev.registerHolder(Registries.MOB_EFFECT, GrowssethEffects::registerEffects)
+            ev.register(Registries.ENTITY_TYPE, GrowssethEntities::registerEntityTypes)
+            ev.register(Registries.STRUCTURE_PIECE, GrowssethStructurePieceTypes::registerStructurePieces)
+            ev.register(Registries.STRUCTURE_TYPE, GrowssethStructures::registerStructureTypes)
+            ev.register(Registries.TRIGGER_TYPE, GrowssethCriterions::registerCriterions)
+            // GrowssethCommands.ArgumentTypes.registerArgumentTypes(Registries.COMMAND_ARGUMENT_TYPE)
+        }
     }
 
-
-
-    private fun <T> createReg(builtin: Registry<T>): DeferredRegister<T> {
-        return DeferredRegister.create(builtin, MOD_ID).also(registries::add)
+    private fun <T : Any> RegisterEvent.register(registryKey: ResourceKey<Registry<T>>, registratorConsumer: (registrator: (ResourceLocation, T) -> Unit) -> Unit) {
+        register(registryKey) { registry -> registratorConsumer(registry::register) }
     }
-    private fun registerRegistries(bus: IEventBus) = registries.forEach { it.register(bus) }
-}
-fun <T> DeferredRegister<T>.doRegister(name: ResourceLocation, value: T): Holder<T> {
-    return register(name.path, Supplier { value })
+    private fun <T : Any> RegisterEvent.registerHolder(registryKey: ResourceKey<Registry<T>>, registratorConsumer: (registrator: (ResourceLocation, T) -> Holder<T>) -> Unit) {
+        register(registryKey) { _ ->
+            registratorConsumer { id, value -> Registry.registerForHolder(getRegistry(registryKey)!!, id, value) }
+        }
+    }
 }
