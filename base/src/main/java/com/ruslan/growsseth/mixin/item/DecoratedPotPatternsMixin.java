@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class DecoratedPotPatternsMixin {
     @Inject(method = "getPatternFromItem", at = @At("HEAD"), cancellable = true)
     private static void getCustomPotPattern(Item item, CallbackInfoReturnable<ResourceKey<DecoratedPotPattern>> cir) {
-        var patternResult = GrowssethItems.SherdPatterns.sherdToPattern.get(item);
+        var patternResult = GrowssethItems.SherdPatterns.INSTANCE.getSherdToPattern().get(item);
         if (patternResult != null) {
             ResourceKey<DecoratedPotPattern> patternKey = patternResult.getFirst();
             if (patternKey != null) {
