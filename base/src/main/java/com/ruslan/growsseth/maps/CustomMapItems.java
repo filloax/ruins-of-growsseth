@@ -11,6 +11,8 @@ import java.util.Optional;
 public class CustomMapItems {
     /**
      * Replace checks for Items.FILLED_MAP in various classes with any item that extends MapItem.
+     *
+     * Not needed in Neoforge as it already fixes this.
      * @param itemStack Item instance to check for
      * @param compareItem Item that was used in the check in the original call
      * @return True if the item should be treated like a map.

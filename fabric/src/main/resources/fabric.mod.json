@@ -57,6 +57,7 @@
   },
   "mixins": [
     "growsseth.mixins.json",
+    "growsseth.noforge.mixins.json",
     "growsseth.fabric.mixins.json"
   ],
   "accessWidener": "growsseth.accesswidener",
