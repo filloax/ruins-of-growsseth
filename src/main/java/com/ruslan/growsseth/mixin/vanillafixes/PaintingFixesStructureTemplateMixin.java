@@ -1,8 +1,8 @@
 package com.ruslan.growsseth.mixin.vanillafixes;
 
+import com.ruslan.growsseth.RuinsOfGrowsseth;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.Painting;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -43,6 +43,7 @@ public abstract class PaintingFixesStructureTemplateMixin {
             }
 
             painting.setPos(pos.getCenter());
+            RuinsOfGrowsseth.getLOGGER().info("Fixed painting placement in newly created structure");
         }
     }
 }
