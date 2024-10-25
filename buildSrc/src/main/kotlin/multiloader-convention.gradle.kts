@@ -119,7 +119,6 @@ val fabricVersion = libs.findVersion("fabric").get()
 val fabricKotlinVersion = libs.findVersion("fabric.language.kotlin").get()
 val neoforgeVersion = libs.findVersion("neoforge").get()
 val neoforgeVersionRange = libs.findVersion("neoforge.range").get()
-val fmlVersionRange = libs.findVersion("fml.range").get()
 val kotlinforgeVersion = libs.findVersion("kotlinforge").get()
 val kotlinforgeVersionRange = libs.findVersion("kotlinforge.range").get()
 
@@ -205,7 +204,6 @@ tasks.withType<ProcessResources>().configureEach {
 
         "neoforge_version" to neoforgeVersion,
         "neoforge_version_range" to neoforgeVersionRange,
-        "fml_version_range" to fmlVersionRange,
         "kotlinforge_version" to kotlinforgeVersion,
         "kotlinforge_version_range" to kotlinforgeVersionRange,
 
