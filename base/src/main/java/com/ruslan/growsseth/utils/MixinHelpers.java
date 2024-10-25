@@ -1,5 +1,6 @@
 package com.ruslan.growsseth.utils;
 
+import com.ruslan.growsseth.RuinsOfGrowsseth;
 import com.ruslan.growsseth.structure.GrowssethStructures;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -46,8 +47,8 @@ public class MixinHelpers {
         public @Nullable ResourceLocation getCurrent() { return currentlyDecoding; }
     }
 
-
-    public static final void fixPaintingPlacement(Entity entity) {
+    // Big thanks to Naz Ikhsan from https://bugs.mojang.com/browse/MC-102223 for the painting fix
+    public static void fixPaintingPlacement(Entity entity) {
         if (entity instanceof Painting painting) {
             var pos = new BlockPos.MutableBlockPos();
             pos.set(painting.getPos());
@@ -71,6 +72,6 @@ public class MixinHelpers {
 
             painting.setPos(pos.getCenter());
         }
-
+        RuinsOfGrowsseth.getLOGGER().info("Fixed painting placement in newly created structure");
     }
 }
