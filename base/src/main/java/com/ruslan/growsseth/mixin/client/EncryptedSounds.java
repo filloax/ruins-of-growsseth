@@ -102,7 +102,8 @@ public class EncryptedSounds {
                 at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/server/packs/resources/ResourceProvider;open(Lnet/minecraft/resources/ResourceLocation;)Ljava/io/InputStream;"
-                )
+                ),
+                remap = false // lambdas and similar not remapped in modern forge/fabric
         )
         private InputStream wrapSoundReadingStream(ResourceProvider instance, ResourceLocation resourceLocation, Operation<InputStream> original) {
             return EncryptedMusicResources.checkEncryptedSoundStream(resourceLocation, original.call(instance, resourceLocation));
