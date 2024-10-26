@@ -9,7 +9,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--open", action='store_true', help="Open browser page on start")
 parser.add_argument("-P", "--port", type=int, default=5000, help="Server port")
 parser.add_argument("--debug", action='store_true', help="Flask debug mode")
-parser.add_argument("lang", type=str, help='Website language')
+parser.add_argument("--lang", type=str, default="en_us", help='Website language')
 
 
 app = Flask(__name__)
@@ -17,7 +17,7 @@ app = Flask(__name__)
 @app.route('/')
 def home():
     return render_template(
-        'home.html', name="home", 
+        'home.html', name="home", theme = color_theme,
         help_title = translations[lang]["help_home"],
         help_content = md_content(lang + "/help_home"),
         translations = translations.get(lang, translations[lang])
@@ -26,7 +26,7 @@ def home():
 @app.route('/commands.html')
 def commands():
     return render_template(
-        'commands.html', name="commands",
+        'commands.html', name="commands", theme = color_theme,
         help_title = translations[lang]["help_commands"],
         help_content = md_content(lang + "/help_commands"),
         translations = translations.get(lang, translations[lang])
@@ -35,7 +35,7 @@ def commands():
 @app.route('/trades.html')
 def trades():
     return render_template(
-        'trades.html', name="trades",
+        'trades.html', name="trades", theme = color_theme,
         help_title = translations[lang]["help_trades"],
         help_content = md_content(lang + "/help_trades"),
         translations = translations.get(lang, translations[lang])
@@ -44,7 +44,7 @@ def trades():
 @app.route('/communications.html')
 def messages():
     return render_template(
-        'communications.html', name="communications",
+        'communications.html', name="communications", theme = color_theme,
         help_title = translations[lang]["help_communications"],
         help_content = md_content(lang + "/help_communications"),
         translations = translations.get(lang, translations[lang])
@@ -53,7 +53,7 @@ def messages():
 @app.route('/quest-steps.html')
 def quest_steps():
     return render_template(
-        'quest-steps.html', name="quest-steps",
+        'quest-steps.html', name="quest-steps", theme = color_theme,
         help_title = translations[lang]["help_quest"],
         help_content = md_content(lang + "/help_quest"),
         translations = translations.get(lang, translations[lang])
@@ -62,7 +62,7 @@ def quest_steps():
 @app.route('/structures.html')
 def structures():
     return render_template(
-        'structures.html', name="structures",
+        'structures.html', name="structures", theme = color_theme,
         help_title = translations[lang]["help_structures"],
         help_content = md_content(lang + "/help_structures"),
         translations = translations.get(lang, translations[lang])
@@ -83,6 +83,13 @@ def send_data():
 @app.route('/last_id', methods=['GET'])
 def send_last_id():
     return str(last_id)
+
+@app.route('/switch_theme', methods=['GET'])
+def switch_color_theme():
+    global color_theme
+    color_theme = "dark" if color_theme == "light" else "light"
+    update_color_theme()
+    return "Theme was switched!"
 
 
 def load_data():
@@ -135,6 +142,10 @@ def update_database():
     with open('server_data.json', 'w') as f:
         json.dump(server_data, f, indent=4)
 
+def update_color_theme():
+    with open("color_theme.txt", "w") as f:
+        f.write(color_theme)
+
 
 dirname = os.path.dirname(__file__)
 
@@ -150,9 +161,39 @@ def load_translations():
         translations = json.load(f)
 
 
+def load_last_id():
+    global last_id
+    last_id_file = "last_id.txt"
+    try:
+        with open(last_id_file, "r") as f:
+            try:
+                last_id = int(f.read())
+            except ValueError:
+                print(f"Could not parse the content of {last_id_file} to integer, will be reset to zero.")
+    except FileNotFoundError:
+        print(f"Could not find the file {last_id_file}, it will be created the first time you add something.")
+    except Exception as e:
+        print("Last index could not be loaded and was reset, changes will apply on the next edit:", e)
+
+def load_color_theme():
+    global color_theme
+    color_theme_file = "color_theme.txt"
+    try:
+        with open(color_theme_file, "r") as f:
+            color_theme = f.read()
+            if (color_theme not in ["light","dark"]):
+                print(f"The theme '{color_theme}' from the file {color_theme_file} is not valid, will be reset to light.")
+                color_theme = "light"
+                update_color_theme()
+    except FileNotFoundError:
+        print(f"Could not find the file {color_theme_file}, it will be created and the theme will be set to light.")
+        update_color_theme()
+
+
 translations = {}
 server_data = []
 last_id = 0
+color_theme = "light"
 lang = ""
 
 
@@ -162,21 +203,11 @@ if __name__ == '__main__':
     args_port: int = args.port
     args_debug: bool = args.debug
     args_lang: bool = args.lang
-    
+
     load_translations()
     load_data()
+    load_color_theme()
     lang = args_lang
-    
-    try:
-        with open("last_id.txt", "r") as f:
-            try:
-                last_id = int(f.read())
-            except ValueError:
-                print("Could not parse the content of last_id.txt to integer, will be reset to zero.")
-    except FileNotFoundError:
-        print("Could not find the file last_id.txt, it will be created the first time you add something.")
-    except Exception as e:
-        print("Last index could not be loaded and was reset, changes will apply on the next edit:", e)
 
     if args_open:
         webbrowser.open(f'http://localhost:{args_port}')
