@@ -12,7 +12,7 @@ fun File.copyRecursivelyWithFilter(target: File, filter: (String) -> Boolean): B
 //            println("\tCopying with filter: $file ${file.readLines(Charsets.UTF_8).any(filter)}")
             val relativePath = toPath().relativize(file.toPath())
             val destFile = target.toPath().resolve(relativePath).toFile()
-            if (file.readLines(Charsets.UTF_8).any {s -> filter(s).also{println("\t\t${it} for $s")}} ) {
+            if (file.readLines(Charsets.UTF_8).any {s -> filter(s)} ) {
                 foundAny = true
                 destFile.parentFile.mkdirs()
                 file.copyTo(destFile, overwrite = true)
