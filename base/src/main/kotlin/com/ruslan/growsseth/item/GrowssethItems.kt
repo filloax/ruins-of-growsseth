@@ -94,15 +94,14 @@ object GrowssethItems {
 		DISC_BALLATA_DEL_RESPAWN
 	) }
 
-	private fun <T : Item> make(hashName: String, supplier: () -> T, autoGenerateJson: Boolean = true) = registryDelegate {
-		val resourceLocation = resLoc(hashName)
-		if (allInitializers.containsKey(resourceLocation)) {
-			throw IllegalArgumentException("Item $hashName already registered!")
+	private inline fun <reified T : Item> make(name: String, noinline supplier: () -> T, autoGenerateJson: Boolean = true) = registryDelegate(resLoc(name)) {
+		if (allInitializers.containsKey(id)) {
+			throw IllegalArgumentException("Item $id already registered!")
 		}
 
-		allInitializers[resourceLocation] = {
+		allInitializers[id] = {
 			val item = supplier()
-			all[resourceLocation] = item
+			all[id] = item
 			if (!autoGenerateJson) noAutogenerateItems.add(item)
 			init(item)
 			item

@@ -7,7 +7,7 @@ import com.ruslan.growsseth.platform.clientPlatform
 
 object GrowssethRenderers {
     fun init() {
-        clientPlatform.registerEntityRenderer(GrowssethEntities.RESEARCHER, ::ResearcherRenderer)
-        clientPlatform.registerEntityRenderer(GrowssethEntities.ZOMBIE_RESEARCHER, ::ZombieResearcherRenderer)
+        clientPlatform.registerEntityRenderer({ GrowssethEntities.RESEARCHER }, ::ResearcherRenderer)
+        clientPlatform.registerEntityRenderer({ GrowssethEntities.ZOMBIE_RESEARCHER }, ::ZombieResearcherRenderer)
     }
 }

@@ -32,8 +32,7 @@ object GrowssethEntities {
         name: String,
         entityTypeBuilder: EntityType.Builder<T>,
         attributeSupplier: (() -> AttributeSupplier.Builder)? = null
-    ) = registryDelegate<EntityType<T>> {
-        val id = resLoc(name)
+    ) = registryDelegate(resLoc(name)) {
         all[id] = {
             val entityType = entityTypeBuilder.build(id.toString())
             init(entityType)
