@@ -1,6 +1,5 @@
 package com.ruslan.gradle
 
-import gradle.kotlin.dsl.accessors._258ea003d60887ae6eb7b6ddf797da1b.compileKotlin
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.kotlin.dsl.register
 import org.gradle.kotlin.dsl.withType
