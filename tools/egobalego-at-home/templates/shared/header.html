@@ -1,9 +1,17 @@
 <header class="sticky-top bg-white">
     <div class="container-fluid">
-        <div class="row justify-content-center pb-2">
-            <div class="col-1"></div>
+        <div class="row justify-content-center pb-2 {% if theme == 'dark' %} bg-light-subtle bg-gradient {% endif %}">
+            <div class="col-1 d-flex justify-content-start align-items-end">
+                <button id="switch-theme-button" class="btn btn-link">
+                    {% if theme == 'light' %}
+                        {% include 'icons/theme-light.html' %}
+                    {% else %}
+                        {% include 'icons/theme-dark.html' %}
+                    {% endif %}
+                </button>
+            </div>
             <div class="col text-center">
-                <a href="/" class="title-font text-decoration-none text-black">EGOBALEGO AT HOME</a>
+                <a href="/" class="title-font text-decoration-none {% if theme == 'light' %} text-black {% else %} text-white {% endif %}">EGOBALEGO AT HOME</a>
             </div>
             <div class="col-1 d-flex justify-content-end align-items-end">
                 <button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#modal-help" {% if name == "home" %}hidden{% endif %}>
@@ -20,4 +28,5 @@
             <a href="/commands.html" class="col-4 col-lg-2 btn btn-dark rounded-0 {% if name == 'commands' %}active{% endif %}">{{ translations.header_commands }}</a>
         </div>
     </div>
+    <script src="{{ url_for('static', filename='js/header.js') }}" defer></script>
 </header>
