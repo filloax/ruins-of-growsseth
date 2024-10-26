@@ -1,9 +1,14 @@
 package com.ruslan.growsseth
 
+import com.filloax.fxlib.FxLib
 import com.ruslan.growsseth.RuinsOfGrowssethNeo.register
 import com.ruslan.growsseth.RuinsOfGrowssethNeo.registerHolder
 import com.ruslan.growsseth.advancements.GrowssethCriterions
-import com.ruslan.growsseth.client.GrowssethClientNeo
+import com.ruslan.growsseth.client.GrowssethItemsClient
+import com.ruslan.growsseth.client.GrowssethRenderers
+import com.ruslan.growsseth.client.resource.EncryptedMusicResources
+import com.ruslan.growsseth.client.worldpreset.GrowssethWorldPresetClient
+import com.ruslan.growsseth.config.ClientConfigHandler
 import com.ruslan.growsseth.dialogues.ResearcherDialogueListener
 import com.ruslan.growsseth.effect.GrowssethEffects
 import com.ruslan.growsseth.entity.GrowssethEntities
@@ -16,6 +21,7 @@ import com.ruslan.growsseth.structure.GrowssethStructures
 import com.ruslan.growsseth.templates.TemplateListener
 import com.ruslan.growsseth.worldgen.worldpreset.LocationNotifListener
 import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.screens.Screen
 import net.minecraft.core.Holder
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.Registries
@@ -26,11 +32,18 @@ import net.minecraft.world.item.CreativeModeTabs
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.Items
 import net.neoforged.bus.api.SubscribeEvent
+import net.neoforged.fml.ModContainer
+import net.neoforged.fml.ModLoadingContext
 import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.fml.common.Mod
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent
+import net.neoforged.neoforge.client.event.ClientTickEvent
+import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory
 import net.neoforged.neoforge.event.AddReloadListenerEvent
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent
 import net.neoforged.neoforge.registries.RegisterEvent
+import org.apache.logging.log4j.Level
 import thedarkcolour.kotlinforforge.neoforge.forge.FORGE_BUS
 import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
 import thedarkcolour.kotlinforforge.neoforge.forge.runForDist
@@ -42,7 +55,8 @@ object RuinsOfGrowssethNeo : RuinsOfGrowsseth() {
 
         runForDist(
             clientTarget = {
-                MOD_BUS.addListener(GrowssethClientNeo::initializeClient)
+                initializeClient()
+                MOD_BUS.addListener(::setupClient)
                 Minecraft.getInstance()
             },
             serverTarget = {}
@@ -105,6 +119,36 @@ object RuinsOfGrowssethNeo : RuinsOfGrowsseth() {
             ev.register(Registries.TRIGGER_TYPE, GrowssethCriterions::registerCriterions)
             // GrowssethCommands.ArgumentTypes.registerArgumentTypes(Registries.COMMAND_ARGUMENT_TYPE)
         }
+    }
+
+    fun initializeClient() {
+        log(Level.INFO, "Initializing client...")
+
+        GrowssethRenderers.init()
+
+        MOD_BUS.addListener<RegisterClientReloadListenersEvent> { ev ->
+            ev.registerReloadListener(EncryptedMusicResources.KeyListener())
+        }
+
+        FORGE_BUS.addListener<ClientTickEvent.Pre> { ev ->
+            GrowssethWorldPresetClient.Callbacks.onClientTick(Minecraft.getInstance())
+        }
+
+        log(Level.INFO, "Initialized Client!")
+    }
+
+    fun setupClient(event: FMLClientSetupEvent) {
+        log(Level.INFO, "Setting up client...")
+
+        ModLoadingContext.get().registerExtensionPoint(IConfigScreenFactory::class.java) {
+            IConfigScreenFactory { _: ModContainer, parent: Screen ->
+                ClientConfigHandler.configScreen(parent) ?: throw Exception("Config not initialized yet during loading")
+            }
+        }
+
+        GrowssethItemsClient.init()
+
+        log(Level.INFO, "Setup Client!")
     }
 
     private fun <T : Any> RegisterEvent.register(registryKey: ResourceKey<Registry<T>>, registratorConsumer: (registrator: (ResourceLocation, T) -> Unit) -> Unit) {

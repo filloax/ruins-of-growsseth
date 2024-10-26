@@ -7,9 +7,9 @@ import net.minecraft.world.entity.EntityType
 
 class ClientPlatformAbstractionsFabric : ClientPlatformAbstractions {
     override fun <T : Entity> registerEntityRenderer(
-        entityType: EntityType<T>,
+        entityTypeSupplier: () -> EntityType<T>,
         provider: EntityRendererProvider<in T>
     ) {
-        EntityRendererRegistry.register(entityType, provider)
+        EntityRendererRegistry.register(entityTypeSupplier(), provider)
     }
 }

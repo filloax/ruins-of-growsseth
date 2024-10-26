@@ -6,7 +6,7 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 
 interface ClientPlatformAbstractions {
-    fun <T: Entity> registerEntityRenderer(entityType: EntityType<T>, provider: EntityRendererProvider<in T>)
+    fun <T: Entity> registerEntityRenderer(entityTypeSupplier: () -> EntityType<T>, provider: EntityRendererProvider<in T>)
 
 }
 
