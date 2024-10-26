@@ -68,11 +68,10 @@ neoForge {
 
 dependencies {
     implementation( libs.jsr305 )
-    implementation( libs.kotlin.serialization )
 
-    implementation( libs.kotlin.reflect )
-    implementation( libs.kotlin.serialization )
-    implementation( libs.kotlin.datetime )
+    // Kotlin for forge has issues with external libraries https://github.com/thedarkcolour/KotlinForForge/issues/86
+//    implementation( libs.kotlin.datetime.jvm )
+//    jarJar( libs.kotlin.datetime.jvm )
 
     socketIoLibs.forEach {
         implementation(it)
@@ -87,8 +86,6 @@ dependencies {
         if (includeDeps)
             jarJar(it)
     }
-
-    implementation( libs.kotlin.serialization ) { exclude(module = "kotlin-stdlib") }
 
     utils.getFilloaxlib("neoforge").let{
         implementation(it) { exclude(module = "kotlin-stdlib") }

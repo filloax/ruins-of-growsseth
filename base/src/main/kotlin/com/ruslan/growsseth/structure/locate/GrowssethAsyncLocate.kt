@@ -6,8 +6,8 @@ import com.ruslan.growsseth.structure.locate.LocateTask.Phase
 import com.ruslan.growsseth.utils.matchesJigsaw
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap
 import it.unimi.dsi.fastutil.objects.ObjectArraySet
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
+import java.time.Clock
+import java.time.Instant
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
 import net.minecraft.core.HolderSet
@@ -23,6 +23,7 @@ import net.minecraft.world.level.levelgen.structure.*
 import net.minecraft.world.level.levelgen.structure.placement.ConcentricRingsStructurePlacement
 import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement
 import net.minecraft.world.level.levelgen.structure.placement.StructurePlacement
+import java.time.Duration
 import java.util.concurrent.*
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.locks.ReentrantLock
@@ -163,7 +164,7 @@ class LocateTask(
 
     fun start() {
         try {
-            startTime = Clock.System.now()
+            startTime = Instant.now()
 
             RuinsOfGrowsseth.LOGGER.info(
                 "[chunkGenerator] Trying to locate {} in {} around {} within {} chunks",
@@ -213,7 +214,7 @@ class LocateTask(
         }
     }
 
-    fun timeElapsedMs() = (Clock.System.now() - startTime).inWholeMilliseconds
+    fun timeElapsedMs() = Duration.between(Instant.now(), startTime).toMillis()
 
     fun cancel(reason: String? = null) {
         RuinsOfGrowsseth.LOGGER.warn("Stopping async locate for structure ${targetString()} from pos $fromPos after ${timeElapsedMs() / 1000.0}s, " +

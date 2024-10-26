@@ -8,7 +8,6 @@ import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.structure.locate.LocateResult
 import com.ruslan.growsseth.structure.locate.SignalProgressFun
 import com.ruslan.growsseth.structure.locate.StoppableAsyncLocator
-import kotlinx.datetime.Clock
 import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
@@ -29,6 +28,8 @@ import net.minecraft.world.level.levelgen.structure.Structure
 import net.minecraft.world.level.saveddata.maps.MapDecorationType
 import net.minecraft.world.level.saveddata.maps.MapDecorationTypes
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData
+import java.time.Duration
+import java.time.Instant
 import java.util.concurrent.CompletableFuture
 import kotlin.concurrent.thread
 import kotlin.random.Random
@@ -202,14 +203,14 @@ private fun ItemStack.updateMapToStructWithHolder(
     val destString = destinationHolderSet.toString()
     RuinsOfGrowsseth.LOGGER.info("Starting async structure '$destString' search...")
 
-    val startTime = Clock.System.now()
+    val startTime = Instant.now()
 
     thread(name="locator-timing-thread", start = true, isDaemon = true){
         while (!done) {
             Thread.sleep(10000)
             if (!done) {
-                val time = Clock.System.now()
-                RuinsOfGrowsseth.LOGGER.info("Async structure '$destString' search still running, took ${(time - startTime).inWholeMilliseconds/1000}s")
+                val time = Instant.now()
+                RuinsOfGrowsseth.LOGGER.info("Async structure '$destString' search still running, took ${Duration.between(time, startTime).toMillis()/1000}s")
             }
         }
     }
@@ -257,7 +258,7 @@ private fun ItemStack.updateMapToStructWithHolder(
     return future
 }
 
-private val loadingNameRandom = Random(Clock.System.now().toEpochMilliseconds())
+private val loadingNameRandom = Random(Instant.now().toEpochMilli())
 
 private fun ItemStack.setLoadingName(displayName: String?) {
     this[DataComponents.CUSTOM_NAME] = Component.translatable("item.growsseth.map.loadingName")
