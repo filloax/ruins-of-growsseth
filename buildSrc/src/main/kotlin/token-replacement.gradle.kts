@@ -1,13 +1,17 @@
 package com.ruslan.gradle
 
+import gradle.kotlin.dsl.accessors._258ea003d60887ae6eb7b6ddf797da1b.compileKotlin
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.kotlin.dsl.register
 import org.gradle.kotlin.dsl.withType
+import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 private val BACKUP_AND_TRANSFORM = "backupAndTransformSources"
 private val REPLACE_TRANSFORMED = "replaceTransformedSources"
 private val RESTORE = "restoreSources"
+
+// This should only be applied to one project
 
 println("Applying token transformer plugin...")
 
@@ -48,26 +52,47 @@ val restoreSources by tasks.registering {
 }
 
 afterEvaluate {
-    project.tasks.withType<JavaCompile> {
+    tasks.withType<JavaCompile> {
         dependsOn(REPLACE_TRANSFORMED)
-        finalizedBy(RESTORE)
     }
-    project.tasks.withType<KotlinCompile> {
+    tasks.withType<KotlinCompile> {
         dependsOn(REPLACE_TRANSFORMED)
-        finalizedBy(RESTORE)
-    }
-
-    project.tasks.withType<Javadoc> {
-        dependsOn(RESTORE)
-    }
-
-    project.tasks.named("kotlinSourcesJar") {
-        dependsOn(RESTORE)
-    }
-
-    project.tasks.named("sourcesJar") {
-        dependsOn(RESTORE)
     }
 
     println("Applied token transformer plugin!")
+}
+
+val currentProject = project
+
+gradle.projectsEvaluated {
+    val compileTasks = mutableListOf<Task>()
+
+    gradle.allprojects {
+        compileTasks.addAll(tasks.withType<KotlinCompile>())
+        compileTasks.addAll(tasks.withType<JavaCompile>())
+
+        if (this == rootProject) return@allprojects
+
+        tasks.withType<Javadoc> {
+            dependsOn(restoreSources)
+        }
+
+        tasks.named("kotlinSourcesJar") {
+            dependsOn(restoreSources)
+        }
+
+        tasks.named("sourcesJar") {
+            dependsOn(restoreSources)
+        }
+
+        tasks.withType<DokkaTask> {
+            dependsOn(restoreSources)
+        }
+        println("Applied token restore tasks to project $name")
+    }
+
+    compileTasks.forEach {
+        restoreSourcesJava.get().mustRunAfter(it)
+        restoreSourcesKotlin.get().mustRunAfter(it)
+    }
 }

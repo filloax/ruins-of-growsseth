@@ -144,7 +144,6 @@ listOf("apiElements", "runtimeElements", "sourcesElements"/*, "javadocElements"*
 //endregion
 
 //region Task configuration
-
 tasks.named<Jar>("sourcesJar") {
     from(rootProject.file("LICENSE")) {
         rename { "${it}_${modName}" }
@@ -251,16 +250,6 @@ idea {
 // Use dokka for kotlin-compatible javadoc
 
 // Make sure our token replacement runs first
-val baseTasks = if (name == "base") tasks else project(BASE_PROJECT).tasks
-val preCompileTasks = PRE_COMPILE_TASKS.mapNotNull { try { baseTasks.getByName(it) } catch (e: Exception) {
-        println("WARNING: ${e.message}")
-        null
-    } }
-
-tasks.withType<DokkaTask>().configureEach {
-    preCompileTasks.forEach { dependsOn(it) }
-}
-
 val dokkaJavadocJar = tasks.register<Jar>("dokkaJavadocJar") {
     dependsOn(tasks.dokkaJavadoc)
     from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
