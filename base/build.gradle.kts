@@ -77,15 +77,15 @@ artifacts {
 
 // Task defined in the custom plugin in buildSrc
 
-//tasks.withType<TransformTokensTask> {
-//	val env = System.getenv()
-//	replaceTokens(mapOf(
-//		"$@MUSIC_PW@" to (env["GROWSSETH_MUSIC_PW"] ?: run {
-//			project.logger.error("Music key not set up in env variable GROWSSETH_MUSIC_PW, music in builds won't work!")
-//			""
-//		}),
-//	))
-//}
+tasks.withType<TransformTokensTask> {
+	val env = System.getenv()
+	replaceTokens(mapOf(
+		"$@MUSIC_PW@" to (env["GROWSSETH_MUSIC_PW"] ?: run {
+			project.logger.error("Music key not set up in env variable GROWSSETH_MUSIC_PW, music in builds won't work!")
+			""
+		}),
+	))
+}
 
 //region custom tasks
 

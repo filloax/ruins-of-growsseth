@@ -348,7 +348,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         }
     }
 
-    // NOTE: Ran only once at first spawn
+    // TODO: in neoforge do not call this directly but use EventHook.finalizeSpawn (see javadoc comment on Neoforge version of Mob.java), applies to other ents too
     override fun finalizeSpawn(level: ServerLevelAccessor, difficulty: DifficultyInstance, mobSpawnType: MobSpawnType, spawnGroupData: SpawnGroupData?): SpawnGroupData? {
         val savedData = server?.let{ serv ->
             // Load data from previous researchers

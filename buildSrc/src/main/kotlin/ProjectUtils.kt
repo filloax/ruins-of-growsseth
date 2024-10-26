@@ -50,6 +50,8 @@ class ProjectUtils(
 
     fun addExtraResourceProp(key: String, value: String) {
         val extraProps = if (ext.has("extraProps")) {
+
+            @Suppress("UNCHECKED_CAST")
             ext["extraProps"] as MutableMap<String, String>
         } else {
             mutableMapOf<String, String>().also { this.ext["extraProps"] = it }
@@ -58,6 +60,7 @@ class ProjectUtils(
     }
 
     val extraResourceProps: Map<String, String> get() {
+        @Suppress("UNCHECKED_CAST")
         return "extraProps".let{ if (ext.has(it)) this.ext[it] as Map<String, String> else mapOf() }
     }
 }
