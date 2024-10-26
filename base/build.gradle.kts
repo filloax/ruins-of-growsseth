@@ -45,7 +45,7 @@ dependencies {
 	compileOnly( libs.kotlin.stdlib )
 	compileOnly( libs.kotlin.reflect )
 	compileOnly( libs.kotlin.serialization )
-	compileOnly( libs.kotlin.datetime )
+//	compileOnly( libs.kotlin.datetime ) // Kotlin for forge has issues with external libraries https://github.com/thedarkcolour/KotlinForForge/issues/86
 
     compileOnly( libs.mixin )
     compileOnly( libs.mixinextras.common )
