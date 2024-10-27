@@ -7,7 +7,7 @@ Added
 - [Web Console] Added dark theme to Egobalego at Home (download it from the GitHub releases!)
 
 Tweaked
-- the first advancement now requires interacting with the researcher directly, instead of just reaching his tent
+- The first advancement now requires interacting with the researcher directly, instead of just reaching his tent
 - Improved terrain adaptation for most of the structures, should fix the instances where some structures would spawn suspended in midair
 - Added logging to painting placement fixes during structure generation, to prevent confusion when using mods that fix the same problem
 
