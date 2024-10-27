@@ -1,9 +1,10 @@
 # Changelog
 
-# 0.11.1
+## 0.11.1
 
 Added
 - Right-clicking on the researcher mid-dialogue now skips the current chat message
+- [Web Console] Added dark theme to Egobalego at Home (download it from the GitHub releases!)
 
 Tweaked
 - the first advancement now requires interacting with the researcher directly, instead of just reaching his tent
