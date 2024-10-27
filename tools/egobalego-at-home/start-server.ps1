@@ -20,4 +20,4 @@ $script = $PSScriptRoot + "\start-server.py"
 echo $script
 
 $lang = $args[0]
-py $script --open $lang
+py $script --open --lang $lang

@@ -79,6 +79,7 @@ open class BasicDialoguesComponent(
     // UUID is player's
     protected val dialogueQueues = mutableMapOf<UUID, Deque<Pair<DialogueLine, DialogueEvent>>>()
     protected var dialogueQueueDelays = mutableMapOf<UUID, Int>()
+    protected val playersSkipNextMessage = mutableSetOf<UUID>()
     protected val serverLevel: ServerLevel get() = entity.level() as ServerLevel
     protected val server get() = serverLevel.server
 
@@ -139,6 +140,15 @@ open class BasicDialoguesComponent(
         }
     }
 
+    fun emptyQueue(playerUUID: UUID): Boolean {
+        val playerQueue = dialogueQueues.getOrDefault(playerUUID, null)
+        return (playerQueue == null || playerQueue.isEmpty())
+    }
+
+    fun skipCurrentMessage(uuid: UUID) {
+       playersSkipNextMessage.add(uuid)
+    }
+
     override fun dialoguesStep() {
         // Run every 2 ticks for better performance
         if (entity.tickCount % 2 == 0) {
@@ -155,7 +165,8 @@ open class BasicDialoguesComponent(
             }
             if (dialogueQueue.isNotEmpty()) {
                 dialogueQueueDelay--
-                if (dialogueQueueDelay <= 0) {
+                if (dialogueQueueDelay <= 0 || playersSkipNextMessage.contains(playerUuid)) {
+                    playersSkipNextMessage.remove(playerUuid)
                     val (line, _) = dialogueQueue.remove()
                     sendDialogueToPlayer(player, line)
                     if (dialogueQueue.isNotEmpty()) {

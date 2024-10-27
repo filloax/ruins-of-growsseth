@@ -112,7 +112,8 @@ class SimplePools(private val context: BootstrapContext<StructureTemplatePool>) 
             keepLiquids = true,
         )
         registerPoolElements(
-            "ruins/noteblock_ship",
+            "ruins/noteblock_ship/top",
+            "ruins/noteblock_ship/bottom",
         )
     }
 

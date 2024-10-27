@@ -157,7 +157,7 @@ class TagProviderBlocks(output: FabricDataOutput, registries: CompletableFuture<
             .addOptionalTag(ResourceLocation("campfires"))
             .addOptionalTag(ResourceLocation("c", "villager_job_sites"))
             .addOptionalTag(ResourceLocation("fence_gates"))
-            .addOptionalTag(ResourceLocation("logs"))
+            .add(Blocks.STRIPPED_SPRUCE_LOG)
             .add(Blocks.LECTERN)
             .add(Blocks.CARTOGRAPHY_TABLE)
             .add(Blocks.IRON_BARS)

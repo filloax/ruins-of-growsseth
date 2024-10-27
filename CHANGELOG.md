@@ -1,5 +1,21 @@
 # Changelog
 
+# 0.11.1
+
+Added
+- Right-clicking on the researcher mid-dialogue now skips the current chat message
+
+Tweaked
+- the first advancement now requires interacting with the researcher directly, instead of just reaching his tent
+- Improved terrain adaptation for most of the structures, should fix the instances where some structures would spawn suspended in midair
+- Added logging to painting placement fixes during structure generation, to prevent confusion when using mods that fix the same problem
+
+Fixed
+- Fixed an instance of the researcher's tent notes not using templates (they always appeared in italian)
+- Lowered the water level of the conduit church nbt, to avoid the appearance of water blobs when it spawns too high up
+- Corrected the durability values for certain items found in the enchanting tower and conduit church
+
+
 ## 0.11.0
 
 Added
