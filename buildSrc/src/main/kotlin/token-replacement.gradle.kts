@@ -16,10 +16,16 @@ println("Applying token transformer plugin...")
 
 val tokenReplaceDirs = TokenReplaceDirs(project)
 
-project.tasks.register<TransformTokensTask>(BACKUP_AND_TRANSFORM)
+val replaceTokens = (project.property("replaceTokens") as String).toBoolean()
+
+project.tasks.register<TransformTokensTask>(BACKUP_AND_TRANSFORM) {
+    onlyIf { replaceTokens }
+}
 
 // Separate task so gradle handles inputs/outputs controls
 val replaceTransformedSources by tasks.registering {
+    onlyIf { replaceTokens }
+
     dependsOn(BACKUP_AND_TRANSFORM)
 
     tokenReplaceDirs.mainSources.forEach { if (it.exists()) outputs.dir(it) }
@@ -34,64 +40,71 @@ val replaceTransformedSources by tasks.registering {
 }
 
 val restoreSourcesJava by tasks.registering(Copy::class) {
+    onlyIf { replaceTokens }
+
     dependsOn(tasks.withType<JavaCompile>())
     dependsOn(tasks.withType<KotlinCompile>())
     from(tokenReplaceDirs.backupSources[0])
     into(tokenReplaceDirs.mainSources[0])
 }
 val restoreSourcesKotlin by tasks.registering(Copy::class) {
+    onlyIf { replaceTokens }
+
     dependsOn(tasks.withType<JavaCompile>())
     dependsOn(tasks.withType<KotlinCompile>())
     from(tokenReplaceDirs.backupSources[1])
     into(tokenReplaceDirs.mainSources[1])
 }
 val restoreSources by tasks.registering {
+    onlyIf { replaceTokens }
+
     dependsOn(restoreSourcesJava)
     dependsOn(restoreSourcesKotlin)
 }
 
-afterEvaluate {
-    tasks.withType<JavaCompile> {
-        dependsOn(REPLACE_TRANSFORMED)
-    }
-    tasks.withType<KotlinCompile> {
-        dependsOn(REPLACE_TRANSFORMED)
-    }
 
-    println("Applied token transformer plugin!")
-}
-
-val currentProject = project
-
-gradle.projectsEvaluated {
-    val compileTasks = mutableListOf<Task>()
-
-    gradle.allprojects {
-        compileTasks.addAll(tasks.withType<KotlinCompile>())
-        compileTasks.addAll(tasks.withType<JavaCompile>())
-
-        if (this == rootProject) return@allprojects
-
-        tasks.withType<Javadoc> {
-            dependsOn(restoreSources)
+if (replaceTokens) {
+    afterEvaluate {
+        tasks.withType<JavaCompile> {
+            dependsOn(REPLACE_TRANSFORMED)
+        }
+        tasks.withType<KotlinCompile> {
+            dependsOn(REPLACE_TRANSFORMED)
         }
 
-        tasks.named("kotlinSourcesJar") {
-            dependsOn(restoreSources)
-        }
-
-        tasks.named("sourcesJar") {
-            dependsOn(restoreSources)
-        }
-
-        tasks.withType<DokkaTask> {
-            dependsOn(restoreSources)
-        }
-        println("Applied token restore tasks to project $name")
+        println("Applied token transformer plugin!")
     }
 
-    compileTasks.forEach {
-        restoreSourcesJava.get().mustRunAfter(it)
-        restoreSourcesKotlin.get().mustRunAfter(it)
+    gradle.projectsEvaluated {
+        val compileTasks = mutableListOf<Task>()
+
+        gradle.allprojects {
+            compileTasks.addAll(tasks.withType<KotlinCompile>())
+            compileTasks.addAll(tasks.withType<JavaCompile>())
+
+            if (this == rootProject) return@allprojects
+
+            tasks.withType<Javadoc> {
+                dependsOn(restoreSources)
+            }
+
+            tasks.named("kotlinSourcesJar") {
+                dependsOn(restoreSources)
+            }
+
+            tasks.named("sourcesJar") {
+                dependsOn(restoreSources)
+            }
+
+            tasks.withType<DokkaTask> {
+                dependsOn(restoreSources)
+            }
+            println("Applied token restore tasks to project $name")
+        }
+
+        compileTasks.forEach {
+            restoreSourcesJava.get().mustRunAfter(it)
+            restoreSourcesKotlin.get().mustRunAfter(it)
+        }
     }
 }
