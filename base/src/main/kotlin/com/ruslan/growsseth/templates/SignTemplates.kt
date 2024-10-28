@@ -1,13 +1,24 @@
 package com.ruslan.growsseth.templates;
 
+import com.filloax.fxlib.api.nbt.putIfAbsent
+import com.ruslan.growsseth.Constants
+import net.minecraft.core.component.DataComponents
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.ListTag
+import net.minecraft.nbt.StringTag
 import net.minecraft.network.chat.Component
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.DyeColor
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.component.CustomData
 import net.minecraft.world.level.block.entity.SignText
 
 object SignTemplates {
     private const val LINE_TEMPLATE_PREFIX = "%TEMPLATE%"   // different from books to allow templates in hanging signs
 
     val templates get() = TemplateListener.signs()
+
+    fun templates(lang: String) = TemplateListener.signs(lang)
 
     operator fun get(key: String) = templates[key]
 
@@ -66,7 +77,30 @@ object SignTemplates {
         }
     }
 
-    private fun templateExists(templateId: String): Boolean {
+    fun templateExists(templateId: String): Boolean {
         return templates[templateId] != null
+    }
+
+    fun getAvailableTemplates(): List<String> {
+        val languageSigns = templates
+        val defaultLanguageSigns = templates(Constants.DEFAULT_LANGUAGE)
+        return (languageSigns.keys + defaultLanguageSigns.keys).toList()
+    }
+
+    fun loadTemplate(sign: ItemStack, templateId: String, player: Player): ItemStack {
+        val signText = getSignTemplate(templateId)
+        val signMessages = signText.getMessages(false)
+        CustomData.update(DataComponents.BLOCK_ENTITY_DATA, sign) { blockEntityDataTag ->
+            val messagesList = ListTag()
+            for(i in 0..3) {
+                messagesList.add(StringTag.valueOf(Component.Serializer.toJson(signMessages[i], player.server!!.registryAccess())))
+            }
+            val messagesTag = CompoundTag()
+            messagesTag.putIfAbsent("messages", messagesList)
+            blockEntityDataTag.putString("id", "oak_sign")
+            blockEntityDataTag.putIfAbsent("front_text", messagesTag)
+            // TODO: ADD COLOR AND GLOW
+        }
+        return sign
     }
 }
