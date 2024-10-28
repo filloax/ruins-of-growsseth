@@ -7,6 +7,8 @@
 
     "generator.growsseth.growsseth": "Growsseth",
 
+    "growsseth.selectWorld.preset_warning": "Nota: La serie originale è iniziata su Minecraft 1.19.4 ed è continuata su Minecraft 1.20.1, il mondo potrebbe presentare delle differenze dovute a nuovi biomi o strutture della versione in cui stai giocando.",
+
     "item.growsseth.growsseth_banner_pattern": "Banner Pattern (Rimpiazzato da codice)",
     "item.growsseth.growsseth_banner_pattern.desc": "Egida di un regno perduto",
     "item.growsseth.growsseth_banner_pattern.desc.black": "Egida di un regno perduto nero",
