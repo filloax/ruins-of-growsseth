@@ -1,12 +1,16 @@
 package com.ruslan.growsseth.mixin.client.growssethworld;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.ruslan.growsseth.client.gui.RawSetEditBox;
 import com.ruslan.growsseth.worldgen.worldpreset.GrowssethWorldPreset;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.MultiLineTextWidget;
+import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.screens.worldselection.CreateWorldScreen;
 import net.minecraft.client.gui.screens.worldselection.WorldCreationContext;
 import net.minecraft.client.gui.screens.worldselection.WorldCreationUiState;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.levelgen.WorldOptions;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
@@ -27,6 +31,9 @@ public class GrowssethSeedMixins {
         @Final @Shadow
         private EditBox seedEdit;
 
+        @Unique
+        private MultiLineTextWidget growssethPresetWarning = new MultiLineTextWidget(Component.translatable("growsseth.selectWorld.preset_warning"), Minecraft.getInstance().font);
+
         @Inject(
                 method = "<init>(Lnet/minecraft/client/gui/screens/worldselection/CreateWorldScreen;)V",
                 at = @At("RETURN")
@@ -41,6 +48,16 @@ public class GrowssethSeedMixins {
                 } else {
                     seedEdit.setEditable(true);
                 }
+            });
+        }
+
+        @Inject(method = "<init>(Lnet/minecraft/client/gui/screens/worldselection/CreateWorldScreen;)V", at = @At(value = "TAIL"))
+        private void addGrowssethPresetWarning(CreateWorldScreen createWorldScreen, CallbackInfo ci, @Local GridLayout.RowHelper rowHelper) {
+            growssethPresetWarning.setMaxWidth(308);    // same width as seed EditBox, to avoid issues
+            rowHelper.addChild(growssethPresetWarning, 2);
+            field_42182.getUiState().addListener(worldCreationUiState -> {
+                WorldCreationUiState.WorldTypeEntry worldType = worldCreationUiState.getWorldType();
+                growssethPresetWarning.visible = GrowssethWorldPreset.isGrowssethPreset(worldType.preset());
             });
         }
     }
