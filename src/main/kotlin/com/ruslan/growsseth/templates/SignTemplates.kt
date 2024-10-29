@@ -12,6 +12,7 @@ import net.minecraft.world.item.DyeColor
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.component.CustomData
 import net.minecraft.world.level.block.entity.SignText
+import kotlin.collections.getOrNull
 
 object SignTemplates {
     private const val LINE_TEMPLATE_PREFIX = "%TEMPLATE%"   // different from books to allow templates in hanging signs
@@ -47,8 +48,8 @@ object SignTemplates {
         val messages: Array<Component> = originalText.getMessages(false)
         if (messages[0].string == LINE_TEMPLATE_PREFIX) {
             val templateId = messages[1].string + messages[2].string + messages[3].string
-            val newFrontText = getSignTemplate(templateId)
-            return newFrontText
+            val templateText = getSignTemplate(templateId)
+            return templateText
         }
         return originalText
     }
@@ -88,19 +89,32 @@ object SignTemplates {
     }
 
     fun loadTemplate(sign: ItemStack, templateId: String, player: Player): ItemStack {
-        val signText = getSignTemplate(templateId)
-        val signMessages = signText.getMessages(false)
+        val template = templates[templateId]!!      // exist check is done in command
+        val signLines = template.linesComponents
+        val registries = player.server!!.registryAccess()
+
+        sign.set(DataComponents.CUSTOM_NAME, Component.literal(templateId))
+
         CustomData.update(DataComponents.BLOCK_ENTITY_DATA, sign) { blockEntityDataTag ->
+            val frontTextTag = CompoundTag()
+
             val messagesList = ListTag()
+            var message: String
             for(i in 0..3) {
-                messagesList.add(StringTag.valueOf(Component.Serializer.toJson(signMessages[i], player.server!!.registryAccess())))
+                if (signLines.getOrNull(i) != null)
+                    message = Component.Serializer.toJson(signLines[i], registries)
+                else
+                    message = "[\"\"]"
+                messagesList.add(StringTag.valueOf(message))
             }
-            val messagesTag = CompoundTag()
-            messagesTag.putIfAbsent("messages", messagesList)
+            frontTextTag.putIfAbsent("messages", messagesList)
+            frontTextTag.putString("color", template.color)
+            frontTextTag.putBoolean("has_glowing_text", template.glowing!!)
+
             blockEntityDataTag.putString("id", "oak_sign")
-            blockEntityDataTag.putIfAbsent("front_text", messagesTag)
-            // TODO: ADD COLOR AND GLOW
+            blockEntityDataTag.putIfAbsent("front_text", frontTextTag)
         }
+
         return sign
     }
 }
