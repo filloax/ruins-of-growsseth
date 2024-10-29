@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.12.0
+
+Added
+- New command /gtemplate, replaces /booktemplates to also support sign templates
+- Added note in the World Creation Tab to specify that the "Growsseth" preset might not generate the exact same world of the Twitch series
+
+
 ## 0.11.1
 
 Added
