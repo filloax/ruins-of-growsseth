@@ -13,8 +13,7 @@ import net.minecraft.core.Registry
 
 object GrowssethCommands {
     fun register(dispatcher: CommandDispatcher<CommandSourceStack>, registryAccess: CommandBuildContext, environment: CommandSelection) {
-        BookTemplateCommand.register(dispatcher, registryAccess, environment)
-        SignTemplateCommand.register(dispatcher, registryAccess, environment)
+        GrowssethTemplateCommand.register(dispatcher, registryAccess, environment)
         GiveStructMapCommand.register(dispatcher, registryAccess, environment)
         GrowssethDiaryCommand.register(dispatcher, registryAccess, environment)
         GamemasterCommand.register(dispatcher, registryAccess, environment)
