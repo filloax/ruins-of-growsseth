@@ -2,12 +2,12 @@ package com.ruslan.growsseth.templates;
 
 import com.filloax.fxlib.api.nbt.putIfAbsent
 import com.ruslan.growsseth.Constants
+import net.minecraft.core.RegistryAccess
 import net.minecraft.core.component.DataComponents
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.StringTag
 import net.minecraft.network.chat.Component
-import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.DyeColor
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.component.CustomData
@@ -88,10 +88,9 @@ object SignTemplates {
         return (languageSigns.keys + defaultLanguageSigns.keys).toList()
     }
 
-    fun loadTemplate(sign: ItemStack, templateId: String, player: Player): ItemStack {
+    fun loadTemplate(sign: ItemStack, templateId: String, registries: RegistryAccess): ItemStack {
         val template = templates[templateId]!!      // exist check is done in command
         val signLines = template.linesComponents
-        val registries = player.server!!.registryAccess()
 
         sign.set(DataComponents.CUSTOM_NAME, Component.literal(templateId))
 
