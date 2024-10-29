@@ -62,9 +62,9 @@ object GrowssethTemplateCommand {
         commandSourceStack.sendSuccess( {
             Component.literal(
                 when (templateType) {
-                    TemplateType.BOOK -> BookTemplates.getAvailableTemplates().joinToString(", ")
-                    TemplateType.SIGN -> SignTemplates.getAvailableTemplates().joinToString(", ")
-                }
+                    TemplateType.BOOK -> BookTemplates.getAvailableTemplates()
+                    TemplateType.SIGN -> SignTemplates.getAvailableTemplates()
+                }.sorted().joinToString("\n ")
             )
         }, true)
         return 1
