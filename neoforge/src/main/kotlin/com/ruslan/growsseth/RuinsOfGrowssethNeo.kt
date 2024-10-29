@@ -24,6 +24,7 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.core.Holder
 import net.minecraft.core.Registry
+import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
@@ -42,6 +43,7 @@ import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory
 import net.neoforged.neoforge.event.AddReloadListenerEvent
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent
+import net.neoforged.neoforge.event.RegisterCommandsEvent
 import net.neoforged.neoforge.registries.RegisterEvent
 import org.apache.logging.log4j.Level
 import thedarkcolour.kotlinforforge.neoforge.forge.FORGE_BUS
@@ -64,7 +66,7 @@ object RuinsOfGrowssethNeo : RuinsOfGrowsseth() {
     }
 
     override fun initItemGroups() {
-        MOD_BUS.addListener { ev: BuildCreativeModeTabContentsEvent ->
+        MOD_BUS.addListener<BuildCreativeModeTabContentsEvent> { ev ->
             val entries = ev.searchEntries.associateBy { it.item }
             val addAfter = { item: Item, new: Item ->
                 ev.insertAfter(entries[item]!!, new.defaultInstance, CreativeModeTab.TabVisibility.PARENT_TAB_ONLY)
@@ -97,7 +99,7 @@ object RuinsOfGrowssethNeo : RuinsOfGrowsseth() {
     }
 
     override fun registerResourceListeners() {
-        FORGE_BUS.addListener { ev: AddReloadListenerEvent ->
+        FORGE_BUS.addListener<AddReloadListenerEvent> { ev ->
             ev.addListener(TradesListener())
             ev.addListener(ResearcherDialogueListener())
             ev.addListener(TemplateListener)
@@ -106,7 +108,7 @@ object RuinsOfGrowssethNeo : RuinsOfGrowsseth() {
     }
 
     override fun initRegistries() {
-        MOD_BUS.addListener { ev: RegisterEvent ->
+        MOD_BUS.addListener<RegisterEvent> { ev ->
             ev.register(Registries.CREATIVE_MODE_TAB, GrowssethCreativeModeTabs::registerCreativeModeTabs)
             ev.register(Registries.ITEM, GrowssethItems::registerItems)
             ev.register(Registries.INSTRUMENT, GrowssethItems.Instruments::registerInstruments)
@@ -117,7 +119,13 @@ object RuinsOfGrowssethNeo : RuinsOfGrowsseth() {
             ev.register(Registries.STRUCTURE_PIECE, GrowssethStructurePieceTypes::registerStructurePieces)
             ev.register(Registries.STRUCTURE_TYPE, GrowssethStructures::registerStructureTypes)
             ev.register(Registries.TRIGGER_TYPE, GrowssethCriterions::registerCriterions)
-            // GrowssethCommands.ArgumentTypes.registerArgumentTypes(Registries.COMMAND_ARGUMENT_TYPE)
+            if (ev.registryKey == Registries.COMMAND_ARGUMENT_TYPE) {
+                GrowssethCommands.ArgumentTypes.registerArgumentTypes(BuiltInRegistries.COMMAND_ARGUMENT_TYPE)
+            }
+        }
+
+        FORGE_BUS.addListener<RegisterCommandsEvent> { ev ->
+            GrowssethCommands.register(ev.dispatcher, ev.buildContext, ev.commandSelection)
         }
     }
 
