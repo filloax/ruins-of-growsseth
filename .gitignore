@@ -33,6 +33,7 @@ tools/live-update-server/update.ps1
 logs/*
 
 #egobalego
+*/egobalego-at-home/.gitignore
 */egobalego-at-home/last_id.txt
 */egobalego-at-home/color_theme.txt
 */egobalego-at-home/server_data.json
