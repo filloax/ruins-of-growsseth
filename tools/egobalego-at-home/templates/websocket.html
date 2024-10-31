@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html data-bs-theme="{{theme}}">
+    {% include 'shared/head.html' %}
+    <body>
+        {% include 'shared/header.html' %}
+        <main class="container mt-3 mb-4">
+            <div class="row justify-content-center">
+                <button id="reload-button" class="col-auto btn btn-lg btn-danger">
+                    {% include 'icons/reload.html' %} {{ translations.reload_mod_data }}
+                </button>
+                {% include 'cards/websocket-cards.html' %}
+            </div>
+            {% with title=help_title, content=help_content %}
+                {% include 'modals/modal-help.html' %}
+            {% endwith %}
+        </main>
+    </body>
+    <script src="{{ url_for('static', filename='js/socket.io.min.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/websocket.js') }}" defer></script>
+</html>
