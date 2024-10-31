@@ -1,10 +1,16 @@
 var socket = io();
 
-document.getElementById("reload-button").addEventListener("click", function () {
-    socket.emit("reload");
-});
-
 document.addEventListener("DOMContentLoaded", function () {
+    let footer = document.querySelector('footer');
+    let main = document.querySelector('main');
+    main.style.paddingBottom = footer.offsetHeight + 'px';
+
+    let modResponseStatus = document.getElementById("mod-response-status");
+    let modResponseTimestamp = document.getElementById("mod-response-timestamp");
+    let modResponseDetails = document.getElementById("mod-response-details");
+
+    let reloadButton = document.getElementById("reload-button");
+
     let dialogueCard = document.getElementById("websocket-dialogue-card");
     let toastCard = document.getElementById("websocket-toast-card");
     let commandCard = document.getElementById("websocket-command-card");
@@ -23,9 +29,15 @@ document.addEventListener("DOMContentLoaded", function () {
     let sendCommandButton = commandCard.querySelector("#send-command-button");
     let commandContent = commandCard.querySelector("#command-content");
 
+
+    reloadButton.addEventListener("click", function () {
+        socket.emit("reload");
+    });
+
     toastType.onchange = function () {
         toastIconDiv.hidden = (toastType.value == "toast-simple");
     };
+
 
     sendDialogueButton.addEventListener("click", function () {
         let dialogue = { "content": dialogueContent.value }
@@ -45,4 +57,23 @@ document.addEventListener("DOMContentLoaded", function () {
         let command = { "command": commandContent.value }
         socket.emit("cmd", command);
     });
+
+
+    socket.on('mod_response', (responseString) => {
+        let response = JSON.parse(responseString);
+        modResponseStatus.value = response.status;
+        if (response.status === "success")
+            modResponseStatus.style.color = "green";
+        else
+            modResponseStatus.style.color = "red";
+        modResponseTimestamp.value = getCurrentTime();
+        delete response.status
+        modResponseDetails.value = JSON.stringify(response)
+    });
 });
+
+
+function getCurrentTime() {
+    let now = new Date();
+    return new String(now).slice(16, 24);   // only getting the timestamp
+}

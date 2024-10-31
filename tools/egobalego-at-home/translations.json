@@ -118,7 +118,11 @@
         "trade_trim_template": "Schema per armature",
         "trade_enchant_dictionary": "Dizionario alfabeto antico",
         "trade_all_extras": "Tutti gli oggetti non segreti della mod (\"gratis\")",
-        "trade_json": "JSON dello scambio"
+        "trade_json": "JSON dello scambio",
+
+        "mod_response_status": "Ultima risposta",
+        "mod_response_details": "Dettagli",
+        "mod_response_timestamp": "Timestamp"
     },
 
     "en_us": {
@@ -239,6 +243,10 @@
         "trade_trim_template": "Smithing Template",
         "trade_enchant_dictionary": "Enchanting Alphabet Dictionary",
         "trade_all_extras": "All non-secret mod items (for \"free\")",
-        "trade_json": "Trade JSON"
+        "trade_json": "Trade JSON",
+
+        "mod_response_status": "Last response",
+        "mod_response_details": "Details",
+        "mod_response_timestamp": "Timestamp"
     }
 }
