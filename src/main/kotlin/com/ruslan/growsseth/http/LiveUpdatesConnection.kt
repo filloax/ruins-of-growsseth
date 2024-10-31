@@ -35,6 +35,7 @@ import kotlin.concurrent.thread
  * from remote.
  * Also allow additional remote commands:
  * - Playing researcher dialogues
+ * - Sending notifications
  * - Remote command execution
  * Class lifetime should be same as the server, just in case.
  */
@@ -163,7 +164,7 @@ class LiveUpdatesConnection private constructor(val server: MinecraftServer) : R
     private fun sendOnSocket(message: String) {
         try {
             RuinsOfGrowsseth.LOGGER.info("LiveUpdatesConnection | Sending message on socket: $message")
-            socket?.emit(message) ?: run {
+            socket?.emit("mod_response", message) ?: run {
                 RuinsOfGrowsseth.LOGGER.error("Couldn't send message $message: socket null")
             }
         } catch (e: Exception) {
