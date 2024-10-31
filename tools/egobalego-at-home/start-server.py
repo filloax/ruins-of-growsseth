@@ -140,7 +140,8 @@ def send_command(data):
 
 @socketio.on('mod_response')
 def handle_mod_response(response):
-    print('Received response from the mod: ' + str(response))
+    print('Received response from the mod: ' + response)
+    emit("mod_response", response, broadcast=True)
 
 
 # Misc functions
@@ -261,4 +262,4 @@ if __name__ == '__main__':
     if args_open:
         webbrowser.open(f'http://localhost:{args_port}')
 
-    socketio.run(app, debug=args_debug, port=args_port)
+    socketio.run(app, debug=True, port=args_port)   # TODO: CAMBIARE CON args_debug quando si ha finito
