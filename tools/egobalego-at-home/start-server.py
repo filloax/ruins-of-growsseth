@@ -1,9 +1,11 @@
 import os
 from flask import Flask, render_template, request
+from flask_socketio import SocketIO, emit
 import json
 import argparse
 import webbrowser
 from mistune import create_markdown
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--open", action='store_true', help="Open browser page on start")
@@ -11,8 +13,13 @@ parser.add_argument("-P", "--port", type=int, default=5000, help="Server port")
 parser.add_argument("--debug", action='store_true', help="Flask debug mode")
 parser.add_argument("--lang", type=str, default="en_us", help='Website language')
 
+dirname = os.path.dirname(__file__)
 
 app = Flask(__name__)
+socketio = SocketIO(app, cors_allowed_origins="*")
+
+
+# App Routes
 
 @app.route('/')
 def home():
@@ -68,6 +75,15 @@ def structures():
         translations = translations.get(lang, translations[lang])
     )
 
+@app.route('/websocket.html')
+def websocket():
+    return render_template(
+        'websocket.html', name="websocket", theme = color_theme,
+        help_title = translations[lang]["help_websocket"],
+        help_content = md_content(lang + "/help_websocket"),
+        translations = translations.get(lang, translations[lang])
+    )
+
 
 @app.route('/data_receiver', methods=['POST'])
 def receive_data():
@@ -91,6 +107,43 @@ def switch_color_theme():
     update_color_theme()
     return "Theme was switched!"
 
+
+# SocketIO Events
+
+@socketio.on('connect')
+def handle_connect():
+    print("Websocket client connected")
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    print("Websocket client disconnected")
+
+@socketio.on('reload')
+def reload_minecraft():
+    print("Sending reload event")
+    emit("reload", broadcast=True)
+
+@socketio.on('rdialogue')
+def send_researcher_dialogue(data):
+    print("Sending rdialogue event:", data)
+    emit("rdialogue", data, broadcast=True)
+
+@socketio.on('toast')
+def send_toast(data):
+    print("Sending toast event:", data)
+    emit("toast", data, broadcast=True)
+
+@socketio.on('cmd')
+def send_command(data):
+    print("Sending cmd event:", data)
+    emit("cmd", data, broadcast=True)
+
+@socketio.on('mod_response')
+def handle_mod_response(response):
+    print('Received response from the mod: ' + str(response))
+
+
+# Misc functions
 
 def load_data():
     global server_data
@@ -146,9 +199,6 @@ def update_color_theme():
     with open("color_theme.txt", "w") as f:
         f.write(color_theme)
 
-
-dirname = os.path.dirname(__file__)
-
 def md_content(name: str):
     with open(os.path.join(dirname, "templates", "content", f'{name}.md'), 'r', encoding='UTF-8') as f:
         parser = create_markdown(escape=False, plugins=['strikethrough', 'footnotes', 'table'])
@@ -159,7 +209,6 @@ def load_translations():
     translations_path = os.path.join(dirname, 'translations.json')
     with open(translations_path, 'r', encoding='utf-8') as f:
         translations = json.load(f)
-
 
 def load_last_id():
     global last_id
@@ -212,4 +261,4 @@ if __name__ == '__main__':
     if args_open:
         webbrowser.open(f'http://localhost:{args_port}')
 
-    app.run(debug=args_debug, port=args_port)
+    socketio.run(app, debug=args_debug, port=args_port)

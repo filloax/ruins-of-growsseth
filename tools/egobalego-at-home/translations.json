@@ -10,11 +10,15 @@
         "add_structure": "Aggiungi struttura",
         "add_trade": "Aggiungi scambio",
 
+        "reload_mod_data": "Ricarica dati mod",
+        "send": "Invia",
+
         "header_structures": "STRUTTURE",
         "header_quest": "QUEST",
         "header_communications": "COMUNICAZIONI",
         "header_trades": "SCAMBI",
         "header_commands": "COMANDI",
+        "header_websocket": "WEBSOCKET",
 
         "help_commands": "Aiuto comandi",
         "help_communications": "Aiuto comunicazioni",
@@ -22,6 +26,7 @@
         "help_quest": "Aiuto quest",
         "help_structures": "Aiuto strutture",
         "help_trades": "Aiuto scambi",
+        "help_websocket": "Aiuto websocket",
 
         "yes": "Sì",
         "no": "No",
@@ -34,6 +39,8 @@
         "not_active_2": "Non attiva",
 
         "type": "Tipologia",
+
+        "command": "Comando",
 
         "command_type_not_set": "Tipo comando non impostato",
         "command_manual": "Manuale",
@@ -124,12 +131,16 @@
         "add_communication": "Add communication",
         "add_structure": "Add structure",
         "add_trade": "Add trade",
+
+        "reload_mod_data": "Reload mod data",
+        "send": "Send",
     
         "header_structures": "STRUCTURES",
         "header_quest": "QUEST",
         "header_communications": "COMMUNICATIONS",
         "header_trades": "TRADES",
         "header_commands": "COMMANDS",
+        "header_websocket": "WEBSOCKET",
 
         "help_commands": "Commands Help",
         "help_communications": "Communications Help",
@@ -137,6 +148,7 @@
         "help_quest": "Quest Help",
         "help_structures": "Structures Help",
         "help_trades": "Trades Help",
+        "help_websocket": "Websocket Help",
     
         "yes": "Yes",
         "no": "No",
@@ -149,6 +161,8 @@
         "not_active_2": "Not active",
     
         "type": "Type",
+
+        "command": "Command",
     
         "command_type_not_set": "Command type not set",
         "command_manual": "Manual",
