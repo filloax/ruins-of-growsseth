@@ -120,6 +120,7 @@
         "trade_all_extras": "Tutti gli oggetti non segreti della mod (\"gratis\")",
         "trade_json": "JSON dello scambio",
 
+        "no_websocket": "Connetti la mod al websocket per usare questa funzionalità",
         "mod_response_status": "Ultima risposta",
         "mod_response_details": "Dettagli",
         "mod_response_timestamp": "Timestamp"
@@ -245,6 +246,7 @@
         "trade_all_extras": "All non-secret mod items (for \"free\")",
         "trade_json": "Trade JSON",
 
+        "no_websocket": "Connect the mod to the websocket to use this function",
         "mod_response_status": "Last response",
         "mod_response_details": "Details",
         "mod_response_timestamp": "Timestamp"
