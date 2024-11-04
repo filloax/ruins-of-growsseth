@@ -126,7 +126,7 @@ class LiveUpdatesConnection private constructor(val server: MinecraftServer) : R
 
                 asyncLock.lockInterruptibly();
                 try {
-                    connectCondition.await(60, TimeUnit.SECONDS);
+                    connectCondition.await(retryTimeSeconds.toLong(), TimeUnit.SECONDS);
                 } catch (e: InterruptedException) {
                     logError("Interrupted while connecting [A]")
                     interrupted = true
