@@ -107,9 +107,7 @@ class LiveUpdatesConnection private constructor(val server: MinecraftServer) : R
                 logInfo("Attempting connection to $uri...")
 
                 val options = IO.Options.builder()
-                    .setExtraHeaders(mapOf(
-                        "apiKey" to listOf(WebConfig.dataSyncApiKey),
-                    ))
+                    .setExtraHeaders(mapOf("apiKey" to listOf(WebConfig.dataSyncApiKey)))
                     .build()
                 val newSocket = IO.socket(uri, options)
 
@@ -117,6 +115,7 @@ class LiveUpdatesConnection private constructor(val server: MinecraftServer) : R
                     logInfo("Connected to $uri")
                     success = true
                     fulfillCondition()
+                    newSocket.emit("mod_connect")
                 }
                 // Set up an error listener
                 newSocket.on(Socket.EVENT_CONNECT_ERROR) { args ->
@@ -138,6 +137,9 @@ class LiveUpdatesConnection private constructor(val server: MinecraftServer) : R
 
                 if (success) {
                     socket = newSocket
+                }
+                else {
+                    newSocket.off()
                 }
             } catch (e: InterruptedException) {
                 logError("Interrupted while connecting [B]")
@@ -329,6 +331,7 @@ class LiveUpdatesConnection private constructor(val server: MinecraftServer) : R
 
     fun stop() {
         logInfo("Stopping thread...")
+        socket?.emit("mod_disconnect")
         // Interrupt thread if sleeping
         running = false
         try {
