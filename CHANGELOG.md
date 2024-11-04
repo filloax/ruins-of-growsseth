@@ -3,8 +3,13 @@
 ## 0.12.0
 
 Added
+- [1.21] NeoForge support! Many changes had to be done under the hood (that also concern the Fabric version), let us know if you find any bugs!
+- [Web Console] The Live Update service (websocket connection) is now manageable from Egobalego at Home and is fully supported by the mod
 - New command /gtemplate, replaces /booktemplates to also support sign templates
 - Added note in the World Creation Tab to specify that the "Growsseth" preset might not generate the exact same world of the Twitch series
+
+Fixed
+- Fixed the Live Update service not closing the newly created sockets when failing to connect
 
 
 ## 0.11.1
