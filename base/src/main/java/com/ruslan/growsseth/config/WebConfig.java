@@ -10,8 +10,7 @@ import static com.ruslan.growsseth.config.GrowssethConfig.T_PREF;
 public final class WebConfig {
     @ConfigEntry(id = "webDataSync", translation = T_PREF + "webDataSync.name")
     @Comment(value = "CAREFUL: check the Wiki on GitHub for how to use this. Enables gamemaster-mode, allowing the " +
-            "player you decide to connect to to control the mod's features and more. Requires reloading the world.",
-            translation = T_PREF + "webDataSync.comment")
+            "player you decide to connect to to control the mod's features and more. Requires reloading the world.", translation = T_PREF + "webDataSync.comment")
     public static boolean webDataSync = false;
     @ConfigEntry(id = "dataSyncUrl", translation = T_PREF + "dataSyncUrl.name")
     @Comment(value = "Only connect to trusted sources!", translation = T_PREF + "dataSyncUrl.comment")
@@ -22,10 +21,11 @@ public final class WebConfig {
     public static String dataSyncApiKey = "";
     @ConfigEntry(id = "dataSyncReloadTime", translation = T_PREF + "dataSyncReloadTime.name")
     @Comment(value = "How much time (in minutes) must pass between each server query. Must be at least 10 seconds.", translation = T_PREF + "dataSyncReloadTime.comment")
-    public static float dataSyncReloadTime = 1f;
+    public static float dataSyncReloadTime = 5f;
 
     @ConfigEntry(id = "liveUpdateService", translation = T_PREF + "liveUpdateService.name")
-    @Comment(value = "CAREFUL: check the Wiki on GitHub for how to use this. Creates a websocket connection with the gamemaster, allowing them to control the mod in real time. Requires reloading the world.", translation = T_PREF + "liveUpdateService.comment")
+    @Comment(value = "CAREFUL: check the Wiki on GitHub for how to use this. Creates a websocket connection with the gamemaster, " +
+            "allowing them to control the mod in real time. Requires reloading the world.", translation = T_PREF + "liveUpdateService.comment")
     public static boolean liveUpdateService = false;
     @ConfigEntry(id = "liveUpdateUrl", translation = T_PREF + "liveUpdateUrl.name")
     @Comment(value = "Only connect to trusted sources!", translation = T_PREF + "liveUpdateUrl.comment")
