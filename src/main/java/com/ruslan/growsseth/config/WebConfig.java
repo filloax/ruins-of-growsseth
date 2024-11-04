@@ -11,12 +11,11 @@ import static com.ruslan.growsseth.config.GrowssethConfig.T_PREF;
 public final class WebConfig {
     @ConfigEntry(id = "webDataSync", type = EntryType.BOOLEAN, translation = T_PREF + "webDataSync.name")
     @Comment(value = "CAREFUL: check the Wiki on GitHub for how to use this. Enables gamemaster-mode, allowing the " +
-            "player you decide to connect to to control the mod's features and more. Requires reloading world.",
+            "player you decide to connect to to control the mod's features and more. Requires reloading the world.",
             translation = T_PREF + "webDataSync.comment")
     public static boolean webDataSync = false;
     @ConfigEntry(id = "dataSyncUrl", type = EntryType.STRING, translation = T_PREF + "dataSyncUrl.name")
-    @Comment(value = "Only connect to trusted sources!",
-            translation = T_PREF + "dataSyncUrl.comment")
+    @Comment(value = "Only connect to trusted sources!", translation = T_PREF + "dataSyncUrl.comment")
     public static String dataSyncUrl = "http://localhost:5000";
     @ConfigEntry(id = "dataSyncEndpoint", type = EntryType.STRING, translation = T_PREF + "dataSyncEndpoint.name")
     public static String dataSyncEndpoint = "server_data";
@@ -27,13 +26,12 @@ public final class WebConfig {
     public static float dataSyncReloadTime = 1f;
 
     @ConfigEntry(id = "liveUpdateService", type = EntryType.BOOLEAN, translation = T_PREF + "liveUpdateService.name")
-    @Comment(value = "WIP. If changed ingame, takes effect on world reload.", translation = T_PREF + "needsWorldReload.comment")
+    @Comment(value = "CAREFUL: check the Wiki on GitHub for how to use this. Creates a websocket connection with the gamemaster, allowing them to control the mod in real time. Requires reloading the world.", translation = T_PREF + "liveUpdateService.comment")
     public static boolean liveUpdateService = false;
     @ConfigEntry(id = "liveUpdateUrl", type = EntryType.STRING, translation = T_PREF + "liveUpdateUrl.name")
-    @Comment(value = "WIP")
-    public static String liveUpdateUrl = "";
+    @Comment(value = "Only connect to trusted sources!", translation = T_PREF + "liveUpdateUrl.comment")
+    public static String liveUpdateUrl = "http://localhost:5000";
     @ConfigEntry(id = "liveUpdatePort", type = EntryType.INTEGER, translation = T_PREF + "liveUpdatePort.name")
-    @Comment(value = "WIP")
     public static int liveUpdatePort = -1;
 
     @ConfigEntry(id = "remoteCommandExecution", type = EntryType.BOOLEAN, translation = T_PREF + "remoteCommandExecution.name")
