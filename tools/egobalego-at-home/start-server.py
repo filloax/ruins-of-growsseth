@@ -110,13 +110,15 @@ def switch_color_theme():
 
 # SocketIO Events
 
-@socketio.on('connect')
+@socketio.on('mod_connect')
 def handle_connect():
-    print("Websocket client connected")
+    print("Mod connected to websocket")
+    emit("mod_connect", broadcast=True)
 
-@socketio.on('disconnect')
+@socketio.on('mod_disconnect')
 def handle_disconnect():
-    print("Websocket client disconnected")
+    print("Mod disconnected from websocket")
+    emit("mod_disconnect", broadcast=True)
 
 @socketio.on('reload')
 def reload_minecraft():
@@ -262,4 +264,4 @@ if __name__ == '__main__':
     if args_open:
         webbrowser.open(f'http://localhost:{args_port}')
 
-    socketio.run(app, debug=True, port=args_port)   # TODO: CAMBIARE CON args_debug quando si ha finito
+    socketio.run(app, debug=args_debug, port=args_port)
