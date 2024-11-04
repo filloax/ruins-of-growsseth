@@ -5,11 +5,17 @@ document.addEventListener("DOMContentLoaded", function () {
     let main = document.querySelector('main');
     main.style.paddingBottom = footer.offsetHeight + 'px';
 
+    let noWebsocketWarning = document.getElementById("no-websocket");
+
+    let modResponse = document.getElementById("mod-response");
     let modResponseStatus = document.getElementById("mod-response-status");
     let modResponseTimestamp = document.getElementById("mod-response-timestamp");
     let modResponseDetails = document.getElementById("mod-response-details");
 
     let reloadButton = document.getElementById("reload-button");
+
+    let cardContainer = document.getElementById("card-container");
+    let allCardButtons = cardContainer.querySelectorAll("button");
 
     let dialogueCard = document.getElementById("websocket-dialogue-card");
     let toastCard = document.getElementById("websocket-toast-card");
@@ -56,6 +62,21 @@ document.addEventListener("DOMContentLoaded", function () {
     sendCommandButton.addEventListener("click", function () {
         let command = { "command": commandContent.value }
         socket.emit("cmd", command);
+    });
+
+
+    socket.on('mod_connect', function() {
+        allCardButtons.forEach(button => button.disabled = false);
+        reloadButton.disabled = false;
+        noWebsocketWarning.hidden = true;
+        modResponse.hidden = false;
+    });
+
+    socket.on('mod_disconnect', function() {
+        allCardButtons.forEach(button => button.disabled = true);
+        reloadButton.disabled = true;
+        noWebsocketWarning.hidden = false;
+        modResponse.hidden = true;
     });
 
 

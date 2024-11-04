@@ -9,7 +9,7 @@
                 <label>{{ translations.content }}</label>
             </div>
             <div class="row justify-content-center mt-3">
-                <button id="send-dialogue-button" class="col-auto btn btn-primary">
+                <button id="send-dialogue-button" class="col-auto btn btn-primary" disabled>
                     {% include 'icons/send.html' %} {{ translations.send }}
                 </button>
             </div>
@@ -41,7 +41,7 @@
                 <label>{{ translations.content }}</label>
             </div>
             <div class="row justify-content-center mt-3">
-                <button id="send-toast-button" class="col-auto btn btn-primary">
+                <button id="send-toast-button" class="col-auto btn btn-primary" disabled>
                     {% include 'icons/send.html' %} {{ translations.send }}
                 </button>
             </div>
@@ -60,7 +60,7 @@
                 <input id="command-content" class="form-control">
             </div>
             <div class="row justify-content-center mt-3">
-                <button id="send-command-button" class="col-auto btn btn-primary">
+                <button id="send-command-button" class="col-auto btn btn-primary" disabled>
                     {% include 'icons/send.html' %} {{ translations.send }}
                 </button>
             </div>

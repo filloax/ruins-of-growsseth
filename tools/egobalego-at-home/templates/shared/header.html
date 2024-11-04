@@ -30,15 +30,20 @@
         </div>
 
         {% if name == 'websocket' %}
-        <div class="row justify-content-center pb-3 {% if theme == 'ligth' %} bg-light {% else %} bg-light-subtle {% endif %}">
-            <div class="input-group mt-3" style="max-width: 400px;">
-                <span class="input-group-text col-5">{{ translations.mod_response_status }}</span>
-                <input id="mod-response-status" class="form-control" disabled>
-                <input id="mod-response-timestamp" class="form-control" disabled>
+        <div id="websocket-status">
+            <div id="no-websocket" class="row justify-content-center text-danger py-3 {% if theme == 'ligth' %} bg-light {% else %} bg-light-subtle {% endif %}">
+                {{ translations.no_websocket }}
             </div>
-            <div class="input-group mt-3" style="max-width: 500px;">
-                <span class="input-group-text col-3">{{ translations.mod_response_details }}</span>
-                <input id="mod-response-details" class="form-control" disabled>
+            <div id="mod-response" hidden class="row justify-content-center pb-3 {% if theme == 'ligth' %} bg-light {% else %} bg-light-subtle {% endif %}">
+                <div class="input-group mt-3" style="max-width: 400px;">
+                    <span class="input-group-text col-5">{{ translations.mod_response_status }}</span>
+                    <input id="mod-response-status" class="form-control" disabled>
+                    <input id="mod-response-timestamp" class="form-control" disabled>
+                </div>
+                <div class="input-group mt-3" style="max-width: 500px;">
+                    <span class="input-group-text col-3">{{ translations.mod_response_details }}</span>
+                    <input id="mod-response-details" class="form-control" disabled>
+                </div>
             </div>
         </div>
         {% endif %}
