@@ -229,6 +229,7 @@
         "structure_type_not_set": "Structure type not set",
     
         "variant": "Variant",
+        "zombie": "Zombie",
         "golem_variant_plains": "Plains",
         "golem_variant_desert": "Desert",
         "golem_variant_savanna": "Savanna",
