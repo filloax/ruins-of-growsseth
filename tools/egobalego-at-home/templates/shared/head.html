@@ -13,5 +13,8 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='css/home-style.css') }}" />
     {% endif %}
 
-    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+    {% if name != 'home' %}
+        <script src="{{ url_for('static', filename='js/socket.io.min.js') }}"></script>
+    {% endif %}
 </head>
