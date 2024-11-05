@@ -36,6 +36,8 @@ document.addEventListener("DOMContentLoaded", function () {
     let sendCommandButton = commandCard.querySelector("#send-command-button");
     let commandContent = commandCard.querySelector("#command-content");
 
+    let lastClickedButton;
+
 
     socket.emit("is_mod_connected", (response) => {
         if (response === true)
@@ -47,6 +49,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     reloadButton.addEventListener("click", function () {
         socket.emit("reload");
+        lastClickedButton = reloadButton;
     });
 
     toastType.onchange = function () {
@@ -57,6 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
     sendDialogueButton.addEventListener("click", function () {
         let dialogue = { "content": dialogueContent.value }
         socket.emit("rdialogue", dialogue);
+        lastClickedButton = sendDialogueButton;
     });
 
     sendToastButton.addEventListener("click", function () {
@@ -66,11 +70,13 @@ document.addEventListener("DOMContentLoaded", function () {
         if (toastContent.value !== "")
             toast["message"] = toastContent.value
         socket.emit("toast", toast);
+        lastClickedButton = sendToastButton;
     });
 
     sendCommandButton.addEventListener("click", function () {
         let command = { "command": commandContent.value }
         socket.emit("cmd", command);
+        lastClickedButton = sendCommandButton;
     });
 
 
@@ -87,9 +93,9 @@ document.addEventListener("DOMContentLoaded", function () {
         let response = JSON.parse(responseString);
         modResponseStatus.value = response.status;
         if (response.status === "success")
-            modResponseStatus.style.color = "green";
+            reportResponse(true)
         else
-            modResponseStatus.style.color = "red";
+            reportResponse(false)
         modResponseTimestamp.value = getCurrentTime();
         delete response.status
         modResponseDetails.value = JSON.stringify(response)
@@ -108,6 +114,16 @@ document.addEventListener("DOMContentLoaded", function () {
         reloadButton.disabled = true;
         noWebsocketWarning.hidden = false;
         modResponse.hidden = true;
+    }
+
+    async function reportResponse(isSuccess) {
+        modResponseStatus.style.color = isSuccess ? "green" : "red";
+        lastClickedButton.classList.remove("btn-primary");
+        lastClickedButton.classList.add(isSuccess ? "btn-success" : "btn-danger");
+        setTimeout(function () {
+            lastClickedButton.classList.remove(isSuccess ? "btn-success" : "btn-danger");
+            lastClickedButton.classList.add("btn-primary");
+        }, 1000);
     }
 });
 
