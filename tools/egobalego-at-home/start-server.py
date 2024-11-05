@@ -23,66 +23,44 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 
 @app.route('/')
 def home():
-    return render_template(
-        'home.html', name="home", theme = color_theme,
-        help_title = translations[lang]["help_home"],
-        help_content = md_content(lang + "/help_home"),
-        translations = translations.get(lang, translations[lang])
-    )
+    return render_custom_template('home')
 
 @app.route('/commands.html')
 def commands():
-    return render_template(
-        'commands.html', name="commands", theme = color_theme,
-        help_title = translations[lang]["help_commands"],
-        help_content = md_content(lang + "/help_commands"),
-        translations = translations.get(lang, translations[lang])
-    )
+    return render_custom_template('commands')
 
 @app.route('/trades.html')
 def trades():
-    return render_template(
-        'trades.html', name="trades", theme = color_theme,
-        help_title = translations[lang]["help_trades"],
-        help_content = md_content(lang + "/help_trades"),
-        translations = translations.get(lang, translations[lang])
-    )
+    return render_custom_template('trades')
 
 @app.route('/communications.html')
 def messages():
-    return render_template(
-        'communications.html', name="communications", theme = color_theme,
-        help_title = translations[lang]["help_communications"],
-        help_content = md_content(lang + "/help_communications"),
-        translations = translations.get(lang, translations[lang])
-    )
+    return render_custom_template('communications')
 
 @app.route('/quest-steps.html')
 def quest_steps():
-    return render_template(
-        'quest-steps.html', name="quest-steps", theme = color_theme,
-        help_title = translations[lang]["help_quest"],
-        help_content = md_content(lang + "/help_quest"),
-        translations = translations.get(lang, translations[lang])
-    )
+    return render_custom_template('quest-steps', help_key="help_quest")
 
 @app.route('/structures.html')
 def structures():
-    return render_template(
-        'structures.html', name="structures", theme = color_theme,
-        help_title = translations[lang]["help_structures"],
-        help_content = md_content(lang + "/help_structures"),
-        translations = translations.get(lang, translations[lang])
-    )
+    return render_custom_template('structures')
 
 @app.route('/websocket.html')
 def websocket():
-    return render_template(
-        'websocket.html', name="websocket", theme = color_theme,
-        help_title = translations[lang]["help_websocket"],
-        help_content = md_content(lang + "/help_websocket"),
-        translations = translations.get(lang, translations[lang])
-    )
+    return render_custom_template('websocket')
+
+
+def render_custom_template(page_name, help_key = None):
+    if help_key is None:
+        help_key = f"help_{page_name}"
+    params = {
+        'name': page_name,
+        'theme': color_theme,
+        'help_title': translations[lang][help_key],
+        'help_content': md_content(lang + f"/{help_key}"),
+        'translations': translations.get(lang, translations[lang])
+    }
+    return render_template(f"{page_name}.html", **params)
 
 
 @app.route('/data_receiver', methods=['POST'])
@@ -110,15 +88,25 @@ def switch_color_theme():
 
 # SocketIO Events
 
+mod_connected_to_socket = False
+
 @socketio.on('mod_connect')
 def handle_connect():
+    global mod_connected_to_socket
+    mod_connected_to_socket = True
     print("Mod connected to websocket")
     emit("mod_connect", broadcast=True)
 
 @socketio.on('mod_disconnect')
 def handle_disconnect():
+    global mod_connected_to_socket
+    mod_connected_to_socket = False
     print("Mod disconnected from websocket")
     emit("mod_disconnect", broadcast=True)
+
+@socketio.on('is_mod_connected')
+def handle_disconnect():
+    return mod_connected_to_socket
 
 @socketio.on('reload')
 def reload_minecraft():

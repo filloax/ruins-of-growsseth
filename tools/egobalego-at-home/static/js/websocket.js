@@ -12,7 +12,8 @@ document.addEventListener("DOMContentLoaded", function () {
     let modResponseTimestamp = document.getElementById("mod-response-timestamp");
     let modResponseDetails = document.getElementById("mod-response-details");
 
-    let reloadButton = document.getElementById("reload-button");
+    let reloadButtonDiv = document.getElementById("reload-button-div");
+    let reloadButton = reloadButtonDiv.querySelector("#reload-button");
 
     let cardContainer = document.getElementById("card-container");
     let allCardButtons = cardContainer.querySelectorAll("button");
@@ -34,6 +35,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let sendCommandButton = commandCard.querySelector("#send-command-button");
     let commandContent = commandCard.querySelector("#command-content");
+
+
+    socket.emit("is_mod_connected", (response) => {
+        if (response === true)
+            enableConsole()
+        else
+            disableConsole()
+    });
 
 
     reloadButton.addEventListener("click", function () {
@@ -66,17 +75,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     socket.on('mod_connect', function() {
-        allCardButtons.forEach(button => button.disabled = false);
-        reloadButton.disabled = false;
-        noWebsocketWarning.hidden = true;
-        modResponse.hidden = false;
+        enableConsole()
     });
 
     socket.on('mod_disconnect', function() {
-        allCardButtons.forEach(button => button.disabled = true);
-        reloadButton.disabled = true;
-        noWebsocketWarning.hidden = false;
-        modResponse.hidden = true;
+        disableConsole()
     });
 
 
@@ -91,6 +94,21 @@ document.addEventListener("DOMContentLoaded", function () {
         delete response.status
         modResponseDetails.value = JSON.stringify(response)
     });
+
+
+    function enableConsole() {
+        allCardButtons.forEach(button => button.disabled = false);
+        reloadButton.disabled = false;
+        noWebsocketWarning.hidden = true;
+        modResponse.hidden = false;
+    }
+
+    function disableConsole() {
+        allCardButtons.forEach(button => button.disabled = true);
+        reloadButton.disabled = true;
+        noWebsocketWarning.hidden = false;
+        modResponse.hidden = true;
+    }
 });
 
 
