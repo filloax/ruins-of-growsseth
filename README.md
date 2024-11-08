@@ -1,6 +1,6 @@
 # Ruins of Growsseth
 
-<img src="./src/main/resources/assets/growsseth/icon.png" alt="alt text" width="250" height="250">
+<img src="./src/main/resources/assets/growsseth/icon.png" alt="Mod icon" width="250" height="250">
 
 ## [**README IN ITALIANO QUA!**](docs/README_ITA.md)
 
@@ -34,7 +34,7 @@ The mod currently is only available for Fabric, and requires [Fabric API](https:
 
 Future plans include releasing the mod for Neoforge and other 1.20.x (and future versions) too.
 
-The mod also includes [Fx-Lib](https://github.com/filloax/FX-Lib/), so it's not needed to be installed (for now).
+The mod also includes [FilloaxLib](https://github.com/filloax/filloaxlib/), so it's not needed to be installed (for now).
 
 ### Credits
 

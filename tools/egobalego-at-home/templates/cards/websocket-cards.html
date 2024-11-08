@@ -1,0 +1,69 @@
+<div id="websocket-dialogue-card" class="row justify-content-center">
+    <div class="card bg-dark-subtle px-3" style="max-width: 550px;">
+        <div class="card-body g-0">
+            <div class="row justify-content-center">
+                {{ translations.communication_dialogue }}
+            </div>
+            <div class="form-floating mt-3">
+                <textarea id="dialogue-content" class="form-control" style="height: 100px"></textarea>
+                <label>{{ translations.content }}</label>
+            </div>
+            <div class="row justify-content-center mt-3">
+                <button id="send-dialogue-button" class="col-auto btn btn-primary" disabled>
+                    {% include 'icons/send.html' %} {{ translations.send }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="websocket-toast-card" class="row justify-content-center">
+    <div class="card mt-3 bg-dark-subtle p-3 pb-0" style="max-width: 550px;">
+        <div class="card-body g-0">
+            <div class="row input-group g-0">
+                <select id="toast-type" class="form-select">
+                    <option value="toast-simple" selected>{{ translations.communication_toast_simple }}</option>
+                    <option value="toast-with-icon">{{ translations.communication_toast_with_icon }}</option>
+                </select>
+            </div>
+            <div class="row input-group g-0 mt-3">
+                <span class="input-group-text col-4">{{ translations.title }}</span>
+                <input id="toast-title" class="form-control">
+            </div>
+            <div id="toast-icon" class="row input-group g-0 mt-3" hidden>
+                <span class="input-group-text col-4">{{ translations.namespace }}</span>
+                <input id="namespace" class="form-control" value="minecraft">
+                <span class="input-group-text col-auto">{{ translations.id }}</span>
+                <input id="item-id" class="form-control" value="stone">
+            </div>
+            <div class="form-floating mt-3">
+                <textarea id="toast-content" class="form-control" style="height: 100px"></textarea>
+                <label>{{ translations.content }}</label>
+            </div>
+            <div class="row justify-content-center mt-3">
+                <button id="send-toast-button" class="col-auto btn btn-primary" disabled>
+                    {% include 'icons/send.html' %} {{ translations.send }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="websocket-command-card" class="row justify-content-center">
+    <div class="card mt-3 bg-dark-subtle px-3" style="max-width: 550px;">
+        <div class="card-body g-0">
+            <div class="row justify-content-center">
+                {{ translations.command }}
+            </div>
+            <div class="row input-group g-0 mt-3">
+                <span class="input-group-text col-auto">/</span>
+                <input id="command-content" class="form-control">
+            </div>
+            <div class="row justify-content-center mt-3">
+                <button id="send-command-button" class="col-auto btn btn-primary" disabled>
+                    {% include 'icons/send.html' %} {{ translations.send }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
