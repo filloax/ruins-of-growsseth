@@ -8,4 +8,4 @@ Four distinct events can be sent:
 
 If the WebSocket is not connected, no events can be sent, and the buttons will be disabled. If they are active, clicking on them will send the corresponding event to the mod, turning green on success or red on failure.
 
-At the top of the page (if there is connection), the latest response from the mod can be viewed along with the corresponding timestamp, and in case of an error, details are printed on the right.
+At the top of the page (if there is connection), the latest response from the mod can be viewed along with the corresponding timestamp, and eventual details are shown on the right.

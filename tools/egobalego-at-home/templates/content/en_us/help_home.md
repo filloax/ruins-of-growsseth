@@ -9,7 +9,7 @@ The app is divided into five main sections, reachable from the header:
 *   **COMMUNICATIONS**: to manage various communications, such as sending notifications, making the researcher say things, making him write diaries or replace pre-set ones, and rewriting the books present in the structures;
 *   **TRADES**: to add trades to the researcher's repertoire;
 *   **COMMANDS**: to execute manual commands or mod-specific ones;
-*   **WEBSOCKET**: to send simple events (dialogues, notifications etc.) to the mod in real time, without having to wait for it to reload.
+*   **WEBSOCKET**: to send simple events (like dialogues, notifications etc.) to the mod in real time, without having to wait for it to reload.
 
 If it's the first time you visit a section, make sure to **read the corresponding help** before doing anything (you can open it from the question mark in the top right corner of the page), and always keep in mind these infos:
 
