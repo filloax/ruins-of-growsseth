@@ -9,7 +9,7 @@ Il sito è diviso in cinque sezioni principali, accessibili dall'header:
 *   **COMUNICAZIONI**: per gestire comunicazioni di vario genere, come mandare notifiche, far dire cose al ricercatore, fargli scrivere diari o sostituire quelli preimpostati, e riscrivere i libri presenti nelle strutture;
 *   **SCAMBI**: per aggiungere scambi al repertorio del ricercatore;
 *   **COMANDI**: per eseguire comandi manuali o specifici della mod;
-*   **WEBSOCKET**: per mandare eventi semplici (dialoghi, notifiche ecc.) alla mod in tempo reale, senza dover aspettare che ricarichi per conto proprio.
+*   **WEBSOCKET**: per mandare eventi semplici (come dialoghi, notifiche ecc.) alla mod in tempo reale, senza dover aspettare che ricarichi per conto proprio.
 
 Mi raccomando, la prima volta che entri in una sezione del sito assicurati prima di tutto di **leggere l'aiuto** corrispondente (puoi aprirlo dai punti di domanda in alto a destra), e tieni sempre a mente queste cose:
 
