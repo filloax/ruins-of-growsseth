@@ -8,4 +8,4 @@ Questa è la sezione per il controllo della mod tramite WebSocket, un sistema tr
 
 Se il WebSocket non è collegato non sarà possibile inviare nessun evento e i pulsanti saranno disattivati. Se sono attivi cliccarci sopra manderà l'evento corrispondente alla mod, e si coloreranno di verde in caso di successo, di rosso in caso di fallimento.
 
-In alto (se c'è connessione) si può visualizzare l'ultima risposta della mod con il timestamp corrispondente, e in caso di errore i dettagli vengono stampati a destra.
+In alto (se c'è connessione) si può visualizzare l'ultima risposta della mod con il timestamp corrispondente, ed eventuali dettagli vengono mostrati a destra.
