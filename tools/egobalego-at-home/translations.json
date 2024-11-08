@@ -26,7 +26,7 @@
         "help_quest": "Aiuto quest",
         "help_structures": "Aiuto strutture",
         "help_trades": "Aiuto scambi",
-        "help_websocket": "Aiuto websocket",
+        "help_websocket": "Aiuto WebSocket",
 
         "yes": "Sì",
         "no": "No",
@@ -120,7 +120,7 @@
         "trade_all_extras": "Tutti gli oggetti non segreti della mod (\"gratis\")",
         "trade_json": "JSON dello scambio",
 
-        "no_websocket": "Connetti la mod al websocket per usare questa funzionalità",
+        "no_websocket": "Connetti la mod al WebSocket per usare questa funzionalità",
         "mod_response_status": "Ultima risposta",
         "mod_response_details": "Dettagli",
         "mod_response_timestamp": "Timestamp"
@@ -153,7 +153,7 @@
         "help_quest": "Quest Help",
         "help_structures": "Structures Help",
         "help_trades": "Trades Help",
-        "help_websocket": "Websocket Help",
+        "help_websocket": "WebSocket Help",
     
         "yes": "Yes",
         "no": "No",
@@ -247,7 +247,7 @@
         "trade_all_extras": "All non-secret mod items (for \"free\")",
         "trade_json": "Trade JSON",
 
-        "no_websocket": "Connect the mod to the websocket to use this function",
+        "no_websocket": "Connect the mod to the WebSocket to use this function",
         "mod_response_status": "Last response",
         "mod_response_details": "Details",
         "mod_response_timestamp": "Timestamp"
