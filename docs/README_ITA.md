@@ -1,6 +1,6 @@
 # Ruins of Growsseth
 
-<img src="../src/main/resources/assets/growsseth/icon.png" alt="alt text" width="250" height="250">
+<img src="../src/main/resources/assets/growsseth/icon.png" alt="Mod icon" width="250" height="250">
 
 Nota per gli sviluppatori: questo branch crea e sovrascrive automaticamente la [build nightly](https://github.com/filloax/ruins-of-growsseth/releases/tag/nightly-release-1.21) a ogni push.
 
@@ -29,7 +29,7 @@ Per segnalare bug c'è la sezione [Issues](https://github.com/filloax/ruins-of-g
 La mod è attualmente disponibile per Fabric, e richiede [Fabric API](https://modrinth.com/mod/fabric-api) e [Resourceful Config](https://modrinth.com/mod/resourceful-config). 
 [Mod Menu](https://modrinth.com/mod/modmenu) è altamente consigliata per impostazioni visibili ingame.
 
-La mod include [Fx-Lib](https://github.com/filloax/FX-Lib/), ma in futuro potrebbe essere richiesta l'installazione a parte.
+La mod include [FilloaxLib](https://github.com/filloax/filloaxlib/), ma in futuro potrebbe essere richiesta l'installazione a parte.
 
 ### Credits
 

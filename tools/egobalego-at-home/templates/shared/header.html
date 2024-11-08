@@ -1,9 +1,17 @@
 <header class="sticky-top bg-white">
     <div class="container-fluid">
-        <div class="row justify-content-center pb-2">
-            <div class="col-1"></div>
+        <div class="row justify-content-center pb-2 {% if theme == 'dark' %} bg-light-subtle bg-gradient {% endif %}">
+            <div class="col-1 d-flex justify-content-start align-items-end">
+                <button id="switch-theme-button" class="btn btn-link">
+                    {% if theme == 'light' %}
+                        {% include 'icons/theme-light.html' %}
+                    {% else %}
+                        {% include 'icons/theme-dark.html' %}
+                    {% endif %}
+                </button>
+            </div>
             <div class="col text-center">
-                <a href="/" class="title-font text-decoration-none text-black">EGOBALEGO AT HOME</a>
+                <a href="/" class="title-font text-decoration-none {% if theme == 'light' %} text-black {% else %} text-white {% endif %}">EGOBALEGO AT HOME</a>
             </div>
             <div class="col-1 d-flex justify-content-end align-items-end">
                 <button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#modal-help" {% if name == "home" %}hidden{% endif %}>
@@ -13,11 +21,32 @@
         </div>
 
         <div class="row btn-group d-flex">
-            <a href="/structures.html" class="col-6 col-lg-2 btn btn-dark rounded-0 {% if name == 'structures' %}active{% endif %}">{{ translations.header_structures }}</a>
-            <a href="/quest-steps.html" class="col-6 col-lg-2 btn btn-dark {% if name == 'quest-steps' %}active{% endif %}">{{ translations.header_quest }}</a>
+            <a href="/structures.html" class="col-4 col-lg-2 btn btn-dark rounded-0 {% if name == 'structures' %}active{% endif %}">{{ translations.header_structures }}</a>
+            <a href="/quest-steps.html" class="col-4 col-lg-2 btn btn-dark {% if name == 'quest-steps' %}active{% endif %}">{{ translations.header_quest }}</a>
             <a href="/communications.html" class="col-4 col-lg-2 btn btn-dark {% if name == 'communications' %}active{% endif %}">{{ translations.header_communications }}</a>
             <a href="/trades.html" class="col-4 col-lg-2 btn btn-dark {% if name == 'trades' %}active{% endif %}">{{ translations.header_trades }}</a>
             <a href="/commands.html" class="col-4 col-lg-2 btn btn-dark rounded-0 {% if name == 'commands' %}active{% endif %}">{{ translations.header_commands }}</a>
+            <a href="/websocket.html" class="col-4 col-lg-2 btn btn-dark rounded-0 {% if name == 'websocket' %}active{% endif %}">{{ translations.header_websocket }}</a>
         </div>
+
+        {% if name == 'websocket' %}
+        <div id="websocket-status">
+            <div id="no-websocket" class="row justify-content-center text-danger py-3 {% if theme == 'ligth' %} bg-light {% else %} bg-light-subtle {% endif %}">
+                {{ translations.no_websocket }}
+            </div>
+            <div id="mod-response" hidden class="row justify-content-center pb-3 {% if theme == 'ligth' %} bg-light {% else %} bg-light-subtle {% endif %}">
+                <div class="input-group mt-3" style="max-width: 400px;">
+                    <span class="input-group-text col-5">{{ translations.mod_response_status }}</span>
+                    <input id="mod-response-status" class="form-control" disabled>
+                    <input id="mod-response-timestamp" class="form-control" disabled>
+                </div>
+                <div class="input-group mt-3" style="max-width: 500px;">
+                    <span class="input-group-text col-3">{{ translations.mod_response_details }}</span>
+                    <input id="mod-response-details" class="form-control" disabled>
+                </div>
+            </div>
+        </div>
+        {% endif %}
     </div>
+    <script src="{{ url_for('static', filename='js/header.js') }}"></script>
 </header>

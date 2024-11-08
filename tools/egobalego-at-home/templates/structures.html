@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
+<html data-bs-theme="{{theme}}">
     {% include 'shared/head.html' %}
     <body>
         {% include 'shared/header.html' %}
@@ -16,9 +16,10 @@
                 {% include 'modals/modal-help.html' %}
             {% endwith %}
         </main>
+        {% include 'shared/footer.html' %}
     </body>
-    <script defer> var defaultPreview = "{{url_for('static', filename='img/structure/none.png')}}" </script>
-    <script defer> var activeText = "{{translations.active_2}}" </script>
-    <script defer> var notActiveText = "{{translations.not_active_2}}" </script>
-    <script src="{{ url_for('static', filename='js/structures.js') }}" defer></script>
+    <script> var defaultPreview = "{{url_for('static', filename='img/structure/none.png')}}" </script>
+    <script> var activeText = "{{translations.active_2}}" </script>
+    <script> var notActiveText = "{{translations.not_active_2}}" </script>
+    <script src="{{ url_for('static', filename='js/structures.js') }}"></script>
 </html>

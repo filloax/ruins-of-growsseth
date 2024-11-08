@@ -1,17 +1,32 @@
 # Changelog
 
-# 0.11.1
+## 0.12.0
 
 Added
-- Right-clicking the researcher when he is still speaking will skip the current chat message
-
-Tweaked
-- First advancement now requires interacting with the researcher, instead of just finding his tent
-- Improved terrain adaptation for most of the structures, should fix the "half of the structure spawns in midair" problem
+- [1.21] NeoForge support! Many changes had to be done under the hood (that also concern the Fabric version), let us know if you find any bugs!
+- [Web Console] The Live Update service (websocket connection) is now manageable from Egobalego at Home and is fully supported by the mod
+- New command /gtemplate, replaces /booktemplates to also support sign templates
+- Added note in the World Creation Tab to specify that the "Growsseth" preset might not generate the exact same world of the Twitch series
 
 Fixed
-- Fixed researcher's tent notes not using templates
-- Lowered water level of conduit church nbt, to avoid water blobs when it spawns too high up
+- Fixed the Live Update service not closing the newly created sockets when failing to connect
+
+
+## 0.11.1
+
+Added
+- Right-clicking on the researcher mid-dialogue now skips the current chat message
+- [Web Console] Added dark theme to Egobalego at Home (download it from the GitHub releases!)
+
+Tweaked
+- The first advancement now requires interacting with the researcher directly, instead of just reaching his tent
+- Improved terrain adaptation for most of the structures, should fix the instances where some structures would spawn suspended in midair
+- Added logging to painting placement fixes during structure generation, to prevent confusion when using mods that fix the same problem
+
+Fixed
+- Fixed an instance of the researcher's tent notes not using templates (they always appeared in italian)
+- Lowered the water level of the conduit church nbt, to avoid the appearance of water blobs when it spawns too high up
+- Corrected the durability values for certain items found in the enchanting tower and conduit church
 
 
 ## 0.11.0

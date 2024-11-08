@@ -1,0 +1,10 @@
+<footer class="fixed-bottom {% if theme == 'ligth' %} bg-light {% else %} bg-light-subtle {% endif %}">
+    <div id="reload-button-div" class="row justify-content-center py-4" {% if name != 'websocket' %} hidden {% endif %}>
+        <button id="reload-button" class="col-auto btn btn-lg btn-primary" {% if name == 'websocket' %} disabled {% endif %}>
+            {% include 'icons/reload.html' %} {{ translations.reload_mod_data }}
+        </button>
+    </div>
+    {% if name != 'websocket' %}
+        <script src="{{ url_for('static', filename='js/footer.js') }}"></script>
+    {% endif %}
+</footer>

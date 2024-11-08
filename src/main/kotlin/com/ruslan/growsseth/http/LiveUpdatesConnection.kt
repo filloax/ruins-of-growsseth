@@ -35,6 +35,7 @@ import kotlin.concurrent.thread
  * from remote.
  * Also allow additional remote commands:
  * - Playing researcher dialogues
+ * - Sending notifications
  * - Remote command execution
  * Class lifetime should be same as the server, just in case.
  */
@@ -103,23 +104,22 @@ class LiveUpdatesConnection private constructor(val server: MinecraftServer) : R
             }
 
             try {
-                RuinsOfGrowsseth.LOGGER.info("LiveUpdatesConnection | Attempting connection to $uri...")
+                logInfo("Attempting connection to $uri...")
 
                 val options = IO.Options.builder()
-                    .setExtraHeaders(mapOf(
-                        "apiKey" to listOf(WebConfig.dataSyncApiKey),
-                    ))
+                    .setExtraHeaders(mapOf("apiKey" to listOf(WebConfig.dataSyncApiKey)))
                     .build()
                 val newSocket = IO.socket(uri, options)
 
                 newSocket.on(Socket.EVENT_CONNECT) {
-                    RuinsOfGrowsseth.LOGGER.info("LiveUpdatesConnection | Connected to $uri")
+                    logInfo("Connected to $uri")
                     success = true
                     fulfillCondition()
+                    newSocket.emit("mod_connect")
                 }
                 // Set up an error listener
                 newSocket.on(Socket.EVENT_CONNECT_ERROR) { args ->
-                    System.err.println("LiveUpdatesConnection | Connection error: " + args[0])
+                    logError("Connection error: " + args[0])
                     fulfillCondition()
                 }
 
@@ -127,9 +127,9 @@ class LiveUpdatesConnection private constructor(val server: MinecraftServer) : R
 
                 asyncLock.lockInterruptibly();
                 try {
-                    connectCondition.await(60, TimeUnit.SECONDS);
+                    connectCondition.await(retryTimeSeconds.toLong(), TimeUnit.SECONDS);
                 } catch (e: InterruptedException) {
-                    RuinsOfGrowsseth.LOGGER.error("LiveUpdatesConnection | interrupted while connecting [A]")
+                    logError("Interrupted while connecting [A]")
                     interrupted = true
                 } finally {
                     asyncLock.unlock();
@@ -138,16 +138,19 @@ class LiveUpdatesConnection private constructor(val server: MinecraftServer) : R
                 if (success) {
                     socket = newSocket
                 }
+                else {
+                    newSocket.off()
+                }
             } catch (e: InterruptedException) {
-                RuinsOfGrowsseth.LOGGER.error("LiveUpdatesConnection | interrupted while connecting [B]")
+                logError("Interrupted while connecting [B]")
                 interrupted = true
             } catch (e: Exception) {
-                RuinsOfGrowsseth.LOGGER.error("LiveUpdatesConnection | failed in connection: " + e.message)
+                logError("Failed in connection: " + e.message)
             }
 
             if (!success) {
                 socket = null
-                RuinsOfGrowsseth.LOGGER.info("LiveUpdatesConnection | Retrying in ${retryTimeSeconds}s...")
+                logInfo("Retrying in ${retryTimeSeconds}s...")
                 try {
                     Thread.sleep(retryTimeSeconds * 1000L)
                 } catch (_: InterruptedException) {
@@ -162,8 +165,8 @@ class LiveUpdatesConnection private constructor(val server: MinecraftServer) : R
 
     private fun sendOnSocket(message: String) {
         try {
-            RuinsOfGrowsseth.LOGGER.info("LiveUpdatesConnection | Sending message on socket: $message")
-            socket?.emit(message) ?: run {
+            logInfo("Sending message on socket: $message")
+            socket?.emit("mod_response", message) ?: run {
                 RuinsOfGrowsseth.LOGGER.error("Couldn't send message $message: socket null")
             }
         } catch (e: Exception) {
@@ -195,24 +198,24 @@ class LiveUpdatesConnection private constructor(val server: MinecraftServer) : R
     }
 
     private fun onRefreshMessage() {
-        RuinsOfGrowsseth.LOGGER.info("LiveUpdatesConnection | Refresh command received, updating data sync...")
+        logInfo("Refresh command received, updating data sync...")
         GrowssethApi.current.reload().thenAccept { success ->
             if (success) {
-                RuinsOfGrowsseth.LOGGER.info("LiveUpdatesConnection | Data sync update success")
+                logInfo("Data sync update success")
                 sendSuccess()
             } else {
-                RuinsOfGrowsseth.LOGGER.error("LiveUpdatesConnection | Data sync update failure")
+                logError("Data sync update failure")
                 sendFailure()
             }
         }
     }
 
     private fun onDialogueMessage(message: String) {
-        RuinsOfGrowsseth.LOGGER.info("LiveUpdatesConnection | Received dialogue message $message")
+        logInfo("Received dialogue message $message")
         val dialogueEntry: DialogueEntry = try {
             json.decodeFromString(DialogueEntry.serializer(), message)
         } catch (e: Exception) {
-            RuinsOfGrowsseth.LOGGER.error("LiveUpdatesConnection | Wrong dialogue format: ${e.message}")
+            logError("Wrong dialogue format: ${e.message}")
             e.printStackTrace()
             sendFailure(e.message)
             return
@@ -231,7 +234,7 @@ class LiveUpdatesConnection private constructor(val server: MinecraftServer) : R
             }
         }
 
-        RuinsOfGrowsseth.LOGGER.info("LiveUpdatesConnection | Sent the dialogue successfully to $c players")
+        logInfo("Sent the dialogue successfully to $c players")
         sendSuccess(mapOf("amount" to c))
     }
 
@@ -250,11 +253,11 @@ class LiveUpdatesConnection private constructor(val server: MinecraftServer) : R
     )
 
     private fun onNotificationMessage(message: String) {
-        RuinsOfGrowsseth.LOGGER.info("LiveUpdatesConnection | Received toast message $message")
+        logInfo("Received toast message $message")
         val toastData: ToastData = try {
             json.decodeFromString(message)
         } catch (e: Exception) {
-            RuinsOfGrowsseth.LOGGER.error("LiveUpdatesConnection | Wrong toast format: ${e.message}")
+            logError("Wrong toast format: ${e.message}")
             e.printStackTrace()
             sendFailure(e.message)
             return
@@ -293,7 +296,7 @@ class LiveUpdatesConnection private constructor(val server: MinecraftServer) : R
                     onCommandMessage(args[0].toString())
                 }
             } ?: run {
-                RuinsOfGrowsseth.LOGGER.error("LiveUpdatesConnection | Socket is null!")
+                logError("Socket is null!")
             }
             while (running && socket?.isActive == true) {
                 if (!running) break // in case not running but socket returned
@@ -303,16 +306,16 @@ class LiveUpdatesConnection private constructor(val server: MinecraftServer) : R
                 Thread.sleep(1000)
             }
         } catch (e: InterruptedException) {
-            RuinsOfGrowsseth.LOGGER.info("LiveUpdatesConnection | Interrupted")
+            logInfo("Interrupted")
         } catch (e: Exception) {
-            RuinsOfGrowsseth.LOGGER.error("LiveUpdatesConnection | Other error in listening: " + e.stackTraceToString())
+            logError("Other error in listening: " + e.stackTraceToString())
         }
 
         try {
             socket?.close()
             socket = null
         } catch (e: Exception) {
-            RuinsOfGrowsseth.LOGGER.error("LiveUpdatesConnection | error when closing connection: " + e.stackTraceToString())
+            logError("Error when closing connection: " + e.stackTraceToString())
         }
     }
 
@@ -322,12 +325,13 @@ class LiveUpdatesConnection private constructor(val server: MinecraftServer) : R
                 connect()
                 listen()
             }
-            RuinsOfGrowsseth.LOGGER.info("LiveUpdatesConnection | stopped")
+            logInfo("Stopped")
         }
     }
 
     fun stop() {
-        RuinsOfGrowsseth.LOGGER.info("LiveUpdatesConnection | stopping thread...")
+        logInfo("Stopping thread...")
+        socket?.emit("mod_disconnect")
         // Interrupt thread if sleeping
         running = false
         try {
@@ -335,5 +339,13 @@ class LiveUpdatesConnection private constructor(val server: MinecraftServer) : R
         } catch (e: Exception) {
             RuinsOfGrowsseth.LOGGER.error("Error in interrupting the LiveUpdatesConnection thread: ${e.stackTraceToString()}")
         }
+    }
+
+    private fun logInfo(message: String) {
+        RuinsOfGrowsseth.LOGGER.info("LiveUpdatesConnection | $message")
+    }
+
+    private fun logError(message: String) {
+        RuinsOfGrowsseth.LOGGER.error("LiveUpdatesConnection | $message")
     }
 }
