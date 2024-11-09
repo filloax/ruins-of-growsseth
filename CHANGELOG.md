@@ -9,6 +9,7 @@ Added
 - Added note in the World Creation Tab to specify that the "Growsseth" preset might not generate the exact same world of the Twitch series
 
 Fixed
+- Fixed simple notifications appearing in-game like those with an icon
 - Fixed the Live Update service not closing the newly created sockets when failing to connect
 
 
