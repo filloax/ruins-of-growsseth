@@ -1,0 +1,11 @@
+{
+    "name": "patchouli_book.growsseth.name",
+    "landing_text": "patchouli_book.growsseth.landing_text",
+    "book_texture": "patchouli:textures/gui/book_brown.png",
+    "filler_texture": "growsseth:textures/gui/researcher_notes_filler.png",
+    "model": "patchouli:book_brown",
+    "creative_tab": "growsseth:growsseth",
+    "use_resource_pack": true,
+    "show_progress": false,
+    "pause_game": true
+}

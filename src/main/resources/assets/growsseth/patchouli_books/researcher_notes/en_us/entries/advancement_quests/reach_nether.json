@@ -1,0 +1,11 @@
+{
+    "name": "Raggiungere il Nether",
+    "icon": "minecraft:flint_and_steel",
+    "category": "growsseth:advancement_quests",
+    "pages": [
+        {
+            "type": "patchouli:text",
+            "text": "todo"
+        }
+    ]
+}

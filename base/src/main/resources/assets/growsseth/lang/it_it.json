@@ -1,6 +1,9 @@
 {
     "growsseth.creative_tab": "Oggetti di Growsseth",
 
+    "patchouli_book.growsseth.name": "Quaderno consumato",
+    "patchouli_book.growsseth.landing_text": "Salve collega, questi sono miei vecchi appunti che ho usato anni fa per sopravvivere, ora non mi servono più, ma potrebbero darti qualche spunto.",
+
     "tag.item.growsseth.music_discs": "Dischi musicali di Growsseth",
     "tag.item.growsseth.noteblock_discs": "Dischi musicali di Growsseth (strutture dei noteblock)",
     "tag.item.growsseth.researcher_mess_trigger": "Trigger per infastidimento del Ricercatore",

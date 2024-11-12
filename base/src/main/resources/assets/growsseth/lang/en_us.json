@@ -1,6 +1,9 @@
 {
     "growsseth.creative_tab": "Growsseth items",
 
+    "patchouli_book.growsseth.name": "Worn notebook",
+    "patchouli_book.growsseth.landing_text": "Hello colleague, these are my old notes I used to survive years ago, now I don't need them anymore, but they could help you learn something new.",
+
     "tag.item.growsseth.music_discs": "Growsseth Music Discs",
     "tag.item.growsseth.noteblock_discs": "Growsseth Music Discs (Noteblock Structures)",
     "tag.item.growsseth.researcher_mess_trigger": "Researcher Mess Trigger",
