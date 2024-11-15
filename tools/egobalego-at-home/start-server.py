@@ -1,9 +1,6 @@
-import os
+import os, json, argparse, webbrowser, requests
 from flask import Flask, render_template, request
 from flask_socketio import SocketIO, emit
-import json
-import argparse
-import webbrowser
 from mistune import create_markdown
 
 
@@ -60,6 +57,8 @@ def render_custom_template(page_name, help_key = None):
         'help_content': md_content(lang + f"/{help_key}"),
         'translations': translations.get(lang, translations[lang])
     }
+    if page_name == "home":
+        params["update_available"] = update_available
     return render_template(f"{page_name}.html", **params)
 
 
@@ -229,11 +228,28 @@ def load_color_theme():
         print(f"Could not find the file {color_theme_file}, it will be created and the theme will be set to light.")
         update_color_theme()
 
+def check_for_updates():
+    github_version_url = 'https://raw.githubusercontent.com/filloax/ruins-of-growsseth/refs/heads/dev/1.21.0/tools/egobalego-at-home/app_version.txt'
+    try:
+        req = requests.get(github_version_url)
+        with open ("app_version.txt") as f:
+            local_version = f.read()
+        if req.status_code == requests.codes.ok:
+            github_version = req.text
+            if float(local_version) < float(github_version):
+                global update_available
+                update_available = True
+        else:
+            print('Error during update check: file not found on GitHub.')
+    except Exception as e:
+        print("Error during update check:", e)
+
 
 translations = {}
 server_data = []
 last_id = 0
 color_theme = "light"
+update_available = False
 lang = ""
 
 
@@ -247,6 +263,7 @@ if __name__ == '__main__':
     load_translations()
     load_data()
     load_color_theme()
+    check_for_updates()
     lang = args_lang
 
     if args_open:

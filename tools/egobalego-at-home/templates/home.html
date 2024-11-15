@@ -23,5 +23,17 @@
                 {% include 'modals/modal-help.html' %}
             {% endwith %}
         </main>
+        {% if update_available == true %}
+            <footer class="fixed-bottom {% if theme == 'ligth' %} bg-light {% else %} bg-light-subtle {% endif %}">
+                <div id="new-update-notif" class="row text-center text-danger pt-3">
+                    <p>
+                        {{ translations.update_available_1 }}
+                        <a class="link-opacity-100" href="https://github.com/filloax/ruins-of-growsseth/releases">
+                            {{ translations.update_available_2 }}
+                        </a>
+                    </p>
+                </div>
+            </footer>
+        {% endif %}
     </body>
 </html>
