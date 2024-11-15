@@ -4,6 +4,8 @@
         "home_click_section": "Clicca su una delle sezioni sopra per iniziare",
         "home_read_guide_1": "Se non lo hai già fatto, leggi prima la",
         "home_read_guide_2": "guida!",
+        "update_available_1": "È stata rilasciata una nuova versione, scaricala da",
+        "update_available_2": "GitHub!",
         
         "add_command": "Aggiungi comando",
         "add_communication": "Aggiungi comunicazione",
@@ -131,6 +133,8 @@
         "home_click_section": "Click on one of the sections above to begin",
         "home_read_guide_1": "If you haven't already, check the",
         "home_read_guide_2": "guide!",
+        "update_available_1": "A new version was released, download if from",
+        "update_available_2": "GitHub!",
     
         "add_command": "Add command",
         "add_communication": "Add communication",
