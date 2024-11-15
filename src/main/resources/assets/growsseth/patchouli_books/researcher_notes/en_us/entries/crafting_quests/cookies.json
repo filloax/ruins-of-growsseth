@@ -1,0 +1,11 @@
+{
+    "name": "todo",
+    "icon": "minecraft:enchanting_table",
+    "category": "growsseth:crafting_quests",
+    "pages": [
+        {
+            "type": "patchouli:text",
+            "text": "todo"
+        }
+    ]
+}
