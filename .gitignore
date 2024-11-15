@@ -28,7 +28,7 @@ run/
 
 #misc
 temp/**
-tools/live-update-server/update.ps1
+tools/old-scripts-and-utilities/live-update-server/update.ps1
 **/.venv/**
 logs/*
 
