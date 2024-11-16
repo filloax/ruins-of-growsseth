@@ -73,7 +73,6 @@ jobs:
           tag_name: v${{ steps.get_version.outputs.VERSION }}-${{ env.MC_VER }}
           files: |
             build/libs/*.jar
-            build/egobalego-at-home/*.zip
             build/datapack/*.zip
       
       
