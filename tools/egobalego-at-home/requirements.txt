@@ -1,4 +1,0 @@
-flask==3.0.3
-flask_socketio==5.4.1
-mistune==3.0.2
-requests==2.32.3
