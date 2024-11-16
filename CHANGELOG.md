@@ -9,6 +9,7 @@ Added
 - Added a note in the World Creation Tab specifying that the "Growsseth" preset may not generate the exact same world as in the Twitch series
 
 Fixed
+- [Web Console] fixed a bug introduced with the last release that prevented the last_id.txt file from being loaded correctly (if you are using that version, please update!)
 - Fixed simple notifications appearing in-game incorrectly as custom ones (but without an icon)
 - Fixed the Live Update service not closing newly created sockets after failing to connect
 
