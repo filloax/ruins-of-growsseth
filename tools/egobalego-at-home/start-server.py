@@ -229,16 +229,19 @@ def load_color_theme():
         update_color_theme()
 
 def check_for_updates():
-    github_version_url = 'https://raw.githubusercontent.com/filloax/ruins-of-growsseth/refs/heads/dev/1.21.0/tools/egobalego-at-home/app_version.txt'
+    github_version_url = 'https://raw.githubusercontent.com/filloax/ruins-of-growsseth/refs/heads/dev/1.21.0/tools/egobalego-at-home/app_version'
     try:
         req = requests.get(github_version_url)
-        with open ("app_version.txt") as f:
+        with open ("app_version") as f:
             local_version = f.read()
         if req.status_code == requests.codes.ok:
             github_version = req.text
             if float(local_version) < float(github_version):
                 global update_available
                 update_available = True
+                print("An update was found.")
+            else:
+                print("No updates available.")
         else:
             print('Error during update check: file not found on GitHub.')
     except Exception as e:
