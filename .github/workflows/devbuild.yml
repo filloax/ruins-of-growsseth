@@ -47,7 +47,6 @@ jobs:
           title: "Nightly build [${{ steps.date.outputs.date }}.${{ env.TEST_RELEASE_NUM }}] - ${{ env.MC_VER }}"
           files: |
             build/libs/*.jar
-            build/egobalego-at-home/*.zip
             build/datapack/*.zip
 
       - name: Increment release count
