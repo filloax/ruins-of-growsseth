@@ -140,7 +140,7 @@ open class BasicDialoguesComponent(
         }
     }
 
-    fun emptyQueue(playerUUID: UUID): Boolean {
+    fun isQueueEmpty(playerUUID: UUID): Boolean {
         val playerQueue = dialogueQueues.getOrDefault(playerUUID, null)
         return (playerQueue == null || playerQueue.isEmpty())
     }

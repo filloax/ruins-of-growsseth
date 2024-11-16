@@ -153,14 +153,6 @@ fun getRconfig(): String {
 }
 
 
-tasks.register<Zip>("zipEgobalegoFolder") {
-	from(project.file("tools/egobalego-at-home"))
-	exclude(".venv")
-	destinationDirectory.set(project.file("build/egobalego-at-home"))
-	archiveFileName.set("Egobalego at Home.zip")
-}
-
-
 val packFormats = mapOf(		// used to set the pack format inside the pack.mcmeta file of the reference datapack
 	"1.20.6" to "41",
 	"1.21" to "48"
@@ -196,7 +188,6 @@ tasks.register<Zip>("makeReferenceDatapack") {
 
 
 tasks.named("build") {
-	dependsOn("zipEgobalegoFolder")
 	dependsOn("makeReferenceDatapack")
 }
 
