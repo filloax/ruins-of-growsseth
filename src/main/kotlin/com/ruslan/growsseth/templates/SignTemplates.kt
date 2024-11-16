@@ -1,13 +1,25 @@
 package com.ruslan.growsseth.templates;
 
+import com.filloax.fxlib.api.nbt.putIfAbsent
+import com.ruslan.growsseth.Constants
+import net.minecraft.core.RegistryAccess
+import net.minecraft.core.component.DataComponents
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.ListTag
+import net.minecraft.nbt.StringTag
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.DyeColor
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.component.CustomData
 import net.minecraft.world.level.block.entity.SignText
+import kotlin.collections.getOrNull
 
 object SignTemplates {
     private const val LINE_TEMPLATE_PREFIX = "%TEMPLATE%"   // different from books to allow templates in hanging signs
 
     val templates get() = TemplateListener.signs()
+
+    fun templates(lang: String) = TemplateListener.signs(lang)
 
     operator fun get(key: String) = templates[key]
 
@@ -36,8 +48,8 @@ object SignTemplates {
         val messages: Array<Component> = originalText.getMessages(false)
         if (messages[0].string == LINE_TEMPLATE_PREFIX) {
             val templateId = messages[1].string + messages[2].string + messages[3].string
-            val newFrontText = getSignTemplate(templateId)
-            return newFrontText
+            val templateText = getSignTemplate(templateId)
+            return templateText
         }
         return originalText
     }
@@ -66,7 +78,42 @@ object SignTemplates {
         }
     }
 
-    private fun templateExists(templateId: String): Boolean {
+    fun templateExists(templateId: String): Boolean {
         return templates[templateId] != null
+    }
+
+    fun getAvailableTemplates(): List<String> {
+        val languageSigns = templates
+        val defaultLanguageSigns = templates(Constants.DEFAULT_LANGUAGE)
+        return (languageSigns.keys + defaultLanguageSigns.keys).toList()
+    }
+
+    fun loadTemplate(sign: ItemStack, templateId: String, registries: RegistryAccess): ItemStack {
+        val template = templates[templateId]!!      // exist check is done in command
+        val signLines = template.linesComponents
+
+        sign.set(DataComponents.CUSTOM_NAME, Component.literal(templateId))
+
+        CustomData.update(DataComponents.BLOCK_ENTITY_DATA, sign) { blockEntityDataTag ->
+            val frontTextTag = CompoundTag()
+
+            val messagesList = ListTag()
+            var message: String
+            for(i in 0..3) {
+                if (signLines.getOrNull(i) != null)
+                    message = Component.Serializer.toJson(signLines[i], registries)
+                else
+                    message = "[\"\"]"
+                messagesList.add(StringTag.valueOf(message))
+            }
+            frontTextTag.putIfAbsent("messages", messagesList)
+            frontTextTag.putString("color", template.color)
+            frontTextTag.putBoolean("has_glowing_text", template.glowing!!)
+
+            blockEntityDataTag.putString("id", "oak_sign")
+            blockEntityDataTag.putIfAbsent("front_text", frontTextTag)
+        }
+
+        return sign
     }
 }

@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.11.2
+
+Added
+- [Web Console] The Live Update service (websocket connection) is now manageable from Egobalego at Home and fully supported by the mod
+- [Web Console] Added a simple update checker to be notified when a new version of the webapp is available
+- New command `/gtemplate`, replaces `/booktemplates` and supports sign templates
+- Added a note in the World Creation Tab specifying that the "Growsseth" preset may not generate the exact same world as in the Twitch series
+
+Fixed
+- Fixed simple notifications appearing in-game incorrectly as custom ones (but without an icon)
+- Fixed the Live Update service not closing newly created sockets after failing to connect
+
+
 ## 0.11.1
 
 Added
@@ -7,7 +20,7 @@ Added
 - [Web Console] Added dark theme to Egobalego at Home (download it from the GitHub releases!)
 
 Tweaked
-- the first advancement now requires interacting with the researcher directly, instead of just reaching his tent
+- The first advancement now requires interacting with the researcher directly, instead of just reaching his tent
 - Improved terrain adaptation for most of the structures, should fix the instances where some structures would spawn suspended in midair
 - Added logging to painting placement fixes during structure generation, to prevent confusion when using mods that fix the same problem
 
