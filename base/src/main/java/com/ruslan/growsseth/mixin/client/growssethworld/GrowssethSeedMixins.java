@@ -55,7 +55,7 @@ public class GrowssethSeedMixins {
         private void addGrowssethPresetWarning(CreateWorldScreen createWorldScreen, CallbackInfo ci, @Local GridLayout.RowHelper rowHelper) {
             growssethPresetWarning.setMaxWidth(308);    // same width as seed EditBox, to avoid issues
             rowHelper.addChild(growssethPresetWarning, 2);
-            field_42182.getUiState().addListener(worldCreationUiState -> {
+            this_CreateWorldScreen.getUiState().addListener(worldCreationUiState -> {
                 WorldCreationUiState.WorldTypeEntry worldType = worldCreationUiState.getWorldType();
                 growssethPresetWarning.visible = GrowssethWorldPreset.isGrowssethPreset(worldType.preset());
             });
