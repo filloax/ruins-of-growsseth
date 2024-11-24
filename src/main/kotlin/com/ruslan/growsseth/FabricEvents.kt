@@ -56,7 +56,7 @@ object FabricEvents : ModEvents() {
 
     override fun afterPlayerBlockBreak(event: (Level, Player, BlockPos, BlockState, BlockEntity?) -> Unit) = PlayerBlockBreakEvents.AFTER.register(event)
 
-    override fun afterPlayerPlaceBlock(event: (Player, Level, BlockPos, BlockPlaceContext, BlockState, BlockItem) -> Unit) = PlaceBlockEvent.AFTER.register(event)
+    override fun afterPlayerPlaceBlock(event: (Player?, Level, BlockPos, BlockPlaceContext, BlockState, BlockItem) -> Unit) = PlaceBlockEvent.AFTER.register(event)
 
     override fun onPlayerServerJoin(event: (handler: ServerGamePacketListenerImpl, PacketSender, MinecraftServer) -> Unit) = ServerPlayConnectionEvents.JOIN.register(event)
 
