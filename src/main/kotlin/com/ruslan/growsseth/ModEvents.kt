@@ -156,7 +156,7 @@ abstract class ModEvents {
     abstract fun onEntityUnload(event: (entity: Entity, level: ServerLevel) -> Unit)
     abstract fun onEntityDestroyed(event: (entity: Entity, level: ServerLevel) -> Unit)
     abstract fun afterPlayerBlockBreak(event: (Level, Player, BlockPos, BlockState, BlockEntity?) -> Unit)
-    abstract fun afterPlayerPlaceBlock(event: (Player, Level, BlockPos, BlockPlaceContext, BlockState, BlockItem) -> Unit)
+    abstract fun afterPlayerPlaceBlock(event: (Player?, Level, BlockPos, BlockPlaceContext, BlockState, BlockItem) -> Unit)
     abstract fun onPlayerServerJoin(event: (handler: ServerGamePacketListenerImpl, PacketSender, MinecraftServer) -> Unit)
     abstract fun onPlayerAdvancement(event: (ServerPlayer, AdvancementHolder, criterionString: String) -> Unit)
     abstract fun onFenceLeash(event: (Mob, BlockPos, ServerPlayer) -> Unit)
