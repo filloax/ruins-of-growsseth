@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.11.3
+
+Fixed
+- Resolved crash when playing with mods that add entities able to place blocks
+
+
 ## 0.11.2
 
 Added
