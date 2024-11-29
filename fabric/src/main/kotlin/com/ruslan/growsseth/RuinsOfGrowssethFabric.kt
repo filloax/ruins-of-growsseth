@@ -32,12 +32,12 @@ object RuinsOfGrowssethFabric : ModInitializer, RuinsOfGrowsseth() {
 
     override fun initRegistries() {
         GrowssethCreativeModeTabs.registerCreativeModeTabs { id, value -> Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, id, value) }
-        GrowssethItems.registerItems{ id, value -> Registry.register(BuiltInRegistries.ITEM, id, value) }
         GrowssethItems.Instruments.registerInstruments{ id, value -> Registry.register(BuiltInRegistries.INSTRUMENT, id, value) }
         GrowssethItems.SherdPatterns.registerPotPatterns { id, value -> Registry.register(BuiltInRegistries.DECORATED_POT_PATTERN, id, value) }
         GrowssethMapDecorations.registerMapDecorations{ id, value -> Registry.registerForHolder(BuiltInRegistries.MAP_DECORATION_TYPE, id, value) }
         GrowssethEffects.registerEffects{ id, value -> Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, id, value) }
         GrowssethEntities.registerEntityTypes{ id, value -> Registry.register(BuiltInRegistries.ENTITY_TYPE, id, value) }
+        GrowssethItems.registerItems{ id, value -> Registry.register(BuiltInRegistries.ITEM, id, value) }
         GrowssethStructurePieceTypes.registerStructurePieces{ id, value -> Registry.register(BuiltInRegistries.STRUCTURE_PIECE, id, value) }
         GrowssethStructures.registerStructureTypes{ id, value -> Registry.register(BuiltInRegistries.STRUCTURE_TYPE, id, value) }
         GrowssethCriterions.registerCriterions { id, value -> Registry.register(BuiltInRegistries.TRIGGER_TYPES, id, value) }
