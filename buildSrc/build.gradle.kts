@@ -12,5 +12,8 @@ dependencies {
     // see https://github.com/orgs/FabricMC/discussions/3546 (fixes there other than this workaround didn't work)
     implementation("com.google.code.gson:gson:2.10.1")
 
-    implementation(libs.kotlin.jvm)
+    implementation(libs.plugin.kotlin.jvm)
+    implementation(libs.plugin.kotlin.serialization)
+    implementation(libs.plugin.dokka)
+
 }
