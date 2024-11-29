@@ -329,8 +329,7 @@ class ResearcherDialoguesComponent(
             }
         }
 
-        fun onPlaceBlock(player: Player?, level: Level, pos: BlockPos, placeContext: BlockPlaceContext, blockState: BlockState, item: BlockItem) {
-            if (player == null) return      // avoids crashes with mods that add entities able to place blocks
+        fun onPlaceBlock(player: Player, level: Level, pos: BlockPos, placeContext: BlockPlaceContext, blockState: BlockState, item: BlockItem) {
             if (level !is ServerLevel) return
             if (!blockState.`is`(RESEARCHER_MESS_TRIGGER)) return
             if (player.isSpectator) return
