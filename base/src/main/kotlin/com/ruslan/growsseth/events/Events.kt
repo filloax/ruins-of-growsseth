@@ -57,7 +57,7 @@ object NameTagEvent {
 
 object PlaceBlockEvent {
     data class Post(
-        val player: Player, val world: Level,
+        val player: Player?, val world: Level,
         val pos: BlockPos, val placeContext: BlockPlaceContext,
         val blockState: BlockState, val item: BlockItem
     )
