@@ -485,6 +485,16 @@ open class BasicDialoguesComponent(
             .aggregate { _, accumulator: Int?, element, _ -> accumulator?.plus(element.second) ?: element.second }
     }
 
+    override fun getTriggeredDialogueGroups(player: ServerPlayer): Map<String, Int> {
+        return playerData(player)?.dialogueGroupCount ?: mapOf()
+    }
+
+    override fun getTriggeredDialogueGroups(): Map<String, Int> {
+        return savedPlayersData.values.flatMap { data -> data.dialogueGroupCount.entries }
+            .groupingBy { it.key }
+            .aggregate { _, accumulator: Int?, element, _ -> accumulator?.plus(element.value) ?: element.value }
+    }
+
     private fun filterDialogueOptions(
         dialogueOptions: List<DialogueEntry>,
         player: ServerPlayer,

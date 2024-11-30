@@ -356,12 +356,7 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
                 or TimeOrDayTimeTrigger(this@ResearcherQuestComponent, Constants.DAY_TICKS_DURATION * 5)
             )
             // You can find the dialogue in the quest dialogues json
-            .and(
-                if (!playerSkippedQuest)
-                    DialogueTrigger("researcher-quest-cure")
-                else
-                    DialogueTrigger("researcher-quest-cure-skip")
-            )
+            .and(DialogueGroupTrigger("group-quest-last-dialogue"))
 
         override fun onActivated(entity: Researcher) {
             entity.startingPos?.let { entity.moveTo(it, entity.yRot, entity.xRot) }

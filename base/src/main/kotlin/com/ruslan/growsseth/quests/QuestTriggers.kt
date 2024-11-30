@@ -54,6 +54,20 @@ class DialogueTrigger<E: LivingEntity>(private val dialogueId: String) : QuestSt
     }
 }
 
+/**
+ * Same as [DialogueTrigger], but checks dialogue group usage (`groups` entry in dialogue JSON) instead
+ * of dialogue ID
+ */
+class DialogueGroupTrigger<E: LivingEntity>(private val groupId: String) : QuestStageTrigger<E> {
+    override fun isActive(entity: E, event: QuestUpdateEvent): Boolean {
+        assert(entity is DialoguesNpc) { "DialogueGroupTrigger must be used on DialoguesNPC owner" }
+        val dialogues = (entity as DialoguesNpc).dialogues
+            ?: throw IllegalStateException("Must be called on server side")
+        return dialogues.getTriggeredDialogueGroups()[groupId]
+            ?.let { it > 0} == true
+    }
+}
+
 open class EventTrigger<E: LivingEntity>(vararg val forEvents: QuestUpdateEvent): QuestStageTrigger<E> {
     override fun isActive(entity: E, event: QuestUpdateEvent): Boolean {
         return (forEvents.contains(event))

@@ -46,6 +46,18 @@ interface NpcDialoguesComponent {
     fun getTriggeredDialogues(): Map<DialogueEntry, Int>
 
     /**
+     * Get the dialogue group trigger count for this NPC for this player.
+     * Dialogue groups are set in the dialouges `group` field.
+     */
+    fun getTriggeredDialogueGroups(player: ServerPlayer): Map<String, Int>
+
+    /**
+     * Get the dialogue group trigger count for this NPC for all players.
+     * Dialogue groups are set in the dialouges `group` field.
+     */
+    fun getTriggeredDialogueGroups(): Map<String, Int>
+
+    /**
      * Can the event run for this player in the current conditions and context?
      * This is supposed to be used when the trigger conditions for the event are already met;
      * for example, on PLAYER_ARRIVE, a player comes close, then this checks if the event
