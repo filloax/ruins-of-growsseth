@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.11.4
+
+Fixed
+- Fixed an issue where the final part of the researcher's quest would not trigger
+
+
 ## 0.11.3
 
 Fixed
