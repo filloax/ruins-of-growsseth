@@ -1,7 +1,7 @@
 package com.ruslan.gradle
 
 import org.gradle.api.DefaultTask
-import org.gradle.api.Project
+import org.gradle.api.InvalidUserDataException
 import org.gradle.api.tasks.*
 import java.io.File
 
@@ -27,11 +27,11 @@ open class TransformTokensTask : DefaultTask() {
     @get:OutputDirectories
     lateinit var processedSources: List<File>
 
-    private var tokens = mapOf<String, String>()
+    private val tokens = mutableMapOf<String, String>()
 
     @Suppress("unused") // Used in build script
     fun replaceTokens(tokens: Map<String, String>) {
-        this.tokens = tokens
+        this.tokens += tokens
     }
 
     private fun setProjectVariables(tokenReplaceDirs: TokenReplaceDirs) {
@@ -51,9 +51,19 @@ open class TransformTokensTask : DefaultTask() {
         backupRootDir.deleteRecursively()
         backupRootDir.mkdirs()
 
+        if (tokens.isEmpty()) {
+            throw InvalidUserDataException("Token replacement didn't have any tokens configured!")
+        }
+
+        var anySuccess = false
         mainSourceDirs.zip(backupSources).forEach { (main, backup) ->
             println("Backupping matching $main sources to $backup...")
-            main.copyRecursivelyWithFilter(backup) { s -> tokens.keys.any { s.contains(it) } }
+            anySuccess = main.copyRecursivelyWithFilter(backup) { s -> tokens.keys.any { s.contains(it) } } || anySuccess
+        }
+        if (!anySuccess) {
+            throw InvalidUserDataException("Token replacement didn't find any matching files! "
+            + "If files are supposed to contain the tokens, check that they do not contain the token's value after a previous build error; "
+            + "additionally, make sure you configured tokens to replace by configuring the <TransformTokensTask> tasks!")
         }
         backupSources.zip(processedSources).forEach { (backup, processed) ->
             println("Transforming $backup sources to $processed...")
