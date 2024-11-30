@@ -1,6 +1,6 @@
 # Ruins of Growsseth
 
-<img src="./src/main/resources/assets/growsseth/icon.png" alt="Mod icon" width="250" height="250">
+<img src="./base/src/main/resources/assets/growsseth/icon.png" alt="Mod icon" width="250" height="250">
 
 ## [**README IN ITALIANO QUA!**](docs/README_ITA.md)
 
@@ -23,14 +23,16 @@ original run, being able to spawn structures, tweak trades, and send notificatio
 See the [Modrinth](https://modrinth.com/mod/ruins-of-growsseth) or [Curseforge](https://curseforge.com/minecraft/mc-mods/ruins-of-growsseth) page, and the [**WIKI**](https://github.com/filloax/ruins-of-growsseth/wiki) for more information.
 For bug reports check the [Issues](https://github.com/filloax/ruins-of-growsseth/issues), for ideas and suggestions check the [Discussions](https://github.com/filloax/ruins-of-growsseth/discussions).
 
-![](./src/main/resources/assets/growsseth/textures/gui/advancements/backgrounds/advancements_background.png)
+![Reivax art](./base/src/main/resources/assets/growsseth/textures/gui/advancements/backgrounds/advancements_background.png)
 
 ### Requirements
 
-The mod currently is only available for Fabric, and requires [Fabric API](https://modrinth.com/mod/fabric-api) and [Resourceful Config](https://modrinth.com/mod/resourceful-config). 
-[Mod Menu](https://modrinth.com/mod/modmenu) is highly suggested for a simpler configuration UI ingame.
+The mod currently is available for Fabric, and a test build is available for Neoforge.
 
-Future plans include releasing the mod for Neoforge and other 1.20.x (and future versions) too.
+The Fabric version requires [Fabric API](https://modrinth.com/mod/fabric-api) and [Resourceful Config](https://modrinth.com/mod/resourceful-config), while the Neoforge version only requires Resourceful Config.
+If using Fabric, [Mod Menu](https://modrinth.com/mod/modmenu) is highly suggested for a simpler configuration UI ingame.
+
+Future plans include releasing the mod for other 1.20.x (and future versions) too.
 
 The mod also includes [FilloaxLib](https://github.com/filloax/filloaxlib/), so it's not needed to be installed (for now).
 
