@@ -1,6 +1,6 @@
 # Ruins of Growsseth
 
-<img src="../src/main/resources/assets/growsseth/icon.png" alt="Mod icon" width="250" height="250">
+<img src="../base/src/main/resources/assets/growsseth/icon.png" alt="Mod icon" width="250" height="250">
 
 Una mod di strutture altamente configurabile, con un NPC intelligente per vendere mappe e guidare nel
 percorso, e strutture che suggeriscono feature vanilla allo stesso modo dei Portali del Nether Rotti.
@@ -20,12 +20,14 @@ alla run di Cydonia, con spawn di strutture, modifiche agli scambi, invio notifi
 Vedi le pagine [Modrinth](https://modrinth.com/mod/ruins-of-growsseth) e [Curseforge](https://curseforge.com/minecraft/mc-mods/ruins-of-growsseth), e la [**WIKI**](https://github.com/filloax/ruins-of-growsseth/wiki) per maggiori informazioni.
 Per segnalare bug c'è la sezione [Issues](https://github.com/filloax/ruins-of-growsseth/issues), per idee e suggerimenti la sezione [Discussions](https://github.com/filloax/ruins-of-growsseth/discussions).
 
-![](../src/main/resources/assets/growsseth/textures/gui/advancements/backgrounds/advancements_background.png)
+![Reivax art](../base/src/main/resources/assets/growsseth/textures/gui/advancements/backgrounds/advancements_background.png)
 
 ### Requisiti
 
-La mod è attualmente disponibile per Fabric, e richiede [Fabric API](https://modrinth.com/mod/fabric-api) e [Resourceful Config](https://modrinth.com/mod/resourceful-config). 
-[Mod Menu](https://modrinth.com/mod/modmenu) è altamente consigliata per impostazioni visibili ingame.
+La mod è attualmente disponibile per Fabric, con una versione di test disponibile per Neoforge.
+
+La versione per Fabric richiede [Fabric API](https://modrinth.com/mod/fabric-api) e [Resourceful Config](https://modrinth.com/mod/resourceful-config), mentre la versione per Neoforge richiede solo Resourceful Config.
+Su Fabric [Mod Menu](https://modrinth.com/mod/modmenu) è altamente consigliata per poter visualizzare le impostazioni ingame.
 
 La mod include [FilloaxLib](https://github.com/filloax/filloaxlib/), ma in futuro potrebbe essere richiesta l'installazione a parte.
 
