@@ -3,6 +3,7 @@ package com.ruslan.growsseth
 object Constants {
     const val TRADES_DATA_FOLDER = "growsseth_researcher_trades"
     const val RESEARCHER_DIALOGUE_DATA_FOLDER = "growsseth_researcher_dialogue"
+    const val RESEARCHER_DIALOGUE_CONVERTED_FOLDER = "growsseth_converted_researcher_dialogue"
     const val PRESET_PLACES_FOLDER = "growsseth_places"
     const val EVENT_NAMESPACE = "event"
 

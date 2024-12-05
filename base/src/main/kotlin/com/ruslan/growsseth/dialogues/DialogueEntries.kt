@@ -1,9 +1,10 @@
 package com.ruslan.growsseth.dialogues
 
+import com.filloax.fxlib.api.EventUtil
+import com.filloax.fxlib.api.FxUtils
 import com.filloax.fxlib.api.json.KotlinJsonResourceReloadListener
 import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.RuinsOfGrowsseth
-import com.ruslan.growsseth.config.GrowssethConfig
 import com.ruslan.growsseth.http.GrowssethApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
@@ -14,13 +15,14 @@ import kotlinx.serialization.json.*
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.util.profiling.ProfilerFiller
+import net.minecraft.world.level.storage.LevelResource
 
 
 /**
- * @param content List of dialogue lines. In JSON can have different formats, mainly:
- * - a single string
- * - a [DialogueLine] object
- * - a list of strings or [DialogueLine] objects (can mix)
+ * Note: for dialogues file format (including shorthands to avoid writing a full DialogueEntry object), see
+ * javadoc for [ResearcherDialogueListener]
+ *
+ * @param content List of dialogue lines. In JSON can have different formats, see [DialogueLineStringsSerializer]
  * @param weight Float weight of the value for random choice, higher is easier to choose. Defaults to 1.
  * @param id String id to identify this dialogue entry, needed for shared dialogues and dialogues that have a useLimit
  *   (to identify their amount of usages)
@@ -81,13 +83,16 @@ data class DialogueEntry(
     }
 
     companion object {
-        fun of(content: String): DialogueEntry {
-            return DialogueEntry(content.split("\n").map{ DialogueLine(it) })
+        fun ofKey(key: String): DialogueEntry {
+            return DialogueEntry(content=listOf(DialogueLine(key=key)))
+        }
+
+        fun ofText(text: String): DialogueEntry {
+            return DialogueEntry(content=listOf(DialogueLine(text=text)))
         }
 
         fun getAllForEvent(event: DialogueEvent): List<DialogueEntry> {
-            val out = ResearcherDialogueListener.DIALOGUE_OPTIONS[GrowssethConfig.serverLanguage]?.get(event.id)?.toMutableList() ?:
-                        ResearcherDialogueListener.DIALOGUE_OPTIONS[DEFAULT_LANGUAGE]?.get(event.id)?.toMutableList() ?:
+            val out = ResearcherDialogueListener.DIALOGUE_OPTIONS[event.id]?.toMutableList() ?:
                         mutableListOf()
             if (event in ResearcherDialogueApiListener.API_DIALOGUES_EVENTS) {
                 out += ResearcherDialogueApiListener.API_DIALOGUES
@@ -96,57 +101,142 @@ data class DialogueEntry(
         }
 
         fun getWithId(id: String): DialogueEntry? {
-            return ResearcherDialogueListener.BY_ID[GrowssethConfig.serverLanguage]?.get(id)?:
-                    ResearcherDialogueListener.BY_ID[DEFAULT_LANGUAGE]?.get(id)
+            return ResearcherDialogueListener.BY_ID[id]
         }
-
-        const val DEFAULT_LANGUAGE = "en_us"
     }
 }
 
 /**
+ * @param key Key to the lang string of the line. Must set either this or `text`.
+ * @param text Hardcoded text of the line. Must set either this or `key`.
  * @param content The actual content of the line.
  * @param duration Optional duration in seconds, otherwise will be calculated by the dialogue component.
  *   (Usually by WPM).
  */
 @Serializable
 data class DialogueLine(
-    val content: String,
+    val key: String? = null,
+    val text: String? = null,
     val duration: Float? = null,
 ) {
     @Transient
     lateinit var dialogue: DialogueEntry
+
+    init {
+        if (key == null && text == null) {
+            throw IllegalArgumentException("Cannot have both key and text null!")
+        }
+        if (key != null && text != null) {
+            throw IllegalArgumentException("Cannot have both key and text set!")
+        }
+    }
 }
 
-/*
+/**
 Parse line list from string, list of strings, json object, list of json objects, etc.
-Valid formats:
-"content": "LINES\nSEPARATED BY\nNEWLINES"
+Valid formats, mainly two approaches:
+
+#### Text referencing lang strings
+_(suggested method)_
+
+Note: all lang keys will be prepended with 'dialogue.', which is also the prefix
+used in the **dialogue lang files** (TODO: link). This is intentional, as that system
+is designed to work with this to avoid cluttering the main lang file.
+
+_1. Simple language key dialogue._
+```json
 "content": {
-    "content": "SINGLE LINE WITH PARAMETERS",
+    "key": "mod.npcname.hello",
     "duration": 2.0
 }
+```
+Will have 1 line, taking from the lang string "dialogue.mod.npcname.hello".
+Can optionally use modifiers, currently:
+- `duration`: replaces duration of line in seconds instead of using configured words per minute.
+
+_2. Multi-line dialogue shorthand._
+```json
+"content": {
+    "key": "mod.npcname.firstGreeting",
+    "numLines": 5
+}
+```
+This will generate 5 lines, with lang keys "dialogue.mod.npcname.firstGreeting.1" to 5.
+Modifiers cannot be used.
+
+_3. Line list_
+```json
 "content": [
-    "SIMPLE LINE",
+    "mod.npcname.bye1",
     {
-        "content": "LINE WITH PARAMETERS, CAN MIX BOTH",
+        "key": "mod.npcname.bye2",
         "duration": 1.0
     }
 ]
- */
+```
+A list of lines, each with the same format as 1 or 2. Can also be mixed with lines using the
+_Text directly written in data files_ format below.
+
+#### Text directly written in data files
+_(not the same as old method, not recommended, mainly meant for quick testing without modifying more files)_
+
+```json
+"content": { "text": "SINGLE LINE" }
+```
+```json
+"content": {
+    "text": "SINGLE LINE WITH PARAMETERS",
+    "duration": 2.0
+}
+```
+```json
+"content": [
+    "mod.npcname.bye1",
+    {
+        "text": "LINE WITH PARAMETERS, CAN MIX BOTH",
+        "duration": 1.0
+    }
+]
+```
+*/
 class DialogueLineStringsSerializer : JsonTransformingSerializer<List<DialogueLine>>(ListSerializer(DialogueLine.serializer())) {
+    companion object {
+        const val NUM_LINES = "numLines"
+        const val KEY = "key"
+    }
+
     override fun transformDeserialize(element: JsonElement): JsonElement {
+        return prefixKeys(normalizeLines(element))
+    }
+
+    private fun normalizeLines(element: JsonElement): JsonArray {
         return when (element) {
-            is JsonArray -> {
+            is JsonArray -> { // array, mix and match
                 JsonArray(element.jsonArray.map(::transformItem))
-            } is JsonPrimitive -> {
-                JsonArray(element.jsonPrimitive.content.split("\n").map { fromString(it.trim()) })
+            } is JsonPrimitive -> { // single string key
+                JsonArray(listOf(fromString(element.content.trim())))
             } is JsonObject -> {
-                JsonArray(mutableListOf(transformItem(element)))
+                if (isNumLinesObj(element)) { // numLines format
+                    fromNumLines(element)
+                } else { // single line object
+                    JsonArray(mutableListOf(transformItem(element)))
+                }
             } else -> {
                 throw SerializationException("Unrecognized element $element")
             }
         }
+    }
+
+    private fun prefixKeys(array: JsonArray): JsonArray {
+        return JsonArray(array.map { el ->
+            val obj = el.jsonObject
+            obj[KEY]?.let { keyEl ->
+                val key = keyEl.jsonPrimitive.content
+                assertValidLangKey(key)
+                val newKey = "dialogue.$key"
+                JsonObject(obj + (KEY to JsonPrimitive(newKey)))
+            } ?: obj
+        });
     }
 
     private fun transformItem(element: JsonElement): JsonObject {
@@ -157,9 +247,26 @@ class DialogueLineStringsSerializer : JsonTransformingSerializer<List<DialogueLi
         }
     }
 
-    // Make sure "content" matches the name of the property in DialogueLine
-    private fun fromString(str: String) =
-        JsonObject(mutableMapOf("content" to JsonPrimitive(str)))
+    private fun isNumLinesObj(obj: JsonObject) = obj.keys.contains(NUM_LINES)
+
+    private fun fromString(str: String) = JsonObject(mutableMapOf(
+            KEY to JsonPrimitive(str),
+        ))
+
+    private fun fromNumLines(obj: JsonObject): JsonArray {
+        val numLines = obj[NUM_LINES]!!.jsonPrimitive.content.toInt()
+        val keyPrefix = obj[KEY]!!.jsonPrimitive.content
+        return JsonArray((1 .. numLines).map { JsonObject(mapOf(
+            KEY to JsonPrimitive("$keyPrefix.$it")
+        )) })
+    }
+
+    private fun assertValidLangKey(key: String) {
+        val pattern = Regex("^(\\w+\\.)*\\w+$")
+        if (!pattern.containsMatchIn(key)) {
+            throw IllegalArgumentException("Wrongly formatted lang key $key")
+        }
+    }
 }
 
 class ListStringSerializer : JsonTransformingSerializer<List<String>>(ListSerializer(String.serializer())) {
@@ -174,13 +281,23 @@ class ListStringSerializer : JsonTransformingSerializer<List<String>>(ListSerial
     }
 }
 
+/**
+ * The file format for dialogues is a JSON file with an object as root:
+ * Each field is either the name of a dialogue event or `shared`, containing a list of [DialogueEntry].
+ * Dialogues inside `shared` require the **id** field, while dialogues outside of `shared` can be replaced by one
+ * of the following shorthands:
+ * - A string, will create a dialogue with just that lang key as its only line
+ * - An object containing only the **id** field, will reference a dialogue in the `shared` entries.
+ */
 class ResearcherDialogueListener : KotlinJsonResourceReloadListener(JSON, Constants.RESEARCHER_DIALOGUE_DATA_FOLDER) {
     companion object {
-        private val JSON = Json
+        private val JSON = Json {
+            prettyPrint = true
+        }
 
-        val DIALOGUE_OPTIONS : MutableMap<String, MutableMap<String, MutableList<DialogueEntry>>> = mutableMapOf()
-        val BY_ID = mutableMapOf<String, MutableMap<String, DialogueEntry>>()
-        private val SHARED_DIALOGUES : MutableMap<String, MutableMap<String, DialogueEntry>> = mutableMapOf()
+        val DIALOGUE_OPTIONS = mutableMapOf<String, MutableList<DialogueEntry>>()
+        val BY_ID = mutableMapOf<String, DialogueEntry>()
+        private val SHARED_DIALOGUES = mutableMapOf<String, DialogueEntry>()
 
         const val SHARED_KEY = "shared"
     }
@@ -188,64 +305,83 @@ class ResearcherDialogueListener : KotlinJsonResourceReloadListener(JSON, Consta
     override fun apply(loader: Map<ResourceLocation, JsonElement>, manager: ResourceManager, profiler: ProfilerFiller) {
         DIALOGUE_OPTIONS.clear()
         SHARED_DIALOGUES.clear()
-        val sharedEntriesReferences = mutableMapOf<String, MutableMap<String, MutableList<String>>>()   // languages, <event names, entry ids>
+        val sharedEntriesReferences = mutableMapOf<String, MutableList<String>>()   // <event names, entry ids>
 
         loader.forEach { (fileIdentifier, jsonElement) ->
             try {
-                val split = fileIdentifier.path.split("/")
-                val langCode = split[0]
-                if (split.size == 2){       // if correct it will be lang_folder_name/file_name
-                    DIALOGUE_OPTIONS.computeIfAbsent(langCode) { mutableMapOf() }
-                    BY_ID.computeIfAbsent(langCode) { mutableMapOf() }
-                    SHARED_DIALOGUES.computeIfAbsent(langCode) { mutableMapOf() }
-                    sharedEntriesReferences.computeIfAbsent(langCode) { mutableMapOf() }
+                val entries: Map<String, List<JsonElement>> = JSON.decodeFromJsonElement(jsonElement)
+                entries.forEach efr@{ (event, list) ->
+                    val eventSharedRefs = sharedEntriesReferences.computeIfAbsent(event) { mutableListOf() }
 
-                    val entries: Map<String, List<JsonElement>> = JSON.decodeFromJsonElement(jsonElement)
-                    entries.forEach efr@{ (event, list) ->
-                        val eventSharedRefs = sharedEntriesReferences[langCode]?.computeIfAbsent(event) { mutableListOf() }
-
-                        val currentEntries = list.mapNotNull {
-                            when (it) {
-                                is JsonPrimitive -> DialogueEntry.of(it.content)
-                                is JsonObject -> if (isSharedReference(it)) {
-                                    val id =
-                                        it["id"] ?: throw IllegalStateException("Shared entries must have an id! $it")
-                                    eventSharedRefs?.add(id.jsonPrimitive.content)
-                                    null
-                                } else {
-                                    Json.decodeFromJsonElement(DialogueEntry.serializer(), it)
-                                }
-
-                                else -> throw SerializationException("Unsupported type: ${it::class}")
+                    val currentEntries = list.mapNotNull {
+                        when (it) {
+                            is JsonPrimitive -> DialogueEntry.ofKey(it.content)
+                            is JsonObject -> if (isSharedReference(it)) {
+                                val id = it["id"] ?: throw IllegalStateException("Shared entries must have an id! $it")
+                                eventSharedRefs.add(id.jsonPrimitive.content)
+                                null
+                            } else {
+                                Json.decodeFromJsonElement(DialogueEntry.serializer(), it)
                             }
-                        }
 
-                        if (event == SHARED_KEY) {
-                            val byId = currentEntries.associateBy {
-                                it.id ?: throw SerializationException("Shared dialogue entries must have id set!")
-                            }
-                            SHARED_DIALOGUES[langCode]?.putAll(byId)
-                            BY_ID[langCode]?.putAll(byId)
-                            return@efr
+                            else -> throw SerializationException("Unsupported type: ${it::class}")
                         }
-
-                        DIALOGUE_OPTIONS[langCode]?.computeIfAbsent(event) { mutableListOf() }?.addAll(currentEntries)
-                        BY_ID[langCode]?.putAll(currentEntries.filter { it.id != null }.associateBy { it.id!! })
                     }
-                }
-                else {
-                    RuinsOfGrowsseth.LOGGER.warn("File {} was not correctly placed in a language folder, will be ignored", fileIdentifier)
+
+                    if (event == SHARED_KEY) {
+                        val byId = currentEntries.associateBy {
+                            it.id ?: throw SerializationException("Shared dialogue entries must have id set!")
+                        }
+                        SHARED_DIALOGUES.putAll(byId)
+                        BY_ID.putAll(byId)
+                        return@efr
+                    }
+
+                    DIALOGUE_OPTIONS.computeIfAbsent(event) { mutableListOf() }.addAll(currentEntries)
+                    BY_ID.putAll(currentEntries.filter { it.id != null }.associateBy { it.id!! })
                 }
             } catch (e: Exception) {
-                RuinsOfGrowsseth.LOGGER.error( "Growsseth: Couldn't parse dialogue file {}", fileIdentifier, e)
+                RuinsOfGrowsseth.LOGGER.warn("Could not parse dialogue file {}, trying to convert it from old format", fileIdentifier)
+                val success = try {
+                    convertOldFormat(fileIdentifier, jsonElement)
+                } catch (e2: Exception) {
+                    RuinsOfGrowsseth.LOGGER.error( "Growsseth: Couldn't convert old dialogue file {}", fileIdentifier, e2)
+                    return
+                }
+                if (!success) {
+                    RuinsOfGrowsseth.LOGGER.error( "Growsseth: Couldn't parse dialogue file {}", fileIdentifier, e)
+                }
             }
         }
 
-        sharedEntriesReferences[GrowssethConfig.serverLanguage]?.forEach { (event, sharedRefs) ->
-            DIALOGUE_OPTIONS[GrowssethConfig.serverLanguage]?.get(event)?.addAll(sharedRefs.map {
-                SHARED_DIALOGUES[GrowssethConfig.serverLanguage]?.get(it) ?: throw SerializationException("Unknown id $it of shared dialogue reference in event $event")
+        sharedEntriesReferences.forEach { (event, sharedRefs) ->
+            DIALOGUE_OPTIONS[event]?.addAll(sharedRefs.map {
+                SHARED_DIALOGUES[it] ?: throw SerializationException("Unknown id $it of shared dialogue reference in event $event")
             })
         }
+    }
+
+    private fun convertOldFormat(fileIdentifier: ResourceLocation, jsonElement: JsonElement): Boolean {
+        val converted = try {
+            DialogueEntryConversion.transformOldDialogueFile(jsonElement.jsonObject)
+        } catch(e: Exception) {
+            return false
+        }
+
+        EventUtil.runAtNextServerTickStart { server ->
+            val generated = server.getWorldPath(LevelResource.GENERATED_DIR).normalize();
+            val convertedDir = generated.resolve(Constants.RESEARCHER_DIALOGUE_CONVERTED_FOLDER)
+            // sometimes the filename passed has a dot at the end, sometimes not
+            val nameWithExtension = "${fileIdentifier.path}.jsonc".replace("..jsonc", ".jsonc")
+            val outputFile = convertedDir.resolve(fileIdentifier.namespace).resolve(nameWithExtension)
+            outputFile.parent.toFile().mkdirs()
+
+            outputFile.toFile().writeText(Json.encodeToString(JsonElement.serializer(), converted))
+            RuinsOfGrowsseth.LOGGER.warn("Saved old dialogue file $fileIdentifier to $outputFile")
+        }
+
+        RuinsOfGrowsseth.LOGGER.warn("Converted old dialogue file $fileIdentifier! Will save on server start")
+        return true
     }
 
     private fun isSharedReference(jsonObject: JsonObject): Boolean {
@@ -279,7 +415,7 @@ object ResearcherDialogueApiListener {
                     return@forEach
                 }
                 API_DIALOGUES.add(DialogueEntry(
-                    desc.split("\n").map(::DialogueLine),
+                    desc.split("\n").map{ DialogueLine(text=it) },
                     id = id,
                     useLimit = 1,
                     priority = 100,
