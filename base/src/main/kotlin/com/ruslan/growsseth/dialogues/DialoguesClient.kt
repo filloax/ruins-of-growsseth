@@ -15,7 +15,7 @@ private val platform = FxLibServices.platform
 
 fun LocalPlayer.handleNpcDialogueLine(packet: DialoguePacket) {
     val nameComp = Component.literal("<").append(packet.senderName.copy().withStyle(ChatFormatting.YELLOW)).append("> ")
-    val messageComp = nameComp.append(Component.translatable(packet.dialogueLine.content))
+    val messageComp = nameComp.append(Component.translatable(packet.dialogueLine.text ?: packet.dialogueLine.key!!)) //TODO
 
     if (platform.isDevEnvironment() || DebugConfig.debugNpcDialogues)
         RuinsOfGrowsseth.LOGGER.info("[Client] Received NPC dialogue: ${messageComp.string}")

@@ -176,7 +176,7 @@ open class BasicDialoguesComponent(
                                 line.duration.secondsToTicks()
                             else 0
                         } else if (sameId) {
-                            val readingTime = if (MiscConfig.dialogueWordsPerMinute > 0) estimateReadingTime(line.content) else 0F
+                            val readingTime = if (MiscConfig.dialogueWordsPerMinute > 0) estimateReadingTime(line) else 0F
                             (dialogueSecondsSameId + readingTime).secondsToTicks()
                         } else {
                             // Shorter delay in consecutive dialogues
@@ -265,12 +265,9 @@ open class BasicDialoguesComponent(
     protected open fun afterPlayersCheck(nearPlayers: Set<ServerPlayer>, inbetweenPlayers: Set<ServerPlayer>, farPlayers: Set<ServerPlayer>) {}
 
     override fun sendDialogueToPlayer(player: ServerPlayer, line: DialogueLine) {
-        if (line.content != "") {
-//            val nameComp = Component.literal("<").append(entity.name.copy().withStyle(ChatFormatting.YELLOW)).append("> ")
-//            val messageComp = nameComp.append(Component.translatable(line.content))
-//            player.displayClientMessage(messageComp, false)
+//        if (line.text != "") {
             player.sendPacket(DialoguePacket(line, entity.name))
-        }
+//        }
     }
 
     protected open fun sendSeparatorToPlayer(player: ServerPlayer) {
@@ -285,7 +282,7 @@ open class BasicDialoguesComponent(
     }
 
     protected fun queueDialogue(player: ServerPlayer, dialogueEntry: DialogueEntry, event: DialogueEvent) {
-        if (dialogueEntry.content.isEmpty() || dialogueEntry.content[0].content == "") return
+        if (dialogueEntry.content.isEmpty() /*|| dialogueEntry.content[0].content == ""*/) return
 
         val dialogueQueue = dialogueQueues.computeIfAbsent(player.uuid) { LinkedBlockingDeque() }
 
@@ -309,7 +306,7 @@ open class BasicDialoguesComponent(
                         dialogueQueue.offerFirst(Pair(it, event))
                         // Since first dialogue is played immediately, delay the second
                         if (idx == lines.size - 2 && MiscConfig.dialogueWordsPerMinute > 0) {
-                            val readingTime = estimateReadingTime(lines[0].content)
+                            val readingTime = estimateReadingTime(lines[0])
                             dialogueQueueDelays[player.uuid] = (dialogueSecondsSameId + readingTime).secondsToTicks()
                         }
                     }
@@ -628,7 +625,10 @@ open class BasicDialoguesComponent(
         return (entity.level().gameTime - time) / 20.0
     }
 
-    protected fun estimateReadingTime(text: String, wordsPerMinute: Int = MiscConfig.dialogueWordsPerMinute): Float {
+    protected fun estimateReadingTime(line: DialogueLine, wordsPerMinute: Int = MiscConfig.dialogueWordsPerMinute): Float {
+        // TODO: calc wpm based on server lang line
+        val text = line.text ?: line.key!!
+
         // Calculate the number of words in the text, ignore small words (<=2 chars)
         val wordCount = text.split(Regex("\\s+")).filter { it.replace(Regex("[^A-Za-z0-9\\\\s]"), "").length > 2 }.size
 
