@@ -266,32 +266,38 @@ object GrowssethStructures {
             registerSimpleJigsaw(CydoniaVersion.BEEKEEPER_HOUSE, "cydonia/ruins/beekeeper_house/house",
                 offset = Vec3i(-11, -2, -9),
                 startHeight = ConstantHeight.of(VerticalAnchor.absolute(-2)),
+                biomesTag = NONE_BIOMES,
             )
             registerSimpleJigsaw(CydoniaVersion.CAVE_CAMP, "cydonia/misc/cave_camp",
-                biomesTag = BiomeTags.IS_OVERWORLD,
                 projectStartToHeightMap = null,
                 startHeight = UniformHeight.of(VerticalAnchor.absolute(20), VerticalAnchor.absolute(50)),
                 offset = Vec3i(-10, -7, -10),
                 step = Decoration.UNDERGROUND_STRUCTURES,
+                biomesTag = NONE_BIOMES,
             )
             registerSimpleJigsaw(CydoniaVersion.CONDUIT_CHURCH, "cydonia/ruins/conduit_church/main",
                 offset = Vec3i(-15, -2, -14),
                 startHeight = ConstantHeight.of(VerticalAnchor.absolute(-2)),
                 projectStartToHeightMap = Heightmap.Types.OCEAN_FLOOR,
+                biomesTag = NONE_BIOMES,
             )
             registerSimpleJigsaw(CydoniaVersion.ENCHANT_TOWER, "cydonia/ruins/enchant_tower/base",
                 offset = Vec3i(-5, 0, -4),
                 size = 6,
+                biomesTag = NONE_BIOMES,
             )
             registerSimpleJigsaw(CydoniaVersion.GOLEM_HOUSE, "cydonia/misc/golem_house",
                 offset = Vec3i(-6, 0, -6),
                 size = 6,
+                biomesTag = NONE_BIOMES,
             )
             registerSimpleJigsaw(CydoniaVersion.MARKER, "cydonia/misc/marker",
                 size = 1,
+                biomesTag = NONE_BIOMES,
             )
             registerSimpleJigsaw(CydoniaVersion.NOTEBLOCK_LAB, "cydonia/ruins/noteblock_lab/house",
                 offset = Vec3i(-8, 0, -9),
+                biomesTag = NONE_BIOMES,
             )
         }
 
