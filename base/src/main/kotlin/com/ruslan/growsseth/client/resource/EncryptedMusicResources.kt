@@ -47,7 +47,7 @@ object EncryptedMusicResources {
                 key = DecryptUtil.readKey(resourceManager.open(resLoc(KEY_PATH)), MusicCommon.musicPw)
                 RuinsOfGrowsseth.LOGGER.info("Read music key!")
             } else {
-                RuinsOfGrowsseth.LOGGER.warn("Cannot read key, not setup during build correctly!")
+                RuinsOfGrowsseth.LOGGER.warn("Cannot read music key, not setup during build correctly!")
             }
         }
     }

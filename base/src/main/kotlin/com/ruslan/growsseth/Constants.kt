@@ -21,4 +21,11 @@ object Constants {
     const val MAX_HEIGHT = 310
 
     const val DAY_TICKS_DURATION = 24000L
+
+    // For data files stored in world folder
+    const val RESEARCHER_DATA = "researcher_data"
+    const val GLOBAL_TRADES_DATA = "GlobalTrades"
+    const val PROGRESS_TRADES_DATA = "progressTrades"
+    const val DATASYNC_MEMORY_DATA = "growsseth_datasync_memory"
+    const val EVENTS_DATA = "growssethEvents"
 }
