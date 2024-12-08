@@ -10,6 +10,7 @@ import com.filloax.fxlib.api.savedata.FxSavedData
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.ruslan.growsseth.Constants
+import com.ruslan.growsseth.Constants.GLOBAL_TRADES_DATA
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.entity.researcher.Researcher
 import com.ruslan.growsseth.network.ResearcherTradesNotifPacket
@@ -18,7 +19,6 @@ import net.minecraft.nbt.Tag
 import net.minecraft.network.PacketSendListener
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
-import net.minecraft.server.network.ServerGamePacketListenerImpl
 import net.minecraft.world.item.trading.MerchantOffers
 import kotlin.jvm.optionals.getOrDefault
 
@@ -183,7 +183,7 @@ abstract class GlobalResearcherTradesProvider protected constructor(
 //                    .fieldOf("trades").forGetter(GlobalTradesSavedData::trades)
             ).apply(builder, ::GlobalTradesSavedData) }
 
-            val DEF = define("GlobalTrades", ::GlobalTradesSavedData, CODEC)
+            val DEF = define(GLOBAL_TRADES_DATA, ::GlobalTradesSavedData, CODEC)
 
             fun getGlobalTrades(server: MinecraftServer) = server.loadData(DEF).trades
             fun setDirty(server: MinecraftServer) = server.loadData(DEF).setDirty()

@@ -8,6 +8,7 @@ import com.filloax.fxlib.api.secondsToTicks
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.ruslan.growsseth.Constants
+import com.ruslan.growsseth.Constants.PROGRESS_TRADES_DATA
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.advancements.StructureAdvancements
 import com.ruslan.growsseth.config.ResearcherConfig
@@ -202,7 +203,8 @@ class ProgressResearcherTradesProvider(
                 mutableSetCodec(ResourceKey.codec(Registries.STRUCTURE)).fieldOf("foundStructures").forGetter(ProgressTradesSavedData::foundStructures),
                 ResourceKey.codec(Registries.STRUCTURE).optionalFieldOf("currentStructure").forNullableGetter(ProgressTradesSavedData::currentStructure),
             ).apply(builder, ProgressTradesSavedData::class.constructorWithOptionals()::newInstance) }
-            private val DEF = define("progressTrades", ::ProgressTradesSavedData, CODEC)
+            private val DEF = define(PROGRESS_TRADES_DATA, ::ProgressTradesSavedData, CODEC)
+
             fun get(server: MinecraftServer) = server.loadData(DEF)
             fun setDirty(server: MinecraftServer) = server.loadData(DEF).setDirty()
         }
