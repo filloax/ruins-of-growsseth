@@ -6,6 +6,7 @@ import com.google.gson.JsonParseException
 import com.google.gson.reflect.TypeToken
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import com.ruslan.growsseth.Constants.DATASYNC_MEMORY_DATA
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.config.WebConfig
 import kotlinx.serialization.DeserializationStrategy
@@ -22,9 +23,7 @@ import java.net.URI
 import java.time.Duration
 import java.time.LocalDateTime
 import java.util.concurrent.*
-import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
-import java.util.concurrent.atomic.AtomicReference
 
 object DataRemoteSync {
     var lastSyncSuccessful = false
@@ -344,7 +343,7 @@ class DataSyncMemorySavedData private constructor (
         val CODEC: Codec<DataSyncMemorySavedData> = RecordCodecBuilder.create { builder -> builder.group(
             Codec.unboundedMap(Codec.STRING, Codec.STRING).fieldOf("lastEndpointOutputs").forGetter(DataSyncMemorySavedData::lastEndpointOutputs)
         ).apply(builder, ::DataSyncMemorySavedData) }
-        private val DEF = define("growsseth_datasync_memory", ::DataSyncMemorySavedData, CODEC)
+        private val DEF = define(DATASYNC_MEMORY_DATA, ::DataSyncMemorySavedData, CODEC, checkDeprecatedFilePaths = listOf("growsseth_datasync_memory"))
 
         @JvmStatic
         fun get(level: ServerLevel): DataSyncMemorySavedData {

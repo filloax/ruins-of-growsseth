@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.12.0
+
+Added
+- [1.21] Neoforge support! Many changes have been made under the hood, so if you encounter any issues (even in the Fabric version), please let us know!
+
+
+## 0.11.4
+
+Fixed
+- Fixed an issue where the final part of the researcher's quest would not trigger
+
+
 ## 0.11.3
 
 Fixed

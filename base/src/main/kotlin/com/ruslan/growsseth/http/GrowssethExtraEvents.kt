@@ -8,6 +8,7 @@ import com.filloax.fxlib.api.savedata.FxSavedData
 import com.filloax.fxlib.api.networking.sendPacket
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import com.ruslan.growsseth.Constants.EVENTS_DATA
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.entity.GrowssethEntities
 import com.ruslan.growsseth.entity.SpawnTimeTracker
@@ -435,7 +436,7 @@ object GrowssethExtraEvents {
                 Codec.STRING.mutableSetOf().fieldOf("alreadyRan").forGetter(EventsSavedData::alreadyRan),
                 Codec.unboundedMap(Codec.STRING, Codec.LONG).fieldOf("removeResearchersTimes").forGetter(EventsSavedData::removeResearchersTimes),
             ).apply(builder, ::EventsSavedData) }
-            private val DEF = define("growssethEvents", ::EventsSavedData, CODEC)
+            private val DEF = define(EVENTS_DATA, ::EventsSavedData, CODEC, checkDeprecatedFilePaths = listOf("growssethEvents"))
 
             fun get(server: MinecraftServer): EventsSavedData {
                 return server.loadData(DEF)

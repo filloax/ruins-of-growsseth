@@ -4,6 +4,7 @@ import com.filloax.fxlib.api.codec.forNullableGetter
 import com.filloax.fxlib.api.savedata.FxSavedData
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import com.ruslan.growsseth.Constants.RESEARCHER_DATA
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.config.ResearcherConfig
 import net.minecraft.nbt.CompoundTag
@@ -51,14 +52,14 @@ class ResearcherSavedData private constructor (
             ResearcherSavedData(data, name.getOrNull(), isDead)
         } }
 
-        private val DEF = define("researcher_data", ::ResearcherSavedData, CODEC)
+        private val DEF = define(RESEARCHER_DATA, ::ResearcherSavedData, CODEC, checkDeprecatedFilePaths = listOf("researcher_data"))
 
         private var instance: ResearcherSavedData? = null
 
         @JvmStatic
         fun getPersistent(server: MinecraftServer): ResearcherSavedData {
             return instance ?: server.loadData(DEF).also {
-                RuinsOfGrowsseth.LOGGER.info("Create researcher saved data!")
+                RuinsOfGrowsseth.LOGGER.info("Created researcher saved data!")
                 instance = it
             }
         }

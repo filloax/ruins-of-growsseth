@@ -56,12 +56,15 @@ class ResearcherTentStructure(
         const val BASEMENT_HEIGHT = 10
 
         fun build(ctx: BootstrapContext<Structure>, templatePath: ResourceLocation = ResearcherTent.DEFAULT_ID, offsetY: Int = -BASEMENT_HEIGHT): ResearcherTentStructure {
+            var biomesTag = ResourceLocation.parse("growsseth:has_structure/researcher_tent")
+            if (templatePath == ResearcherTent.CYDONIA_ID)
+                biomesTag = ResourceLocation.parse("growsseth:has_structure/none")
             return ResearcherTentStructure(StructureSettings(
-                ctx.lookup(Registries.BIOME).getOrThrow(TagKey.create(Registries.BIOME, ResourceLocation.parse("growsseth:has_structure/researcher_tent"))),
-                mapOf(),
-                GenerationStep.Decoration.SURFACE_STRUCTURES,
-                TerrainAdjustment.NONE,
-            ), templatePath, offsetY)
+                    ctx.lookup(Registries.BIOME).getOrThrow(TagKey.create(Registries.BIOME, biomesTag)),
+                    mapOf(),
+                    GenerationStep.Decoration.SURFACE_STRUCTURES,
+                    TerrainAdjustment.NONE,
+                ), templatePath, offsetY)
         }
     }
 
