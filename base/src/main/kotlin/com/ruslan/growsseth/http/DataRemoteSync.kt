@@ -343,7 +343,7 @@ class DataSyncMemorySavedData private constructor (
         val CODEC: Codec<DataSyncMemorySavedData> = RecordCodecBuilder.create { builder -> builder.group(
             Codec.unboundedMap(Codec.STRING, Codec.STRING).fieldOf("lastEndpointOutputs").forGetter(DataSyncMemorySavedData::lastEndpointOutputs)
         ).apply(builder, ::DataSyncMemorySavedData) }
-        private val DEF = define(DATASYNC_MEMORY_DATA, ::DataSyncMemorySavedData, CODEC)
+        private val DEF = define(DATASYNC_MEMORY_DATA, ::DataSyncMemorySavedData, CODEC, checkDeprecatedFilePaths = listOf("growsseth_datasync_memory"))
 
         @JvmStatic
         fun get(level: ServerLevel): DataSyncMemorySavedData {

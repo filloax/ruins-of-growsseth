@@ -183,7 +183,7 @@ abstract class GlobalResearcherTradesProvider protected constructor(
 //                    .fieldOf("trades").forGetter(GlobalTradesSavedData::trades)
             ).apply(builder, ::GlobalTradesSavedData) }
 
-            val DEF = define(GLOBAL_TRADES_DATA, ::GlobalTradesSavedData, CODEC)
+            val DEF = define(GLOBAL_TRADES_DATA, ::GlobalTradesSavedData, CODEC, checkDeprecatedFilePaths = listOf("GlobalTrades"))
 
             fun getGlobalTrades(server: MinecraftServer) = server.loadData(DEF).trades
             fun setDirty(server: MinecraftServer) = server.loadData(DEF).setDirty()

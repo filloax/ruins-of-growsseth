@@ -23,9 +23,10 @@ object Constants {
     const val DAY_TICKS_DURATION = 24000L
 
     // For data files stored in world folder
-    const val RESEARCHER_DATA = "researcher_data"
-    const val GLOBAL_TRADES_DATA = "GlobalTrades"
-    const val PROGRESS_TRADES_DATA = "progressTrades"
-    const val DATASYNC_MEMORY_DATA = "growsseth_datasync_memory"
-    const val EVENTS_DATA = "growssethEvents"
+    const val DATA_FOLDER = "ruins_of_growsseth"
+    const val RESEARCHER_DATA = "$DATA_FOLDER/researcher_data"
+    const val GLOBAL_TRADES_DATA = "$DATA_FOLDER/global_trades"
+    const val PROGRESS_TRADES_DATA = "$DATA_FOLDER/progress_trades"
+    const val DATASYNC_MEMORY_DATA = "$DATA_FOLDER/growsseth_datasync_memory"
+    const val EVENTS_DATA = "$DATA_FOLDER/growsseth_events"
 }

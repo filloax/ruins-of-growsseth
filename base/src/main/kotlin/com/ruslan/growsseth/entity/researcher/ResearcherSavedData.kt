@@ -52,7 +52,7 @@ class ResearcherSavedData private constructor (
             ResearcherSavedData(data, name.getOrNull(), isDead)
         } }
 
-        private val DEF = define(RESEARCHER_DATA, ::ResearcherSavedData, CODEC)
+        private val DEF = define(RESEARCHER_DATA, ::ResearcherSavedData, CODEC, checkDeprecatedFilePaths = listOf("researcher_data"))
 
         private var instance: ResearcherSavedData? = null
 

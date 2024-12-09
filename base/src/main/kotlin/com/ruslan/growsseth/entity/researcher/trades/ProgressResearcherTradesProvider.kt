@@ -203,7 +203,7 @@ class ProgressResearcherTradesProvider(
                 mutableSetCodec(ResourceKey.codec(Registries.STRUCTURE)).fieldOf("foundStructures").forGetter(ProgressTradesSavedData::foundStructures),
                 ResourceKey.codec(Registries.STRUCTURE).optionalFieldOf("currentStructure").forNullableGetter(ProgressTradesSavedData::currentStructure),
             ).apply(builder, ProgressTradesSavedData::class.constructorWithOptionals()::newInstance) }
-            private val DEF = define(PROGRESS_TRADES_DATA, ::ProgressTradesSavedData, CODEC)
+            private val DEF = define(PROGRESS_TRADES_DATA, ::ProgressTradesSavedData, CODEC, checkDeprecatedFilePaths = listOf("progressTrades"))
 
             fun get(server: MinecraftServer) = server.loadData(DEF)
             fun setDirty(server: MinecraftServer) = server.loadData(DEF).setDirty()
