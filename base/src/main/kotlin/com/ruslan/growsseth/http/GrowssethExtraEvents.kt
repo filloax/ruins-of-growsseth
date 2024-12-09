@@ -436,7 +436,7 @@ object GrowssethExtraEvents {
                 Codec.STRING.mutableSetOf().fieldOf("alreadyRan").forGetter(EventsSavedData::alreadyRan),
                 Codec.unboundedMap(Codec.STRING, Codec.LONG).fieldOf("removeResearchersTimes").forGetter(EventsSavedData::removeResearchersTimes),
             ).apply(builder, ::EventsSavedData) }
-            private val DEF = define(EVENTS_DATA, ::EventsSavedData, CODEC)
+            private val DEF = define(EVENTS_DATA, ::EventsSavedData, CODEC, checkDeprecatedFilePaths = listOf("growssethEvents"))
 
             fun get(server: MinecraftServer): EventsSavedData {
                 return server.loadData(DEF)

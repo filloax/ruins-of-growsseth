@@ -192,8 +192,8 @@ open class QuestComponent<E : LivingEntity>(val entity: E, val name: String) {
 
     fun readNbt(tag: CompoundTag) {
         data = QuestData()
-        tag.getCompound(QUESTS_TAG_ID)?.let { questsTag ->
-            questsTag.getCompound(name)?.let { qTag ->
+        tag.getCompoundOrNull(QUESTS_TAG_ID)?.let { questsTag ->
+            questsTag.getCompoundOrNull(name)?.let { qTag ->
                 val result = PERSIST_CODEC.decodeNbt(qTag.getCompound(NBT_TAG_PERSIST)).result()
                 result.ifPresent {
                     data = it.first
