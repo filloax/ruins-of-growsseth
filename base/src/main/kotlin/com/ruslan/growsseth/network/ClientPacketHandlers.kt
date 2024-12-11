@@ -6,13 +6,13 @@ import com.ruslan.growsseth.client.gui.components.NewTradeToast.Companion.update
 import com.ruslan.growsseth.client.gui.components.updateCustomToast
 import com.ruslan.growsseth.client.worldpreset.GrowssethWorldPresetClient
 import com.ruslan.growsseth.config.ClientConfig
-import com.ruslan.growsseth.dialogues.handleNpcDialogueLine
+import com.ruslan.growsseth.dialogues.DialoguesClient.handleNpcDialogue
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.sounds.SoundEvents
 
 object ClientPacketHandlers {
-    fun handleDialogue(packet: DialoguePacket, context: ToClientContext) {
-        context.player.handleNpcDialogueLine(packet)
+    fun handleDialogue(packet: IDialoguePacket, context: ToClientContext) {
+        context.player.handleNpcDialogue(packet)
     }
 
     fun handleTradeNotification(packet: ResearcherTradesNotifPacket, context: ToClientContext) {

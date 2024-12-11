@@ -19,7 +19,7 @@ interface NpcDialoguesComponent {
      * Send a dialogue to a player, as a chat message,
      * some sort of ui popup, etc.
      */
-    fun sendDialogueToPlayer(player: ServerPlayer, line: DialogueLine)
+    fun sendDialogueToPlayer(player: ServerPlayer, line: DialogueLineProcessed)
     fun dialoguesStep()
     fun nearbyPlayers(): List<ServerPlayer>
     fun playersStillAround(): Boolean
