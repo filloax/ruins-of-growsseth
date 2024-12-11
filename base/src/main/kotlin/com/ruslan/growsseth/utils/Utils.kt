@@ -1,6 +1,9 @@
 package com.ruslan.growsseth.utils
 
+import com.filloax.fxlib.api.FxLibServices
 import com.ruslan.growsseth.RuinsOfGrowsseth
+import com.ruslan.growsseth.config.GrowssethConfig
+import com.ruslan.growsseth.config.GrowssethConfigHandler
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.trading.MerchantOffer
 import net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece
@@ -16,6 +19,8 @@ import kotlin.contracts.contract
 fun resLoc(str: String): ResourceLocation {
     return ResourceLocation.fromNamespaceAndPath(RuinsOfGrowsseth.MOD_ID, str)
 }
+
+fun serverLang() = FxLibServices.serverLanguage.get(GrowssethConfig.serverLanguage)
 
 fun MerchantOffer.contentEquals(other: Any?): Boolean {
     if (this === other) return true

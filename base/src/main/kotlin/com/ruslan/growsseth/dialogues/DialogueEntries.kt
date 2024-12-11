@@ -1,5 +1,7 @@
 package com.ruslan.growsseth.dialogues
 
+import com.mojang.datafixers.util.Either
+import com.ruslan.growsseth.utils.serverLang
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlinx.serialization.json.*
@@ -94,9 +96,8 @@ data class DialogueEntry(
 }
 
 /**
- * @param key Key to the lang string of the line. Must set either this or `text`.
+ * @param key Key to the server lang string of the line. Must set either this or `text`. See FxLib for server lang.
  * @param text Hardcoded text of the line. Must set either this or `key`.
- * @param content The actual content of the line.
  * @param duration Optional duration in seconds, otherwise will be calculated by the dialogue component.
  *   (Usually by WPM).
  */
@@ -108,6 +109,12 @@ data class DialogueLine(
 ) {
     @Transient
     lateinit var dialogue: DialogueEntry
+    @Transient
+    val keyOrText: Either<String, String> = key?.let { Either.left(it) } ?: Either.right(text!!)
+
+    fun content(): String {
+        return keyOrText.map({key -> serverLang().getOrDefault(key) }, {it})
+    }
 
     init {
         if (key == null && text == null) {
@@ -117,4 +124,16 @@ data class DialogueLine(
             throw IllegalArgumentException("Cannot have both key and text set!")
         }
     }
+}
+
+/**
+ * [DialogueLine] after server-side processing (duration calculation, server localisation) is done
+ */
+@Serializable
+data class DialogueLineProcessed(
+    val text: String,
+    val duration: Float,
+) {
+    @Transient
+    lateinit var dialogue: DialogueEntry
 }

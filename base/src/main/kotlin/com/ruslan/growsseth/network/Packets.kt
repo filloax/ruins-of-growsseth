@@ -6,10 +6,12 @@ import com.filloax.fxlib.api.optional
 import com.filloax.fxlib.api.networking.playS2C
 import com.mojang.serialization.Codec
 import com.ruslan.growsseth.dialogues.DialogueLine
+import com.ruslan.growsseth.dialogues.DialogueLineProcessed
 import com.ruslan.growsseth.entity.researcher.trades.ResearcherItemListing
 import com.ruslan.growsseth.platform.PlatformAbstractions
 import com.ruslan.growsseth.utils.resLoc
 import com.ruslan.growsseth.worldgen.worldpreset.LocationData
+import net.minecraft.core.UUIDUtil
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.Component
@@ -18,6 +20,7 @@ import net.minecraft.network.codec.StreamCodec
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload.TypeAndCodec
 import net.minecraft.world.item.ItemStack
+import java.util.UUID
 import kotlin.jvm.optionals.getOrNull
 
 typealias RStreamCodec<T> = StreamCodec<RegistryFriendlyByteBuf, T>
@@ -30,9 +33,11 @@ object GrowssethPackets {
         val FORCE_AMBIENT_SOUND = resLoc("force_ambient_sound")
         val PLACES_DATA = resLoc("places_data")
         val DIALOGUE = resLoc("dialogue")
+        val DIALOGUE_SEPARATOR = resLoc("dialogue_separator")
     }
 
     val DIALOGUE            = DialoguePacket.ENTRY
+    val DIALOGUE_SEPARATOR  = DialogueSeparatorPacket.ENTRY
     val TRADE_NOTIF         = ResearcherTradesNotifPacket.ENTRY
     val CUSTOM_TOAST        = CustomToastPacket.ENTRY
     val STOP_MUSIC          = StopMusicPacket.ENTRY
@@ -42,6 +47,7 @@ object GrowssethPackets {
     fun registerPacketsS2C() {
         FxLibServices.networking.packetRegistrator.apply {
             playS2C(DIALOGUE, ClientPacketHandlers::handleDialogue)
+            playS2C(DIALOGUE_SEPARATOR, ClientPacketHandlers::handleDialogue)
             playS2C(TRADE_NOTIF, ClientPacketHandlers::handleTradeNotification)
             playS2C(CUSTOM_TOAST, ClientPacketHandlers::handleCustomToast)
             playS2C(STOP_MUSIC, ClientPacketHandlers::handleStopMusic)
@@ -54,24 +60,45 @@ object GrowssethPackets {
     }
 }
 
-data class DialoguePacket(
-    val dialogueLine: DialogueLine,
-    val senderName: Component,
-) : CustomPacketPayload  {
+interface IDialoguePacket {
+    val senderName: Component
+    val senderUUID: UUID
+}
+
+data class DialoguePacket (
+    val dialogueLine: DialogueLineProcessed,
+    override val senderName: Component,
+    override val senderUUID: UUID,
+) : CustomPacketPayload, IDialoguePacket {
     companion object {
         val TYPE = CustomPacketPayload.Type<DialoguePacket>(GrowssethPackets.Types.DIALOGUE)
         val CODEC: RStreamCodec<DialoguePacket> = StreamCodec.composite(
-            DialogueLine.serializer().streamCodec(), DialoguePacket::dialogueLine,
+            DialogueLineProcessed.serializer().streamCodec(), DialoguePacket::dialogueLine,
             ComponentSerialization.STREAM_CODEC, DialoguePacket::senderName,
+            UUIDUtil.STREAM_CODEC, DialoguePacket::senderUUID,
             ::DialoguePacket
         )
         val ENTRY = TypeAndCodec(TYPE, CODEC)
-
-        private fun write(buf: RegistryFriendlyByteBuf, packet: ResearcherTradesNotifPacket) = buf.writeJsonWithCodec(ResearcherItemListing.LIST_CODEC, packet.newTrades)
-        private fun read(buf: RegistryFriendlyByteBuf) = ResearcherTradesNotifPacket(buf.readJsonWithCodec(ResearcherItemListing.LIST_CODEC))
     }
 
     override fun type(): CustomPacketPayload.Type<DialoguePacket> = TYPE
+}
+
+data class DialogueSeparatorPacket (
+    override val senderName: Component,
+    override val senderUUID: UUID,
+) : CustomPacketPayload, IDialoguePacket {
+    companion object {
+        val TYPE = CustomPacketPayload.Type<DialogueSeparatorPacket>(GrowssethPackets.Types.DIALOGUE_SEPARATOR)
+        val CODEC: RStreamCodec<DialogueSeparatorPacket> = StreamCodec.composite(
+            ComponentSerialization.STREAM_CODEC, DialogueSeparatorPacket::senderName,
+            UUIDUtil.STREAM_CODEC, DialogueSeparatorPacket::senderUUID,
+            ::DialogueSeparatorPacket
+        )
+        val ENTRY = TypeAndCodec(TYPE, CODEC)
+    }
+
+    override fun type(): CustomPacketPayload.Type<DialogueSeparatorPacket> = TYPE
 }
 
 data class ResearcherTradesNotifPacket(
@@ -103,7 +130,6 @@ open class CustomToastPacket(
 
         val TYPE = CustomPacketPayload.Type<CustomToastPacket>(GrowssethPackets.Types.CUSTOM_TOAST)
         val ENTRY = TypeAndCodec(TYPE, CODEC)
-
     }
 
     override fun type() = TYPE
