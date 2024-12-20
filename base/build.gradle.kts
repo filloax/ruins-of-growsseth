@@ -80,7 +80,7 @@ artifacts {
 tasks.withType<TransformTokensTask> {
 	val env = System.getenv()
 	replaceTokens(mapOf(
-		"$@MUSIC_PW@" to (env["GROWSSETH_MUSIC_PW"]?.replace("$", "\\$") ?: run {
+		"$@MUSIC_PW@" to (env["GROWSSETH_MUSIC_PW"] ?: run {
 			project.logger.error("Music key not set up in env variable GROWSSETH_MUSIC_PW, music in builds won't work!")
 			""
 		}),
