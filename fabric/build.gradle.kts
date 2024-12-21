@@ -42,20 +42,20 @@ loom {
 			runDir("build/datagen")
 		}
 
-		create("musicKey") {
+		create("growssethMusicKeyCreate") {
 			client()
 			mainClass = "com.ruslan.growsseth.data.MusicKeyCreateKt"
 
 			name("Create music key")
-			runDir("run/musicencrypt")
+			runDir("../music-encrypt")
 		}
 
-		create("musicEncrypt") {
+		create("growssethMusicEncrypt") {
 			client()
 			mainClass = "com.ruslan.growsseth.data.MusicEncryptKt"
 
 			name("Encrypt music")
-			runDir("run/musicencrypt")
+			runDir("../music-encrypt")
 		}
 
 		matching{ it.name == "client" || it.name == "server" }.configureEach {
