@@ -22,7 +22,7 @@ fun main() {
     DecryptUtil.generateRandomKeyWithPassword(MusicCommon.musicPw, keyFile)
     log.info("Generated key at ${keyFile.absolutePath}")
 
-    val folder = File(".")
+    val folder = File("")
     val outFolder = folder.resolve("../base/src/main/resources/assets/growsseth/")
 
     keyFile.copyTo(outFolder.resolve(keyFile), overwrite = true)
