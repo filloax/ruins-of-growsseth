@@ -4,6 +4,7 @@ import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.resource.MusicCommon
 import com.ruslan.growsseth.utils.DecryptUtil
 import java.io.File
+import javax.crypto.AEADBadTagException
 import kotlin.system.exitProcess
 
 /**
@@ -25,7 +26,7 @@ fun main() {
         exitProcess(-1)
     }
 
-    val folder = File(".")      // see Fabric's build.gradle.kts file for the path (should be the project's root + /music-encrypt)
+    val folder = File("")      // see Fabric's build.gradle.kts file for the path (should be the project's root + /music-encrypt)
     val musFolder = folder.resolve("plain-music")
     val assetsFolder = folder.resolve("../base/src/main/resources/assets/growsseth/")
     val outFolder = assetsFolder.resolve("./soundsx")
@@ -35,16 +36,22 @@ fun main() {
     log.info("Encrypting music found in ${musFolder.absolutePath}")
     log.info("Loading key...")
     val keyFile = assetsFolder.resolve("sounds.key")        // If key changes, remember to run "growssethMusicKeyCreate" first
-    val key = DecryptUtil.readKey(keyFile, MusicCommon.musicPw)
-    log.info("Loaded key")
 
-    musFolder.list()?.forEach { fn ->
-        val file = musFolder.resolve(fn)
-        log.info("File: $file")
-        val outFile = outFolder.resolve(fn.replace(".ogg", ".oggx"))
-        DecryptUtil.encryptFile(key, file, outFile)
-        log.info("Saved to ${outFile.absolutePath}")
-    } ?: run { log.warn("No music files!") }
+    try {
+        val key = DecryptUtil.readKey(keyFile, MusicCommon.musicPw)
+        log.info("Loaded key")
 
-    log.info("Done!")
+        musFolder.list()?.forEach { fn ->
+            val file = musFolder.resolve(fn)
+            log.info("File: $file")
+            val outFile = outFolder.resolve(fn.replace(".ogg", ".oggx"))
+            DecryptUtil.encryptFile(key, file, outFile)
+            log.info("Saved to ${outFile.absolutePath}")
+        } ?: run { log.warn("No music files!") }
+
+        log.info("Done!")
+    }
+    catch (_: AEADBadTagException) {
+        RuinsOfGrowsseth.LOGGER.error("Music key taken from env could not be used to decrypt sounds.key file! Did you change it without running growssethMusicKeyCreate afterward?")
+    }
 }
