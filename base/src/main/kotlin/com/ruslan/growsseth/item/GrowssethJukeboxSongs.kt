@@ -139,7 +139,7 @@ object GrowssethJukeboxSongs {
         register(ctx, OURSTEPS,             GrowssethSounds.DISC_OURSTEPS, 154)
         register(ctx, ODI_ET_AMO,           GrowssethSounds.DISC_ODI_ET_AMO, 191)
         register(ctx, ANCORA_QUI,           GrowssethSounds.DISC_ANCORA_QUI, 145)
-        register(ctx, BALLATA_DEL_RESPAWN,  GrowssethSounds.DISC_BALLATA_DEL_RESPAWN, 266)
+        register(ctx, BALLATA_DEL_RESPAWN,  GrowssethSounds.DISC_BALLATA_DEL_RESPAWN, 263)
         register(ctx, CACO_CACO,            GrowssethSounds.DISC_CACO_CACO, 145)
         register(ctx, PESCI_STRANI,         GrowssethSounds.DISC_PESCI_STRANI, 157)
     }
