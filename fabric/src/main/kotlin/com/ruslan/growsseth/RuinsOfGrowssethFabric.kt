@@ -54,6 +54,7 @@ object RuinsOfGrowssethFabric : ModInitializer, RuinsOfGrowsseth() {
                 it.addAfter(Items.PIGLIN_BANNER_PATTERN, GrowssethItems.GROWSSETH_BANNER_PATTERN)
                 it.addAfter(Items.SPIRE_ARMOR_TRIM_SMITHING_TEMPLATE, GrowssethItems.GROWSSETH_ARMOR_TRIM)
                 it.addAfter(Items.HEART_POTTERY_SHERD, GrowssethItems.GROWSSETH_POTTERY_SHERD)
+                it.addAfter(Items.DISC_FRAGMENT_5, GrowssethItems.FRAGMENT_BALLATA_DEL_RESPAWN)
             })
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.SPAWN_EGGS)
             .register(ModifyEntries {
@@ -70,10 +71,6 @@ object RuinsOfGrowssethFabric : ModInitializer, RuinsOfGrowsseth() {
                 for (disc in GrowssethItems.DISCS_ORDERED) {
                     it.accept(disc)
                 }
-            })
-        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.INGREDIENTS)
-            .register(ModifyEntries {
-                it.addAfter(Items.DISC_FRAGMENT_5, GrowssethItems.FRAGMENT_BALLATA_DEL_RESPAWN)
             })
     }
 

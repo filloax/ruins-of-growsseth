@@ -72,11 +72,12 @@ object RuinsOfGrowssethNeo : RuinsOfGrowsseth() {
                 ev.insertAfter(entries[item]!!, new.defaultInstance, CreativeModeTab.TabVisibility.PARENT_TAB_ONLY)
             }
 
-            when (ev.tab) {
+            when (ev.tabKey) {
                 CreativeModeTabs.INGREDIENTS -> {
                     addAfter(Items.PIGLIN_BANNER_PATTERN, GrowssethItems.GROWSSETH_BANNER_PATTERN)
                     addAfter(Items.SPIRE_ARMOR_TRIM_SMITHING_TEMPLATE, GrowssethItems.GROWSSETH_ARMOR_TRIM)
                     addAfter(Items.HEART_POTTERY_SHERD, GrowssethItems.GROWSSETH_POTTERY_SHERD)
+                    addAfter(Items.DISC_FRAGMENT_5, GrowssethItems.FRAGMENT_BALLATA_DEL_RESPAWN)
                 }
                 CreativeModeTabs.SPAWN_EGGS -> {
                     ev.accept(GrowssethItems.RESEARCHER_SPAWN_EGG)
@@ -90,9 +91,6 @@ object RuinsOfGrowssethNeo : RuinsOfGrowsseth() {
                     for (disc in GrowssethItems.DISCS_ORDERED) {
                         ev.accept(disc)
                     }
-                }
-                CreativeModeTabs.INGREDIENTS -> {
-                    addAfter(Items.DISC_FRAGMENT_5, GrowssethItems.FRAGMENT_BALLATA_DEL_RESPAWN)
                 }
             }
         }
