@@ -18,8 +18,8 @@ import javax.crypto.spec.SecretKeySpec
 object DecryptUtil {
     fun generateRandomKeyWithPassword(password: String, file: File) {
         val randomKey = generateRandomKey()
-        val ecnryptedKey = encryptKey(randomKey, password)
-        writeKey(ecnryptedKey, file)
+        val encryptedKey = encryptKey(randomKey, password)
+        writeKey(encryptedKey, file)
     }
 
     fun encryptFile(key: SecretKey, inputFile: File, outputFile: File) {
