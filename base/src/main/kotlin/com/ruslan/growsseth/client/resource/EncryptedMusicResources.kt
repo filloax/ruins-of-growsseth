@@ -49,7 +49,7 @@ object EncryptedMusicResources {
                     key = DecryptUtil.readKey(resourceManager.open(resLoc(KEY_PATH)), MusicCommon.musicPw)
                     RuinsOfGrowsseth.LOGGER.info("Read music key!")
                 } catch (_: AEADBadTagException) {
-                    RuinsOfGrowsseth.LOGGER.error("Music key was taken from env but could not be used to decrypt sounds.key file!")
+                    RuinsOfGrowsseth.LOGGER.error("Music key could not be used to decrypt sounds.key file!")
                 }
             } else {
                 RuinsOfGrowsseth.LOGGER.warn("Cannot read music key, not setup during build correctly!")
