@@ -105,11 +105,11 @@ val baseName: String by project
 val author: String by project
 val license: String by project
 val displayUrl: String by project
+val modVersion: String by project
 
 val cydoVersion = (property("cydoVersion") as String).toBoolean()
 
 // Main versions
-val modVersion = libs.findVersion("modversion").get()
 val kotlinVersion = libs.findVersion("kotlin").get()
 val minecraftVersion = libs.findVersion("minecraft").get()
 val minecraftVersionRange = libs.findVersion("minecraft.range").get()

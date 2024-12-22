@@ -10,7 +10,7 @@ plugins {
 val utils = project.utils(versionCatalogs, ext)
 
 val modid: String by project
-val modVersion = libs.versions.modversion.get()
+val modVersion: String by project
 val minecraftVersion = libs.versions.minecraft.asProvider().get()
 val parchmentMcVersion = libs.versions.parchment.minecraft.get()
 val parchmentVersion = libs.versions.parchment.asProvider().get()
