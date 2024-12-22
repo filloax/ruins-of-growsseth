@@ -3,13 +3,13 @@ package com.ruslan.growsseth.data
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.resource.MusicCommon
 import com.ruslan.growsseth.utils.DecryptUtil
-import net.minecraft.sounds.Music
 import java.io.File
-import java.io.FileOutputStream
-import java.io.ObjectOutputStream
 import kotlin.system.exitProcess
 
-
+/**
+ * Takes the GROWSSETH_MUSIC_PW env user variable and creates a "sounds.key" file with it,
+ * necessary for encrypting the OGGs and make the mod able to decrypt them in-game
+ */
 fun main() {
     val log = RuinsOfGrowsseth.LOGGER
     log.info("Creating music key...")
@@ -22,8 +22,8 @@ fun main() {
     DecryptUtil.generateRandomKeyWithPassword(MusicCommon.musicPw, keyFile)
     log.info("Generated key at ${keyFile.absolutePath}")
 
-    val folder = File(".")
-    val outFolder = folder.resolve("../../src/main/resources/assets/growsseth/")
+    val folder = File("")
+    val outFolder = folder.resolve("../base/src/main/resources/assets/growsseth/")
 
     keyFile.copyTo(outFolder.resolve(keyFile), overwrite = true)
     log.info("Copied key to ${outFolder.resolve(keyFile).absolutePath}")

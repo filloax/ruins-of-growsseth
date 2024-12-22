@@ -5,6 +5,9 @@
 Added
 - [1.21] Neoforge support! Many changes have been made under the hood, so if you encounter any issues (even in the Fabric version), please let us know!
 
+Tweaked
+- Reduced size of music discs sound files, halving the size of the mod!
+
 
 ## 0.11.4
 

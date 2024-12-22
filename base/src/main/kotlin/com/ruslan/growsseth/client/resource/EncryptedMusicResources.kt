@@ -10,6 +10,7 @@ import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener
 import java.io.IOException
 import java.io.InputStream
+import javax.crypto.AEADBadTagException
 import javax.crypto.SecretKey
 
 /**
@@ -44,8 +45,12 @@ object EncryptedMusicResources {
     class KeyListener : ResourceManagerReloadListener {
         override fun onResourceManagerReload(resourceManager: ResourceManager) {
             if (MusicCommon.hasMusicKey) {
-                key = DecryptUtil.readKey(resourceManager.open(resLoc(KEY_PATH)), MusicCommon.musicPw)
-                RuinsOfGrowsseth.LOGGER.info("Read music key!")
+                try {
+                    key = DecryptUtil.readKey(resourceManager.open(resLoc(KEY_PATH)), MusicCommon.musicPw)
+                    RuinsOfGrowsseth.LOGGER.info("Read music key!")
+                } catch (_: AEADBadTagException) {
+                    RuinsOfGrowsseth.LOGGER.error("Music key was taken from env but could not be used to decrypt sounds.key file!")
+                }
             } else {
                 RuinsOfGrowsseth.LOGGER.warn("Cannot read music key, not setup during build correctly!")
             }
