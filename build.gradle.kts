@@ -3,7 +3,7 @@ plugins {
 }
 
 // For common build.gradle, do not load plugin but use catalogs directly
-val modVersion = libs.versions.modversion.get()
+val modVersion: String by project
 
 tasks.register("modVersion") {
     println("VERSION=$modVersion")
