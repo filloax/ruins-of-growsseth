@@ -3,7 +3,7 @@ name: Publish Nightly Build (1.21)
 on:
   push:
     branches:
-      - 'test/1.21'
+      - 'test/1.21.0'
 env:
   TEST_RELEASE_NUM: ${{ vars.TEST_RELEASE_NUM }}
   JAVA_VERSION: 21
