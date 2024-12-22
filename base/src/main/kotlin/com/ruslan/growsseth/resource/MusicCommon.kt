@@ -14,7 +14,7 @@ object MusicCommon {
         @Suppress("SENSELESS_COMPARISON")
         if (musicPw == "$" + "@MUSIC_PW@") {
             if (System.getProperty("replaceTokens").toBoolean()) {
-                RuinsOfGrowsseth.log(Level.INFO, "Token replacement not working! Something went wrong during mod build, encrypted music won't work!")
+                RuinsOfGrowsseth.log(Level.WARN, "Token replacement not working! Something went wrong during mod build, encrypted music won't work!")
             } else {
                 hasMusicKey = getMusicKeyFromEnv()
             }
@@ -22,7 +22,7 @@ object MusicCommon {
             RuinsOfGrowsseth.log(Level.INFO, "Token replacement is working!")
             hasMusicKey = true
         } else {
-            RuinsOfGrowsseth.log(Level.INFO, "Token replacement is working but no env var set! If you're a dev, did you set up build env correctly! Encrypted music won't work!")
+            RuinsOfGrowsseth.log(Level.WARN, "Token replacement is working but no env var set! If you're a dev, did you set up build env correctly! Encrypted music won't work!")
         }
     }
 
@@ -33,6 +33,7 @@ object MusicCommon {
             RuinsOfGrowsseth.log(Level.INFO, "Music key taken from user's env!")
             return true
         }
+        RuinsOfGrowsseth.log(Level.WARN, "Cannot get music key from user's env!")
         return false
     }
 }
