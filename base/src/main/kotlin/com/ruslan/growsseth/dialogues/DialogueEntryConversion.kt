@@ -1,5 +1,6 @@
 package com.ruslan.growsseth.dialogues
 
+import com.ruslan.growsseth.Constants
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.*
@@ -7,12 +8,24 @@ import kotlinx.serialization.json.*
 object DialogueEntryConversion {
     const val KEY_CONTENT = "content"
     const val KEY_TEXT = "text"
+    const val KEY_KEY = "key"
+
+    private val JSON = Json
 
     /**
      * returns: dialogue file with text entries replaced to keys, and dialogues lang object with the extracted text in the keys
      */
-    fun extractKeysFromDialogueFile(root: JsonObject): Pair<JsonObject, JsonObject> {
-        TODO("dialogues file")
+    fun extractKeysFromDialogueFile(root: JsonObject, langPrefix: String): Pair<JsonObject, JsonObject> {
+        val entries: Map<String, List<JsonElement>> = JSON.decodeFromJsonElement(root)
+        val langStrings = mutableMapOf<String, String>()
+        val toKeys = entries.mapValues { (event, list) -> list.withIndex().map { (index, element) ->
+            when (element) {
+                is JsonObject -> extractKeysFromEntry(element, "${langPrefix}.${event}.$index") { k, v -> langStrings[k] = v }
+                else -> element
+            }
+        }.let(::JsonArray) }.let(::JsonObject)
+
+        return Pair(toKeys, createNestedJsonObject(langStrings))
     }
 
     fun transformOldDialogueFile(root: JsonObject): JsonObject {
@@ -24,6 +37,87 @@ object DialogueEntryConversion {
         return root.mapValues { (key, dialogues) ->
             dialogues.jsonArray.map(::transformOldDialogueEntry).let(::JsonArray)
         }.let(::JsonObject)
+    }
+
+    private fun createNestedJsonObject(map: Map<String, String>, maxDepth: Int? = null): JsonObject {
+        val root = mutableMapOf<String, JsonElement>()
+
+        for ((path, value) in map) {
+            val keys = path.split(".").let { maxDepth?.let { d ->
+                    if (d < it.size) {
+                        it.subList(0, d) + it.subList(d, it.size).joinToString(".")
+                    } else { it }
+                } ?: it }
+            var currentLevel = root
+
+            for (i in keys.indices) {
+                val key = keys[i]
+                if (i == keys.lastIndex) {
+                    currentLevel[key] = JsonPrimitive(value)
+                } else {
+                    val nextLevel = (currentLevel[key] as? JsonObject)?.toMutableMap() ?: mutableMapOf()
+                    currentLevel[key] = JsonObject(nextLevel)
+                    currentLevel = nextLevel
+                }
+            }
+        }
+
+        return JsonObject(root)
+    }
+
+    private fun extractKeysFromEntry(dialogueEntry: JsonObject, prefix: String, keysInserter: (key: String, value: String) -> Unit): JsonElement {
+        val content = dialogueEntry[KEY_CONTENT] ?: return dialogueEntry
+
+        val newContent = when (content) {
+            is JsonPrimitive -> content
+            is JsonObject -> extractKeysFromContent(content, prefix, keysInserter)
+            is JsonArray -> if (content.size == 1 && content[0] is JsonObject) {
+                extractKeysFromContent(content[0].jsonObject, prefix, keysInserter)
+            } else {
+                JsonArray(content.withIndex().map { (index, elem) ->
+                    if (elem !is JsonObject) return@map elem
+                    extractKeysFromContent(elem, "$prefix.$index", keysInserter)
+                })
+            }
+        }
+        val simplifyContent = { element: JsonElement ->
+            if (element !is JsonObject)
+                element
+            else if (element.keys.size == 1 && element.containsKey(KEY_KEY))
+                JsonPrimitive(element[KEY_KEY]!!.jsonPrimitive.content)
+            else
+                element
+        }
+        val simplifiedContent = when (newContent) {
+            is JsonObject -> simplifyContent(newContent)
+            is JsonArray -> newContent.map(simplifyContent).let {
+                if (it.size == 1)
+                    it[0]
+                else JsonArray(it)
+            }
+            is JsonPrimitive -> newContent
+        }
+
+        // has only content
+        if (dialogueEntry.keys.size == 1) {
+            return simplifiedContent
+        }
+
+        return JsonObject(
+            mapOf(KEY_CONTENT to simplifiedContent )
+            + dialogueEntry.minus(KEY_CONTENT)
+        )
+    }
+
+    private fun extractKeysFromContent(content: JsonObject, key: String, keysInserter: (key: String, value: String) -> Unit): JsonObject {
+        return if (content.containsKey(KEY_TEXT)) {
+            keysInserter("${Constants.LANG_DIALOGUE_PREFIX}.$key", content[KEY_TEXT]!!.jsonPrimitive.content)
+
+            JsonObject(
+                mapOf(KEY_KEY to JsonPrimitive(key))
+                        + content.toMap().minus(KEY_TEXT)
+            )
+        } else { content }
     }
 
     private fun transformOldDialogueEntry(dialogueEntry: JsonElement): JsonObject {
