@@ -1,0 +1,179 @@
+{
+    "shared": {
+        "0": {
+            "0": "Cosa..? Una persona che vaga per queste terre e non è un mercante?",
+            "1": "Non può essere... senti, non è che sei per caso un ricercatore, o comunque un esploratore?",
+            "2": "Quindi è davvero così, incredibile... Lascia che mi spieghi, io sono entrambe le cose, ricercatore §led§r esploratore. Vago da anni per queste terre, ma non ho mai incontrato nessuno della mia professione. Sai, quello che è successo dopo la Piaga... Pensavo che non esistessero più persone come me.",
+            "3": "Beh, piacere di conoscerti allora, lascia che mi presenti... O almeno è quello che vorrei dire. È da così tanto che non uso il mio nome che ho finito con il dimenticarlo...",
+            "4": "In ogni caso, cambiamo argomento. Ricercatore o esploratore che sia, suppongo che possiamo comunque considerarci colleghi.",
+            "5": "Io? Personalmente non appartengo ad una branca specifica. Il dovermi spostare continuamente e sopravvivere da solo in mezzo alla natura mi ha reso una sorta di 'tuttologo'. Immagino che valga lo stesso anche per te, dato il coraggio che mostri nell'avventurarti qua fuori.",
+            "6": "E a proposito di avventure, durante le mie esplorazioni mi è capitato spesso di scoprire luoghi e reliquie del regno ormai caduto. Presumo che la faccenda ti interessi, vero?",
+            "7": "Normalmente non mi separerei dalle mie scoperte, neanche sotto pagamento, ma credo che collaborare possa portare un vantaggio reciproco, dai pure un'occhiata!"
+        },
+        "1": "Arrivederci, è stato un piacere!",
+        "2": "Ehi, torna qui! Devi rimettere a posto!",
+        "3": "...",
+        "4": ""
+    },
+    "playerArrive": {
+        "2": "Buongiorno, collega.",
+        "3": "...forse, con quell'ingrediente... Oh, salve collega.",
+        "4": "Buongiorno collega, bella giornata oggi, vero?",
+        "5": "...ma certo, ora ha senso... Oh, salve, dimmi pure.",
+        "6": "Lieto di vederti ancora in vita, collega.",
+        "7": "Salve collega, sempre in movimento eh?"
+    },
+    "playerArriveNight": {
+        "2": "Oh, non mi aspettavo di vederti a quest'ora, va tutto bene?",
+        "3": "Strano momento per una visita, spero tu non abbia attirato qui qualche creatura della notte.",
+        "4": "Salve collega, anche tu ti stai godendo il cielo stellato?",
+        "5": "Ronf... AH! Ma che ci fai qui a quest'ora?",
+        "6": "Collega, ma starai dormendo abbastanza? L'insonnia tende ad attirare guai...",
+        "7": {
+            "0": "Senza paura come sempre vedo, mi raccomando però, fai attenzione a non attirare dei creeper.",
+            "1": "...Non che quelle pesti abbiano il coraggio di esplodere in mia presenza, sia ovvio."
+        }
+    },
+    "playerArriveAfterKilled": {
+        "0": {
+            "0": "Ah collega, sei di ritorno, credevo di aver visto un mostro con le tue sembianze prima.",
+            "1": "Fortuna che a qualcuno come te non verrebbero mai certe idee... giusto?"
+        },
+        "1": "Salve collega, c'è qualcosa che non va? Hai una strana espressione in viso."
+    },
+    "playerLeave": {
+        "1": "Arrivederci collega.",
+        "2": "Ti auguro una buona giornata, collega.",
+        "3": "Alla tua prossima visita!",
+        "4": "Arrivederci, e ricordati sempre che nelle mappe il nord è in alto!"
+    },
+    "playerLeaveNight": {
+        "1": "Arrivederci, e buon rientro a casa.",
+        "2": "Fai attenzione ai mostri sulla strada del ritorno, collega.",
+        "3": "Mi raccomando, stai alla larga dallo sguardo dei demoni!",
+        "4": "Arrivederci, e buonanotte!"
+    },
+    "playerArriveLongTime": {
+        "1": "Da quanto tempo! Ormai non ero più sicuro che fossi ancora in vita.",
+        "2": "Collega...? Sei davvero tu? Non ti vedevo da molto tempo.",
+        "3": "Collega...? Sei di ritorno da una lunga avventura immagino, hai qualcosa di interessante da condividere?",
+        "4": "Da quanto tempo che non ci si vede, collega.",
+        "5": "Salve collega, è da tanto che sei via, come stai?",
+        "6": {
+            "0": "Salve, ne è passato di tempo...",
+            "1": "Sai, sto ancora aspettando che tu mi restituisca gli strumenti da lavoro."
+        }
+    },
+    "playerArriveNewLocation": {
+        "2": {
+            "0": "Salve, non mi aspettavo di trovarti qua!",
+            "1": "Anche io viaggio, come sai, quindi ho diversi accampamenti sparsi per il mondo.",
+            "2": "Se ci incroceremo altre volte sarò felice di scambiare informazioni come di consueto."
+        }
+    },
+    "playerArriveSoon": {
+        "2": "Già di ritorno?",
+        "3": "Dimenticato qualcosa?",
+        "4": "Oh, sei ancora qui. Dimmi pure.",
+        "5": "Hai bisogno ancora di qualcosa?",
+        "6": "Volevi dirmi ancora qualcosa, collega?",
+        "7": "Oh, sei già di ritorno.",
+        "8": "...Ok, ora che se n'è anda... Oh! Salve di nuovo collega.",
+        "9": "Wow, che velocità, volevi rivedermi per caso?",
+        "10": "...Vediamo, ora dovrei lavorare a... Oh! Sei ancora quì collega.",
+        "11": "Uhm... ti sei mica lavato le mani col piscio?",
+        "12": "Collega, mi stai per caso prendendo in giro? Non sono un bambino.",
+        "13": "..."
+    },
+    "playerLeaveSoon": {
+        "1": "Allora a presto!",
+        "2": "Bene, a presto!",
+        "3": "Arrivederci collega, di nuovo.",
+        "4": "Buon proseguimento!",
+        "5": ""
+    },
+    "hitByPlayer": {
+        "0": "Hey!",
+        "1": "Ma che fai?! Sei fuori di testa?",
+        "2": "La piaga deve aver preso il sopravvento... Mi dispiace, ma è per il tuo bene!"
+    },
+    "hitByPlayerImmortal": {
+        "0": "Hey!",
+        "1": "C'è qualcosa che non va?",
+        "2": {
+            "0": "Ooh, capisco! Vuoi testare le mie capacità di resilienza, eh eh. Fai pure allora.",
+            "1": "Sappi però che il mio corpo è stato temprato dal freddo delle gelide lande di Polar'Hetty e dallo scontro con innumerevoli nemici, dubito riuscirai a scalfirmi!"
+        }
+    },
+    "killPlayer": {
+        "0": "Perché... Non doveva finire così...",
+        "1": "..."
+    },
+    "playerCheats": {
+        "0": "Non cadrò per questi meri trucchetti!"
+    },
+    "lowHealth": {
+        "0": "Ugh... non posso permettermi... di fallire..."
+    },
+    "death": {
+        "0": "Forse... questo mondo non è destinato a cambiare..."
+    },
+    "breakTent": {
+        "0": "Uhm... va bene fai pure, basta che non tocchi gli strumenti con cui lavoro.",
+        "1": ""
+    },
+    "makeMess": {
+        "0": "Ti prego di tenere giù le mani dalle mie cose, collega. Non posso permettermi di badare sia a un asino che a una scimmia.",
+        "1": "Per favore...",
+        "2": "Mmm..."
+    },
+    "fixMess": {
+        "0": "Grazie, vedo che allora forse esiste ancora un po' di civiltà in questo mondo.",
+        "1": "Bene...",
+        "2": "Mh..."
+    },
+    "refuseTrade": {
+        "0": "Mi dispiace, sto finendo alcune ricerche e non ho ancora niente da offrirti. Prova a ripassare più tardi.",
+        "1": {
+            "0": "Fratello.",
+            "1": "Cugino.",
+            "2": "Compagno.",
+            "3": "Compare.",
+            "4": "Ma ti pare che mi rubi le cose e poi ti vendo pure le mie ricerche?",
+            "5": "RIMETTI A POSTO."
+        },
+        "2": "Hai ancora i miei strumenti da lavoro, ricordi? Rimettili a posto.",
+        "3": "Scusa collega, purtroppo qualcuno ha rubato i miei strumenti da lavoro, finché non li avrò indietro non potrò venderti niente."
+    },
+    "playerAdvancement": {
+        "0": "Hey! Cosa stai facendo?",
+        "1": "Fermati!"
+    },
+    "borrowDonkey": {
+        "0": {
+            "0": "Oh, ti serve il mio asino per caso? Fai pure, tanto non credo che ne avrò bisogno presto.",
+            "1": "Però dovrò farti pagare di più finché non lo riporti sano e salvo, vedila come una specie di cauzione.",
+            "2": "Queste terre sono molto pericolose dopo tutto, e non si sa mai cosa possa accadere..."
+        },
+        "1": "Oh, ti serve di nuovo il mio asino? Fai pure, le regole le conosci!"
+    },
+    "borrowDonkeyHealed": {
+        "0": {
+            "0": "Oh, ti serve il mio asino? Prendilo pure, non preoccuparti.",
+            "1": "Certo, gradirei che me lo riportassi prima della mia partenza, ma se non farai in tempo posso sempre trovarmene un altro."
+        }
+    },
+    "returnDonkey": {
+        "0": "Grazie per avermelo riportato. Ti farò di nuovo i prezzi originali!"
+    },
+    "exploreCellar": {
+        "0": "Per favore, esci immediatamente da lì.",
+        "1": "..."
+    },
+    "exitCellar": {
+        "0": {
+            "0": "Mi dispiace, so che avrai molte domande a riguardo ma non posso dirti niente, riguarda una faccenda personale...",
+            "1": "Se possibile vorrei che facessi finta di non aver visto nulla, e di non farne parola con nessuno... Grazie."
+        }
+    }
+}

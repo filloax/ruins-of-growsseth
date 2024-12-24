@@ -1,0 +1,179 @@
+{
+    "shared": {
+        "0": {
+            "0": "What..? Someone wandering these lands who isn't a merchant?",
+            "1": "It can't be... Listen, are you perhaps a researcher, or some kind of explorer?",
+            "2": "So it's true, unbelievable... Let me explain: I'm both, a researcher §land§r an explorer. I've been wandering these lands for years, but I've never encountered anyone of my profession. You know, after the Plague... I thought there were no more people like me.",
+            "3": "Well, nice to meet you then. Let me introduce myself... Or at least, that's what I would like to say. It's been so long since I've used my name that I've ended up forgetting it...",
+            "4": "Anyway, let's change the subject. Whether you're a researcher or an explorer, I suppose we can still consider ourselves colleagues.",
+            "5": "Me? Personally, I don't belong to any specific branch of research. Having to constantly wander and survive alone in the wilderness has made me something of a 'jack-of-all-trades'. I imagine it's the same for you, given the courage you show in venturing out here.",
+            "6": "And speaking of adventures, during my explorations I've often come across places and relics from the now fallen kingdom. I presume they'd interest you, right?",
+            "7": "Normally, I wouldn't part with my discoveries, not even for payment, but I believe collaborating could bring us mutual benefits. So, take a look!"
+        },
+        "1": "Goodbye, it was a pleasure!",
+        "2": "Hey, come back here! You need to put those back!",
+        "3": "...",
+        "4": ""
+    },
+    "playerArrive": {
+        "2": "Good morning, colleague.",
+        "3": "...maybe, with that ingredient... Oh, hello colleague.",
+        "4": "Good morning colleague, beautiful day today, isn't it?",
+        "5": "...but of course, now it makes sense... Oh, hello, ask ahead.",
+        "6": "Glad to see you're still alive, colleague.",
+        "7": "Hello colleague, always on the move, huh?"
+    },
+    "playerArriveNight": {
+        "2": "Oh, I didn't expect to see you at this hour, is everything okay?",
+        "3": "Strange time for a visit, I hope you didn't bring any night creatures with you.",
+        "4": "Hello colleague, are you enjoying the starry sky too?",
+        "5": "Snore... AH! What are you doing here at this hour?",
+        "6": "Colleague, are you sleeping enough? Insomnia tends to attract trouble...",
+        "7": {
+            "0": "Fearless as always I see, just be careful not to bring creepers here.",
+            "1": "...Not that those pests would have the courage to explode in my presence, but still..."
+        }
+    },
+    "playerArriveAfterKilled": {
+        "0": {
+            "0": "Ah colleague, you're back, I thought I saw a monster with your likeness earlier.",
+            "1": "Luckily, someone like you would never get such ideas... right?"
+        },
+        "1": "Hello colleague, is there something wrong? You have a strange expression on your face."
+    },
+    "playerLeave": {
+        "1": "Goodbye colleague.",
+        "2": "I wish you a good day, colleague.",
+        "3": "Until your next visit!",
+        "4": "Goodbye, and always remember that on maps the north is up!"
+    },
+    "playerLeaveNight": {
+        "1": "Goodbye, have a safe journey home.",
+        "2": "Watch out for monsters on the way back, colleague.",
+        "3": "Be careful, and don't look at the demons!",
+        "4": "Goodbye, and goodnight!"
+    },
+    "playerArriveLongTime": {
+        "1": "Long time no see! I wasn't sure if you were still alive.",
+        "2": "Colleague...? Is that really you? I haven't seen you in a long time.",
+        "3": "Colleague...? Back from a long adventure I assume, do you have anything interesting to share?",
+        "4": "Long time no see, colleague.",
+        "5": "Hello colleague, it's been a while since your last visit, how are you?",
+        "6": {
+            "0": "Hello, it's been a long time...",
+            "1": "You know, I'm still waiting for you to give me back my work tools."
+        }
+    },
+    "playerArriveNewLocation": {
+        "2": {
+            "0": "Greetings, didn't expect to meet you here!",
+            "1": "As you know, I also am a traveler, so I have various encampments around the world.",
+            "2": "If we meet again, I'll be happy to share information as usual."
+        }
+    },
+    "playerArriveSoon": {
+        "2": "Back already?",
+        "3": "Forgot something?",
+        "4": "Oh, you're still here. Go ahead, tell me.",
+        "5": "Do you need something else?",
+        "6": "Did you want to tell me something else, colleague?",
+        "7": "Oh, you're back already.",
+        "8": "...Okay, now that they're gone... Oh! Hello again colleague.",
+        "9": "Wow, that was fast, did you want to see me again by any chance?",
+        "10": "...Let's see, now I should work on... Oh! You're still here colleague.",
+        "11": "Well, that was quick. Did you even leave?",
+        "12": "Colleague, are you mocking me by any chance? I'm not a child.",
+        "13": "..."
+    },
+    "playerLeaveSoon": {
+        "1": "So long, then!",
+        "2": "Alright, see you soon!",
+        "3": "Goodbye colleague, again.",
+        "4": "Have a good one!",
+        "5": ""
+    },
+    "hitByPlayer": {
+        "0": "Hey!",
+        "1": "What are you doing?! Are you out of your mind?",
+        "2": "The Plague must have taken over... I'm sorry, but it's for your own good!"
+    },
+    "hitByPlayerImmortal": {
+        "0": "Hey!",
+        "1": "Is something wrong?",
+        "2": {
+            "0": "Ooh, I see! You want to test my resilience, he he. Go ahead then.",
+            "1": "Just know that my body has been tempered by the cold of the Icy Lands and the clashes with countless enemies, I doubt you'll be able to scratch me!"
+        }
+    },
+    "killPlayer": {
+        "0": "Why... It shouldn't have ended like this...",
+        "1": "..."
+    },
+    "playerCheats": {
+        "0": "I won't fall for these cowardly tricks!"
+    },
+    "lowHealth": {
+        "0": "Ugh... I can't afford... to fail..."
+    },
+    "death": {
+        "0": "Maybe... this world isn't meant to change..."
+    },
+    "breakTent": {
+        "0": "Hmm... alright go ahead, just don't touch the tools I work with.",
+        "1": ""
+    },
+    "makeMess": {
+        "0": "Please keep your hands off my things, colleague. I can't afford to look after a donkey §land§r a monkey.",
+        "1": "Please...",
+        "2": "Mmm..."
+    },
+    "fixMess": {
+        "0": "Thank you, I see that civility may still exist in this world.",
+        "1": "Good...",
+        "2": "Hmm..."
+    },
+    "refuseTrade": {
+        "0": "I'm finishing up a research and I don't have anything to offer you yet. Try again later.",
+        "1": {
+            "0": "Brother.",
+            "1": "Cousin.",
+            "2": "Companion.",
+            "3": "Pal.",
+            "4": "Do you really think you can steal my things and then buy my research?",
+            "5": "PUT THEM BACK."
+        },
+        "2": "You still have my work tools, remember? Put them back.",
+        "3": "I'm sorry collegue, someone stole my work tools, until I'll get them back I won't be able to sell you anything."
+    },
+    "playerAdvancement": {
+        "0": "Hey! What are you doing?",
+        "1": "Stop it!"
+    },
+    "borrowDonkey": {
+        "0": {
+            "0": "Oh, do you need my donkey by any chance? Go ahead, I don't think I'll need it anytime soon.",
+            "1": "Still, I'll have to charge you more until you bring it back safe, see it as some sort of deposit.",
+            "2": "These lands are very dangerous after all, and you never know what might happen..."
+        },
+        "1": "Oh, do you need my donkey again? Go ahead, you know the rules!"
+    },
+    "borrowDonkeyHealed": {
+        "0": {
+            "0": "Oh, do you need my donkey? Take it, and don't worry about it.",
+            "1": "I would be grateful if you could bring it back before I leave, but if you can't make it in time I can always find another."
+        }
+    },
+    "returnDonkey": {
+        "0": "Thank you for bringing it back. I'll charge you the original prices again!"
+    },
+    "exploreCellar": {
+        "0": "Please, get out of there immediately.",
+        "1": "..."
+    },
+    "exitCellar": {
+        "0": {
+            "0": "I'm sorry, I know you probably have many questions, but I can't tell you anything, it's a personal matter...",
+            "1": "If possible, I'd like you to pretend you didn't see anything and not mention it to anyone... Thank you."
+        }
+    }
+}

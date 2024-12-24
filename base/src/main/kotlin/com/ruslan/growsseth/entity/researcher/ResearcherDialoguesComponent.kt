@@ -292,7 +292,7 @@ class ResearcherDialoguesComponent(
         return playersWhoMadeMess.contains(playerUuid)
     }
 
-    override fun sendDialogueToPlayer(player: ServerPlayer, line: DialogueLine) {
+    override fun sendDialogueToPlayer(player: ServerPlayer, line: DialogueLineProcessed) {
         super.sendDialogueToPlayer(player, line)
         val soundData = line.dialogue.data[DDATA_SOUND]
         if (soundData != "none") {

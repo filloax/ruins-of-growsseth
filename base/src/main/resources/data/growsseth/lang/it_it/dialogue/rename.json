@@ -1,0 +1,64 @@
+{
+    "rename": {
+        "0": {
+            "0": "Mh..? Quella è una targhetta?",
+            "1": "Un regalo piuttosto... uhm... singolare, collega. Ti è rimasto a cuore il fatto che non ricordi il mio nome, presumo.",
+            "2": "Di certo non inizierò ad indossare un guinzaglio con questa attaccata, però va bene, chiamami pure come vuoi."
+        },
+        "1": {
+            "0": "Un'altra targhetta? Hai un modo molto particolare di comunicarmi che vuoi chiamarmi in un altro modo, collega.",
+            "1": "Va bene, tanto a me non fa alcuna differenza."
+        },
+        "2": "Uh, abbastanza autoesplicativo devo dire. Forse è meglio se ti inventi effettivamente un nome proprio di persona.",
+        "3": "Uh, abbastanza autoesplicativo devo dire. Forse è meglio se ti inventi effettivamente un nome proprio di persona.",
+        "4": "Collega, so che forse ti sei impegnato con tutto te stesso nello scegliere questo nome, ma anche io ho degli standard.",
+        "5": "Collega, ti sembro per caso un fagiolo?",
+        "6": "Collega, ti sembro per caso un fagiolo?",
+        "7": "...collega, no.",
+        "8": "...collega, no.",
+        "9": "Ho già sentito l'espressione \"uomo Synergo\" in passato da dei ragazzini di un villaggio. Mi sono sembrati molto... intrattenuti nel chiamarmi così, preferirei non ripetere l'esperienza.",
+        "10": {
+            "0": "Sabaku? In una lingua lontana significa più o meno \"deserto\", dico bene? In alcune vecchie favole si parlava di un certo \"Sabaku II\" come eroe dall'elmo dorato in un mondo oscuro.",
+            "1": "Nella favola si parlava anche del suo allievo, ma il suo nome è andato perso nel tempo.",
+            "2": "In ogni caso, questo nome sembra starti a cuore collega, ma non mi appartiene, mi dispiace."
+        },
+        "11": "Il nome del vecchio re? Non voglio avere il nome di qualcuno che ha abbandonato il suo popolo quando aveva bisogno di lui, mi dispiace collega.",
+        "12": "Il nome dell'antico arciere? Collega, forse mi hai sopravvalutato, la mia mira è paragonabile a una frana nel bel mezzo di un deserto. Per favore, pensa a qualcos'altro.",
+        "13": {
+            "0": "Il nome del lupo maledetto? Collega, per quanto mi piacciano i cani, preferirei evitare di chiamarmi come il mastino che sterminava le legioni avversarie.",
+            "1": "...E in tutto ciò sto dando per scontato che tu non ti aspettassi che iniziassi ad abbaiare per te."
+        },
+        "14": "Il nome del cubetto esplosivo? Collega, ti ho forse mai dato l'idea di voler saltare in aria? Ho disseminato apposta i dintorni con escrementi anti-Creeper, no grazie.",
+        "15": {
+            "0": "Il nome di colui che morì per primo nella notte delle spade diamantine? Fu un evento terribile, uno dei tanti di quella guerra...",
+            "1": "Perdonami, ma non voglio avere un nome che richiami un evento così tragico."
+        },
+        "16": {
+            "0": "Il nome del mangialava? Collega, io non ho di certo il suo fetish, né la sua maestria nel forgiare armi, perché mai dovrei utilizzare il suo nome?",
+            "1": "A meno che questo non sia un augurio di finire arrostito, lo trovo alquanto insensato."
+        },
+        "17": {
+            "0": "Il nome del costruttore di ogni cosa, eh? Devo dire che da piccolo lo ammiravo molto, nel mio villaggio c'era un'enorme statua a sua immagine.",
+            "1": "Di sicuro è grazie a lui che la civiltà è rimasta intatta al giorno d'oggi, anche se non con lo splendore di una volta. Si dice che Ruslan sia impazzito tempo fa, che abbia forse trovato qualcosa di più grande di lui?",
+            "2": "Oh, scusa collega, sto vaneggiando. Comunque non mi sento degno di portare tale nome."
+        },
+        "18": "Collega, no. So benissimo cosa fa quella targhetta, e non ci tengo a subirne gli effetti, grazie.",
+        "19": "Collega, no. So benissimo cosa fa quella targhetta, e non ci tengo a subirne gli effetti, grazie.",
+        "20": "Jeb_, eh? Scusa collega, il mio camice non possiede la capacità di cambiare colore se ci stavi sperando, ma il nome mi sta comunque bene.",
+        "21": {
+            "0": "Oh, buffo che tu abbia scelto per me questo nome, era il nome del coniglietto che avevo quando ero piccolo.",
+            "1": "Ora che ci penso, è strano che mi ricordi il suo nome ma non il mio, non trovi?",
+            "2": "Lo accetto volentieri, in suo onore..."
+        },
+        "22": {
+            "0": "Johnny? Che strano, il solo pensare di farmi chiamare così mi eccita, mi sento come se fossi in grado di affrontare qualsiasi nemico, ostile o meno che sia!",
+            "1": "Lo accetto volentieri, questa grinta potrebbe salvarmi in situazioni disperate."
+        },
+        "23": {
+            "0": "Il nome su questa targhetta... È così... familiare...",
+            "1": "Manfredo, Manfredo... ripeterlo mi dà una strana sensazione... Che fosse il mio vecchio nome? Dannazione, non riesco a ricordare...",
+            "2": "Oh, scusa, stavo blaterando tra me e me.",
+            "3": "Lo accetto volentieri, non mi dispiace come nome."
+        }
+    }
+}
