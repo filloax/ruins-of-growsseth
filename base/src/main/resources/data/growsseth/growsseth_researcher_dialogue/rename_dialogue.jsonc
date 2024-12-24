@@ -1,0 +1,148 @@
+{
+    "rename": [
+        {
+            "content": [
+                "rename.rename.0.0",
+                "rename.rename.0.1",
+                "rename.rename.0.2"
+            ],
+            "id": "rename-first",
+            "groups": "group-first-nametag",
+            "groupUseLimit": 1,
+            "useLimit": 1,
+            "priority": -100
+        },
+        {
+            "content": [
+                "rename.rename.1.0",
+                "rename.rename.1.1"
+            ],
+            "priority": -500
+        },
+        {
+            "content": "rename.rename.2",
+            "requiresEventParam": "ricercatore"
+        },
+        {
+            "content": "rename.rename.3",
+            "requiresEventParam": "researcher"
+        },
+        {
+            "content": "rename.rename.4",
+            "requiresEventParam": "franco"
+        },
+        {
+            "content": "rename.rename.5",
+            "requiresEventParam": "folgo"
+        },
+        {
+            "content": "rename.rename.6",
+            "requiresEventParam": "foldo"
+        },
+        {
+            "content": "rename.rename.7",
+            "requiresEventParam": "palle"
+        },
+        {
+            "content": "rename.rename.8",
+            "requiresEventParam": "balls"
+        },
+        {
+            "content": "rename.rename.9",
+            "requiresEventParam": "synergo"
+        },
+        {
+            "content": [
+                "rename.rename.10.0",
+                "rename.rename.10.1",
+                "rename.rename.10.2"
+            ],
+            "requiresEventParam": "sabaku"
+        },
+        {
+            "content": "rename.rename.11",
+            "requiresEventParam": "lucio"
+        },
+        {
+            "content": "rename.rename.12",
+            "requiresEventParam": "lionel"
+        },
+        {
+            "content": [
+                "rename.rename.13.0",
+                "rename.rename.13.1"
+            ],
+            "requiresEventParam": "julius"
+        },
+        {
+            "content": "rename.rename.14",
+            "requiresEventParam": "nicolaos"
+        },
+        {
+            "content": [
+                "rename.rename.15.0",
+                "rename.rename.15.1"
+            ],
+            "requiresEventParam": "wazo"
+        },
+        {
+            "content": [
+                "rename.rename.16.0",
+                "rename.rename.16.1"
+            ],
+            "requiresEventParam": "efisio"
+        },
+        {
+            "content": [
+                "rename.rename.17.0",
+                "rename.rename.17.1",
+                "rename.rename.17.2"
+            ],
+            "requiresEventParam": "ruslan"
+        },
+        {
+            "content": "rename.rename.18",
+            "requiresEventParam": "grumm"
+        },
+        {
+            "content": "rename.rename.19",
+            "requiresEventParam": "dinnerbone"
+        },
+        {
+            "content": "rename.rename.20",
+            "requiresEventParam": "jeb_",
+            "groups": "group-first-nametag",
+            "groupUseLimit": 1
+        },
+        {
+            "content": [
+                "rename.rename.21.0",
+                "rename.rename.21.1",
+                "rename.rename.21.2"
+            ],
+            "requiresEventParam": "toast",
+            "groups": "group-first-nametag",
+            "groupUseLimit": 1
+        },
+        {
+            "content": [
+                "rename.rename.22.0",
+                "rename.rename.22.1"
+            ],
+            "requiresEventParam": "johnny",
+            "groups": "group-first-nametag",
+            "groupUseLimit": 1
+        },
+        {
+            "content": [
+                "rename.rename.23.0",
+                "rename.rename.23.1",
+                "rename.rename.23.2",
+                "rename.rename.23.3"
+            ],
+            "requiresEventParam": "manfredo",
+            "groups": "group-first-nametag",
+            "groupUseLimit": 1
+        }
+    ]
+}
