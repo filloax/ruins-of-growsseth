@@ -1,5 +1,6 @@
 package com.ruslan.growsseth.dialogues
 
+import com.filloax.fxlib.api.FxLibServices
 import com.filloax.fxlib.api.codec.mapWithValueOf
 import com.filloax.fxlib.api.codec.mutableMapCodec
 import com.filloax.fxlib.api.codec.mutableSetOf
@@ -13,13 +14,16 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.config.ClientConfig
+import com.ruslan.growsseth.config.GrowssethConfig
 import com.ruslan.growsseth.config.MiscConfig
 import com.ruslan.growsseth.dialogues.BasicDialogueEvents
 import com.ruslan.growsseth.dialogues.DialoguesNpc.Companion.getDialogueNpcs
 import com.ruslan.growsseth.network.DialoguePacket
+import com.ruslan.growsseth.network.DialogueSeparatorPacket
 import com.ruslan.growsseth.quests.QuestOwner
 import com.ruslan.growsseth.utils.isNull
 import com.ruslan.growsseth.utils.notNull
+import com.ruslan.growsseth.utils.serverLang
 import net.minecraft.ChatFormatting
 import net.minecraft.advancements.AdvancementHolder
 import net.minecraft.core.UUIDUtil
@@ -77,7 +81,7 @@ open class BasicDialoguesComponent(
     protected var numOfInbetweenPlayers: Int = 0
 
     // UUID is player's
-    protected val dialogueQueues = mutableMapOf<UUID, Deque<Pair<DialogueLine, DialogueEvent>>>()
+    protected val dialogueQueues = mutableMapOf<UUID, Deque<Pair<DialogueLineProcessed, DialogueEvent>>>()
     protected var dialogueQueueDelays = mutableMapOf<UUID, Int>()
     protected val playersSkipNextMessage = mutableSetOf<UUID>()
     protected val serverLevel: ServerLevel get() = entity.level() as ServerLevel
@@ -142,7 +146,7 @@ open class BasicDialoguesComponent(
 
     fun isQueueEmpty(playerUUID: UUID): Boolean {
         val playerQueue = dialogueQueues.getOrDefault(playerUUID, null)
-        return (playerQueue == null || playerQueue.isEmpty())
+        return playerQueue.isNullOrEmpty()
     }
 
     fun skipCurrentMessage(uuid: UUID) {
@@ -171,19 +175,9 @@ open class BasicDialoguesComponent(
                     sendDialogueToPlayer(player, line)
                     if (dialogueQueue.isNotEmpty()) {
                         val sameId = line.dialogue.id == dialogueQueue.peek().first.dialogue.id
-                        dialogueQueueDelay = if (line.duration != null) {
-                            if (MiscConfig.dialogueWordsPerMinute > 0)
-                                line.duration.secondsToTicks()
-                            else 0
-                        } else if (sameId) {
-                            val readingTime = if (MiscConfig.dialogueWordsPerMinute > 0) estimateReadingTime(line.content) else 0F
-                            (dialogueSecondsSameId + readingTime).secondsToTicks()
-                        } else {
-                            // Shorter delay in consecutive dialogues
-                            if (dialogueDelayMaxSeconds > 0)
-                                random.nextInt() % (dialogueDelayMaxSeconds / 2).secondsToTicks()
-                            else 0
-                        }
+                        dialogueQueueDelay = if (MiscConfig.dialogueWordsPerMinute > 0)
+                            line.duration.secondsToTicks()
+                        else 0
                         if (!sameId)
                             sendSeparatorToPlayer(player)
                     } else {
@@ -264,20 +258,14 @@ open class BasicDialoguesComponent(
     protected open fun changeNearPlayers(nearPlayers: MutableSet<ServerPlayer>, farPlayers: MutableSet<ServerPlayer>) {}
     protected open fun afterPlayersCheck(nearPlayers: Set<ServerPlayer>, inbetweenPlayers: Set<ServerPlayer>, farPlayers: Set<ServerPlayer>) {}
 
-    override fun sendDialogueToPlayer(player: ServerPlayer, line: DialogueLine) {
-        if (line.content != "") {
-//            val nameComp = Component.literal("<").append(entity.name.copy().withStyle(ChatFormatting.YELLOW)).append("> ")
-//            val messageComp = nameComp.append(Component.translatable(line.content))
-//            player.displayClientMessage(messageComp, false)
-            player.sendPacket(DialoguePacket(line, entity.name))
-        }
+    override fun sendDialogueToPlayer(player: ServerPlayer, line: DialogueLineProcessed) {
+//        if (line.text != "") {
+            player.sendPacket(DialoguePacket(line, entity.name, entity.uuid))
+//        }
     }
 
     protected open fun sendSeparatorToPlayer(player: ServerPlayer) {
-        if (!ClientConfig.disableNpcDialogues) {
-            val messageComp = Component.literal("*-------------------").withStyle(ChatFormatting.DARK_GRAY)
-            player.displayClientMessage(messageComp, false)
-        }
+        player.sendPacket(DialogueSeparatorPacket(entity.name, entity.uuid))
     }
 
     override fun triggerDialogueEntry(player: ServerPlayer, dialogueEntry: DialogueEntry) {
@@ -285,15 +273,16 @@ open class BasicDialoguesComponent(
     }
 
     protected fun queueDialogue(player: ServerPlayer, dialogueEntry: DialogueEntry, event: DialogueEvent) {
-        if (dialogueEntry.content.isEmpty() || dialogueEntry.content[0].content == "") return
+        if (dialogueEntry.content.isEmpty() /*|| dialogueEntry.content[0].content == ""*/) return
 
         val dialogueQueue = dialogueQueues.computeIfAbsent(player.uuid) { LinkedBlockingDeque() }
 
+        val lines = dialogueEntry.content
         if (dialogueDelayMaxSeconds > 0) {
-            val lines = dialogueEntry.content
             if (dialogueEntry.immediate) {
                 // Reverse so that in offering first segments are in right order
                 lines.reversed().forEachIndexed{ idx, it ->
+                    val processedLine = materializeDialogueLine(dialogueEntry, it)
                     // reversed, so last is first
                     if (idx == lines.size - 1) {
                         // If queue is not empty (aka ongoing dialogue) send separator at start
@@ -301,28 +290,28 @@ open class BasicDialoguesComponent(
                         if (dialogueQueue.isNotEmpty()) {
                             sendSeparatorToPlayer(player)
                         }
-                        sendDialogueToPlayer(player, it)
+                        sendDialogueToPlayer(player, processedLine)
                         if (lines.size == 1) {
                             sendSeparatorToPlayer(player)
                         }
                     } else {
-                        dialogueQueue.offerFirst(Pair(it, event))
+                        dialogueQueue.offerFirst(Pair(processedLine, event))
                         // Since first dialogue is played immediately, delay the second
                         if (idx == lines.size - 2 && MiscConfig.dialogueWordsPerMinute > 0) {
-                            val readingTime = estimateReadingTime(lines[0].content)
+                            val readingTime = estimateReadingTime(lines[0])
                             dialogueQueueDelays[player.uuid] = (dialogueSecondsSameId + readingTime).secondsToTicks()
                         }
                     }
                 }
             } else {
-                lines.forEach { dialogueQueue.offer(Pair(it, event)) }
+                lines.forEach { dialogueQueue.offer(Pair(materializeDialogueLine(dialogueEntry, it), event)) }
             }
             if ((dialogueQueueDelays[player.uuid] ?: 0) <= 0) {
                 dialogueQueueDelays[player.uuid] = random.nextInt() % dialogueDelayMaxSeconds.secondsToTicks()
             }
         } else {
-            dialogueEntry.content.forEach {
-                sendDialogueToPlayer(player, it)
+            lines.forEach {
+                sendDialogueToPlayer(player, materializeDialogueLine(dialogueEntry, it))
             }
         }
     }
@@ -628,7 +617,15 @@ open class BasicDialoguesComponent(
         return (entity.level().gameTime - time) / 20.0
     }
 
-    protected fun estimateReadingTime(text: String, wordsPerMinute: Int = MiscConfig.dialogueWordsPerMinute): Float {
+    protected fun materializeDialogueLine(entry: DialogueEntry, line: DialogueLine): DialogueLineProcessed {
+        return DialogueLineProcessed(line.content(), estimateReadingTime(line)).also {
+            it.dialogue = entry
+        }
+    }
+
+    protected fun estimateReadingTime(line: DialogueLine, wordsPerMinute: Int = MiscConfig.dialogueWordsPerMinute): Float {
+        val text = line.content()
+
         // Calculate the number of words in the text, ignore small words (<=2 chars)
         val wordCount = text.split(Regex("\\s+")).filter { it.replace(Regex("[^A-Za-z0-9\\\\s]"), "").length > 2 }.size
 

@@ -1,0 +1,61 @@
+{
+    "shared": {
+        "0": {
+            "0": "Oh... hello colleague. §o*yawn*§r uh... lately I've been feeling sleepy all the time, even though I've been sleeping more than usual.",
+            "1": "Perhaps my relentless research is wearing me out more than usual. §o*yawn*§r",
+            "2": "Tell me... have you come across any information about the symptoms of the Plague, by any chance? There are rumors that maybe, just maybe, there could be a cure. Not that I really believe it, haha!",
+            "3": "Me? I'm doing great §o*yawn*§r ...don't worry, I'm following my instincts. But staying in a tent might have made me sick. After all, I'm not getting any younger! Haha... §o*yawn*§r"
+        },
+        "1": {
+            "0": "§o...pant... pant...§r Colleague? Is that you..? Are we... in my cellar? What are you doing here? And why am I in my cage..?",
+            "1": "Oh, I remember now. In the end, I couldn't find that cursed ingredient...",
+            "2": "Wait... this smell... this taste... §lNOW I UNDERSTAND!§r",
+            "3": "It was the weakness potion, wasn't it? And this other taste... a golden apple? I can't believe it, that was one of the last combinations I had left to try!",
+            "4": "...",
+            "5": "Oh right, sorry! I got so caught up in the excitement that I forgot to thank you!",
+            "6": "Thank you so much, colleague. I was sure my end had come, I even wrote a farewell diary, and yet here I am, alive.",
+            "7": "I can never repay you enough but please, if you need any of my research, don't hesitate to ask. It's the least I can do.",
+            "8": "I'll go back up once I've fully recovered... I'd like to prepare a few things."
+        },
+        "2": {
+            "0": "§o...pant... pant...§r What? Who are you..? Are we... in my cellar? What are you doing here? And why am I in my cage..?",
+            "1": "Oh, I remember now. In the end, I couldn't find that cursed ingredient...",
+            "2": "Wait... this smell... this taste... §lNOW I UNDERSTAND!§r",
+            "3": "It was the weakness potion, wasn't it? And this other taste... a golden apple? I can't believe it, that was one of the last combinations I had left to try!",
+            "4": "...",
+            "5": "Oh right, sorry! I got so caught up in the excitement that I forgot to introduce myself and thank you!",
+            "6": "I'm a researcher... I would tell you my name, but unfortunately, I have long forgotten it, perhaps due to the symptoms of undeath...",
+            "7": "For a long time, I sought a cure for undeath, but it seems you've beaten me to it... I imagine you're a fellow researcher, given your skills. Am I right?",
+            "8": "Thank you so much. I was sure my end had come, I even wrote a farewell diary, and yet here I am, alive.",
+            "9": "I can never repay you enough but please, if you need any of my research, don't hesitate to ask. It's the least I can do.",
+            "10": "I'll go back up once I've fully recovered... I'd like to prepare a few things."
+        },
+        "3": {
+            "0": "Hello, colleague.",
+            "1": "You know, after everything that happened, I thought it was time to retire... For years I've wandered these lands with no results, and in the end, I even failed in my one true goal.",
+            "2": "So I thought about it, and I came to a conclusion... No, my journey isn't over yet, there's still something I can do.",
+            "3": "Now that you've found the cure, someone needs to spread it, right? I'll do it. I'll travel to faraway places and bring it to anyone who needs it. That will be my redemption.",
+            "4": "But don't be sad about my departure, colleague! Sooner or later, our paths will cross again. I'm sure of it.",
+            "5": "Anyway, I wanted to thank you once more. If it weren't for you, I wouldn't be here, standing, breathing, and above all, there wouldn't be hope for a new world. For all this, thank you.",
+            "6": "§lAhem ahem§r, anyway, I'll be leaving soon, so if there's anything else you want to ask, now's the time."
+        },
+        "4": {
+            "0": "Hello colleague.",
+            "1": "You know, after everything that happened, I thought it was time to retire... For years I've wandered these lands with no results, and in the end, I even failed in my one true goal.",
+            "2": "So I thought about it, and I came to a conclusion... No, my journey isn't over yet, there's still something I can do.",
+            "3": "Now that you've found the cure, someone needs to spread it, right? I'll do it. I'll travel to faraway places and bring it to anyone who needs it. That will be my redemption.",
+            "4": "Anyway, I wanted to thank you once more. If it weren't for you, I wouldn't be here, standing, breathing, and above all, there wouldn't be hope for a new world. For all this, thank you.",
+            "5": "§lAhem ahem§r, anyway, I'll be leaving soon, so if there's anything else you want to ask, now's the time."
+        }
+    },
+    "playerLeave": {
+        "0": "Goodbye colleague. And don't you dare become an undead, huh!",
+        "1": "Goodbye colleague, I'll miss you."
+    },
+    "playerLeaveSoon": {
+        "0": "Goodbye colleague, again."
+    },
+    "playerLeaveNight": {
+        "0": "Goodbye colleague, I'll miss you."
+    }
+}

@@ -21,6 +21,7 @@ object GrowssethCommands {
         QuestCommand.register(dispatcher, registryAccess, environment)
         GrowssethPlaceCommand.register(dispatcher, registryAccess, environment)
         GrowssethLocateCommand.register(dispatcher, registryAccess, environment)
+        GrowssethDataCommand.register(dispatcher, registryAccess, environment)
     }
 
     object ArgumentTypes {
