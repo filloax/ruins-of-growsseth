@@ -282,7 +282,7 @@ open class BasicDialoguesComponent(
             if (dialogueEntry.immediate) {
                 // Reverse so that in offering first segments are in right order
                 lines.reversed().forEachIndexed{ idx, it ->
-                    val processedLine = materializeDialogueLine(it)
+                    val processedLine = materializeDialogueLine(dialogueEntry, it)
                     // reversed, so last is first
                     if (idx == lines.size - 1) {
                         // If queue is not empty (aka ongoing dialogue) send separator at start
@@ -304,14 +304,14 @@ open class BasicDialoguesComponent(
                     }
                 }
             } else {
-                lines.forEach { dialogueQueue.offer(Pair(materializeDialogueLine(it), event)) }
+                lines.forEach { dialogueQueue.offer(Pair(materializeDialogueLine(dialogueEntry, it), event)) }
             }
             if ((dialogueQueueDelays[player.uuid] ?: 0) <= 0) {
                 dialogueQueueDelays[player.uuid] = random.nextInt() % dialogueDelayMaxSeconds.secondsToTicks()
             }
         } else {
             lines.forEach {
-                sendDialogueToPlayer(player, materializeDialogueLine(it))
+                sendDialogueToPlayer(player, materializeDialogueLine(dialogueEntry, it))
             }
         }
     }
@@ -617,8 +617,10 @@ open class BasicDialoguesComponent(
         return (entity.level().gameTime - time) / 20.0
     }
 
-    protected fun materializeDialogueLine(line: DialogueLine): DialogueLineProcessed {
-        return DialogueLineProcessed(line.content(), estimateReadingTime(line))
+    protected fun materializeDialogueLine(entry: DialogueEntry, line: DialogueLine): DialogueLineProcessed {
+        return DialogueLineProcessed(line.content(), estimateReadingTime(line)).also {
+            it.dialogue = entry
+        }
     }
 
     protected fun estimateReadingTime(line: DialogueLine, wordsPerMinute: Int = MiscConfig.dialogueWordsPerMinute): Float {

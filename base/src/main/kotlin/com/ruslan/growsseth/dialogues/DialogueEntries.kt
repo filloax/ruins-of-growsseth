@@ -1,6 +1,7 @@
 package com.ruslan.growsseth.dialogues
 
 import com.mojang.datafixers.util.Either
+import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.utils.serverLang
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
@@ -73,7 +74,7 @@ data class DialogueEntry(
 
     companion object {
         fun ofKey(key: String): DialogueEntry {
-            return DialogueEntry(content=listOf(DialogueLine(key=key)))
+            return DialogueEntry(content=listOf(DialogueLine(key="${Constants.LANG_DIALOGUE_PREFIX}.$key")))
         }
 
         fun ofText(text: String): DialogueEntry {

@@ -4,6 +4,7 @@ object Constants {
     const val TRADES_DATA_FOLDER = "growsseth_researcher_trades"
     const val RESEARCHER_DIALOGUE_DATA_FOLDER = "growsseth_researcher_dialogue"
     const val RESEARCHER_DIALOGUE_CONVERTED_FOLDER = "growsseth_converted_researcher_dialogue"
+    const val RESEARCHER_DIALOGUE_EXTRACTED_FOLDER = "growsseth_extracted_researcher_dialogue"
     const val PRESET_PLACES_FOLDER = "growsseth_places"
     const val EVENT_NAMESPACE = "event"
 
@@ -12,6 +13,8 @@ object Constants {
     const val TEMPLATE_DIARY_FOLDER = "researcher_diary"
 
     const val DEFAULT_LANGUAGE = "en_us"
+
+    const val LANG_DIALOGUE_PREFIX = "dialogue"
 
     const val DATA_PLAYER_MET_RESEARCHER = "metResearcher"
     const val TAG_RESEARCHER_DONKEY = "researcher_donkey"
