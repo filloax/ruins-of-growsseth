@@ -4,19 +4,10 @@ import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.dialogues.DialogueLine
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonArray
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.decodeFromJsonElement
-import kotlinx.serialization.json.encodeToJsonElement
-import kotlinx.serialization.json.jsonArray
-import kotlinx.serialization.json.jsonObject
-import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.*
 
 object LocationEntryConversion {
-    const val KEY_CONTENT = "content"
+    const val KEY_CONTENT = "name"
     const val KEY_TEXT = "text"
     const val KEY_KEY = "key"
 
@@ -27,15 +18,15 @@ object LocationEntryConversion {
     /**
      * returns: dialogue file with text entries replaced to keys, and dialogues lang object with the extracted text in the keys
      */
-    fun extractKeysFromPlacesFile(root: JsonObject, langPrefix: String): Pair<JsonObject, JsonObject> {
-        val entries: Map<String, List<JsonElement>> = JSON.decodeFromJsonElement(root)
+    fun extractKeysFromPlacesFile(root: JsonArray, langPrefix: String): Pair<JsonArray, JsonObject> {
+        val entries: List<JsonElement> = JSON.decodeFromJsonElement(root)
         val langStrings = mutableMapOf<String, String>()
-        val toKeys = entries.mapValues { (event, list) -> list.withIndex().map { (index, element) ->
+        val toKeys = entries.withIndex().map { (index, element) ->
             when (element) {
-                is JsonObject -> extractKeysFromEntry(element, "${langPrefix}.${event}.$index") { k, v -> langStrings[k] = v }
+                is JsonObject -> extractKeysFromEntry(element, "${langPrefix}.$index") { k, v -> langStrings[k] = v }
                 else -> element
             }
-        }.let(::JsonArray) }.let(::JsonObject)
+        }.let(::JsonArray)
 
         return Pair(toKeys, createNestedJsonObject(langStrings))
     }
@@ -123,7 +114,7 @@ object LocationEntryConversion {
 
     private fun extractKeysFromContent(content: JsonObject, key: String, keysInserter: (key: String, value: String) -> Unit): JsonObject {
         return if (content.containsKey(KEY_TEXT)) {
-            keysInserter("${Constants.LANG_DIALOGUE_PREFIX}.$key", content[KEY_TEXT]!!.jsonPrimitive.content)
+            keysInserter("${Constants.LANG_PLACES_PREFIX}.$key", content[KEY_TEXT]!!.jsonPrimitive.content)
 
             JsonObject(
                 mapOf(KEY_KEY to JsonPrimitive(key))

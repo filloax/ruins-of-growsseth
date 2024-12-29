@@ -39,7 +39,7 @@ object GrowssethDataCommand {
                 DIALOGUES_ROOT,
                 Constants.RESEARCHER_DIALOGUE_EXTRACTED_FOLDER,
                 Constants.LANG_DIALOGUE_PREFIX,
-                GrowssethDataCommand::tryMakeDialogueFiles
+                GrowssethDataCommand::tryWriteDialogueFiles
             ),
             "dialogue"
         ),
@@ -48,7 +48,7 @@ object GrowssethDataCommand {
                 PLACES_ROOT,
                 Constants.PRESET_PLACES_EXTRACTED_FOLDER,
                 Constants.LANG_PLACES_PREFIX,
-                GrowssethDataCommand::tryMakePlacesFiles
+                GrowssethDataCommand::tryWritePlacesFiles
             ),
             "places"
         )
@@ -57,8 +57,8 @@ object GrowssethDataCommand {
     private data class DataExtractionParams(
         val dataRoot: String,
         val extractedFolder: String,
-        val langPrefix: String,
-        val tryMakeFiles: (Resource, String, CommandSourceStack, Path, String, Path) -> Boolean,
+        val langSubfolderPrefix: String,
+        val tryWriteFiles: (Resource, String, CommandSourceStack, Path, String, Path) -> Boolean,
     )
 
     fun register(dispatcher: CommandDispatcher<CommandSourceStack>, registryAccess: CommandBuildContext, environment: CommandSelection) {
@@ -111,10 +111,11 @@ object GrowssethDataCommand {
         outputFile.parent.toFile().mkdirs()
 
         // create lang files under dialogue/places subfolder
-        val langDir = convertedDir.resolve(adjustedPath.namespace).resolve("lang/${lang}/${params.langPrefix}")
+        val langPrefix = params.langSubfolderPrefix
+        val langDir = convertedDir.resolve(adjustedPath.namespace).resolve("lang/${lang}/${langPrefix}")
         langDir.toFile().mkdirs()
 
-        if (!params.tryMakeFiles(resource, prefix, source, outputFile, params.langPrefix, langDir)) return 0
+        if (!params.tryWriteFiles(resource, prefix, source, outputFile, langPrefix, langDir)) return 0
 
         source.sendSuccess({
             Component.translatable("growsseth.commands.gdata.extract.success", convertedDir.toString(), langDir.toString())
@@ -123,7 +124,7 @@ object GrowssethDataCommand {
         return 1
     }
 
-    private fun tryMakeDialogueFiles(resource: Resource, prefix: String, source: CommandSourceStack, outputFile: Path, langPrefix: String, langDir: Path): Boolean {
+    private fun tryWriteDialogueFiles(resource: Resource, prefix: String, source: CommandSourceStack, outputFile: Path, langPrefix: String, langDir: Path): Boolean {
         val (keyObj, languageStringObj) = try {
             resource.openAsReader()
                 .readText()
@@ -134,7 +135,26 @@ object GrowssethDataCommand {
             return false
         }
         outputFile.writeText(JSON.encodeToString(JsonObject.serializer(), keyObj))
+        writeLanguageStrings(languageStringObj, langPrefix, langDir)
+        return true
+    }
 
+    private fun tryWritePlacesFiles(resource: Resource, prefix: String, source: CommandSourceStack, outputFile: Path, langPrefix: String, langDir: Path): Boolean {
+        val (keyArray, languageStringObj) = try {
+            resource.openAsReader()
+                .readText()
+                .let { JSON.decodeFromString(JsonArray.serializer(), it) }
+                .let { LocationEntryConversion.extractKeysFromPlacesFile(it, prefix) }
+        } catch (e: Exception) {
+            source.sendFailure(Component.translatable("growsseth.commands.gdata.extract.parse-failure"))
+            return false
+        }
+        outputFile.writeText(JSON.encodeToString(JsonArray.serializer(), keyArray))
+        writeLanguageStrings(languageStringObj, langPrefix, langDir)
+        return true
+    }
+
+    private fun writeLanguageStrings(languageStringObj: JsonObject, langPrefix: String, langDir: Path) {
         languageStringObj[langPrefix]!!.jsonObject.forEach { (name, subObj) ->
             val out = langDir.resolve("${name}.json")
             var obj = subObj
@@ -144,12 +164,6 @@ object GrowssethDataCommand {
             }
             out.writeText(JSON.encodeToString(JsonElement.serializer(), obj))
         }
-        return true
-    }
-
-    private fun tryMakePlacesFiles(resource: Resource, prefix: String, source: CommandSourceStack, outputFile: Path, langPrefix: String, langDir: Path): Boolean {
-        // TODO
-        return false
     }
 
     private fun showHelp(source: CommandSourceStack, dataType: DataType): Int {
