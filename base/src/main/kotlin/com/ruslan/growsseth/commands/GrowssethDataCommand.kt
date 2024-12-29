@@ -14,10 +14,13 @@ import net.minecraft.commands.Commands.*
 import net.minecraft.commands.arguments.ResourceLocationArgument
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.packs.resources.Resource
 import net.minecraft.world.level.storage.LevelResource
+import java.nio.file.Path
 import kotlin.io.path.exists
 import kotlin.io.path.readText
 import kotlin.io.path.writeText
+import kotlin.io.readText
 import kotlin.jvm.optionals.getOrNull
 
 object GrowssethDataCommand {
@@ -29,27 +32,34 @@ object GrowssethDataCommand {
 
     private enum class DataType(
         val params: DataExtractionParams,
-        val id: String
+        val helpId: String
     ) {
         DIALOGUES(
             DataExtractionParams(
                 DIALOGUES_ROOT,
-                DialogueEntryConversion::extractKeysFromDialogueFile,
                 Constants.RESEARCHER_DIALOGUE_EXTRACTED_FOLDER,
-                Constants.LANG_DIALOGUE_PREFIX
+                Constants.LANG_DIALOGUE_PREFIX,
+                GrowssethDataCommand::tryMakeDialogueFiles
             ),
-            "dialogues"
+            "dialogue"
         ),
         PLACES(
             DataExtractionParams(
                 PLACES_ROOT,
-                LocationEntryConversion::extractKeysFromPlacesFile,
                 Constants.PRESET_PLACES_EXTRACTED_FOLDER,
-                Constants.LANG_PLACES_PREFIX
+                Constants.LANG_PLACES_PREFIX,
+                GrowssethDataCommand::tryMakePlacesFiles
             ),
             "places"
         )
     }
+
+    private data class DataExtractionParams(
+        val dataRoot: String,
+        val extractedFolder: String,
+        val langPrefix: String,
+        val tryMakeFiles: (Resource, String, CommandSourceStack, Path, String, Path) -> Boolean,
+    )
 
     fun register(dispatcher: CommandDispatcher<CommandSourceStack>, registryAccess: CommandBuildContext, environment: CommandSelection) {
         dispatcher.register(
@@ -82,13 +92,6 @@ object GrowssethDataCommand {
             )
     }
 
-    private data class DataExtractionParams(
-        val dataRoot: String,
-        val extractKeysFromFile: (root: JsonObject, langPrefix: String) -> Pair<JsonObject, JsonObject>,
-        val extractedFolder: String,
-        val langPrefix: String
-    )
-
     private fun extractText(source: CommandSourceStack, filePath: ResourceLocation, prefix: String, lang: String, dataType: DataType): Int {
         val params: DataExtractionParams = dataType.params
         val adjustedPath = filePath.withPath("${params.dataRoot}/${filePath.path}")
@@ -102,51 +105,56 @@ object GrowssethDataCommand {
             return 0
         }
 
+        val generated = source.server.getWorldPath(LevelResource.GENERATED_DIR).normalize()
+        val convertedDir = generated.resolve(params.extractedFolder)
+        val outputFile = convertedDir.resolve(adjustedPath.namespace).resolve(adjustedPath.path)
+        outputFile.parent.toFile().mkdirs()
+
+        // create lang files under dialogue/places subfolder
+        val langDir = convertedDir.resolve(adjustedPath.namespace).resolve("lang/${lang}/${params.langPrefix}")
+        langDir.toFile().mkdirs()
+
+        if (!params.tryMakeFiles(resource, prefix, source, outputFile, params.langPrefix, langDir)) return 0
+
+        source.sendSuccess({
+            Component.translatable("growsseth.commands.gdata.extract.success", convertedDir.toString(), langDir.toString())
+        }, true)
+
+        return 1
+    }
+
+    private fun tryMakeDialogueFiles(resource: Resource, prefix: String, source: CommandSourceStack, outputFile: Path, langPrefix: String, langDir: Path): Boolean {
         val (keyObj, languageStringObj) = try {
             resource.openAsReader()
                 .readText()
                 .let { JSON.decodeFromString(JsonObject.serializer(), it) }
-                .let { params.extractKeysFromFile(it, prefix) }
+                .let { DialogueEntryConversion.extractKeysFromDialogueFile(it, prefix) }
         } catch (e: Exception) {
             source.sendFailure(Component.translatable("growsseth.commands.gdata.extract.parse-failure"))
-            return 0
+            return false
         }
-
-        val generated = source.server.getWorldPath(LevelResource.GENERATED_DIR).normalize()
-        val convertedDir = generated.resolve(params.extractedFolder)
-        val outputFile = convertedDir.resolve(adjustedPath.namespace).resolve(adjustedPath.path)
-
-        outputFile.parent.toFile().mkdirs()
         outputFile.writeText(JSON.encodeToString(JsonObject.serializer(), keyObj))
 
-        // create lang files under dialogue/places subfolder
-
-        val langDir = convertedDir.resolve(adjustedPath.namespace).resolve("lang/${lang}/${params.langPrefix}")
-        langDir.toFile().mkdirs()
-
-        languageStringObj[params.langPrefix]!!.jsonObject.forEach { (name, subObj) ->
+        languageStringObj[langPrefix]!!.jsonObject.forEach { (name, subObj) ->
             val out = langDir.resolve("${name}.json")
-
             var obj = subObj
             if (out.exists()) {
                 val existingObj = JSON.decodeFromString<JsonObject>(out.readText())
                 obj = mergeJsonObjects(existingObj, subObj.jsonObject)
             }
-
             out.writeText(JSON.encodeToString(JsonElement.serializer(), obj))
         }
+        return true
+    }
 
-        source.sendSuccess({
-                Component.translatable("growsseth.commands.gdata.extract.success", convertedDir.toString(), langDir.toString())
-            }, true)
-
-        return 1
+    private fun tryMakePlacesFiles(resource: Resource, prefix: String, source: CommandSourceStack, outputFile: Path, langPrefix: String, langDir: Path): Boolean {
+        // TODO
+        return false
     }
 
     private fun showHelp(source: CommandSourceStack, dataType: DataType): Int {
-        val type = dataType.id
         source.sendSuccess({
-            Component.translatable("growsseth.commands.gdata.$type.extract.help")
+            Component.translatable("growsseth.commands.gdata.${dataType.helpId}.extract.help")
         }, true)
         return 1
     }
@@ -170,5 +178,4 @@ object GrowssethDataCommand {
 
         return JsonObject(mergedContent)
     }
-
 }
