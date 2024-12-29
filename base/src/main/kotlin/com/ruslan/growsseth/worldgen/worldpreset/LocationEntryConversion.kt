@@ -1,21 +1,33 @@
-package com.ruslan.growsseth.dialogues
+package com.ruslan.growsseth.worldgen.worldpreset
 
 import com.ruslan.growsseth.Constants
+import com.ruslan.growsseth.dialogues.DialogueLine
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
-import kotlinx.serialization.json.*
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.decodeFromJsonElement
+import kotlinx.serialization.json.encodeToJsonElement
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 
-object DialogueEntryConversion {
+object LocationEntryConversion {
     const val KEY_CONTENT = "content"
     const val KEY_TEXT = "text"
     const val KEY_KEY = "key"
 
     private val JSON = Json
 
+    // TODO: COPIED FROM DIALOGUES ONE, TO ADAPT FOR PLACES
+
     /**
      * returns: dialogue file with text entries replaced to keys, and dialogues lang object with the extracted text in the keys
      */
-    fun extractKeysFromDialogueFile(root: JsonObject, langPrefix: String): Pair<JsonObject, JsonObject> {
+    fun extractKeysFromPlacesFile(root: JsonObject, langPrefix: String): Pair<JsonObject, JsonObject> {
         val entries: Map<String, List<JsonElement>> = JSON.decodeFromJsonElement(root)
         val langStrings = mutableMapOf<String, String>()
         val toKeys = entries.mapValues { (event, list) -> list.withIndex().map { (index, element) ->
@@ -29,9 +41,9 @@ object DialogueEntryConversion {
     }
 
     fun transformOldDialogueFile(root: JsonObject): JsonObject {
-        // old format changes dialogue lines mainly, so everything else is the same object
-        // containing shared + events, each field is an array containing a list of dialogue entries
-        // outside of shared can have only an id, referencing a shared dialogue,
+        // old format changes dialogue lines mainly, so everything else is the same
+        // object containing shared + events, each field is an array containing a list of
+        // dialogue entries outside of shared can have only an id, referencing a shared dialogue,
         // and can also be a string (direct text) instead of an object
 
         return root.mapValues { (key, dialogues) ->
@@ -44,10 +56,10 @@ object DialogueEntryConversion {
 
         for ((path, value) in map) {
             val keys = path.split(".").let { maxDepth?.let { d ->
-                    if (d < it.size) {
-                        it.subList(0, d) + it.subList(d, it.size).joinToString(".")
-                    } else { it }
-                } ?: it }
+                if (d < it.size) {
+                    it.subList(0, d) + it.subList(d, it.size).joinToString(".")
+                } else { it }
+            } ?: it }
             var currentLevel = root
 
             for (i in keys.indices) {
@@ -105,7 +117,7 @@ object DialogueEntryConversion {
 
         return JsonObject(
             mapOf(KEY_CONTENT to simplifiedContent )
-            + dialogueEntry.minus(KEY_CONTENT)
+                    + dialogueEntry.minus(KEY_CONTENT)
         )
     }
 

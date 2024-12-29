@@ -24,7 +24,7 @@ object GrowssethTemplateCommand {
     private val ERROR_BOOK_TEMPLATE_INVALID = DynamicCommandExceptionType { Component.translatable("growsseth.commands.gtemplate.invalidbooktemplate", it) }
     private val ERROR_SIGN_TEMPLATE_INVALID = DynamicCommandExceptionType { Component.translatable("growsseth.commands.gtemplate.invalidsigntemplate", it) }
 
-    enum class TemplateType { BOOK, SIGN }
+    private enum class TemplateType { BOOK, SIGN }
 
     fun register(dispatcher: CommandDispatcher<CommandSourceStack>, registryAccess: CommandBuildContext, environment: CommandSelection) {
         dispatcher.register(literal("gtemplate").requires{ it.hasPermission(2) }
@@ -37,7 +37,7 @@ object GrowssethTemplateCommand {
         )
     }
 
-    fun <T : ArgumentBuilder<CommandSourceStack, T>> registerTemplateArgs(builder: ArgumentBuilder<CommandSourceStack, T>, templateType: TemplateType) {
+    private fun <T : ArgumentBuilder<CommandSourceStack, T>> registerTemplateArgs(builder: ArgumentBuilder<CommandSourceStack, T>, templateType: TemplateType) {
         builder
             .then(
                 argument("targets", EntityArgument.player())
