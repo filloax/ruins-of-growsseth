@@ -27,7 +27,29 @@ object GrowssethDataCommand {
         prettyPrint = true
     }
 
-    private enum class DataType { DIALOGUES, PLACES }
+    private enum class DataType(
+        val params: DataExtractionParams,
+        val id: String
+    ) {
+        DIALOGUES(
+            DataExtractionParams(
+                DIALOGUES_ROOT,
+                DialogueEntryConversion::extractKeysFromDialogueFile,
+                Constants.RESEARCHER_DIALOGUE_EXTRACTED_FOLDER,
+                Constants.LANG_DIALOGUE_PREFIX
+            ),
+            "dialogues"
+        ),
+        PLACES(
+            DataExtractionParams(
+                PLACES_ROOT,
+                LocationEntryConversion::extractKeysFromPlacesFile,
+                Constants.PRESET_PLACES_EXTRACTED_FOLDER,
+                Constants.LANG_PLACES_PREFIX
+            ),
+            "places"
+        )
+    }
 
     fun register(dispatcher: CommandDispatcher<CommandSourceStack>, registryAccess: CommandBuildContext, environment: CommandSelection) {
         dispatcher.register(
@@ -68,7 +90,7 @@ object GrowssethDataCommand {
     )
 
     private fun extractText(source: CommandSourceStack, filePath: ResourceLocation, prefix: String, lang: String, dataType: DataType): Int {
-        val params: DataExtractionParams = getExtractionParams(dataType)
+        val params: DataExtractionParams = dataType.params
         val adjustedPath = filePath.withPath("${params.dataRoot}/${filePath.path}")
 
         val resource = source.server.resourceManager.getResource(adjustedPath).getOrNull() ?: run {
@@ -99,7 +121,7 @@ object GrowssethDataCommand {
 
         // create lang files under dialogue/places subfolder
 
-        val langDir = generated.resolve("lang/${lang}/${params.langPrefix}")
+        val langDir = convertedDir.resolve(adjustedPath.namespace).resolve("lang/${lang}/${params.langPrefix}")
         langDir.toFile().mkdirs()
 
         languageStringObj[params.langPrefix]!!.jsonObject.forEach { (name, subObj) ->
@@ -121,32 +143,8 @@ object GrowssethDataCommand {
         return 1
     }
 
-    private fun getExtractionParams(dataType: DataType): DataExtractionParams {
-        return when(dataType) {
-            DataType.DIALOGUES -> {
-                DataExtractionParams(
-                    DIALOGUES_ROOT,
-                    DialogueEntryConversion::extractKeysFromDialogueFile,
-                    Constants.RESEARCHER_DIALOGUE_EXTRACTED_FOLDER,
-                    Constants.LANG_DIALOGUE_PREFIX
-                )
-            }
-            DataType.PLACES -> {
-                DataExtractionParams(
-                    PLACES_ROOT,
-                    LocationEntryConversion::extractKeysFromPlacesFile,
-                    Constants.PRESET_PLACES_EXTRACTED_FOLDER,
-                    Constants.LANG_PLACES_PREFIX
-                )
-           }
-        }
-    }
-
     private fun showHelp(source: CommandSourceStack, dataType: DataType): Int {
-        val type = when(dataType) {
-            DataType.DIALOGUES -> "dialogue"
-            DataType.PLACES -> "places"
-        }
+        val type = dataType.id
         source.sendSuccess({
             Component.translatable("growsseth.commands.gdata.$type.extract.help")
         }, true)
