@@ -135,7 +135,17 @@ object GrowssethDataCommand {
             return false
         }
         outputFile.writeText(JSON.encodeToString(JsonObject.serializer(), keyObj))
-        writeLanguageStrings(languageStringObj, langPrefix, langDir)
+
+        languageStringObj[langPrefix]!!.jsonObject.forEach { (name, subObj) ->
+            val out = langDir.resolve("${name}.json")
+            var obj = subObj
+            if (out.exists()) {
+                val existingObj = JSON.decodeFromString<JsonObject>(out.readText())
+                obj = mergeJsonObjects(existingObj, subObj.jsonObject)
+            }
+            out.writeText(JSON.encodeToString(JsonElement.serializer(), obj))
+        }
+
         return true
     }
 
@@ -150,20 +160,16 @@ object GrowssethDataCommand {
             return false
         }
         outputFile.writeText(JSON.encodeToString(JsonArray.serializer(), keyArray))
-        writeLanguageStrings(languageStringObj, langPrefix, langDir)
-        return true
-    }
 
-    private fun writeLanguageStrings(languageStringObj: JsonObject, langPrefix: String, langDir: Path) {
-        languageStringObj[langPrefix]!!.jsonObject.forEach { (name, subObj) ->
-            val out = langDir.resolve("${name}.json")
-            var obj = subObj
-            if (out.exists()) {
-                val existingObj = JSON.decodeFromString<JsonObject>(out.readText())
-                obj = mergeJsonObjects(existingObj, subObj.jsonObject)
-            }
-            out.writeText(JSON.encodeToString(JsonElement.serializer(), obj))
+        val outLang = langDir.resolve("${prefix}.json")
+        var obj = languageStringObj
+        if (outLang.exists()) {
+            val existingObj = JSON.decodeFromString<JsonObject>(outLang.readText())
+            obj = mergeJsonObjects(existingObj, languageStringObj)
         }
+        outLang.writeText(JSON.encodeToString(JsonElement.serializer(), obj))
+
+        return true
     }
 
     private fun showHelp(source: CommandSourceStack, dataType: DataType): Int {
