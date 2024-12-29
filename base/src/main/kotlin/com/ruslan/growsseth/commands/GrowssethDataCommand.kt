@@ -2,9 +2,11 @@ package com.ruslan.growsseth.commands
 
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.arguments.StringArgumentType
+import com.mojang.brigadier.builder.ArgumentBuilder
 import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.dialogues.DialogueEntryConversion
+import com.ruslan.growsseth.worldgen.worldpreset.LocationEntryConversion
 import kotlinx.serialization.json.*
 import net.minecraft.commands.CommandBuildContext
 import net.minecraft.commands.CommandSourceStack
@@ -12,76 +14,95 @@ import net.minecraft.commands.Commands.*
 import net.minecraft.commands.arguments.ResourceLocationArgument
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
-import net.minecraft.server.packs.PackType
 import net.minecraft.world.level.storage.LevelResource
 import kotlin.io.path.exists
-import kotlin.io.path.inputStream
 import kotlin.io.path.readText
 import kotlin.io.path.writeText
 import kotlin.jvm.optionals.getOrNull
 
 object GrowssethDataCommand {
-    const val DIALOGUES_ROOT = "growsseth_researcher_dialogue"
+    const val DIALOGUES_ROOT = Constants.RESEARCHER_DIALOGUE_DATA_FOLDER
+    const val PLACES_ROOT = Constants.PRESET_PLACES_FOLDER
     private val JSON = Json {
         prettyPrint = true
     }
 
+    private enum class DataType { DIALOGUES, PLACES }
+
     fun register(dispatcher: CommandDispatcher<CommandSourceStack>, registryAccess: CommandBuildContext, environment: CommandSelection) {
         dispatcher.register(
             literal("gdata").requires{ it.hasPermission(2) }
-                .then(literal("dialogue")
-                    .then(literal("extract")
-                        .then(argument("lang", StringArgumentType.word())
-                        .then(argument("prefix", StringArgumentType.word())
-                        .then(argument("filePath", ResourceLocationArgument.id())
-                        .executes { extractDialogueText(
-                            it.source,
-                            ResourceLocationArgument.getId(it, "filePath"),
-                            StringArgumentType.getString(it, "prefix"),
-                            StringArgumentType.getString(it, "lang"),
-                        ) }
-                        )))
-                        .executes { ctx -> showHelp(ctx.source, "dialogue.extract") }
-                    )
+                .then(
+                    literal("dialogue").also { arg -> registerDataArgs(arg, DataType.DIALOGUES) }
+                )
+                .then(
+                    literal("places").also { arg -> registerDataArgs(arg, DataType.PLACES) }
                 )
         )
     }
 
-    private fun extractDialogueText(source: CommandSourceStack, filePath: ResourceLocation, prefix: String, lang: String): Int {
-        val adjustedPath = filePath.withPath("${DIALOGUES_ROOT}/${filePath.path}")
+    private fun <T : ArgumentBuilder<CommandSourceStack, T>> registerDataArgs(builder: ArgumentBuilder<CommandSourceStack, T>, dataType: DataType) {
+        builder
+            .then(literal("extract")
+                .then(argument("lang", StringArgumentType.word())
+                    .then(argument("prefix", StringArgumentType.word())
+                        .then(argument("filePath", ResourceLocationArgument.id())
+                        .executes {
+                            extractText(
+                            it.source,
+                            ResourceLocationArgument.getId(it, "filePath"),
+                            StringArgumentType.getString(it, "prefix"),
+                            StringArgumentType.getString(it, "lang"),
+                            dataType
+                        ) }
+                    )))
+                .executes { ctx -> showHelp(ctx.source, dataType) }
+            )
+    }
+
+    private data class DataExtractionParams(
+        val dataRoot: String,
+        val extractKeysFromFile: (root: JsonObject, langPrefix: String) -> Pair<JsonObject, JsonObject>,
+        val extractedFolder: String,
+        val langPrefix: String
+    )
+
+    private fun extractText(source: CommandSourceStack, filePath: ResourceLocation, prefix: String, lang: String, dataType: DataType): Int {
+        val params: DataExtractionParams = getExtractionParams(dataType)
+        val adjustedPath = filePath.withPath("${params.dataRoot}/${filePath.path}")
 
         val resource = source.server.resourceManager.getResource(adjustedPath).getOrNull() ?: run {
             RuinsOfGrowsseth.LOGGER.info(
                 "Available files: {}",
-                source.server.resourceManager.listResources(DIALOGUES_ROOT) { true }
+                source.server.resourceManager.listResources(params.dataRoot) { true }
             )
-            source.sendFailure(Component.translatable("growsseth.commands.gdata.dialogue.extract.not-found", adjustedPath.path))
+            source.sendFailure(Component.translatable("growsseth.commands.gdata.extract.not-found", adjustedPath.path))
             return 0
         }
 
-        val (dialogueKeyObj, languageStringObj) = try {
+        val (keyObj, languageStringObj) = try {
             resource.openAsReader()
                 .readText()
                 .let { JSON.decodeFromString(JsonObject.serializer(), it) }
-                .let { DialogueEntryConversion.extractKeysFromDialogueFile(it, prefix) }
+                .let { params.extractKeysFromFile(it, prefix) }
         } catch (e: Exception) {
-            source.sendFailure(Component.translatable("growsseth.commands.gdata.dialogue.extract.parse-failure"))
+            source.sendFailure(Component.translatable("growsseth.commands.gdata.extract.parse-failure"))
             return 0
         }
 
         val generated = source.server.getWorldPath(LevelResource.GENERATED_DIR).normalize()
-        val convertedDir = generated.resolve(Constants.RESEARCHER_DIALOGUE_EXTRACTED_FOLDER)
+        val convertedDir = generated.resolve(params.extractedFolder)
         val outputFile = convertedDir.resolve(adjustedPath.namespace).resolve(adjustedPath.path)
 
         outputFile.parent.toFile().mkdirs()
-        outputFile.writeText(JSON.encodeToString(JsonObject.serializer(), dialogueKeyObj))
+        outputFile.writeText(JSON.encodeToString(JsonObject.serializer(), keyObj))
 
-        // create lang files under dialogue subfolder
+        // create lang files under dialogue/places subfolder
 
-        val langDir = generated.resolve("lang/${lang}/${Constants.LANG_DIALOGUE_PREFIX}")
+        val langDir = generated.resolve("lang/${lang}/${params.langPrefix}")
         langDir.toFile().mkdirs()
 
-        languageStringObj[Constants.LANG_DIALOGUE_PREFIX]!!.jsonObject.forEach { (name, subObj) ->
+        languageStringObj[params.langPrefix]!!.jsonObject.forEach { (name, subObj) ->
             val out = langDir.resolve("${name}.json")
 
             var obj = subObj
@@ -94,17 +115,41 @@ object GrowssethDataCommand {
         }
 
         source.sendSuccess({
-                Component.translatable("growsseth.commands.gdata.dialogue.extract.success", convertedDir.toString(), langDir.toString())
+                Component.translatable("growsseth.commands.gdata.extract.success", convertedDir.toString(), langDir.toString())
             }, true)
 
         return 1
     }
 
-    private fun showHelp(source: CommandSourceStack, what: String): Int {
-        source.sendSuccess({
-            Component.translatable("growsseth.commands.gdata.$what.help")
-        }, true)
+    private fun getExtractionParams(dataType: DataType): DataExtractionParams {
+        return when(dataType) {
+            DataType.DIALOGUES -> {
+                DataExtractionParams(
+                    DIALOGUES_ROOT,
+                    DialogueEntryConversion::extractKeysFromDialogueFile,
+                    Constants.RESEARCHER_DIALOGUE_EXTRACTED_FOLDER,
+                    Constants.LANG_DIALOGUE_PREFIX
+                )
+            }
+            DataType.PLACES -> {
+                DataExtractionParams(
+                    PLACES_ROOT,
+                    LocationEntryConversion::extractKeysFromPlacesFile,
+                    Constants.PRESET_PLACES_EXTRACTED_FOLDER,
+                    Constants.LANG_PLACES_PREFIX
+                )
+           }
+        }
+    }
 
+    private fun showHelp(source: CommandSourceStack, dataType: DataType): Int {
+        val type = when(dataType) {
+            DataType.DIALOGUES -> "dialogue"
+            DataType.PLACES -> "places"
+        }
+        source.sendSuccess({
+            Component.translatable("growsseth.commands.gdata.$type.extract.help")
+        }, true)
         return 1
     }
 
