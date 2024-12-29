@@ -15,7 +15,6 @@ import net.minecraft.util.profiling.ProfilerFiller
 import net.minecraft.world.level.storage.LevelResource
 
 
-
 /**
  * The file format for dialogues is a JSON file with an object as root:
  * Each field is either the name of a dialogue event or `shared`, containing a list of [DialogueEntry].
@@ -80,11 +79,11 @@ class ResearcherDialogueListener : KotlinJsonResourceReloadListener(JSON, Consta
                 val success = try {
                     convertOldFormat(fileIdentifier, jsonElement)
                 } catch (e2: Exception) {
-                    RuinsOfGrowsseth.LOGGER.error( "Growsseth: Couldn't convert old dialogue file {}", fileIdentifier, e2)
+                    RuinsOfGrowsseth.LOGGER.error("Couldn't convert old dialogue file {}", fileIdentifier, e2)
                     return
                 }
                 if (!success) {
-                    RuinsOfGrowsseth.LOGGER.error( "Growsseth: Couldn't parse dialogue file {}", fileIdentifier, e)
+                    RuinsOfGrowsseth.LOGGER.error("Couldn't parse dialogue file {}", fileIdentifier, e)
                 }
             }
         }
