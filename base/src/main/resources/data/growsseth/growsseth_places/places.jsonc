@@ -1,6 +1,6 @@
 [
     {
-        "name": "\"\"\"Casa\"\"\" tra i ghiacci",
+        "name": "places.0",
         "x": "520",
         "y": "63",
         "z": "-223",
@@ -13,7 +13,7 @@
         "hidden": true
     },
     {
-        "name": "Accampamento nella Foresta Lontana",
+        "name": "places.1",
         "x": "-1004",
         "y": "71",
         "z": "6794",
@@ -26,7 +26,7 @@
         "hidden": true
     },
     {
-        "name": "Accampamento sulla Riva",
+        "name": "places.2",
         "x": "1064",
         "y": "63",
         "z": "4242",
@@ -39,7 +39,7 @@
         "hidden": true
     },
     {
-        "name": "Accampamento tra le nevi",
+        "name": "places.3",
         "x": "1272",
         "y": "30",
         "z": "-1400",
@@ -52,7 +52,7 @@
         "hidden": true
     },
     {
-        "name": "Antro Aaahno",
+        "name": "places.4",
         "x": "2210",
         "y": "67",
         "z": "315",
@@ -65,7 +65,7 @@
         "hidden": false
     },
     {
-        "name": "Antro Abissale",
+        "name": "places.5",
         "x": "1360",
         "y": "33",
         "z": "-1809",
@@ -78,7 +78,7 @@
         "hidden": false
     },
     {
-        "name": "Antro in Calore",
+        "name": "places.6",
         "x": "1139",
         "y": "66",
         "z": "1223",
@@ -91,7 +91,7 @@
         "hidden": false
     },
     {
-        "name": "Avamposto di Re Vlasta",
+        "name": "places.7",
         "x": "1310",
         "y": "61",
         "z": "1641",
@@ -104,7 +104,7 @@
         "hidden": false
     },
     {
-        "name": "Avamposto Mil'han",
+        "name": "places.8",
         "x": "1624",
         "y": "87",
         "z": "-1835",
@@ -117,7 +117,7 @@
         "hidden": false
     },
     {
-        "name": "Bacon of Light",
+        "name": "places.9",
         "x": "217",
         "y": "54",
         "z": "-538",
@@ -130,7 +130,7 @@
         "hidden": false
     },
     {
-        "name": "Bastiodon",
+        "name": "places.10",
         "x": "146",
         "y": "77",
         "z": "525",
@@ -143,7 +143,7 @@
         "hidden": false
     },
     {
-        "name": "Bastione Sul Lago Di Lava",
+        "name": "places.11",
         "x": "-122",
         "y": "35 ",
         "z": "875",
@@ -156,7 +156,7 @@
         "hidden": false
     },
     {
-        "name": "Bosco Buonlegno",
+        "name": "places.12",
         "x": "1454",
         "y": "0",
         "z": "168",
@@ -169,7 +169,7 @@
         "hidden": false
     },
     {
-        "name": "Bosco Metroennovanta",
+        "name": "places.13",
         "x": "1713",
         "y": "72",
         "z": "-156",
@@ -182,7 +182,7 @@
         "hidden": false
     },
     {
-        "name": "Ca**o di Orientamento",
+        "name": "places.14",
         "x": "566",
         "y": "0",
         "z": "-780",
@@ -195,7 +195,7 @@
         "hidden": true
     },
     {
-        "name": "Canyon di Elondo",
+        "name": "places.15",
         "x": "1105",
         "y": "0",
         "z": "-88",
@@ -208,7 +208,7 @@
         "hidden": false
     },
     {
-        "name": "Capanna nella Palude - Elondo",
+        "name": "places.16",
         "x": "1143",
         "y": "65",
         "z": "-348",
@@ -221,7 +221,7 @@
         "hidden": false
     },
     {
-        "name": "Capanna nella Palude - Polar'Hetty",
+        "name": "places.17",
         "x": "1200",
         "y": "0",
         "z": "-764",
@@ -235,7 +235,7 @@
     },
     {
         "name_original": "Casa della Setta in Fiamme",
-        "name": "Casa della Setta",
+        "name": "places.18",
         "x": "4088",
         "y": "96",
         "z": "2930",
@@ -248,7 +248,7 @@
         "hidden": false
     },
     {
-        "name": "Cascata Trebutti",
+        "name": "places.19",
         "x": "3254",
         "y": "0",
         "z": "2125",
@@ -261,7 +261,7 @@
         "hidden": false
     },
     {
-        "name": "Cascata TuttiGiuPerTerra",
+        "name": "places.20",
         "x": "2916",
         "y": "62",
         "z": "792",
@@ -274,7 +274,7 @@
         "hidden": false
     },
     {
-        "name": "Castello Abissale di Re Vlasta",
+        "name": "places.21",
         "x": "692",
         "y": "63",
         "z": "-966",
@@ -287,7 +287,7 @@
         "hidden": false
     },
     {
-        "name": "Cava dei Terreni",
+        "name": "places.22",
         "x": "1350",
         "y": "30",
         "z": "260",
@@ -300,7 +300,7 @@
         "hidden": false
     },
     {
-        "name": "Cava Quattrolave",
+        "name": "places.23",
         "x": "1355",
         "y": "-46",
         "z": "201",
@@ -313,7 +313,7 @@
         "hidden": false
     },
     {
-        "name": "Centro Commerciale di Arrese",
+        "name": "places.24",
         "x": "1400",
         "y": "14",
         "z": "360",
@@ -326,7 +326,7 @@
         "hidden": false
     },
     {
-        "name": "Città Ancestrale",
+        "name": "places.25",
         "x": "4064",
         "y": "-34",
         "z": "2447",
@@ -339,7 +339,7 @@
         "hidden": false
     },
     {
-        "name": "Colle Buonamerenda",
+        "name": "places.26",
         "x": "858",
         "y": "0",
         "z": "1419",
@@ -352,7 +352,7 @@
         "hidden": false
     },
     {
-        "name": "Costello di GoldMortadel",
+        "name": "places.27",
         "x": "144",
         "y": "68",
         "z": "195",
@@ -365,7 +365,7 @@
         "hidden": false
     },
     {
-        "name": "Cratere del Deathstandy",
+        "name": "places.28",
         "x": "3923 ",
         "y": "153 ",
         "z": "2813",
@@ -378,7 +378,7 @@
         "hidden": false
     },
     {
-        "name": "Egobalego",
+        "name": "places.29",
         "x": "552",
         "y": "0",
         "z": "8",
@@ -391,7 +391,7 @@
         "hidden": false
     },
     {
-        "name": "Fenditura Profondissima",
+        "name": "places.30",
         "x": "2756",
         "y": "0",
         "z": "2339",
@@ -404,7 +404,7 @@
         "hidden": false
     },
     {
-        "name": "Fondale Belrespiro",
+        "name": "places.31",
         "x": "984",
         "y": "41",
         "z": "-1176",
@@ -417,7 +417,7 @@
         "hidden": false
     },
     {
-        "name": "Foresta dei funghi pois-rcini",
+        "name": "places.32",
         "x": "1460",
         "y": "100",
         "z": "2400",
@@ -430,7 +430,7 @@
         "hidden": false
     },
     {
-        "name": "Fortezza del Nether",
+        "name": "places.33",
         "x": "339",
         "y": "71",
         "z": "-242",
@@ -443,7 +443,7 @@
         "hidden": false
     },
     {
-        "name": "Fortezza del Sapere",
+        "name": "places.34",
         "x": "1348",
         "y": "38",
         "z": "239",
@@ -456,7 +456,7 @@
         "hidden": false
     },
     {
-        "name": "Fortezza di Seeh'r Joe",
+        "name": "places.35",
         "x": "691",
         "y": "58",
         "z": "285",
@@ -469,7 +469,7 @@
         "hidden": false
     },
     {
-        "name": "Frattura Raigeki",
+        "name": "places.36",
         "x": "3254",
         "y": "70",
         "z": "-7112",
@@ -482,7 +482,7 @@
         "hidden": false
     },
     {
-        "name": "Funghipelago di Amsterdont",
+        "name": "places.37",
         "x": "1297",
         "y": "63",
         "z": "5204",
@@ -495,7 +495,7 @@
         "hidden": false
     },
     {
-        "name": "Golemmilano Marittima",
+        "name": "places.38",
         "x": "1696",
         "y": "0",
         "z": "128",
@@ -508,7 +508,7 @@
         "hidden": false
     },
     {
-        "name": "Grotta Andata",
+        "name": "places.39",
         "x": "1416",
         "y": "35",
         "z": "230",
@@ -521,7 +521,7 @@
         "hidden": false
     },
     {
-        "name": "Grotta Delavizzata",
+        "name": "places.40",
         "x": "-710",
         "y": "23",
         "z": "630",
@@ -534,7 +534,7 @@
         "hidden": false
     },
     {
-        "name": "Grotta Mohl Hare",
+        "name": "places.41",
         "x": "03450",
         "y": "90",
         "z": "3002",
@@ -547,7 +547,7 @@
         "hidden": false
     },
     {
-        "name": "Grotta Oodle",
+        "name": "places.42",
         "x": "1090 ",
         "y": "26",
         "z": "4064",
@@ -560,7 +560,7 @@
         "hidden": false
     },
     {
-        "name": "Il Bæo",
+        "name": "places.43",
         "x": "843",
         "y": "66",
         "z": "-1630",
@@ -573,7 +573,7 @@
         "hidden": false
     },
     {
-        "name": "Il SottoSotto",
+        "name": "places.44",
         "x": "1174",
         "y": "-1",
         "z": "-742",
@@ -586,7 +586,7 @@
         "hidden": false
     },
     {
-        "name": "Il vero ca**o",
+        "name": "places.45",
         "x": "1356",
         "y": "79",
         "z": "-228",
@@ -599,7 +599,7 @@
         "hidden": false
     },
     {
-        "name": "Ingresso a H'tessWorg -  Bastione con Torrione",
+        "name": "places.46",
         "x": "-127",
         "y": "54",
         "z": "846",
@@ -612,7 +612,7 @@
         "hidden": true
     },
     {
-        "name": "Ingresso a H'tessworg - Amsterdont",
+        "name": "places.47",
         "x": "169 ",
         "y": "70 ",
         "z": "644",
@@ -625,7 +625,7 @@
         "hidden": true
     },
     {
-        "name": "Ingresso a H'tessWorg - Foresta",
+        "name": "places.48",
         "x": "100",
         "y": "90",
         "z": "23",
@@ -638,7 +638,7 @@
         "hidden": true
     },
     {
-        "name": "Ingresso a H'tessworg - Mario Monte",
+        "name": "places.49",
         "x": "336",
         "y": "101",
         "z": "341",
@@ -651,7 +651,7 @@
         "hidden": true
     },
     {
-        "name": "Ingresso a H'tessworg - Monstā Cādo",
+        "name": "places.50",
         "x": "449",
         "y": "60",
         "z": "-874",
@@ -664,7 +664,7 @@
         "hidden": true
     },
     {
-        "name": "Ingresso a H'Tessworg - Polar'Hetty",
+        "name": "places.51",
         "x": "164",
         "y": "55",
         "z": "-135",
@@ -677,7 +677,7 @@
         "hidden": true
     },
     {
-        "name": "Ingresso a H'tessWorg - Portale Dei Gemelli",
+        "name": "places.52",
         "x": "428",
         "y": "84",
         "z": "87",
@@ -690,7 +690,7 @@
         "hidden": true
     },
     {
-        "name": "Ingresso a H'tessWorg - Savana",
+        "name": "places.53",
         "x": "134",
         "y": "66",
         "z": "530",
@@ -703,7 +703,7 @@
         "hidden": true
     },
     {
-        "name": "Ingresso a H'tessWorg - Villajjo",
+        "name": "places.54",
         "x": "170",
         "y": "65",
         "z": "25",
@@ -716,7 +716,7 @@
         "hidden": true
     },
     {
-        "name": "Kor Teena (da 1 pezzo)",
+        "name": "places.55",
         "x": "663",
         "y": "108",
         "z": "579",
@@ -729,7 +729,7 @@
         "hidden": false
     },
     {
-        "name": "L'altro Villajjo",
+        "name": "places.56",
         "x": "942",
         "y": "64",
         "z": "220",
@@ -742,7 +742,7 @@
         "hidden": false
     },
     {
-        "name": "Lago di Bolooonhe",
+        "name": "places.57",
         "x": "1703",
         "y": "62",
         "z": "450",
@@ -755,7 +755,7 @@
         "hidden": false
     },
     {
-        "name": "Mario Monte",
+        "name": "places.58",
         "x": "2756",
         "y": "0",
         "z": "2339",
@@ -768,7 +768,7 @@
         "hidden": false
     },
     {
-        "name": "Mondo di End: Limbo",
+        "name": "places.59",
         "x": "100",
         "y": "49",
         "z": "2",
@@ -781,7 +781,7 @@
         "hidden": false
     },
     {
-        "name": "Monte Bocca di Lava",
+        "name": "places.60",
         "x": "814",
         "y": "123",
         "z": "1108",
@@ -794,7 +794,7 @@
         "hidden": false
     },
     {
-        "name": "Monte Ceres",
+        "name": "places.61",
         "x": "3605",
         "y": "168",
         "z": "2947",
@@ -807,7 +807,7 @@
         "hidden": false
     },
     {
-        "name": "Monte Heineken",
+        "name": "places.62",
         "x": "3555",
         "y": "175",
         "z": "2644",
@@ -820,7 +820,7 @@
         "hidden": false
     },
     {
-        "name": "Monte Mobile",
+        "name": "places.63",
         "x": "549",
         "y": "155",
         "z": "821",
@@ -833,7 +833,7 @@
         "hidden": false
     },
     {
-        "name": "Monte Quayraza",
+        "name": "places.64",
         "x": "1248",
         "y": "90",
         "z": "-1518",
@@ -846,7 +846,7 @@
         "hidden": false
     },
     {
-        "name": "Monte Sbocco",
+        "name": "places.65",
         "x": "3254",
         "y": "0",
         "z": "2125",
@@ -859,7 +859,7 @@
         "hidden": false
     },
     {
-        "name": "Nave Affondata",
+        "name": "places.66",
         "x": "1556",
         "y": "0",
         "z": "-1075",
@@ -872,7 +872,7 @@
         "hidden": false
     },
     {
-        "name": "Nug-Gate",
+        "name": "places.67",
         "x": "632",
         "y": "0",
         "z": "136",
@@ -885,7 +885,7 @@
         "hidden": false
     },
     {
-        "name": "Piana di Biancavilla",
+        "name": "places.68",
         "x": "2259",
         "y": "69",
         "z": "-1668",
@@ -898,7 +898,7 @@
         "hidden": false
     },
     {
-        "name": "Piramide Esplosa",
+        "name": "places.69",
         "x": "3820",
         "y": "68",
         "z": "-7366",
@@ -911,7 +911,7 @@
         "hidden": false
     },
     {
-        "name": "Polar'hetty",
+        "name": "places.70",
         "x": "410",
         "y": "0",
         "z": "-214",
@@ -924,7 +924,7 @@
         "hidden": false
     },
     {
-        "name": "Portale artigianale",
+        "name": "places.71",
         "x": "410",
         "y": "52",
         "z": "273",
@@ -937,7 +937,7 @@
         "hidden": true
     },
     {
-        "name": "Portale Dei Gemelli",
+        "name": "places.72",
         "x": "3315",
         "y": "64",
         "z": "767",
@@ -950,7 +950,7 @@
         "hidden": true
     },
     {
-        "name": "Portale nella Mega Taiga",
+        "name": "places.73",
         "x": "-947",
         "y": "64",
         "z": "780",
@@ -963,7 +963,7 @@
         "hidden": true
     },
     {
-        "name": "Portale per H'tessWorg - Foresta",
+        "name": "places.74",
         "x": "824",
         "y": "0",
         "z": "200",
@@ -976,7 +976,7 @@
         "hidden": true
     },
     {
-        "name": "Portale per H'tessworg - Mario Monte",
+        "name": "places.75",
         "x": "2722",
         "y": "120",
         "z": "2670",
@@ -989,7 +989,7 @@
         "hidden": true
     },
     {
-        "name": "Portale per H'Tessworg - Polar'Hetty",
+        "name": "places.76",
         "x": "1350",
         "y": "65",
         "z": "-982",
@@ -1002,7 +1002,7 @@
         "hidden": true
     },
     {
-        "name": "Prigione di Impellenza",
+        "name": "places.77",
         "x": "1380",
         "y": "193",
         "z": "281",
@@ -1015,7 +1015,7 @@
         "hidden": true
     },
     {
-        "name": "Rovine Abissali",
+        "name": "places.78",
         "x": "-1553",
         "y": "39",
         "z": "2527",
@@ -1028,7 +1028,7 @@
         "hidden": false
     },
     {
-        "name": "Sala del Portale",
+        "name": "places.79",
         "x": "1368",
         "y": "25",
         "z": "190",
@@ -1041,7 +1041,7 @@
         "hidden": false
     },
     {
-        "name": "Spiaggia CacoCaco",
+        "name": "places.80",
         "x": "1260",
         "y": "0",
         "z": "850",
@@ -1054,7 +1054,7 @@
         "hidden": false
     },
     {
-        "name": "Spiaggia Origine - World Spawn",
+        "name": "places.81",
         "x": "400",
         "y": "0",
         "z": "-48",
@@ -1067,7 +1067,7 @@
         "hidden": false
     },
     {
-        "name": "Tempio di Vlasta tra i Coralli",
+        "name": "places.82",
         "x": "1090",
         "y": "41",
         "z": "4447",
@@ -1080,7 +1080,7 @@
         "hidden": false
     },
     {
-        "name": "Tempio nella Giungla (Quello Non Vero)",
+        "name": "places.83",
         "x": "2696",
         "y": "73",
         "z": "-8344 ",
@@ -1093,7 +1093,7 @@
         "hidden": false
     },
     {
-        "name": "Tempio nella Giungla (Quello Vero)",
+        "name": "places.84",
         "x": "2360",
         "y": "84",
         "z": "-8472",
@@ -1106,7 +1106,7 @@
         "hidden": false
     },
     {
-        "name": "Terre di Sculk",
+        "name": "places.85",
         "x": "3658",
         "y": "15",
         "z": "2750",
@@ -1119,7 +1119,7 @@
         "hidden": false
     },
     {
-        "name": "Torre Kassah'no",
+        "name": "places.86",
         "x": "725",
         "y": "0",
         "z": "-1235",
@@ -1132,7 +1132,7 @@
         "hidden": false
     },
     {
-        "name": "Torre To'tti",
+        "name": "places.87",
         "x": "1432",
         "y": "0",
         "z": "1416",
@@ -1145,7 +1145,7 @@
         "hidden": false
     },
     {
-        "name": "Traforo Agheenelano ",
+        "name": "places.88",
         "x": "3700",
         "y": "1",
         "z": "2835",
@@ -1158,7 +1158,7 @@
         "hidden": false
     },
     {
-        "name": "Tunnel Menchemmeno",
+        "name": "places.89",
         "x": "779",
         "y": "30",
         "z": "143",
@@ -1171,7 +1171,7 @@
         "hidden": false
     },
     {
-        "name": "Un Pozzo",
+        "name": "places.90",
         "x": "4273",
         "y": "74",
         "z": "-7646",
@@ -1184,7 +1184,7 @@
         "hidden": false
     },
     {
-        "name": "Villaggio Degli H2Ostrogoti",
+        "name": "places.91",
         "x": "1145",
         "y": "74",
         "z": "4070",
@@ -1197,7 +1197,7 @@
         "hidden": false
     },
     {
-        "name": "Villaggio delle Divinità Egizie",
+        "name": "places.92",
         "x": "4406",
         "y": "89",
         "z": "-7583",
@@ -1210,7 +1210,7 @@
         "hidden": false
     },
     {
-        "name": "Villaggio di Capraecavoli",
+        "name": "places.93",
         "x": "173",
         "y": "145",
         "z": "858",
@@ -1223,7 +1223,7 @@
         "hidden": false
     },
     {
-        "name": "Villaggio di Desolato",
+        "name": "places.94",
         "x": "-1081",
         "y": "68",
         "z": "696",
@@ -1236,7 +1236,7 @@
         "hidden": false
     },
     {
-        "name": "Villaggio di Iban",
+        "name": "places.95",
         "x": "1671",
         "y": "63",
         "z": "-262",
@@ -1249,7 +1249,7 @@
         "hidden": false
     },
     {
-        "name": "Villaggio di Maho Cādo",
+        "name": "places.96",
         "x": "4720",
         "y": "64",
         "z": "-7000",
@@ -1262,7 +1262,7 @@
         "hidden": false
     },
     {
-        "name": "Villaggio di Monstā Cādo",
+        "name": "places.97",
         "x": "3611",
         "y": "66",
         "z": "-7002",
@@ -1275,7 +1275,7 @@
         "hidden": false
     },
     {
-        "name": "Villaggio di Pah C'hani",
+        "name": "places.98",
         "x": "3093",
         "y": "70",
         "z": "-7000",
@@ -1288,7 +1288,7 @@
         "hidden": false
     },
     {
-        "name": "Villaggio di Paolo Sarpig",
+        "name": "places.99",
         "x": "1902",
         "y": "101",
         "z": "2990",
@@ -1301,7 +1301,7 @@
         "hidden": false
     },
     {
-        "name": "Villaggio di Pen Sione",
+        "name": "places.100",
         "x": "1456",
         "y": "64",
         "z": "-1997",
@@ -1314,7 +1314,7 @@
         "hidden": false
     },
     {
-        "name": "Villaggio di Phreddura",
+        "name": "places.101",
         "x": "262",
         "y": "63",
         "z": "-900",
@@ -1327,7 +1327,7 @@
         "hidden": false
     },
     {
-        "name": "Villaggio di Shinkuro Cādo",
+        "name": "places.102",
         "x": "3025",
         "y": "73",
         "z": "-8050",
@@ -1340,7 +1340,7 @@
         "hidden": false
     },
     {
-        "name": "Villaggio di Torappo Cādo",
+        "name": "places.103",
         "x": "4050 ",
         "y": "67 ",
         "z": "-7280",
@@ -1353,7 +1353,7 @@
         "hidden": false
     },
     {
-        "name": "Villaggio di Vaati-Kano",
+        "name": "places.104",
         "x": "2951",
         "y": "70",
         "z": "685",
@@ -1366,7 +1366,7 @@
         "hidden": false
     },
     {
-        "name": "Villaggio Int'Her",
+        "name": "places.105",
         "x": "1782",
         "y": "67",
         "z": "-2024",
@@ -1379,7 +1379,7 @@
         "hidden": false
     },
     {
-        "name": "Villaggio Zero",
+        "name": "places.106",
         "x": "3251",
         "y": "72",
         "z": "874",
@@ -1393,7 +1393,7 @@
     },
     {
         "name_original": "Villajjo - Casa",
-        "name": "Villajjo",
+        "name": "places.107",
         "x": "1344",
         "y": "68",
         "z": "240",
@@ -1406,7 +1406,7 @@
         "hidden": false
     },
     {
-        "name": "Voragine Cubica",
+        "name": "places.108",
         "x": "2617",
         "y": "0",
         "z": "1709",
@@ -1419,7 +1419,7 @@
         "hidden": false
     },
     {
-        "name": "Voragine di Cartagine",
+        "name": "places.109",
         "x": "1733",
         "y": "1",
         "z": "342",
@@ -1432,7 +1432,7 @@
         "hidden": false
     },
     {
-        "name": "Voragine di Godagine",
+        "name": "places.110",
         "x": "925 ",
         "y": "-12 ",
         "z": "361",
