@@ -1,5 +1,6 @@
 {
     "shared": [
+        // Used by more events (referenced by id)
         {
             "content": [
                 "basic.shared.0.0",
@@ -156,7 +157,7 @@
     ],
     "playerArriveLongTime": [
         {
-            "id": "researcher-first"
+            "id": "researcher-first"    // just for /greset consistency
         },
         {
             "content": "basic.playerArriveLongTime.1",
@@ -183,10 +184,10 @@
     ],
     "playerArriveNewLocation": [
         {
-            "id": "researcher-first"
+            "id": "researcher-first"    // just for /greset consistency
         },
         {
-            "id": "no-dialogue-mess"
+            "id": "no-dialogue-mess"    // only possible if player breaks tools before being seen
         },
         {
             "content": [
@@ -202,7 +203,7 @@
     ],
     "playerArriveSoon": [
         {
-            "id": "researcher-first"
+            "id": "researcher-first"    // just for /greset consistency
         },
         {
             "id": "no-dialogue-mess"
@@ -242,7 +243,7 @@
     ],
     "playerLeaveSoon": [
         {
-            "id": "researcher-first-leave"
+            "id": "researcher-first-leave"  // just for /greset consistency
         },
         "basic.playerLeaveSoon.1",
         "basic.playerLeaveSoon.2",

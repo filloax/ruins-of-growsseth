@@ -54,7 +54,7 @@
                 "quest.shared.2.10"
             ],
             "useLimit": 1,
-            "priority": 1051,
+            "priority": 1051,   // higher priority to override normal dialogue
             "id": "researcher-quest-cure-skip",
             "groups": [
                 "group-first-dialogue",
