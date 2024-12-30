@@ -130,7 +130,7 @@
     "growsseth.commands.gdata.extract.parse-failure": "Il file selezionato non può essere analizzato correttamente",
     "growsseth.commands.gdata.extract.success": "File risultanti salvati nelle directory %s e %s",
     "growsseth.commands.gdata.dialogue.extract.help": "Converte il file di dialogo specificato (nei dati del mondo) in due file json: un file di dialogo con tutte le righe codificate (campo text all'interno del content del dialogo) convertite in chiavi di lingua, e un file di lingua contenente il testo estratto. Se esiste già un file di lingua denominato dialogue.json nella cartella world generated/lang/<lingua>, verrà unito al risultato.",
-    "growsseth.commands.gdata.places.extract.help": "TODO",
+    "growsseth.commands.gdata.places.extract.help": "Converte il file delle location specificato (nei dati del mondo) in due file json: un file dei luoghi con tutte le righe codificate (campo text associato al nome del luogo) convertite in chiavi di lingua, e un file di lingua contenente il testo estratto. Se esiste già un file di lingua denominato places.json nella cartella world generated/lang/<lingua>, verrà unito al risultato.",
 
     "entity.growsseth.researcher": "Ricercatore",
     "entity.growsseth.zombie_researcher": "Ricercatore Zombi",
