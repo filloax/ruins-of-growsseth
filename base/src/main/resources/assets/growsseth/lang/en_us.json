@@ -7,7 +7,7 @@
 
     "generator.growsseth.growsseth": "Growsseth",
 
-    "growsseth.selectWorld.preset_warning": "Note: The original series started with Minecraft 1.19.4 and continued on Minecraft 1.20.1, the world might have some differences caused by new biomes and structures present in the version you are playing with.",
+    "growsseth.selectWorld.preset_warning": "Note: The original series started with Minecraft 1.19.4 and continued on Minecraft 1.20.1, the world might have some differences caused by new biomes and structures present in the version you are playing with (also, the locations' names might not make much sense to an english audience).",
 
     "item.growsseth.growsseth_banner_pattern": "Banner Pattern (Replaced by code)",
     "item.growsseth.growsseth_banner_pattern.desc": "Lost Kingdom's Effigy",
