@@ -5,14 +5,20 @@ import com.filloax.fxlib.api.codec.FxCodecs
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.ruslan.growsseth.Constants
+import com.ruslan.growsseth.utils.serverLang
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.Transient
+import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.JsonTransformingSerializer
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import kotlin.jvm.optionals.getOrNull
@@ -21,6 +27,7 @@ import kotlin.math.min
 
 @Serializable
 data class LocationData(
+    @Serializable(with = LocationNameSerializer::class)
     val name: String,
     val x: Double,
     val y: Double,
@@ -93,6 +100,37 @@ data class LocationData(
             } else {
                 value.toDouble()
             }
+        }
+    }
+}
+
+class LocationNameSerializer : JsonTransformingSerializer<String>(String.serializer()) {
+    override fun transformDeserialize(element: JsonElement): JsonElement {
+        val prefixedKey = prefixKey(normalizeKey(element))
+        val localizedName = serverLang().getOrDefault(prefixedKey)
+        return JsonPrimitive(localizedName)
+    }
+
+    private fun normalizeKey(element: JsonElement): String {
+        return when (element) {
+            is JsonPrimitive -> {
+                element.content.trim()
+            } else -> {
+                throw SerializationException("Unrecognized element $element, was supposed to be a string")
+            }
+        }
+    }
+
+    private fun prefixKey(key: String): String {
+        assertValidLangKey(key)
+        val newKey = "${Constants.LANG_PLACES_PREFIX}.$key"
+        return newKey
+    }
+
+    private fun assertValidLangKey(key: String) {
+        val pattern = Regex("^(\\w+\\.)*\\w+$")
+        if (!pattern.containsMatchIn(key)) {
+            throw IllegalArgumentException("Wrongly formatted lang key $key")
         }
     }
 }
