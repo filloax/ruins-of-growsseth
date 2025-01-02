@@ -17,6 +17,7 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.JsonTransformingSerializer
 import net.minecraft.world.phys.AABB
@@ -106,19 +107,38 @@ data class LocationData(
 
 class LocationNameSerializer : JsonTransformingSerializer<String>(String.serializer()) {
     override fun transformDeserialize(element: JsonElement): JsonElement {
-        val prefixedKey = prefixKey(normalizeKey(element))
-        val localizedName = serverLang().getOrDefault(prefixedKey)
-        return JsonPrimitive(localizedName)
+        return if (isHardcodedName(element)) {
+            getHardcodedName(element as JsonObject)
+        } else {
+            getLocalizedName(element)
+        }
     }
 
-    private fun normalizeKey(element: JsonElement): String {
+    private fun isHardcodedName(element: JsonElement): Boolean {
         return when (element) {
-            is JsonPrimitive -> {
-                element.content.trim()
-            } else -> {
-                throw SerializationException("Unrecognized element $element, was supposed to be a string")
-            }
+            is JsonPrimitive ->   // localization key
+                false
+            is JsonObject ->
+                true
+            else ->
+                throw SerializationException("Unrecognized places element $element, was supposed to be a string or JSON object")
         }
+    }
+
+    private fun getHardcodedName(element: JsonObject): JsonPrimitive {
+        return element["text"]?.let {
+            if (it is JsonPrimitive)
+                JsonPrimitive(it.content)
+            else
+                throw SerializationException("Place name $it is hardcoded but was wrongly formatted, it should be a string")
+        } ?: throw SerializationException("Place name $element is a JSON object, but the 'text' key could not be found")
+    }
+
+    private fun getLocalizedName(element: JsonElement): JsonPrimitive {
+        val key = (element as JsonPrimitive).content.trim()
+        val prefixedKey = prefixKey(key)
+        val localizedName = serverLang().getOrDefault(prefixedKey)
+        return JsonPrimitive(localizedName)
     }
 
     private fun prefixKey(key: String): String {
