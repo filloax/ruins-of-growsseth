@@ -137,7 +137,7 @@ object GrowssethApiV2 : AbstractGrowssethApi() {
     ) {
         fun checkValid(): Boolean {
             if (id == "") {
-                RuinsOfGrowsseth.LOGGER.error("There are some entries with no id in web sync data!")
+                RuinsOfGrowsseth.LOGGER.error("The web sync entry:\n$this\ndoes not have an id set!")
                 return false
             }
             if (type != "structure" && type !in EVENT_TYPES) {
