@@ -116,7 +116,7 @@ object TemplateListener : KotlinJsonResourceReloadListener(JSON, Constants.TEMPL
                     RuinsOfGrowsseth.LOGGER.warn("Template $templateId inserted but already existed: $existing")
                 }
             } catch (e: Exception) {
-                throw SerializationException("Growsseth: Couldn't parse template file $fileIdentifier", e)
+                throw SerializationException("Couldn't parse template file $fileIdentifier", e)
             }
 
         }

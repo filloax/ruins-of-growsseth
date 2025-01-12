@@ -42,7 +42,7 @@ class LocationNotifListener : KotlinJsonResourceReloadListener(JSON, Constants.P
                     PLACES_DATA.add(entry)
                 }
             } catch (e: Exception) {
-                RuinsOfGrowsseth.LOGGER.error( "Growsseth: Couldn't parse places file {} at {}", fileIdentifier, last, e)
+                RuinsOfGrowsseth.LOGGER.error("Couldn't parse places file {} at {}", fileIdentifier, last, e)
             }
         }
 

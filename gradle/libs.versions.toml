@@ -2,19 +2,19 @@
 java = "21"
 
 # Minecraft dependencies
-minecraft-range = "[1.21, 1.21.1]"
-minecraft-range-fabric = ">=1.21 <=1.21.1"
-minecraft = "1.21"
+minecraft-range = "1.21.1"
+minecraft-range-fabric = "1.21.1"
+minecraft = "1.21.1"
 # Get versions from https://parchmentmc.org/docs/getting-started
-parchment-minecraft = "1.21"
-parchment = "2024.07.07"
+parchment-minecraft = "1.21.1"
+parchment = "2024.11.17"
 # Get versions from https://projects.neoforged.net/neoforged/neoform
-neoform = "1.21-20240613.152323" # vanilla neoforge configuration
+neoform = "1.21.1-20240808.144430" # vanilla neoforge configuration
 
 # Mod dependencies
-filloaxlib = "0.34.0-1.21"
-modmenu = "11.0.1"
-rconfig = "3.0.7"
+filloaxlib = "0.35.0-1.21"
+modmenu = "11.0.3"
+rconfig = "3.0.8"
 rconfigMc = "1.21"
 
 # Kotlin
@@ -23,31 +23,32 @@ kotlin-serialization = "1.7.1"
 kotlin-datetime = "0.6.1"
 
 # Fabric Settings
-fabric = "0.15.11"
-fabric-api = "0.100.7+1.21"
+fabric = "0.16.9"
+fabric-api = "0.110.0+1.21.1"
 fabric-language-kotlin = "1.11.0+kotlin.2.0.0"
 
 # Neoforge Settings
-neoforge = "21.0.167"
-neoforge-range = "[21.0.0,)"
+neoforge = "21.1.93"
+neoforge-range = "[21.1.1,21.2)"
 kotlinforge = "5.6.0"
 kotlinforge-range = "[5.6,)"
 
 # Other dependencies
 mixin = "0.8.5"
-mixinextras = "0.4.0"
-mixinextras-range = "[0.4.0,)"
-jsr305 = "3.0.1"
-log4j = "2.17.0"
-ow-asm = "9.6"
+mixinextras = "0.4.1"
+mixinextras-range = "[0.4.1,)"
+jsr305 = "3.0.2"
+# Specific log4j version required by neoform
+log4j = "2.22.1"
+ow-asm = "9.7.1"
 kotlinevents = "v2.0"
 
 # Plugins
-plugin-dokka = "2.0.0-Beta"
+plugin-dokka = "2.0.0"
 plugin-mixin = "0.7.+"
 plugin-loom = "1.7-SNAPSHOT"
-plugin-moddev = "2.0.36-beta"
-plugin-idea-ext = "1.1.8"
+plugin-moddev = "2.0.74"
+plugin-idea-ext = "1.1.9"
 
 [libraries]
 # Mods

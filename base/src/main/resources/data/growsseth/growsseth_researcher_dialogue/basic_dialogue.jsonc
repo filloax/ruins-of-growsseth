@@ -1,0 +1,548 @@
+{
+    "shared": [
+        // Used by more events (referenced by id)
+        {
+            "content": [
+                "basic.shared.0.0",
+                "basic.shared.0.1",
+                "basic.shared.0.2",
+                "basic.shared.0.3",
+                "basic.shared.0.4",
+                "basic.shared.0.5",
+                "basic.shared.0.6",
+                "basic.shared.0.7"
+            ],
+            "useLimit": 1,
+            "priority": 100,
+            "id": "researcher-first",
+            "groups": "group-first-dialogue",
+            "groupUseLimit": 1,
+            "requiresUntilQuestStage": "start",
+            "data": {
+                "singleOnly": "true"
+            }
+        },
+        {
+            "content": "basic.shared.1",
+            "useLimit": 1,
+            "priority": 50,
+            "id": "researcher-first-leave",
+            "requiresUntilQuestStage": "start"
+        },
+        {
+            "content": "basic.shared.2",
+            "id": "goodbye-made-mess-1",
+            "priority": 60,
+            "data": {
+                "sound": "angry",
+                "madeMess": "true"
+            },
+            "afterCloseRepeatsMax": 1,
+            "requiresUntilQuestStage": "healed"
+        },
+        {
+            "content": "basic.shared.3",
+            "id": "goodbye-made-mess-2",
+            "priority": 60,
+            "data": {
+                "sound": "angry",
+                "madeMess": "true"
+            },
+            "afterCloseRepeatsMin": 2,
+            "requiresUntilQuestStage": "healed"
+        },
+        {
+            "content": "basic.shared.4",
+            "id": "no-dialogue-mess",
+            "priority": 60,
+            "data": {
+                "madeMess": "true"
+            },
+            "requiresUntilQuestStage": "healed"
+        }
+    ],
+    "playerArrive": [
+        {
+            "id": "researcher-first"
+        },
+        {
+            "id": "no-dialogue-mess"
+        },
+        "basic.playerArrive.2",
+        "basic.playerArrive.3",
+        "basic.playerArrive.4",
+        "basic.playerArrive.5",
+        {
+            "content": "basic.playerArrive.6",
+            "afterRepeatsMin": 2
+        },
+        {
+            "content": "basic.playerArrive.7",
+            "afterRepeatsMin": 2
+        }
+    ],
+    "playerArriveNight": [
+        {
+            "id": "researcher-first"
+        },
+        {
+            "id": "no-dialogue-mess"
+        },
+        {
+            "content": "basic.playerArriveNight.2",
+            "useLimit": 1,
+            "priority": 20,
+            "id": "researcher-dialogue-night-first"
+        },
+        "basic.playerArriveNight.3",
+        "basic.playerArriveNight.4",
+        "basic.playerArriveNight.5",
+        "basic.playerArriveNight.6",
+        {
+            "content": [
+                "basic.playerArriveNight.7.0",
+                "basic.playerArriveNight.7.1"
+            ],
+            "useLimit": 1,
+            "id": "researcher-arrive-night-creeper"
+        }
+    ],
+    "playerArriveAfterKilled": [
+        {
+            "content": [
+                "basic.playerArriveAfterKilled.0.0",
+                "basic.playerArriveAfterKilled.0.1"
+            ],
+            "useLimit": 1,
+            "priority": 20,
+            "id": "greet-player-after-first-kill"
+        },
+        "basic.playerArriveAfterKilled.1"
+    ],
+    "playerLeave": [
+        {
+            "id": "researcher-first-leave"
+        },
+        "basic.playerLeave.1",
+        "basic.playerLeave.2",
+        "basic.playerLeave.3",
+        {
+            "content": "basic.playerLeave.4",
+            "id": "researcher-north-tip-force",
+            "useLimit": 1,
+            "priority": 30,
+            "afterRepeatsMin": 3
+        },
+        {
+            "id": "goodbye-made-mess-1"
+        },
+        {
+            "id": "goodbye-made-mess-2"
+        }
+    ],
+    "playerLeaveNight": [
+        {
+            "id": "researcher-first-leave"
+        },
+        "basic.playerLeaveNight.1",
+        "basic.playerLeaveNight.2",
+        "basic.playerLeaveNight.3",
+        "basic.playerLeaveNight.4",
+        {
+            "id": "goodbye-made-mess-1"
+        },
+        {
+            "id": "goodbye-made-mess-2"
+        }
+    ],
+    "playerArriveLongTime": [
+        {
+            "id": "researcher-first"    // just for /greset consistency
+        },
+        {
+            "content": "basic.playerArriveLongTime.1",
+            "useLimit": 1,
+            "priority": 50,
+            "id": "researcher-arrive-long-time-first"
+        },
+        "basic.playerArriveLongTime.2",
+        "basic.playerArriveLongTime.3",
+        "basic.playerArriveLongTime.4",
+        "basic.playerArriveLongTime.5",
+        {
+            "content": [
+                "basic.playerArriveLongTime.6.0",
+                "basic.playerArriveLongTime.6.1"
+            ],
+            "id": "long-time-after-mess",
+            "priority": 60,
+            "data": {
+                "madeMess": "true"
+            },
+            "requiresUntilQuestStage": "healed"
+        }
+    ],
+    "playerArriveNewLocation": [
+        {
+            "id": "researcher-first"    // just for /greset consistency
+        },
+        {
+            "id": "no-dialogue-mess"    // only possible if player breaks tools before being seen
+        },
+        {
+            "content": [
+                "basic.playerArriveNewLocation.2.0",
+                "basic.playerArriveNewLocation.2.1",
+                "basic.playerArriveNewLocation.2.2"
+            ],
+            "useLimit": 1,
+            "priority": 50,
+            "id": "researcher-arrive-new-loc-first",
+            "requiresUntilQuestStage": "healed"
+        }
+    ],
+    "playerArriveSoon": [
+        {
+            "id": "researcher-first"    // just for /greset consistency
+        },
+        {
+            "id": "no-dialogue-mess"
+        },
+        "basic.playerArriveSoon.2",
+        "basic.playerArriveSoon.3",
+        "basic.playerArriveSoon.4",
+        "basic.playerArriveSoon.5",
+        "basic.playerArriveSoon.6",
+        "basic.playerArriveSoon.7",
+        "basic.playerArriveSoon.8",
+        "basic.playerArriveSoon.9",
+        "basic.playerArriveSoon.10",
+        {
+            "content": "basic.playerArriveSoon.11",
+            "id": "arrive-soon-special",
+            "afterRepeatsMin": 2,
+            "useLimit": 1
+        },
+        {
+            "content": "basic.playerArriveSoon.12",
+            "priority": 50,
+            "afterCloseRepeatsMin": 3,
+            "afterCloseRepeatsMax": 3,
+            "data": {
+                "sound": "angry"
+            }
+        },
+        {
+            "content": "basic.playerArriveSoon.13",
+            "priority": 50,
+            "afterCloseRepeatsMin": 4,
+            "data": {
+                "sound": "angry"
+            }
+        }
+    ],
+    "playerLeaveSoon": [
+        {
+            "id": "researcher-first-leave"  // just for /greset consistency
+        },
+        "basic.playerLeaveSoon.1",
+        "basic.playerLeaveSoon.2",
+        "basic.playerLeaveSoon.3",
+        "basic.playerLeaveSoon.4",
+        {
+            "content": "basic.playerLeaveSoon.5",
+            "priority": 50,
+            "afterCloseRepeatsMin": 3
+        },
+        {
+            "id": "goodbye-made-mess-1"
+        },
+        {
+            "id": "goodbye-made-mess-2"
+        }
+    ],
+    "hitByPlayer": [
+        {
+            "content": "basic.hitByPlayer.0",
+            "priority": 50,
+            "afterCloseRepeatsMax": 1,
+            "immediate": true,
+            "data": {
+                "sound": "none"
+            }
+        },
+        {
+            "content": "basic.hitByPlayer.1",
+            "priority": 50,
+            "afterCloseRepeatsMin": 2,
+            "afterCloseRepeatsMax": 2,
+            "immediate": true,
+            "data": {
+                "sound": "none"
+            }
+        },
+        {
+            "content": "basic.hitByPlayer.2",
+            "afterCloseRepeatsMin": 3,
+            "afterCloseRepeatsMax": 3,
+            "priority": 50,
+            "immediate": true,
+            "data": {
+                "sound": "none"
+            }
+        }
+    ],
+    "hitByPlayerImmortal": [
+        {
+            "content": "basic.hitByPlayerImmortal.0",
+            "priority": 50,
+            "afterRepeatsMax": 1,
+            "immediate": true,
+            "data": {
+                "sound": "none"
+            }
+        },
+        {
+            "content": "basic.hitByPlayerImmortal.1",
+            "priority": 50,
+            "afterRepeatsMin": 3,
+            "afterRepeatsMax": 3,
+            "immediate": true,
+            "data": {
+                "sound": "none"
+            }
+        },
+        {
+            "content": [
+                "basic.hitByPlayerImmortal.2.0",
+                "basic.hitByPlayerImmortal.2.1"
+            ],
+            "useLimit": 1,
+            "afterRepeatsMin": 5,
+            "afterRepeatsMax": 5,
+            "priority": 50,
+            "id": "hit-excuse",
+            "immediate": true
+        }
+    ],
+    "killPlayer": [
+        {
+            "content": "basic.killPlayer.0",
+            "immediate": true,
+            "useLimit": 1,
+            "priority": 20,
+            "data": {
+                "sound": "none"
+            },
+            "id": "first-player-kill"
+        },
+        "basic.killPlayer.1"
+    ],
+    "playerCheats": [
+        {
+            "content": "basic.playerCheats.0",
+            "immediate": true,
+            "afterCloseRepeatsMax": 1,
+            "data": {
+                "sound": "none"
+            }
+        }
+    ],
+    "lowHealth": [
+        {
+            "content": "basic.lowHealth.0",
+            "immediate": true,
+            "afterCloseRepeatsMax": 1,
+            "data": {
+                "sound": "none"
+            }
+        }
+    ],
+    "death": [
+        {
+            "content": "basic.death.0",
+            "immediate": true,
+            "data": {
+                "sound": "none"
+            }
+        }
+    ],
+    "breakTent": [
+        {
+            "content": "basic.breakTent.0",
+            "afterRepeatsMax": 1,
+            "immediate": true
+        },
+        {
+            "content": "basic.breakTent.1",
+            "afterRepeatsMin": 2
+        }
+    ],
+    "makeMess": [
+        {
+            "content": "basic.makeMess.0",
+            "immediate": true,
+            "data": {
+                "sound": "none"
+            }
+        },
+        {
+            "content": "basic.makeMess.1",
+            "priority": 50,
+            "afterRepeatsMin": 2,
+            "afterRepeatsMax": 2,
+            "immediate": true,
+            "data": {
+                "sound": "none"
+            }
+        },
+        {
+            "content": "basic.makeMess.2",
+            "priority": 50,
+            "afterRepeatsMin": 3,
+            "immediate": true,
+            "data": {
+                "sound": "none"
+            }
+        }
+    ],
+    "fixMess": [
+        "basic.fixMess.0",
+        {
+            "content": "basic.fixMess.1",
+            "priority": 50,
+            "afterRepeatsMin": 2,
+            "afterRepeatsMax": 2
+        },
+        {
+            "content": "basic.fixMess.2",
+            "priority": 50,
+            "afterRepeatsMin": 3
+        }
+    ],
+    "refuseTrade": [
+        {
+            "content": "basic.refuseTrade.0",
+            "priority": -100,
+            "immediate": true,
+            "data": {
+                "sound": "none"
+            }
+        },
+        {
+            "content": [
+                "basic.refuseTrade.1.0",
+                "basic.refuseTrade.1.1",
+                "basic.refuseTrade.1.2",
+                "basic.refuseTrade.1.3",
+                "basic.refuseTrade.1.4",
+                "basic.refuseTrade.1.5"
+            ],
+            "priority": 0,
+            "immediate": true,
+            "requiresEventParam": "angry-at-player",
+            "afterRepeatsMax": 1,
+            "data": {
+                "sound": "none"
+            }
+        },
+        {
+            "content": "basic.refuseTrade.2",
+            "priority": 0,
+            "immediate": true,
+            "requiresEventParam": "angry-at-player",
+            "afterRepeatsMin": 2,
+            "data": {
+                "sound": "none"
+            }
+        },
+        {
+            "content": "basic.refuseTrade.3",
+            "priority": 0,
+            "immediate": true,
+            "requiresEventParam": "angry-at-others",
+            "data": {
+                "sound": "none"
+            }
+        }
+    ],
+    "playerAdvancement": [
+        {
+            "content": "basic.playerAdvancement.0",
+            "requiresEventParam": "growsseth:donkey/donkey_hurt_dialogue",
+            "immediate": true,
+            "id": "hit-donkey-first",
+            "useLimit": 1,
+            "priority": 50
+        },
+        {
+            "content": "basic.playerAdvancement.1",
+            "requiresEventParam": "growsseth:donkey/donkey_hurt_dialogue",
+            "immediate": true,
+            "id": "hit-donkey-second",
+            "useLimit": 1
+        }
+    ],
+    "borrowDonkey": [
+        {
+            "content": [
+                "basic.borrowDonkey.0.0",
+                "basic.borrowDonkey.0.1",
+                "basic.borrowDonkey.0.2"
+            ],
+            "immediate": true,
+            "id": "first-donkey-borrow",
+            "useLimit": 1,
+            "priority": 50
+        },
+        {
+            "content": "basic.borrowDonkey.1",
+            "immediate": true
+        }
+    ],
+    "borrowDonkeyHealed": [
+        {
+            "content": [
+                "basic.borrowDonkeyHealed.0.0",
+                "basic.borrowDonkeyHealed.0.1"
+            ],
+            "immediate": true,
+            "id": "first-donkey-borrow-healed",
+            "useLimit": 1,
+            "priority": 50
+        }
+    ],
+    "returnDonkey": [
+        {
+            "content": "basic.returnDonkey.0",
+            "immediate": true
+        }
+    ],
+    "exploreCellar": [
+        {
+            "content": "basic.exploreCellar.0",
+            "id": "explore-cellar",
+            "useLimit": 1,
+            "priority": 50,
+            "immediate": true,
+            "requiresUntilQuestStage": "healed"
+        },
+        {
+            "content": "basic.exploreCellar.1",
+            "id": "explore-cellar",
+            "immediate": true,
+            "requiresUntilQuestStage": "healed"
+        }
+    ],
+    "exitCellar": [
+        {
+            "content": [
+                "basic.exitCellar.0.0",
+                "basic.exitCellar.0.1"
+            ],
+            "id": "exit-cellar",
+            "useLimit": 1,
+            "requiresUntilQuestStage": "healed"
+        }
+    ]
+}

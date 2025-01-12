@@ -1,0 +1,64 @@
+{
+    "rename": {
+        "0": {
+            "0": "Mh..? Is that a name tag?",
+            "1": "Quite a... uh... peculiar gift, colleague. I guess you really care about the fact that I don't remember my name.",
+            "2": "I won't certainly start wearing a leash with this attached, but sure, call me whatever you want."
+        },
+        "1": {
+            "0": "Another name tag? You have a unique way of telling me that you want to call me something else, colleague.",
+            "1": "Sure, it makes no difference to me anyway."
+        },
+        "2": "Uh, quite self-explanatory I must say. Maybe it's better if you actually come up with a proper personal name.",
+        "3": "Uh, quite self-explanatory I must say. Maybe it's better if you actually come up with a proper personal name.",
+        "4": "Colleague, I know you may have put your heart into choosing this name, but I also have standards.",
+        "5": "Colleague, do I look like a bean to you?",
+        "6": "Colleague, do I look like a bean to you?",
+        "7": "...colleague, no.",
+        "8": "...colleague, no.",
+        "9": "I already heard about that expression in a distant land long ago, and I prefer not to use that name. Don't ask why, you wouldn't get it.",
+        "10": {
+            "0": "Sabaku? Isn't there a language from a distant place in which it means \"desert\"? I recall some old fables where a certain 'Sabaku II' was a hero with a golden helmet, wandering through a dark world.",
+            "1": "The fable also spoke of his apprentice, but his name has been lost to time.",
+            "2": "Anyway, this name seems dear to you, colleague, but it doesn't belong to me, I'm sorry."
+        },
+        "11": "The name of the old king? I don't want the name of someone who abandoned his people when they most needed him, Sorry, colleague.",
+        "12": "The name of the Ancient Archer? Colleague, perhaps you overestimated me, the effects of my aim are comparable to those of a landslide in the middle of a desert. Please, think of something else.",
+        "13": {
+            "0": "The name of the Cursed Wolf? Colleague, as much as I like dogs, I'd prefer to avoid being called like the mastiff that used to slaughter the enemy legions.",
+            "1": "...And in all this, I'm assuming you didn't expect me to start barking for you."
+        },
+        "14": "The name of the Explosive Cube? Colleague, have I ever given the impression of wanting to blow up? I purposely scattered the surroundings with anti-Creeper excrements, no thank you.",
+        "15": {
+            "0": "The name of the first victim of the Night of the Diamond Swords? It was a terrible event, one of many from that war...",
+            "1": "Forgive me, but I don't want a name that recalls such a tragic event."
+        },
+        "16": {
+            "0": "The name of the Lava Eater? Colleague, I certainly don't share his fetish, nor his mastery in forging weapons, why should I use his name?",
+            "1": "Unless this is a wish for me to end up roasted, I find it rather senseless."
+        },
+        "17": {
+            "0": "The name of the Builder of Everything, eh? I must say, I admired him a lot as a child, in my village we had a huge statue in his image.",
+            "1": "Surely it's thanks to him that civilization has remained intact to this day, although not as splendid as before. It's said that Ruslan went mad a long time ago, maybe he found something bigger than him?",
+            "2": "Oh, sorry colleague, I'm rambling. Anyway, I don't feel worthy of bearing such a name."
+        },
+        "18": "Colleague, no. I know very well what that name tag does, and I don't want to suffer its effects, thank you.",
+        "19": "Colleague, no. I know very well what that name tag does, and I don't want to suffer its effects, thank you.",
+        "20": "Jeb_, huh? Sorry colleague, my lab coat doesn't have the ability to change color, if that's what you were hoping for. The name fits me, though.",
+        "21": {
+            "0": "Oh, funny that you chose this name for me, it was the name of the bunny I had when I was little.",
+            "1": "Now that I think about it, it's strange that I remember his name but not mine, don't you think?",
+            "2": "I gladly accept it, in his honor..."
+        },
+        "22": {
+            "0": "Johnny? How strange, just the thought of being called that excites me, I feel like I can face any enemy, hostile or not!",
+            "1": "I gladly accept it, this grit might save me in desperate situations."
+        },
+        "23": {
+            "0": "The name on this name tag... It's so... familiar...",
+            "1": "Manfredo, Manfredo... repeating it gives me a strange feeling... Could it be my old name? Damn, I can't remember...",
+            "2": "Oh, sorry, I was babbling to myself.",
+            "3": "I gladly accept it, I don't mind having it as a name."
+        }
+    }
+}
