@@ -21,7 +21,7 @@ version = "$modVersion-${minecraftVersion}-neoforge"
 if (includeDeps) println("Including dependencies for test mode")
 
 neoForge {
-    version.set(libs.versions.neoforge.asProvider())
+    version = libs.versions.neoforge.asProvider().get()
 
     validateAccessTransformers = true
     accessTransformers.files.setFrom( project(BASE_PROJECT).file("src/main/resources/META-INF/accesstransformer.cfg"))

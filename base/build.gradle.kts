@@ -25,7 +25,7 @@ base {
 
 neoForge {
 	// vanilla mode, see moddevgradle docs
-	neoFormVersion = libs.versions.neoform
+	neoFormVersion = libs.versions.neoform.get()
 
 	validateAccessTransformers = true
 
