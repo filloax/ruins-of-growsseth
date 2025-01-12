@@ -91,7 +91,8 @@ tasks.withType<TransformTokensTask> {
 
 val packFormats = mapOf(		// used to set the pack format inside the pack.mcmeta file of the reference datapack
 	"1.20.6" to "41",
-	"1.21" to "48"
+	"1.21" to "48",
+	"1.21.1" to "48"
 )
 
 val createDatapackTask = tasks.register("createDatapackMeta") {
