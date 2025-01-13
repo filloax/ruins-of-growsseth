@@ -29,7 +29,7 @@ For bug reports check the [Issues](https://github.com/filloax/ruins-of-growsseth
 
 The mod currently is available for Fabric, and a test build is available for Neoforge.
 
-The Fabric version requires [Fabric API](https://modrinth.com/mod/fabric-api) and [Resourceful Config](https://modrinth.com/mod/resourceful-config), while the Neoforge version only requires Resourceful Config.
+The Fabric version requires [Fabric API](https://modrinth.com/mod/fabric-api) and [Resourceful Config](https://modrinth.com/mod/resourceful-config), while the Neoforge version requires Resourceful Config and [Kotlin for Forge](https://modrinth.com/mod/kotlin-for-forge).
 If using Fabric, [Mod Menu](https://modrinth.com/mod/modmenu) is highly suggested for a simpler configuration UI ingame.
 
 The mod also includes [FilloaxLib](https://github.com/filloax/filloaxlib/), so it's not needed to be installed (for now).
