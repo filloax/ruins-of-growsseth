@@ -31,10 +31,8 @@ For bug reports check the [Issues](https://github.com/filloax/ruins-of-growsseth
 
 The mod currently is available for Fabric, and a test build is available for Neoforge.
 
-The Fabric version requires [Fabric API](https://modrinth.com/mod/fabric-api) and [Resourceful Config](https://modrinth.com/mod/resourceful-config), while the Neoforge version only requires Resourceful Config.
+The Fabric version requires [Fabric API](https://modrinth.com/mod/fabric-api) and [Resourceful Config](https://modrinth.com/mod/resourceful-config), while the Neoforge version requires Resourceful Config and [Kotlin for Forge](https://modrinth.com/mod/kotlin-for-forge).
 If using Fabric, [Mod Menu](https://modrinth.com/mod/modmenu) is highly suggested for a simpler configuration UI ingame.
-
-Future plans include releasing the mod for other 1.20.x (and future versions) too.
 
 The mod also includes [FilloaxLib](https://github.com/filloax/filloaxlib/), so it's not needed to be installed (for now).
 
@@ -66,7 +64,7 @@ Musical artists:
 
 ### Developers
 
-As this mod wouldn't have been possible without the help of the community, and most mods code being freely available only to be able to look at examples of how things are done, feel free to use this mod to look at examples of how to do the thing it does, as we do various specific and niche things in this mods' features (but do note that this is Filloax and Krozzt's first minecraft mod). In particular (also to aid google searches that might be needing this), this mod contains examples of:
+As this mod wouldn't have been possible without the help of the community, and most mods code being freely available only to be able to look at examples of how things are done, feel free to use this mod to look at examples of how to do the thing it does, as we do various specific and niche things in this mods' features (but do note that this is Filloax and Krozzzt's first minecraft mod). In particular (also to aid google searches that might be needing this), this mod contains examples of:
 - Explorer maps that lead to villages with specific houses
 - Disabling/enabling structures and village houses via config and not only datapack
 - Language settings for structure elements, books, signs (nyi), etc.

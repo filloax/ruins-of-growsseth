@@ -107,7 +107,7 @@ object SignTemplates {
                 messagesList.add(StringTag.valueOf(message))
             }
             frontTextTag.putIfAbsent("messages", messagesList)
-            frontTextTag.putString("color", template.color)
+            frontTextTag.putString("color", template.color!!)
             frontTextTag.putBoolean("has_glowing_text", template.glowing!!)
 
             blockEntityDataTag.putString("id", "oak_sign")
