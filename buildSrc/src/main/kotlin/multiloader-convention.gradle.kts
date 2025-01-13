@@ -184,7 +184,7 @@ tasks.withType<JavaCompile>().configureEach {
     this.options.encoding = "UTF-8"
     this.options.release.set(javaVersion)
     options.compilerArgs.addAll(listOf("-Xlint:all,-classfile,-processing,-deprecation,-serial", "-Xdoclint:none"))
-    options.compilerArgs.addAll(listOf("-Werror")) // wa
+    //options.compilerArgs.addAll(listOf("-Werror")) // Disabled because of false positives
 }
 
 tasks.withType<ProcessResources>().configureEach {

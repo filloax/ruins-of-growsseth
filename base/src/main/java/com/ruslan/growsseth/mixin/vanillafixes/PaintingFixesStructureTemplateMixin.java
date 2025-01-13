@@ -1,11 +1,7 @@
 package com.ruslan.growsseth.mixin.vanillafixes;
 
 import com.ruslan.growsseth.utils.MixinHelpers;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.decoration.Painting;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
@@ -23,10 +19,9 @@ public abstract class PaintingFixesStructureTemplateMixin {
 
     @SuppressWarnings("UnresolvedMixinReference")
     @Inject(
-            // placeEntities in vanilla, addEntitiesToWorld in neoforge
+        // placeEntities in vanilla, addEntitiesToWorld in neoforge
         method = {"method_17917", "lambda$placeEntities$5"},
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;moveTo(DDDFF)V", shift = At.Shift.AFTER),
-        remap = false // lambdas and similar not remapped in modern forge/fabric
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;moveTo(DDDFF)V", shift = At.Shift.AFTER)
     )
     private static void fixPaintingPlacementVanilla(Rotation rotation, Mirror mirror, Vec3 vec3, boolean bl, ServerLevelAccessor serverLevelAccessor, Entity entity, CallbackInfo ci) {
         MixinHelpers.fixPaintingPlacement(entity);
