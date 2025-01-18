@@ -1,5 +1,4 @@
-Explore the ruins of the lost kingdom of Growsseth, with a smart
-NPC to guide you along the way
+Explore the ruins of the lost kingdom of Growsseth, with a smart NPC to guide you along the way
 
 Credits: Ruslan Fanclub
 - Filloax (Lead Programmer)
