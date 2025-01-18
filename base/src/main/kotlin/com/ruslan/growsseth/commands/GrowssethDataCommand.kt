@@ -7,6 +7,7 @@ import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.dialogues.DialogueEntryConversion
 import com.ruslan.growsseth.worldgen.worldpreset.LocationEntryConversion
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.*
 import net.minecraft.commands.CommandBuildContext
 import net.minecraft.commands.CommandSourceStack
@@ -26,8 +27,11 @@ import kotlin.jvm.optionals.getOrNull
 object GrowssethDataCommand {
     const val DIALOGUES_ROOT = Constants.RESEARCHER_DIALOGUE_DATA_FOLDER
     const val PLACES_ROOT = Constants.PRESET_PLACES_FOLDER
+
+    @OptIn(ExperimentalSerializationApi::class)
     private val JSON = Json {
         prettyPrint = true
+        allowComments = true
     }
 
     private enum class DataType(
