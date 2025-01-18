@@ -22,46 +22,29 @@ object ResearcherResetCommand {
     fun register(dispatcher: CommandDispatcher<CommandSourceStack>, registryAccess: CommandBuildContext, environment: CommandSelection) {
         dispatcher.register(literal("greset").requires{ it.hasPermission(2) }
             .then(literal("researcher").executes { ctx ->
-                if (ResearcherConfig.singleResearcher) {
-                    resetResearcherData(ctx, ctx.source.server)
-                    ctx.source.sendSuccess({ Component.translatable("growsseth.commands.greset.done") }, true)
-                    1
-                } else {
-                    ctx.source.sendFailure(Component.translatable("growsseth.commands.greset.nop"))
-                    0
-                }
+                runResetFunction(ctx, ::resetResearcherData)
             })
             .then(literal("structures").executes { ctx ->
-                if (ResearcherConfig.singleResearcher) {
-                    resetStructureProgress(ctx, ctx.source.server)
-                    ctx.source.sendSuccess({ Component.translatable("growsseth.commands.greset.done") }, true)
-                    1
-                } else {
-                    ctx.source.sendFailure(Component.translatable("growsseth.commands.greset.nop"))
-                    0
-                }
+                runResetFunction(ctx, ::resetStructureProgress)
             })
             .then(literal("all").executes { ctx ->
-                if (ResearcherConfig.singleResearcher) {
-                    resetAll(ctx, ctx.source.server)
-                    ctx.source.sendSuccess({ Component.translatable("growsseth.commands.greset.done") }, true)
-                    1
-                } else {
-                    ctx.source.sendFailure(Component.translatable("growsseth.commands.greset.nop"))
-                    0
-                }
+                runResetFunction(ctx, ::resetAll)
             })
             .executes { ctx ->
-                if (ResearcherConfig.singleResearcher) {
-                    resetAll(ctx, ctx.source.server)
-                    ctx.source.sendSuccess({ Component.translatable("growsseth.commands.greset.done") }, true)
-                    1
-                } else {
-                    ctx.source.sendFailure(Component.translatable("growsseth.commands.greset.nop"))
-                    0
-                }
+                runResetFunction(ctx, ::resetAll)
             }
         )
+    }
+
+    private fun runResetFunction(ctx: CommandContext<CommandSourceStack>, resetFunction: (CommandContext<CommandSourceStack>, MinecraftServer) -> Unit): Int {
+        return if (ResearcherConfig.singleResearcher) {
+            resetFunction(ctx, ctx.source.server)
+            ctx.source.sendSuccess({ Component.translatable("growsseth.commands.greset.done") }, true)
+            1
+        } else {
+            ctx.source.sendFailure(Component.translatable("growsseth.commands.greset.nop"))
+            0
+        }
     }
 
     private fun resetResearcherData(ctx: CommandContext<CommandSourceStack>, server: MinecraftServer) {
