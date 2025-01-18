@@ -66,6 +66,9 @@ object QuestCommand {
             quest.activateStageId(stage)
             ctx.source.sendSuccess({ Component.translatable("${LANG_PREFIX}.stage.success", stage, targetEntity?.name, quest.toString()) }, true)
             1
+        } catch (_: IllegalArgumentException) {
+            ctx.source.sendFailure(Component.translatable("${LANG_PREFIX}.stage.notFound", stage, targetEntity?.name, quest.availableStages.joinToString(", ")))
+            0
         } catch (e: Exception) {
             ctx.source.sendFailure(Component.translatable(e.message ?: "${LANG_PREFIX}.stage.failure", stage, targetEntity.toString()))
             0

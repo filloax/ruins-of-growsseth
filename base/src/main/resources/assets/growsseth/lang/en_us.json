@@ -114,6 +114,7 @@
     "growsseth.commands.greset.done": "Researcher data was reset successfully",
     "growsseth.commands.gquest.noQuest": "Target entity does not have any quests:\n%s",
     "growsseth.commands.gquest.stage.success": "Correctly set quest stage '%s' for %s.\nHistory is: %s",
+    "growsseth.commands.gquest.stage.notFound": "Could not find stage '%s' for %s, available options are: %s",
     "growsseth.commands.gquest.stage.failure": "Failed in setting quest stage '%s' for the target entity:\n%s",
     "growsseth.commands.gquest.back.success": "Correctly reverted to quest stage '%s' for %s.\nHistory is: %s",
     "growsseth.commands.gquest.back.notAllowed": "Error: quest of %s is at the initial step, can't go back any further",
