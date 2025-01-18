@@ -6,14 +6,10 @@ import com.filloax.fxlib.api.codec.*
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.ruslan.growsseth.RuinsOfGrowsseth
-import com.ruslan.growsseth.utils.*
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.nbt.NbtOps
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
-import java.lang.IllegalArgumentException
-import java.util.*
 
 interface QuestOwner<E : LivingEntity> {
     val quest: QuestComponent<E>?
@@ -42,6 +38,8 @@ open class QuestComponent<E : LivingEntity>(val entity: E, val name: String) {
 
         const val NBT_TAG_PERSIST = "status"
     }
+
+    open val availableStages = listOf(INIT_STAGE_ID)
 
     var updatePeriod = 1f.secondsToTicks()
 
@@ -160,7 +158,9 @@ open class QuestComponent<E : LivingEntity>(val entity: E, val name: String) {
     }
 
     fun backOneStage(activate: Boolean = false): Boolean {
-        data.currentStageId = data.stageHistory.removeLastOrNull() ?: return false
+        if (data.stageHistory.size <= 1) return false   // Can't remove initial stage
+        data.stageHistory.removeLast()
+        data.currentStageId = data.stageHistory.last()
         data.currentStageTriggerTime = server.overworld().gameTime
         data.currentStageTriggerDayTime = server.overworld().dayTime
         RuinsOfGrowsseth.LOGGER.info("Reverted to quest stage ${data.currentStageId}\n\t$this")

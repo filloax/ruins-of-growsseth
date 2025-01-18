@@ -69,6 +69,11 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
         const val ENDING = "ending"
     }
 
+    override val availableStages = Stages::class.java.declaredFields
+        .filter { it.type == String::class.java }
+        .sortedBy { it.declaringClass.declaredFields.indexOf(it) }
+        .map { it.get(null) as String }
+
     private val finalQuestStartName = "researcher_end_quest_start"
     private val finalQuestZombieName = "researcher_end_quest_zombie"
     private val finalQuestLeaveName = "researcher_end_quest_leave"

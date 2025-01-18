@@ -13,15 +13,10 @@ issueTrackerURL="https://github.com/filloax/ruins-of-growsseth/issues"
     # A URL to query for updates for this mod. See the JSON update specification https://docs.neoforged.net/docs/misc/updatechecker/
     #updateJSONURL="https://change.me.example.invalid/updates.json" #optional
 
-    displayURL="https://github.com/filloax/filloax-lib"
+    displayURL="https://github.com/filloax/ruins-of-growsseth"
     logoFile="${mod_icon}"
     #credits=""
-    authors='''Filloax
-Krozzt
-Reivaxelain
-bb01
-SkullFury
-Vovalcool'''
+    authors="Filloax, Krozzzt, Reivaxelain, bb01, SkullFury, Vovalcool"
     description='''${description}'''
 
 [[mixins]]
