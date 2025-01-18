@@ -119,6 +119,7 @@
     "growsseth.commands.gquest.back.success": "Correctly reverted to quest stage '%s' for %s.\nHistory is: %s",
     "growsseth.commands.gquest.back.notAllowed": "Error: quest of %s is at the initial step, can't go back any further",
     "growsseth.commands.gquest.back.failure": "Failed in reverting to previous quest stage for the target entity:\n%s",
+    "growsseth.commands.gquest.list_stages": "Available quest stages for %s are: %s",
     "growsseth.commands.gquest.info": "%s quest data:\nStage: '%s', History: %s",
     "growsseth.commands.gtemplate.booksuccess": "Received book template '%s'",
     "growsseth.commands.gtemplate.invalidbooktemplate": "Invalid book template: '%s'",

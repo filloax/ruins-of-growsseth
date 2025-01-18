@@ -9,6 +9,7 @@ Added
 Tweaked
 - Reduced size of music discs sound files, halving the size of the mod!
 - [1.21] Removed 1.21.0 support
+- `gquest` can now list stages available for the selected entity
 - Growsseth preset locations titles are now localized
 
 
