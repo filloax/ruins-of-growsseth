@@ -39,6 +39,8 @@ open class QuestComponent<E : LivingEntity>(val entity: E, val name: String) {
         const val NBT_TAG_PERSIST = "status"
     }
 
+    open val availableStages = listOf(INIT_STAGE_ID)
+
     var updatePeriod = 1f.secondsToTicks()
 
     private val stagesGraph = QuestNodeImpl(QuestStage.blank<E>(), INIT_STAGE_ID)

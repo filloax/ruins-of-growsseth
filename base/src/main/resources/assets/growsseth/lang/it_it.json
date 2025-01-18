@@ -114,6 +114,7 @@
     "growsseth.commands.greset.done": "Dati ricercatore resettati con successo",
     "growsseth.commands.gquest.noQuest": "L'entità selezionata non ha quest:\n%s",
     "growsseth.commands.gquest.stage.success": "Impostata correttamente la fase quest '%s' per %s.\nLa cronologia è: %s",
+    "growsseth.commands.gquest.stage.notFound": "Impossibile trovare la fase '%s' per %s, le opzioni disponibili sono: %s",
     "growsseth.commands.gquest.stage.failure": "Non è stato possibile impostare la fase quest '%s' per l'entità selezionata:\n%s",
     "growsseth.commands.gquest.back.success": "Riportata correttamente la quest alla fase '%s' per %s.\nLa cronologia è: %s",
     "growsseth.commands.gquest.back.notAllowed": "Errore: la quest di %s è alla fase iniziale, non si può andare più indietro di così",
