@@ -54,6 +54,9 @@ object QuestCommand {
                     .then(argument("doActivate", BoolArgumentType.bool())
                         .executes { ctx -> backStage(ctx, getEnt(ctx), BoolArgumentType.getBool(ctx, "doActivate")) }))
             )
+            .then(literal("list_stages")
+                .executes { ctx -> listQuestStages(ctx, getEnt(ctx)) }
+            )
             .then(literal("info")
                 .executes { ctx -> showQuestInfo(ctx, getEnt(ctx)) }
             )
@@ -89,6 +92,13 @@ object QuestCommand {
             ctx.source.sendFailure(Component.translatable("${LANG_PREFIX}.back.failure", targetEntity.toString()))
             0
         }
+    }
+
+    private fun listQuestStages(ctx: CommandContext<CommandSourceStack>, targetEntity: Entity?): Int {
+        val quest = getQuest(ctx, targetEntity) ?: return 0
+
+        ctx.source.sendSuccess({ Component.translatable("${LANG_PREFIX}.list_stages", targetEntity?.name, quest.availableStages.joinToString(", ")) }, true)
+        return 1
     }
 
     private fun showQuestInfo(ctx: CommandContext<CommandSourceStack>, targetEntity: Entity?): Int {
