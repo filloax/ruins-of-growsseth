@@ -2,9 +2,9 @@
     "rename": [
         {
             "content": [
-                "rename.rename.0.0",
-                "rename.rename.0.1",
-                "rename.rename.0.2"
+                "rename.nameTag.first.0",
+                "rename.nameTag.first.1",
+                "rename.nameTag.first.2"
             ],
             "id": "rename-first",
             "groups": "group-first-nametag",
@@ -14,111 +14,111 @@
         },
         {
             "content": [
-                "rename.rename.1.0",
-                "rename.rename.1.1"
+                "rename.nameTag.another.0",
+                "rename.nameTag.another.1"
             ],
             "priority": -500
         },
         {
-            "content": "rename.rename.2",
+            "content": "rename.nameTag.ricercatore",
             "requiresEventParam": "ricercatore"
         },
         {
-            "content": "rename.rename.3",
+            "content": "rename.nameTag.researcher",
             "requiresEventParam": "researcher"
         },
         {
-            "content": "rename.rename.4",
+            "content": "rename.nameTag.franco",
             "requiresEventParam": "franco"
         },
         {
-            "content": "rename.rename.5",
+            "content": "rename.nameTag.folgo",
             "requiresEventParam": "folgo"
         },
         {
-            "content": "rename.rename.6",
+            "content": "rename.nameTag.foldo",
             "requiresEventParam": "foldo"
         },
         {
-            "content": "rename.rename.7",
+            "content": "rename.nameTag.palle",
             "requiresEventParam": "palle"
         },
         {
-            "content": "rename.rename.8",
+            "content": "rename.nameTag.balls",
             "requiresEventParam": "balls"
         },
         {
-            "content": "rename.rename.9",
+            "content": "rename.nameTag.synergo",
             "requiresEventParam": "synergo"
         },
         {
             "content": [
-                "rename.rename.10.0",
-                "rename.rename.10.1",
-                "rename.rename.10.2"
+                "rename.nameTag.sabaku.0",
+                "rename.nameTag.sabaku.1",
+                "rename.nameTag.sabaku.2"
             ],
             "requiresEventParam": "sabaku"
         },
         {
-            "content": "rename.rename.11",
+            "content": "rename.nameTag.lucio",
             "requiresEventParam": "lucio"
         },
         {
-            "content": "rename.rename.12",
+            "content": "rename.nameTag.lionel",
             "requiresEventParam": "lionel"
         },
         {
             "content": [
-                "rename.rename.13.0",
-                "rename.rename.13.1"
+                "rename.nameTag.julius.0",
+                "rename.nameTag.julius.1"
             ],
             "requiresEventParam": "julius"
         },
         {
-            "content": "rename.rename.14",
+            "content": "rename.nameTag.nicolaos",
             "requiresEventParam": "nicolaos"
         },
         {
             "content": [
-                "rename.rename.15.0",
-                "rename.rename.15.1"
+                "rename.nameTag.wazo.0",
+                "rename.nameTag.wazo.1"
             ],
             "requiresEventParam": "wazo"
         },
         {
             "content": [
-                "rename.rename.16.0",
-                "rename.rename.16.1"
+                "rename.nameTag.efisio.0",
+                "rename.nameTag.efisio.1"
             ],
             "requiresEventParam": "efisio"
         },
         {
             "content": [
-                "rename.rename.17.0",
-                "rename.rename.17.1",
-                "rename.rename.17.2"
+                "rename.nameTag.ruslan.0",
+                "rename.nameTag.ruslan.1",
+                "rename.nameTag.ruslan.2"
             ],
             "requiresEventParam": "ruslan"
         },
         {
-            "content": "rename.rename.18",
+            "content": "rename.nameTag.grumm",
             "requiresEventParam": "grumm"
         },
         {
-            "content": "rename.rename.19",
+            "content": "rename.nameTag.dinnerbone",
             "requiresEventParam": "dinnerbone"
         },
         {
-            "content": "rename.rename.20",
+            "content": "rename.nameTag.jeb_",
             "requiresEventParam": "jeb_",
             "groups": "group-first-nametag",
             "groupUseLimit": 1
         },
         {
             "content": [
-                "rename.rename.21.0",
-                "rename.rename.21.1",
-                "rename.rename.21.2"
+                "rename.nameTag.toast.0",
+                "rename.nameTag.toast.1",
+                "rename.nameTag.toast.2"
             ],
             "requiresEventParam": "toast",
             "groups": "group-first-nametag",
@@ -126,8 +126,8 @@
         },
         {
             "content": [
-                "rename.rename.22.0",
-                "rename.rename.22.1"
+                "rename.nameTag.johnny.0",
+                "rename.nameTag.johnny.1"
             ],
             "requiresEventParam": "johnny",
             "groups": "group-first-nametag",
@@ -135,10 +135,10 @@
         },
         {
             "content": [
-                "rename.rename.23.0",
-                "rename.rename.23.1",
-                "rename.rename.23.2",
-                "rename.rename.23.3"
+                "rename.nameTag.manfredo.0",
+                "rename.nameTag.manfredo.1",
+                "rename.nameTag.manfredo.2",
+                "rename.nameTag.manfredo.3"
             ],
             "requiresEventParam": "manfredo",
             "groups": "group-first-nametag",

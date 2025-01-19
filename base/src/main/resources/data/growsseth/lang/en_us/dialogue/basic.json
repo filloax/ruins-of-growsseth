@@ -1,6 +1,6 @@
 {
     "shared": {
-        "0": {
+        "first_meet": {
             "0": "What..? Someone wandering these lands who isn't a merchant?",
             "1": "It can't be... Listen, are you perhaps a researcher, or some kind of explorer?",
             "2": "So it's true, unbelievable... Let me explain: I'm both, a researcher §land§r an explorer. I've been wandering these lands for years, but I've never encountered anyone of my profession. You know, after the Plague... I thought there were no more people like me.",
@@ -10,10 +10,10 @@
             "6": "And speaking of adventures, during my explorations I've often come across places and relics from the now fallen kingdom. I presume they'd interest you, right?",
             "7": "Normally, I wouldn't part with my discoveries, not even for payment, but I believe collaborating could bring us mutual benefits. So, take a look!"
         },
-        "1": "Goodbye, it was a pleasure!",
-        "2": "Hey, come back here! You need to put those back!",
-        "3": "...",
-        "4": ""
+        "first_leave": "Goodbye, it was a pleasure!",
+        "goodbye_mess_1": "Hey, come back here! You need to put those back!",
+        "goodbye_mess_2": "...",
+        "no_dialogue_mess": ""
     },
     "playerArrive": {
         "2": "Good morning, colleague.",

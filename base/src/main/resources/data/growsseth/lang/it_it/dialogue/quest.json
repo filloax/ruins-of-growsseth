@@ -1,12 +1,12 @@
 {
     "shared": {
-        "0": {
+        "start": {
             "0": "Oh... salve collega. §o*yawn*§r uh... ultimamente sono sempre assonnato, eppure sto dormendo più del solito.",
             "1": "Probabilmente le mie ricerche imperterrite mi stanno stancando più del solito. §o*yawn*§r",
             "2": "Dimmi un po'... non è che hai trovato informazioni riguardo i sintomi della Piaga per caso? Ci sono voci in giro che dicono che forse, e ripeto forse, possa esistere una cura. Non che ci creda davvero, ahah!",
             "3": "Io? Sto benissimo §o*yawn*§r ...non preoccuparti, sto seguendo una mia intuizione, ma stando in una tenda mi sarò ammalato, ho comunque una certa età! Ahah... §o*yawn*§r"
         },
-        "1": {
+        "cure": {
             "0": "§o...anf... anf...§r Collega? Sei tu..? Siamo... nel mio sotterraneo? Cosa ci fai qui? E cosa ci faccio io nella mia gabbia..?",
             "1": "Oh, ora ricordo, alla fine non sono riuscito a trovare quel maledetto ingrediente...",
             "2": "Aspetta... questo odore... questo sapore... §lADESSO HO CAPITO!§r",
@@ -17,7 +17,7 @@
             "7": "Non potrò mai ripagarti abbastanza ma ti prego, se hai bisogno di qualche mia ricerca non esitare a chiedere, è il minimo che possa fare.",
             "8": "Tornerò di sopra una volta che mi sarò ripreso del tutto... vorrei preparare alcune cose."
         },
-        "2": {
+        "cure_skip": {
             "0": "§o...anf... anf...§r Cosa? E tu chi sei..? Siamo... nel mio sotterraneo? Cosa ci fai qui? E cosa ci faccio io nella mia gabbia..?",
             "1": "Oh, ora ricordo, alla fine non sono riuscito a trovare quel maledetto ingrediente...",
             "2": "Aspetta... questo odore... questo sapore... §lADESSO HO CAPITO!§r",
@@ -30,7 +30,7 @@
             "9": "Non potrò mai ripagarti abbastanza ma ti prego, se hai bisogno di qualche mia ricerca non esitare a chiedere, è il minimo che possa fare.",
             "10": "Tornerò di sopra una volta che mi sarò ripreso del tutto... vorrei preparare alcune cose."
         },
-        "3": {
+        "end": {
             "0": "Salve collega.",
             "1": "Sai, dopo quello che è successo ho pensato che fosse arrivato il momento di ritirarmi... Per anni ho vagato in queste terre senza risultati, e alla fine ho fallito pure nel mio unico vero obiettivo.",
             "2": "Ci ho quindi riflettuto su, e sono arrivato ad una conclusione... No, il mio viaggio non si è concluso, c'è ancora qualcosa che posso fare.",
@@ -39,7 +39,7 @@
             "5": "Comunque, volevo ringraziarti di nuovo. Se non ci fossi stato tu non sarei qui, in piedi, a respirare, e soprattutto non ci sarebbe la speranza di un mondo nuovo. Per tutto questo, grazie.",
             "6": "§lEhm ehm§r, comunque partirò a breve, quindi se vuoi chiedermi ancora qualcosa, questo è il momento giusto."
         },
-        "4": {
+        "end_skip": {
             "0": "Salve collega.",
             "1": "Sai, dopo quello che è successo ho pensato che fosse arrivato il momento di ritirarmi... Per anni ho vagato in queste terre senza risultati, e alla fine ho fallito pure nel mio unico vero obiettivo.",
             "2": "Ci ho quindi riflettuto su, e sono arrivato ad una conclusione... No, il mio viaggio non si è concluso, c'è ancora qualcosa che posso fare.",

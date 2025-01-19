@@ -1,6 +1,6 @@
 {
     "shared": {
-        "0": {
+        "first_meet": {
             "0": "Cosa..? Una persona che vaga per queste terre e non è un mercante?",
             "1": "Non può essere... senti, non è che sei per caso un ricercatore, o comunque un esploratore?",
             "2": "Quindi è davvero così, incredibile... Lascia che mi spieghi, io sono entrambe le cose, ricercatore §led§r esploratore. Vago da anni per queste terre, ma non ho mai incontrato nessuno della mia professione. Sai, quello che è successo dopo la Piaga... Pensavo che non esistessero più persone come me.",
@@ -10,10 +10,10 @@
             "6": "E a proposito di avventure, durante le mie esplorazioni mi è capitato spesso di scoprire luoghi e reliquie del regno ormai caduto. Presumo che la faccenda ti interessi, vero?",
             "7": "Normalmente non mi separerei dalle mie scoperte, neanche sotto pagamento, ma credo che collaborare possa portare un vantaggio reciproco, dai pure un'occhiata!"
         },
-        "1": "Arrivederci, è stato un piacere!",
-        "2": "Ehi, torna qui! Devi rimettere a posto!",
-        "3": "...",
-        "4": ""
+        "first_leave": "Arrivederci, è stato un piacere!",
+        "goodbye_mess_1": "Ehi, torna qui! Devi rimettere a posto!",
+        "goodbye_mess_2": "...",
+        "no_dialogue_mess": ""
     },
     "playerArrive": {
         "2": "Buongiorno, collega.",

@@ -3,14 +3,14 @@
         // Used by more events (referenced by id)
         {
             "content": [
-                "basic.shared.0.0",
-                "basic.shared.0.1",
-                "basic.shared.0.2",
-                "basic.shared.0.3",
-                "basic.shared.0.4",
-                "basic.shared.0.5",
-                "basic.shared.0.6",
-                "basic.shared.0.7"
+                "basic.shared.first_meet.0",
+                "basic.shared.first_meet.1",
+                "basic.shared.first_meet.2",
+                "basic.shared.first_meet.3",
+                "basic.shared.first_meet.4",
+                "basic.shared.first_meet.5",
+                "basic.shared.first_meet.6",
+                "basic.shared.first_meet.7"
             ],
             "useLimit": 1,
             "priority": 100,
@@ -23,14 +23,14 @@
             }
         },
         {
-            "content": "basic.shared.1",
+            "content": "basic.shared.first_leave",
             "useLimit": 1,
             "priority": 50,
             "id": "researcher-first-leave",
             "requiresUntilQuestStage": "start"
         },
         {
-            "content": "basic.shared.2",
+            "content": "basic.shared.goodbye_mess_1",
             "id": "goodbye-made-mess-1",
             "priority": 60,
             "data": {
@@ -41,7 +41,7 @@
             "requiresUntilQuestStage": "healed"
         },
         {
-            "content": "basic.shared.3",
+            "content": "basic.shared.goodbye_mess_2",
             "id": "goodbye-made-mess-2",
             "priority": 60,
             "data": {
@@ -52,7 +52,7 @@
             "requiresUntilQuestStage": "healed"
         },
         {
-            "content": "basic.shared.4",
+            "content": "basic.shared.no_dialogue_mess",
             "id": "no-dialogue-mess",
             "priority": 60,
             "data": {
