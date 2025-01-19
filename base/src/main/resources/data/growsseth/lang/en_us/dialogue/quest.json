@@ -1,12 +1,12 @@
 {
     "shared": {
-        "0": {
+        "start": {
             "0": "Oh... hello colleague. §o*yawn*§r uh... lately I've been feeling sleepy all the time, even though I've been sleeping more than usual.",
             "1": "Perhaps my relentless research is wearing me out more than usual. §o*yawn*§r",
             "2": "Tell me... have you come across any information about the symptoms of the Plague, by any chance? There are rumors that maybe, just maybe, there could be a cure. Not that I really believe it, haha!",
             "3": "Me? I'm doing great §o*yawn*§r ...don't worry, I'm following my instincts. But staying in a tent might have made me sick. After all, I'm not getting any younger! Haha... §o*yawn*§r"
         },
-        "1": {
+        "cure": {
             "0": "§o...pant... pant...§r Colleague? Is that you..? Are we... in my cellar? What are you doing here? And why am I in my cage..?",
             "1": "Oh, I remember now. In the end, I couldn't find that cursed ingredient...",
             "2": "Wait... this smell... this taste... §lNOW I UNDERSTAND!§r",
@@ -17,7 +17,7 @@
             "7": "I can never repay you enough but please, if you need any of my research, don't hesitate to ask. It's the least I can do.",
             "8": "I'll go back up once I've fully recovered... I'd like to prepare a few things."
         },
-        "2": {
+        "cure_skip": {
             "0": "§o...pant... pant...§r What? Who are you..? Are we... in my cellar? What are you doing here? And why am I in my cage..?",
             "1": "Oh, I remember now. In the end, I couldn't find that cursed ingredient...",
             "2": "Wait... this smell... this taste... §lNOW I UNDERSTAND!§r",
@@ -30,7 +30,7 @@
             "9": "I can never repay you enough but please, if you need any of my research, don't hesitate to ask. It's the least I can do.",
             "10": "I'll go back up once I've fully recovered... I'd like to prepare a few things."
         },
-        "3": {
+        "end": {
             "0": "Hello, colleague.",
             "1": "You know, after everything that happened, I thought it was time to retire... For years I've wandered these lands with no results, and in the end, I even failed in my one true goal.",
             "2": "So I thought about it, and I came to a conclusion... No, my journey isn't over yet, there's still something I can do.",
@@ -39,7 +39,7 @@
             "5": "Anyway, I wanted to thank you once more. If it weren't for you, I wouldn't be here, standing, breathing, and above all, there wouldn't be hope for a new world. For all this, thank you.",
             "6": "§lAhem ahem§r, anyway, I'll be leaving soon, so if there's anything else you want to ask, now's the time."
         },
-        "4": {
+        "end_skip": {
             "0": "Hello colleague.",
             "1": "You know, after everything that happened, I thought it was time to retire... For years I've wandered these lands with no results, and in the end, I even failed in my one true goal.",
             "2": "So I thought about it, and I came to a conclusion... No, my journey isn't over yet, there's still something I can do.",
