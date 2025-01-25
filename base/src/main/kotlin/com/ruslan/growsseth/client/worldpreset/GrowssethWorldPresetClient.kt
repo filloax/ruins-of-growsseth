@@ -43,7 +43,7 @@ object GrowssethWorldPresetClient {
                     .filter { it.boundingBox?.let { vol -> vol.contains(fPos) && !vol.contains(lastPos.vec3()) } == true }
                     .minByOrNull { it.centerPos.distanceToSqr(fPos) }
                 if (closestInside != null) {
-                    locationTitlesController().showLocationTitle(closestInside.name)
+                    locationTitlesController().showLocationTitle(closestInside.getProcessedName())
                     lastShowTime = player.tickCount
                 }
                 lastPos = pos
