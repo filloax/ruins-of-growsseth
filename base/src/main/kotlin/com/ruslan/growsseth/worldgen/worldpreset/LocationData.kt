@@ -16,10 +16,12 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.JsonTransformingSerializer
+import kotlinx.serialization.json.jsonPrimitive
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import kotlin.jvm.optionals.getOrNull
@@ -87,6 +89,11 @@ data class LocationData(
         } }
     }
 
+    fun getProcessedName(): String {
+        val nameAsJElement = Json.parseToJsonElement(name)
+        return LocationNameProcessor.processLocationName(nameAsJElement)
+    }
+
     object DoubleAsStringSerializer : KSerializer<Double?> {
         override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("DoubleAsStringSerializer", PrimitiveKind.STRING)
 
@@ -105,12 +112,21 @@ data class LocationData(
     }
 }
 
+// Names are converted to strings, in order to postpone the processing to after the loading of the serverLang files
 class LocationNameSerializer : JsonTransformingSerializer<String>(String.serializer()) {
     override fun transformDeserialize(element: JsonElement): JsonElement {
+        return JsonPrimitive(element.jsonPrimitive.content)
+    }
+}
+
+// Takes the name parsed as json element and returns the hardcoded name (if the structure is {"text": "name"}) or the localized one
+// Not the cleanest solution, might need a better implementation if we expand on the system
+private object LocationNameProcessor {
+    fun processLocationName(element: JsonElement): String {
         return if (isHardcodedName(element)) {
-            getHardcodedName(element as JsonObject)
+            getHardcodedName(element as JsonObject).content
         } else {
-            getLocalizedName(element)
+            getLocalizedName(element).content
         }
     }
 
