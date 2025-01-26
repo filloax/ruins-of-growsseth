@@ -3,7 +3,7 @@
 ## 0.11.5
 
 Tweaked
-- Slightly increased compression for music discs audio, significantly reducing the mod size!
+- Slightly increased compression for music discs audio, significantly reducing the size of the mod!
 
 
 ## 0.11.4
