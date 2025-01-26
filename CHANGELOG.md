@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.11.5
+
+Tweaked
+- Slightly increased compression for music discs audio, significantly reducing the mod size!
+
+
+## 0.11.4
+
+Fixed
+- Fixed an issue where the final part of the researcher's quest would not trigger
+
+
+## 0.11.3
+
+Fixed
+- Resolved crash when playing with mods that add entities able to place blocks
+
+
 ## 0.11.2
 
 Added
