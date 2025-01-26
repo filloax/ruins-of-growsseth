@@ -4,13 +4,18 @@
 
 Added
 - [1.21] Neoforge support! Many changes have been made under the hood, so if you encounter any issues (even in the Fabric version), please let us know!
-- `gdata` command
+- `gdata` command, used to convert dialogue and places files to the new format (see the wiki for details)
 
 Tweaked
-- Reduced size of music discs sound files, halving the size of the mod!
-- [1.21] Removed 1.21.0 support
-- `gquest` can now list stages available for the selected entity
+- [1.21] Since the development tools for 1.21.0 are not supported anymore, future versions of the mod (this one included) will only be on version 1.21.1 (or higher)
+- `gquest` command can now list all the quest stages available for the selected entity
 - Growsseth preset locations titles are now localized
+
+
+## 0.11.5
+
+Tweaked
+- Slightly increased compression for music discs audio, significantly reducing the mod size!
 
 
 ## 0.11.4
