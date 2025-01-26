@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.11.5
+
+Tweaked
+- Slightly increased compression for music discs audio, significantly reducing the mod size!
+
+
 ## 0.11.4
 
 Fixed
