@@ -20,6 +20,10 @@ fun resLoc(str: String): ResourceLocation {
     return ResourceLocation.fromNamespaceAndPath(RuinsOfGrowsseth.MOD_ID, str)
 }
 
+fun resLocVanilla(str: String): ResourceLocation {
+    return ResourceLocation.fromNamespaceAndPath("minecraft", str)
+}
+
 fun serverLang() = FxLibServices.serverLanguage.get(GrowssethConfig.serverLanguage)
 
 fun MerchantOffer.contentEquals(other: Any?): Boolean {
