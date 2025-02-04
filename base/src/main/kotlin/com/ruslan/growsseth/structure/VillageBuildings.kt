@@ -13,6 +13,7 @@ import net.minecraft.world.level.levelgen.structure.pools.LegacySinglePoolElemen
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement
 
 typealias BuildingKey = String
 
@@ -50,13 +51,13 @@ object VillageBuildings {
         weight: Int,
     ) {
         val pool: StructureTemplatePool = templatePoolRegistry.getOrThrow(ResourceKey.create(Registries.TEMPLATE_POOL, poolId))
-        val emptyProcessor = ResourceLocation.fromNamespaceAndPath("minecraft", "empty")     // some houses have mossify 10% percent, but for now we keep it simple
+        /* val emptyProcessor = ResourceLocation.fromNamespaceAndPath("minecraft", "empty")     // some houses have mossify 10% percent, but for now we keep it simple
         val processorHolder: Holder<StructureProcessorList> = processorListRegistry.getHolderOrThrow(
             ResourceKey.create(
                 Registries.PROCESSOR_LIST, emptyProcessor
             )
-        )
-        val piece = LegacySinglePoolElement.legacy(poolPieceId.toString()).apply(StructureTemplatePool.Projection.RIGID)
+        )*/
+        val piece = SinglePoolElement.legacy(poolPieceId.toString()).apply(StructureTemplatePool.Projection.RIGID)
         for (i in 0 until weight) {
             pool.templates.add(piece)
         }

@@ -1,6 +1,8 @@
 package com.ruslan.growsseth
 
 import com.filloax.fxlib.api.FxLibServices
+import com.filloax.fxlib.api.platform.ServiceUtil
+import com.ruslan.growsseth.compat.ModCompatChecker
 import com.ruslan.growsseth.config.GrowssethConfigHandler
 import com.ruslan.growsseth.dialogues.ResearcherDialogueApiListener
 import com.ruslan.growsseth.entity.researcher.CustomRemoteDiaries
@@ -36,6 +38,8 @@ abstract class RuinsOfGrowsseth {
 
         val cydoniaProperties = loadPropertiesFile("cydonia.properties")
         val cydoniaMode: Boolean = cydoniaProperties["cydoniaMode"]!!.toBoolean()
+
+        val modCompat = ServiceUtil.findService(ModCompatChecker::class.java)
     }
 
     final fun initialize() {

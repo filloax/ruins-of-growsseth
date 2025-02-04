@@ -97,7 +97,7 @@ object StoppableAsyncLocator {
 
     /**
      * Queues a task to locate a structure with a specific jigsaw piece inside it and returns a
-     * [JigsawLocateTask] that allows monitoring, cancelling it, and running code with futures.
+     * [LocateTask] that allows monitoring, cancelling it, and running code with futures.
      */
     fun locateJigsaw(
         level: ServerLevel, structureSet: HolderSet<Structure>,
