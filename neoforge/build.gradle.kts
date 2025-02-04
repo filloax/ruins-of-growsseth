@@ -93,6 +93,9 @@ dependencies {
     }
     implementation( libs.kotlinevents )
     jarJar( libs.kotlinevents )
+
+    // Mod compat
+    compileOnly(libs.lithostitched)
 }
 
 
