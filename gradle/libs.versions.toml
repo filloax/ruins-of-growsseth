@@ -18,7 +18,9 @@ rconfig = "3.0.8"
 rconfigMc = "1.21"
 
 # Mod compatibility dependencies
-lithostitched = "1.4.2"
+#lithostitched = "1.4.2"
+lithostitched-neoforge = "Q8TwwzCq"
+lithostitched-fabric = "73Oigiov"
 
 # Kotlin
 kotlin = "2.0.21"
@@ -62,7 +64,9 @@ modmenu = { group = "com.terraformersmc", name = "modmenu", version.ref = "modme
 # rconfig = { group = "com.teamresourceful.resourcefulconfig", name = "resourcefulconfig-common-", version.ref = "modmenu" }
 
 # Mod compatibility
-lithostitched = { group = "maven.modrinth", name = "lithostitched", version.ref = "lithostitched" }
+#lithostitched = { group = "maven.modrinth", name = "lithostitched", version.ref = "lithostitched" }
+lithostitched-neoforge = { group = "maven.modrinth", name = "lithostitched", version.ref = "lithostitched-neoforge" }
+lithostitched-fabric = { group = "maven.modrinth", name = "lithostitched", version.ref = "lithostitched-fabric" }
 
 # Mixin
 mixin = { group = "org.spongepowered", name = "mixin", version.ref = "mixin" }
