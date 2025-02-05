@@ -102,6 +102,9 @@ dependencies {
 	}
 	implementation( libs.kotlinevents )
 	include( libs.kotlinevents )
+
+	// Mod compat
+	compileOnly(libs.lithostitched.fabric)
 }
 
 // Mod description handling (different in loaders due to formatting)

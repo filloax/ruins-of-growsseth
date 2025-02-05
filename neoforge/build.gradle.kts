@@ -95,7 +95,7 @@ dependencies {
     jarJar( libs.kotlinevents )
 
     // Mod compat
-    compileOnly(libs.lithostitched)
+    compileOnly(libs.lithostitched.neoforge)
 }
 
 
