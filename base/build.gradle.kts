@@ -56,7 +56,7 @@ dependencies {
 	compileOnly(utils.getFilloaxlib())
 
 	// Mod compatibility
-	compileOnly( libs.lithostitched )
+	compileOnly(libs.lithostitched)
 }
 
 sourceSets.main.get().resources.srcDir(project(":base").file("src/generated/resources"))
