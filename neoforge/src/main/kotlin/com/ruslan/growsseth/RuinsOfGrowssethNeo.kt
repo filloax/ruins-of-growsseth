@@ -128,7 +128,7 @@ object RuinsOfGrowssethNeo : RuinsOfGrowsseth() {
     }
 
     fun initializeClient() {
-        log(Level.INFO, "Initializing client...")
+        LOGGER.info("Initializing client...")
 
         GrowssethRenderers.init()
 
@@ -140,11 +140,11 @@ object RuinsOfGrowssethNeo : RuinsOfGrowsseth() {
             GrowssethWorldPresetClient.Callbacks.onClientTick(Minecraft.getInstance())
         }
 
-        log(Level.INFO, "Initialized Client!")
+        LOGGER.info("Initialized Client!")
     }
 
     fun setupClient(event: FMLClientSetupEvent) {
-        log(Level.INFO, "Setting up client...")
+        LOGGER.info("Setting up client...")
 
         ModLoadingContext.get().registerExtensionPoint(IConfigScreenFactory::class.java) {
             IConfigScreenFactory { _: ModContainer, parent: Screen ->
@@ -154,7 +154,7 @@ object RuinsOfGrowssethNeo : RuinsOfGrowsseth() {
 
         GrowssethItemsClient.init()
 
-        log(Level.INFO, "Setup Client!")
+        LOGGER.info("Setup Client!")
     }
 
     private fun <T : Any> RegisterEvent.register(registryKey: ResourceKey<Registry<T>>, registratorConsumer: (registrator: (ResourceLocation, T) -> Unit) -> Unit) {

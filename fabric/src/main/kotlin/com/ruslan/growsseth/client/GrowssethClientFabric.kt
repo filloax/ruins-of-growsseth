@@ -12,7 +12,6 @@ import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.server.packs.PackType
-import org.apache.logging.log4j.Level
 
 
 object GrowssethClientFabric : ClientModInitializer {
@@ -24,7 +23,7 @@ object GrowssethClientFabric : ClientModInitializer {
 
         initEvents()
 
-        RuinsOfGrowsseth.log(Level.INFO, "Initialized Client!")
+        RuinsOfGrowsseth.LOGGER.info("Initialized Client!")
     }
 
     private fun initEvents() {
