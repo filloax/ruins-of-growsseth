@@ -26,7 +26,7 @@ object GrowssethClient : ClientModInitializer {
 
         initEvents()
 
-        RuinsOfGrowsseth.log(Level.INFO, "Initialized Client!")
+        RuinsOfGrowsseth.LOGGER.info("Initialized Client!")
     }
 
     private fun initEvents() {

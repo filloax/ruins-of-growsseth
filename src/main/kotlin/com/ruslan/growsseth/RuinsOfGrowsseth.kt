@@ -38,18 +38,18 @@ import net.minecraft.world.item.Items
 import org.apache.logging.log4j.Level
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
-import java.util.*
 
 
 object RuinsOfGrowsseth : ModInitializer {
-    @JvmStatic
-    val LOGGER: Logger = LogManager.getLogger()
-    val platform = PlatformAbstractions.get()
     const val MOD_ID = "growsseth"
     const val MOD_NAME = "Ruins of Growsseth"
 
+    @JvmStatic
+    val LOGGER: Logger = LogManager.getLogger(MOD_NAME)
+    val platform = PlatformAbstractions.get()
+
     override fun onInitialize() {
-        log(Level.INFO, "Initializing")
+        LOGGER.info("Initializing")
 
         ModEvents.get().initCallbacks()
 
@@ -73,9 +73,9 @@ object RuinsOfGrowsseth : ModInitializer {
         MusicCommon.initCheck()
 
         if (cydoniaMode)
-            log(Level.INFO, "Cydonia mode enabled, structures won't spawn and API v1 will be used")
+            LOGGER.info("Cydonia mode enabled, structures won't spawn and API v1 will be used")
 
-        log(Level.INFO, "Initialized! :saidogPipo: :saidogRitto: :saidogMax:")
+        LOGGER.info("Initialized! :saidogPipo: :saidogRitto: :saidogMax:")
     }
 
     private fun initRegistries() {
@@ -141,10 +141,6 @@ object RuinsOfGrowsseth : ModInitializer {
             resLoc(Constants.PRESET_PLACES_FOLDER),
             LocationNotifListener(),
         ))
-    }
-
-    fun log(level: Level, message: String) {
-        LOGGER.log(level, "[$MOD_NAME] $message")
     }
 
     fun logDev(level: Level, message: String) {
