@@ -21,9 +21,6 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.biome.Biome
 import net.minecraft.world.level.block.CampfireBlock
 import net.minecraft.world.level.levelgen.structure.*
-import net.minecraft.world.level.levelgen.structure.pools.ListPoolElement
-import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement
-import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement
 
 data class JigsawPiecePredicate(
     val structure: ResourceKey<Structure>,
@@ -96,9 +93,5 @@ data class JigsawPiecePredicate(
             throw IllegalStateException("Structure in JigsawPiecePredicate is not a jigsaw! Is $structure")
         }
         checked = true
-    }
-
-    private fun StructureStart.getPiecesCompat(): List<StructurePiece> {
-        return pieces
     }
 }
