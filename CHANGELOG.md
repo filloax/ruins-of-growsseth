@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.11.6
+
+Fixed
+- Fixed crash with mods using the `spawn_condition` feature of the Lithostitched library
+
+Note: the village houses from our mod will stop spawning if Lithostitched is loaded, but we are working on a fix
+
+
 ## 0.11.5
 
 Tweaked
