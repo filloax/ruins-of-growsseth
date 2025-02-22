@@ -72,8 +72,6 @@ object RuinsOfGrowsseth : ModInitializer {
         MusicCommon.initCheck()
 
         LOGGER.info("Initialized! :saidogPipo: :saidogRitto: :saidogMax:")
-
-        LOGGER.info("In log debug mode!")
     }
 
     private fun initRegistries() {
