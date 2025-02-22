@@ -13,6 +13,8 @@ import net.minecraft.world.level.levelgen.structure.pools.LegacySinglePoolElemen
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList
 import com.mojang.datafixers.util.Pair;
+import com.ruslan.growsseth.RuinsOfGrowsseth
+import com.ruslan.growsseth.compat.ModCompatChecker
 
 typealias BuildingKey = String
 
@@ -30,6 +32,9 @@ object VillageBuildings {
     val SNOWY_GOLEM     = register("snowy_golem_house", CATEGORY_GOLEM_HOUSE, "snowy", "houses", DEFAULT_GOLEM_WEIGHT)
 
     fun onServerStarted(server: MinecraftServer) {
+        if (ModCompatChecker.isLithoStitchedLoaded)
+            RuinsOfGrowsseth.LOGGER.warn("LithoStitched library is loaded, RoG's village houses won't spawn! (we are working on a fix)")
+
         val shouldAddBuildings = StructureConfig.golemHouseEnabled
                 && !GrowssethWorldPreset.isGrowssethPreset(server)
 

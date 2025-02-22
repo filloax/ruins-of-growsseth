@@ -13,6 +13,9 @@ modmenu = "11.0.1"
 rconfig = "3.0.2"
 rconfigMc = "1.21"
 
+# Mod Compat
+lithostitched = "GyOXVW9s"
+
 # Kotlin
 kotlin = "2.0.0"
 kotlin-serialization = "1.7.1"
@@ -50,6 +53,9 @@ plugin-vanilla-gradle = "0.2.1-SNAPSHOT"
 modmenu = { group = "com.terraformersmc", name = "modmenu", version.ref = "modmenu" }
 # name depends on mc version, so define in build.gradle
 # rconfig = { group = "com.teamresourceful.resourcefulconfig", name = "resourcefulconfig-fabric-", version.ref = "modmenu" }
+
+# Mod Compat
+lithostitched = { group = "maven.modrinth", name = "lithostitched", version.ref = "lithostitched" }
 
 # Mixin
 mixin = { group = "org.spongepowered", name = "mixin", version.ref = "mixin" }

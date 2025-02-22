@@ -115,6 +115,7 @@ dependencies {
 	listOf(
 		libs.fabric.kotlin,
 		libs.modmenu,
+		libs.lithostitched,
 		getRconfig(),
 	).forEach {
 		modImplementation(it)

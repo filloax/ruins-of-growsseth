@@ -4,6 +4,8 @@ import com.filloax.fxlib.api.codec.constructorWithOptionals
 import com.filloax.fxlib.api.codec.forNullableGetter
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import com.ruslan.growsseth.compat.LithoStitchedCompat
+import com.ruslan.growsseth.compat.ModCompatChecker
 import com.ruslan.growsseth.utils.matches
 import net.minecraft.advancements.critereon.BlockPredicate
 import net.minecraft.advancements.critereon.FluidPredicate
@@ -21,9 +23,6 @@ import net.minecraft.world.level.block.CampfireBlock
 import net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece
 import net.minecraft.world.level.levelgen.structure.Structure
 import net.minecraft.world.level.levelgen.structure.StructureType
-import net.minecraft.world.level.levelgen.structure.pools.ListPoolElement
-import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement
-import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement
 
 data class JigsawPiecePredicate(
     val structure: ResourceKey<Structure>,
@@ -88,7 +87,10 @@ data class JigsawPiecePredicate(
         if (checked) return
 
         val structureVal = registryAccess.registryOrThrow(Registries.STRUCTURE).getOrThrow(structure)
-        if (structureVal.type() != StructureType.JIGSAW) {
+        if (
+            structureVal.type() != StructureType.JIGSAW
+            && !(ModCompatChecker.isLithoStitchedLoaded && LithoStitchedCompat.isValidJigsawCheckStructure(structureVal))
+        ) {
             throw IllegalStateException("Structure in JigsawPiecePredicate is not a jigsaw! Is $structure")
         }
         checked = true
