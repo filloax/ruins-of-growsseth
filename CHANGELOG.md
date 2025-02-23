@@ -4,7 +4,7 @@
 
 Fixed
 - [1.21] Fixed our village houses not spawning when the Lithostitched library is installed
-- Fixed the "(Ruins of Growsseth)" prefix not appearing inside logs from our mod
+- Fixed the "Ruins of Growsseth" prefix not appearing inside logs from our mod
 
 
 ## 0.11.6
