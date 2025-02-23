@@ -2,8 +2,8 @@ package com.ruslan.growsseth.utils
 
 import com.filloax.fxlib.api.FxLibServices
 import com.ruslan.growsseth.RuinsOfGrowsseth
+import com.ruslan.growsseth.RuinsOfGrowsseth.Companion.MOD_NAME
 import com.ruslan.growsseth.config.GrowssethConfig
-import com.ruslan.growsseth.config.GrowssethConfigHandler
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.trading.MerchantOffer
 import net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece
@@ -11,6 +11,8 @@ import net.minecraft.world.level.levelgen.structure.StructurePiece
 import net.minecraft.world.level.levelgen.structure.pools.ListPoolElement
 import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement
+import org.apache.logging.log4j.Level
+import org.apache.logging.log4j.Logger
 import java.util.*
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
@@ -25,6 +27,18 @@ fun resLocVanilla(str: String): ResourceLocation {
 }
 
 fun serverLang() = FxLibServices.serverLanguage.get(GrowssethConfig.serverLanguage)
+
+class PrefixedLogger(private val logger: Logger) {
+    private val prefix =
+        if (FxLibServices.platform.isDevEnvironment()) ""     // already present on dev env
+        else "($MOD_NAME) "
+    fun log(level: Level, msg: String, vararg params: Any?) = logger.log(level, "$prefix$msg", params)
+    fun info(msg: String, vararg params: Any?) = logger.info("$prefix$msg", params)
+    fun warn(msg: String, vararg params: Any?) = logger.warn("$prefix$msg", params)
+    fun error(msg: String, vararg params: Any?) = logger.error("$prefix$msg", params)
+    fun error(ex: Exception) = logger.error(prefix, ex)
+    fun debug(msg: String, vararg params: Any?) = logger.debug("$prefix$msg", params)
+}
 
 fun MerchantOffer.contentEquals(other: Any?): Boolean {
     if (this === other) return true
