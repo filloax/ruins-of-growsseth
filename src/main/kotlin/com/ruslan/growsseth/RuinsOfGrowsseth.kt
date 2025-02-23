@@ -145,7 +145,7 @@ object RuinsOfGrowsseth : ModInitializer {
 
     fun logDev(level: Level, message: String) {
         if (FabricLoader.getInstance().isDevelopmentEnvironment) {
-            LOGGER.log(level, "[$MOD_NAME] $message")
+            LOGGER.log(level, message)
         }
     }
 
