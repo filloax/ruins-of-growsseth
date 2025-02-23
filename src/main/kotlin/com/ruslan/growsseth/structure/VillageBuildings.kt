@@ -14,7 +14,7 @@ import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList
 import com.mojang.datafixers.util.Pair;
 import com.ruslan.growsseth.RuinsOfGrowsseth
-import com.ruslan.growsseth.compat.ModCompatChecker
+import com.ruslan.growsseth.compat.LithoStitchedCompat
 
 typealias BuildingKey = String
 
@@ -31,21 +31,25 @@ object VillageBuildings {
     val SAVANNA_GOLEM   = register("savanna_golem_house", CATEGORY_GOLEM_HOUSE, "savanna", "houses", DEFAULT_GOLEM_WEIGHT)
     val SNOWY_GOLEM     = register("snowy_golem_house", CATEGORY_GOLEM_HOUSE, "snowy", "houses", DEFAULT_GOLEM_WEIGHT)
 
-    fun onServerStarted(server: MinecraftServer) {
-        if (ModCompatChecker.isLithoStitchedLoaded)
-            RuinsOfGrowsseth.LOGGER.warn("LithoStitched library is loaded, RoG's village houses won't spawn! (we are working on a fix)")
+    fun addVillageBuildings(server: MinecraftServer, isLithoStitchedLoaded: Boolean = false) {
+        if (isLithoStitchedLoaded)
+            RuinsOfGrowsseth.LOGGER.warn("LithoStitched library is loaded, RoG's village houses will also spawn in the Growsseth preset!")
 
+        // We assume that server has not yet started if the Lithostitched library is loaded (necessary for compat);
+        // in that case we can't check the seed for the Growsseth preset or the game will crash
         val shouldAddBuildings = StructureConfig.golemHouseEnabled
-                && !GrowssethWorldPreset.isGrowssethPreset(server)
+                && (isLithoStitchedLoaded || !GrowssethWorldPreset.isGrowssethPreset(server))   // check preset only if Lithostitched isn't present
 
         if (!shouldAddBuildings) return
 
         val templatePools: Registry<StructureTemplatePool> = server.registryAccess().registry(Registries.TEMPLATE_POOL).get()
         val processorLists: Registry<StructureProcessorList> = server.registryAccess().registry(Registries.PROCESSOR_LIST).get()
 
+        val addBuildingToPoolFunction = if (isLithoStitchedLoaded) LithoStitchedCompat::addBuildingToPool else this::addBuildingToPool
+
         houseEntries[CATEGORY_GOLEM_HOUSE]!!.forEach { entry ->
-            addBuildingToPool(templatePools, processorLists, entry.parentPool, entry.normalTemplate, entry.weight)
-            addBuildingToPool(templatePools, processorLists, entry.parentZombiePool, entry.zombieTemplate, entry.weight)
+            addBuildingToPoolFunction(templatePools, processorLists, entry.parentPool, entry.normalTemplate, entry.weight)
+            addBuildingToPoolFunction(templatePools, processorLists, entry.parentZombiePool, entry.zombieTemplate, entry.weight)
         }
     }
 

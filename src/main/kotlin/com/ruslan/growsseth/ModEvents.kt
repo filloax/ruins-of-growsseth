@@ -4,6 +4,7 @@ import com.filloax.fxlib.platform.ServerEvent
 import com.ruslan.growsseth.advancements.GrowssethAdvancements
 import com.ruslan.growsseth.advancements.StructureAdvancements
 import com.ruslan.growsseth.advancements.criterion.JigsawPieceTrigger
+import com.ruslan.growsseth.compat.ModCompatChecker
 import com.ruslan.growsseth.config.WebConfig
 import com.ruslan.growsseth.dialogues.BasicDialoguesComponent
 import com.ruslan.growsseth.entity.researcher.*
@@ -34,7 +35,6 @@ import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.Leashable
 import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.ItemStack
@@ -58,10 +58,13 @@ abstract class ModEvents {
             DataRemoteSync.doSync(WebConfig.dataSyncUrl, server)
             MixinHelpers.serverInit(server)
             LiveUpdatesConnection.serverStart(server)
+            if(ModCompatChecker.isLithoStitchedLoaded)
+                VillageBuildings.addVillageBuildings(server, isLithoStitchedLoaded = true)
         }
         onServerStarted { server ->
             GrowssethWorldPreset.Callbacks.onServerStarted(server)
-            VillageBuildings.onServerStarted(server)
+            if(!ModCompatChecker.isLithoStitchedLoaded)
+                VillageBuildings.addVillageBuildings(server)
             ProgressResearcherTradesProvider.Callbacks.onServerStarted(server)
         }
         onServerStopping { server ->
