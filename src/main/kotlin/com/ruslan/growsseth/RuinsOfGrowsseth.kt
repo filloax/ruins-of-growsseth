@@ -21,6 +21,7 @@ import com.ruslan.growsseth.platform.PlatformAbstractions
 import com.ruslan.growsseth.resource.MusicCommon
 import com.ruslan.growsseth.structure.*
 import com.ruslan.growsseth.templates.TemplateListener
+import com.ruslan.growsseth.utils.PrefixedLogger
 import com.ruslan.growsseth.utils.loadPropertiesFile
 import com.ruslan.growsseth.utils.resLoc
 import com.ruslan.growsseth.worldgen.worldpreset.LocationNotifListener
@@ -37,7 +38,6 @@ import net.minecraft.world.item.CreativeModeTabs
 import net.minecraft.world.item.Items
 import org.apache.logging.log4j.Level
 import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
 
 
 object RuinsOfGrowsseth : ModInitializer {
@@ -45,7 +45,7 @@ object RuinsOfGrowsseth : ModInitializer {
     const val MOD_NAME = "Ruins of Growsseth"
 
     @JvmStatic
-    val LOGGER: Logger = LogManager.getLogger(MOD_NAME)
+    val LOGGER = PrefixedLogger(LogManager.getLogger())
     val platform = PlatformAbstractions.get()
 
     override fun onInitialize() {
