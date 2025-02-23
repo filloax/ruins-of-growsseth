@@ -7,7 +7,7 @@
 
     "generator.growsseth.growsseth": "Growsseth",
 
-    "growsseth.selectWorld.preset_warning": "Note: The original series started with Minecraft 1.19.4 and continued on Minecraft 1.20.1, the world might have some differences caused by new biomes and structures present in the version you are playing with (also, the locations' names might not make much sense to an english audience).",
+    "growsseth.selectWorld.preset_warning": "Note: The original series started with Minecraft 1.19.4 and ended on Minecraft 1.20.1, the world might have some differences caused by new biomes or structures present in the version you are playing with (also, some locations' names might not make much sense).",
 
     "item.growsseth.growsseth_banner_pattern": "Banner Pattern (Replaced by code)",
     "item.growsseth.growsseth_banner_pattern.desc": "Lost Kingdom's Effigy",
@@ -267,6 +267,8 @@
     "growsseth.config.researcherTentSimpleEnabled.name": "Enable spawn of the researcher's tent with no cellar (variant)",
     "growsseth.config.researcherTentSimpleEnabled.comment": "Warning: with this version the final quest might work incorrectly. It's also recommended to enable only one variant.",
 
+    "growsseth.config.disableTrialChambers.name": "Disable Trial Chambers spawn",
+    "growsseth.config.disableTrialChambers.comment": "Prevents the Trial Chambers structure from spawning in the Growsseth world preset (since the original series was on 1.20.1 and they didn't exist yet)",
     "growsseth.config.researcherTent.name": "Researcher tent",
     "growsseth.config.caveCamp.name": "Cave camp",
     "growsseth.config.caveCampMarker.name": "Cave camp marker",

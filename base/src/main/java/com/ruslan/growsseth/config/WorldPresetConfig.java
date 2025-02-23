@@ -16,14 +16,14 @@ import static com.ruslan.growsseth.config.GrowssethConfig.T_PREF;
 @Category("worldpreset")
 public class WorldPresetConfig {
     public static final Map<ResourceKey<Structure>, PosPreset> PRESET_ORIGINAL = Map.of(
-            GrowssethStructures.CydoniaVersion.RESEARCHER_TENT, new PosPreset(1374, 74, 162, Rotation.CLOCKWISE_180),
-            GrowssethStructures.CydoniaVersion.CAVE_CAMP,       new PosPreset(934, 38, 340, Rotation.NONE),
-            GrowssethStructures.CydoniaVersion.MARKER,          new PosPreset(940, 68, 347, Rotation.NONE),
-            GrowssethStructures.CydoniaVersion.ENCHANT_TOWER,   new PosPreset(-1276, 123, 743, Rotation.CLOCKWISE_180),
-            GrowssethStructures.CydoniaVersion.GOLEM_HOUSE,     new PosPreset(171, 144, 861, Rotation.COUNTERCLOCKWISE_90),
-            GrowssethStructures.CydoniaVersion.BEEKEEPER_HOUSE, new PosPreset(3086, 72, 989, Rotation.COUNTERCLOCKWISE_90),
-            GrowssethStructures.CydoniaVersion.NOTEBLOCK_LAB,   new PosPreset(2260, 69, -1674, Rotation.NONE),
-            GrowssethStructures.CydoniaVersion.CONDUIT_CHURCH,  new PosPreset(-1553, 39, 2527, Rotation.CLOCKWISE_180)
+        GrowssethStructures.CydoniaVersion.RESEARCHER_TENT, new PosPreset(1374, 74, 162, Rotation.CLOCKWISE_180),
+        GrowssethStructures.CydoniaVersion.CAVE_CAMP,       new PosPreset(934, 38, 340, Rotation.NONE),
+        GrowssethStructures.CydoniaVersion.MARKER,          new PosPreset(940, 68, 347, Rotation.NONE),
+        GrowssethStructures.CydoniaVersion.ENCHANT_TOWER,   new PosPreset(-1276, 123, 743, Rotation.CLOCKWISE_180),
+        GrowssethStructures.CydoniaVersion.GOLEM_HOUSE,     new PosPreset(171, 144, 861, Rotation.COUNTERCLOCKWISE_90),
+        GrowssethStructures.CydoniaVersion.BEEKEEPER_HOUSE, new PosPreset(3086, 72, 989, Rotation.COUNTERCLOCKWISE_90),
+        GrowssethStructures.CydoniaVersion.NOTEBLOCK_LAB,   new PosPreset(2260, 69, -1674, Rotation.NONE),
+        GrowssethStructures.CydoniaVersion.CONDUIT_CHURCH,  new PosPreset(-1553, 39, 2527, Rotation.CLOCKWISE_180)
     );
     public static final Map<ResourceKey<Structure>, PosPreset> PRESET_UPDATED = Map.of(
         GrowssethStructures.CydoniaVersion.RESEARCHER_TENT, new PosPreset(1374, 74, 162, Rotation.CLOCKWISE_180),
@@ -52,6 +52,10 @@ public class WorldPresetConfig {
         noteblockLab.assign(new StructureInWorldConfig(GrowssethStructures.CydoniaVersion.NOTEBLOCK_LAB, preset));
         conduitChurch.assign(new StructureInWorldConfig(GrowssethStructures.CydoniaVersion.CONDUIT_CHURCH, preset));
     }
+
+    @ConfigEntry(id = "disableTrialChambers", translation = T_PREF + "disableTrialChambers.name")
+    @Comment(value = "Prevents the Trial Chambers structure from spawning in the Growsseth world preset (since the original series was on 1.20.1 and they didn't exist yet)", translation = T_PREF + "disableTrialChambers.comment")
+    public static boolean disableTrialChambers = true;
 
     @ConfigEntry(id = "researcherTent", translation = T_PREF + "researcherTent.name")
     public static final StructureInWorldConfig researcherTent = new StructureInWorldConfig(GrowssethStructures.CydoniaVersion.RESEARCHER_TENT);
