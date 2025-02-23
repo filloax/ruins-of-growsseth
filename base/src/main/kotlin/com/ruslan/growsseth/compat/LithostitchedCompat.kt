@@ -16,11 +16,11 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProc
 
 
 /**
- * Only use if LithoStitched mod is enabled
+ * Only use if Lithostitched mod is enabled
  */
-object LithoStitchedCompat {
+object LithostitchedCompat {
     /**
-     * Some mods that use LithoStitched library replaced e.g. villages with DelegatingStructure
+     * Some mods that use Lithostitched library replaced e.g. villages with DelegatingStructure
      * (a type added by the mod), which would break some of our checks.
      */
     fun isValidJigsawCheckStructure(struct: Structure): Boolean {
@@ -30,7 +30,7 @@ object LithoStitchedCompat {
         return false
     }
     /**
-     * The LithoStitched library replaces vanilla template pools with their optimized format,
+     * The Lithostitched library replaces vanilla template pools with their optimized format,
      * if it's loaded we add the village houses to the pools using their implementation
      */
     fun addBuildingToPool(

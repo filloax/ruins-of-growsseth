@@ -13,7 +13,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProc
 import com.mojang.datafixers.util.Pair;
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement
-import com.ruslan.growsseth.compat.LithoStitchedCompat
+import com.ruslan.growsseth.compat.LithostitchedCompat
 
 typealias BuildingKey = String
 
@@ -30,23 +30,25 @@ object VillageBuildings {
     val SAVANNA_GOLEM   = register("savanna_golem_house", CATEGORY_GOLEM_HOUSE, "savanna", "houses", DEFAULT_GOLEM_WEIGHT)
     val SNOWY_GOLEM     = register("snowy_golem_house", CATEGORY_GOLEM_HOUSE, "snowy", "houses", DEFAULT_GOLEM_WEIGHT)
 
-    fun addVillageBuildings(server: MinecraftServer, isLithoStitchedLoaded: Boolean = false) {
-        if (isLithoStitchedLoaded)
-            RuinsOfGrowsseth.LOGGER.warn("LithoStitched library is loaded, RoG's village houses will also spawn in the Growsseth preset!")
+    fun addVillageBuildings(server: MinecraftServer, isLithostitchedLoaded: Boolean = false) {
+        if (isLithostitchedLoaded)
+            RuinsOfGrowsseth.LOGGER.warn("Lithostitched library is loaded, RoG's village houses will also spawn in the Growsseth preset!")
 
         // We assume that server has not yet started if the Lithostitched library is loaded (necessary for compat);
         // in that case we can't check the seed for the Growsseth preset or the game will crash
         val shouldAddBuildings = StructureConfig.golemHouseEnabled
-                && (isLithoStitchedLoaded || !GrowssethWorldPreset.isGrowssethPreset(server))   // check preset only if Lithostitched isn't present
+                && (isLithostitchedLoaded || !GrowssethWorldPreset.isGrowssethPreset(server))   // check preset only if Lithostitched isn't present
 
         if (!shouldAddBuildings) return
 
         val templatePools: Registry<StructureTemplatePool> = server.registryAccess().registry(Registries.TEMPLATE_POOL).get()
         val processorLists: Registry<StructureProcessorList> = server.registryAccess().registry(Registries.PROCESSOR_LIST).get()
 
-        val addBuildingToPoolFunction = if (isLithoStitchedLoaded) LithoStitchedCompat::addBuildingToPool else this::addBuildingToPool
+        val addBuildingToPoolFunction = if (isLithostitchedLoaded) LithostitchedCompat::addBuildingToPool else this::addBuildingToPool
 
         houseEntries[CATEGORY_GOLEM_HOUSE]!!.forEach { entry ->
+            if (RuinsOfGrowsseth.modCompat.isImprovedVillagePlacementLoaded)
+                entry.weight *= 2   // Villages are rarer with that mod, we don't want players to travel so much for a house
             addBuildingToPoolFunction(templatePools, processorLists, entry.parentPool, entry.normalTemplate, entry.weight)
             addBuildingToPoolFunction(templatePools, processorLists, entry.parentZombiePool, entry.zombieTemplate, entry.weight)
         }
@@ -99,6 +101,6 @@ object VillageBuildings {
         val zombiePool: ResourceLocation,
         val normalTemplate: ResourceLocation,
         val zombieTemplate: ResourceLocation,
-        val weight: Int,
+        var weight: Int,
     )
 }
