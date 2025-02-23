@@ -31,7 +31,7 @@ fun serverLang() = FxLibServices.serverLanguage.get(GrowssethConfig.serverLangua
 class PrefixedLogger(private val logger: Logger) {
     private val prefix =
         if (FxLibServices.platform.isDevEnvironment()) ""     // already present on dev env
-        else "($MOD_NAME) "
+        else "[$MOD_NAME] "
     fun log(level: Level, msg: String, vararg params: Any?) = logger.log(level, "$prefix$msg", params)
     fun info(msg: String, vararg params: Any?) = logger.info("$prefix$msg", params)
     fun warn(msg: String, vararg params: Any?) = logger.warn("$prefix$msg", params)

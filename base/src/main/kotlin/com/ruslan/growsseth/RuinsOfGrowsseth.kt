@@ -29,7 +29,7 @@ abstract class RuinsOfGrowsseth {
 
         fun logDev(level: Level, message: String) {
             if (FxLibServices.platform.isDevEnvironment()) {
-                LOGGER.log(level, "[$MOD_NAME] $message")
+                LOGGER.log(level, message)
             }
         }
 
