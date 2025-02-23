@@ -46,12 +46,12 @@ abstract class ModEvents {
             DataRemoteSync.doSync(WebConfig.dataSyncUrl, server)
             com.ruslan.growsseth.utils.MixinHelpers.serverInit(server)
             LiveUpdatesConnection.serverStart(server)
-            if(RuinsOfGrowsseth.modCompat.isLithoStitchedLoaded)
-                VillageBuildings.addVillageBuildings(server, isLithoStitchedLoaded = true)
+            if(RuinsOfGrowsseth.modCompat.isLithostitchedLoaded)
+                VillageBuildings.addVillageBuildings(server, isLithostitchedLoaded = true)
         }
         onServerStarted { server ->
             GrowssethWorldPreset.Callbacks.onServerStarted(server)
-            if(!RuinsOfGrowsseth.modCompat.isLithoStitchedLoaded)
+            if(!RuinsOfGrowsseth.modCompat.isLithostitchedLoaded)
                 VillageBuildings.addVillageBuildings(server)
             ProgressResearcherTradesProvider.Callbacks.onServerStarted(server)
         }
