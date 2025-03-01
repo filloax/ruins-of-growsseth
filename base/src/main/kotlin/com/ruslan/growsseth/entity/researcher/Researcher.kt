@@ -988,7 +988,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     fun scheduleClearingFailedMaps() {
         // In 10 seconds (or if quitting, in the write nbt function), clear
         // failed map offers to be able to retry)
-        clearFailedMapsTime = tickCount + 10f.secondsToTicks()
+        clearFailedMapsTime = tickCount + 20f.secondsToTicks()
     }
 
     private fun clearFailedMaps() {
