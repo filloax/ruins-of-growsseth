@@ -158,7 +158,7 @@ open class CustomToastPacket(
 data class PlacesInfoPacket(
     val locationData: List<LocationData>
 ) : CustomPacketPayload {
-    constructor(buf: FriendlyByteBuf) : this(buf.readJsonWithCodec(Codec.list(LocationData.CODEC)))
+    constructor(buf: FriendlyByteBuf) : this(buf.readJsonWithCodec(LocationData.CODEC.listOf()))
 
     companion object {
         val CODEC: RStreamCodec<PlacesInfoPacket> = StreamCodec.of(::write, ::read)
