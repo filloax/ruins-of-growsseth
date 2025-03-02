@@ -103,7 +103,7 @@ object GrowssethDataCommand {
         val resource = source.server.resourceManager.getResource(adjustedPath).getOrNull() ?: run {
             RuinsOfGrowsseth.LOGGER.info(
                 "Available files: {}",
-                source.server.resourceManager.listResources(params.dataRoot) { true }
+                source.server.resourceManager.listResources(params.dataRoot) { true }.keys.joinToString("\n")
             )
             source.sendFailure(Component.translatable("growsseth.commands.gdata.extract.not-found", adjustedPath.path))
             return 0
@@ -140,6 +140,11 @@ object GrowssethDataCommand {
         }
         outputFile.writeText(JSON.encodeToString(JsonObject.serializer(), keyObj))
 
+        if (languageStringObj.isEmpty()) {
+            source.sendFailure(Component.translatable("growsseth.commands.gdata.extract.no-lang"))
+            return false
+        }
+
         languageStringObj[langPrefix]!!.jsonObject.forEach { (name, subObj) ->
             val out = langDir.resolve("${name}.json")
             var obj = subObj
@@ -164,6 +169,11 @@ object GrowssethDataCommand {
             return false
         }
         outputFile.writeText(JSON.encodeToString(JsonArray.serializer(), keyArray))
+
+        if (languageStringObj.isEmpty()) {
+            source.sendFailure(Component.translatable("growsseth.commands.gdata.extract.no-lang"))
+            return false
+        }
 
         val outLang = langDir.resolve("${prefix}.json")
         var obj = languageStringObj
