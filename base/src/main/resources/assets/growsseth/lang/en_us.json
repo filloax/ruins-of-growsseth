@@ -130,6 +130,7 @@
     "growsseth.commands.glocate.stop.success": "Stopped all your locate tasks",
 
     "growsseth.commands.gdata.extract.not-found": "File %s not found",
+    "growsseth.commands.gdata.extract.no-lang": "No translatable text found in the specified file",
     "growsseth.commands.gdata.extract.parse-failure": "Selected file could not be parsed correctly",
     "growsseth.commands.gdata.extract.success": "Saved resulting files to directories %s and %s",
     "growsseth.commands.gdata.dialogue.extract.help": "Converts the specified dialogue file (in world data) into two json files: a dialogue file with all hardcoded lines (text field inside dialogue content) converted to keys, and a lang file containing the extracted text. If a lang file named dialogue.json already exists in the world generated/lang/<language> folder, it will be merged with the result.",
