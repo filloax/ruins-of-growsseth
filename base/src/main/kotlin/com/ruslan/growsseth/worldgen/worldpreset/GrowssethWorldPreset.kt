@@ -47,11 +47,9 @@ object GrowssethWorldPreset {
         fun onServerPlayerJoin(player: ServerPlayer, server: MinecraftServer) {
             if (isGrowssethPreset(server)) {
                 if (LocationNotifListener.loaded) {
-                    player.sendPacket(PlacesInfoPacket(LocationNotifListener.PLACES_DATA))
+                    player.sendPacket(PlacesInfoPacket(LocationNotifListener.LOCALISED_PLACES_DATA))
                 } else {
-                    LocationNotifListener.onNextReload {
-                        player.sendPacket(PlacesInfoPacket(it))
-                    }
+                    throw Exception("TEMP")
                 }
             }
         }
