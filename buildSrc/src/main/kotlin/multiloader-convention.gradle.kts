@@ -1,6 +1,5 @@
 package com.ruslan.gradle
 
-import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -13,7 +12,7 @@ plugins {
     kotlin("plugin.serialization")
 
     // kotlin-compatible javadoc, cannot use base as it errors with kotlin
-    id("org.jetbrains.dokka")
+    id("org.jetbrains.dokka-javadoc")
 }
 
 val javaVersion: Int = (property("javaVersion")!! as String).toInt()
@@ -248,12 +247,9 @@ idea {
     }
 }
 
-// Use dokka for kotlin-compatible javadoc
-
-// Make sure our token replacement runs first
 val dokkaJavadocJar = tasks.register<Jar>("dokkaJavadocJar") {
-    dependsOn(tasks.dokkaJavadoc)
-    from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
+    dependsOn(tasks.dokkaGenerateModuleJavadoc)
+    from(tasks.dokkaGenerateModuleJavadoc.flatMap { it.outputDirectory })
     archiveClassifier.set("javadoc")
 }
 

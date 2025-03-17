@@ -131,3 +131,16 @@ tasks.named("build") {
 	dependsOn("makeReferenceDatapack")
 }
 //endregion
+
+//region Dokka
+// susceptible to changes in dokka v2
+listOf(
+	tasks.named("dokkaGenerateModuleJavadoc"),
+	tasks.named("dokkaGenerate"),
+).forEach { task ->
+	task {
+		mustRunAfter(tasks.named("replaceTransformedSources"))
+		mustRunAfter(tasks.named("restoreSources"))
+	}
+}
+//endregion
