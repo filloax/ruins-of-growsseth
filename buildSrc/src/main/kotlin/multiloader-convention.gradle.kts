@@ -106,6 +106,7 @@ val author: String by project
 val license: String by project
 val displayUrl: String by project
 val modVersion: String by project
+val versionSuffix: String by project
 
 val cydoVersion = (property("cydoVersion") as String).toBoolean()
 
@@ -165,9 +166,9 @@ tasks.jar {
         attributes(mapOf(
                 "Specification-Title"     to modName,
                 "Specification-Vendor"    to author,
-                "Specification-Version"   to modVersion,
+                "Specification-Version"   to modVersion + versionSuffix,
                 "Implementation-Title"    to modName,
-                "Implementation-Version"  to modVersion,
+                "Implementation-Version"  to modVersion + versionSuffix,
                 "Implementation-Vendor"   to author,
                 "Built-On-Minecraft"      to minecraftVersion
         ))
@@ -191,7 +192,7 @@ tasks.withType<ProcessResources>().configureEach {
     exclude(".cache")
 
     val metaProps = mapOf(
-        "version_prefix" to "$modVersion-$minecraftVersion",
+        "version_prefix" to "$modVersion-$minecraftVersion$versionSuffix",
         "group" to project.group, // Else we target the task's group.
         "display_url" to displayUrl, // Else we target the task's group.
         "minecraft_version" to minecraftVersion,
