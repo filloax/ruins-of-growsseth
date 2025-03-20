@@ -49,7 +49,7 @@ object GrowssethWorldPreset {
                 if (LocationNotifListener.loaded) {
                     player.sendPacket(PlacesInfoPacket(LocationNotifListener.LOCALISED_PLACES_DATA))
                 } else {
-                    throw Exception("TEMP")
+                    throw Exception("Location notification listener not loaded!")
                 }
             }
         }
