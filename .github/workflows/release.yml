@@ -6,7 +6,7 @@ on:
       - 'release/1.21.0'
 env:
   JAVA_VERSION: 21
-  MC_VER: 1.21            # Main version
+  MC_VER: 1.21.1           # Main version
   MC_VER_EXTRA: 1.21.1    # Minor releases that are still compatible
 
 jobs:
