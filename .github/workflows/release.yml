@@ -7,15 +7,16 @@ on:
 env:
   JAVA_VERSION: 21
   MC_VER: 1.21.1           # Main version
-  MC_VER_EXTRA: 1.21.1    # Minor releases that are still compatible
+  MC_VER_EXTRA: 1.21.1     # Minor releases that are still compatible
 
 jobs:
   build:
     if: "contains(github.event.head_commit.message, 'chore: release') && github.event_name != 'pull_request'"
     runs-on: ubuntu-latest
-
+    outputs:
+      mod_version: ${{ steps.get_version.outputs.VERSION }}
     steps:
-      - uses: actions/checkout@v1  
+      - uses: actions/checkout@v4  
 
       - name: Setup Java
         uses: actions/setup-java@v2
@@ -43,37 +44,88 @@ jobs:
           latest_changelog=$(sed -n "/## $latest_version/,/## /p" CHANGELOG.md | sed '$d')
           echo "$latest_changelog" > latest_changelog.txt
 
-      - uses: Kir-Antipov/mc-publish@v3.3
-        id: mc_publish
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: |
+            fabric/build/libs/*.jar
+            neoforge/build/libs/*.jar
+            base/build/libs/*.jar
+            base/build/datapack/*.zip
+            latest_changelog.txt
+          retention-days: 30
+
+  publish_platform:
+    name: Publish (Platforms)
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - platform: neoforge
+            name: Neoforge
+            dependencies: |
+              resourceful-config(required)
+              kotlin-for-forge(required)
+          - platform: fabric
+            name: Fabric
+            dependencies: |
+              resourceful-config(required)
+              fabric-language-kotlin(required)
+              fabric-api(required)
+              modmenu(recommended)
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          
+      - name: Publish
+        uses: Kir-Antipov/mc-publish@v3.3
+        id: mc_publish_fabric
         with:
           modrinth-token: ${{ secrets.TOKEN_MODRINTH }}
           curseforge-token: ${{ secrets.TOKEN_CURSEFORGE }}
 
-          name: Ruins of Growsseth ${{ steps.get_version.outputs.VERSION }} for Minecraft ${{ env.MC_VER }}
-          version-type: beta
+          name: Ruins of Growsseth ${{ needs.build.outputs.mod_version }} for ${{ matrix.name }} + Minecraft ${{ env.MC_VER }}
 
+          files: |
+            ${{ matrix.platform }}/build/libs/*.jar
           game-versions: |
             ${{ env.MC_VER }}
             ${{ env.MC_VER_EXTRA }}
-          dependencies: |
-            resourceful-config(required)
-            fabric-language-kotlin(required)
-            fabric-api(required)
-            modmenu(recommended)
+          dependencies: ${{ matrix.dependencies }}
           java: 21
 
           changelog-file: latest_changelog.txt
 
-      - name: Release
+      - run: echo "Published ${{ matrix.name }}!"
+
+  publish_github:
+    name: Publish (GitHub)
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+
+      - name: Publish (GitHub)
         uses: softprops/action-gh-release@v2
         with:
-          name: Ruins of Growsseth ${{ steps.get_version.outputs.VERSION }} for Minecraft ${{ env.MC_VER }}
+          name: Ruins of Growsseth ${{ needs.build.outputs.mod_version }} for Minecraft ${{ env.MC_VER }}
           body_path: latest_changelog.txt
           token: ${{ secrets.TOKEN_GITHUB }}
           make_latest: true
-          tag_name: v${{ steps.get_version.outputs.VERSION }}-${{ env.MC_VER }}
+          tag_name: v${{ needs.build.outputs.mod_version }}-${{ env.MC_VER }}
           files: |
-            build/libs/*.jar
-            build/datapack/*.zip
-      
-      
+            base/build/libs/*.jar
+            neoforge/build/libs/*.jar
+            fabric/build/libs/*.jar
+            base/build/datapack/*.zip
