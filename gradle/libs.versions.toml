@@ -52,7 +52,7 @@ kotlinevents = "v2.0"
 # Plugins
 plugin-dokka = "2.0.0"
 plugin-mixin = "0.7.+"
-plugin-loom = "1.8-SNAPSHOT"
+plugin-loom = "1.10.1"
 plugin-moddev = "2.0.74"
 plugin-idea-ext = "1.1.9"
 
