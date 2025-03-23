@@ -101,6 +101,7 @@ jobs:
             ${{ env.MC_VER_EXTRA }}
           dependencies: ${{ matrix.dependencies }}
           java: 21
+          loaders: ${{ matrix.platform }}
 
           changelog-file: latest_changelog.txt
 
