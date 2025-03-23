@@ -12,12 +12,13 @@ val utils = project.utils(versionCatalogs, ext)
 
 val modid: String by project
 val modVersion: String by project
+val versionSuffix: String by project
 val minecraftVersion = libs.versions.minecraft.asProvider().get()
 
 val cydoVersion = (property("cydoVersion") as String).toBoolean()
 
 
-version = "$modVersion-$minecraftVersion-base"
+version = "$modVersion-$minecraftVersion$versionSuffix-base"
 
 base {
 	archivesName = property("archives_base_name") as String
@@ -128,5 +129,18 @@ tasks.register<Zip>("makeReferenceDatapack") {
 
 tasks.named("build") {
 	dependsOn("makeReferenceDatapack")
+}
+//endregion
+
+//region Dokka
+// susceptible to changes in dokka v2
+listOf(
+	tasks.named("dokkaGenerateModuleJavadoc"),
+	tasks.named("dokkaGenerate"),
+).forEach { task ->
+	task {
+		mustRunAfter(tasks.named("replaceTransformedSources"))
+		mustRunAfter(tasks.named("restoreSources"))
+	}
 }
 //endregion

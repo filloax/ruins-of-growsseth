@@ -52,7 +52,7 @@ kotlinevents = "v2.0"
 # Plugins
 plugin-dokka = "2.0.0"
 plugin-mixin = "0.7.+"
-plugin-loom = "1.8-SNAPSHOT"
+plugin-loom = "1.10.1"
 plugin-moddev = "2.0.74"
 plugin-idea-ext = "1.1.9"
 
@@ -95,7 +95,7 @@ kotlinevents = { group = "com.github.stuhlmeier", name = "kotlin-events", versio
 # Plugin dependencies (for buildSrc)
 plugin-kotlin-jvm = { group = "org.jetbrains.kotlin.jvm", name = "org.jetbrains.kotlin.jvm.gradle.plugin", version.ref = "kotlin" }
 plugin-kotlin-serialization = { group = "org.jetbrains.kotlin", name = "kotlin-serialization", version.ref = "kotlin" }
-plugin-dokka = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref = "plugin-dokka" }
+plugin-dokka-javadoc = { group = "org.jetbrains.dokka-javadoc", name = "org.jetbrains.dokka-javadoc.gradle.plugin", version.ref = "plugin-dokka" }
 
 [plugins]
 # Kotlin

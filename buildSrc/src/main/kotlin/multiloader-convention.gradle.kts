@@ -1,6 +1,5 @@
 package com.ruslan.gradle
 
-import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -13,7 +12,7 @@ plugins {
     kotlin("plugin.serialization")
 
     // kotlin-compatible javadoc, cannot use base as it errors with kotlin
-    id("org.jetbrains.dokka")
+    id("org.jetbrains.dokka-javadoc")
 }
 
 val javaVersion: Int = (property("javaVersion")!! as String).toInt()
@@ -106,6 +105,7 @@ val author: String by project
 val license: String by project
 val displayUrl: String by project
 val modVersion: String by project
+val versionSuffix: String by project
 
 val cydoVersion = (property("cydoVersion") as String).toBoolean()
 
@@ -165,9 +165,9 @@ tasks.jar {
         attributes(mapOf(
                 "Specification-Title"     to modName,
                 "Specification-Vendor"    to author,
-                "Specification-Version"   to modVersion,
+                "Specification-Version"   to modVersion + versionSuffix,
                 "Implementation-Title"    to modName,
-                "Implementation-Version"  to modVersion,
+                "Implementation-Version"  to modVersion + versionSuffix,
                 "Implementation-Vendor"   to author,
                 "Built-On-Minecraft"      to minecraftVersion
         ))
@@ -191,7 +191,7 @@ tasks.withType<ProcessResources>().configureEach {
     exclude(".cache")
 
     val metaProps = mapOf(
-        "version_prefix" to "$modVersion-$minecraftVersion",
+        "version_prefix" to "$modVersion-$minecraftVersion$versionSuffix",
         "group" to project.group, // Else we target the task's group.
         "display_url" to displayUrl, // Else we target the task's group.
         "minecraft_version" to minecraftVersion,
@@ -247,12 +247,9 @@ idea {
     }
 }
 
-// Use dokka for kotlin-compatible javadoc
-
-// Make sure our token replacement runs first
 val dokkaJavadocJar = tasks.register<Jar>("dokkaJavadocJar") {
-    dependsOn(tasks.dokkaJavadoc)
-    from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
+    dependsOn(tasks.dokkaGenerateModuleJavadoc)
+    from(tasks.dokkaGenerateModuleJavadoc.flatMap { it.outputDirectory })
     archiveClassifier.set("javadoc")
 }
 
