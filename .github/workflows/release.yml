@@ -88,7 +88,9 @@ jobs:
         id: mc_publish_fabric
         with:
           modrinth-token: ${{ secrets.TOKEN_MODRINTH }}
+          modrinth-id: 476XCS3C
           curseforge-token: ${{ secrets.TOKEN_CURSEFORGE }}
+          curseforge-id: 1017555
 
           name: Ruins of Growsseth ${{ needs.build.outputs.mod_version }} for ${{ matrix.name }} + Minecraft ${{ env.MC_VER }}
 
