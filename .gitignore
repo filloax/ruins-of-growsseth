@@ -19,6 +19,7 @@ bin/
 
 #kotlin
 .kotlin/sessions/
+.kotlin/errors/
 
 #fabric
 run/
@@ -31,6 +32,6 @@ temp/**
 tools/old-scripts-and-utilities/live-update-server/update.ps1
 **/.venv/**
 logs/*
-
 **/music.key
 tools/egobalego-no-gui/server_data.json
+music-encrypt

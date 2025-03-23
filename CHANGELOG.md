@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.12.0
+
+Added
+- [1.21] Neoforge support! Many changes have been made under the hood, so if you encounter any issues (even in the Fabric version), please let us know!
+    - Neoforge version has feature parity, only missing thing is the "live connection" part of the Gamemaster mode due to dependency issues
+- `gdata` command, used to convert dialogue and places files to the new format (see below + wiki for details)
+
+Tweaked
+- [1.21] Since the development tools for 1.21.0 are not supported anymore, future versions of the mod (this one included) will only be on version 1.21.1 (or higher)
+- Dialogues now store their text in separate data entries, still server-side to sync the dialogue timing for all players
+- `gquest` command can now list all the quest stages available for the selected entity
+- Growsseth preset locations titles are now localized
+
+
 ## 0.11.7
 
 Fixed

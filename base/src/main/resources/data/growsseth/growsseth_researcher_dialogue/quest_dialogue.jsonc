@@ -1,0 +1,224 @@
+{
+    "shared": [
+        {
+            "content": [
+                "quest.shared.start.0",
+                "quest.shared.start.1",
+                "quest.shared.start.2",
+                "quest.shared.start.3"
+            ],
+            "useLimit": 1,
+            "priority": 1000,
+            "id": "researcher-quest-start",
+            "requiresQuestStage": "start",
+            "requiresUntilQuestStage": "healed"
+        },
+        {
+            "content": [
+                "quest.shared.cure.0",
+                "quest.shared.cure.1",
+                "quest.shared.cure.2",
+                "quest.shared.cure.3",
+                {
+                    "key": "quest.shared.cure.4",
+                    "duration": 4.0
+                },
+                "quest.shared.cure.5",
+                "quest.shared.cure.6",
+                "quest.shared.cure.7",
+                "quest.shared.cure.8"
+            ],
+            "useLimit": 1,
+            "priority": 1050,
+            "id": "researcher-quest-cure",
+            "groups": "group-cure-dialogue",
+            "groupUseLimit": 1,
+            "requiresQuestStage": "healed",
+            "requiresUntilQuestStage": "home"
+        },
+        {
+            "content": [
+                "quest.shared.cure_skip.0",
+                "quest.shared.cure_skip.1",
+                "quest.shared.cure_skip.2",
+                "quest.shared.cure_skip.3",
+                {
+                    "key": "quest.shared.cure_skip.4",
+                    "duration": 4.0
+                },
+                "quest.shared.cure_skip.5",
+                "quest.shared.cure_skip.6",
+                "quest.shared.cure_skip.7",
+                "quest.shared.cure_skip.8",
+                "quest.shared.cure_skip.9",
+                "quest.shared.cure_skip.10"
+            ],
+            "useLimit": 1,
+            "priority": 1051,   // higher priority to override normal dialogue
+            "id": "researcher-quest-cure-skip",
+            "groups": [
+                "group-first-dialogue",
+                "group-cure-dialogue"
+            ],
+            "groupUseLimit": 1,
+            "requiresQuestStage": "healed",
+            "requiresUntilQuestStage": "home"
+        },
+        {
+            "content": [
+                {
+                    "key": "quest.shared.end.0",
+                    "duration": 4.0
+                },
+                "quest.shared.end.1",
+                "quest.shared.end.2",
+                "quest.shared.end.3",
+                "quest.shared.end.4",
+                "quest.shared.end.5",
+                "quest.shared.end.6"
+            ],
+            "useLimit": 1,
+            "priority": 1100,
+            "id": "researcher-quest-end",
+            "groups": [
+                "group-quest-last-dialogue"
+            ],
+            "groupUseLimit": 1,
+            "requiresQuestStage": "home"
+        },
+        {
+            "content": [
+                {
+                    "key": "quest.shared.end_skip.0",
+                    "duration": 4.0
+                },
+                "quest.shared.end_skip.1",
+                "quest.shared.end_skip.2",
+                "quest.shared.end_skip.3",
+                "quest.shared.end_skip.4",
+                "quest.shared.end_skip.5"
+            ],
+            "useLimit": 1,
+            "priority": 1101,
+            "id": "researcher-quest-end-skip",
+            "groups": [
+                "group-first-dialogue",
+                "group-quest-last-dialogue"
+            ],
+            "groupUseLimit": 1,
+            "requiresQuestStage": "home"
+        }
+    ],
+    "tickNearPlayer": [
+        {
+            "id": "researcher-quest-start"
+        },
+        {
+            "id": "researcher-quest-cure"
+        },
+        {
+            "id": "researcher-quest-cure-skip"
+        },
+        {
+            "id": "researcher-quest-end"
+        },
+        {
+            "id": "researcher-quest-end-skip"
+        }
+    ],
+    "playerArrive": [
+        {
+            "id": "researcher-quest-start"
+        },
+        {
+            "id": "researcher-quest-cure"
+        },
+        {
+            "id": "researcher-quest-cure-skip"
+        },
+        {
+            "id": "researcher-quest-end"
+        },
+        {
+            "id": "researcher-quest-end-skip"
+        }
+    ],
+    "playerArriveNight": [
+        {
+            "id": "researcher-quest-start"
+        },
+        {
+            "id": "researcher-quest-cure"
+        },
+        {
+            "id": "researcher-quest-cure-skip"
+        },
+        {
+            "id": "researcher-quest-end"
+        },
+        {
+            "id": "researcher-quest-end-skip"
+        }
+    ],
+    "playerArriveSoon": [
+        {
+            "id": "researcher-quest-start"
+        },
+        {
+            "id": "researcher-quest-cure"
+        },
+        {
+            "id": "researcher-quest-cure-skip"
+        },
+        {
+            "id": "researcher-quest-end"
+        },
+        {
+            "id": "researcher-quest-end-skip"
+        }
+    ],
+    "playerArriveLongTime": [
+        {
+            "id": "researcher-quest-start"
+        },
+        {
+            "id": "researcher-quest-cure"
+        },
+        {
+            "id": "researcher-quest-cure-skip"
+        },
+        {
+            "id": "researcher-quest-end"
+        },
+        {
+            "id": "researcher-quest-end-skip"
+        }
+    ],
+    "playerLeave": [
+        {
+            "content": "quest.playerLeave.0",
+            "priority": 1000,
+            "requiresQuestStage": "start",
+            "requiresUntilQuestStage": "healed"
+        },
+        {
+            "content": "quest.playerLeave.1",
+            "priority": 1000,
+            "requiresQuestStage": "home"
+        }
+    ],
+    "playerLeaveSoon": [
+        {
+            "content": "quest.playerLeaveSoon.0",
+            "priority": 1000,
+            "requiresQuestStage": "home"
+        }
+    ],
+    "playerLeaveNight": [
+        {
+            "content": "quest.playerLeaveNight.0",
+            "priority": 1000,
+            "requiresQuestStage": "home"
+        }
+    ]
+}

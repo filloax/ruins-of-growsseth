@@ -1,0 +1,95 @@
+package com.ruslan.growsseth
+
+import com.filloax.fxlib.api.fabric.FabricReloadListener
+import com.ruslan.growsseth.advancements.GrowssethCriterions
+import com.ruslan.growsseth.dialogues.ResearcherDialogueListener
+import com.ruslan.growsseth.effect.GrowssethEffects
+import com.ruslan.growsseth.entity.GrowssethEntities
+import com.ruslan.growsseth.entity.researcher.trades.TradesListener
+import com.ruslan.growsseth.item.GrowssethCreativeModeTabs
+import com.ruslan.growsseth.item.GrowssethItems
+import com.ruslan.growsseth.maps.GrowssethMapDecorations
+import com.ruslan.growsseth.structure.*
+import com.ruslan.growsseth.templates.TemplateListener
+import com.ruslan.growsseth.utils.resLoc
+import com.ruslan.growsseth.worldgen.worldpreset.LocationNotifListener
+import net.fabricmc.api.ModInitializer
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents.ModifyEntries
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper
+import net.minecraft.core.Registry
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.server.packs.PackType
+import net.minecraft.world.item.CreativeModeTabs
+import net.minecraft.world.item.Items
+
+
+object RuinsOfGrowssethFabric : ModInitializer, RuinsOfGrowsseth() {
+    override fun onInitialize() {
+       initialize()
+    }
+
+    override fun initRegistries() {
+        GrowssethCreativeModeTabs.registerCreativeModeTabs { id, value -> Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, id, value) }
+        GrowssethItems.Instruments.registerInstruments{ id, value -> Registry.register(BuiltInRegistries.INSTRUMENT, id, value) }
+        GrowssethItems.SherdPatterns.registerPotPatterns { id, value -> Registry.register(BuiltInRegistries.DECORATED_POT_PATTERN, id, value) }
+        GrowssethMapDecorations.registerMapDecorations{ id, value -> Registry.registerForHolder(BuiltInRegistries.MAP_DECORATION_TYPE, id, value) }
+        GrowssethEffects.registerEffects{ id, value -> Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, id, value) }
+        GrowssethEntities.registerEntityTypes{ id, value -> Registry.register(BuiltInRegistries.ENTITY_TYPE, id, value) }
+        GrowssethItems.registerItems{ id, value -> Registry.register(BuiltInRegistries.ITEM, id, value) }
+        GrowssethStructurePieceTypes.registerStructurePieces{ id, value -> Registry.register(BuiltInRegistries.STRUCTURE_PIECE, id, value) }
+        GrowssethStructures.registerStructureTypes{ id, value -> Registry.register(BuiltInRegistries.STRUCTURE_TYPE, id, value) }
+        GrowssethCriterions.registerCriterions { id, value -> Registry.register(BuiltInRegistries.TRIGGER_TYPES, id, value) }
+        GrowssethCommands.ArgumentTypes.registerArgumentTypes(BuiltInRegistries.COMMAND_ARGUMENT_TYPE)
+
+        CommandRegistrationCallback.EVENT.register { d, ra, e -> GrowssethCommands.register(d, ra, e) }
+    }
+
+    override fun initItemGroups() {
+        // More convenient to do this per-loader than AT all the creativeModeTabs entries (which are private by default)
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.INGREDIENTS)
+            .register(ModifyEntries {
+                // Piglin is last pattern
+                it.addAfter(Items.PIGLIN_BANNER_PATTERN, GrowssethItems.GROWSSETH_BANNER_PATTERN)
+                it.addAfter(Items.SPIRE_ARMOR_TRIM_SMITHING_TEMPLATE, GrowssethItems.GROWSSETH_ARMOR_TRIM)
+                it.addAfter(Items.HEART_POTTERY_SHERD, GrowssethItems.GROWSSETH_POTTERY_SHERD)
+                it.addAfter(Items.DISC_FRAGMENT_5, GrowssethItems.FRAGMENT_BALLATA_DEL_RESPAWN)
+            })
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.SPAWN_EGGS)
+            .register(ModifyEntries {
+                it.accept(GrowssethItems.RESEARCHER_SPAWN_EGG)
+                it.accept(GrowssethItems.ZOMBIE_RESEARCHER_SPAWN_EGG)
+            })
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT)
+            .register(ModifyEntries {
+                it.addAfter(Items.TRIDENT, GrowssethItems.RESEARCHER_DAGGER)
+            })
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES)
+            .register(ModifyEntries {
+                it.addAfter(Items.GOAT_HORN, GrowssethItems.RESEARCHER_HORN)
+                for (disc in GrowssethItems.DISCS_ORDERED) {
+                    it.accept(disc)
+                }
+            })
+    }
+
+    override fun registerResourceListeners() {
+        ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(FabricReloadListener(
+            resLoc(Constants.TRADES_DATA_FOLDER),
+            TradesListener(),
+        ))
+        ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(FabricReloadListener(
+            resLoc(Constants.RESEARCHER_DIALOGUE_DATA_FOLDER),
+            ResearcherDialogueListener(),
+        ))
+        ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(FabricReloadListener(
+            resLoc(Constants.TEMPLATE_FOLDER),
+            TemplateListener,
+        ))
+        ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(FabricReloadListener(
+            resLoc(Constants.PRESET_PLACES_FOLDER),
+            LocationNotifListener(),
+        ))
+    }
+}

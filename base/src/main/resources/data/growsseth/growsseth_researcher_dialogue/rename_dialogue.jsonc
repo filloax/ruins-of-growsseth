@@ -1,0 +1,148 @@
+{
+    "rename": [
+        {
+            "content": [
+                "rename.nameTag.first.0",
+                "rename.nameTag.first.1",
+                "rename.nameTag.first.2"
+            ],
+            "id": "rename-first",
+            "groups": "group-first-nametag",
+            "groupUseLimit": 1,
+            "useLimit": 1,
+            "priority": -100
+        },
+        {
+            "content": [
+                "rename.nameTag.another.0",
+                "rename.nameTag.another.1"
+            ],
+            "priority": -500
+        },
+        {
+            "content": "rename.nameTag.ricercatore",
+            "requiresEventParam": "ricercatore"
+        },
+        {
+            "content": "rename.nameTag.researcher",
+            "requiresEventParam": "researcher"
+        },
+        {
+            "content": "rename.nameTag.franco",
+            "requiresEventParam": "franco"
+        },
+        {
+            "content": "rename.nameTag.folgo",
+            "requiresEventParam": "folgo"
+        },
+        {
+            "content": "rename.nameTag.foldo",
+            "requiresEventParam": "foldo"
+        },
+        {
+            "content": "rename.nameTag.palle",
+            "requiresEventParam": "palle"
+        },
+        {
+            "content": "rename.nameTag.balls",
+            "requiresEventParam": "balls"
+        },
+        {
+            "content": "rename.nameTag.synergo",
+            "requiresEventParam": "synergo"
+        },
+        {
+            "content": [
+                "rename.nameTag.sabaku.0",
+                "rename.nameTag.sabaku.1",
+                "rename.nameTag.sabaku.2"
+            ],
+            "requiresEventParam": "sabaku"
+        },
+        {
+            "content": "rename.nameTag.lucio",
+            "requiresEventParam": "lucio"
+        },
+        {
+            "content": "rename.nameTag.lionel",
+            "requiresEventParam": "lionel"
+        },
+        {
+            "content": [
+                "rename.nameTag.julius.0",
+                "rename.nameTag.julius.1"
+            ],
+            "requiresEventParam": "julius"
+        },
+        {
+            "content": "rename.nameTag.nicolaos",
+            "requiresEventParam": "nicolaos"
+        },
+        {
+            "content": [
+                "rename.nameTag.wazo.0",
+                "rename.nameTag.wazo.1"
+            ],
+            "requiresEventParam": "wazo"
+        },
+        {
+            "content": [
+                "rename.nameTag.efisio.0",
+                "rename.nameTag.efisio.1"
+            ],
+            "requiresEventParam": "efisio"
+        },
+        {
+            "content": [
+                "rename.nameTag.ruslan.0",
+                "rename.nameTag.ruslan.1",
+                "rename.nameTag.ruslan.2"
+            ],
+            "requiresEventParam": "ruslan"
+        },
+        {
+            "content": "rename.nameTag.grumm",
+            "requiresEventParam": "grumm"
+        },
+        {
+            "content": "rename.nameTag.dinnerbone",
+            "requiresEventParam": "dinnerbone"
+        },
+        {
+            "content": "rename.nameTag.jeb_",
+            "requiresEventParam": "jeb_",
+            "groups": "group-first-nametag",
+            "groupUseLimit": 1
+        },
+        {
+            "content": [
+                "rename.nameTag.toast.0",
+                "rename.nameTag.toast.1",
+                "rename.nameTag.toast.2"
+            ],
+            "requiresEventParam": "toast",
+            "groups": "group-first-nametag",
+            "groupUseLimit": 1
+        },
+        {
+            "content": [
+                "rename.nameTag.johnny.0",
+                "rename.nameTag.johnny.1"
+            ],
+            "requiresEventParam": "johnny",
+            "groups": "group-first-nametag",
+            "groupUseLimit": 1
+        },
+        {
+            "content": [
+                "rename.nameTag.manfredo.0",
+                "rename.nameTag.manfredo.1",
+                "rename.nameTag.manfredo.2",
+                "rename.nameTag.manfredo.3"
+            ],
+            "requiresEventParam": "manfredo",
+            "groups": "group-first-nametag",
+            "groupUseLimit": 1
+        }
+    ]
+}

@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "id": "growsseth",
+  "version": "${version_prefix}-fabric",
+  "name": "Ruins of Growsseth",
+  "description": "${description}",
+  "authors": [
+    "Filloax",
+    "Krozzzt",
+    "Reivaxelain",
+    "bb01",
+    "SkullFury",
+    "Vovalcool"
+  ],
+  "contributors": [
+    "Sync_Gabri",
+    "Worgage",
+    "Simone Russo",
+    "Farcr",
+    "Il Coro di Mammonk",
+    "Singalek",
+    "HunterProduction",
+    "Ako & R-E-M",
+    "Guber"
+  ],
+  "contact": {
+    "homepage": "https://github.com/filloax/ruins-of-growsseth",
+    "issues": "https://github.com/filloax/ruins-of-growsseth/issues",
+    "source": "https://github.com/filloax/ruins-of-growsseth"
+  },
+  "license": "MIT",
+  "icon": "assets/growsseth/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      {
+        "value": "com.ruslan.growsseth.RuinsOfGrowssethFabric",
+        "adapter": "kotlin"
+      }
+    ],
+    "client": [
+      {
+        "value": "com.ruslan.growsseth.client.GrowssethClientFabric",
+        "adapter": "kotlin"
+      }
+    ],
+    "server": [],
+    "fabric-datagen": [
+      {
+        "value": "com.ruslan.growsseth.data.DataGeneration",
+        "adapter": "kotlin"
+      }
+    ],
+    "modmenu": [
+      "com.ruslan.growsseth.client.GrowssethModMenu"
+    ]
+  },
+  "mixins": [
+    "growsseth.mixins.json",
+    "growsseth.noforge.mixins.json",
+    "growsseth.fabric.mixins.json"
+  ],
+  "accessWidener": "growsseth.accesswidener",
+  "depends": {
+    "filloaxlib": ">=${filloaxlib_version}",
+    "resourcefulconfig": ">=${rconfig_version}",
+    "fabric-language-kotlin": ">=${fabric_kotlin_version}",
+    "fabricloader": ">=${fabric_loader_version}",
+    "fabric-api": ">=${fapi_version}",
+    "fabric": "*",
+    "minecraft": "${fabric_minecraft_version_range}"
+  },
+  "custom": {
+    "modmenu": {
+
+    },
+    "mc-publish": {
+      "modrinth": "476XCS3C",
+      "curseforge": 1017555
+    }
+  }
+}
