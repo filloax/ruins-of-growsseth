@@ -105,7 +105,9 @@ val author: String by project
 val license: String by project
 val displayUrl: String by project
 val modVersion: String by project
-val versionSuffix: String by project
+val versionType: String? by project
+
+val versionSuffix = if (versionType?.isBlank() == true) "" else "-$versionType"
 
 val cydoVersion = (property("cydoVersion") as String).toBoolean()
 
