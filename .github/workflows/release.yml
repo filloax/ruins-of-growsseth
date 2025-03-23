@@ -107,28 +107,28 @@ jobs:
 
       - run: echo "Published ${{ matrix.name }}!"
 
-  publish_github:
-    name: Publish (GitHub)
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
+  # publish_github:
+    # name: Publish (GitHub)
+    # needs: build
+    # runs-on: ubuntu-latest
+    # steps:
+    #   - uses: actions/checkout@v1
 
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: build-artifacts
+    #   - name: Download build artifacts
+    #     uses: actions/download-artifact@v4
+    #     with:
+    #       name: build-artifacts
 
-      - name: Publish (GitHub)
-        uses: softprops/action-gh-release@v2
-        with:
-          name: Ruins of Growsseth ${{ needs.build.outputs.mod_version }} for Minecraft ${{ env.MC_VER }}
-          body_path: latest_changelog.txt
-          token: ${{ secrets.TOKEN_GITHUB }}
-          make_latest: true
-          tag_name: v${{ needs.build.outputs.mod_version }}-${{ env.MC_VER }}
-          files: |
-            base/build/libs/*.jar
-            neoforge/build/libs/*.jar
-            fabric/build/libs/*.jar
-            base/build/datapack/*.zip
+    #   - name: Publish (GitHub)
+    #     uses: softprops/action-gh-release@v2
+    #     with:
+    #       name: Ruins of Growsseth ${{ needs.build.outputs.mod_version }} for Minecraft ${{ env.MC_VER }}
+    #       body_path: latest_changelog.txt
+    #       token: ${{ secrets.TOKEN_GITHUB }}
+    #       make_latest: true
+    #       tag_name: v${{ needs.build.outputs.mod_version }}-${{ env.MC_VER }}
+    #       files: |
+    #         base/build/libs/*.jar
+    #         neoforge/build/libs/*.jar
+    #         fabric/build/libs/*.jar
+    #         base/build/datapack/*.zip
