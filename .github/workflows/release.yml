@@ -42,9 +42,9 @@ jobs:
             VERSION_SUFFIX=""
           fi
 
-          echo "MOD_VERSION=${MOD_VERSION}" 
-          echo "VERSION_TYPE=${VERSION_TYPE}" 
-          echo "VERSION_SUFFIX=${VERSION_SUFFIX}" 
+          echo "MOD_VERSION=${MOD_VERSION}" >> $GITHUB_OUTPUT
+          echo "VERSION_TYPE=${VERSION_TYPE}" >> $GITHUB_OUTPUT
+          echo "VERSION_SUFFIX=${VERSION_SUFFIX}" >> $GITHUB_OUTPUT
 
       - name: Build with Gradle
         run: ./gradlew build
