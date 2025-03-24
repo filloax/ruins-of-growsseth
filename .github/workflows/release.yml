@@ -46,29 +46,29 @@ jobs:
           echo "VERSION_TYPE=${VERSION_TYPE}" >> $GITHUB_OUTPUT
           echo "VERSION_SUFFIX=${VERSION_SUFFIX}" >> $GITHUB_OUTPUT
 
-      - name: Build with Gradle
-        run: ./gradlew build
-        env:
-          GROWSSETH_MUSIC_PW: ${{ secrets.MUSIC_PW }}
+      # - name: Build with Gradle
+      #   run: ./gradlew build
+      #   env:
+      #     GROWSSETH_MUSIC_PW: ${{ secrets.MUSIC_PW }}
       
-      - name: Extract latest changelog
-        id: changelog
-        run: |
-          latest_version=$(grep -m 1 -oP '(?<=##\s)\d+\.\d+\.\d+' CHANGELOG.md)
-          latest_changelog=$(sed -n "/## $latest_version/,/## /p" CHANGELOG.md | sed '$d')
-          echo "$latest_changelog" > latest_changelog.txt
+      # - name: Extract latest changelog
+      #   id: changelog
+      #   run: |
+      #     latest_version=$(grep -m 1 -oP '(?<=##\s)\d+\.\d+\.\d+' CHANGELOG.md)
+      #     latest_changelog=$(sed -n "/## $latest_version/,/## /p" CHANGELOG.md | sed '$d')
+      #     echo "$latest_changelog" > latest_changelog.txt
 
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-artifacts
-          path: |
-            fabric/build/libs/*.jar
-            neoforge/build/libs/*.jar
-            base/build/libs/*.jar
-            base/build/datapack/*.zip
-            latest_changelog.txt
-          retention-days: 30
+      # - name: Upload build artifacts
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: build-artifacts
+      #     path: |
+      #       fabric/build/libs/*.jar
+      #       neoforge/build/libs/*.jar
+      #       base/build/libs/*.jar
+      #       base/build/datapack/*.zip
+      #       latest_changelog.txt
+      #     retention-days: 30
 
   publish_platform:
     name: Publish (Platforms)
@@ -92,61 +92,63 @@ jobs:
     steps:
       - uses: actions/checkout@v1
 
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: build-artifacts
+      # - name: Download build artifacts
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: build-artifacts
+
+      - run: 'echo "Testing: version \"${{ needs.build.outputs.mod_version }}\" vers suff \"${{ needs.build.outputs.version_suffix }}\" type \"${{ needs.build.outputs.version_type }}\" "'
           
-      - name: Publish
-        uses: Kir-Antipov/mc-publish@v3.3
-        id: mc_publish
-        with:
-          modrinth-token: ${{ secrets.TOKEN_MODRINTH }}
-          modrinth-id: 476XCS3C
-          curseforge-token: ${{ secrets.TOKEN_CURSEFORGE }}
-          curseforge-id: 1017555
+      # - name: Publish
+      #   uses: Kir-Antipov/mc-publish@v3.3
+      #   id: mc_publish
+      #   with:
+      #     modrinth-token: ${{ secrets.TOKEN_MODRINTH }}
+      #     modrinth-id: 476XCS3C
+      #     curseforge-token: ${{ secrets.TOKEN_CURSEFORGE }}
+      #     curseforge-id: 1017555
 
-          name: Ruins of Growsseth ${{ needs.build.outputs.mod_version }}${{ needs.build.outputs.version_suffix }} for ${{ matrix.name }} + Minecraft ${{ env.MC_VER }}
-          version: ${{ needs.build.outputs.mod_version }}-${{ env.MC_VER }}${{ needs.build.outputs.version_suffix }}-${{ matrix.platform }}
-          version-type: ${{ needs.build.outputs.version_type }}
+      #     name: Ruins of Growsseth ${{ needs.build.outputs.mod_version }}${{ needs.build.outputs.version_suffix }} for ${{ matrix.name }} + Minecraft ${{ env.MC_VER }}
+      #     version: ${{ needs.build.outputs.mod_version }}-${{ env.MC_VER }}${{ needs.build.outputs.version_suffix }}-${{ matrix.platform }}
+      #     version-type: ${{ needs.build.outputs.version_type }}
 
-          files: |
-            ${{ matrix.platform }}/build/libs/!(*-@(dev|sources|javadoc)).jar
-            ${{ matrix.platform }}/build/libs/*-@(dev|sources|javadocs).jar
-          game-versions: |
-            ${{ env.MC_VER }}
-            ${{ env.MC_VER_EXTRA }}
-          dependencies: ${{ matrix.dependencies }}
-          java: 21
-          loaders: ${{ matrix.platform }}
+      #     files: |
+      #       ${{ matrix.platform }}/build/libs/!(*-@(dev|sources|javadoc)).jar
+      #       ${{ matrix.platform }}/build/libs/*-@(dev|sources|javadocs).jar
+      #     game-versions: |
+      #       ${{ env.MC_VER }}
+      #       ${{ env.MC_VER_EXTRA }}
+      #     dependencies: ${{ matrix.dependencies }}
+      #     java: 21
+      #     loaders: ${{ matrix.platform }}
 
-          changelog-file: latest_changelog.txt
+      #     changelog-file: latest_changelog.txt
 
       - run: echo "Published ${{ matrix.name }}!"
 
-  publish_github:
-    name: Publish (GitHub)
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
+  # publish_github:
+  #   name: Publish (GitHub)
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v1
 
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: build-artifacts
+  #     - name: Download build artifacts
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: build-artifacts
 
-      - name: Publish (GitHub)
-        uses: softprops/action-gh-release@v2
-        with:
-          name: Ruins of Growsseth ${{ needs.build.outputs.mod_version }}${{ needs.build.outputs.version_suffix }} for Minecraft ${{ env.MC_VER }}
-          body_path: latest_changelog.txt
-          token: ${{ secrets.TOKEN_GITHUB }}
-          make_latest: true
-          tag_name: v${{ needs.build.outputs.mod_version }}${{ needs.build.outputs.version_suffix }}-${{ env.MC_VER }}
-          target_commitish: ${{ env.GITHUB_SHA }}
-          files: |
-            base/build/libs/*.jar
-            neoforge/build/libs/*.jar
-            fabric/build/libs/*.jar
-            base/build/datapack/*.zip
+  #     - name: Publish (GitHub)
+  #       uses: softprops/action-gh-release@v2
+  #       with:
+  #         name: Ruins of Growsseth ${{ needs.build.outputs.mod_version }}${{ needs.build.outputs.version_suffix }} for Minecraft ${{ env.MC_VER }}
+  #         body_path: latest_changelog.txt
+  #         token: ${{ secrets.TOKEN_GITHUB }}
+  #         make_latest: true
+  #         tag_name: v${{ needs.build.outputs.mod_version }}${{ needs.build.outputs.version_suffix }}-${{ env.MC_VER }}
+  #         target_commitish: ${{ env.GITHUB_SHA }}
+  #         files: |
+  #           base/build/libs/*.jar
+  #           neoforge/build/libs/*.jar
+  #           fabric/build/libs/*.jar
+  #           base/build/datapack/*.zip
