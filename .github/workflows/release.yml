@@ -14,7 +14,7 @@ jobs:
     if: "contains(github.event.head_commit.message, 'chore: release') && github.event_name != 'pull_request'"
     runs-on: ubuntu-latest
     outputs:
-      mod_version: ${{ steps.get_version.outputs.VERSION }}
+      mod_version: ${{ steps.get_version.outputs.MOD_VERSION }}
       version_type: ${{ steps.get_version.outputs.VERSION_TYPE }}
       version_suffix: ${{ steps.get_version.outputs.VERSION_SUFFIX }}
     steps:
@@ -111,7 +111,8 @@ jobs:
           version-type: ${{ needs.build.outputs.version_type }}
 
           files: |
-            ${{ matrix.platform }}/build/libs/*.jar
+            ${{ matrix.platform }}/build/libs/!(*-@(dev|sources|javadoc)).jar
+            ${{ matrix.platform }}/build/libs/*-@(dev|sources|javadocs).jar
           game-versions: |
             ${{ env.MC_VER }}
             ${{ env.MC_VER_EXTRA }}
@@ -143,6 +144,7 @@ jobs:
           token: ${{ secrets.TOKEN_GITHUB }}
           make_latest: true
           tag_name: v${{ needs.build.outputs.mod_version }}${{ needs.build.outputs.version_suffix }}-${{ env.MC_VER }}
+          target_commitish: ${{ env.GITHUB_SHA }}
           files: |
             base/build/libs/*.jar
             neoforge/build/libs/*.jar
