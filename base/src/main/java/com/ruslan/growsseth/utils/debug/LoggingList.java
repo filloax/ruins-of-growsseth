@@ -154,11 +154,11 @@ public class LoggingList<T> implements List<T> {
     private void log(String action, @Nullable Object value, @Nullable Object pos) {
         if (true) {//condition.get()) {
             if (value == null) {
-                RuinsOfGrowsseth.getLOGGER().info("DEBUG LIST | {}", action);
+                RuinsOfGrowsseth.LOGGER.info("DEBUG LIST | {}", action);
             } else if (pos == null) {
-                RuinsOfGrowsseth.getLOGGER().info("DEBUG LIST | {} | {}", action, value);
+                RuinsOfGrowsseth.LOGGER.info("DEBUG LIST | {} | {}", action, value);
             } else {
-                RuinsOfGrowsseth.getLOGGER().info("DEBUG LIST | {} | {} at {}", action, value, pos);
+                RuinsOfGrowsseth.LOGGER.info("DEBUG LIST | {} | {} at {}", action, value, pos);
             }
         }
     }

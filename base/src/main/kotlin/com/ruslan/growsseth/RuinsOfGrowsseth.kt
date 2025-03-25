@@ -24,7 +24,7 @@ abstract class RuinsOfGrowsseth {
         const val MOD_ID = "growsseth"
         const val MOD_NAME = "Ruins of Growsseth"
 
-        @JvmStatic
+        @JvmField
         val LOGGER = PrefixedLogger(LogManager.getLogger(MOD_NAME))
 
         fun logDev(level: Level, message: String) {
