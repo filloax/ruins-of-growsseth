@@ -72,6 +72,6 @@ public class MixinHelpers {
 
             painting.setPos(pos.getCenter());
         }
-        RuinsOfGrowsseth.getLOGGER().info("Fixed painting placement in newly created structure");
+        RuinsOfGrowsseth.LOGGER.info("Fixed painting placement in newly created structure");
     }
 }

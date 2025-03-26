@@ -19,6 +19,7 @@ import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.Registries
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.MapItem
@@ -46,123 +47,156 @@ object ResearcherTradeUtils {
 
     // Should be ran once per item stack
     fun setTradeMapTarget(researcher: Researcher, itemStack: ItemStack, mapData: TradeItemMapInfo, offer: MerchantOffer) {
+        val hasMemorizedData = loadMemorizedMapData(researcher, itemStack, mapData)
+
+        if (hasMemorizedData) return
+
+        val foundImmediate = findPosImmediate(researcher, itemStack, mapData)
+
+        if (foundImmediate) return
+
+        findPosLocating(researcher, itemStack, mapData, offer)
+    }
+
+    private fun loadMemorizedMapData(researcher: Researcher, itemStack: ItemStack, mapData: TradeItemMapInfo): Boolean {
         val server = getServer(researcher)
         val registryAccess = server.registryAccess()
         val level = researcher.level() as ServerLevel
         val scale = mapData.scale ?: 3
-        var known = false
 
-        synchronized(researcher.storedMapLocations) {
-            researcher.storedMapLocations[mapData.structure]?.let { mapMemory ->
-                val destinationType = mapData.overrideMapIcon?.let { DestinationType.withIcon(it, registryAccess) } ?: mapMemory.struct.map({
-                    DestinationType.auto(it, server.registryAccess())
-                }, {
-                    DestinationType.auto(it)
-                })
-                itemStack.updateMapToPos(
-                    level,
-                    mapMemory.pos,
-                    scale,
-                    destinationType = destinationType,
-                    displayName = mapData.name,
-                )
-                val mapSavedData = MapItem.getSavedData(MapId(mapMemory.mapId), researcher.level())
-                if (mapSavedData != null) {
-                    itemStack[DataComponents.MAP_ID] = MapId(mapMemory.mapId)
-                } else {
-                    RuinsOfGrowsseth.LOGGER.info(
-                        "Tried setting res. known map data from id ${mapMemory.mapId} but was null, making new"
-                    )
-                }
-                mapData.description?.forEach { itemStack.loreLines().add(Component.translatable(it)) }
-                RuinsOfGrowsseth.LOGGER.info("Loaded map data from known map $mapMemory")
-                known = true
-            }
+        val mapMemory = synchronized(researcher.storedMapLocations) {
+            researcher.storedMapLocations[mapData.structure]
         }
 
+        if (mapMemory == null) {
+            return false
+        }
+
+        val destinationType = mapData.overrideMapIcon?.let { DestinationType.withIcon(it, registryAccess) } ?: mapMemory.struct.map({
+            DestinationType.auto(it, server.registryAccess())
+        }, {
+            DestinationType.auto(it)
+        })
+
+        itemStack.updateMapToPos(
+            level,
+            mapMemory.pos,
+            scale,
+            destinationType = destinationType,
+            displayName = mapData.name,
+        )
+        val mapSavedData = MapItem.getSavedData(MapId(mapMemory.mapId), researcher.level())
+        if (mapSavedData != null) {
+            itemStack[DataComponents.MAP_ID] = MapId(mapMemory.mapId)
+        } else {
+            RuinsOfGrowsseth.LOGGER.info(
+                "Tried setting res. known map data from id ${mapMemory.mapId} but was null, making new"
+            )
+        }
+        mapData.description?.forEach { itemStack.loreLines().add(Component.translatable(it)) }
+        RuinsOfGrowsseth.LOGGER.info("Loaded map data from known map $mapMemory")
+        return true
+    }
+
+    private fun findPosImmediate(researcher: Researcher, itemStack: ItemStack, mapData: TradeItemMapInfo): Boolean {
+        val server = getServer(researcher)
+        val registryAccess = server.registryAccess()
+        val level = researcher.level() as ServerLevel
+        val scale = mapData.scale ?: 3
+
         // Check fixed map positions
-        if (!known) {
-            var pos: BlockPos? = null
-            if (mapData.x != null && mapData.z != null) {
-                pos = BlockPos(mapData.x, level.getYAtXZ(mapData.x, mapData.z), mapData.z)
-            } else if (mapData.fixedStructureId != null) {
-                val matchingStructures = getMatchingStructures(level.registryAccess(), mapData.fixedStructureId)
-                val spawnData = fixedStructureGeneration.registeredStructureSpawns.values
-                    .filter { matchingStructures.contains(it.structure) }
-                    .minByOrNull { it.pos.distManhattan(researcher.blockPosition()) }
-                if (spawnData != null) {
-                    pos = spawnData.pos
-                }
+        var pos: BlockPos? = null
+        if (mapData.x != null && mapData.z != null) {
+            pos = BlockPos(mapData.x, level.getYAtXZ(mapData.x, mapData.z), mapData.z)
+        }
+        if (pos == null && mapData.fixedStructureId != null) {
+            pos = findPosByFixedStructure(researcher, mapData, level)
+        }
+
+        if (pos != null) {
+            val destination = getStructTagOrKey(mapData.structure)
+            val destinationType = mapData.overrideMapIcon?.let { DestinationType.withIcon(it, registryAccess) } ?: destination.map({
+                DestinationType.auto(it, server.registryAccess())
+            }, {
+                DestinationType.auto(it)
+            })
+
+            itemStack.updateMapToPos(
+                level,
+                pos,
+                scale,
+                destinationType = destinationType,
+                displayName = mapData.name,
+            )
+            RuinsOfGrowsseth.LOGGER.info("Res.trades: created map to pos $pos dtype $destinationType")
+            mapData.description?.forEach { itemStack.loreLines().add(Component.translatable(it)) }
+
+            val mapMemory = Researcher.MapMemory(
+                pos,
+                destination,
+                itemStack[DataComponents.MAP_ID]?.id ?: throw IllegalStateException("Map has no id after updating pos! $itemStack"),
+            )
+            synchronized(researcher.storedMapLocations) {
+                researcher.storedMapLocations[mapData.structure] = mapMemory
             }
-            if (pos != null) {
-                val destination = getStructTagOrKey(mapData.structure)
-                val destinationType = mapData.overrideMapIcon?.let { DestinationType.withIcon(it, registryAccess) } ?: destination.map({
-                    DestinationType.auto(it, server.registryAccess())
-                }, {
-                    DestinationType.auto(it)
-                })
+            researcher.refreshCurrentTrades()
+            return true
+        }
+        return false
+    }
 
-                itemStack.updateMapToPos(
-                    level,
-                    pos,
-                    scale,
-                    destinationType = destinationType,
-                    displayName = mapData.name,
-                )
-                RuinsOfGrowsseth.LOGGER.info("Res.trades: created map to pos $pos dtype $destinationType")
-                mapData.description?.forEach { itemStack.loreLines().add(Component.translatable(it)) }
+    private fun findPosByFixedStructure(researcher: Researcher, mapData: TradeItemMapInfo, level: ServerLevel): BlockPos? {
+        val matchingStructures = getMatchingStructures(level.registryAccess(), mapData.fixedStructureId!!)
+        val spawnData = fixedStructureGeneration.registeredStructureSpawns.values
+            .filter { matchingStructures.contains(it.structure) }
+            .minByOrNull { it.pos.distManhattan(researcher.blockPosition()) }
+        if (spawnData != null) {
+            return spawnData.pos
+        }
+        RuinsOfGrowsseth.LOGGER.warn("Could not find fixed structure position for map {}", mapData)
+        return null
+    }
 
+    private fun findPosLocating(researcher: Researcher, itemStack: ItemStack, mapData: TradeItemMapInfo, offer: MerchantOffer) {
+        val level = researcher.level() as ServerLevel
+        val scale = mapData.scale ?: 3
+
+        // Locate map if not fixed struct or pos
+        offer.setToOutOfStock() // Disable offer until found
+        itemStack.updateMapToStruct(
+            level,
+            destinationName = mapData.structure,
+            MapLocateContext(
+                searchFromPos = researcher.blockPosition(),
+                scale = scale,
+                displayName = mapData.name,
+                skipExploredChunks = true,
+                mustContainJigsawIds = mapData.searchForJigsawIds,
+                overrideDestinationType = mapData.overrideMapIcon?.let { DestinationType.withIcon(it, level.registryAccess()) },
+            )
+        ).thenAccept { result ->
+            if (result != null) {
+                val pos = result.pos
+                RuinsOfGrowsseth.LOGGER.info("Res.trades: found map to pos $pos struct ${mapData.structure}")
                 synchronized(researcher.storedMapLocations) {
                     researcher.storedMapLocations[mapData.structure] = Researcher.MapMemory(
                         pos,
-                        destination,
-                        itemStack[DataComponents.MAP_ID]?.id ?: throw IllegalStateException("Map has no id after updating pos! $itemStack"),
+                        Either.right(result.structure.unwrapKey().get()),
+                        itemStack[DataComponents.MAP_ID]?.id ?: throw IllegalStateException("Map item has no id after updating! $itemStack"),
                     )
                 }
+                mapData.description?.forEach { itemStack.loreLines().add(Component.translatable(it)) }
+
+                offer.resetUses()
                 researcher.refreshCurrentTrades()
-                known = true
+            } else {
+                // Update map with failed name
+                researcher.refreshCurrentTrades()
+                researcher.scheduleClearingFailedMaps()
             }
         }
-
-        // Locate map
-        if (!known) {
-            offer.setToOutOfStock() // Disable offer until found
-            // Locate map if not fixed struct or pos
-            itemStack.updateMapToStruct(
-                level,
-                destinationName = mapData.structure,
-                MapLocateContext(
-                    searchFromPos = researcher.blockPosition(),
-                    scale = scale,
-                    displayName = mapData.name,
-                    skipExploredChunks = true,
-                    mustContainJigsawIds = mapData.searchForJigsawIds,
-                    overrideDestinationType = mapData.overrideMapIcon?.let { DestinationType.withIcon(it, level.registryAccess()) },
-                )
-            ).thenAccept { result ->
-                if (result != null) {
-                    val pos = result.pos
-                    RuinsOfGrowsseth.LOGGER.info("Res.trades: found map to pos $pos struct ${mapData.structure}")
-                    synchronized(researcher.storedMapLocations) {
-                        researcher.storedMapLocations[mapData.structure] = Researcher.MapMemory(
-                            pos,
-                            Either.right(result.structure.unwrapKey().get()),
-                            itemStack[DataComponents.MAP_ID]?.id ?: throw IllegalStateException("Map item has no id after updating! $itemStack"),
-                        )
-                    }
-                    mapData.description?.forEach { itemStack.loreLines().add(Component.translatable(it)) }
-
-                    offer.resetUses()
-                    researcher.refreshCurrentTrades()
-                } else {
-                    // Update map with failed name
-                    researcher.refreshCurrentTrades()
-                    researcher.scheduleClearingFailedMaps()
-                }
-            }
-            // Update map with loading name + stock change
-            researcher.refreshCurrentTrades()
-        }
+        // Update map with loading name + stock change
+        researcher.refreshCurrentTrades()
     }
 
     fun offersMatch(offersA: MerchantOffers, offersB: MerchantOffers): Boolean {

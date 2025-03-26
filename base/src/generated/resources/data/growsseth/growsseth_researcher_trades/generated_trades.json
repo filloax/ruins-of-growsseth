@@ -116,7 +116,7 @@
           "id": "growsseth:ruins_map",
           "mapPool": [
             {
-              "fixedStructureId": "growsseth:golem_house",
+              "fixedStructureId": "#growsseth:golem_house",
               "name": "structure.growsseth.golem_house.map.name",
               "overrideMapIcon": "growsseth:icon_golem_house",
               "searchForJigsawIds": [
@@ -126,7 +126,7 @@
               "structure": "minecraft:village_desert"
             },
             {
-              "fixedStructureId": "growsseth:golem_house",
+              "fixedStructureId": "#growsseth:golem_house",
               "name": "structure.growsseth.golem_house.map.name",
               "overrideMapIcon": "growsseth:icon_golem_house",
               "searchForJigsawIds": [
@@ -136,7 +136,7 @@
               "structure": "minecraft:village_plains"
             },
             {
-              "fixedStructureId": "growsseth:golem_house",
+              "fixedStructureId": "#growsseth:golem_house",
               "name": "structure.growsseth.golem_house.map.name",
               "overrideMapIcon": "growsseth:icon_golem_house",
               "searchForJigsawIds": [
@@ -146,7 +146,7 @@
               "structure": "minecraft:village_taiga"
             },
             {
-              "fixedStructureId": "growsseth:golem_house",
+              "fixedStructureId": "#growsseth:golem_house",
               "name": "structure.growsseth.golem_house.map.name",
               "overrideMapIcon": "growsseth:icon_golem_house",
               "searchForJigsawIds": [
@@ -156,7 +156,7 @@
               "structure": "minecraft:village_savanna"
             },
             {
-              "fixedStructureId": "growsseth:golem_house",
+              "fixedStructureId": "#growsseth:golem_house",
               "name": "structure.growsseth.golem_house.map.name",
               "overrideMapIcon": "growsseth:icon_golem_house",
               "searchForJigsawIds": [

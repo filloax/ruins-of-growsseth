@@ -1,5 +1,10 @@
 # Changelog
 
+## CURRENT
+
+Fixed
+- structure debug option crashing the game
+
 ## 0.12.0
 
 Added

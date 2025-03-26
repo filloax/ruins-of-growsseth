@@ -43,7 +43,7 @@ public class DebugMixins {
 //    )
         // Result: TEST IS EXPERIMENTAL RegistryEntry[key=ResourceKey[minecraft:root / minecraft:dimension], value=Registry[ResourceKey[minecraft:root / minecraft:dimension] (Experimental)]]: Experimental
         private static void test(RegistryAccess.RegistryEntry<?> registryEntry, CallbackInfoReturnable<Lifecycle> cir) {
-            RuinsOfGrowsseth.getLOGGER().info("TEST IS EXPERIMENTAL " + registryEntry + ": " + registryEntry.value().registryLifecycle());
+            RuinsOfGrowsseth.LOGGER.info("TEST IS EXPERIMENTAL " + registryEntry + ": " + registryEntry.value().registryLifecycle());
         }
     }
 
@@ -54,7 +54,7 @@ public class DebugMixins {
 //            at = @At("HEAD")
 //        )
         private <T> void test(int id, ResourceKey<T> key, T value, Lifecycle lifecycle, CallbackInfoReturnable<Holder.Reference<T>> cir) {
-            RuinsOfGrowsseth.getLOGGER().info("TEST IS EXPERIMENTAL " + key + ": " + lifecycle);
+            RuinsOfGrowsseth.LOGGER.info("TEST IS EXPERIMENTAL " + key + ": " + lifecycle);
         }
     }
 
@@ -66,7 +66,7 @@ public class DebugMixins {
         )
         private void onLoadStruct(ChunkAccess chunk, CallbackInfo ci) {
             if (chunk.getPos().toLong() == -1 && !(chunk instanceof ProtoChunk)) {
-                RuinsOfGrowsseth.getLOGGER().error("Loaded chunk with wrong index, server will probably error and crash soon."
+                RuinsOfGrowsseth.LOGGER.error("Loaded chunk with wrong index, server will probably error and crash soon."
                 + "Happens occasionally after purchasing the golem house map, restarting the game should fix this."
                 + "We're looking into a fix!\n"
                 + Arrays.toString(Thread.currentThread().getStackTrace())
@@ -94,7 +94,7 @@ public class DebugMixins {
         )
         private Stream<?> onStopTrackingEnts(EntitySection<?> instance, Operation<Stream<?>> original) {
             MixinHelpers.savingPersistentEntities = true;
-            RuinsOfGrowsseth.getLOGGER().info("BEGIN STOP TRACKING ENTS");
+            RuinsOfGrowsseth.LOGGER.info("BEGIN STOP TRACKING ENTS");
             return original.call(instance);
         }
 
@@ -107,9 +107,9 @@ public class DebugMixins {
             )
         )
         private void afterForEach(Stream<?> instance, Consumer<?> consumer, Operation<Void> original) {
-            RuinsOfGrowsseth.getLOGGER().info("BEGIN STOP TRACKING ENTS FOREACH");
+            RuinsOfGrowsseth.LOGGER.info("BEGIN STOP TRACKING ENTS FOREACH");
             original.call(instance, consumer);
-            RuinsOfGrowsseth.getLOGGER().info("END STOP TRACKING ENTS");
+            RuinsOfGrowsseth.LOGGER.info("END STOP TRACKING ENTS");
             MixinHelpers.savingPersistentEntities = false;
         }
     }
@@ -148,11 +148,11 @@ public class DebugMixins {
         private void log(String action, @Nullable Object value, @Nullable Object pos) {
             if (MixinHelpers.savingPersistentEntities) {
                 if (value == null) {
-                    RuinsOfGrowsseth.getLOGGER().info("DEBUG CLASS MULTIMAP | {}", action);
+                    RuinsOfGrowsseth.LOGGER.info("DEBUG CLASS MULTIMAP | {}", action);
                 } else if (pos == null) {
-                    RuinsOfGrowsseth.getLOGGER().info("DEBUG CLASS MULTIMAP | {} | {}", action, value);
+                    RuinsOfGrowsseth.LOGGER.info("DEBUG CLASS MULTIMAP | {} | {}", action, value);
                 } else {
-                    RuinsOfGrowsseth.getLOGGER().info("DEBUG CLASS MULTIMAP | {} | {} at {}", action, value, pos);
+                    RuinsOfGrowsseth.LOGGER.info("DEBUG CLASS MULTIMAP | {} | {} at {}", action, value, pos);
                 }
             }
         }
