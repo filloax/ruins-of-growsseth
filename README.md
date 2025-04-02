@@ -2,7 +2,7 @@
 
 <img src="./base/src/main/resources/assets/growsseth/icon.png" alt="Mod icon" width="250" height="250">
 
-## [**README IN ITALIANO QUA!**](docs/README_ITA.md)
+## [**🇮🇹 README IN ITALIANO QUA!**](docs/README_ITA.md)
 
 A highly configurable structures mod, with a smart NPC to sell maps and guide you in discovery, and structures 
 that hint to vanilla features taking inspiration from Broken Nether Portals.
