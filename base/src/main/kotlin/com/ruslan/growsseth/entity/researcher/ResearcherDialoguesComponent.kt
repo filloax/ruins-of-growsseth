@@ -29,7 +29,6 @@ import net.minecraft.world.item.context.BlockPlaceContext
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
-import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.AABB
 import java.util.*
@@ -56,6 +55,14 @@ class ResearcherDialoguesComponent(
         val EV_PLAYER_ARRIVE_LAST_KILLED    = event("playerArriveAfterKilled")
         val EV_HIT_BY_PLAYER_IMMORTAL       = event("hitByPlayerImmortal")
         val EV_ARRIVE_NEW_LOCATION          = event("playerArriveNewLocation", ignoreNoDialogueWarning = true)
+
+        val AGGRESSIVE_DIALOGUE_EVENTS_ALLOWED = listOf(
+            BasicDialogueEvents.DEATH,
+            BasicDialogueEvents.LOW_HEALTH,
+            EV_PLAYER_CHEATS,
+            EV_KILL_PLAYER,
+            BasicDialogueEvents.HIT_BY_PLAYER,
+        )
 
         // "true" or unset
         const val DDATA_MADE_MESS = "madeMess"
@@ -95,10 +102,10 @@ class ResearcherDialoguesComponent(
     ) : Boolean {
         if (researcher.isAggressive)
             for (dialogueEvent in dialogueEvents) {
-                val dialoguesForWhenAggressive =
-                    listOf(BasicDialogueEvents.DEATH, BasicDialogueEvents.LOW_HEALTH, EV_PLAYER_CHEATS, EV_KILL_PLAYER, BasicDialogueEvents.HIT_BY_PLAYER)
-                if (dialoguesForWhenAggressive.all{ it != dialogueEvent } ||
-                    (dialogueEvent == BasicDialogueEvents.HIT_BY_PLAYER && combat.wantsToKillPlayer(player)))
+                if (
+                    AGGRESSIVE_DIALOGUE_EVENTS_ALLOWED.all{ it != dialogueEvent }
+                    || (dialogueEvent == BasicDialogueEvents.HIT_BY_PLAYER && combat.wantsToKillPlayer(player))
+                )
                     return false
             }
         return super.triggerDialogue(player, *dialogueEvents, eventParam=eventParam, ignoreEventConditions=ignoreEventConditions)
@@ -206,6 +213,15 @@ class ResearcherDialoguesComponent(
             triggerDialogue(player, EV_ARRIVE_NEW_LOCATION)
         } else {
             super.onPlayerArrive(player)
+        }
+    }
+
+    override fun onPlayerTickNear(player: ServerPlayer) {
+        if (combat.lastKilledPlayers.contains(player)) {
+            triggerDialogue(player, EV_PLAYER_ARRIVE_LAST_KILLED)
+            combat.lastKilledPlayers.remove(player)
+        } else {
+            super.onPlayerTickNear(player)
         }
     }
 
