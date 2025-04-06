@@ -249,7 +249,9 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
             .or(ApiEventTrigger(finalQuestZombieName))
 
         // Trigger on update too to cover multiple tent situations
-        override fun onUpdate(entity: Researcher) {
+        // but run logic at tick end to avoid issues with replacing entities as it sometimes desynced
+        // or something, keeping both zombie and researcher
+        override fun onUpdate(entity: Researcher) = EventUtil.runAtServerTickEnd { _ ->
             if (entity.dialogues?.getTriggeredDialogues()?.isEmpty() == true)
                 playerSkippedQuest = true
 
@@ -274,7 +276,7 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
             if (isNull(zombie)) {
                 RuinsOfGrowsseth.LOGGER.error("Couldn't zombify researcher in quest stage!")
                 entity.moveTo(startingPos)
-                return
+                return@runAtServerTickEnd
             }
             zombie.researcherData = data
             zombie.lastWorldDataTime = entity.lastWorldDataTime
@@ -282,9 +284,11 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
             zombie.researcherOriginalPos = resStartingPos
             // not visible normally other than with entity info mods
             zombie.villagerData = zombie.villagerData.setProfession(VillagerProfession.CARTOGRAPHER).setLevel(5)
+            RuinsOfGrowsseth.LOGGER.info("Spawned researcher zombie {} from quest stage", zombie)
 
             entity.discard()
 
+            // Maybe is now redundant after enclosing the function in serverAtTickEnd, treat this as "next tick end"
             if (scheduleMoveRemoveLater) {
                 RuinsOfGrowsseth.LOGGER.info("Couldn't find tent, trying again at end of server tick...")
                 // Try moving him again at the end of the tick, maybe this is during load and the structure wasn't
@@ -354,11 +358,11 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
     // Separate stage for last dialogue, so we can in next stage count
     // time only after dialogue of this quest triggered
     inner class LastDialogueStage: QuestStage<Researcher> {
-        // Automatically trigger as soon as healed (and quests work again)
+        // Trigger when healed dialogue is triggered
         override val trigger = (
                 EventTrigger<Researcher>(QuestUpdateEvent.LOAD)
                 or NoPlayersInRadiusTrigger(this@ResearcherQuestComponent, chunkRadius = 8)
-                or TimeOrDayTimeTrigger(this@ResearcherQuestComponent, Constants.DAY_TICKS_DURATION * 5)
+                or TimeOrDayTimeTrigger(this@ResearcherQuestComponent, Constants.DAY_TICKS_DURATION * 1)
             )
             // You can find the dialogue in the quest dialogues json
             .and(DialogueGroupTrigger("group-quest-last-dialogue"))
