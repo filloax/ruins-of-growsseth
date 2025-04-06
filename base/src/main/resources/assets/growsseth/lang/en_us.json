@@ -121,6 +121,8 @@
     "growsseth.commands.gquest.back.failure": "Failed in reverting to previous quest stage for the target entity:\n%s",
     "growsseth.commands.gquest.list_stages": "Available quest stages for %s are: %s",
     "growsseth.commands.gquest.info": "%s quest data:\nStage: '%s', History: %s",
+    "growsseth.commands.gquest.info.triggers": "Next quest stage triggers for event %s:",
+    "growsseth.commands.gquest.info.triggers.noent": "Cannot show stage triggers without the quest entity available",
     "growsseth.commands.gtemplate.booksuccess": "Received book template '%s'",
     "growsseth.commands.gtemplate.invalidbooktemplate": "Invalid book template: '%s'",
     "growsseth.commands.gtemplate.signsuccess": "Received sign template '%s'",
