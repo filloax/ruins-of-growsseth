@@ -53,6 +53,8 @@ open class QuestComponent<E : LivingEntity>(val entity: E, val name: String) {
     var data = QuestData()
         private set
 
+    val currentNode get() = current()
+
     // NBT data
     data class QuestData(
         var currentStageId: String = INIT_STAGE_ID,
