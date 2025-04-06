@@ -64,8 +64,9 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
         const val START = "start"
         const val ZOMBIE = "zombie"
         const val HEALED = "healed"
+        const val HEALED_WAIT = "healed_wait"
         const val HOME = "home"
-        const val WAIT = "wait"
+        const val HOME_WAIT = "home_wait"
         const val ENDING = "ending"
     }
 
@@ -78,6 +79,13 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
     private val finalQuestZombieName = "researcher_end_quest_zombie"
     private val finalQuestLeaveName = "researcher_end_quest_leave"
 
+    // Trigger for generic "wait for player to leave or time to pass" criteria
+    private val commonReloadTrigger = (
+            EventTrigger<Researcher>(QuestUpdateEvent.LOAD)
+            or NoPlayersInRadiusTrigger(this, chunkRadius = 8)
+            or TimeOrDayTimeTrigger(this, Constants.DAY_TICKS_DURATION)
+        )
+
 
     // Used to avoid repeating full tent removal with multiple tents in normal worlds
     private var alreadyRemovedTent = false
@@ -87,9 +95,10 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
         // can skip start
         addStage(Stages.ZOMBIE, ZombieStage(), Stages.START, INIT_STAGE_ID, priority = -10, blockSiblingStages = true)
         addStage(Stages.HEALED, HealedStage(), Stages.ZOMBIE)
-        addStage(Stages.HOME, LastDialogueStage(), Stages.HEALED, blockNextStages = true)
-        addStage(Stages.WAIT, WaitBeforeLeaveStage(), Stages.HOME, blockNextStages = true)
-        addStage(Stages.ENDING, EndingStage(), Stages.WAIT)
+        addStage(Stages.HEALED_WAIT, HealedWaitForDialogueStage(), Stages.ZOMBIE)
+        addStage(Stages.HOME, HomeLastDialogueStage(), Stages.HEALED, blockNextStages = true)
+        addStage(Stages.HOME_WAIT, WaitBeforeLeaveStage(), Stages.HOME, blockNextStages = true)
+        addStage(Stages.ENDING, EndingStage(), Stages.HOME_WAIT)
     }
 
     override fun writeCustomNbt(tag: CompoundTag) {
@@ -150,7 +159,7 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
          * Note: doesn't care about stage order
          */
         fun setStage(server: MinecraftServer, stage: String) {
-            assert(stage in listOf(Stages.HOME, Stages.WAIT, Stages.START, Stages.HEALED, Stages.ZOMBIE, Stages.ENDING))
+            assert(stage in listOf(Stages.HOME, Stages.HOME_WAIT, Stages.START, Stages.HEALED, Stages.ZOMBIE, Stages.ENDING))
                 { "Stage $stage not included in stages for researcher!" }
             val data = getPersistentData(server)
             data.currentStageId = stage
@@ -355,17 +364,16 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
         }
     }
 
-    // Separate stage for last dialogue, so we can in next stage count
-    // time only after dialogue of this quest triggered
-    inner class LastDialogueStage: QuestStage<Researcher> {
+    // First this stage where we wait for healed dialogue to play out,
+    // AFTER that following stage where it waits for time or reload AFTER the dialogue plays
+    // (to ensure npc doesn't immediately teleport after starting healed dialogue if reached after timeout trigger)
+    inner class HealedWaitForDialogueStage : QuestStage<Researcher> {
         // Trigger when healed dialogue is triggered
-        override val trigger = (
-                EventTrigger<Researcher>(QuestUpdateEvent.LOAD)
-                or NoPlayersInRadiusTrigger(this@ResearcherQuestComponent, chunkRadius = 8)
-                or TimeOrDayTimeTrigger(this@ResearcherQuestComponent, Constants.DAY_TICKS_DURATION * 1)
-            )
-            // You can find the dialogue in the quest dialogues json
-            .and(DialogueGroupTrigger("group-quest-last-dialogue"))
+        override val trigger: QuestStageTrigger<Researcher> = DialogueGroupTrigger("group-cure-dialogue")
+    }
+
+    inner class HomeLastDialogueStage: QuestStage<Researcher> {
+        override val trigger = commonReloadTrigger
 
         override fun onActivated(entity: Researcher) {
             entity.startingPos?.let { entity.moveTo(it, entity.yRot, entity.xRot) }
@@ -373,18 +381,20 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
         }
     }
 
+    // First wait for researcher to say final dialogue...
     class WaitBeforeLeaveStage : QuestStage<Researcher> {
-        override val trigger = DialogueTrigger<Researcher>("researcher-quest-end")
+        override val trigger = DialogueGroupTrigger<Researcher>("group-quest-last-dialogue")
     }
 
+    // ...THEN start counting time
     inner class EndingStage: QuestStage<Researcher> {
+        // wait 5 days / manual trigger and reload
         override val trigger: QuestStageTrigger<Researcher> = (
-                EventTrigger<Researcher>(QuestUpdateEvent.LOAD)
-                or NoPlayersInRadiusTrigger(this@ResearcherQuestComponent, chunkRadius = 8)
-                or TimeOrDayTimeTrigger(this@ResearcherQuestComponent, Constants.DAY_TICKS_DURATION * 5)
-            ) and (
-                TimeOrDayTimeTrigger(this@ResearcherQuestComponent, Constants.DAY_TICKS_DURATION)
-                or ApiEventTrigger(finalQuestLeaveName)
+                commonReloadTrigger
+                and (
+                    TimeOrDayTimeTrigger(this@ResearcherQuestComponent, Constants.DAY_TICKS_DURATION * 5)
+                    or ApiEventTrigger(finalQuestLeaveName)
+                )
             )
 
         // OnUpdate to also cover multiple tents
@@ -400,7 +410,8 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
         }
     }
 
-    class ProgressTradesTrigger(val server: MinecraftServer, val onlyOne: Boolean = false) : QuestStageTrigger<Researcher> {
+
+    private class ProgressTradesTrigger(val server: MinecraftServer, val onlyOne: Boolean = false) : QuestStageTrigger<Researcher> {
         override fun isActive(entity: Researcher, event: QuestUpdateEvent): Boolean {
             val tradesProvider = ResearcherTradeMode.providerFromSettings(server)
             if (tradesProvider !is ProgressResearcherTradesProvider) return false
