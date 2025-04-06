@@ -26,6 +26,44 @@ fun interface QuestStageTrigger<E : LivingEntity> {
     fun orMulti(vararg with: QuestStageTrigger<E>): QuestStageTrigger<E> {
         return OrTrigger(with.toMutableList().also{it.add(this)})
     }
+
+    /**
+     * Debug status of various triggers under this one
+     */
+    fun getActiveTree(entity: E, event: QuestUpdateEvent): TriggerTreeNode {
+        val parts = when (this) {
+            is AndTrigger -> this.parts
+            is OrTrigger -> this.parts
+            else -> null
+        }
+        return parts?.let { child -> TriggerTreeNode(
+                className = this::class.simpleName ?: this::class.toString(),
+                isActive = this.isActive(entity, event),
+                children = child.map { it.getActiveTree(entity, event) }
+            ) } ?: TriggerTreeNode(
+                className = this::class.simpleName ?: this::class.toString(),
+                isActive = isActive(entity, event)
+            )
+    }
+}
+
+/**
+ * Used for debugging active status of a quest stage
+ */
+data class TriggerTreeNode(
+    val className: String,
+    val isActive: Boolean,
+    val children: List<TriggerTreeNode> = emptyList()
+) {
+    override fun toString(): String = buildString {
+        appendNode(this@TriggerTreeNode)
+    }
+
+    private fun StringBuilder.appendNode(node: TriggerTreeNode, indent: Int = 0) {
+        val indentStr = "  ".repeat(indent)
+        append("$indentStr${node.className} - Active: ${node.isActive}\n")
+        node.children.forEach { appendNode(it, indent + 1) }
+    }
 }
 
 open class ApiEventTrigger<E : LivingEntity>(val apiEventName: String) :
