@@ -118,6 +118,10 @@ open class BasicDialoguesComponent(
             triggerDialogue(player, Events.PLAYER_LEAVE_SOON, Events.PLAYER_LEAVE_NIGHT, Events.PLAYER_LEAVE)
     }
 
+    open fun onPlayerTickNear(player: ServerPlayer) {
+        triggerDialogueInternal(player, Events.TICK_NEAR_PLAYER, ignoreEmptyOptionsWarning = true, countEvents = false)
+    }
+
     override fun resetNearbyPlayers() {
         closePlayers.toList().forEach { uuid ->
             playerDataOrCreate(uuid).lastSeenTimestamp = entity.level().gameTime
@@ -209,6 +213,7 @@ open class BasicDialoguesComponent(
         val nearPlayers = possiblePlayers.filter {
             nearbyBoundingBox.contains(it.position())
             && (!checkLineOfSight || entity.hasLineOfSight(it))
+            && it.isAlive
         }.toMutableSet()
 
         // Players far enough to trigger leave
@@ -230,7 +235,7 @@ open class BasicDialoguesComponent(
             if (player.uuid in leavingPlayers) {
                 leavingPlayers.remove(player.uuid)
             }
-            triggerDialogueInternal(player, Events.TICK_NEAR_PLAYER, ignoreEmptyOptionsWarning = true, countEvents = false)
+            onPlayerTickNear(player)
         }
         // Stop leaving players triggering leave if inbetween the areas
         for (player in inbetweenPlayers) {

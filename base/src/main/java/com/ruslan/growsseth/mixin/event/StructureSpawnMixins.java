@@ -48,7 +48,7 @@ public class StructureSpawnMixins {
 
             if (StructureDisabler.Mixins.shouldDisableStructure(structureSetEntry.structure(), level)) {
                 if (FxUtils.isDevEnvironment()) {
-                    RuinsOfGrowsseth.getLOGGER().info("Disabled spawn for structure " + structureSetEntry.structure());
+                    RuinsOfGrowsseth.LOGGER.info("Disabled spawn for structure " + structureSetEntry.structure());
                 }
                 cir.setReturnValue(false);
             }
