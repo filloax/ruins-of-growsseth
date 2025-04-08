@@ -11,7 +11,7 @@ Fixed
 - Golem houses not having maps in Growsseth world preset
 - Researcher dialogue triggers vs dead players (especially the "player returns after getting killed by researcher" dialogue)
 - `glocate` for fixed structure placement (ie Growsseth Preset or Gamemaster mode)
-- Quest: try avoiding a certain duplication issue
+- Quest: try avoiding a zombie duplication issue
 - Quest: fix final stages not properly triggering
 - structure debug option crashing the game
 
