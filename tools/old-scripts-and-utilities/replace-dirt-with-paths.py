@@ -1,33 +1,52 @@
-# Little script for substituting dirt blocks with paths in golem streets (not needed anymore since we removed the streets)
-
-from nbt import nbt
 import os
+from pathlib import Path
+from nbt import nbt
+import shutil
 
-os.chdir(os.path.dirname(__file__))
+# Config constants
+VILLAGE_STRUCTURE_PATH = Path(__file__).resolve().parent / "../../../src/main/resources/data/growsseth/structures/village"
+DIRT_STATE_ID = 0         # the block state ID corresponding to dirt
+DIRT_PATH_STATE_ID = 2    # the block state ID corresponding to dirt path (corrected per your comment, was 3)
+DRY_RUN = False           # set True to preview changes only
+MAKE_BACKUP = True        # backup original NBT files before overwrite
+VERBOSE = True
 
-structures_folder = "../../../src/main/resources/data/growsseth/structures/village/"
 total_processed_blocks = 0
+total_files_modified = 0
 
-for path, dirs, files in os.walk(structures_folder):
-    for file in files:
-        # we want to avoid processing the desert streets, since they don't have dirt or path blocks
-        if (file.endswith("street.nbt") or file.endswith("street_zombie.nbt")) and not "desert" in file:
-            print("Processing", file)
-            
-            nbtfile = nbt.NBTFile(os.path.join(path, file))
-            processed_blocks = 0
-            
-            # In the files we want to process the dirt block is associated to state 0, and the dirt path to state 3:
-            for block in nbtfile["blocks"]:
-                if (block["state"].valuestr() == "0"):
-                    block["state"] = nbt.TAG_Int(2)
-                    processed_blocks += 1
-                    total_processed_blocks += 1
-                        
-            if processed_blocks > 0:
-                nbtfile.write_file()
-                print(f"-> Processed {processed_blocks} blocks\n")
+for file_path in VILLAGE_STRUCTURE_PATH.rglob("*.nbt"):
+    if ("street.nbt" in file_path.name or "street_zombie.nbt" in file_path.name) and "desert" not in file_path.name:
+        if VERBOSE:
+            print(f"Processing '{file_path}'...")
+        try:
+            nbtfile = nbt.NBTFile(str(file_path))
+        except Exception as e:
+            print(f"Failed to load NBT file '{file_path}': {e}")
+            continue
+        
+        processed_blocks = 0
+        for block in nbtfile["blocks"]:
+            if block["state"].valuestr() == str(DIRT_STATE_ID):
+                block["state"] = nbt.TAG_Int(DIRT_PATH_STATE_ID)
+                processed_blocks += 1
+                total_processed_blocks += 1
+        
+        if processed_blocks > 0:
+            total_files_modified += 1
+            if MAKE_BACKUP and not DRY_RUN:
+                shutil.copy(file_path, file_path.with_suffix(".nbt.bak"))
+            if not DRY_RUN:
+                try:
+                    nbtfile.write_file(str(file_path))
+                    print(f"  -> Converted {processed_blocks} dirt blocks to paths.")
+                except Exception as e:
+                    print(f"Failed to write updated NBT file '{file_path}': {e}")
             else:
-                print("-> No blocks needed to be processed\n")
+                print(f"  (Dry run) Would convert {processed_blocks} blocks.")
+        else:
+            if VERBOSE:
+                print("  -> No dirt blocks to convert.")
 
-print(f"Processed {total_processed_blocks} total blocks\n")
+print(f"\nTotal blocks processed: {total_processed_blocks}")
+print(f"Total files modified: {total_files_modified}")
+print(f"Dry run mode: {DRY_RUN}")
