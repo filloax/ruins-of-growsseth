@@ -926,7 +926,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         } ?: MerchantOffers()
     }
 
-    fun getOffers(player: ServerPlayer): MerchantOffers {
+    private fun getOffers(player: ServerPlayer): MerchantOffers {
         val server = player.server
         val currentProvider = ResearcherTradeMode.providerFromSettings(server)
         val tradesData = tradesData()

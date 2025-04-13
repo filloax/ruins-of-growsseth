@@ -1,6 +1,7 @@
 package com.ruslan.growsseth.entity.researcher
 
 import com.filloax.fxlib.api.*
+import com.filloax.fxlib.api.codec.CodecUtils
 import com.filloax.fxlib.api.codec.mutableMapCodec
 import com.filloax.fxlib.api.codec.mutableSetCodec
 import com.mojang.serialization.Codec
@@ -14,6 +15,7 @@ import com.ruslan.growsseth.config.ResearcherConfig
 import com.ruslan.growsseth.http.ApiEvent
 import com.ruslan.growsseth.http.GrowssethApi
 import com.ruslan.growsseth.structure.GrowssethStructures
+import com.ruslan.growsseth.structure.StructureVisitTracker
 import com.ruslan.growsseth.templates.BookData
 import com.ruslan.growsseth.templates.BookTemplates
 import com.ruslan.growsseth.templates.TemplateKind
@@ -32,6 +34,7 @@ import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.tags.TagKey
+import net.minecraft.util.ExtraCodecs
 import net.minecraft.world.Container
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.targeting.TargetingConditions
@@ -46,6 +49,7 @@ import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.level.levelgen.structure.BoundingBox
 import net.minecraft.world.level.levelgen.structure.Structure
 import net.minecraft.world.phys.AABB
+import java.time.LocalDateTime
 
 
 /**
@@ -61,6 +65,8 @@ class ResearcherDiaryComponent(val researcher: Researcher) {
             b.group(
                 mutableMapCodec(TagKey.codec(Registries.STRUCTURE), Codec.BOOL).fieldOf("recordedStructures").forGetter(DiaryData::recordedStructures),
                 mutableSetCodec(Codec.STRING).fieldOf("recordedEvents").forGetter(DiaryData::recordedEvents),
+                mutableMapCodec(TagKey.codec(Registries.STRUCTURE), GrowssethCodecs.LOCAL_DATE_TIME_CODEC)
+                    .optionalFieldOf("trackedStructures", mutableMapOf()).forGetter(DiaryData::trackedStructures),
             ).apply(b, ::DiaryData)
         }
 
@@ -114,26 +120,23 @@ class ResearcherDiaryComponent(val researcher: Researcher) {
     data class DiaryData(
         val recordedStructures: MutableMap<TagKey<Structure>, Boolean> = mutableMapOf(),
         val recordedEvents: MutableSet<String> = mutableSetOf(),
+        // Used for non-single researcher mode, to track which structures this researcher sold
+        val trackedStructures: MutableMap<TagKey<Structure>, LocalDateTime> = mutableMapOf(),
     )
 
     private val level = researcher.level() as ServerLevel
     private var lecternBlockEntity: LecternBlockEntity? = null
     private var previousDiariesChestBlockEntity: ChestBlockEntity? = null
-    private var didFirstStructSearch = false
 
     fun aiStep() {
         if (!ResearcherConfig.researcherWritesDiaries) return
-        /*
-        FOR NOW: Outright disable with non-single researcher mode
-        TODO: make multiple researchers mode make each researcher have diaries only
-        for his structures and only if they're (re)discovered after a player reached that
-        specific entity (harder part is the 2nd as we couldn't rely on just "player has discovered"
-         */
-        if (!ResearcherConfig.singleResearcher) return
 
         if (researcher.tickCount % updatePeriod == 0) {
             checkLanguageChanged()
-            val anyNew = updateUnlockedStructures()
+            val anyNew = if (ResearcherConfig.singleResearcher)
+                    updateUnlockedStructuresGlobal()
+                else
+                    updateUnlockedStructuresOnlyTracked()
 
             if (anyNew || !data.recordedStructures.values.all { it }) {
                 for ((structKey, alreadyRecorded) in data.recordedStructures) {
@@ -151,6 +154,15 @@ class ResearcherDiaryComponent(val researcher: Researcher) {
                     data.recordedEvents.add(id)
                 }
             }
+        }
+    }
+
+    // TODO: call this after selling map
+    fun trackRandomMapStructure(tag: TagKey<Structure>) {
+        if (ResearcherConfig.singleResearcher) return
+
+        if (tag !in data.trackedStructures) {
+            data.trackedStructures[tag] = LocalDateTime.now()
         }
     }
 
@@ -217,22 +229,17 @@ class ResearcherDiaryComponent(val researcher: Researcher) {
 
     private val printedWarningFor = mutableSetOf<ResourceKey<Structure>>()
 
-    private fun updateUnlockedStructures(): Boolean {
-        val checkRange = 64.0
-        val possiblePlayers: List<ServerPlayer> = level.getNearbyPlayers(
-            targetingConditions,
-            researcher,
-            AABB.ofSize(researcher.position(), checkRange, checkRange / 2, checkRange)
-        ).map { it as ServerPlayer }
-
+    private fun updateUnlockedStructuresGlobal(): Boolean {
         var found = false
 
         val structToTagLevel = structToTag[level] ?: structToTag[level.server.overworld()]
 
         if (structToTagLevel == null) {
-            RuinsOfGrowsseth.LOGGER.error("No structToTag initialized for level or overworld! Level is $level")
+            RuinsOfGrowsseth.LOGGER.error("No structToTag initialized for level or overworld in global check! Level is $level")
             return false
         }
+
+        val possiblePlayers = getPossiblePlayersToCheck()
 
         possiblePlayers.forEach { player ->
             val unlocked = StructureAdvancements.getPlayerFoundStructures(player)
@@ -254,9 +261,63 @@ class ResearcherDiaryComponent(val researcher: Researcher) {
         return found
     }
 
+    /**
+     * Used in non-single researcher mode, only update structures we sold that were
+     * found after we sold the map
+     */
+    private fun updateUnlockedStructuresOnlyTracked(): Boolean {
+        if (data.trackedStructures.isEmpty()) {
+            return false
+        }
+
+        var found = false
+
+        val structToTagLevel = structToTag[level] ?: structToTag[level.server.overworld()]
+
+        if (structToTagLevel == null) {
+            RuinsOfGrowsseth.LOGGER.error("No structToTag initialized for level or overworld in tracked check! Level is $level")
+            return false
+        }
+
+        val possiblePlayers = getPossiblePlayersToCheck()
+
+        possiblePlayers.forEach { player ->
+            for ((tag, trackedAt) in data.trackedStructures) {
+                val discovered = StructureVisitTracker.getLastStructureEnterTime(player, tag)?.isAfter(trackedAt) == true
+                val isNew = tag !in data.recordedStructures.keys
+                if (isNew && discovered) {
+                    found = true
+                    data.recordedStructures[tag] = false
+                }
+            }
+        }
+
+        return found
+    }
+
+    private fun getPossiblePlayersToCheck(): List<ServerPlayer> {
+        val checkRange = 64.0
+        return level.getNearbyPlayers(
+                targetingConditions,
+                researcher,
+                AABB.ofSize(researcher.position(), checkRange, checkRange / 2, checkRange)
+            ).map { it as ServerPlayer }
+    }
+
     private fun findBlockEntsIfNull() {
         var findLectern = lecternBlockEntity == null || lecternBlockEntity?.isRemoved == true
         var findChest = previousDiariesChestBlockEntity == null || previousDiariesChestBlockEntity?.isRemoved == true
+
+        val attemptInPos = aip@{ pos: BlockPos ->
+            val found = checkBlockPosForEnt(pos, findLectern, findChest)
+            findLectern = !found.first
+            findChest = !found.second
+
+            if (!findChest && !findLectern) {
+                return@aip
+            }
+        }
+
         val tent = researcher.tent
         if (findLectern || findChest) {
             if (tent == null) {
@@ -264,27 +325,11 @@ class ResearcherDiaryComponent(val researcher: Researcher) {
                 val offset = Vec3i(searchRange, searchRange * 3 / 4, searchRange)
                 for (center in listOfNotNull(researcher.startingPos, researcher.blockPosition())) {
                     val searchArea = BoundingBox.fromCorners(center.subtract(offset), center.offset(offset))
-                    searchArea.iterBlocks { pos ->
-                        val found = checkBlockPosForEnt(pos, findLectern, findChest)
-                        findLectern = !found.first
-                        findChest = !found.second
-
-                        if (!findChest && !findLectern) {
-                            return@iterBlocks
-                        }
-                    }
+                    searchArea.iterBlocks(attemptInPos)
                 }
             } else {
                 val boundingBoxWithoutCellar = tent.boundingBox.clip(minY = tent.cellarTrapdoorPos?.y ?: (tent.boundingBox.minY() + 11))
-                boundingBoxWithoutCellar.iterBlocks { pos ->
-                    val found = checkBlockPosForEnt(pos, findLectern, findChest)
-                    findLectern = !found.first
-                    findChest = !found.second
-
-                    if (!findChest && !findLectern) {
-                        return@iterBlocks
-                    }
-                }
+                boundingBoxWithoutCellar.iterBlocks(attemptInPos)
             }
         }
     }

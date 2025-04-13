@@ -7,6 +7,10 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.trading.ItemCost
 import net.minecraft.world.item.trading.MerchantOffer
 import net.minecraft.world.item.trading.MerchantOffers
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZoneOffset
 import java.util.*
 
 
@@ -34,4 +38,13 @@ object GrowssethCodecs {
     val MERCHANT_OFFERS_CODEC: Codec<MerchantOffers> = mutableListCodec(MERCHANT_OFFER_CODEC).xmap({ mutableList ->
         MerchantOffers().also { it.addAll(mutableList) }
     }, { arrayList -> arrayList})
+
+    val LOCAL_DATE_TIME_CODEC: Codec<LocalDateTime> = Codec.LONG.xmap(
+        {
+            epochMillis -> epochMillis?.let {
+                LocalDateTime.ofInstant(Instant.ofEpochMilli(it), ZoneOffset.UTC)
+            }
+        },
+        { localDateTime -> localDateTime?.toInstant(ZoneOffset.UTC)?.toEpochMilli() }
+    )
 }
