@@ -12,6 +12,7 @@ import com.ruslan.growsseth.maps.DestinationType
 import com.ruslan.growsseth.maps.MapLocateContext
 import com.ruslan.growsseth.maps.updateMapToPos
 import com.ruslan.growsseth.maps.updateMapToStruct
+import com.ruslan.growsseth.structure.GrowssethStructures
 import com.ruslan.growsseth.templates.BookTemplates
 import net.minecraft.core.BlockPos
 import net.minecraft.core.RegistryAccess
@@ -19,14 +20,16 @@ import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.Registries
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
-import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.tags.TagKey
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.MapItem
 import net.minecraft.world.item.component.CustomData
 import net.minecraft.world.item.trading.MerchantOffer
 import net.minecraft.world.item.trading.MerchantOffers
+import net.minecraft.world.level.levelgen.structure.Structure
 import net.minecraft.world.level.saveddata.maps.MapId
+import java.util.function.Function
 import kotlin.jvm.optionals.getOrNull
 
 object ResearcherTradeUtils {
@@ -251,5 +254,19 @@ object ResearcherTradeUtils {
             BookTemplates.loadTemplate(result, data.getString(ResearcherItemListing.BOOK_TEMPLATE_TAG), edit = { withAuthor(researcher.name.string) })
         }
         return offerOut
+    }
+
+    fun getStructureTagFromMapOffer(offer: MerchantOffer): TagKey<Structure>? {
+        val data = offer.result[DataComponents.CUSTOM_DATA]?.copyTag()
+        val mapInfo = data?.loadField(ResearcherItemListing.MAP_INFO_TAG, TradeItemMapInfo.CODEC) ?: return null
+
+        // If already tag it, return tag id, otherwise try finding corresponding tag among mod structures
+        // Try both structure and fixedStructureId (latter for village maps)
+        return listOfNotNull(mapInfo.structure, mapInfo.fixedStructureId)
+            .firstNotNullOfOrNull {
+                getStructTagOrKey(it).map(Function.identity()) { key ->
+                    GrowssethStructures.info[key]?.tag
+                }
+            }
     }
 }

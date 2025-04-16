@@ -26,6 +26,7 @@ import com.ruslan.growsseth.entity.researcher.trades.ResearcherTradeMode
 import com.ruslan.growsseth.entity.researcher.trades.ResearcherTradeUtils
 import com.ruslan.growsseth.entity.researcher.trades.ResearcherTradesData
 import com.ruslan.growsseth.http.GrowssethExtraEvents
+import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.quests.QuestOwner
 import com.ruslan.growsseth.sound.GrowssethSounds
 import com.ruslan.growsseth.structure.pieces.ResearcherTent
@@ -926,7 +927,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         } ?: MerchantOffers()
     }
 
-    fun getOffers(player: ServerPlayer): MerchantOffers {
+    private fun getOffers(player: ServerPlayer): MerchantOffers {
         val server = player.server
         val currentProvider = ResearcherTradeMode.providerFromSettings(server)
         val tradesData = tradesData()
@@ -968,6 +969,17 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     override fun notifyTrade(merchantOffer: MerchantOffer) {
         ambientSoundTime = -this.ambientSoundInterval
         rewardTradeXp(merchantOffer)
+
+        if (merchantOffer.result.`is`(GrowssethItems.RUINS_MAP)) {
+            diary?.let { d ->
+                val tag = ResearcherTradeUtils.getStructureTagFromMapOffer(merchantOffer)
+                if (tag != null) {
+                    d.trackRandomMapStructure(tag)
+                } else {
+                    RuinsOfGrowsseth.LOGGER.warn("Could not track structure for map trade {}, tag not found", merchantOffer)
+                }
+            }
+        }
     }
 
     override fun notifyTradeUpdated(itemStack: ItemStack) {

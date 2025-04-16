@@ -1,6 +1,7 @@
 package com.ruslan.growsseth
 
 import com.filloax.fxlib.platform.ServerEvent
+import com.ruslan.growsseth.event.ServerPlayerTickCallback
 import com.ruslan.growsseth.loot.LootTableModifier
 import net.fabricmc.fabric.api.event.lifecycle.v1.*
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents
@@ -44,6 +45,10 @@ class FabricEvents : ModEvents() {
 
     override fun onPlayerServerJoin(event: (ServerPlayer, MinecraftServer) -> Unit) = ServerPlayConnectionEvents.JOIN.register { handler, _, server ->
         event(handler.player, server)
+    }
+
+    override fun onPlayerServerTick(event: (player: ServerPlayer) -> Unit) = ServerPlayerTickCallback.EVENT.register { serverPlayer ->
+        event(serverPlayer)
     }
 
     override fun onLootTableModify(event: (key: ResourceLocation, table: LootTableModifier) -> Unit) = LootTableEvents.MODIFY.register { key, tableBuilder, _, registries ->

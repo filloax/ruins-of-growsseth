@@ -19,6 +19,7 @@ object Constants {
     const val LANG_DIALOGUE_PREFIX = "dialogue"
     const val LANG_PLACES_PREFIX = "places"
 
+    const val ATTACHMENT_SERVER_PLAYER_DATA = "server-player-data"
     const val DATA_PLAYER_MET_RESEARCHER = "metResearcher"
     const val TAG_RESEARCHER_DONKEY = "researcher_donkey"
 
