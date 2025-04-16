@@ -157,7 +157,6 @@ class ResearcherDiaryComponent(val researcher: Researcher) {
         }
     }
 
-    // TODO: call this after selling map
     fun trackRandomMapStructure(tag: TagKey<Structure>) {
         if (ResearcherConfig.singleResearcher) return
 
