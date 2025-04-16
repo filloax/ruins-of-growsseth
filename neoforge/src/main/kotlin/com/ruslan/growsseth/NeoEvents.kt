@@ -31,6 +31,7 @@ import net.neoforged.neoforge.event.server.ServerStartingEvent
 import net.neoforged.neoforge.event.server.ServerStoppedEvent
 import net.neoforged.neoforge.event.server.ServerStoppingEvent
 import net.neoforged.neoforge.event.tick.LevelTickEvent
+import net.neoforged.neoforge.event.tick.PlayerTickEvent
 import net.neoforged.neoforge.event.tick.ServerTickEvent
 
 class NeoEvents : ModEvents() {
@@ -115,6 +116,15 @@ class NeoEvents : ModEvents() {
             val player = ev.entity
             if (player is ServerPlayer) {
                 event(player, player.server)
+            }
+        }
+    }
+
+    override fun onPlayerServerTick(event: (player: ServerPlayer) -> Unit) {
+        NeoForge.EVENT_BUS.addListener { ev: PlayerTickEvent.Post ->
+            val player = ev.entity
+            if (player is ServerPlayer) {
+                event(player)
             }
         }
     }
