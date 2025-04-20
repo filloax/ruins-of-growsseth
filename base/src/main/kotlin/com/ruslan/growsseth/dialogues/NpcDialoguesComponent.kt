@@ -75,12 +75,12 @@ interface NpcDialoguesComponent {
      * @param ignoreEventConditions if true: do not run checks with [canTriggeredEventRun]
      * @return If a dialogue was triggered
      */
-    fun triggerDialogue(player: ServerPlayer, vararg dialogueEvents: DialogueEvent, eventParam: String? = null, ignoreEventConditions: Boolean = false): Boolean
+    fun triggerDialogue(player: ServerPlayer, vararg dialogueEvents: DialogueEvent, eventParam: String? = null, ignoreEventConditions: Boolean = false)
 
     /**
-     * Triggers a dialogue entry, otherwise respecting its params (timing, immediate, etc)
+     * Triggers a dialogue entry, otherwise respecting its params.
      */
-    fun triggerDialogueEntry(player: ServerPlayer, dialogueEntry: DialogueEntry)
+    fun triggerDialogueEntry(player: ServerPlayer, dialogueEntry: DialogueEntry, immediate: Boolean = false)
 
     fun readNbt(tag: CompoundTag) {}
     fun writeNbt(tag: CompoundTag) {}

@@ -32,7 +32,6 @@ import kotlinx.serialization.json.*
  *   Meant for dialogues that shouldn't risk to be played if the quest is started, or the stage is surpassed.
  * @param requiresEventParam Requires a specific value of the [DialogueEvent] param, for example the name in a RENAME event.
  *   If the event has no param (in general or in that specific trigger) will not allow the dialogue.
- * @param immediate If true, immediately play the dialogue when triggered, skipping any queue or delay.
  * @param data Arbitrary string-string data object, to be used by specific entities in their own ways.
  *   (For example, an entity might have sound customizations here).
  * @param priority Int, defaults to 0. After filtering allowed dialogues with the other attributes, will keep only the
@@ -57,7 +56,6 @@ data class DialogueEntry(
     val requiresQuestStage: String? = null,
     val requiresUntilQuestStage: String? = null,
     val requiresEventParam: String? = null,
-    val immediate: Boolean = false, // Skip the queue (for things like taking damage)
     val data: Map<String, String> = mapOf(),
     val priority: Int = 0, // higher -> has priority
 ) {

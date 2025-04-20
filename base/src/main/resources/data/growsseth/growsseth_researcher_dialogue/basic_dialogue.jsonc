@@ -266,7 +266,6 @@
             "content": "basic.hitByPlayer.0",
             "priority": 50,
             "afterCloseRepeatsMax": 1,
-            "immediate": true,
             "data": {
                 "sound": "none"
             }
@@ -276,7 +275,6 @@
             "priority": 50,
             "afterCloseRepeatsMin": 2,
             "afterCloseRepeatsMax": 2,
-            "immediate": true,
             "data": {
                 "sound": "none"
             }
@@ -286,7 +284,6 @@
             "afterCloseRepeatsMin": 3,
             "afterCloseRepeatsMax": 3,
             "priority": 50,
-            "immediate": true,
             "data": {
                 "sound": "none"
             }
@@ -297,7 +294,6 @@
             "content": "basic.hitByPlayerImmortal.0",
             "priority": 50,
             "afterRepeatsMax": 1,
-            "immediate": true,
             "data": {
                 "sound": "none"
             }
@@ -307,7 +303,6 @@
             "priority": 50,
             "afterRepeatsMin": 3,
             "afterRepeatsMax": 3,
-            "immediate": true,
             "data": {
                 "sound": "none"
             }
@@ -321,14 +316,12 @@
             "afterRepeatsMin": 5,
             "afterRepeatsMax": 5,
             "priority": 50,
-            "id": "hit-excuse",
-            "immediate": true
+            "id": "hit-excuse"
         }
     ],
     "killPlayer": [
         {
             "content": "basic.killPlayer.0",
-            "immediate": true,
             "useLimit": 1,
             "priority": 20,
             "data": {
@@ -341,7 +334,6 @@
     "playerCheats": [
         {
             "content": "basic.playerCheats.0",
-            "immediate": true,
             "afterCloseRepeatsMax": 1,
             "data": {
                 "sound": "none"
@@ -351,7 +343,6 @@
     "lowHealth": [
         {
             "content": "basic.lowHealth.0",
-            "immediate": true,
             "afterCloseRepeatsMax": 1,
             "data": {
                 "sound": "none"
@@ -361,7 +352,6 @@
     "death": [
         {
             "content": "basic.death.0",
-            "immediate": true,
             "data": {
                 "sound": "none"
             }
@@ -370,8 +360,7 @@
     "breakTent": [
         {
             "content": "basic.breakTent.0",
-            "afterRepeatsMax": 1,
-            "immediate": true
+            "afterRepeatsMax": 1
         },
         {
             "content": "basic.breakTent.1",
@@ -381,7 +370,6 @@
     "makeMess": [
         {
             "content": "basic.makeMess.0",
-            "immediate": true,
             "data": {
                 "sound": "none"
             }
@@ -391,7 +379,6 @@
             "priority": 50,
             "afterRepeatsMin": 2,
             "afterRepeatsMax": 2,
-            "immediate": true,
             "data": {
                 "sound": "none"
             }
@@ -400,7 +387,6 @@
             "content": "basic.makeMess.2",
             "priority": 50,
             "afterRepeatsMin": 3,
-            "immediate": true,
             "data": {
                 "sound": "none"
             }
@@ -424,7 +410,6 @@
         {
             "content": "basic.refuseTrade.0",
             "priority": -100,
-            "immediate": true,
             "data": {
                 "sound": "none"
             }
@@ -439,7 +424,6 @@
                 "basic.refuseTrade.1.5"
             ],
             "priority": 0,
-            "immediate": true,
             "requiresEventParam": "angry-at-player",
             "afterRepeatsMax": 1,
             "data": {
@@ -449,7 +433,6 @@
         {
             "content": "basic.refuseTrade.2",
             "priority": 0,
-            "immediate": true,
             "requiresEventParam": "angry-at-player",
             "afterRepeatsMin": 2,
             "data": {
@@ -459,7 +442,6 @@
         {
             "content": "basic.refuseTrade.3",
             "priority": 0,
-            "immediate": true,
             "requiresEventParam": "angry-at-others",
             "data": {
                 "sound": "none"
@@ -470,7 +452,6 @@
         {
             "content": "basic.playerAdvancement.0",
             "requiresEventParam": "growsseth:donkey/donkey_hurt_dialogue",
-            "immediate": true,
             "id": "hit-donkey-first",
             "useLimit": 1,
             "priority": 50
@@ -478,7 +459,6 @@
         {
             "content": "basic.playerAdvancement.1",
             "requiresEventParam": "growsseth:donkey/donkey_hurt_dialogue",
-            "immediate": true,
             "id": "hit-donkey-second",
             "useLimit": 1
         }
@@ -490,14 +470,12 @@
                 "basic.borrowDonkey.0.1",
                 "basic.borrowDonkey.0.2"
             ],
-            "immediate": true,
             "id": "first-donkey-borrow",
             "useLimit": 1,
             "priority": 50
         },
         {
-            "content": "basic.borrowDonkey.1",
-            "immediate": true
+            "content": "basic.borrowDonkey.1"
         }
     ],
     "borrowDonkeyHealed": [
@@ -506,7 +484,6 @@
                 "basic.borrowDonkeyHealed.0.0",
                 "basic.borrowDonkeyHealed.0.1"
             ],
-            "immediate": true,
             "id": "first-donkey-borrow-healed",
             "useLimit": 1,
             "priority": 50
@@ -514,8 +491,7 @@
     ],
     "returnDonkey": [
         {
-            "content": "basic.returnDonkey.0",
-            "immediate": true
+            "content": "basic.returnDonkey.0"
         }
     ],
     "exploreCellar": [
@@ -524,13 +500,11 @@
             "id": "explore-cellar",
             "useLimit": 1,
             "priority": 50,
-            "immediate": true,
             "requiresUntilQuestStage": "healed"
         },
         {
             "content": "basic.exploreCellar.1",
             "id": "explore-cellar",
-            "immediate": true,
             "requiresUntilQuestStage": "healed"
         }
     ],
