@@ -16,13 +16,14 @@ object BasicDialogueEvents {
     val PLAYER_ARRIVE_LONG_TIME = event("playerArriveLongTime", tag=DialogueEvent.TAG_HELLO)
     /** As soon as the dialogue conditions apply and a player is nearby, this triggers;
      * to be used by limited dialogue entries. */
-    val TICK_NEAR_PLAYER = event("tickNearPlayer")
-    val HIT_BY_PLAYER = event("hitByPlayer")
-    val LOW_HEALTH = event("lowHealth")
-    val DEATH = event("death")
+    val TICK_NEAR_PLAYER = event("tickNearPlayer", preventMultiQueue = true)
+    val HIT_BY_PLAYER = event("hitByPlayer", immediate = true)
+    val LOW_HEALTH = event("lowHealth", immediate = true)
+    val DEATH = event("death", immediate = true)
     /** To be triggered on rename, not handled automatically */
     val RENAME = event("rename")
-    val PLAYER_ADVANCEMENT = event("playerAdvancement")
+    val PLAYER_ADVANCEMENT = event("playerAdvancement", immediate = true)
+    val PLAYER_ADVANCEMENT_LAZY = event("playerAdvancementLazy")
     val MANUAL_TRIGGER = event("manualTrigger")
 }
 
@@ -30,6 +31,14 @@ class DialogueEvent private constructor (
     val id: String,
     val ignoreNoDialogueWarning: Boolean = false,
     val count: Boolean = true,
+    /**
+     * Plays dialogues immediately
+     */
+    val immediate: Boolean = false,
+    /**
+     * Prevents queueing if another dialogue of this type is queued.
+     */
+    val preventMultiQueue: Boolean = false,
     val tags: Set<String> = setOf(),
 ) {
     override fun toString(): String {
@@ -55,19 +64,24 @@ class DialogueEvent private constructor (
         const val TAG_HELLO = "hello"
         const val TAG_GOODBYE = "goodbye"
 
-
+        /**
+         * @param immediate Plays dialogues immediately
+         * @param preventMultiQueue Prevents queueing if another dialogue of this type is queued.
+         */
         fun event(
             id: String,
             tags: Set<String> = setOf(),
             tag: String? = null,
             ignoreNoDialogueWarning: Boolean = false,
+            immediate: Boolean = false,
+            preventMultiQueue: Boolean = false,
             count: Boolean = true,
         ): DialogueEvent {
             var tagsHolder = tags;
             if (tag != null) {
                 tagsHolder = tagsHolder.plus(tag)
             }
-            val event = DialogueEvent(id, ignoreNoDialogueWarning, count, tagsHolder)
+            val event = DialogueEvent(id, ignoreNoDialogueWarning, count, immediate, preventMultiQueue, tagsHolder)
             register(event)
             return event
         }

@@ -32,12 +32,12 @@ class PrefixedLogger(private val logger: Logger) {
     private val prefix =
         if (FxLibServices.platform.isDevEnvironment()) ""     // already present on dev env
         else "[$MOD_NAME] "
-    fun log(level: Level, msg: String, vararg params: Any?) = logger.log(level, "$prefix$msg", params)
-    fun info(msg: String, vararg params: Any?) = logger.info("$prefix$msg", params)
-    fun warn(msg: String, vararg params: Any?) = logger.warn("$prefix$msg", params)
-    fun error(msg: String, vararg params: Any?) = logger.error("$prefix$msg", params)
+    fun log(level: Level, msg: String, vararg params: Any?) = logger.log(level, "$prefix$msg", *params)
+    fun info(msg: String, vararg params: Any?) = logger.info("$prefix$msg", *params)
+    fun warn(msg: String, vararg params: Any?) = logger.warn("$prefix$msg", *params)
+    fun error(msg: String, vararg params: Any?) = logger.error("$prefix$msg", *params)
     fun error(ex: Exception) = logger.error(prefix, ex)
-    fun debug(msg: String, vararg params: Any?) = logger.debug("$prefix$msg", params)
+    fun debug(msg: String, vararg params: Any?) = logger.debug("$prefix$msg", *params)
 }
 
 fun MerchantOffer.contentEquals(other: Any?): Boolean {
