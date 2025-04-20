@@ -56,6 +56,7 @@ data class DialogueEntry(
     val requiresQuestStage: String? = null,
     val requiresUntilQuestStage: String? = null,
     val requiresEventParam: String? = null,
+    val blockMultiQueue: Boolean = true,
     val data: Map<String, String> = mapOf(),
     val priority: Int = 0, // higher -> has priority
 ) {

@@ -9,6 +9,7 @@ import net.minecraft.util.RandomSource
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.level.entity.EntityTypeTest
 import net.minecraft.world.phys.AABB
+import java.util.*
 
 /**
  * Interface to represent a component that handles "dialogues" for an NPC,
@@ -23,6 +24,9 @@ interface NpcDialoguesComponent {
     fun dialoguesStep()
     fun nearbyPlayers(): List<ServerPlayer>
     fun playersStillAround(): Boolean
+
+    fun isQueueEmpty(playerUUID: UUID): Boolean
+    fun skipCurrentMessage(playerUUID: UUID)
 
     /**
      * Reset nearby players, use to clear the list and allow new greetings

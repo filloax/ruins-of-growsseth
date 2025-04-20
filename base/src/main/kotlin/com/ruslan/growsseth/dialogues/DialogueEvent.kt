@@ -16,7 +16,7 @@ object BasicDialogueEvents {
     val PLAYER_ARRIVE_LONG_TIME = event("playerArriveLongTime", tag=DialogueEvent.TAG_HELLO)
     /** As soon as the dialogue conditions apply and a player is nearby, this triggers;
      * to be used by limited dialogue entries. */
-    val TICK_NEAR_PLAYER = event("tickNearPlayer")
+    val TICK_NEAR_PLAYER = event("tickNearPlayer", preventMultiQueue = true)
     val HIT_BY_PLAYER = event("hitByPlayer", immediate = true)
     val LOW_HEALTH = event("lowHealth", immediate = true)
     val DEATH = event("death", immediate = true)
@@ -31,7 +31,14 @@ class DialogueEvent private constructor (
     val id: String,
     val ignoreNoDialogueWarning: Boolean = false,
     val count: Boolean = true,
+    /**
+     * Plays dialogues immediately
+     */
     val immediate: Boolean = false,
+    /**
+     * Prevents queueing if another dialogue of this type is queued.
+     */
+    val preventMultiQueue: Boolean = false,
     val tags: Set<String> = setOf(),
 ) {
     override fun toString(): String {
@@ -59,6 +66,7 @@ class DialogueEvent private constructor (
 
         /**
          * @param immediate Plays dialogues immediately
+         * @param preventMultiQueue Prevents queueing if another dialogue of this type is queued.
          */
         fun event(
             id: String,
@@ -66,13 +74,14 @@ class DialogueEvent private constructor (
             tag: String? = null,
             ignoreNoDialogueWarning: Boolean = false,
             immediate: Boolean = false,
+            preventMultiQueue: Boolean = false,
             count: Boolean = true,
         ): DialogueEvent {
             var tagsHolder = tags;
             if (tag != null) {
                 tagsHolder = tagsHolder.plus(tag)
             }
-            val event = DialogueEvent(id, ignoreNoDialogueWarning, count, immediate, tagsHolder)
+            val event = DialogueEvent(id, ignoreNoDialogueWarning, count, immediate, preventMultiQueue, tagsHolder)
             register(event)
             return event
         }
