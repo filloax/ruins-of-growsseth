@@ -19,7 +19,6 @@ import com.ruslan.growsseth.network.DialoguePacket
 import com.ruslan.growsseth.network.DialogueSeparatorPacket
 import com.ruslan.growsseth.quests.QuestOwner
 import com.ruslan.growsseth.utils.notNull
-import com.teamresourceful.resourcefulconfig.api.annotations.ConfigInfo.Link
 import net.minecraft.advancements.AdvancementHolder
 import net.minecraft.core.UUIDUtil
 import net.minecraft.nbt.CompoundTag
@@ -99,8 +98,23 @@ open class BasicDialoguesComponent(
 
     protected open fun onPlayerLeave(player: ServerPlayer) {
         playerDataOrCreate(player).lastSeenTimestamp = entity.level().gameTime
-        if (!player.isDeadOrDying)  // to avoid goodbye when the npc gets away from the place where player died (and did not respawn yet)
-            triggerDialogue(player, Events.PLAYER_LEAVE_SOON, Events.PLAYER_LEAVE_NIGHT, Events.PLAYER_LEAVE)
+        // just make a blank one if event queue not init, no need to modify original
+        val eventQueue = eventQueues[player.uuid] ?: LinkedBlockingDeque()
+
+        // Handle interruptions
+        // TODO: save current dialogue status to resume
+        val interrupted = eventQueue.isNotEmpty()
+        if (interrupted) {
+            eventQueue.clear()
+        }
+
+        if (!player.isDeadOrDying) { // to avoid goodbye when the npc gets away from the place where player died (and did not respawn yet)
+            if (interrupted) {
+                triggerDialogue(player, Events.PLAYER_LEAVE_INTERRUPTED)
+            } else {
+                triggerDialogue(player, Events.PLAYER_LEAVE_SOON, Events.PLAYER_LEAVE_NIGHT, Events.PLAYER_LEAVE)
+            }
+        }
     }
 
     protected open fun onPlayerTickNear(player: ServerPlayer) {
@@ -157,13 +171,13 @@ open class BasicDialoguesComponent(
                 eventQueue.clear()
                 continue
             }
-            if (eventQueue.isNotEmpty()) {
+            if (dialogueQueueDelay > 0) {
                 dialogueQueueDelay--
-                if (dialogueQueueDelay <= 0 || playersSkipNextMessage.contains(playerUuid)) {
-                    playersSkipNextMessage.remove(playerUuid)
-                    popQueues(player, eventQueue)?.let { nextDialogueDelay ->
-                        dialogueQueueDelay = nextDialogueDelay
-                    }
+            }
+            if (eventQueue.isNotEmpty() && dialogueQueueDelay <= 0 || playersSkipNextMessage.contains(playerUuid)) {
+                playersSkipNextMessage.remove(playerUuid)
+                popQueues(player, eventQueue)?.let { nextDialogueDelay ->
+                    dialogueQueueDelay = nextDialogueDelay
                 }
             }
             dialogueQueueDelays[playerUuid] = dialogueQueueDelay
@@ -298,9 +312,8 @@ open class BasicDialoguesComponent(
      * @param eagerResolve if this trigger is called often (every tick, etc.)
      *  eager check if it has valid dialogue to play
      *  BEFORE queueing to avoid infinite queues from the "spammed"
-     *  event. If used incorrectly, nay lead to incorrect event condition
-     *  resolution if dialogues for this event would depend on other dialogue's
-     *  completion to play/not play.
+     *  event. Will also recheck before starting the dialogue to make sure the conditions
+     *  are still relevant.
      */
     private fun triggerDialogueInternal(
         player: ServerPlayer,
@@ -342,9 +355,9 @@ open class BasicDialoguesComponent(
                 RuinsOfGrowsseth.LOGGER.debug("Resolving dialogue event immediately: {} for {}", queueItem, player)
             }
 
-            resolveDialogueEventQueueItem(player, queueItem)
+            val checkOnly = eagerResolve && !(eventQueue.isEmpty() || runImmediately)
 
-            if (queueItem.failed) {
+            if (!resolveDialogueEventQueueItem(player, queueItem, checkOnly)) {
                 // no dialogues found, do not queue
                 return
             }
@@ -381,7 +394,7 @@ open class BasicDialoguesComponent(
 
         var eventQueueItem: EventQueueItem = eventQueue.peek()
         while (eventQueue.isNotEmpty() && !eventQueueItem.resolved) {
-            if (resolveDialogueEventQueueItem(player, eventQueueItem).failed) {
+            if (!resolveDialogueEventQueueItem(player, eventQueueItem)) {
                 eventQueueItem = eventQueue.pop()
             }
         }
@@ -427,31 +440,46 @@ open class BasicDialoguesComponent(
      * Alters and returns the queueItem, setting [EventQueueItem.resolved] to true and filling
      * the event and dialogueEvent fields on a success, or [EventQueueItem.failed] to true on
      * no dialogues found.
+     *
+     * @param checkOnly Only check if there are any valid dialogues (returning true/false), but do not alter
+     *   the passed queueItem.
+     * @return true if found any dialogue
      */
-    private fun resolveDialogueEventQueueItem(player: ServerPlayer, queueItem: EventQueueItem): EventQueueItem {
+    private fun resolveDialogueEventQueueItem(player: ServerPlayer, queueItem: EventQueueItem, checkOnly: Boolean = false): Boolean {
         if (queueItem.resolved) {
             RuinsOfGrowsseth.LOGGER.warn("Tried resolving already resolved dialogue event queue item {}", queueItem)
-            return queueItem
+            return true
         } else if (queueItem.failed) {
             RuinsOfGrowsseth.LOGGER.warn("Tried resolving failed dialogue event queue item {}", queueItem)
-            return queueItem
+            return false
         }
 
         val (dialogueEvents, eventParam, ignoreEventConditions, ignoreEmptyOptionsWarning) = queueItem
 
         val (event, dialogueOptions) = getDialoguesAndEvent(player, dialogueEvents, ignoreEventConditions, ignoreEmptyOptionsWarning)
-            ?: return queueItem.fail()
+            ?: run {
+                if (!checkOnly)
+                    queueItem.fail()
+                return false
+            }
 
         val validOptions = filterDialogueOptions(dialogueOptions, player, event, eventParam)
         val success = validOptions.isNotEmpty()
 
-        onEventSelected(event, eventParam, player, success)
+        if (!checkOnly) {
+            onEventSelected(event, eventParam, player, success)
+        }
 
         if (!success) {
 //            if (!ignoreEmptyOptionsWarning && !dialogueEvents.any{it.ignoreNoDialogueWarning}) {
 //                RuinsOfGrowsseth.LOGGER.warn("No valid dialogue options for $event (param=$eventParam) $entity")
 //            }
-            return queueItem.fail()
+            if (!checkOnly) {
+                queueItem.fail()
+            }
+            return false
+        } else if (checkOnly) {
+            return true
         }
 
         val selected = validOptions.weightedRandom(DialogueEntry::weight::get, random)
@@ -462,7 +490,9 @@ open class BasicDialoguesComponent(
             .map { materializeDialogueLine(selected, it) }
             .let { LinkedBlockingDeque(it) }
 
-        return queueItem.resolve(event, dialogueQueue)
+        queueItem.resolve(event, dialogueQueue)
+
+        return true
     }
 
     private fun filterDialogueOptions(
@@ -870,7 +900,9 @@ open class BasicDialoguesComponent(
             dialoguesNpcs.forEach {
                 val dialogues = it.dialogues
                 if (dialogues is BasicDialoguesComponent && dialogues.nearbyPlayers().contains(player)) {
+                    // Trigger both, dialogue conditions will take care of deciding which one to play
                     dialogues.triggerDialogue(player, BasicDialogueEvents.PLAYER_ADVANCEMENT, eventParam = advancement.id.toString())
+                    dialogues.triggerDialogue(player, BasicDialogueEvents.PLAYER_ADVANCEMENT_LAZY, eventParam = advancement.id.toString())
                 }
             }
         }
