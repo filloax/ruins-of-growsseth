@@ -503,6 +503,11 @@ open class BasicDialoguesComponent(
     ): List<DialogueEntry> {
         val pdata = playerDataOrCreate(player)
         val lastForEvent = pdata.lastEventDialogue[event]
+
+        // +1 to count current trigger
+        val eventTriggerCount = (pdata.eventTriggerCount[event] ?: 0) + 1
+        val eventCloseTriggerCount = (pdata.eventCloseTriggerCount[event] ?: 0) + 1
+
         val filters = mutableListOf<(DialogueEntry) -> Boolean>(
             { entry ->
                 if (entry.useLimit != null) {
@@ -543,16 +548,15 @@ open class BasicDialoguesComponent(
                     } else true
                 } ?: false
             },
+            { entry ->
+                eventTriggerCount >= entry.afterRepeatsMin && (entry.afterRepeatsMax == null || eventTriggerCount <= entry.afterRepeatsMax)
+            },
+            { entry ->
+                eventCloseTriggerCount >= entry.afterCloseRepeatsMin
+                && (entry.afterCloseRepeatsMax == null || eventCloseTriggerCount <= entry.afterCloseRepeatsMax)
+            },
         )
-        pdata.eventTriggerCount[event]?.let {
-            filters.add { entry -> it >= entry.afterRepeatsMin && (entry.afterRepeatsMax == null || it <= entry.afterRepeatsMax) }
-        }
-        pdata.eventCloseTriggerCount[event]?.let {
-            filters.add { entry ->
-                it >= entry.afterCloseRepeatsMin
-                        && (entry.afterCloseRepeatsMax == null || it <= entry.afterCloseRepeatsMax)
-            }
-        }
+
         if (eventParam != null) {
             filters.add { entry -> entry.requiresEventParam == null || entry.requiresEventParam == eventParam }
         }
