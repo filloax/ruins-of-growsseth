@@ -19,10 +19,11 @@ import kotlinx.serialization.json.*
  * @param useLimit Maximum amount of times this specific dialogue entry can be played, regardless of total event triggers.
  *   Requires an id to be set to allow storing the amount of triggers.
  * @param afterRepeatsMin Minimum amount of event triggers for the dialogue's event for the dialogue to play.
- * @param afterRepeatsMax As [afterRepeatsMin], but max amount (inclusive).
+ *   Uses trigger count *including current dialogue*.
+ * @param afterRepeatsMax As [afterRepeatsMin], but max amount (inclusive). Uses trigger count *including current dialogue*.
  * @param afterCloseRepeatsMin Minimum amount of event triggers within some time (defaults to a minute, configurable in entity)
- *   for the dialogue's event for the dialogue to play.
- * @param afterCloseRepeatsMax As [afterCloseRepeatsMin], but max amount (inclusive).
+ *   for the dialogue's event for the dialogue to play. Uses trigger count *including current dialogue*.
+ * @param afterCloseRepeatsMax As [afterCloseRepeatsMin], but max amount (inclusive). Uses trigger count *including current dialogue*.
  * @param requiresQuest If this dialogue requires a quest (as per [com.ruslan.growsseth.quests] package content), specify quest name.
  *   If the entity only has one quest assigned in its class, can just specify the stage instead, this will default to the one quest
  *   it has. (Currently quests only support one per entity, but future might not)

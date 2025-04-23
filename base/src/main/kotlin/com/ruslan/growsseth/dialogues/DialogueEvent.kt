@@ -13,6 +13,7 @@ object BasicDialogueEvents {
     val PLAYER_LEAVE_NIGHT = event("playerLeaveNight", tag=DialogueEvent.TAG_GOODBYE)
     val PLAYER_ARRIVE_SOON = event("playerArriveSoon", tag=DialogueEvent.TAG_HELLO)
     val PLAYER_LEAVE_SOON = event("playerLeaveSoon", tag=DialogueEvent.TAG_GOODBYE)
+    val PLAYER_LEAVE_INTERRUPTED = event("playerLeaveInterrupted", immediate = true, tag=DialogueEvent.TAG_GOODBYE)
     val PLAYER_ARRIVE_LONG_TIME = event("playerArriveLongTime", tag=DialogueEvent.TAG_HELLO)
     /** As soon as the dialogue conditions apply and a player is nearby, this triggers;
      * to be used by limited dialogue entries. */

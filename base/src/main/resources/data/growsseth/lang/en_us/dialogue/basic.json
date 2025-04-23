@@ -92,6 +92,12 @@
         "4": "Have a good one!",
         "5": ""
     },
+    "playerLeaveInterrupted": {
+        "1": "Wait, where are you going?",
+        "2": "I was not done talking...",
+        "3": "Hey, come back!",
+        "4": "And away they go."
+    },
     "hitByPlayer": {
         "0": "Hey!",
         "1": "What are you doing?! Are you out of your mind?",

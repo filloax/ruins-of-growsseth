@@ -261,6 +261,12 @@
             "id": "goodbye-made-mess-2"
         }
     ],
+    "playerLeaveInterrupted": [
+        "basic.playerLeaveInterrupted.1",
+        "basic.playerLeaveInterrupted.2",
+        "basic.playerLeaveInterrupted.3",
+        "basic.playerLeaveInterrupted.4",
+    ],
     "hitByPlayer": [
         {
             "content": "basic.hitByPlayer.0",
