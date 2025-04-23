@@ -399,8 +399,10 @@ open class BasicDialoguesComponent(
             }
         }
         if (eventQueueItem.failed) {
-            // Last item checked is failed, pop and return false
-            eventQueue.pop()
+            if (eventQueue.isNotEmpty()) {
+                // Last item checked is failed, pop and return false
+                eventQueue.pop()
+            }
             return null
         }
 
