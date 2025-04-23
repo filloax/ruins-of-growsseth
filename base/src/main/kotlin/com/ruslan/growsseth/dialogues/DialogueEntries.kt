@@ -19,10 +19,11 @@ import kotlinx.serialization.json.*
  * @param useLimit Maximum amount of times this specific dialogue entry can be played, regardless of total event triggers.
  *   Requires an id to be set to allow storing the amount of triggers.
  * @param afterRepeatsMin Minimum amount of event triggers for the dialogue's event for the dialogue to play.
- * @param afterRepeatsMax As [afterRepeatsMin], but max amount (inclusive).
+ *   Uses trigger count *including current dialogue*.
+ * @param afterRepeatsMax As [afterRepeatsMin], but max amount (inclusive). Uses trigger count *including current dialogue*.
  * @param afterCloseRepeatsMin Minimum amount of event triggers within some time (defaults to a minute, configurable in entity)
- *   for the dialogue's event for the dialogue to play.
- * @param afterCloseRepeatsMax As [afterCloseRepeatsMin], but max amount (inclusive).
+ *   for the dialogue's event for the dialogue to play. Uses trigger count *including current dialogue*.
+ * @param afterCloseRepeatsMax As [afterCloseRepeatsMin], but max amount (inclusive). Uses trigger count *including current dialogue*.
  * @param requiresQuest If this dialogue requires a quest (as per [com.ruslan.growsseth.quests] package content), specify quest name.
  *   If the entity only has one quest assigned in its class, can just specify the stage instead, this will default to the one quest
  *   it has. (Currently quests only support one per entity, but future might not)
@@ -32,7 +33,6 @@ import kotlinx.serialization.json.*
  *   Meant for dialogues that shouldn't risk to be played if the quest is started, or the stage is surpassed.
  * @param requiresEventParam Requires a specific value of the [DialogueEvent] param, for example the name in a RENAME event.
  *   If the event has no param (in general or in that specific trigger) will not allow the dialogue.
- * @param immediate If true, immediately play the dialogue when triggered, skipping any queue or delay.
  * @param data Arbitrary string-string data object, to be used by specific entities in their own ways.
  *   (For example, an entity might have sound customizations here).
  * @param priority Int, defaults to 0. After filtering allowed dialogues with the other attributes, will keep only the
@@ -57,7 +57,7 @@ data class DialogueEntry(
     val requiresQuestStage: String? = null,
     val requiresUntilQuestStage: String? = null,
     val requiresEventParam: String? = null,
-    val immediate: Boolean = false, // Skip the queue (for things like taking damage)
+    val blockMultiQueue: Boolean = true,
     val data: Map<String, String> = mapOf(),
     val priority: Int = 0, // higher -> has priority
 ) {

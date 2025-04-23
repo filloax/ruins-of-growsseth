@@ -41,19 +41,19 @@ class ResearcherDialoguesComponent(
         // Stuff to persist in NBT (using DataFixerUpper because shorter to write even if complicated af to read)
         val CODEC_PLAYERSET: Codec<MutableSet<UUID>> = CodecUtils.setOf(UUIDUtil.STRING_CODEC)
 
-        val EV_MAKE_MESS     = event("makeMess")
+        val EV_MAKE_MESS     = event("makeMess", immediate = true)
         val EV_FIX_MESS      = event("fixMess")
-        val EV_REFUSE_TRADE  = event("refuseTrade")
-        val EV_BREAK_TENT    = event("breakTent")
-        val EV_RETURN_DONKEY = event("returnDonkey")
-        val EV_CELLAR        = event("exploreCellar", ignoreNoDialogueWarning = true, count = false)
-        val EV_CELLAR_EXIT   = event("exitCellar", ignoreNoDialogueWarning = true, count = false)
-        val EV_BORROW_DONKEY = event("borrowDonkey")
-        val EV_BORROW_DONKEY_HEALED         = event("borrowDonkeyHealed")
-        val EV_PLAYER_CHEATS                = event("playerCheats")
-        val EV_KILL_PLAYER                  = event("killPlayer")
+        val EV_REFUSE_TRADE  = event("refuseTrade", immediate = true)
+        val EV_BREAK_TENT    = event("breakTent", immediate = true)
+        val EV_RETURN_DONKEY = event("returnDonkey", immediate = true)
+        val EV_CELLAR        = event("exploreCellar", count = false, immediate = true)
+        val EV_CELLAR_EXIT   = event("exitCellar", count = false, immediate = true)
+        val EV_BORROW_DONKEY = event("borrowDonkey", immediate = true)
+        val EV_BORROW_DONKEY_HEALED         = event("borrowDonkeyHealed", immediate = true)
+        val EV_PLAYER_CHEATS                = event("playerCheats", immediate = true)
+        val EV_KILL_PLAYER                  = event("killPlayer", immediate = true)
         val EV_PLAYER_ARRIVE_LAST_KILLED    = event("playerArriveAfterKilled")
-        val EV_HIT_BY_PLAYER_IMMORTAL       = event("hitByPlayerImmortal")
+        val EV_HIT_BY_PLAYER_IMMORTAL       = event("hitByPlayerImmortal", immediate = true)
         val EV_ARRIVE_NEW_LOCATION          = event("playerArriveNewLocation", ignoreNoDialogueWarning = true)
 
         val AGGRESSIVE_DIALOGUE_EVENTS_ALLOWED = listOf(
@@ -99,16 +99,16 @@ class ResearcherDialoguesComponent(
         vararg dialogueEvents: DialogueEvent,
         eventParam: String?,
         ignoreEventConditions: Boolean,
-    ) : Boolean {
+    ) {
         if (researcher.isAggressive)
             for (dialogueEvent in dialogueEvents) {
                 if (
                     AGGRESSIVE_DIALOGUE_EVENTS_ALLOWED.all{ it != dialogueEvent }
                     || (dialogueEvent == BasicDialogueEvents.HIT_BY_PLAYER && combat.wantsToKillPlayer(player))
                 )
-                    return false
+                    return
             }
-        return super.triggerDialogue(player, *dialogueEvents, eventParam=eventParam, ignoreEventConditions=ignoreEventConditions)
+        super.triggerDialogue(player, *dialogueEvents, eventParam=eventParam, ignoreEventConditions=ignoreEventConditions)
     }
 
     override fun changeNearPlayers(nearPlayers: MutableSet<ServerPlayer>, farPlayers: MutableSet<ServerPlayer>) {
@@ -148,9 +148,12 @@ class ResearcherDialoguesComponent(
         val players = nearPlayers + inbetweenPlayers
         for (player in players) {
             if (!player.isSpectator) {
-                if (isInCellar(player)) {
+                val inCellar = isInCellar(player)
+                if (inCellar && !playersInCellar.contains(player.uuid)) {
+                    playersInCellar.add(player.uuid)
                     triggerDialogue(player, EV_CELLAR)
-                } else if (researcher.hasLineOfSight(player)) {
+                } else if (!inCellar && playersInCellar.contains(player.uuid) && researcher.hasLineOfSight(player)) {
+                    playersInCellar.remove(player.uuid)
                     triggerDialogue(player, EV_CELLAR_EXIT)
                 }
             }
@@ -176,13 +179,11 @@ class ResearcherDialoguesComponent(
             EV_MAKE_MESS   -> playersMadeMess = true
             EV_FIX_MESS    -> playersMadeMess = false
             EV_CELLAR      -> {
-                playersInCellar.add(player.uuid)
                 if (triggerSuccess) {
                     player.sendPacket(StopMusicPacket())
                     player.sendPacket(AmbientSoundsPacket())
                 }
             }
-            EV_CELLAR_EXIT -> playersInCellar.remove(player.uuid)
         }
         if (hadMess && !playersMadeMess) {
             researcher.angryForMess = false
@@ -225,19 +226,10 @@ class ResearcherDialoguesComponent(
         }
     }
 
-    override fun onPlayerLeave(player: ServerPlayer) {
-        playerDataOrCreate(player).lastSeenTimestamp = entity.level().gameTime
-        // Second check to avoid goodbye when player respawns after being killed by him:
-        if (!player.isDeadOrDying && player !in researcher.combat.lastKilledPlayers)
-            triggerDialogue(player, BasicDialogueEvents.PLAYER_LEAVE_SOON, BasicDialogueEvents.PLAYER_LEAVE_NIGHT, BasicDialogueEvents.PLAYER_LEAVE)
-    }
-
     override fun canTriggeredEventRun(player: ServerPlayer, dialogueEvent: DialogueEvent): Boolean {
         return super.canTriggeredEventRun(player, dialogueEvent) && when(dialogueEvent) {
             EV_MAKE_MESS   -> !playersMadeMess
             EV_FIX_MESS    ->  playersMadeMess
-            EV_CELLAR      -> !playersInCellar.contains(player.uuid)
-            EV_CELLAR_EXIT ->  playersInCellar.contains(player.uuid)
             EV_BREAK_TENT  -> !playersInCellar.contains(player.uuid)
             else -> true
         }
