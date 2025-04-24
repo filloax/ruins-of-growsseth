@@ -42,7 +42,7 @@ class ResearcherDialoguesComponent(
         val CODEC_PLAYERSET: Codec<MutableSet<UUID>> = CodecUtils.setOf(UUIDUtil.STRING_CODEC)
 
         val EV_MAKE_MESS     = event("makeMess", immediate = true)
-        val EV_FIX_MESS      = event("fixMess")
+        val EV_FIX_MESS      = event("fixMess", immediate = true)
         val EV_REFUSE_TRADE  = event("refuseTrade", immediate = true)
         val EV_BREAK_TENT    = event("breakTent", immediate = true)
         val EV_RETURN_DONKEY = event("returnDonkey", immediate = true)

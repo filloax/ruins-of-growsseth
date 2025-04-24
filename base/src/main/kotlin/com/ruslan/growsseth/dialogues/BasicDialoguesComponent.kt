@@ -395,6 +395,11 @@ open class BasicDialoguesComponent(
             }
             return null
         }
+        if (!eventQueueItem.resolved) {
+            // should not happen
+            RuinsOfGrowsseth.LOGGER.warn("Current dialogue queue item not resolved after pop checks!")
+            return null
+        }
 
         val dialogueQueue = eventQueueItem.dialogueQueue
 
