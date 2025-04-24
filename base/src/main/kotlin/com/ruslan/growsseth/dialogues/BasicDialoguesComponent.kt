@@ -415,7 +415,9 @@ open class BasicDialoguesComponent(
         sendDialogueToPlayer(player, line)
 
         if (completed) {
-            sendSeparatorToPlayer(player)
+            if (line.text.isNotEmpty()) {
+                sendSeparatorToPlayer(player)
+            }
 
             onDialogueComplete(player, line.dialogue, eventQueueItem.event, eventQueueItem.eventParam, eventQueueItem.countEvents)
 
