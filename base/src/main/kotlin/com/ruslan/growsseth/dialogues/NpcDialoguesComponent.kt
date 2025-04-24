@@ -25,8 +25,7 @@ interface NpcDialoguesComponent {
     fun nearbyPlayers(): List<ServerPlayer>
     fun playersStillAround(): Boolean
 
-    fun isQueueEmpty(playerUUID: UUID): Boolean
-    fun skipCurrentMessage(playerUUID: UUID)
+    fun skipCurrentMessage(playerUuid: UUID): Boolean
 
     /**
      * Reset nearby players, use to clear the list and allow new greetings

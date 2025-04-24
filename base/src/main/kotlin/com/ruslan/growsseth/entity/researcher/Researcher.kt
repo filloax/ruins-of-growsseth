@@ -190,12 +190,12 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
                 // Error in the fixed structures mixin? Just incase, given usecase of mod (streaming)
                 // we have to avoid all avoidable crashes
-                if (tentStart.isValid && tentStart.structure !is ResearcherTentStructure) {
+                if (tentStart?.isValid == true && tentStart.structure !is ResearcherTentStructure) {
                     RuinsOfGrowsseth.LOGGER.error("Found wrong structure when searching tent, is ${tentStart.structure} in $tentStart")
                     tentStart = StructureStart.INVALID_START
                 }
 
-                if (!tentStart.isValid) {
+                if (tentStart?.isValid != true) {
                     tentStart = null
                 }
 
@@ -693,10 +693,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             player.getPersistData().putBoolean(Constants.DATA_PLAYER_MET_RESEARCHER, true)
 
             if (player is ServerPlayer) {
-                if (!dialogues!!.isQueueEmpty(player.uuid)){
-                    dialogues.skipCurrentMessage(player.uuid)
-                }
-                else {
+                if (!dialogues!!.skipCurrentMessage(player.uuid)) {
                     val offers = getOffers(player)
                     val blockTrades = angryForMess && !healed
                     if (offers.isEmpty() || blockTrades) {

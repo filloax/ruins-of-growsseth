@@ -78,10 +78,9 @@ open class BasicDialoguesComponent(
     // UUID is player's
     // Each Deque is the queue of events to trigger, which contains after they are resolved
     // (lazily, when the previous dialogue is done) the list of dialogue lines that will play
-    // for that instance of the event)
+    // for that instance of the event
     protected val eventQueues = mutableMapOf<UUID, Deque<EventQueueItem>>()
     protected var dialogueQueueDelays = mutableMapOf<UUID, Int>()
-    protected val playersSkipNextMessage = mutableSetOf<UUID>()
     private   val playersLastSentSeparator = mutableSetOf<UUID>()
     protected val serverLevel: ServerLevel get() = entity.level() as ServerLevel
     protected val server get() = serverLevel.server
@@ -147,13 +146,12 @@ open class BasicDialoguesComponent(
         }
     }
 
-    override fun isQueueEmpty(playerUUID: UUID): Boolean {
-        val playerQueue = eventQueues.getOrDefault(playerUUID, null)
-        return playerQueue.isNullOrEmpty()
-    }
-
-    override fun skipCurrentMessage(uuid: UUID) {
-       playersSkipNextMessage.add(uuid)
+    override fun skipCurrentMessage(playerUuid: UUID): Boolean {
+        val playerQueue = eventQueues.getOrDefault(playerUuid, null)
+        if (playerQueue.isNullOrEmpty())
+            return false
+        dialogueQueueDelays[playerUuid] = 0
+        return true
     }
 
     override fun dialoguesStep() {
@@ -174,8 +172,7 @@ open class BasicDialoguesComponent(
             if (dialogueQueueDelay > 0) {
                 dialogueQueueDelay--
             }
-            if (eventQueue.isNotEmpty() && dialogueQueueDelay <= 0 || playersSkipNextMessage.contains(playerUuid)) {
-                playersSkipNextMessage.remove(playerUuid)
+            if (eventQueue.isNotEmpty() && dialogueQueueDelay <= 0) {
                 popQueues(player, eventQueue)?.let { nextDialogueDelay ->
                     dialogueQueueDelay = nextDialogueDelay
                 }
