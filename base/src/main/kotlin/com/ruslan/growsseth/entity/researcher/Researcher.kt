@@ -190,12 +190,12 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
                 // Error in the fixed structures mixin? Just incase, given usecase of mod (streaming)
                 // we have to avoid all avoidable crashes
-                if (tentStart?.isValid == true && tentStart.structure !is ResearcherTentStructure) {
+                if (tentStart.isValid && tentStart.structure !is ResearcherTentStructure) {
                     RuinsOfGrowsseth.LOGGER.error("Found wrong structure when searching tent, is ${tentStart.structure} in $tentStart")
                     tentStart = StructureStart.INVALID_START
                 }
 
-                if (tentStart?.isValid != true) {
+                if (!tentStart.isValid) {
                     tentStart = null
                 }
 
@@ -717,7 +717,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
                             return InteractionResult.FAIL
                     }
                     tradingPlayer = player
-                    openTradingScreen(player, this.displayName ?: this.name, 1)
+                    openTradingScreen(player, this.displayName, 1)
                 }
             }
             return InteractionResult.sidedSuccess(level().isClientSide)
@@ -937,7 +937,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             tradesData.resetRandomTrades()
         }
 
-        var offers = offersByPlayer.computeIfAbsent(player.uuid) { MerchantOffers() }
+        val offers = offersByPlayer.computeIfAbsent(player.uuid) { MerchantOffers() }
         val updatedOffers = currentProvider.getOffers(this, tradesData, player)
 
         if (
@@ -1087,7 +1087,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     override fun getHurtSound(damageSource: DamageSource): SoundEvent = GrowssethSounds.RESEARCHER_HURT
     override fun getDeathSound(): SoundEvent = GrowssethSounds.RESEARCHER_DEATH
     override fun getAmbientSoundInterval(): Int = super.getAmbientSoundInterval() * 3
-    override fun getAmbientSound(): SoundEvent? {
+    override fun getAmbientSound(): SoundEvent {
         return if (isTrading()) {
             GrowssethSounds.RESEARCHER_TRADE
         } else GrowssethSounds.RESEARCHER_AMBIENT

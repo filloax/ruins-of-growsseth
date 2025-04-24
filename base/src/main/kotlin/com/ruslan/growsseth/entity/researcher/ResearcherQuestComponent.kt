@@ -388,11 +388,11 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
 
     // ...THEN start counting time
     inner class EndingStage: QuestStage<Researcher> {
-        // wait 5 days / manual trigger and reload
+        // wait 2 days / manual trigger and reload
         override val trigger: QuestStageTrigger<Researcher> = (
                 commonReloadTrigger
                 and (
-                    TimeOrDayTimeTrigger(this@ResearcherQuestComponent, Constants.DAY_TICKS_DURATION * 5)
+                    TimeOrDayTimeTrigger(this@ResearcherQuestComponent, Constants.DAY_TICKS_DURATION * 2)
                     or ApiEventTrigger(finalQuestLeaveName)
                 )
             )
