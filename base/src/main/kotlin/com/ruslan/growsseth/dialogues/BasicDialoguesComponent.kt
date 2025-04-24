@@ -255,16 +255,9 @@ open class BasicDialoguesComponent(
     protected open fun afterPlayersCheck(nearPlayers: Set<ServerPlayer>, inbetweenPlayers: Set<ServerPlayer>, farPlayers: Set<ServerPlayer>) {}
 
     override fun sendDialogueToPlayer(player: ServerPlayer, line: DialogueLineProcessed) {
-        sendDialogueToPlayerInternal(player, line, false)
-    }
-
-    private fun sendDialogueToPlayerInternal(player: ServerPlayer, line: DialogueLineProcessed, isLast: Boolean) {
         if (line.text.isNotEmpty()) {
             playersLastSentSeparator.remove(player.uuid)
             player.sendPacket(DialoguePacket(line, entity.name, entity.uuid))
-            if (isLast) {
-                sendSeparatorToPlayer(player)
-            }
         }
     }
 
@@ -419,9 +412,11 @@ open class BasicDialoguesComponent(
         // Last line of dialogue entry
         val completed = dialogueQueue.isEmpty()
 
-        sendDialogueToPlayerInternal(player, line, completed)
+        sendDialogueToPlayer(player, line)
 
         if (completed) {
+            sendSeparatorToPlayer(player)
+
             onDialogueComplete(player, line.dialogue, eventQueueItem.event, eventQueueItem.eventParam, eventQueueItem.countEvents)
 
             if (eventQueue.isNotEmpty()) {
