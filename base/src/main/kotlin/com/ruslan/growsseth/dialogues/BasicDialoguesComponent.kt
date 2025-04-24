@@ -1,6 +1,5 @@
 package com.ruslan.growsseth.dialogues
 
-import com.filloax.fxlib.api.FxLibServices
 import com.filloax.fxlib.api.codec.mapWithValueOf
 import com.filloax.fxlib.api.codec.mutableMapCodec
 import com.filloax.fxlib.api.codec.mutableSetOf
@@ -13,22 +12,16 @@ import com.filloax.fxlib.api.weightedRandom
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.ruslan.growsseth.RuinsOfGrowsseth
-import com.ruslan.growsseth.config.ClientConfig
-import com.ruslan.growsseth.config.GrowssethConfig
 import com.ruslan.growsseth.config.MiscConfig
 import com.ruslan.growsseth.dialogues.BasicDialogueEvents
 import com.ruslan.growsseth.dialogues.DialoguesNpc.Companion.getDialogueNpcs
 import com.ruslan.growsseth.network.DialoguePacket
 import com.ruslan.growsseth.network.DialogueSeparatorPacket
 import com.ruslan.growsseth.quests.QuestOwner
-import com.ruslan.growsseth.utils.isNull
 import com.ruslan.growsseth.utils.notNull
-import com.ruslan.growsseth.utils.serverLang
-import net.minecraft.ChatFormatting
 import net.minecraft.advancements.AdvancementHolder
 import net.minecraft.core.UUIDUtil
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.util.RandomSource
@@ -60,33 +53,6 @@ open class BasicDialoguesComponent(
         val TARGETING: TargetingConditions = TargetingConditions.forNonCombat().ignoreLineOfSight().ignoreInvisibilityTesting()
     }
 
-    data class PlayerData(
-        val dialogueCount: MutableMap<String, Int> = mutableMapOf(),
-        val dialogueGroupCount: MutableMap<String, Int> = mutableMapOf(),
-        val eventTriggerCount: MutableMap<DialogueEvent, Int> = mutableMapOf(),
-        val eventCloseTriggerCount: MutableMap<DialogueEvent, Int> = mutableMapOf(),
-        val eventLastTriggerTime: MutableMap<DialogueEvent, Long> = mutableMapOf(),
-        var lastSeenTimestamp: Long? = null,
-        var lastArrivedTimestamp: Long? = null,
-        // Do not persist, not necessary
-        val lastEventDialogue: MutableMap<DialogueEvent, DialogueEntry> = mutableMapOf(),
-    )
-
-    // NBT data
-    // First key is player UUID
-    protected val closePlayers = mutableSetOf<UUID>()
-    protected val leavingPlayers = mutableMapOf<UUID, Int>()
-    protected val playersArrivedSoon = mutableMapOf<UUID, Boolean>()
-    protected val savedPlayersData = mutableMapOf<UUID, PlayerData>()
-    protected var numOfInbetweenPlayers: Int = 0
-
-    // UUID is player's
-    protected val dialogueQueues = mutableMapOf<UUID, Deque<Pair<DialogueLineProcessed, DialogueEvent>>>()
-    protected var dialogueQueueDelays = mutableMapOf<UUID, Int>()
-    protected val playersSkipNextMessage = mutableSetOf<UUID>()
-    protected val serverLevel: ServerLevel get() = entity.level() as ServerLevel
-    protected val server get() = serverLevel.server
-
     open var nearbyRadius = 12.0
     open var radiusForTriggerLeave = 17.0
     open var secondsForTriggerLeave = 0   // waiting time before saying goodbye when a player leaves
@@ -100,7 +66,24 @@ open class BasicDialoguesComponent(
     open var maxCloseHitsForDialogues = 3
     /** Set to 0 to have no wait: */
     open var dialogueDelayMaxSeconds = 0.6f
-    open var dialogueSecondsSameId = .1f // + estimatedReadingTime
+
+    // NBT data
+    // First key is player UUID
+    protected val closePlayers = mutableSetOf<UUID>()
+    protected val leavingPlayers = mutableMapOf<UUID, Int>()
+    protected val playersArrivedSoon = mutableMapOf<UUID, Boolean>()
+    protected val savedPlayersData = mutableMapOf<UUID, PlayerData>()
+    protected var numOfInbetweenPlayers: Int = 0
+
+    // UUID is player's
+    // Each Deque is the queue of events to trigger, which contains after they are resolved
+    // (lazily, when the previous dialogue is done) the list of dialogue lines that will play
+    // for that instance of the event
+    protected val eventQueues = mutableMapOf<UUID, Deque<EventQueueItem>>()
+    protected var dialogueQueueDelays = mutableMapOf<UUID, Int>()
+    private   val playersLastSentSeparator = mutableSetOf<UUID>()
+    protected val serverLevel: ServerLevel get() = entity.level() as ServerLevel
+    protected val server get() = serverLevel.server
 
     protected fun playerDataOrCreate(player: ServerPlayer) = playerDataOrCreate(player.uuid)
     protected fun playerDataOrCreate(uuid: UUID) = savedPlayersData.computeIfAbsent(uuid) { PlayerData() }
@@ -108,18 +91,33 @@ open class BasicDialoguesComponent(
     protected fun playerData(uuid: UUID) = savedPlayersData[uuid]
 
 
-    open fun onPlayerArrive(player: ServerPlayer) {
+    protected open fun onPlayerArrive(player: ServerPlayer) {
         triggerDialogue(player, Events.PLAYER_ARRIVE_LONG_TIME, Events.PLAYER_ARRIVE_SOON, Events.PLAYER_ARRIVE_NIGHT, Events.PLAYER_ARRIVE)
     }
 
-    open fun onPlayerLeave(player: ServerPlayer) {
+    protected open fun onPlayerLeave(player: ServerPlayer) {
         playerDataOrCreate(player).lastSeenTimestamp = entity.level().gameTime
-        if (!player.isDeadOrDying)  // to avoid goodbye when the npc gets away from the place where player died (and did not respawn yet)
-            triggerDialogue(player, Events.PLAYER_LEAVE_SOON, Events.PLAYER_LEAVE_NIGHT, Events.PLAYER_LEAVE)
+        // just make a blank one if event queue not init, no need to modify original
+        val eventQueue = eventQueues[player.uuid] ?: LinkedBlockingDeque()
+
+        // Handle interruptions
+        // TODO: save current dialogue status to resume
+        val interrupted = eventQueue.isNotEmpty()
+        if (interrupted) {
+            eventQueue.clear()
+        }
+
+        if (!player.isDeadOrDying) { // to avoid goodbye when the npc gets away from the place where player died (and did not respawn yet)
+            if (interrupted) {
+                triggerDialogue(player, Events.PLAYER_LEAVE_INTERRUPTED)
+            } else {
+                triggerDialogue(player, Events.PLAYER_LEAVE_SOON, Events.PLAYER_LEAVE_NIGHT, Events.PLAYER_LEAVE)
+            }
+        }
     }
 
-    open fun onPlayerTickNear(player: ServerPlayer) {
-        triggerDialogueInternal(player, Events.TICK_NEAR_PLAYER, ignoreEmptyOptionsWarning = true, countEvents = false)
+    protected open fun onPlayerTickNear(player: ServerPlayer) {
+        triggerDialogueInternal(player, Events.TICK_NEAR_PLAYER, ignoreEmptyOptionsWarning = true, countEvents = false, eagerResolve = true)
     }
 
     override fun resetNearbyPlayers() {
@@ -148,13 +146,12 @@ open class BasicDialoguesComponent(
         }
     }
 
-    fun isQueueEmpty(playerUUID: UUID): Boolean {
-        val playerQueue = dialogueQueues.getOrDefault(playerUUID, null)
-        return playerQueue.isNullOrEmpty()
-    }
-
-    fun skipCurrentMessage(uuid: UUID) {
-       playersSkipNextMessage.add(uuid)
+    override fun skipCurrentMessage(playerUuid: UUID): Boolean {
+        val playerQueue = eventQueues.getOrDefault(playerUuid, null)
+        if (playerQueue.isNullOrEmpty())
+            return false
+        dialogueQueueDelays[playerUuid] = 0
+        return true
     }
 
     override fun dialoguesStep() {
@@ -163,30 +160,21 @@ open class BasicDialoguesComponent(
             checkNearbyPlayers()
         }
 
-        for ((playerUuid, dialogueQueue) in dialogueQueues) {
+        for ((playerUuid, eventQueue) in eventQueues) {
             var dialogueQueueDelay = dialogueQueueDelays.computeIfAbsent(playerUuid) { 0 }
+
             val player = server.playerList.getPlayer(playerUuid)
-            if (isNull(player)) {
-                RuinsOfGrowsseth.LOGGER.warn("Player $playerUuid left while dialogues were still queued!")
-                dialogueQueue.clear()
+            if (player == null) {
+                RuinsOfGrowsseth.LOGGER.warn("Player $playerUuid left game while dialogues were still queued!")
+                eventQueue.clear()
                 continue
             }
-            if (dialogueQueue.isNotEmpty()) {
+            if (dialogueQueueDelay > 0) {
                 dialogueQueueDelay--
-                if (dialogueQueueDelay <= 0 || playersSkipNextMessage.contains(playerUuid)) {
-                    playersSkipNextMessage.remove(playerUuid)
-                    val (line, _) = dialogueQueue.remove()
-                    sendDialogueToPlayer(player, line)
-                    if (dialogueQueue.isNotEmpty()) {
-                        val sameId = line.dialogue.id == dialogueQueue.peek().first.dialogue.id
-                        dialogueQueueDelay = if (MiscConfig.dialogueWordsPerMinute > 0)
-                            line.duration.secondsToTicks()
-                        else 0
-                        if (!sameId)
-                            sendSeparatorToPlayer(player)
-                    } else {
-                        sendSeparatorToPlayer(player)
-                    }
+            }
+            if (eventQueue.isNotEmpty() && dialogueQueueDelay <= 0) {
+                popQueues(player, eventQueue)?.let { nextDialogueDelay ->
+                    dialogueQueueDelay = nextDialogueDelay
                 }
             }
             dialogueQueueDelays[playerUuid] = dialogueQueueDelay
@@ -264,61 +252,26 @@ open class BasicDialoguesComponent(
     protected open fun afterPlayersCheck(nearPlayers: Set<ServerPlayer>, inbetweenPlayers: Set<ServerPlayer>, farPlayers: Set<ServerPlayer>) {}
 
     override fun sendDialogueToPlayer(player: ServerPlayer, line: DialogueLineProcessed) {
-//        if (line.text != "") {
+        if (line.text.isNotEmpty()) {
+            playersLastSentSeparator.remove(player.uuid)
             player.sendPacket(DialoguePacket(line, entity.name, entity.uuid))
-//        }
+        }
     }
 
     protected open fun sendSeparatorToPlayer(player: ServerPlayer) {
         player.sendPacket(DialogueSeparatorPacket(entity.name, entity.uuid))
+        playersLastSentSeparator.add(player.uuid)
     }
 
-    override fun triggerDialogueEntry(player: ServerPlayer, dialogueEntry: DialogueEntry) {
-        queueDialogue(player, dialogueEntry, BasicDialogueEvents.MANUAL_TRIGGER)
-    }
+    override fun triggerDialogueEntry(player: ServerPlayer, dialogueEntry: DialogueEntry, immediate: Boolean) {
+        // Build ad-hoc event queue item
+        val event = BasicDialogueEvents.MANUAL_TRIGGER
+        val queueItem = EventQueueItem(listOf(event), null, true)
+        val lines = dialogueEntry.content.map { materializeDialogueLine(dialogueEntry, it) }
+        queueItem.resolve(event, LinkedBlockingDeque(lines))
 
-    protected fun queueDialogue(player: ServerPlayer, dialogueEntry: DialogueEntry, event: DialogueEvent) {
-        if (dialogueEntry.content.isEmpty() /*|| dialogueEntry.content[0].content == ""*/) return
-
-        val dialogueQueue = dialogueQueues.computeIfAbsent(player.uuid) { LinkedBlockingDeque() }
-
-        val lines = dialogueEntry.content
-        if (dialogueDelayMaxSeconds > 0) {
-            if (dialogueEntry.immediate) {
-                // Reverse so that in offering first segments are in right order
-                lines.reversed().forEachIndexed{ idx, it ->
-                    val processedLine = materializeDialogueLine(dialogueEntry, it)
-                    // reversed, so last is first
-                    if (idx == lines.size - 1) {
-                        // If queue is not empty (aka ongoing dialogue) send separator at start
-                        // to distinguish it from other dialogues
-                        if (dialogueQueue.isNotEmpty()) {
-                            sendSeparatorToPlayer(player)
-                        }
-                        sendDialogueToPlayer(player, processedLine)
-                        if (lines.size == 1) {
-                            sendSeparatorToPlayer(player)
-                        }
-                    } else {
-                        dialogueQueue.offerFirst(Pair(processedLine, event))
-                        // Since first dialogue is played immediately, delay the second
-                        if (idx == lines.size - 2 && MiscConfig.dialogueWordsPerMinute > 0) {
-                            val readingTime = estimateReadingTime(lines[0])
-                            dialogueQueueDelays[player.uuid] = (dialogueSecondsSameId + readingTime).secondsToTicks()
-                        }
-                    }
-                }
-            } else {
-                lines.forEach { dialogueQueue.offer(Pair(materializeDialogueLine(dialogueEntry, it), event)) }
-            }
-            if ((dialogueQueueDelays[player.uuid] ?: 0) <= 0) {
-                dialogueQueueDelays[player.uuid] = random.nextInt() % dialogueDelayMaxSeconds.secondsToTicks()
-            }
-        } else {
-            lines.forEach {
-                sendDialogueToPlayer(player, materializeDialogueLine(dialogueEntry, it))
-            }
-        }
+        val eventQueue = eventQueues.computeIfAbsent(player.uuid) { LinkedBlockingDeque() }
+        offerEventQueueItem(player, eventQueue, queueItem, immediate)
     }
 
     /**
@@ -335,15 +288,22 @@ open class BasicDialoguesComponent(
         vararg dialogueEvents: DialogueEvent,
         eventParam: String?,
         ignoreEventConditions: Boolean,
-    ) : Boolean {
+    ) {
         if (player.isSpectator)
-            return false
-        return triggerDialogueInternal(player, *dialogueEvents, eventParam=eventParam, ignoreEventConditions=ignoreEventConditions)
+            return
+        triggerDialogueInternal(player, *dialogueEvents, eventParam=eventParam, ignoreEventConditions=ignoreEventConditions)
     }
 
     /**
      * Implementation of [triggerDialogue] with extra options to
      * allow more control internally in this class
+     * @param countEvents some events are meant to be called often, and leave
+     *   selection of when to play dialogues in the specific dialogue conditions.
+     * @param eagerResolve if this trigger is called often (every tick, etc.)
+     *  eager check if it has valid dialogue to play
+     *  BEFORE queueing to avoid infinite queues from the "spammed"
+     *  event. Will also recheck before starting the dialogue to make sure the conditions
+     *  are still relevant.
      */
     private fun triggerDialogueInternal(
         player: ServerPlayer,
@@ -352,41 +312,329 @@ open class BasicDialoguesComponent(
         ignoreEventConditions: Boolean = false,
         ignoreEmptyOptionsWarning: Boolean = false,
         countEvents: Boolean = true,
-    ) : Boolean {
-        val (event, dialogueOptions) = getDialoguesAndEvent(player, dialogueEvents, ignoreEventConditions, ignoreEmptyOptionsWarning) ?: return false
+        eagerResolve: Boolean = false,
+    ) {
+        // Resolve dialogue selection, filtering based on conditions, etc.
+        // lazily: as the completion of a dialogue affects the conditions of
+        // following dialogues (dialogues requiring a count, etc.), we decide
+        // which specific dialogue event and entry to use when that event's
+        // turn comes (that is done inside `resolveDialogueEventQueueItem`)
+
+        val eventQueue = eventQueues.computeIfAbsent(player.uuid) { LinkedBlockingDeque() }
+
+        val queueItem = EventQueueItem(dialogueEvents.toList(), eventParam, ignoreEventConditions, ignoreEmptyOptionsWarning, countEvents)
+
+        val anyImmediate = dialogueEvents.any { it.immediate }
+        if (anyImmediate && dialogueEvents.any { !it.immediate }) {
+            throw IllegalArgumentException("Cannot use mix of immediate and not immediate dialogue events! Was $dialogueEvents")
+        }
+        val anyPreventMultiQueue = dialogueEvents.any { it.preventMultiQueue }
+        if (anyPreventMultiQueue && dialogueEvents.any { !it.preventMultiQueue }) {
+            throw IllegalArgumentException("Cannot use mix of preventMultiQueue and not preventMultiQueue dialogue events! Was $dialogueEvents")
+        }
+        
+        if (anyPreventMultiQueue && dialogueEvents.any(::eventInQueue)) {
+            // Already queued and should not requeue
+            return
+        }
+
+        val runImmediately = dialogueDelayMaxSeconds == 0f || anyImmediate
+
+        if (eventQueue.isEmpty() || runImmediately || eagerResolve) {
+            if (!eagerResolve) {
+                RuinsOfGrowsseth.LOGGER.debug("Resolving dialogue event immediately: {} for {}", queueItem, player)
+            }
+
+            val checkOnly = eagerResolve && !(eventQueue.isEmpty() || runImmediately)
+
+            if (!resolveDialogueEventQueueItem(player, queueItem, checkOnly)) {
+                // no dialogues found, do not queue
+                return
+            }
+        }
+
+        offerEventQueueItem(player, eventQueue, queueItem, anyImmediate)
+    }
+
+    private fun offerEventQueueItem(player: ServerPlayer, eventQueue: Deque<EventQueueItem>, queueItem: EventQueueItem, immediate: Boolean) {
+        // If run immediately: place at beginning of queue and set delay
+        // for next dialogue to 0 (so it plays on next tick), avoid
+        // directly playing it here to not repeat logic of dialogue completion, etc.
+        if (immediate) {
+            // If interrupting something, send separator unless it was the last thing sent
+            if (eventQueue.isNotEmpty() && !playersLastSentSeparator.contains(player.uuid)) {
+                sendSeparatorToPlayer(player)
+            }
+
+            RuinsOfGrowsseth.LOGGER.debug("Queueing dialogue event immediately: {} for {}", queueItem, player)
+            eventQueue.offerFirst(queueItem)
+            dialogueQueueDelays[player.uuid] = 0
+        } else {
+            RuinsOfGrowsseth.LOGGER.debug("Queueing dialogue event: {} for {}", queueItem, player)
+            eventQueue.offer(queueItem)
+        }
+    }
+
+    /**
+     * @param eventQueue must not be empty
+     * @return delay for next dialogue if any dialogue send action taken, null otherwise
+     */
+    private fun popQueues(player: ServerPlayer, eventQueue: Deque<EventQueueItem>): Int? {
+        if (eventQueue.isEmpty()) return null
+
+        var eventQueueItem: EventQueueItem = eventQueue.peek()
+        while (eventQueue.isNotEmpty() && !eventQueueItem.resolved) {
+            if (!resolveDialogueEventQueueItem(player, eventQueueItem)) {
+                eventQueueItem = eventQueue.pop()
+            }
+        }
+        if (eventQueueItem.failed) {
+            if (eventQueue.isNotEmpty()) {
+                // Last item checked is failed, pop and return false
+                eventQueue.pop()
+            }
+            return null
+        }
+        if (!eventQueueItem.resolved) {
+            // should not happen
+            RuinsOfGrowsseth.LOGGER.warn("Current dialogue queue item not resolved after pop checks!")
+            return null
+        }
+
+        val dialogueQueue = eventQueueItem.dialogueQueue
+
+        if (dialogueQueue.isEmpty()) {
+            RuinsOfGrowsseth.LOGGER.warn("Tried popping empty dialogue queue, cancel")
+            // Should not happen as event queue is popped when current dialogue empty, but fallback
+            eventQueue.pop()
+            return null
+        }
+
+        val line = dialogueQueue.pop()
+        // Last line of dialogue entry
+        val completed = dialogueQueue.isEmpty()
+
+        sendDialogueToPlayer(player, line)
+
+        if (completed) {
+            if (line.text.isNotEmpty()) {
+                sendSeparatorToPlayer(player)
+            }
+
+            onDialogueComplete(player, line.dialogue, eventQueueItem.event, eventQueueItem.eventParam, eventQueueItem.countEvents)
+
+            if (eventQueue.isNotEmpty()) {
+                eventQueue.pop() // remove current item to make space for next
+            }
+        }
+
+        return if (MiscConfig.dialogueWordsPerMinute > 0)
+                line.duration.secondsToTicks()
+            else 0
+    }
+
+    /**
+     * Do the actual dialogue entry condition filtering
+     * choosing which event from a list of events has matching conditions and has entries
+     * and which of its dialogue entries to use depending on priority/conditions.
+     *
+     * Alters and returns the queueItem, setting [EventQueueItem.resolved] to true and filling
+     * the event and dialogueEvent fields on a success, or [EventQueueItem.failed] to true on
+     * no dialogues found.
+     *
+     * @param checkOnly Only check if there are any valid dialogues (returning true/false), but do not alter
+     *   the passed queueItem.
+     * @return true if found any dialogue
+     */
+    private fun resolveDialogueEventQueueItem(player: ServerPlayer, queueItem: EventQueueItem, checkOnly: Boolean = false): Boolean {
+        if (queueItem.resolved) {
+            RuinsOfGrowsseth.LOGGER.warn("Tried resolving already resolved dialogue event queue item {}", queueItem)
+            return true
+        } else if (queueItem.failed) {
+            RuinsOfGrowsseth.LOGGER.warn("Tried resolving failed dialogue event queue item {}", queueItem)
+            return false
+        }
+
+        val (dialogueEvents, eventParam, ignoreEventConditions, ignoreEmptyOptionsWarning) = queueItem
+
+        val (event, dialogueOptions) = getDialoguesAndEvent(player, dialogueEvents, ignoreEventConditions, ignoreEmptyOptionsWarning)
+            ?: run {
+                if (!checkOnly)
+                    queueItem.fail()
+                return false
+            }
+
+        val validOptions = filterDialogueOptions(dialogueOptions, player, event, eventParam)
+        val success = validOptions.isNotEmpty()
+
+        if (!checkOnly) {
+            onEventSelected(event, eventParam, player, success)
+        }
+
+        if (!success) {
+//            if (!ignoreEmptyOptionsWarning && !dialogueEvents.any{it.ignoreNoDialogueWarning}) {
+//                RuinsOfGrowsseth.LOGGER.warn("No valid dialogue options for $event (param=$eventParam) $entity")
+//            }
+            if (!checkOnly) {
+                queueItem.fail()
+            }
+            return false
+        } else if (checkOnly) {
+            return true
+        }
+
+        val selected = validOptions.weightedRandom(DialogueEntry::weight::get, random)
+
+        onDialogueSelected(player, selected, event, eventParam)
+
+        val dialogueQueue: Deque<DialogueLineProcessed> = selected.content
+            .map { materializeDialogueLine(selected, it) }
+            .let { LinkedBlockingDeque(it) }
+
+        queueItem.resolve(event, dialogueQueue)
+
+        return true
+    }
+
+    private fun filterDialogueOptions(
+        dialogueOptions: List<DialogueEntry>,
+        player: ServerPlayer,
+        event: DialogueEvent,
+        eventParam: String? = null
+    ): List<DialogueEntry> {
+        val pdata = playerDataOrCreate(player)
+        val lastForEvent = pdata.lastEventDialogue[event]
+
+        // +1 to count current trigger
+        val eventTriggerCount = (pdata.eventTriggerCount[event] ?: 0) + 1
+        val eventCloseTriggerCount = (pdata.eventCloseTriggerCount[event] ?: 0) + 1
+
+        val filters = mutableListOf<(DialogueEntry) -> Boolean>(
+            { entry ->
+                if (entry.useLimit != null) {
+                    val entryId = entry.id
+                    if (entryId == null) {
+                        RuinsOfGrowsseth.LOGGER.error("Dialogue has no id but has useLimit: $entry")
+                        false
+                    } else {
+                        val count = pdata.dialogueCount[entryId] ?: 0
+                        count < entry.useLimit
+                    }
+                } else true
+            },
+            { entry ->
+                if (entry.groupUseLimit != null) {
+                    if (entry.groups == null) {
+                        RuinsOfGrowsseth.LOGGER.error("Dialogue has no groups but has groupUseLimit: $entry")
+                        false
+                    } else {
+                        entry.groups.all { group ->
+                            val count = pdata.dialogueGroupCount[group] ?: 0
+                            count < entry.groupUseLimit
+                        }
+                    }
+                } else true
+            },
+            { entry ->
+                entity is QuestOwner<*> && entity.quest?.let { quest ->
+                    if (
+                        (entry.requiresQuest != null || entry.requiresQuestStage != null || entry.requiresUntilQuestStage != null)
+                    ) {
+                        val goodQuest = entry.requiresQuest == null || quest.name == entry.requiresQuest
+                        val goodStage = entry.requiresQuestStage == null || quest.passedStage(entry.requiresQuestStage)
+                        val goodMaxStage = entry.requiresUntilQuestStage == null || !quest.passedStage(
+                            entry.requiresUntilQuestStage
+                        )
+                        goodQuest && goodStage && goodMaxStage
+                    } else true
+                } ?: false
+            },
+            { entry ->
+                eventTriggerCount >= entry.afterRepeatsMin && (entry.afterRepeatsMax == null || eventTriggerCount <= entry.afterRepeatsMax)
+            },
+            { entry ->
+                eventCloseTriggerCount >= entry.afterCloseRepeatsMin
+                && (entry.afterCloseRepeatsMax == null || eventCloseTriggerCount <= entry.afterCloseRepeatsMax)
+            },
+        )
+
+        if (eventParam != null) {
+            filters.add { entry -> entry.requiresEventParam == null || entry.requiresEventParam == eventParam }
+        }
+        addDialogueOptionFilters(filters, player, event, eventParam)
+
+        val filtered = dialogueOptions.filter { entry -> filters.all { it(entry) } }
+        val hasPriority = filtered.any { it.priority != 0 }
+        val priorityFiltered = if (hasPriority) {
+            val maxPriority = filtered.maxOf(DialogueEntry::priority)
+            filtered.filter { it.priority == maxPriority }
+        } else {
+            val withoutLast = if (filtered.size > 1) filtered.filter { entry -> lastForEvent != entry } else filtered
+            withoutLast
+        }
+
+        val postPriorityFilters = mutableListOf<(DialogueEntry) -> Boolean>()
+
+        addDialogueOptionPostPriorityFilters(postPriorityFilters, player, event, priorityFiltered, eventParam)
+
+        return priorityFiltered.filter { entry -> postPriorityFilters.all { it(entry) } }
+    }
+
+    /**
+     * Override to add additional filters to dialogue entries. Order is:
+     * - get first available event for trigger
+     * - filter dialogue entries with basic filters
+     * - if any of them has non-default priority, keep only ones with highest priority
+     * - filter remaining entries with post priority filters
+     */
+    protected open fun addDialogueOptionFilters(
+        filters: MutableList<(DialogueEntry) -> Boolean>, player: ServerPlayer, event: DialogueEvent, eventParam: String? = null
+    ) {}
+
+    /**
+     * Override to add filters to dialogue entries that are applied after priority is checked (and so, after the first filters are applied).
+     * The order is:
+     * - get first available event for trigger
+     * - filter dialogue entries with basic filters
+     * - if any of them has non-default priority, keep only ones with highest priority
+     * - filter remaining entries with post priority filters
+     */
+    protected open fun addDialogueOptionPostPriorityFilters(
+        postPriorityFilters: MutableList<(DialogueEntry) -> Boolean>,
+        player: ServerPlayer, event: DialogueEvent, currentEntries: List<DialogueEntry>,
+        eventParam: String? = null,
+    ) {}
+
+    protected open fun onDialogueSelected(
+        player: ServerPlayer,
+        dialogueEntry: DialogueEntry,
+        event: DialogueEvent,
+        eventParam: String?,
+    ) {
+    }
+
+    protected open fun onDialogueComplete(
+        player: ServerPlayer,
+        dialogueEntry: DialogueEntry,
+        event: DialogueEvent,
+        eventParam: String?,
+        countEvents: Boolean = true,
+    ) {
+        RuinsOfGrowsseth.LOGGER.debug("Completed dialogue {}, event {}, for player {}", dialogueEntry, event, player)
+
+        val playerData = playerDataOrCreate(player)
+        playerData.lastEventDialogue[event] = dialogueEntry
 
         if (countEvents && event.count) {
             incrementEventCount(event, player)
         }
 
-        val validOptions = filterDialogueOptions(dialogueOptions, player, event, eventParam)
-        val success = validOptions.isNotEmpty()
-
-        onEventSelected(event, eventParam, player, success)
-
-        if (!success) {
-            if (!ignoreEmptyOptionsWarning && !dialogueEvents.any{it.ignoreNoDialogueWarning}) {
-                RuinsOfGrowsseth.LOGGER.warn("No valid dialogue options for $event (param=$eventParam) $entity")
-            }
-            return false
+        if (dialogueEntry.id != null) {
+            playerData.dialogueCount.let{ map -> map[dialogueEntry.id] = map.getOrDefault(dialogueEntry.id, 0) + 1 }
         }
-
-        val selected = validOptions.weightedRandom(DialogueEntry::weight::get, random)
-
-        val playerData = playerDataOrCreate(player)
-        playerData.lastEventDialogue[event] = selected
-
-        if (selected.id != null) {
-            playerData.dialogueCount.let{map -> map[selected.id] = map.getOrDefault(selected.id, 0) + 1 }
-        }
-        selected.groups?.forEach { group ->
+        dialogueEntry.groups?.forEach { group ->
             playerData.dialogueGroupCount.let{ map -> map[group] = map.getOrDefault(group, 0) + 1 }
         }
-
-        onDialogueSelected(selected, event, eventParam, player)
-
-        queueDialogue(player, selected, event)
-        return true
     }
 
     protected open fun incrementEventCount(event: DialogueEvent, player: ServerPlayer) {
@@ -435,14 +683,13 @@ open class BasicDialoguesComponent(
             playersArrivedSoon.remove(player.uuid)
         }
     }
-    protected open fun onDialogueSelected(selected: DialogueEntry, event: DialogueEvent, eventParam: String?, player: ServerPlayer) {}
 
     override fun getDialogues(player: ServerPlayer, dialogueEvent: DialogueEvent): List<DialogueEntry> {
-        return getDialoguesAndEvent(player, arrayOf(dialogueEvent))?.second ?: listOf()
+        return getDialoguesAndEvent(player, listOf(dialogueEvent))?.second ?: listOf()
     }
 
-    protected fun getDialoguesAndEvent(
-        player: ServerPlayer, dialogueEvents: Array<out DialogueEvent>, ignoreEventConditions: Boolean = false,
+    private fun getDialoguesAndEvent(
+        player: ServerPlayer, dialogueEvents: Collection<DialogueEvent>, ignoreEventConditions: Boolean = false,
         ignoreEmptyWarning: Boolean = false
     ): Pair<DialogueEvent, List<DialogueEntry>>? {
         val global = DialogueEntry.getAllForEvent(Events.GLOBAL)
@@ -489,111 +736,6 @@ open class BasicDialoguesComponent(
             .aggregate { _, accumulator: Int?, element, _ -> accumulator?.plus(element.value) ?: element.value }
     }
 
-    private fun filterDialogueOptions(
-        dialogueOptions: List<DialogueEntry>,
-        player: ServerPlayer,
-        event: DialogueEvent,
-        eventParam: String? = null
-    ): List<DialogueEntry> {
-        val pdata = playerDataOrCreate(player)
-        val lastForEvent = pdata.lastEventDialogue[event]
-        val filters = mutableListOf<(DialogueEntry) -> Boolean>(
-            { entry ->
-                if (entry.useLimit != null) {
-                    val entryId = entry.id
-                    if (entryId == null) {
-                        RuinsOfGrowsseth.LOGGER.error("Dialogue has no id but has useLimit: $entry")
-                        false
-                    } else {
-                        val count = pdata.dialogueCount[entryId] ?: 0
-                        count < entry.useLimit
-                    }
-                } else true
-            },
-            { entry ->
-                if (entry.groupUseLimit != null) {
-                    if (entry.groups == null) {
-                        RuinsOfGrowsseth.LOGGER.error("Dialogue has no groups but has groupUseLimit: $entry")
-                        false
-                    } else {
-                        entry.groups.all { group ->
-                            val count = pdata.dialogueGroupCount[group] ?: 0
-                            count < entry.groupUseLimit
-                        }
-                    }
-                } else true
-            },
-            { entry ->
-                entity is QuestOwner<*> && entity.quest?.let { quest ->
-                    if (
-                        (entry.requiresQuest != null || entry.requiresQuestStage != null || entry.requiresUntilQuestStage != null)
-                    ) {
-                        val goodQuest = entry.requiresQuest == null || quest.name == entry.requiresQuest
-                        val goodStage = entry.requiresQuestStage == null || quest.passedStage(entry.requiresQuestStage)
-                        val goodMaxStage = entry.requiresUntilQuestStage == null || !quest.passedStage(
-                            entry.requiresUntilQuestStage
-                        )
-                        goodQuest && goodStage && goodMaxStage
-                    } else true
-                } ?: false
-            },
-        )
-        pdata.eventTriggerCount[event]?.let {
-            filters.add { entry -> it >= entry.afterRepeatsMin && (entry.afterRepeatsMax == null || it <= entry.afterRepeatsMax) }
-        }
-        pdata.eventCloseTriggerCount[event]?.let {
-            filters.add { entry ->
-                it >= entry.afterCloseRepeatsMin
-                        && (entry.afterCloseRepeatsMax == null || it <= entry.afterCloseRepeatsMax)
-            }
-        }
-        if (eventParam != null) {
-            filters.add { entry -> entry.requiresEventParam == null || entry.requiresEventParam == eventParam }
-        }
-        addDialogueOptionFilters(filters, player, event, eventParam)
-
-        val filtered = dialogueOptions.filter { entry -> filters.all { it(entry) } }
-        val hasPriority = filtered.any { it.priority != 0 }
-        val priorityFiltered = if (hasPriority) {
-            val maxPriority = filtered.maxOf(DialogueEntry::priority)
-            filtered.filter { it.priority == maxPriority }
-        } else {
-            val withoutLast = if (filtered.size > 1) filtered.filter { entry -> lastForEvent != entry } else filtered
-            withoutLast
-        }
-
-        val postPriorityFilters = mutableListOf<(DialogueEntry) -> Boolean>()
-
-        addDialogueOptionPostPriorityFilters(postPriorityFilters, player, event, priorityFiltered, eventParam)
-
-        return priorityFiltered.filter { entry -> postPriorityFilters.all { it(entry) } }
-    }
-
-    /**
-    * Override to add additional filters to dialogue entries. Order is:
-     * - get first available event for trigger
-     * - filter dialogue entries with basic filters
-     * - if any of them has non-default priority, keep only ones with highest priority
-     * - filter remaining entries with post priority filters
-    */
-    protected open fun addDialogueOptionFilters(
-        filters: MutableList<(DialogueEntry) -> Boolean>, player: ServerPlayer, event: DialogueEvent, eventParam: String? = null
-    ) {}
-
-    /**
-     * Override to add filters to dialogue entries that are applied after priority is checked (and so, after the first filters are applied).
-     * The order is:
-     * - get first available event for trigger
-     * - filter dialogue entries with basic filters
-     * - if any of them has non-default priority, keep only ones with highest priority
-     * - filter remaining entries with post priority filters
-     */
-    protected open fun addDialogueOptionPostPriorityFilters(
-        postPriorityFilters: MutableList<(DialogueEntry) -> Boolean>,
-        player: ServerPlayer, event: DialogueEvent, currentEntries: List<DialogueEntry>,
-        eventParam: String? = null,
-    ) {}
-
     private fun getPlayerById(uuid: UUID): ServerPlayer? {
         val player = entity.level().getPlayerByUUID(uuid)
         return if (notNull(player)) {
@@ -610,25 +752,35 @@ open class BasicDialoguesComponent(
     // needed to avoid npcs getting away from players before saying goodbye
     override fun playersStillAround(): Boolean = closePlayers.size + numOfInbetweenPlayers > 0
 
+    /**
+     * Returns true if event may be in queue (not 100% sure as multi-event queued items
+     * could have that event or not)
+     */
     private fun eventInQueue(event: DialogueEvent): Boolean {
-        return dialogueQueues.any { e -> e.value.any { it.second == event } }
+        return eventQueues.values.any { e -> e.any {
+            if (it.resolved) {
+                it.event == event
+            } else {
+                it.dialogueEvents.contains(event)
+            }
+        } }
     }
 
-    protected fun getSecondsSinceTick(entity: Entity, tick: Int): Double {
+    private fun getSecondsSinceTick(entity: Entity, tick: Int): Double {
         return (entity.tickCount - tick) / 20.0
     }
 
-    protected fun getSecondsSinceWorldTime(time: Long): Double {
+    private fun getSecondsSinceWorldTime(time: Long): Double {
         return (entity.level().gameTime - time) / 20.0
     }
 
-    protected fun materializeDialogueLine(entry: DialogueEntry, line: DialogueLine): DialogueLineProcessed {
+    private fun materializeDialogueLine(entry: DialogueEntry, line: DialogueLine): DialogueLineProcessed {
         return DialogueLineProcessed(line.content(), estimateReadingTime(line)).also {
             it.dialogue = entry
         }
     }
 
-    protected fun estimateReadingTime(line: DialogueLine, wordsPerMinute: Int = MiscConfig.dialogueWordsPerMinute): Float {
+    private fun estimateReadingTime(line: DialogueLine, wordsPerMinute: Int = MiscConfig.dialogueWordsPerMinute): Float {
         val text = line.content()
 
         // Calculate the number of words in the text, ignore small words (<=2 chars)
@@ -675,6 +827,57 @@ open class BasicDialoguesComponent(
         }}
     }
 
+    data class PlayerData(
+        val dialogueCount: MutableMap<String, Int> = mutableMapOf(),
+        val dialogueGroupCount: MutableMap<String, Int> = mutableMapOf(),
+        val eventTriggerCount: MutableMap<DialogueEvent, Int> = mutableMapOf(),
+        val eventCloseTriggerCount: MutableMap<DialogueEvent, Int> = mutableMapOf(),
+        val eventLastTriggerTime: MutableMap<DialogueEvent, Long> = mutableMapOf(),
+        var lastSeenTimestamp: Long? = null,
+        var lastArrivedTimestamp: Long? = null,
+        // Do not persist, not necessary
+        val lastEventDialogue: MutableMap<DialogueEvent, DialogueEntry> = mutableMapOf(),
+    )
+
+    data class EventQueueItem(
+        val dialogueEvents: List<DialogueEvent>,
+        val eventParam: String? = null,
+        val ignoreEventConditions: Boolean = false,
+        val ignoreEmptyOptionsWarning: Boolean = false,
+        val countEvents: Boolean = true,
+        private var failed_: Boolean = false,
+        private var resolved_: Boolean = false,
+
+        // These two should be non null IF AND ONLY IF
+        // resolved is true (would make other class, but logic is simpler
+        // if I just expand the same object in the queue with dialogues
+        private var event_: DialogueEvent? = null,
+        private var dialogueQueue_: Deque<DialogueLineProcessed>? = null,
+    ) {
+        // Assign a specific event & dialogue queue
+        fun resolve(event: DialogueEvent, dialogueQueue: Deque<DialogueLineProcessed>): EventQueueItem {
+            if (resolved_) {
+                throw IllegalStateException("Dialogue event item already resolved: $this")
+            }
+            resolved_ = true
+            event_ = event
+            dialogueQueue_ = dialogueQueue
+
+            return this
+        }
+
+        fun fail(): EventQueueItem {
+            failed_ = true
+
+            return this
+        }
+
+        val failed get() = failed_
+        val resolved get() = resolved_
+        val event get() = event_ ?: throw IllegalStateException("Tried obtaining event on not resolved queue item $this")
+        val dialogueQueue get() = dialogueQueue_ ?: throw IllegalStateException("Tried obtaining dialogueQueue on not resolved queue item $this")
+    }
+
     object DataFields {
         const val CLOSE_PLAYERS = "closePlayers"
         const val LEAVING_PLAYERS = "leavingPlayers"
@@ -702,7 +905,9 @@ open class BasicDialoguesComponent(
             dialoguesNpcs.forEach {
                 val dialogues = it.dialogues
                 if (dialogues is BasicDialoguesComponent && dialogues.nearbyPlayers().contains(player)) {
+                    // Trigger both, dialogue conditions will take care of deciding which one to play
                     dialogues.triggerDialogue(player, BasicDialogueEvents.PLAYER_ADVANCEMENT, eventParam = advancement.id.toString())
+                    dialogues.triggerDialogue(player, BasicDialogueEvents.PLAYER_ADVANCEMENT_LAZY, eventParam = advancement.id.toString())
                 }
             }
         }

@@ -92,6 +92,12 @@
         "4": "Buon proseguimento!",
         "5": ""
     },
+    "playerLeaveInterrupted": {
+        "1": "Aspetta, dove vai?",
+        "2": "Non avevo finito di parlare...",
+        "3": "Ehi, torna qui!",
+        "4": "E via che va."
+    },
     "hitByPlayer": {
         "0": "Hey!",
         "1": "Ma che fai?! Sei fuori di testa?",

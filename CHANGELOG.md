@@ -2,6 +2,21 @@
 
 ## CURRENT
 
+## 0.13.0
+
+Added
+- Researcher now keeps diaries even without Single Researcher mode on: each researcher will only
+show diaries for its own structures, and only after you find them *after* he sold the map to you
+(they won't count times you entered the structure before)
+
+Changed
+- Dialogues now are interrupted if you leave the researcher mid-dialogue, with a special
+interruption dialogue
+- Internal change of dialogue structure, dialogue conditions (like quest stages requiring
+dialogues, event counts, etc.) are now triggered at completion of dialogue, and not start
+- Removed immediate property from dialogues, as it now depends on the events
+- Final quest step timer changed to 2 days
+
 ## 0.12.1
 
 Added
@@ -11,7 +26,7 @@ Fixed
 - Golem houses not having maps in Growsseth world preset
 - Researcher dialogue triggers vs dead players (especially the "player returns after getting killed by researcher" dialogue)
 - `glocate` for fixed structure placement (ie Growsseth Preset or Gamemaster mode)
-- Quest: try avoiding zombie duplication issue
+- Quest: try avoiding a zombie duplication issue
 - Quest: fix final stages not properly triggering
 - structure debug option crashing the game
 

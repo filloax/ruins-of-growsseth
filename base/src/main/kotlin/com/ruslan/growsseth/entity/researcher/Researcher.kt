@@ -26,6 +26,7 @@ import com.ruslan.growsseth.entity.researcher.trades.ResearcherTradeMode
 import com.ruslan.growsseth.entity.researcher.trades.ResearcherTradeUtils
 import com.ruslan.growsseth.entity.researcher.trades.ResearcherTradesData
 import com.ruslan.growsseth.http.GrowssethExtraEvents
+import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.quests.QuestOwner
 import com.ruslan.growsseth.sound.GrowssethSounds
 import com.ruslan.growsseth.structure.pieces.ResearcherTent
@@ -692,10 +693,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             player.getPersistData().putBoolean(Constants.DATA_PLAYER_MET_RESEARCHER, true)
 
             if (player is ServerPlayer) {
-                if (!dialogues!!.isQueueEmpty(player.uuid)){
-                    dialogues.skipCurrentMessage(player.uuid)
-                }
-                else {
+                if (!dialogues!!.skipCurrentMessage(player.uuid)) {
                     val offers = getOffers(player)
                     val blockTrades = angryForMess && !healed
                     if (offers.isEmpty() || blockTrades) {
@@ -716,7 +714,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
                             return InteractionResult.FAIL
                     }
                     tradingPlayer = player
-                    openTradingScreen(player, this.displayName ?: this.name, 1)
+                    openTradingScreen(player, this.displayName, 1)
                 }
             }
             return InteractionResult.sidedSuccess(level().isClientSide)
@@ -926,7 +924,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         } ?: MerchantOffers()
     }
 
-    fun getOffers(player: ServerPlayer): MerchantOffers {
+    private fun getOffers(player: ServerPlayer): MerchantOffers {
         val server = player.server
         val currentProvider = ResearcherTradeMode.providerFromSettings(server)
         val tradesData = tradesData()
@@ -936,7 +934,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             tradesData.resetRandomTrades()
         }
 
-        var offers = offersByPlayer.computeIfAbsent(player.uuid) { MerchantOffers() }
+        val offers = offersByPlayer.computeIfAbsent(player.uuid) { MerchantOffers() }
         val updatedOffers = currentProvider.getOffers(this, tradesData, player)
 
         if (
@@ -968,6 +966,17 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     override fun notifyTrade(merchantOffer: MerchantOffer) {
         ambientSoundTime = -this.ambientSoundInterval
         rewardTradeXp(merchantOffer)
+
+        if (merchantOffer.result.`is`(GrowssethItems.RUINS_MAP)) {
+            diary?.let { d ->
+                val tag = ResearcherTradeUtils.getStructureTagFromMapOffer(merchantOffer)
+                if (tag != null) {
+                    d.trackRandomMapStructure(tag)
+                } else {
+                    RuinsOfGrowsseth.LOGGER.warn("Could not track structure for map trade {}, tag not found", merchantOffer)
+                }
+            }
+        }
     }
 
     override fun notifyTradeUpdated(itemStack: ItemStack) {
@@ -1075,7 +1084,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     override fun getHurtSound(damageSource: DamageSource): SoundEvent = GrowssethSounds.RESEARCHER_HURT
     override fun getDeathSound(): SoundEvent = GrowssethSounds.RESEARCHER_DEATH
     override fun getAmbientSoundInterval(): Int = super.getAmbientSoundInterval() * 3
-    override fun getAmbientSound(): SoundEvent? {
+    override fun getAmbientSound(): SoundEvent {
         return if (isTrading()) {
             GrowssethSounds.RESEARCHER_TRADE
         } else GrowssethSounds.RESEARCHER_AMBIENT

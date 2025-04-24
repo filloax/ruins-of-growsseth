@@ -16,6 +16,7 @@ import com.ruslan.growsseth.loot.LootTableModifier
 import com.ruslan.growsseth.loot.VanillaStructureLoot
 import com.ruslan.growsseth.quests.QuestComponentEvents
 import com.ruslan.growsseth.structure.RemoteStructureBooks
+import com.ruslan.growsseth.structure.StructureVisitTracker
 import com.ruslan.growsseth.structure.VillageBuildings
 import com.ruslan.growsseth.structure.locate.StoppableAsyncLocator
 import com.ruslan.growsseth.worldgen.worldpreset.GrowssethWorldPreset
@@ -104,6 +105,10 @@ abstract class ModEvents {
             GrowssethWorldPreset.Callbacks.onServerPlayerJoin(player, server)
         }
 
+        onPlayerServerTick { player ->
+            StructureVisitTracker.onServerPlayerTick(player)
+        }
+
         // Register singularly because returns
 
         onLootTableModify { key, table ->
@@ -153,5 +158,6 @@ abstract class ModEvents {
     abstract fun onEntityUnload(event: (entity: Entity, level: ServerLevel) -> Unit)
     abstract fun afterPlayerBlockBreak(event: (Level, Player, BlockPos, BlockState) -> Unit)
     abstract fun onPlayerServerJoin(event: (player: ServerPlayer, MinecraftServer) -> Unit)
+    abstract fun onPlayerServerTick(event: (player: ServerPlayer) -> Unit)
     abstract fun onLootTableModify(event: (key: ResourceLocation, table: LootTableModifier) -> Unit)
 }
