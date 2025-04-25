@@ -147,6 +147,7 @@ open class BasicDialoguesComponent(
     }
 
     override fun skipCurrentMessage(playerUuid: UUID): Boolean {
+        // todo: fix behaviour with latest dialogue in queue
         val playerQueue = eventQueues.getOrDefault(playerUuid, null)
         if (playerQueue.isNullOrEmpty())
             return false

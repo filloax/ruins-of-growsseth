@@ -35,7 +35,8 @@ class ResearcherCombatComponent(
 
     // For player aggro management
     private var angerBuildupTimer: MutableMap<Player, MutableInt> = mutableMapOf()
-    private var hitCounter: MutableMap<Player, MutableInt> = mutableMapOf()
+    var hitCounter: MutableMap<Player, MutableInt> = mutableMapOf()
+        private set
     val ticksToCalmDown: Int = 10 * 20   // todo: use Int.secondsToTick() after filloaxlib update
     val maxHitCounter = 3
 
