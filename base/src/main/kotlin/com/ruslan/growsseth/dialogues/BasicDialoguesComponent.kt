@@ -62,7 +62,7 @@ open class BasicDialoguesComponent(
     /** Set to 0 to disable "long time" events: */
     open var secondsForArriveLongTime = 6 * 3600 // 6 hours
     open var secondsForCloseRepeat = 60
-    open var secondsForAttackRepeat = 10
+    open var secondsForAttackDiagRepeat = 10
     open var maxCloseHitsForDialogues = 3
     /** Set to 0 to have no wait: */
     open var dialogueDelayMaxSeconds = 0.6f
@@ -140,7 +140,7 @@ open class BasicDialoguesComponent(
             Events.PLAYER_LEAVE_NIGHT -> entity.level().isNight
             Events.PLAYER_LEAVE_SOON -> secondsForArriveSoon > 0
                     && playersArrivedSoon[player.uuid] ?: false
-            Events.HIT_BY_PLAYER -> secondsForAttackRepeat > 0
+            Events.HIT_BY_PLAYER -> secondsForAttackDiagRepeat > 0
             Events.RENAME -> !eventInQueue(dialogueEvent)
             else -> true
         }
@@ -646,9 +646,9 @@ open class BasicDialoguesComponent(
         if (event == Events.HIT_BY_PLAYER && lastTriggerTime != null) {
             val count = pdata.eventCloseTriggerCount[event] ?: 1
             val secondsSinceLastAttack = getSecondsSinceWorldTime(lastTriggerTime)
-            if (secondsSinceLastAttack < secondsForAttackRepeat && count < maxCloseHitsForDialogues)
+            if (secondsSinceLastAttack < secondsForAttackDiagRepeat && count < maxCloseHitsForDialogues)
                 pdata.eventCloseTriggerCount[event] = count + 1
-            else if (secondsSinceLastAttack > secondsForAttackRepeat * 2)
+            else if (secondsSinceLastAttack > secondsForAttackDiagRepeat * 2)
                 pdata.eventCloseTriggerCount[event] = 1
         }
         else if (lastTriggerTime != null) {
@@ -689,8 +689,8 @@ open class BasicDialoguesComponent(
     }
 
     private fun getDialoguesAndEvent(
-        player: ServerPlayer, dialogueEvents: Collection<DialogueEvent>, ignoreEventConditions: Boolean = false,
-        ignoreEmptyWarning: Boolean = false
+        player: ServerPlayer, dialogueEvents: Collection<DialogueEvent>,
+        ignoreEventConditions: Boolean = false, ignoreEmptyWarning: Boolean = false
     ): Pair<DialogueEvent, List<DialogueEntry>>? {
         val global = DialogueEntry.getAllForEvent(Events.GLOBAL)
         for (dialogueEvent in dialogueEvents) {
@@ -848,7 +848,7 @@ open class BasicDialoguesComponent(
         private var failed_: Boolean = false,
         private var resolved_: Boolean = false,
 
-        // These two should be non null IF AND ONLY IF
+        // These two should be non-null IF AND ONLY IF
         // resolved is true (would make other class, but logic is simpler
         // if I just expand the same object in the queue with dialogues
         private var event_: DialogueEvent? = null,

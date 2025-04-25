@@ -91,7 +91,8 @@ class ResearcherDialoguesComponent(
     private val playersMetThisEntity: MutableSet<UUID> = mutableSetOf()
 
     init {
-        secondsForAttackRepeat = combat.timeToCalmDown / 20
+        secondsForAttackDiagRepeat = combat.ticksToCalmDown / 20
+        maxCloseHitsForDialogues = combat.maxHitCounter
     }
 
     override fun triggerDialogue(
