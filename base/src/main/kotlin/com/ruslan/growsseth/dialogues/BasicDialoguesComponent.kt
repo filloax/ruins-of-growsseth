@@ -102,10 +102,10 @@ open class BasicDialoguesComponent(
 
         // Handle interruptions
         // TODO: save current dialogue status to resume
-        val interrupted = eventQueue.isNotEmpty()
-        if (interrupted) {
-            eventQueue.clear()
+        val interrupted = eventQueue.any { event ->     // got interrupted if there is at least one valid dialogue in queue
+             resolveDialogueEventQueueItem(player, event, checkOnly = true)
         }
+        eventQueue.clear()
 
         if (!player.isDeadOrDying) { // to avoid goodbye when the npc gets away from the place where player died (and did not respawn yet)
             if (interrupted) {
@@ -457,10 +457,12 @@ open class BasicDialoguesComponent(
      */
     private fun resolveDialogueEventQueueItem(player: ServerPlayer, queueItem: EventQueueItem, checkOnly: Boolean = false): Boolean {
         if (queueItem.resolved) {
-            RuinsOfGrowsseth.LOGGER.warn("Tried resolving already resolved dialogue event queue item {}", queueItem)
+            if (!checkOnly)
+                RuinsOfGrowsseth.LOGGER.warn("Tried resolving already resolved dialogue event queue item {}", queueItem)
             return true
         } else if (queueItem.failed) {
-            RuinsOfGrowsseth.LOGGER.warn("Tried resolving failed dialogue event queue item {}", queueItem)
+            if (!checkOnly)
+                RuinsOfGrowsseth.LOGGER.warn("Tried resolving failed dialogue event queue item {}", queueItem)
             return false
         }
 
