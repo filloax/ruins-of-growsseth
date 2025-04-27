@@ -198,6 +198,10 @@ class ResearcherDialoguesComponent(
         val justMet = !playersMetThisEntity.contains(player.uuid)
         playersMetThisEntity.add(player.uuid)
 
+        // Stops random strolls when players approach him (by resetting his navigation path to himself)
+        researcher.navigation.moveTo(researcher, Researcher.WALKING_SPEED)
+        researcher.navigation.recomputePath()
+
         val triggeredArriveBefore = (playerData(player)?.eventTriggerCount
             ?.filter { it.key in setOf(
                 BasicDialogueEvents.PLAYER_ARRIVE_SOON,

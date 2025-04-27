@@ -1,5 +1,12 @@
 # Changelog
 
+## DEVELOPMENT
+
+## 0.13.1
+
+Fixed
+- Researcher will now stop strolling when players approach him
+
 ## CURRENT
 
 ## 0.13.0

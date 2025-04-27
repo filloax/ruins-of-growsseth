@@ -122,6 +122,8 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         const val RESEARCHER_XP = 25
         const val WALK_LIMIT_DISTANCE = 15
         const val WALK_LIMIT_DISTANCE_NIGHT = 3
+        const val WALKING_SPEED = 0.6
+        const val BASE_FIGHTING_SPEED = 0.7
         const val RESEARCHER_ATTACK_REACH = 0.7         // 1.21.1 default attack reach is 0,828
 
         const val DATA_TAG = "ResearcherData"
@@ -336,9 +338,9 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         goalSelector.addGoal(0, ClimbOnTopOfPowderSnowGoal(this, level()))
         goalSelector.addGoal(0, ResearcherBreatheAirGoal(this))
         goalSelector.addGoal(1, OpenDoorGoal(this, true))
-        goalSelector.addGoal(2, ResearcherAttackGoal(this, 0.7, true))
-        goalSelector.addGoal(3, MoveTowardsRestrictionGoal(this, 0.6))
-        goalSelector.addGoal(4, ResearcherRandomStrollGoal(this, 0.6))
+        goalSelector.addGoal(2, ResearcherAttackGoal(this, BASE_FIGHTING_SPEED, true))
+        goalSelector.addGoal(3, MoveTowardsRestrictionGoal(this, WALKING_SPEED))
+        goalSelector.addGoal(4, ResearcherRandomStrollGoal(this, WALKING_SPEED))
         goalSelector.addGoal(5, ResearcherLookAtPlayerGoal(this, 8f, 0.1f))
 
         targetSelector.addGoal(0, NearestAttackableTargetGoal(this, Player::class.java, 0, true, true)
