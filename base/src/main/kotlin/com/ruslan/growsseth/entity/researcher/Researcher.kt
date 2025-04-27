@@ -701,7 +701,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             player.getPersistData().putBoolean(Constants.DATA_PLAYER_MET_RESEARCHER, true)
 
             if (player is ServerPlayer) {
-                if (!dialogues!!.skipCurrentMessage(player.uuid)) {
+                if (!dialogues!!.skipCurrentMessage(player)) {
                     val offers = getOffers(player)
                     val blockTrades = angryForMess && !healed
                     if (offers.isEmpty() || blockTrades) {

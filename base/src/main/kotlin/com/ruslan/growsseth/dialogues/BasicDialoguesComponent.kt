@@ -146,13 +146,21 @@ open class BasicDialoguesComponent(
         }
     }
 
-    override fun skipCurrentMessage(playerUuid: UUID): Boolean {
-        // todo: fix behaviour with latest dialogue in queue
-        val playerQueue = eventQueues.getOrDefault(playerUuid, null)
-        if (playerQueue.isNullOrEmpty())
+    override fun skipCurrentMessage(player: ServerPlayer): Boolean {
+        val playerEventQueue = eventQueues.getOrDefault(player.uuid, null)
+        if (playerEventQueue.isNullOrEmpty())
             return false
-        dialogueQueueDelays[playerUuid] = 0
-        return true
+
+        // We search every event queue of the player for valid events with dialogues, and reset the current delay at the first one we find
+        playerEventQueue.forEach { eventQueueItem ->
+            val validDialoguesInQueueItem = resolveDialogueEventQueueItem(player, eventQueueItem, checkOnly = true)
+            if (validDialoguesInQueueItem) {
+                dialogueQueueDelays[player.uuid] = 0
+                return true
+            }
+        }
+
+        return false        // no actual dialogues have been found, there is no skip to do
     }
 
     override fun dialoguesStep() {
