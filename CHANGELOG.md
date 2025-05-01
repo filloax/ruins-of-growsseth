@@ -4,6 +4,9 @@
 
 ## 0.13.1
 
+Tweaked
+- Creepers now won't explode inside the Researcher's tent (before they exploded without dealing damage)
+
 Fixed
 - Researcher will now stop strolling when players approach him
 - All goodbye dialogues are now immediate, to always trigger even if there is still a delay from a previous chat message

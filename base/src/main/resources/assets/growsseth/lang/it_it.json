@@ -191,7 +191,7 @@
     "growsseth.config.needsWorldReload.comment": "Se cambiata ingame farà effetto al ricaricamento del mondo.",
 
     "growsseth.config.serverLanguage.name": "Lingua del server",
-    "growsseth.config.serverLanguage.comment": "Scegli tra 'it_it' e 'en_us'. Usata per i dialoghi degli npc, i diari del ricercatore e i libri delle strutture. Strutture già generate non saranno influenziate dall'impostazione. Altre lingue aggiungibili via datapack.",
+    "growsseth.config.serverLanguage.comment": "Scegli tra 'it_it' e 'en_us'. Se impostata a 'client' la lingua verrà resettata quando si tornerà al menu principale.\nViene usata per i dialoghi degli npc, i diari del ricercatore e i libri delle strutture. Le strutture già generate non saranno influenzate dall'impostazione. Altre lingue aggiungibili via datapack.",
 
     "growsseth.config.modLootInVanillaStructures.name": "Genera loot della mod nelle strutture vanilla",
     "growsseth.config.dialogueWordsPerMinute.name": "Frequenza dialoghi npc",
