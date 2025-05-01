@@ -6,6 +6,7 @@
 
 Fixed
 - Researcher will now stop strolling when players approach him
+- All goodbye dialogues are now immediate, to always trigger even if there is still a delay from a previous chat message
 
 ## CURRENT
 
