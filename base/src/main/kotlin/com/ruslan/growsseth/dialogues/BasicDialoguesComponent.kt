@@ -335,11 +335,11 @@ open class BasicDialoguesComponent(
 
         val anyImmediate = dialogueEvents.any { it.immediate }
         if (anyImmediate && dialogueEvents.any { !it.immediate }) {
-            throw IllegalArgumentException("Cannot use mix of immediate and not immediate dialogue events! Was $dialogueEvents")
+            throw IllegalArgumentException("Cannot use mix of immediate and not immediate dialogue events! Was ${dialogueEvents.joinToString { it.id }}")
         }
         val anyPreventMultiQueue = dialogueEvents.any { it.preventMultiQueue }
         if (anyPreventMultiQueue && dialogueEvents.any { !it.preventMultiQueue }) {
-            throw IllegalArgumentException("Cannot use mix of preventMultiQueue and not preventMultiQueue dialogue events! Was $dialogueEvents")
+            throw IllegalArgumentException("Cannot use mix of preventMultiQueue and not preventMultiQueue dialogue events! Was ${dialogueEvents.joinToString { it.id }}")
         }
         
         if (anyPreventMultiQueue && dialogueEvents.any(::eventInQueue)) {
