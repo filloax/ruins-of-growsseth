@@ -38,9 +38,10 @@
     "item.DecoratedPotPatternsMixin",
     "item.DiscCreditsMixin",
     "item.MapItemInfoMixin",
-    "structurebook.ItemFrameStructureBookMixin",
-    "structurebook.ItemStackStructureBookMixin",
-    "structurebook.StructureTemplateMixin"
+    "structuretext.ItemFrameStructureBookMixin",
+    "structuretext.ItemStackStructureBookMixin",
+    "structuretext.StructureBlockEntityMixin",
+    "structuretext.StructureTemplateMixin"
   ],
   "client": [
     "client.AdvancementTabMixin",

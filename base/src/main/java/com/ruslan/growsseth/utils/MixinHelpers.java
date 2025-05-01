@@ -18,6 +18,7 @@ import java.util.Stack;
 public class MixinHelpers {
     private MixinHelpers() {}
 
+    public static boolean loadingFromStructureBlock = false;
     public static boolean placingBlockEntityInStructure = false;
     public static boolean savingPersistentEntities = false;
 

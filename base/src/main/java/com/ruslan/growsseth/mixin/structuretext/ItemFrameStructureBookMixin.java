@@ -1,18 +1,16 @@
-package com.ruslan.growsseth.mixin.structurebook;
+package com.ruslan.growsseth.mixin.structuretext;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.ruslan.growsseth.structure.StructureBooks;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.Tag;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Optional;
 
