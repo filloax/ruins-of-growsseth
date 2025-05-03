@@ -64,7 +64,12 @@ object GiveStructMapCommand {
         )
     }
 
-    private fun giveMapToStruct(commandSourceStack: CommandSourceStack, players: Collection<ServerPlayer>, structureArg: ResourceOrTagKeyArgument.Result<Structure>, mapItemInput: ItemInput? = null): Int {
+    private fun giveMapToStruct(
+        commandSourceStack: CommandSourceStack,
+        players: Collection<ServerPlayer>,
+        structureArg: ResourceOrTagKeyArgument.Result<Structure>,
+        mapItemInput: ItemInput? = null
+    ) : Int {
         val mapStack = mapItemInput?.let {
             if (it.item !is MapItem) {
                 throw ERROR_MAP_ITEM_INVALID.create(it.item)
@@ -79,13 +84,24 @@ object GiveStructMapCommand {
         // Call the thing with either struct tag or key
         try {
             structureArg.unwrap()
-                .ifLeft { mapStack.updateMapToStruct(serverLevel, it, MapLocateContext(blockPos, 100, scale = 3)) }
-                .ifRight { mapStack.updateMapToStruct(serverLevel, it, MapLocateContext(blockPos, 100, scale = 3)) }
+                .ifLeft { mapStack.updateMapToStruct(serverLevel, it, MapLocateContext(blockPos, 100, scale = 3))
+                    .thenAccept { giveMapToPlayers(players, mapStack) }
+                }
+                .ifRight { mapStack.updateMapToStruct(serverLevel, it, MapLocateContext(blockPos, 100, scale = 3))
+                    .thenAccept { giveMapToPlayers(players, mapStack) }
+                }
         } catch (e: Exception) {
             throw ERROR_STRUCTURE_INVALID.create(structureArg)
         }
         stopwatch.stop()
 
+        return 1
+    }
+
+    private fun giveMapToPlayers(
+        players: Collection<ServerPlayer>,
+        mapStack: ItemStack
+    ) {
         players.forEach { player ->
             player.inventory.placeItemBackInInventory(mapStack)
             player.level().playSound(
@@ -97,7 +113,5 @@ object GiveStructMapCommand {
                 ((player.random.nextFloat() - player.random.nextFloat()) * 0.7f + 1.0f) * 2.0f
             )
         }
-
-        return 1
     }
 }
