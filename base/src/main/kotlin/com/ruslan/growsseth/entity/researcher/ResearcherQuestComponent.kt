@@ -249,6 +249,7 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
             .or(ApiEventTrigger(finalQuestStartName))
 
         override fun onActivated(entity: Researcher) {
+            entity.healed = false    // for resetting discounts when using gquest
             entity.dialogues?.resetNearbyPlayers()
         }
     }
@@ -256,6 +257,10 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
     inner class ZombieStage : QuestStage<Researcher> {
         override val trigger = ProgressTradesTrigger(server, onlyOne = false)
             .or(ApiEventTrigger(finalQuestZombieName))
+
+        override fun onActivated(entity: Researcher) {
+            entity.healed = false    // for resetting discounts when using gquest
+        }
 
         // Trigger on update too to cover multiple tent situations
         // but run logic at tick end to avoid issues with replacing entities as it sometimes desynced

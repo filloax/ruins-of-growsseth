@@ -12,6 +12,7 @@ Fixed
 - The Researcher will now stop strolling when players approach him
 - All goodbye dialogues are now immediate, to always trigger even if there is still a delay from a previous message
 - Fixed rare bug that made the researcher think that players stole his work tools (but wasn't true)
+- Fixed some dynamic dialogues triggering at the wrong quest stages
 - `givestructmap` command now works again
 
 ## CURRENT
