@@ -5,11 +5,12 @@
 ## 0.13.1
 
 Tweaked
-- Creepers now won't explode inside the Researcher's tent (before they exploded without dealing damage)
+- Creepers won't explode inside the Researcher's tent, instead of exploding without dealing damage
+- Books and signs templates won't be loaded when placing structures with structure blocks, to allow easier editing
 
 Fixed
-- Researcher will now stop strolling when players approach him
-- All goodbye dialogues are now immediate, to always trigger even if there is still a delay from a previous chat message
+- The Researcher will now stop strolling when players approach him
+- All goodbye dialogues are now immediate, to always trigger even if there is still a delay from a previous message
 
 ## CURRENT
 

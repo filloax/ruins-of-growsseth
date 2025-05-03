@@ -3,6 +3,7 @@ package com.ruslan.growsseth.mixin.structuretext;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.ruslan.growsseth.structure.StructureBooks;
+import com.ruslan.growsseth.utils.MixinHelpers;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.decoration.ItemFrame;
@@ -30,6 +31,7 @@ public abstract class ItemFrameStructureBookMixin {
         var itemOpt = original.call(lookupProvider, tag);
         return itemOpt.map(item -> {
             if (
+                !MixinHelpers.loadingFromStructureBlock &&
                 (item.is(Items.WRITABLE_BOOK) || item.is(Items.WRITTEN_BOOK))
                 && StructureBooks.bookIsTemplate(item)
             ) {
