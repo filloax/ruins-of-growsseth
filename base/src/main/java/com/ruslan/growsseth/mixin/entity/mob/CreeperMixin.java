@@ -3,6 +3,7 @@ package com.ruslan.growsseth.mixin.entity.mob;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.ruslan.growsseth.config.ResearcherConfig;
 import com.ruslan.growsseth.entity.researcher.Researcher;
+import com.ruslan.growsseth.interfaces.StructureManagerExtension;
 import com.ruslan.growsseth.utils.MixinHelpers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -12,7 +13,6 @@ import net.minecraft.world.entity.ai.goal.SwellGoal;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.StructureManager;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -57,8 +57,10 @@ public abstract class CreeperMixin {
             else if (coordsChanged) {
                 // Creeper changed its position: we check if it's inside the Researcher tent
                 ServerLevel serverLevel = (ServerLevel) creeper.level();        // Already server side from vanilla code
-                StructureManager structureManager = serverLevel.structureManager();
-                boolean creeperInTent = structureManager.getStructureAt(creeperPos, MixinHelpers.researcherTent).isValid();
+                StructureManagerExtension structureManager = (StructureManagerExtension) serverLevel.structureManager();
+                // We expand the bounding box of the tent, since it still might explode too close to it
+                boolean creeperInTent = structureManager
+                        .getStructureAtExpanded(creeperPos, MixinHelpers.researcherTent, 3).isValid();
                 creeperWasInTent = creeperInTent;
                 if (creeperInTent)
                     return false;
