@@ -1,6 +1,7 @@
 package com.ruslan.growsseth.mixin.entity.mob;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.ruslan.growsseth.config.ResearcherConfig;
 import com.ruslan.growsseth.entity.researcher.Researcher;
 import com.ruslan.growsseth.utils.MixinHelpers;
 import net.minecraft.core.BlockPos;
@@ -43,8 +44,8 @@ public abstract class CreeperMixin {
 
         @ModifyReturnValue(at = @At("TAIL"), method = "canUse")
         private boolean preventExplosionInTent(boolean original) {
-            if (original == false) {
-                // Skip check if already false
+            if (!original || !ResearcherConfig.noCreeperExplosionsInResearcherTent) {
+                // Skip check if already false or config disabled
                 return original;
             }
             BlockPos creeperPos = creeper.blockPosition();

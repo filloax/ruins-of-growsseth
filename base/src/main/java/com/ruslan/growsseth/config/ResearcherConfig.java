@@ -65,6 +65,13 @@ public final class ResearcherConfig {
     )
     public static boolean researcherAntiCheat = true;
 
+    @ConfigEntry(id = "noCreeperExplosionsInResearcherTent", translation = T_PREF + "noCreeperExplosionsInResearcherTent.name")
+    @Comment(
+            value = "Makes creepers unable to explode while near the Researcher's tent, to prevent accidental damage and possible issues with the Researcher's quest.",
+            translation = T_PREF + "noCreeperExplosionsInResearcherTent.comment"
+    )
+    public static boolean noCreeperExplosionsInResearcherTent = true;
+
     @ConfigEntry(id = "researcherInteractsWithMobs", translation = T_PREF + "researcherInteractsWithMobs.name")
     @Comment(
             value = "Zombies, skeletons, raiders and vexes will be hostile towards the researcher, and he will react to them and other mobs who attack him. If changed ingame, takes effect on world reload.",
