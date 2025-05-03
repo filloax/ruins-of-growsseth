@@ -42,7 +42,7 @@ class ResearcherDialoguesComponent(
         val CODEC_PLAYERSET: Codec<MutableSet<UUID>> = CodecUtils.setOf(UUIDUtil.STRING_CODEC)
 
         val EV_MAKE_MESS     = event("makeMess", immediate = true)
-        val EV_FIX_MESS      = event("fixMess")
+        val EV_FIX_MESS      = event("fixMess", immediate = true)
         val EV_REFUSE_TRADE  = event("refuseTrade", immediate = true)
         val EV_BREAK_TENT    = event("breakTent", immediate = true)
         val EV_RETURN_DONKEY = event("returnDonkey", immediate = true)
@@ -77,10 +77,6 @@ class ResearcherDialoguesComponent(
 
     // NBT data
     private var playersInCellar: MutableSet<UUID> = mutableSetOf()
-    // Unlike other dialogue-related variables,
-    // share between all players as it is related to the physical block state
-    // Before we tracked player ids but that meant another player couldn't fix the issue
-    private var playersMadeMess: Boolean = false
     // Used for different trade refusal dialogue when another player made a mess
     private val playersWhoMadeMess: MutableSet<UUID> = mutableSetOf()
     // Variables for keeping count of items inside tent for madeMess trigger
@@ -91,7 +87,8 @@ class ResearcherDialoguesComponent(
     private val playersMetThisEntity: MutableSet<UUID> = mutableSetOf()
 
     init {
-        secondsForAttackRepeat = combat.timeToCalmDown / 20
+        secondsForAttackDiagRepeat = combat.ticksToCalmDown / 20
+        maxCloseHitsForDialogues = combat.maxHitCounter
     }
 
     override fun triggerDialogue(
@@ -174,10 +171,15 @@ class ResearcherDialoguesComponent(
 
     override fun onEventSelected(event: DialogueEvent, eventParam: String?, player: ServerPlayer, triggerSuccess: Boolean) {
         super.onEventSelected(event, eventParam, player, triggerSuccess)
-        val hadMess = playersMadeMess
+        // Check for mess condition is already in CanTriggeredEventRun
         when(event) {
-            EV_MAKE_MESS   -> playersMadeMess = true
-            EV_FIX_MESS    -> playersMadeMess = false
+            EV_MAKE_MESS   -> {
+                researcher.angryForMess = true
+                researcher.setUnhappy()
+            }
+            EV_FIX_MESS    -> {
+                researcher.angryForMess = false
+            }
             EV_CELLAR      -> {
                 if (triggerSuccess) {
                     player.sendPacket(StopMusicPacket())
@@ -185,17 +187,15 @@ class ResearcherDialoguesComponent(
                 }
             }
         }
-        if (hadMess && !playersMadeMess) {
-            researcher.angryForMess = false
-        } else if (!hadMess && playersMadeMess) {
-            researcher.angryForMess = true
-            researcher.setUnhappy()
-        }
     }
 
     override fun onPlayerArrive(player: ServerPlayer) {
         val justMet = !playersMetThisEntity.contains(player.uuid)
         playersMetThisEntity.add(player.uuid)
+
+        // Stops random strolls when players approach him (by resetting his navigation path to himself)
+        researcher.navigation.moveTo(researcher, Researcher.WALKING_SPEED)
+        researcher.navigation.recomputePath()
 
         val triggeredArriveBefore = (playerData(player)?.eventTriggerCount
             ?.filter { it.key in setOf(
@@ -228,8 +228,8 @@ class ResearcherDialoguesComponent(
 
     override fun canTriggeredEventRun(player: ServerPlayer, dialogueEvent: DialogueEvent): Boolean {
         return super.canTriggeredEventRun(player, dialogueEvent) && when(dialogueEvent) {
-            EV_MAKE_MESS   -> !playersMadeMess
-            EV_FIX_MESS    ->  playersMadeMess
+            EV_MAKE_MESS   -> !playersMadeMess()
+            EV_FIX_MESS    ->  playersMadeMess()
             EV_BREAK_TENT  -> !playersInCellar.contains(player.uuid)
             else -> true
         }
@@ -258,7 +258,6 @@ class ResearcherDialoguesComponent(
     override fun addExtraNbtData(dialogueData: CompoundTag) {
         super.addExtraNbtData(dialogueData)
 
-        dialogueData.saveField("MessAngerActive", Codec.BOOL, this::playersMadeMess)
         dialogueData.saveField("PlayersWhoMadeMess", CODEC_PLAYERSET, this::playersWhoMadeMess)
         dialogueData.saveField("CartographyTablesInTent", Codec.INT, this::cartographyTablesInTent)
         dialogueData.saveField("LecternsInTent", Codec.INT, this::lecternsInTent)
@@ -270,7 +269,6 @@ class ResearcherDialoguesComponent(
         // prevent modifying shared data
         super.readExtraNbtData(dialogueData)
 
-        dialogueData.loadField("MessAngerActive", Codec.BOOL) { playersMadeMess = it }
         dialogueData.loadField("PlayersWhoMadeMess", CODEC_PLAYERSET) { playersWhoMadeMess.addAll(it)}
         dialogueData.loadField("CartographyTablesInTent", Codec.INT) { cartographyTablesInTent = it }
         dialogueData.loadField("LecternsInTent", Codec.INT) { lecternsInTent = it }
@@ -287,13 +285,17 @@ class ResearcherDialoguesComponent(
     }
 
     // Save nbt data to be shared between researcher entities in single researcher mode.
-    // Preferably run AFTER the base readNbtData of dialoguecomponent as it wipes saved players data,
+    // Preferably run AFTER the base readNbtData of DialogueComponent as it wipes saved players data,
     // we try to handle this in readExtraNbtData but better safe than sorry
     fun readSharedData(data: CompoundTag) {
         savedPlayersData.clear()
         data.getCompound("SharedDialogueData").apply {
             loadField(DataFields.SAVED_PLAYERS_DATA, mutableMapCodec(UUIDUtil.STRING_CODEC, PLAYER_DATA_CODEC)) { savedPlayersData.putAll(it) }
         }
+    }
+
+    fun playersMadeMess(): Boolean {
+        return playersWhoMadeMess.isNotEmpty()
     }
 
     fun playerMadeMess(playerUuid: UUID): Boolean {

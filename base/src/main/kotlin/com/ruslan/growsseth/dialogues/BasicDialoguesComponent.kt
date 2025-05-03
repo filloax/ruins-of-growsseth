@@ -62,7 +62,7 @@ open class BasicDialoguesComponent(
     /** Set to 0 to disable "long time" events: */
     open var secondsForArriveLongTime = 6 * 3600 // 6 hours
     open var secondsForCloseRepeat = 60
-    open var secondsForAttackRepeat = 10
+    open var secondsForAttackDiagRepeat = 10
     open var maxCloseHitsForDialogues = 3
     /** Set to 0 to have no wait: */
     open var dialogueDelayMaxSeconds = 0.6f
@@ -78,10 +78,9 @@ open class BasicDialoguesComponent(
     // UUID is player's
     // Each Deque is the queue of events to trigger, which contains after they are resolved
     // (lazily, when the previous dialogue is done) the list of dialogue lines that will play
-    // for that instance of the event)
+    // for that instance of the event
     protected val eventQueues = mutableMapOf<UUID, Deque<EventQueueItem>>()
     protected var dialogueQueueDelays = mutableMapOf<UUID, Int>()
-    protected val playersSkipNextMessage = mutableSetOf<UUID>()
     private   val playersLastSentSeparator = mutableSetOf<UUID>()
     protected val serverLevel: ServerLevel get() = entity.level() as ServerLevel
     protected val server get() = serverLevel.server
@@ -103,10 +102,10 @@ open class BasicDialoguesComponent(
 
         // Handle interruptions
         // TODO: save current dialogue status to resume
-        val interrupted = eventQueue.isNotEmpty()
-        if (interrupted) {
-            eventQueue.clear()
+        val interrupted = eventQueue.any { event ->     // got interrupted if there is at least one valid dialogue in queue
+             resolveDialogueEventQueueItem(player, event, checkOnly = true)
         }
+        eventQueue.clear()
 
         if (!player.isDeadOrDying) { // to avoid goodbye when the npc gets away from the place where player died (and did not respawn yet)
             if (interrupted) {
@@ -141,19 +140,27 @@ open class BasicDialoguesComponent(
             Events.PLAYER_LEAVE_NIGHT -> entity.level().isNight
             Events.PLAYER_LEAVE_SOON -> secondsForArriveSoon > 0
                     && playersArrivedSoon[player.uuid] ?: false
-            Events.HIT_BY_PLAYER -> secondsForAttackRepeat > 0
+            Events.HIT_BY_PLAYER -> secondsForAttackDiagRepeat > 0
             Events.RENAME -> !eventInQueue(dialogueEvent)
             else -> true
         }
     }
 
-    override fun isQueueEmpty(playerUUID: UUID): Boolean {
-        val playerQueue = eventQueues.getOrDefault(playerUUID, null)
-        return playerQueue.isNullOrEmpty()
-    }
+    override fun skipCurrentMessage(player: ServerPlayer): Boolean {
+        val playerEventQueue = eventQueues.getOrDefault(player.uuid, null)
+        if (playerEventQueue.isNullOrEmpty())
+            return false
 
-    override fun skipCurrentMessage(uuid: UUID) {
-       playersSkipNextMessage.add(uuid)
+        // We search every event queue of the player for valid events with dialogues, and reset the current delay at the first one we find
+        playerEventQueue.forEach { eventQueueItem ->
+            val validDialoguesInQueueItem = resolveDialogueEventQueueItem(player, eventQueueItem, checkOnly = true)
+            if (validDialoguesInQueueItem) {
+                dialogueQueueDelays[player.uuid] = 0
+                return true
+            }
+        }
+
+        return false        // no actual dialogues have been found, there is no skip to do
     }
 
     override fun dialoguesStep() {
@@ -174,8 +181,7 @@ open class BasicDialoguesComponent(
             if (dialogueQueueDelay > 0) {
                 dialogueQueueDelay--
             }
-            if (eventQueue.isNotEmpty() && dialogueQueueDelay <= 0 || playersSkipNextMessage.contains(playerUuid)) {
-                playersSkipNextMessage.remove(playerUuid)
+            if (eventQueue.isNotEmpty() && dialogueQueueDelay <= 0) {
                 popQueues(player, eventQueue)?.let { nextDialogueDelay ->
                     dialogueQueueDelay = nextDialogueDelay
                 }
@@ -255,16 +261,9 @@ open class BasicDialoguesComponent(
     protected open fun afterPlayersCheck(nearPlayers: Set<ServerPlayer>, inbetweenPlayers: Set<ServerPlayer>, farPlayers: Set<ServerPlayer>) {}
 
     override fun sendDialogueToPlayer(player: ServerPlayer, line: DialogueLineProcessed) {
-        sendDialogueToPlayerInternal(player, line, false)
-    }
-
-    private fun sendDialogueToPlayerInternal(player: ServerPlayer, line: DialogueLineProcessed, isLast: Boolean) {
         if (line.text.isNotEmpty()) {
             playersLastSentSeparator.remove(player.uuid)
             player.sendPacket(DialoguePacket(line, entity.name, entity.uuid))
-            if (isLast) {
-                sendSeparatorToPlayer(player)
-            }
         }
     }
 
@@ -336,11 +335,11 @@ open class BasicDialoguesComponent(
 
         val anyImmediate = dialogueEvents.any { it.immediate }
         if (anyImmediate && dialogueEvents.any { !it.immediate }) {
-            throw IllegalArgumentException("Cannot use mix of immediate and not immediate dialogue events! Was $dialogueEvents")
+            throw IllegalArgumentException("Cannot use mix of immediate and not immediate dialogue events! Was ${dialogueEvents.joinToString { it.id }}")
         }
         val anyPreventMultiQueue = dialogueEvents.any { it.preventMultiQueue }
         if (anyPreventMultiQueue && dialogueEvents.any { !it.preventMultiQueue }) {
-            throw IllegalArgumentException("Cannot use mix of preventMultiQueue and not preventMultiQueue dialogue events! Was $dialogueEvents")
+            throw IllegalArgumentException("Cannot use mix of preventMultiQueue and not preventMultiQueue dialogue events! Was ${dialogueEvents.joinToString { it.id }}")
         }
         
         if (anyPreventMultiQueue && dialogueEvents.any(::eventInQueue)) {
@@ -405,6 +404,11 @@ open class BasicDialoguesComponent(
             }
             return null
         }
+        if (!eventQueueItem.resolved) {
+            // should not happen
+            RuinsOfGrowsseth.LOGGER.warn("Current dialogue queue item not resolved after pop checks!")
+            return null
+        }
 
         val dialogueQueue = eventQueueItem.dialogueQueue
 
@@ -419,9 +423,13 @@ open class BasicDialoguesComponent(
         // Last line of dialogue entry
         val completed = dialogueQueue.isEmpty()
 
-        sendDialogueToPlayerInternal(player, line, completed)
+        sendDialogueToPlayer(player, line)
 
         if (completed) {
+            if (line.text.isNotEmpty()) {
+                sendSeparatorToPlayer(player)
+            }
+
             onDialogueComplete(player, line.dialogue, eventQueueItem.event, eventQueueItem.eventParam, eventQueueItem.countEvents)
 
             if (eventQueue.isNotEmpty()) {
@@ -449,10 +457,12 @@ open class BasicDialoguesComponent(
      */
     private fun resolveDialogueEventQueueItem(player: ServerPlayer, queueItem: EventQueueItem, checkOnly: Boolean = false): Boolean {
         if (queueItem.resolved) {
-            RuinsOfGrowsseth.LOGGER.warn("Tried resolving already resolved dialogue event queue item {}", queueItem)
+            if (!checkOnly)
+                RuinsOfGrowsseth.LOGGER.warn("Tried resolving already resolved dialogue event queue item {}", queueItem)
             return true
         } else if (queueItem.failed) {
-            RuinsOfGrowsseth.LOGGER.warn("Tried resolving failed dialogue event queue item {}", queueItem)
+            if (!checkOnly)
+                RuinsOfGrowsseth.LOGGER.warn("Tried resolving failed dialogue event queue item {}", queueItem)
             return false
         }
 
@@ -647,9 +657,9 @@ open class BasicDialoguesComponent(
         if (event == Events.HIT_BY_PLAYER && lastTriggerTime != null) {
             val count = pdata.eventCloseTriggerCount[event] ?: 1
             val secondsSinceLastAttack = getSecondsSinceWorldTime(lastTriggerTime)
-            if (secondsSinceLastAttack < secondsForAttackRepeat && count < maxCloseHitsForDialogues)
+            if (secondsSinceLastAttack < secondsForAttackDiagRepeat && count < maxCloseHitsForDialogues)
                 pdata.eventCloseTriggerCount[event] = count + 1
-            else if (secondsSinceLastAttack > secondsForAttackRepeat * 2)
+            else if (secondsSinceLastAttack > secondsForAttackDiagRepeat * 2)
                 pdata.eventCloseTriggerCount[event] = 1
         }
         else if (lastTriggerTime != null) {
@@ -690,8 +700,8 @@ open class BasicDialoguesComponent(
     }
 
     private fun getDialoguesAndEvent(
-        player: ServerPlayer, dialogueEvents: Collection<DialogueEvent>, ignoreEventConditions: Boolean = false,
-        ignoreEmptyWarning: Boolean = false
+        player: ServerPlayer, dialogueEvents: Collection<DialogueEvent>,
+        ignoreEventConditions: Boolean = false, ignoreEmptyWarning: Boolean = false
     ): Pair<DialogueEvent, List<DialogueEntry>>? {
         val global = DialogueEntry.getAllForEvent(Events.GLOBAL)
         for (dialogueEvent in dialogueEvents) {
@@ -849,7 +859,7 @@ open class BasicDialoguesComponent(
         private var failed_: Boolean = false,
         private var resolved_: Boolean = false,
 
-        // These two should be non null IF AND ONLY IF
+        // These two should be non-null IF AND ONLY IF
         // resolved is true (would make other class, but logic is simpler
         // if I just expand the same object in the queue with dialogues
         private var event_: DialogueEvent? = null,

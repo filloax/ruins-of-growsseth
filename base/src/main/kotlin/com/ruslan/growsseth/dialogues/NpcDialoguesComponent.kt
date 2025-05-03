@@ -1,11 +1,8 @@
 package com.ruslan.growsseth.dialogues
 
-import com.ruslan.growsseth.entity.researcher.Researcher
-import com.ruslan.growsseth.entity.researcher.ResearcherDialoguesComponent
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
-import net.minecraft.util.RandomSource
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.level.entity.EntityTypeTest
 import net.minecraft.world.phys.AABB
@@ -25,8 +22,7 @@ interface NpcDialoguesComponent {
     fun nearbyPlayers(): List<ServerPlayer>
     fun playersStillAround(): Boolean
 
-    fun isQueueEmpty(playerUUID: UUID): Boolean
-    fun skipCurrentMessage(playerUUID: UUID)
+    fun skipCurrentMessage(player: ServerPlayer): Boolean
 
     /**
      * Reset nearby players, use to clear the list and allow new greetings
@@ -51,13 +47,13 @@ interface NpcDialoguesComponent {
 
     /**
      * Get the dialogue group trigger count for this NPC for this player.
-     * Dialogue groups are set in the dialouges `group` field.
+     * Dialogue groups are set in the dialogues `group` field.
      */
     fun getTriggeredDialogueGroups(player: ServerPlayer): Map<String, Int>
 
     /**
      * Get the dialogue group trigger count for this NPC for all players.
-     * Dialogue groups are set in the dialouges `group` field.
+     * Dialogue groups are set in the dialogues `group` field.
      */
     fun getTriggeredDialogueGroups(): Map<String, Int>
 
@@ -69,11 +65,10 @@ interface NpcDialoguesComponent {
      */
     fun canTriggeredEventRun(player: ServerPlayer, dialogueEvent: DialogueEvent): Boolean
 
-
     /**
      * Runs a random dialogue, using [canTriggeredEventRun] to check if it can run.
      * (devs: make it respect this contract)
-     * @param dialogueEvents Dialogue events to triggger, in order of priority
+     * @param dialogueEvents Dialogue events to trigger, in order of priority
      *  (will use next ones if previous are empty)
      * @param eventParam Parameter for the event to use in filtering dialogues
      * @param ignoreEventConditions if true: do not run checks with [canTriggeredEventRun]

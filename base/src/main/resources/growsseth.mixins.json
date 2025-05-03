@@ -6,6 +6,7 @@
     "EasterEggMixin$ZombieMixin",
     "PlaceCommandMixin",
     "PlayerAdvancementsMixin",
+    "StructureManagerMixin",
     "block.SignBlockEntityMixin",
     "block.WitherRoseBlockMixin",
     "custommapitem.CartographyTableMenu_ConstructorSlot1Mixin",
@@ -22,7 +23,8 @@
     "entity.PlayerMixin",
     "entity.ServerPlayerMixin",
     "entity.mob.AbstractHorseMixin",
-    "entity.mob.CreeperMixin",
+    "entity.mob.CreeperMixin$CreeperMobMixin",
+    "entity.mob.CreeperMixin$SwellGoalMixin",
     "entity.mob.HostileTowardsResearcherMixin",
     "entity.mob.VexMixin",
     "entity.mob.ZombieMixin",
@@ -37,9 +39,10 @@
     "item.DecoratedPotPatternsMixin",
     "item.DiscCreditsMixin",
     "item.MapItemInfoMixin",
-    "structurebook.ItemFrameStructureBookMixin",
-    "structurebook.ItemStackStructureBookMixin",
-    "structurebook.StructureTemplateMixin"
+    "structuretext.ItemFrameStructureBookMixin",
+    "structuretext.ItemStackStructureBookMixin",
+    "structuretext.StructureBlockEntityMixin",
+    "structuretext.StructureTemplateMixin"
   ],
   "client": [
     "client.AdvancementTabMixin",
