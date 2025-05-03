@@ -3,6 +3,7 @@ package com.ruslan.growsseth.commands
 import com.google.common.base.Stopwatch
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType
+import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.maps.MapLocateContext
 import com.ruslan.growsseth.maps.updateMapToStruct
 import net.minecraft.Util
@@ -75,7 +76,7 @@ object GiveStructMapCommand {
                 throw ERROR_MAP_ITEM_INVALID.create(it.item)
             }
             it.createItemStack(1, false)
-        } ?: ItemStack(Items.FILLED_MAP)
+        } ?: ItemStack(GrowssethItems.RUINS_MAP)
 
         val blockPos = BlockPos.containing(commandSourceStack.position)
         val serverLevel = commandSourceStack.level
