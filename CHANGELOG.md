@@ -1,5 +1,20 @@
 # Changelog
 
+## DEVELOPMENT
+
+## 0.13.1
+
+Tweaked
+- Creepers won't explode inside the Researcher's tent, instead of exploding without dealing damage (configurable)
+- Books and signs templates won't be loaded when placing structures with structure blocks, to allow easier editing in dev
+
+Fixed
+- The Researcher will now stop strolling when players approach him
+- All goodbye dialogues are now immediate, to always trigger even if there is still a delay from a previous message
+- Fixed rare bug that made the researcher think that players stole his work tools (but wasn't true)
+- Fixed some dynamic dialogues triggering at the wrong quest stages
+- `givestructmap` command now works again
+
 ## CURRENT
 
 ## 0.13.0

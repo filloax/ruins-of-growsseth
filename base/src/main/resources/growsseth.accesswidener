@@ -1,7 +1,7 @@
 accessWidener	v1	named
 #note: not used in this module, but used in fabric-like modules
 
-extendable  method net/minecraft/world/entity/monster/ZombieVillager finishConversion (Lnet/minecraft/server/level/ServerLevel;)V
+extendable method net/minecraft/world/entity/monster/ZombieVillager finishConversion (Lnet/minecraft/server/level/ServerLevel;)V
 accessible field net/minecraft/world/entity/monster/ZombieVillager conversionStarter Ljava/util/UUID;
 accessible field net/minecraft/world/entity/monster/ZombieVillager villagerConversionTime I
 accessible field net/minecraft/world/level/levelgen/structure/pieces/StructurePiecesBuilder pieces Ljava/util/List;

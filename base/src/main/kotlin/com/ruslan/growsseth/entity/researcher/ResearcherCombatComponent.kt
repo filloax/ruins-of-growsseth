@@ -34,8 +34,11 @@ class ResearcherCombatComponent(
     val lastKilledPlayers: MutableList<Player> = mutableListOf()
 
     // For player aggro management
+    private var angerBuildupTimer: MutableMap<Player, MutableInt> = mutableMapOf()
     var hitCounter: MutableMap<Player, MutableInt> = mutableMapOf()
-    val timeToCalmDown: Int = 10F.secondsToTicks()
+        private set
+    val ticksToCalmDown: Int = 10.secondsToTicks()
+    val maxHitCounter = 3
 
     companion object {
         // distance for attacking mobs that are not going after him (if option is active)
@@ -43,10 +46,6 @@ class ResearcherCombatComponent(
     }
 
     private val dialogues by owner::dialogues
-
-    // For player aggro management
-    private var angerBuildupTimer: MutableMap<Player, MutableInt> = mutableMapOf()
-    private val maxHitCounter = 3
 
     private val lowHealthCondition: Boolean
         get() = owner.health <= owner.maxHealth / 3
@@ -72,7 +71,7 @@ class ResearcherCombatComponent(
                 hitCounter[attacker] = MutableInt(0)
             if (!wantsToKillPlayer(attacker)) {
                 hitCounter[attacker]?.increment()
-                angerBuildupTimer[attacker] = MutableInt(timeToCalmDown)
+                angerBuildupTimer[attacker] = MutableInt(ticksToCalmDown)
             }
         }
 
@@ -141,7 +140,7 @@ class ResearcherCombatComponent(
             if (value.toInt() == 0) {       // using if (and not else if) since the timer decreases in the tick after the attack
                 hitCounter[key]!!.decrement()
                 angerBuildupTimer[key] =
-                    if (hitCounter[key]!!.toInt() > 0) MutableInt(timeToCalmDown)
+                    if (hitCounter[key]!!.toInt() > 0) MutableInt(ticksToCalmDown)
                     else MutableInt(-1)
             }
         }

@@ -1,4 +1,4 @@
-package com.ruslan.growsseth.mixin.structurebook;
+package com.ruslan.growsseth.mixin.structuretext;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -18,11 +18,17 @@ public abstract class StructureTemplateMixin {
         at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/entity/BlockEntity;loadWithComponents(Lnet/minecraft/nbt/CompoundTag;Lnet/minecraft/core/HolderLookup$Provider;)V")
     )
     private void placeInWorld_loadBlockEntity(BlockEntity instance, CompoundTag tag, HolderLookup.Provider registries, Operation<Void> original) {
-        MixinHelpers.placingBlockEntityInStructure = true;
-        try { // Potentially laggy? But want to be 100% sure
+        // We want to keep the templates strings when placing structures through structure blocks
+        if (!MixinHelpers.loadingFromStructureBlock) {
+            MixinHelpers.placingBlockEntityInStructure = true;
+            try { // Potentially laggy? But want to be 100% sure
+                original.call(instance, tag, registries);
+            } finally {
+                MixinHelpers.placingBlockEntityInStructure = false;
+            }
+        }
+        else {
             original.call(instance, tag, registries);
-        } finally {
-            MixinHelpers.placingBlockEntityInStructure = false;
         }
     }
 }

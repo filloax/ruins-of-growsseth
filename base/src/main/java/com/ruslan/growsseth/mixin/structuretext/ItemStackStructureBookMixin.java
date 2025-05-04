@@ -1,4 +1,4 @@
-package com.ruslan.growsseth.mixin.structurebook;
+package com.ruslan.growsseth.mixin.structuretext;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.ruslan.growsseth.structure.StructureBooks;

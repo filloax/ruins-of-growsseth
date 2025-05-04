@@ -9,12 +9,13 @@ object BasicDialogueEvents {
     val GLOBAL = event("global")
     val PLAYER_ARRIVE = event("playerArrive", tag=DialogueEvent.TAG_HELLO)
     val PLAYER_ARRIVE_NIGHT = event("playerArriveNight", tag=DialogueEvent.TAG_HELLO)
-    val PLAYER_LEAVE = event("playerLeave", tag=DialogueEvent.TAG_GOODBYE)
-    val PLAYER_LEAVE_NIGHT = event("playerLeaveNight", tag=DialogueEvent.TAG_GOODBYE)
     val PLAYER_ARRIVE_SOON = event("playerArriveSoon", tag=DialogueEvent.TAG_HELLO)
-    val PLAYER_LEAVE_SOON = event("playerLeaveSoon", tag=DialogueEvent.TAG_GOODBYE)
-    val PLAYER_LEAVE_INTERRUPTED = event("playerLeaveInterrupted", immediate = true, tag=DialogueEvent.TAG_GOODBYE)
     val PLAYER_ARRIVE_LONG_TIME = event("playerArriveLongTime", tag=DialogueEvent.TAG_HELLO)
+    /** Needs to be immediate, or it won't trigger when there is a long dialogue with  */
+    val PLAYER_LEAVE = event("playerLeave", immediate = true, tag=DialogueEvent.TAG_GOODBYE)
+    val PLAYER_LEAVE_NIGHT = event("playerLeaveNight", immediate = true, tag=DialogueEvent.TAG_GOODBYE)
+    val PLAYER_LEAVE_SOON = event("playerLeaveSoon", immediate = true, tag=DialogueEvent.TAG_GOODBYE)
+    val PLAYER_LEAVE_INTERRUPTED = event("playerLeaveInterrupted", immediate = true, tag=DialogueEvent.TAG_GOODBYE)
     /** As soon as the dialogue conditions apply and a player is nearby, this triggers;
      * to be used by limited dialogue entries. */
     val TICK_NEAR_PLAYER = event("tickNearPlayer", preventMultiQueue = true)

@@ -107,7 +107,7 @@ fun ItemStack.updateMapToPos(
     }
     this.loreLines().clear()
 
-    RuinsOfGrowsseth.LOGGER.info("Set map target to: $pos, with icon: $destinationType, name: $displayName (item is $this)")
+    RuinsOfGrowsseth.LOGGER.info("Set map target to: $pos, with icon: ${destinationType.type?.value()?.assetId}, name: $displayName (item is $this)")
 }
 
 fun ItemStack.invalidateMap() {
