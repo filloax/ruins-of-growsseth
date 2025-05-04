@@ -6,7 +6,7 @@
 
 Tweaked
 - Creepers won't explode inside the Researcher's tent, instead of exploding without dealing damage (configurable)
-- Books and signs templates won't be loaded when placing structures with structure blocks, to allow easier editing
+- Books and signs templates won't be loaded when placing structures with structure blocks, to allow easier editing in dev
 
 Fixed
 - The Researcher will now stop strolling when players approach him
