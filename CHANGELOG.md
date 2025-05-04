@@ -1,6 +1,6 @@
 # Changelog
 
-## DEVELOPMENT
+## CURRENT
 
 ## 0.13.1
 
@@ -14,8 +14,6 @@ Fixed
 - Fixed rare bug that made the researcher think that players stole his work tools (but wasn't true)
 - Fixed some dynamic dialogues triggering at the wrong quest stages
 - `givestructmap` command now works again
-
-## CURRENT
 
 ## 0.13.0
 
