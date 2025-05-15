@@ -1,5 +1,15 @@
 # Changelog
 
+## DEVELOPMENT
+
+## 0.13.2
+
+Tweaked
+- Tweaked the noteblock structures map icon colors
+
+Fixed
+- Fixed the `removeTentAndResearcher` gamemaster event removing the first donkey it found, even if not owned by the researcher
+
 ## CURRENT
 
 ## 0.13.1
