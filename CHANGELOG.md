@@ -4,6 +4,9 @@
 
 ## 0.13.2
 
+Added
+- `keep_dialogue_history` argument for `/greset` command, to reset the researcher data except for its dialogue history
+
 Tweaked
 - Tweaked the noteblock structures map icon colors
 

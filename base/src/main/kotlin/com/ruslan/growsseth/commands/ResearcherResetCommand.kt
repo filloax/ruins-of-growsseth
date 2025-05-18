@@ -21,9 +21,14 @@ object ResearcherResetCommand {
 
     fun register(dispatcher: CommandDispatcher<CommandSourceStack>, registryAccess: CommandBuildContext, environment: CommandSelection) {
         dispatcher.register(literal("greset").requires{ it.hasPermission(2) }
-            .then(literal("researcher").executes { ctx ->
-                runResetFunction(ctx, ::resetResearcherData)
-            })
+            .then(literal("researcher")
+                .then(literal("keep_dialogue_history").executes { ctx ->
+                    runResetFunction(ctx, ::resetResearcherDataKeepDialogues)
+                })
+                .executes { ctx ->
+                    runResetFunction(ctx, ::resetResearcherData)
+                }
+            )
             .then(literal("structures").executes { ctx ->
                 runResetFunction(ctx, ::resetStructureProgress)
             })
@@ -36,7 +41,10 @@ object ResearcherResetCommand {
         )
     }
 
-    private fun runResetFunction(ctx: CommandContext<CommandSourceStack>, resetFunction: (CommandContext<CommandSourceStack>, MinecraftServer) -> Unit): Int {
+    private fun runResetFunction(
+        ctx: CommandContext<CommandSourceStack>,
+        resetFunction: (CommandContext<CommandSourceStack>, MinecraftServer) -> Unit,
+    ): Int {
         return if (ResearcherConfig.singleResearcher) {
             resetFunction(ctx, ctx.source.server)
             ctx.source.sendSuccess({ Component.translatable("growsseth.commands.greset.done") }, true)
@@ -52,8 +60,25 @@ object ResearcherResetCommand {
         savedData.data = CompoundTag()
         savedData.name = null
         savedData.isDead = false
-        savedData.setDirty()
+        updateResearcherData(savedData, server, ctx)
+    }
 
+    private fun resetResearcherDataKeepDialogues(ctx: CommandContext<CommandSourceStack>, server: MinecraftServer) {
+        // Like resetResearcherData, but keeps the dialogue history
+        val savedData = ResearcherSavedData.getPersistent(server)
+        val dialogueData = savedData.data.getCompound("SharedDialogueData")
+        savedData.data = CompoundTag()
+        savedData.data.put("SharedDialogueData", dialogueData)
+        savedData.isDead = false
+        updateResearcherData(savedData, server, ctx)
+    }
+
+    private fun updateResearcherData(
+        savedData: ResearcherSavedData,
+        server: MinecraftServer,
+        ctx: CommandContext<CommandSourceStack>
+    ) {
+        savedData.setDirty()
         try {
             server.allLevels.forEach { level ->
                 level.getEntities(GrowssethEntities.RESEARCHER, alwaysTruePredicate()).forEach { researcher ->
