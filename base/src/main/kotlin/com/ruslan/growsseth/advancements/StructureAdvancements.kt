@@ -1,13 +1,11 @@
 package com.ruslan.growsseth.advancements
 
 import com.mojang.datafixers.util.Either
-import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.ModEvents
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.advancements.criterion.JigsawPiecePredicate
 import com.ruslan.growsseth.advancements.criterion.JigsawPieceTrigger
 import com.ruslan.growsseth.structure.GrowssethStructures
-import com.ruslan.growsseth.structure.VillageBuildings
 import com.ruslan.growsseth.utils.resLoc
 import net.minecraft.advancements.Advancement
 import net.minecraft.advancements.AdvancementHolder
@@ -153,7 +151,7 @@ object StructureAdvancements {
 
         private fun createStructureDetectionAdvancement(consumer: Consumer<AdvancementHolder>, structKey: ResourceKey<Structure>, root: AdvancementHolder): AdvancementHolder {
             val holder = structureReg.getOrThrow(structKey)
-            return Advancement.Builder.advancement()
+            return Advancement.Builder()
                 /* not needed if it's not going to be displayed
                 .display(
                     Items.FILLED_MAP,  // The display icon
@@ -178,7 +176,7 @@ object StructureAdvancements {
             root: AdvancementHolder,
             name: String = pieceIds.joinToString("_") { it.path.replace("/", "_") },
         ): AdvancementHolder {
-            return Advancement.Builder.advancement()
+            return Advancement.Builder()
                 .parent(root)
                 .addCriterion("in_structure_piece", GrowssethCriterions.JIGSAW_PIECE.createCriterion(JigsawPieceTrigger.Instance(
                     Optional.empty(),
