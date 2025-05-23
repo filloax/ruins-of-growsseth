@@ -67,7 +67,7 @@ public final class ResearcherConfig {
 
     @ConfigEntry(id = "noCreeperExplosionsInResearcherTent", translation = T_PREF + "noCreeperExplosionsInResearcherTent.name")
     @Comment(
-            value = "Makes creepers unable to explode while near the Researcher's tent, to prevent accidental damage and possible issues with the Researcher's quest.",
+            value = "Makes creepers unable to explode while near the Researcher's tent (if a researcher is present), to prevent accidental damage and possible issues with the Researcher's quest.",
             translation = T_PREF + "noCreeperExplosionsInResearcherTent.comment"
     )
     public static boolean noCreeperExplosionsInResearcherTent = true;
