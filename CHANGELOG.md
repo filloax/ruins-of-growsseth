@@ -12,6 +12,7 @@ Tweaked
 
 Fixed
 - Fixed the `removeTentAndResearcher` gamemaster event removing the first donkey it found, even if not owned by the researcher
+- Fixed creepers not exploding inside researcher's tents even when no researcher is present
 
 ## CURRENT
 
