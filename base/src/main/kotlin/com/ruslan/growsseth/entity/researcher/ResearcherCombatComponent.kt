@@ -14,23 +14,25 @@ import net.minecraft.world.Difficulty
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal
 import net.minecraft.world.entity.boss.wither.WitherBoss
+import net.minecraft.world.entity.monster.AbstractSkeleton
+import net.minecraft.world.entity.monster.Vex
+import net.minecraft.world.entity.monster.Zombie
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.entity.projectile.AbstractArrow
+import net.minecraft.world.entity.raid.Raider
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.enchantment.Enchantments
+import net.minecraft.world.level.Level
 import org.apache.commons.lang3.mutable.MutableInt
 
-/**
- * Split combat-related features to simplify main class
- * (and avoid it being 1.3k lines long)
- */
-class ResearcherCombatComponent(
-    val owner: Researcher,
-) {
-    val level = owner.level()
+/** Researcher combat-related features, split from main class to simplify it */
+class ResearcherCombatComponent(val owner: Researcher) {
+    val level: Level = owner.level()
     val lastKilledPlayers: MutableList<Player> = mutableListOf()
 
     // For player aggro management
@@ -39,11 +41,6 @@ class ResearcherCombatComponent(
         private set
     val ticksToCalmDown: Int = 10.secondsToTicks()
     val maxHitCounter = 3
-
-    companion object {
-        // distance for attacking mobs that are not going after him (if option is active)
-        val distanceForUnjustifiedAggression: Int = 10
-    }
 
     private val dialogues by owner::dialogues
 
@@ -155,6 +152,17 @@ class ResearcherCombatComponent(
         angerBuildupTimer[player]!!.setValue(-1)
         lastKilledPlayers.add(player)
         dialogues?.triggerDialogue(player, ResearcherDialoguesComponent.EV_KILL_PLAYER)
+    }
+
+    fun shouldApplySelfDefence(entity: LivingEntity?): Boolean {
+        return (entity is Mob && entity.target.let { notNull(it) && it == owner })
+    }
+
+    fun shouldStrikeFirst(entity: LivingEntity?): Boolean {
+        // distance for attacking mobs that are not going after him (if option is active)
+        val distanceForUnjustifiedAggression = 10
+        return (entity != null && owner.distanceTo(entity) < distanceForUnjustifiedAggression &&
+                (entity is Raider || entity is Vex || entity is Zombie || entity is AbstractSkeleton))
     }
 
     private fun deflectArrow(source: DamageSource) : Boolean {
