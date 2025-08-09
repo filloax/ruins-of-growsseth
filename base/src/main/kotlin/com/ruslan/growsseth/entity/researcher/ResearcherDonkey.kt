@@ -11,7 +11,6 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.Leashable
-import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.animal.horse.Donkey
 import net.minecraft.world.entity.decoration.LeashFenceKnotEntity
 import net.minecraft.world.level.Level
@@ -87,7 +86,7 @@ object ResearcherDonkey {
         mob.tags.add(Constants.TAG_RESEARCHER_DONKEY)
     }
 
-    fun removeDonkey(entity: Researcher, level: ServerLevel, predicate: ((Entity) -> Boolean) = {true}) {
+    fun removeDonkey(entity: Researcher, level: ServerLevel, predicate: ((Entity) -> Boolean) = {it.tags.contains(Constants.TAG_RESEARCHER_DONKEY)}) {
         val tent = entity.tent ?: return
         removeDonkey(tent, level, predicate)
     }
@@ -98,14 +97,14 @@ object ResearcherDonkey {
 //        if (noItemDonkey == null && donkeys.isNotEmpty()) {
 //            RuinsOfGrowsseth.LOGGER.warn("Couldn't remove donkey as inventory was not empty")
 //        }
-        val useDonkey = donkeys.firstOrNull()
-        if (notNull(useDonkey)) {
-            RuinsOfGrowsseth.LOGGER.info("Removing Researcher donkey $useDonkey")
+        val donkeyToRemove = donkeys.firstOrNull()
+        if (notNull(donkeyToRemove)) {
+            RuinsOfGrowsseth.LOGGER.info("Removing Researcher donkey $donkeyToRemove")
 
-            val knot = useDonkey.leashHolder?.let { if (it is LeashFenceKnotEntity) it else null }
+            val knot = donkeyToRemove.leashHolder?.let { if (it is LeashFenceKnotEntity) it else null }
 
             EventUtil.runAtServerTickEnd {
-                useDonkey.discard()
+                donkeyToRemove.discard()
                 knot?.discard()
             }
         }

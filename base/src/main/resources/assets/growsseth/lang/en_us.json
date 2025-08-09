@@ -223,7 +223,7 @@
     "growsseth.config.researcherAntiCheat.name": "Researcher anti-cheat",
     "growsseth.config.researcherAntiCheat.comment": "If the player tries to cheat while fighting the researcher he will drink a turtle master potion and enable a passive regen to prevent him from dying. Also prevents him from suffocating when on low health.",
     "growsseth.config.noCreeperExplosionsInResearcherTent.name": "Creepers can't explode near tent",
-    "growsseth.config.noCreeperExplosionsInResearcherTent.comment": "Makes creepers unable to explode while near the Researcher's tent, to prevent accidental damage and possible issues with the Researcher's quest.",
+    "growsseth.config.noCreeperExplosionsInResearcherTent.comment": "Makes creepers unable to explode while near the Researcher's tent (if a researcher is present), to prevent accidental damage and possible issues with the Researcher's quest.",
     "growsseth.config.researcherInteractsWithMobs.name": "Researcher interacts with other mobs",
     "growsseth.config.researcherInteractsWithMobs.comment": "Zombies, skeletons, raiders and vexes will be hostile towards the researcher, and he will react to them and other mobs who attack him. If changed ingame, takes effect on world reload.",
     "growsseth.config.researcherStrikesFirst.name": "Researcher strikes first",

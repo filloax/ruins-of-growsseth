@@ -2,6 +2,19 @@
 
 ## CURRENT
 
+## 0.13.2
+
+Added
+- `keep_dialogue_history` argument for `/greset` command, to reset the researcher data except for its dialogue history
+
+Tweaked
+- Tweaked the noteblock structures map icon colors
+
+Fixed
+- Fixed the `removeTentAndResearcher` gamemaster event removing the first donkey it found, even if not owned by the researcher
+- Fixed creepers not exploding inside researcher's tents even when no researcher is present
+- Fixed the logs on Neoforge having two "Ruins of Growsseth" prefixes
+
 ## 0.13.1
 
 Tweaked

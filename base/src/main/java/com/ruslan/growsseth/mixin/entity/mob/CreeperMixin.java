@@ -3,6 +3,7 @@ package com.ruslan.growsseth.mixin.entity.mob;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.ruslan.growsseth.config.ResearcherConfig;
 import com.ruslan.growsseth.entity.researcher.Researcher;
+import com.ruslan.growsseth.entity.researcher.ZombieResearcher;
 import com.ruslan.growsseth.interfaces.StructureManagerExtension;
 import com.ruslan.growsseth.utils.MixinHelpers;
 import net.minecraft.core.BlockPos;
@@ -13,6 +14,8 @@ import net.minecraft.world.entity.ai.goal.SwellGoal;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -41,6 +44,7 @@ public abstract class CreeperMixin {
         @Shadow @Final private Creeper creeper;
         @Unique private boolean creeperWasInTent;
         @Unique private BlockPos lastCreeperPos;
+        @Unique private boolean researchersNearby;
 
         @ModifyReturnValue(at = @At("TAIL"), method = "canUse")
         private boolean preventExplosionInTent(boolean original) {
@@ -50,7 +54,7 @@ public abstract class CreeperMixin {
             }
             BlockPos creeperPos = creeper.blockPosition();
             boolean coordsChanged = creeperCoordsChanged(creeperPos);
-            if (creeperWasInTent && !coordsChanged) {
+            if (creeperWasInTent && !coordsChanged && researchersNearby) {
                 // Creeper was in tent at last check and did not change position: skip tent check
                 return false;
             }
@@ -62,8 +66,12 @@ public abstract class CreeperMixin {
                 boolean creeperInTent = structureManager
                         .getStructureAtExpanded(creeperPos, MixinHelpers.researcherTent, 3).isValid();
                 creeperWasInTent = creeperInTent;
-                if (creeperInTent)
-                    return false;
+                if (creeperInTent) {
+                    // Every time the coordinates change while the creeper is inside the tent we refresh the nearby researchers boolean
+                    refreshResearchersNearby();
+                    if (researchersNearby)
+                        return false;   // The creeper explosion should only be prevented when a researcher is present
+                }
             }
             return original;
         }
@@ -83,6 +91,16 @@ public abstract class CreeperMixin {
                 lastCreeperPos = currentCreeperPos;
                 return true;
             }
+        }
+
+        @Unique
+        private void refreshResearchersNearby() {
+            Vec3 creeperPos = creeper.blockPosition().getBottomCenter();
+            double bbSize = 80;     // To be 100% sure
+            AABB bbCheck = AABB.ofSize(creeperPos, bbSize, bbSize, bbSize);
+            var researchersList = creeper.level().getEntitiesOfClass(Researcher.class, bbCheck);
+            var zombieResearchersList = creeper.level().getEntitiesOfClass(ZombieResearcher.class, bbCheck);
+            researchersNearby = !researchersList.isEmpty() || !zombieResearchersList.isEmpty();
         }
     }
 }
