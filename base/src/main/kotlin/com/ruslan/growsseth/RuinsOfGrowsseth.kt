@@ -13,7 +13,7 @@ import com.ruslan.growsseth.http.GrowssethExtraEvents
 import com.ruslan.growsseth.network.GrowssethPackets
 import com.ruslan.growsseth.resource.MusicCommon
 import com.ruslan.growsseth.structure.*
-import com.ruslan.growsseth.utils.PrefixedLogger
+import com.ruslan.growsseth.utils.GrowssethLogger
 import com.ruslan.growsseth.utils.loadPropertiesFile
 import org.apache.logging.log4j.Level
 import org.apache.logging.log4j.LogManager
@@ -25,7 +25,7 @@ abstract class RuinsOfGrowsseth {
         const val MOD_NAME = "Ruins of Growsseth"
 
         @JvmField
-        val LOGGER = PrefixedLogger(LogManager.getLogger(MOD_NAME))
+        val LOGGER = GrowssethLogger(LogManager.getLogger(MOD_NAME))
 
         fun logDev(level: Level, message: String) {
             if (FxLibServices.platform.isDevEnvironment()) {

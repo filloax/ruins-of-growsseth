@@ -28,10 +28,12 @@ fun resLocVanilla(str: String): ResourceLocation {
 
 fun serverLang() = FxLibServices.serverLanguage.get(GrowssethConfig.serverLanguage)
 
-class PrefixedLogger(private val logger: Logger) {
-    private val prefix =
-        if (FxLibServices.platform.isDevEnvironment()) ""     // already present on dev env
+class GrowssethLogger(private val logger: Logger) {
+    var isNeoforge = false
+    private val prefix by lazy {
+        if (isNeoforge || FxLibServices.platform.isDevEnvironment()) ""     // already present on neoforge and fabric dev env
         else "[$MOD_NAME] "
+    }
     fun log(level: Level, msg: String, vararg params: Any?) = logger.log(level, "$prefix$msg", *params)
     fun info(msg: String, vararg params: Any?) = logger.info("$prefix$msg", *params)
     fun warn(msg: String, vararg params: Any?) = logger.warn("$prefix$msg", *params)
