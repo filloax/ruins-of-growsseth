@@ -34,15 +34,12 @@ import net.neoforged.fml.ModContainer
 import net.neoforged.fml.ModLoadingContext
 import net.neoforged.fml.common.Mod
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent
-import net.neoforged.neoforge.attachment.AttachmentType
 import net.neoforged.neoforge.client.event.ClientTickEvent
 import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory
 import net.neoforged.neoforge.event.AddReloadListenerEvent
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent
 import net.neoforged.neoforge.event.RegisterCommandsEvent
-import net.neoforged.neoforge.registries.DeferredRegister
-import net.neoforged.neoforge.registries.NeoForgeRegistries
 import net.neoforged.neoforge.registries.RegisterEvent
 import thedarkcolour.kotlinforforge.neoforge.forge.FORGE_BUS
 import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
@@ -52,6 +49,7 @@ import thedarkcolour.kotlinforforge.neoforge.forge.runForDist
 @Mod(RuinsOfGrowsseth.MOD_ID)
 object RuinsOfGrowssethNeo : RuinsOfGrowsseth() {
     init {
+        LOGGER.isNeoforge = true
         initialize()
 
         runForDist(

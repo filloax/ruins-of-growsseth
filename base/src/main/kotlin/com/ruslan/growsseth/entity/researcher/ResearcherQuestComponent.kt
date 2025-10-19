@@ -249,6 +249,7 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
             .or(ApiEventTrigger(finalQuestStartName))
 
         override fun onActivated(entity: Researcher) {
+            entity.healed = false    // for resetting discounts when using gquest
             entity.dialogues?.resetNearbyPlayers()
         }
     }
@@ -256,6 +257,10 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
     inner class ZombieStage : QuestStage<Researcher> {
         override val trigger = ProgressTradesTrigger(server, onlyOne = false)
             .or(ApiEventTrigger(finalQuestZombieName))
+
+        override fun onActivated(entity: Researcher) {
+            entity.healed = false    // for resetting discounts when using gquest
+        }
 
         // Trigger on update too to cover multiple tent situations
         // but run logic at tick end to avoid issues with replacing entities as it sometimes desynced
@@ -362,6 +367,10 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
         override val trigger = QuestStageTrigger<Researcher> { entity, _ ->
             entity.healed
         }
+
+        override fun onActivated(entity: Researcher) {
+            entity.healed = true    // for discounts when using gquest
+        }
     }
 
     // First this stage where we wait for healed dialogue to play out,
@@ -370,12 +379,17 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
     inner class HealedWaitForDialogueStage : QuestStage<Researcher> {
         // Trigger when healed dialogue is triggered
         override val trigger: QuestStageTrigger<Researcher> = DialogueGroupTrigger("group-cure-dialogue")
+
+        override fun onActivated(entity: Researcher) {
+            entity.healed = true    // for discounts when using gquest
+        }
     }
 
     inner class HomeLastDialogueStage: QuestStage<Researcher> {
         override val trigger = commonReloadTrigger
 
         override fun onActivated(entity: Researcher) {
+            entity.healed = true    // for discounts when using gquest
             entity.startingPos?.let { entity.moveTo(it, entity.yRot, entity.xRot) }
             entity.dialogues?.resetNearbyPlayers()
         }
@@ -384,6 +398,10 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
     // First wait for researcher to say final dialogue...
     class WaitBeforeLeaveStage : QuestStage<Researcher> {
         override val trigger = DialogueGroupTrigger<Researcher>("group-quest-last-dialogue")
+
+        override fun onActivated(entity: Researcher) {
+            entity.healed = true    // for discounts when using gquest
+        }
     }
 
     // ...THEN start counting time
@@ -396,6 +414,10 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
                     or ApiEventTrigger(finalQuestLeaveName)
                 )
             )
+
+        override fun onActivated(entity: Researcher) {
+            entity.healed = true    // for discounts when using gquest
+        }
 
         // OnUpdate to also cover multiple tents
         override fun onUpdate(entity: Researcher) {

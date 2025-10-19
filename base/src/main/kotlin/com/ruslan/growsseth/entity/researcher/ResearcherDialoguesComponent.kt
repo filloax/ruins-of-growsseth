@@ -142,18 +142,23 @@ class ResearcherDialoguesComponent(
         inbetweenPlayers: Set<ServerPlayer>,
         farPlayers: Set<ServerPlayer>
     ) {
-        val players = nearPlayers + inbetweenPlayers
-        for (player in players) {
-            if (!player.isSpectator) {
-                val inCellar = isInCellar(player)
-                if (inCellar && !playersInCellar.contains(player.uuid)) {
-                    playersInCellar.add(player.uuid)
-                    triggerDialogue(player, EV_CELLAR)
-                } else if (!inCellar && playersInCellar.contains(player.uuid) && researcher.hasLineOfSight(player)) {
-                    playersInCellar.remove(player.uuid)
-                    triggerDialogue(player, EV_CELLAR_EXIT)
+        val cellarCheck = !researcher.healed        // we check the cellar only if the researcher has not been healed yet
+        if (cellarCheck) {
+            val players = nearPlayers + inbetweenPlayers
+            for (player in players) {
+                if (!player.isSpectator) {
+                    val inCellar = isInCellar(player)
+                    if (inCellar && !playersInCellar.contains(player.uuid)) {
+                        playersInCellar.add(player.uuid)
+                        triggerDialogue(player, EV_CELLAR)
+                    } else if (!inCellar && playersInCellar.contains(player.uuid) && researcher.hasLineOfSight(player)) {
+                        playersInCellar.remove(player.uuid)
+                        triggerDialogue(player, EV_CELLAR_EXIT)
+                    }
                 }
             }
+        } else {
+            playersInCellar.clear()     // it's easier to do it here
         }
     }
 
