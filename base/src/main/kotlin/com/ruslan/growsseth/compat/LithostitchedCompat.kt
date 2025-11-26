@@ -48,6 +48,7 @@ object LithostitchedCompat {
         val poolSet = HolderSet.direct(pool)
         // Create and apply the modifier to the pool set
         val modifier = AddTemplatePoolElementsModifier(
+            0,
             poolSet,
             listOf(Pair.of(newPiece, weight))
         )
