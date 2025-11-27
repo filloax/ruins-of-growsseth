@@ -11,25 +11,19 @@ env:
 
 jobs:
   build:
+    # 'chore: release' commits will trigger the build
     if: "contains(github.event.head_commit.message, 'chore: release') && github.event_name != 'pull_request'"
     runs-on: ubuntu-latest
     outputs:
       mod_version: ${{ steps.get_version.outputs.MOD_VERSION }}
       version_type: ${{ steps.get_version.outputs.VERSION_TYPE }}
       version_suffix: ${{ steps.get_version.outputs.VERSION_SUFFIX }}
+      release_tag: ${{ steps.get_version.outputs.RELEASE_TAG }}
     steps:
-      - uses: actions/checkout@v4  
-
-      - name: Setup Java
-        uses: actions/setup-java@v2
+      - uses: actions/checkout@v4
         with:
-          distribution: "temurin"
-          java-version: ${{ env.JAVA_VERSION }}
+          fetch-depth: 0    # Needed to check tags
 
-      - name: Make Gradle Wrapper Executable
-        if: ${{ runner.os != 'Windows' }}
-        run: chmod +x ./gradlew
-      
       - name: Extract version info from gradle.properties
         id: get_version
         run: |
@@ -41,10 +35,34 @@ jobs:
           else
             VERSION_SUFFIX=""
           fi
+          
+          RELEASE_TAG=v${MOD_VERSION}${VERSION_SUFFIX}-${{ env.MC_VER }}
 
           echo "MOD_VERSION=${MOD_VERSION}" >> $GITHUB_OUTPUT
           echo "VERSION_TYPE=${VERSION_TYPE}" >> $GITHUB_OUTPUT
           echo "VERSION_SUFFIX=${VERSION_SUFFIX}" >> $GITHUB_OUTPUT
+          echo "RELEASE_TAG=${RELEASE_TAG}" >> $GITHUB_OUTPUT
+
+      - name: Check if Tag already exists
+        id: check_tag
+        run: |
+          TAG=${{ steps.get_version.outputs.release_tag }}          
+          if git show-ref --tags --verify --quiet "refs/tags/${TAG}"; then
+            echo "Tag ${TAG} already exists! Preventing override"
+            exit 1
+          else
+            echo "Tag ${TAG} does not exist in current releases, will proceed"
+          fi
+
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: "temurin"
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Make Gradle Wrapper Executable
+        if: ${{ runner.os != 'Windows' }}
+        run: chmod +x ./gradlew
 
       - name: Build with Gradle
         run: ./gradlew build
@@ -90,7 +108,7 @@ jobs:
               fabric-api(required)
               modmenu(recommended)
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v4
 
       - name: Download build artifacts
         uses: actions/download-artifact@v4
@@ -129,7 +147,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v4
 
       - name: Download build artifacts
         uses: actions/download-artifact@v4
