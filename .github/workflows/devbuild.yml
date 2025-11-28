@@ -49,6 +49,7 @@ jobs:
             base/build/libs/*.jar
             fabric/build/libs/*.jar
             neoforge/build/libs/*.jar
+            base/build/datapack/*.zip
 
       - name: Increment release count
         id: get_release_count
