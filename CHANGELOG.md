@@ -5,7 +5,7 @@
 ## 0.13.3
 
 Fixed
-- Lithostitched compatibility for 1.5 of the library
+- Lithostitched compatibility for version 1.5 of the library
 
 ## 0.13.2
 
