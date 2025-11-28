@@ -1,5 +1,5 @@
 name: Release Mod (1.20.6)
- 
+
 on:
   push:
     branches:
@@ -10,11 +10,32 @@ env:
 
 jobs:
   build:
+    # 'chore: release' commits will trigger the build
     if: "contains(github.event.head_commit.message, 'chore: release') && github.event_name != 'pull_request'"
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v1  
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0    # Needed to check tags
+
+      - name: Get version from gradle
+        id: get_version
+        run: |
+          MOD_VERSION=$(grep "mod_version" gradle.properties | cut -d'=' -f2 | xargs)
+          echo "MOD_VERSION=${MOD_VERSION}" >> $GITHUB_OUTPUT
+          echo "RELEASE_TAG=v${MOD_VERSION}-${{ env.MC_VER }}" >> $GITHUB_OUTPUT
+
+      - name: Check if tag already exists
+        id: check_tag
+        run: |
+          TAG=${{ steps.get_version.outputs.release_tag }}
+          if git show-ref --tags --verify --quiet "refs/tags/${TAG}"; then
+            echo "Tag ${TAG} already exists! Preventing override"
+            exit 1
+          else
+            echo "Tag ${TAG} does not exist in current releases, will proceed"
+          fi
 
       - name: Setup Java
         uses: actions/setup-java@v2
@@ -25,16 +46,12 @@ jobs:
       - name: Make Gradle Wrapper Executable
         if: ${{ runner.os != 'Windows' }}
         run: chmod +x ./gradlew
-      
-      - name: Get version from gradle
-        id: get_version
-        run: echo "VERSION=$(./gradlew modVersion | grep VERSION | awk -F'=' '{print $2}')" >> $GITHUB_OUTPUT
-  
+
       - name: Build with Gradle
         run: ./gradlew build
         env:
           GROWSSETH_MUSIC_PW: ${{ secrets.MUSIC_PW }}
-      
+
       - name: Extract latest changelog
         id: changelog
         run: |
@@ -49,9 +66,9 @@ jobs:
 
           curseforge-token: ${{ secrets.TOKEN_CURSEFORGE }}
 
-          name: Ruins of Growsseth ${{ steps.get_version.outputs.VERSION }} for Minecraft ${{ env.MC_VER }}
+          name: Ruins of Growsseth ${{ steps.get_version.outputs.MOD_VERSION }} for Minecraft ${{ env.MC_VER }}
           version-type: beta
-          
+
           game-versions: |
             ${{ env.MC_VER }}
           dependencies: |
@@ -66,13 +83,11 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
-          name: Ruins of Growsseth ${{ steps.get_version.outputs.VERSION }} for Minecraft ${{ env.MC_VER }}
+          name: Ruins of Growsseth ${{ steps.get_version.outputs.MOD_VERSION }} for Minecraft ${{ env.MC_VER }}
           body_path: latest_changelog.txt
           token: ${{ secrets.TOKEN_GITHUB }}
           make_latest: false
-          tag_name: v${{ steps.get_version.outputs.VERSION }}-${{ env.MC_VER }}
+          tag_name: ${{ steps.get_version.outputs.RELEASE_TAG }}
           files: |
             build/libs/*.jar
             build/datapack/*.zip
-      
-      

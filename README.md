@@ -2,6 +2,8 @@
 
 <img src="./src/main/resources/assets/growsseth/icon.png" alt="Mod icon" width="250" height="250">
 
+### Note: development for MC 1.20.6 has stopped, this branch only exists to eventually provide fixes to critical (and easy to fix) issues.
+
 ## [**README IN ITALIANO QUA!**](docs/README_ITA.md)
 
 A highly configurable structures mod, with a smart NPC to sell maps and guide you in discovery, and structures 
