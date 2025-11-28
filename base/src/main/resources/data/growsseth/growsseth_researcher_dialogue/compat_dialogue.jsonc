@@ -1,0 +1,27 @@
+{
+  "compatCobblemonError": [
+    {
+      "content": "compat.cobblemon.error.noTeam",
+      "data": {
+        "errorId": "no-team"
+      }
+    },
+    {
+      "content": "compat.cobblemon.error.noPlayer",
+      "data": {
+        "errorId": "no-player"
+      }
+    },
+    {
+      "content": "compat.cobblemon.error.noBattle",
+      "data": {
+        "errorId": "no-battle"
+      }
+    }
+  ],
+  "compatCobblemonBattleStart": [
+    "compat.cobblemon.battleStart.0",
+    "compat.cobblemon.battleStart.1",
+    "compat.cobblemon.battleStart.2"
+  ]
+}

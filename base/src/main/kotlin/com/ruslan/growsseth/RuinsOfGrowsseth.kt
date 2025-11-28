@@ -66,6 +66,13 @@ abstract class RuinsOfGrowsseth {
         if (cydoniaMode)
             LOGGER.info("Cydonia mode enabled, structures won't spawn and API v1 will be used")
 
+        // Mod compat
+        if (modCompat.isCobblemonLoaded) {
+            if (!modCompat.isRCTTrainerApiLoaded) {
+                LOGGER.error("Cobblemon loaded but Cobblemon RCT trainer API not loaded, researcher as trainer won't work")
+            }
+        }
+
         LOGGER.info("Initialized! :saidogPipo: :saidogRitto: :saidogMax:")
     }
 

@@ -108,6 +108,8 @@ dependencies {
 
 	// Mod compat
 	modImplementation(libs.lithostitched.fabric)
+    modImplementation(libs.rctapi.fabric)
+
 }
 
 // Mod description handling (different in loaders due to formatting)

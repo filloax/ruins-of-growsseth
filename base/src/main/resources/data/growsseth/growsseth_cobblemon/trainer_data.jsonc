@@ -1,0 +1,66 @@
+{
+  "researcherStandard": {
+    "name": "Researcher",
+    "ai": {
+      "type": "rct"
+//      "data": {
+//        "moveBias": 1.0,
+//        "statMoveBias": 0.1,
+//        "switchBias": 0.65,
+//        "itemBias": 1.0,
+//        "maxSelectMargin": 0.5
+//      }
+    },
+    "bag": [
+      {
+        "item": "cobblemon:potion",
+        "quantity": 3
+      }
+    ],
+    "team": [
+      {
+        "species": "cobblemon:rattata",
+        "gender": "FEMALE",
+        "level": 10,
+        "nature": "jolly",
+        "ability": "guts",
+        "moveset": [
+          "bite",
+          "quickattack",
+          "tailwhip"
+        ],
+        "evs": {
+          "atk": 252,
+          "spe": 252
+        },
+        "heldItem": "cobblemon:oran_berry"
+      },
+      {
+        "species": "cobblemon:pikachu",
+        "gender": "MALE",
+        "level": 15,
+        "nature": "timid",
+        "ability": "static",
+        "moveset": [
+          "thunderbolt",
+          "quickattack",
+          "irontail",
+          "volttackle"
+        ],
+        "ivs": {
+          "hp": 31,
+          "atk": 31,
+          "def": 31,
+          "spa": 31,
+          "spd": 31,
+          "spe": 31
+        },
+        "evs": {
+          "spa": 252,
+          "spe": 252
+        },
+        "heldItem": "cobblemon:light_ball"
+      }
+    ]
+  }
+}

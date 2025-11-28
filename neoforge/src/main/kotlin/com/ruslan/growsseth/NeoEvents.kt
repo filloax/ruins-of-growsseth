@@ -22,6 +22,7 @@ import net.neoforged.neoforge.common.NeoForge
 import net.neoforged.neoforge.event.LootTableLoadEvent
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent
 import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent
+import net.neoforged.neoforge.event.entity.player.PlayerEvent
 import net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent
 import net.neoforged.neoforge.event.level.BlockEvent.BreakEvent
 import net.neoforged.neoforge.event.level.ChunkEvent
@@ -113,6 +114,15 @@ class NeoEvents : ModEvents() {
 
     override fun onPlayerServerJoin(event: (player: ServerPlayer, MinecraftServer) -> Unit) {
         NeoForge.EVENT_BUS.addListener { ev: PlayerLoggedInEvent ->
+            val player = ev.entity
+            if (player is ServerPlayer) {
+                event(player, player.server)
+            }
+        }
+    }
+
+    override fun onPlayerServerLeave(event: (player: ServerPlayer, MinecraftServer) -> Unit) {
+        NeoForge.EVENT_BUS.addListener { ev: PlayerEvent.PlayerLoggedOutEvent ->
             val player = ev.entity
             if (player is ServerPlayer) {
                 event(player, player.server)

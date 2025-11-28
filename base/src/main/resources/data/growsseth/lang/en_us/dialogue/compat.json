@@ -1,0 +1,14 @@
+{
+  "cobblemon": {
+    "error": {
+      "noTeam": "...where did I put them? I'm sorry, colleague, it seems I have no team to battle you with.",
+      "noPlayer": "I cannot accept your challenge if you have no team to fight with.",
+      "noBattle": "I cannot accept your challenge in this moment."
+    },
+    "battleStart": {
+      "0": "Palle time",
+      "1": "Daje botte",
+      "2": "Te spacco"
+    }
+  }
+}

@@ -2,6 +2,7 @@ package com.ruslan.growsseth
 
 import com.filloax.fxlib.api.fabric.FabricReloadListener
 import com.ruslan.growsseth.advancements.GrowssethCriterions
+import com.ruslan.growsseth.compat.cobblemon.CobblemonRCTListener
 import com.ruslan.growsseth.dialogues.ResearcherDialogueListener
 import com.ruslan.growsseth.effect.GrowssethEffects
 import com.ruslan.growsseth.entity.GrowssethEntities
@@ -91,5 +92,11 @@ object RuinsOfGrowssethFabric : ModInitializer, RuinsOfGrowsseth() {
             resLoc(Constants.PRESET_PLACES_FOLDER),
             LocationNotifListener(),
         ))
+        if (modCompat.isRCTTrainerApiLoaded) {
+            ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(FabricReloadListener(
+                resLoc(Constants.COMPAT_COBBLEMON_FOLDER),
+                CobblemonRCTListener,
+            ))
+        }
     }
 }

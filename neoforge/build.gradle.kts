@@ -100,6 +100,7 @@ dependencies {
 
     // Mod compat
     compileOnly(libs.lithostitched.neoforge)
+    compileOnly(libs.rctapi.neoforge)
 }
 
 

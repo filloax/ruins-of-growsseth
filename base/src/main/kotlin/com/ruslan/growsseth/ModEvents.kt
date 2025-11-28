@@ -5,6 +5,7 @@ import com.filloax.fxlib.platform.ServerEvent
 import com.ruslan.growsseth.advancements.GrowssethAdvancements
 import com.ruslan.growsseth.advancements.StructureAdvancements
 import com.ruslan.growsseth.advancements.criterion.JigsawPieceTrigger
+import com.ruslan.growsseth.compat.cobblemon.CobblemonRCTCompat
 import com.ruslan.growsseth.config.WebConfig
 import com.ruslan.growsseth.dialogues.BasicDialoguesComponent
 import com.ruslan.growsseth.entity.researcher.*
@@ -49,6 +50,8 @@ abstract class ModEvents {
             LiveUpdatesConnection.serverStart(server)
             if(RuinsOfGrowsseth.modCompat.isLithostitchedLoaded)
                 VillageBuildings.addVillageBuildings(server, isLithostitchedLoaded = true)
+            if (RuinsOfGrowsseth.modCompat.isRCTTrainerApiLoaded)
+                CobblemonRCTCompat.rctApiOnServerStart(server)
         }
         onServerStarted { server ->
             GrowssethWorldPreset.Callbacks.onServerStarted(server)
@@ -65,6 +68,8 @@ abstract class ModEvents {
             GrowssethExtraEvents.onServerStop()
             CustomRemoteDiaries.onServerStopped()
             RemoteStructureBooks.onServerStopped()
+            if (RuinsOfGrowsseth.modCompat.isRCTTrainerApiLoaded)
+                CobblemonRCTCompat.rctApiOnServerStop(server)
         }
         onServerStopped { server ->
             LocationNotifListener.Callbacks.onServerStopped(server)
@@ -103,6 +108,11 @@ abstract class ModEvents {
             GlobalResearcherTradesProvider.Callbacks.onServerPlayerJoin(player, server)
             GrowssethExtraEvents.onServerPlayerJoin(player, server)
             GrowssethWorldPreset.Callbacks.onServerPlayerJoin(player, server)
+            CobblemonRCTCompat.rctApiOnPlayerJoin(player)
+        }
+
+        onPlayerServerLeave { player, server ->
+            CobblemonRCTCompat.rctApiOnPlayerQuit(player)
         }
 
         onPlayerServerTick { player ->
@@ -158,6 +168,7 @@ abstract class ModEvents {
     abstract fun onEntityUnload(event: (entity: Entity, level: ServerLevel) -> Unit)
     abstract fun afterPlayerBlockBreak(event: (Level, Player, BlockPos, BlockState) -> Unit)
     abstract fun onPlayerServerJoin(event: (player: ServerPlayer, MinecraftServer) -> Unit)
+    abstract fun onPlayerServerLeave(event: (player: ServerPlayer, MinecraftServer) -> Unit)
     abstract fun onPlayerServerTick(event: (player: ServerPlayer) -> Unit)
     abstract fun onLootTableModify(event: (key: ResourceLocation, table: LootTableModifier) -> Unit)
 }

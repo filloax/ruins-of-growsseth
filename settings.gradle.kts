@@ -36,3 +36,7 @@ listOf(
     "neoforge",
     "fabric",
 ).forEach { include(it) }
+
+// Include the local Radical Cobblemon Trainers API build so we can compile directly against it
+// without modifying the API module itself.
+includeBuild("../api")

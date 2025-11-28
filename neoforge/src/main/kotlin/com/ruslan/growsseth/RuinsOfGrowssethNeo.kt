@@ -6,6 +6,7 @@ import com.ruslan.growsseth.client.GrowssethItemsClient
 import com.ruslan.growsseth.client.GrowssethRenderers
 import com.ruslan.growsseth.client.resource.EncryptedMusicResources
 import com.ruslan.growsseth.client.worldpreset.GrowssethWorldPresetClient
+import com.ruslan.growsseth.compat.cobblemon.CobblemonRCTListener
 import com.ruslan.growsseth.config.ClientConfigHandler
 import com.ruslan.growsseth.dialogues.ResearcherDialogueListener
 import com.ruslan.growsseth.effect.GrowssethEffects
@@ -99,6 +100,9 @@ object RuinsOfGrowssethNeo : RuinsOfGrowsseth() {
             ev.addListener(ResearcherDialogueListener())
             ev.addListener(TemplateListener)
             ev.addListener(LocationNotifListener())
+            if (modCompat.isRCTTrainerApiLoaded) {
+                ev.addListener(CobblemonRCTListener)
+            }
         }
     }
 

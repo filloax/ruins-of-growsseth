@@ -9,4 +9,10 @@ class ModCompatCheckerFabric : ModCompatChecker {
     override val isImprovedVillagePlacementLoaded: Boolean by lazy {
         FabricLoader.getInstance().isModLoaded(ModCompatChecker.ID_IMPROVED_VILLAGE_PLACEMENT)
     }
+    override val isCobblemonLoaded: Boolean by lazy {
+        FabricLoader.getInstance().isModLoaded(ModCompatChecker.ID_COBBLEMON)
+    }
+    override val isRCTTrainerApiLoaded: Boolean by lazy {
+        FabricLoader.getInstance().isModLoaded(ModCompatChecker.ID_RCT_TRAINER_API)
+    }
 }

@@ -14,6 +14,8 @@ object Constants {
     const val TEMPLATE_STRUCT_FOLDER = "structures"
     const val TEMPLATE_DIARY_FOLDER = "researcher_diary"
 
+    const val COMPAT_COBBLEMON_FOLDER = "growsseth_cobblemon"
+
     const val DEFAULT_LANGUAGE = "en_us"
 
     const val LANG_DIALOGUE_PREFIX = "dialogue"

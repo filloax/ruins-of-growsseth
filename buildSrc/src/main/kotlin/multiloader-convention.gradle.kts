@@ -90,6 +90,7 @@ repositories {
         filter { includeGroup("com.teamresourceful.resourcefulconfig") }
     }
 
+    maven("https://cursemaven.com")
 }
 
 //region Libs and props

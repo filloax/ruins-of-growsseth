@@ -1,0 +1,14 @@
+{
+  "cobblemon": {
+    "error": {
+      "noTeam": "...ma dove le ho messe? Mi dispiace, collega, non ho la mia squadra con me.",
+      "noPlayer": "Non posso accettare la tua sfida se non hai una squadra con cui lottare.",
+      "noBattle": "Non posso accettare la tua sfida in questo momento."
+    },
+    "battleStart": {
+      "0": "Palle time",
+      "1": "Daje botte",
+      "2": "Te spacco"
+    }
+  }
+}
