@@ -1,5 +1,5 @@
 name: Release Mod (1.21.1)
- 
+
 on:
   push:
     branches:
@@ -46,7 +46,7 @@ jobs:
       - name: Check if Tag already exists
         id: check_tag
         run: |
-          TAG=${{ steps.get_version.outputs.release_tag }}          
+          TAG=${{ steps.get_version.outputs.RELEASE_TAG }}
           if git show-ref --tags --verify --quiet "refs/tags/${TAG}"; then
             echo "Tag ${TAG} already exists! Preventing override"
             exit 1
@@ -68,7 +68,7 @@ jobs:
         run: ./gradlew build
         env:
           GROWSSETH_MUSIC_PW: ${{ secrets.MUSIC_PW }}
-      
+
       - name: Extract latest changelog
         id: changelog
         run: |
@@ -114,7 +114,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build-artifacts
-          
+
       - name: Publish
         uses: Kir-Antipov/mc-publish@v3.3
         id: mc_publish
@@ -161,7 +161,7 @@ jobs:
           body_path: latest_changelog.txt
           token: ${{ secrets.TOKEN_GITHUB }}
           make_latest: true
-          tag_name: v${{ needs.build.outputs.mod_version }}${{ needs.build.outputs.version_suffix }}-${{ env.MC_VER }}
+          tag_name: ${{ needs.build.outputs.release_tag }}
           target_commitish: ${{ env.GITHUB_SHA }}
           files: |
             base/build/libs/*.jar
