@@ -1,9 +1,9 @@
-name: Release Mod (1.21)
+name: Release Mod (1.21.1)
  
 on:
   push:
     branches:
-      - 'release/1.21.0'
+      - 'release/1.21.1'
 env:
   JAVA_VERSION: 21
   MC_VER: 1.21.1           # Main version
