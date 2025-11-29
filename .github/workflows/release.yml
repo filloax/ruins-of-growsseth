@@ -29,7 +29,7 @@ jobs:
       - name: Check if tag already exists
         id: check_tag
         run: |
-          TAG=${{ steps.get_version.outputs.release_tag }}
+          TAG=${{ steps.get_version.outputs.RELEASE_TAG }}
           if git show-ref --tags --verify --quiet "refs/tags/${TAG}"; then
             echo "Tag ${TAG} already exists! Preventing override"
             exit 1
