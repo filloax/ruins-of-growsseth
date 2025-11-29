@@ -18,9 +18,8 @@ rconfig = "3.0.8"
 rconfigMc = "1.21"
 
 # Mod compatibility dependencies
-#lithostitched = "1.4.2"
-lithostitched-neoforge = "Q8TwwzCq"
-lithostitched-fabric = "73Oigiov"
+lithostitched-neoforge = "1.5.0-neoforge-1.21.1"
+lithostitched-fabric = "1.5.0-fabric-1.21.1"
 
 # Kotlin
 kotlin = "2.0.21"

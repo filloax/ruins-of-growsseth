@@ -83,4 +83,4 @@ gets out of pre-release.
 
 ## Source code structure
 
-Uses [Favouriteless's template](https://github.com/Favouriteless/ML-Template), with added kotlin mod stuff.
+Uses [Favouriteless's template](https://github.com/Favouriteless/ML-Template) (now unavailable), with added kotlin mod stuff.
