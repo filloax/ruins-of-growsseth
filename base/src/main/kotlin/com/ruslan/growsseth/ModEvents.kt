@@ -50,13 +50,13 @@ abstract class ModEvents {
             LiveUpdatesConnection.serverStart(server)
             if(RuinsOfGrowsseth.modCompat.isLithostitchedLoaded)
                 VillageBuildings.addVillageBuildings(server, isLithostitchedLoaded = true)
-            if (RuinsOfGrowsseth.modCompat.isRCTTrainerApiLoaded)
-                CobblemonRCTCompat.rctApiOnServerStart(server)
         }
         onServerStarted { server ->
             GrowssethWorldPreset.Callbacks.onServerStarted(server)
             if(!RuinsOfGrowsseth.modCompat.isLithostitchedLoaded)
                 VillageBuildings.addVillageBuildings(server)
+            if (RuinsOfGrowsseth.modCompat.isRCTTrainerApiLoaded)
+                CobblemonRCTCompat.rctApiOnServerStarted(server)
             ProgressResearcherTradesProvider.Callbacks.onServerStarted(server)
         }
         onServerStopping { server ->

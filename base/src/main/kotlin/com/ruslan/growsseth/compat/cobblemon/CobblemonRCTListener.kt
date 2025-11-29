@@ -43,6 +43,7 @@ object CobblemonRCTListener : KotlinJsonResourceReloadListener(JSON, Constants.C
             // decode JSON key into enum using @SerialName
             val enumKey = Json.decodeFromString(TrainerTeam.serializer(), "\"$key\"")
 
+            // RCT wants us to use its GSON instance
             val model = GSON.fromJson(value.toGson(), TrainerModel::class.java)
 
             enumKey to model

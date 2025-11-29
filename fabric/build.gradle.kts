@@ -19,6 +19,8 @@ val includeDeps = (property("includeDeps") as String).toBoolean()
 
 val versionSuffix = if (versionType?.isBlank() == true) "" else "-$versionType"
 
+val cobblemonTest = (property("cobblemonTest") as String).toBoolean()
+
 version = "$modVersion-$minecraftVersion$versionSuffix-fabric"
 
 if (includeDeps) println("Including dependencies for test mode")
@@ -67,6 +69,14 @@ loom {
 	}
 }
 
+if (cobblemonTest) {
+    repositories {
+        maven { setUrl("https://maven.architectury.dev/") }
+        maven { setUrl("https://maven.impactdev.net/repository/development/") }
+        maven { setUrl("https://maven.wispforest.io") }
+    }
+}
+
 dependencies {
 	minecraft( libs.minecraft )
 	implementation( libs.jsr305 )
@@ -107,9 +117,29 @@ dependencies {
 	include( libs.kotlinevents )
 
 	// Mod compat
-	modImplementation(libs.lithostitched.fabric)
-    modImplementation(libs.rctapi.fabric)
+	modCompileOnly(libs.lithostitched.fabric)
+    modCompileOnly(libs.rctapi.fabric)
 
+    if (cobblemonTest) {
+        modLocalRuntime("io.wispforest:accessories-fabric:1.1.0-beta.52+1.21.1")
+
+        modLocalRuntime("dev.architectury:architectury-fabric:13.0.8")
+
+        modLocalRuntime("maven.modrinth:cobblemon:Ygf8KJFC")
+        modLocalRuntime(libs.rctapi.fabric)
+
+        modLocalRuntime("maven.modrinth:cobblemon-mega-showdown:NuoWFTNN")
+
+        modLocalRuntime("maven.modrinth:cobblemontools:cvHY7gmJ")
+        modLocalRuntime("maven.modrinth:rib:C4vWmZoB")
+        modLocalRuntime("maven.modrinth:luckperms:l47d4ZWk")
+        modLocalRuntime("maven.modrinth:fabric-permissions-api:62DUD085")
+        modLocalRuntime("net.kyori:adventure-platform-fabric:5.14.0")
+        modLocalRuntime("net.kyori:adventure-text-serializer-gson:4.17.0")
+        modLocalRuntime("net.kyori:adventure-text-serializer-legacy:4.17.0")
+
+        modLocalRuntime("io.wispforest:owo-lib:0.12.15+1.21")
+    }
 }
 
 // Mod description handling (different in loaders due to formatting)

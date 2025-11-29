@@ -25,7 +25,7 @@ rctapi-neoforge = "7257753"
 rctapi-fabric = "7257754"
 
 # Kotlin
-kotlin = "2.0.21"
+kotlin = "2.2.0"  # DO NOT PUSH
 kotlin-serialization = "1.7.1"
 kotlin-datetime = "0.6.1"
 

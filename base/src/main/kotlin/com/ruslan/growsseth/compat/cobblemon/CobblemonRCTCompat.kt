@@ -23,9 +23,10 @@ object CobblemonRCTCompat {
 
     val MAX_ITEM_USES = 3
 
-    fun rctApiOnServerStart(server: MinecraftServer) {
+    fun rctApiOnServerStarted(server: MinecraftServer) {
         RCT.trainerRegistry.init(server)
 
+        RuinsOfGrowsseth.LOGGER.info("Registering RCT trainer NPCs...")
         CobblemonRCTListener.TRAINER_DATA.forEach { (team, model) ->
             RCT.trainerRegistry.registerNPC(team.toString(), model)
         }
