@@ -23,5 +23,14 @@
     "compat.cobblemon.battleStart.0",
     "compat.cobblemon.battleStart.1",
     "compat.cobblemon.battleStart.2"
+  ],
+  "compatCobblemonBattleLastPkmn": [
+    "compat.cobblemon.battleLastPkmn"
+  ],
+  "compatCobblemonBattleEndWin": [
+    "compat.cobblemon.battleEndWin"
+  ],
+  "compatCobblemonBattleEndLose": [
+    "compat.cobblemon.battleEndLose"
   ]
 }

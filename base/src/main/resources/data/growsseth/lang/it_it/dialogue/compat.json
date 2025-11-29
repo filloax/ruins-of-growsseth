@@ -9,6 +9,9 @@
       "0": "Palle time",
       "1": "Daje botte",
       "2": "Te spacco"
-    }
+    },
+    "battleLastPkmn": "Accidenti, mi hai messo alle strette.",
+    "battleEndWin": "Beh, è stato divertente. Non preoccuparti, non ti farò pagare!",
+    "battleEndLose": "Ottimo lavoro collega! Finché è solo un gioco non c'è vergogna a perdere."
   }
 }
