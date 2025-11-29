@@ -7,7 +7,7 @@ on:
 env:
   TEST_RELEASE_NUM: ${{ vars.TEST_RELEASE_NUM }}
   JAVA_VERSION: 21
-  MC_VER: 1.21
+  MC_VER: 1.21.1
 
 jobs:
   build:
