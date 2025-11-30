@@ -25,13 +25,13 @@ rctapi-neoforge = "7257753"
 rctapi-fabric = "7257754"
 
 # Kotlin
-kotlin = "2.2.0"  # DO NOT PUSH
-kotlin-serialization = "1.7.1"
-kotlin-datetime = "0.6.1"
+kotlin = "2.2.0"                # REVERT TO 2.0.21
+kotlin-serialization = "1.9.0"
+kotlin-datetime = "0.7.1"
 
 # Fabric Settings
-fabric = "0.17.2"
-fabric-api = "0.116.7+1.21.1"
+fabric = "0.17.2"               # REVERT TO 0.16.9
+fabric-api = "0.116.7+1.21.1"   # REVERT TO 0.110.0+1.21.1
 fabric-language-kotlin = "1.12.3+kotlin.2.0.21"
 
 # Neoforge Settings
@@ -41,9 +41,9 @@ kotlinforge = "5.6.0"
 kotlinforge-range = "[5.6,)"
 
 # Other dependencies
-mixin = "0.8.5"
-mixinextras = "0.4.1"
-mixinextras-range = "[0.4.1,)"
+mixin = "0.8.7"
+mixinextras = "0.5.0"
+mixinextras-range = "[0.5.0,)"
 jsr305 = "3.0.2"
 # Specific log4j version required by neoform
 log4j = "2.22.1"
@@ -54,9 +54,9 @@ kotlinevents = "v2.0"
 # Plugins
 plugin-dokka = "2.0.0"
 plugin-mixin = "0.7.+"
-plugin-loom = "1.10.1"
-plugin-moddev = "2.0.74"
-plugin-idea-ext = "1.1.9"
+plugin-loom = "1.13-SNAPSHOT"
+plugin-moddev = "2.0.120"
+plugin-idea-ext = "1.3"
 
 [libraries]
 # Mods
