@@ -36,7 +36,8 @@ abstract class RuinsOfGrowsseth {
         val cydoniaProperties = loadPropertiesFile("cydonia.properties")
         val cydoniaMode: Boolean = cydoniaProperties["cydoniaMode"]!!.toBoolean()
 
-        val modCompat = ServiceUtil.findService(ModCompatChecker::class.java)
+        val modCompat: ModCompatChecker = ServiceUtil.findService(ModCompatChecker::class.java)
+        var isNeoforge = false      // set to true in RuinsOfGrowssethNeo for custom logic
     }
 
     final fun initialize() {

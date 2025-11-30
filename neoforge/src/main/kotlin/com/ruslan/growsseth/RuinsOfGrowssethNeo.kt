@@ -50,7 +50,7 @@ import thedarkcolour.kotlinforforge.neoforge.forge.runForDist
 @Mod(RuinsOfGrowsseth.MOD_ID)
 object RuinsOfGrowssethNeo : RuinsOfGrowsseth() {
     init {
-        LOGGER.isNeoforge = true
+        isNeoforge = true
         initialize()
 
         runForDist(
