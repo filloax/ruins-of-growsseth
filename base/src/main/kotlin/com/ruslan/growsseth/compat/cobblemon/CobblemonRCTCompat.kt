@@ -2,7 +2,10 @@ package com.ruslan.growsseth.compat.cobblemon
 
 import com.gitlab.srcmc.rctapi.api.RCTApi
 import com.gitlab.srcmc.rctapi.api.battle.BattleFormat
+import com.gitlab.srcmc.rctapi.api.battle.BattleManager
 import com.gitlab.srcmc.rctapi.api.battle.BattleRules
+import com.gitlab.srcmc.rctapi.api.battle.BattleState
+import com.gitlab.srcmc.rctapi.api.events.Events
 import com.gitlab.srcmc.rctapi.api.trainer.TrainerNPC
 import com.gitlab.srcmc.rctapi.api.trainer.TrainerPlayer
 import com.ruslan.growsseth.RuinsOfGrowsseth
@@ -25,6 +28,10 @@ object CobblemonRCTCompat {
 
     fun onInit() {
         ResearcherRCTBattleAIConfig.register()
+
+        RCT.eventContext.register(Events.BATTLE_ENDED) { event ->
+            onBattleEnd(event.value)
+        }
     }
 
     fun rctApiOnServerStarted(server: MinecraftServer) {
@@ -86,6 +93,29 @@ object CobblemonRCTCompat {
         researcher.dialogues!!.triggerDialogue(player, ResearcherDialoguesComponent.EV_COMPAT_COBBLEMON_BATTLE_START)
 
         return true
+    }
+
+    private fun onBattleEnd(battleState: BattleState) {
+        val researcher = (battleState.participants1 + battleState.participants2)
+            .firstNotNullOfOrNull { if (it.entity is Researcher) (it.entity as Researcher) else null }
+        val players = (battleState.participants1 + battleState.participants2)
+            .mapNotNull { if (it.entity is ServerPlayer) (it.entity as ServerPlayer) else null }
+
+        if (researcher != null) {
+            if (players.isEmpty()) {
+                RuinsOfGrowsseth.LOGGER.error("RCT battle ended without players!")
+                return
+            }
+
+            val researcherWon = battleState.winners.any { it.entity == researcher }
+            players.forEach { player ->
+                if (researcherWon) {
+                    researcher.dialogues!!.triggerDialogue(player, ResearcherDialoguesComponent.EV_COMPAT_COBBLEMON_BATTLE_END_LOSE)
+                } else {
+                    researcher.dialogues!!.triggerDialogue(player, ResearcherDialoguesComponent.EV_COMPAT_COBBLEMON_BATTLE_END_WIN)
+                }
+            }
+        }
     }
 
     private fun startBattleErrorDialogue(researcher: Researcher, player: ServerPlayer, errorId: String) {
