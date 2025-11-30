@@ -112,4 +112,4 @@ loom = { id = "fabric-loom", version.ref = "plugin-loom" }
 
 # Misc
 ideaext = { id = "org.jetbrains.gradle.plugin.idea-ext", version.ref = "plugin-idea-ext" }
-mixin = { id = "org.spongepowered.mixin", version.ref = "plugin-mixin" }
+mixin = { id = "org.spongepowered.mixin", version.ref = "plugin-mixin" }    # todo: rename to plugin-mixin to avoid confusion
