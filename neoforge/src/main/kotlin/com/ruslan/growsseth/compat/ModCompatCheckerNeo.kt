@@ -15,4 +15,7 @@ class ModCompatCheckerNeo : ModCompatChecker {
     override val isRCTTrainerApiLoaded: Boolean by lazy {
         ModList.get().isLoaded(ModCompatChecker.ID_RCT_TRAINER_API)
     }
+    override val isCobblemonMegaShowdownLoaded: Boolean by lazy {
+        ModList.get().isLoaded(ModCompatChecker.ID_MEGA_SHOWDOWN)
+    }
 }

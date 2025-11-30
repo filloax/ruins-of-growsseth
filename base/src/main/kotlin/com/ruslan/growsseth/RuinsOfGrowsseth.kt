@@ -3,6 +3,7 @@ package com.ruslan.growsseth
 import com.filloax.fxlib.api.FxLibServices
 import com.filloax.fxlib.api.platform.ServiceUtil
 import com.ruslan.growsseth.compat.ModCompatChecker
+import com.ruslan.growsseth.compat.cobblemon.CobblemonRCTCompat
 import com.ruslan.growsseth.config.GrowssethConfigHandler
 import com.ruslan.growsseth.dialogues.ResearcherDialogueApiListener
 import com.ruslan.growsseth.entity.researcher.CustomRemoteDiaries
@@ -69,8 +70,10 @@ abstract class RuinsOfGrowsseth {
 
         // Mod compat
         if (modCompat.isCobblemonLoaded) {
-            if (!modCompat.isRCTTrainerApiLoaded) {
-                LOGGER.error("Cobblemon loaded but Cobblemon RCT trainer API not loaded, researcher as trainer won't work")
+            if (modCompat.isAllCobblemonDepsLoaded) {
+                CobblemonRCTCompat.onInit()
+            } else {
+                LOGGER.error("Cobblemon loaded but Cobblemon RCT trainer API and Mega Showdown not loaded, researcher as trainer won't work")
             }
         }
 

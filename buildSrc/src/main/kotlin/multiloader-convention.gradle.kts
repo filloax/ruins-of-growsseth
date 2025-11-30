@@ -91,6 +91,9 @@ repositories {
     }
 
     maven("https://cursemaven.com")
+
+    // Cobblemon
+    maven("https://maven.impactdev.net/repository/development/")
 }
 
 //region Libs and props

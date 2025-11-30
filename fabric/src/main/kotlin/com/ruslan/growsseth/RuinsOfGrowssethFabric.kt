@@ -92,7 +92,7 @@ object RuinsOfGrowssethFabric : ModInitializer, RuinsOfGrowsseth() {
             resLoc(Constants.PRESET_PLACES_FOLDER),
             LocationNotifListener(),
         ))
-        if (modCompat.isRCTTrainerApiLoaded) {
+        if (modCompat.isAllCobblemonDepsLoaded) {
             ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(FabricReloadListener(
                 resLoc(Constants.COMPAT_COBBLEMON_FOLDER),
                 CobblemonRCTListener,

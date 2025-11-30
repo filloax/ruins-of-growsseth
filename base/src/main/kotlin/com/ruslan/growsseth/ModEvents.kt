@@ -55,7 +55,7 @@ abstract class ModEvents {
             GrowssethWorldPreset.Callbacks.onServerStarted(server)
             if(!RuinsOfGrowsseth.modCompat.isLithostitchedLoaded)
                 VillageBuildings.addVillageBuildings(server)
-            if (RuinsOfGrowsseth.modCompat.isRCTTrainerApiLoaded)
+            if (RuinsOfGrowsseth.modCompat.isAllCobblemonDepsLoaded)
                 CobblemonRCTCompat.rctApiOnServerStarted(server)
             ProgressResearcherTradesProvider.Callbacks.onServerStarted(server)
         }
@@ -68,7 +68,7 @@ abstract class ModEvents {
             GrowssethExtraEvents.onServerStop()
             CustomRemoteDiaries.onServerStopped()
             RemoteStructureBooks.onServerStopped()
-            if (RuinsOfGrowsseth.modCompat.isRCTTrainerApiLoaded)
+            if (RuinsOfGrowsseth.modCompat.isAllCobblemonDepsLoaded)
                 CobblemonRCTCompat.rctApiOnServerStop(server)
         }
         onServerStopped { server ->
@@ -108,11 +108,13 @@ abstract class ModEvents {
             GlobalResearcherTradesProvider.Callbacks.onServerPlayerJoin(player, server)
             GrowssethExtraEvents.onServerPlayerJoin(player, server)
             GrowssethWorldPreset.Callbacks.onServerPlayerJoin(player, server)
-            CobblemonRCTCompat.rctApiOnPlayerJoin(player)
+            if (RuinsOfGrowsseth.modCompat.isAllCobblemonDepsLoaded)
+                CobblemonRCTCompat.rctApiOnPlayerJoin(player)
         }
 
         onPlayerServerLeave { player, server ->
-            CobblemonRCTCompat.rctApiOnPlayerQuit(player)
+            if (RuinsOfGrowsseth.modCompat.isAllCobblemonDepsLoaded)
+                CobblemonRCTCompat.rctApiOnPlayerQuit(player)
         }
 
         onPlayerServerTick { player ->

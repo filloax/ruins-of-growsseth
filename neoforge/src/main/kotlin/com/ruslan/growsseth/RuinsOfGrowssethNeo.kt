@@ -100,7 +100,7 @@ object RuinsOfGrowssethNeo : RuinsOfGrowsseth() {
             ev.addListener(ResearcherDialogueListener())
             ev.addListener(TemplateListener)
             ev.addListener(LocationNotifListener())
-            if (modCompat.isRCTTrainerApiLoaded) {
+            if (modCompat.isAllCobblemonDepsLoaded) {
                 ev.addListener(CobblemonRCTListener)
             }
         }

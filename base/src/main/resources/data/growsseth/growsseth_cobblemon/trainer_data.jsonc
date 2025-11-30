@@ -2,11 +2,15 @@
   "researcherStandard": {
     "name": "Researcher",
     "ai": {
-      "type": "rct"
+      // See ResearcherRCTBattleAI[Config].kt
+      "type": "growsseth_researcher_rct",
+      "data": {
+        "switchBias": 0.72
+      }
     },
     "bag": [
       {
-        "item": "cobblemon:potion",
+        "item": "cobblemon:full_restore",
         "quantity": 3
       }
     ],
@@ -37,7 +41,7 @@
           "spd": 124
         },
         "gimmicks": {
-          "tera": "ground"
+//          "tera": "ground"
         },
         "heldItem": "cobblemon:focus_sash"
       },
@@ -67,7 +71,7 @@
           "spd": 52
         },
         "gimmicks": {
-          "tera": "fire"
+//          "tera": "fire"
         },
         "heldItem": "cobblemon:rocky_helmet"
       },
@@ -92,8 +96,9 @@
         },
         "evs": {
           "hp": 252,
-          "atk": 252,
-          "spd": 4
+          "atk": 124,
+          "def": 64,
+          "spd": 64
         },
         "gimmicks": {
           "tera": "fighting"

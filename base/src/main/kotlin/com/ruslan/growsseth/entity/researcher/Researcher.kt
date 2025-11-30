@@ -723,7 +723,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
                 if (!stack.isEmpty) {
                     val itemKey = BuiltInRegistries.ITEM.getKey(stack.item)
                     if (itemKey.namespace == ModCompatChecker.ID_COBBLEMON) {
-                        if (RuinsOfGrowsseth.modCompat.isRCTTrainerApiLoaded) {
+                        if (RuinsOfGrowsseth.modCompat.isAllCobblemonDepsLoaded) {
                             try {
                                 if (CobblemonRCTCompat.tryStartTrainerBattle(player, this)) {
                                     return InteractionResult.sidedSuccess(level().isClientSide)

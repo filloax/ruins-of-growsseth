@@ -20,6 +20,7 @@ rconfigMc = "1.21"
 # Mod compatibility dependencies
 lithostitched-neoforge = "1.5.0-neoforge-1.21.1"
 lithostitched-fabric = "1.5.0-fabric-1.21.1"
+cobblemon = "1.7.1+1.21.1"
 # rctapi 1.21.1-0.14.1, don't use common as it breaks with neoform in base
 rctapi-neoforge = "7257753"
 rctapi-fabric = "7257754"
@@ -71,6 +72,8 @@ lithostitched-neoforge = { group = "maven.modrinth", name = "lithostitched", ver
 lithostitched-fabric = { group = "maven.modrinth", name = "lithostitched", version.ref = "lithostitched-fabric" }
 rctapi-fabric = { group = "curse.maven", name = "radical-cobblemon-trainers-api-1152792", version.ref = "rctapi-fabric" }
 rctapi-neoforge = { group = "curse.maven", name = "radical-cobblemon-trainers-api-1152792", version.ref = "rctapi-neoforge" }
+cobblemon-fabric = { group = "com.cobblemon", name = "fabric", version.ref = "cobblemon" }
+cobblemon-neoforge = { group = "com.cobblemon", name = "neoforge", version.ref = "cobblemon" }
 
 # Mixin
 mixin = { group = "org.spongepowered", name = "mixin", version.ref = "mixin" }

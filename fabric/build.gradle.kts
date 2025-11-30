@@ -72,7 +72,6 @@ loom {
 if (cobblemonTest) {
     repositories {
         maven { setUrl("https://maven.architectury.dev/") }
-        maven { setUrl("https://maven.impactdev.net/repository/development/") }
         maven { setUrl("https://maven.wispforest.io") }
     }
 }
@@ -118,6 +117,7 @@ dependencies {
 
 	// Mod compat
 	modCompileOnly(libs.lithostitched.fabric)
+    modCompileOnly(libs.cobblemon.fabric)
     modCompileOnly(libs.rctapi.fabric)
 
     if (cobblemonTest) {
@@ -125,10 +125,10 @@ dependencies {
 
         modLocalRuntime("dev.architectury:architectury-fabric:13.0.8")
 
-        modLocalRuntime("maven.modrinth:cobblemon:Ygf8KJFC")
+        modLocalRuntime(libs.cobblemon.fabric)
         modLocalRuntime(libs.rctapi.fabric)
 
-        modLocalRuntime("maven.modrinth:cobblemon-mega-showdown:NuoWFTNN")
+        modLocalRuntime("maven.modrinth:cobblemon-mega-showdown:FHVQFA5j")
 
         modLocalRuntime("maven.modrinth:cobblemontools:cvHY7gmJ")
         modLocalRuntime("maven.modrinth:rib:C4vWmZoB")

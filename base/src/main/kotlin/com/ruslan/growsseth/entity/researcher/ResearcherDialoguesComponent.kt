@@ -267,7 +267,7 @@ class ResearcherDialoguesComponent(
             filters.add { entry -> entry.data[DDATA_MADE_MESS] != "true" }
         }
 
-        if (RuinsOfGrowsseth.modCompat.isRCTTrainerApiLoaded && event == EV_COMPAT_COBBLEMON_ERROR) {
+        if (RuinsOfGrowsseth.modCompat.isAllCobblemonDepsLoaded && event == EV_COMPAT_COBBLEMON_ERROR) {
             filters.add { entry -> entry.data[DDATA_COBBLEMON_ERROR] == eventParam }
         }
     }

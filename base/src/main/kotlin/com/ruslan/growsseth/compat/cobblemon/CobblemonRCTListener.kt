@@ -27,7 +27,7 @@ object CobblemonRCTListener : KotlinJsonResourceReloadListener(JSON, Constants.C
     private val TRAINER_FILENAME = "trainer_data"
 
     override fun apply(loader: Map<ResourceLocation, JsonElement>, manager: ResourceManager, profiler: ProfilerFiller) {
-        if (RuinsOfGrowsseth.modCompat.isRCTTrainerApiLoaded) {
+        if (RuinsOfGrowsseth.modCompat.isAllCobblemonDepsLoaded) {
             RuinsOfGrowsseth.LOGGER.info("Loading Cobblemon RCT trainer data...")
         } else {
             return

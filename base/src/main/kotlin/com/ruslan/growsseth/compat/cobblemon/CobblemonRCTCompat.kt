@@ -17,11 +17,15 @@ import net.minecraft.world.entity.player.Player
  * Optional compatibility with Cobblemon using the Radical Cobblemon Trainers API.
  */
 object CobblemonRCTCompat {
-    val RCT = RCTApi.initInstance(RuinsOfGrowsseth.MOD_ID)
+    val RCT by lazy { RCTApi.initInstance(RuinsOfGrowsseth.MOD_ID) }
     var isServerActive = false
         private set
 
     val MAX_ITEM_USES = 3
+
+    fun onInit() {
+        ResearcherRCTBattleAIConfig.register()
+    }
 
     fun rctApiOnServerStarted(server: MinecraftServer) {
         RCT.trainerRegistry.init(server)
