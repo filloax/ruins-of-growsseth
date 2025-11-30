@@ -6,9 +6,9 @@
       "noBattle": "I cannot accept your challenge in this moment."
     },
     "battleStart": {
-      "0": "Balls time",
-      "1": "Cmon fight",
-      "2": "Gonna break ya"
+      "0": "You want to fight? Alright, I have some free time!",
+      "1": "A Pokémon battle? Why not?",
+      "2": "Alright, I can pause my research for a while!"
     },
     "battleLastPkmn": "Damn, you've cornered me .",
     "battleEndWin": "Well, that was fun. Don't worry, I won't make you pay!",
