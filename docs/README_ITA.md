@@ -7,7 +7,7 @@ Nota per gli sviluppatori: questo branch crea e sovrascrive automaticamente la [
 Una mod di strutture altamente configurabile, con un NPC intelligente per vendere mappe e guidare nel
 percorso, e strutture che suggeriscono feature vanilla allo stesso modo dei Portali del Nether Rotti.
 
-> Hai voglia di rischiare? Puoi provare l'ultima versione in via di sviluppo [da qui](https://github.com/filloax/ruins-of-growsseth/releases/tag/nightly-release-1.20.6)!
+> Hai voglia di rischiare? Puoi provare l'ultima versione in via di sviluppo [da qui](https://github.com/filloax/ruins-of-growsseth/releases/tag/nightly-release-1.21.1)!
 
 Adattata dalla mod creata per la run dello streamer **Cydonia**; contiene quindi dischi, armor trim, e altro
 con contenuto dalla sua community ed easter egg varie (anche esse configurabili). Contiene anche un **preset di generazione mondo**

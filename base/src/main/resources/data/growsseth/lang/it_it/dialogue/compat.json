@@ -1,0 +1,17 @@
+{
+  "cobblemon": {
+    "error": {
+      "noTeam": "...ma dove le ho messe? Mi dispiace, collega, non ho la mia squadra con me.",
+      "noPlayer": "Non posso accettare la tua sfida se non hai una squadra con cui lottare.",
+      "noBattle": "Non posso accettare la tua sfida in questo momento."
+    },
+    "battleStart": {
+      "0": "Vuoi combattere? D'accordo, ho un po' di tempo libero!",
+      "1": "Una lotta Pokémon? Perché no?",
+      "2": "Va bene, posso interrompere un attimo le mie ricerche!"
+    },
+    "battleLastPkmn": "Accidenti, mi hai messo alle strette.",
+    "battleEndWin": "Beh, è stato divertente. Non preoccuparti, non ti farò pagare!",
+    "battleEndLose": "Ottimo lavoro collega! Finché è solo un gioco non c'è vergogna a perdere."
+  }
+}

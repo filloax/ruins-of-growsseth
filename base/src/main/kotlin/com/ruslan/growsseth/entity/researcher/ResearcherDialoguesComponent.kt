@@ -56,6 +56,13 @@ class ResearcherDialoguesComponent(
         val EV_HIT_BY_PLAYER_IMMORTAL       = event("hitByPlayerImmortal", immediate = true)
         val EV_ARRIVE_NEW_LOCATION          = event("playerArriveNewLocation", ignoreNoDialogueWarning = true)
 
+        // Mod compatibility features
+        val EV_COMPAT_COBBLEMON_BATTLE_START        = event("compatCobblemonBattleStart", ignoreNoDialogueWarning = true)
+        val EV_COMPAT_COBBLEMON_BATTLE_LAST_POKEMON = event("compatCobblemonBattleLastPkmn", ignoreNoDialogueWarning = true)
+        val EV_COMPAT_COBBLEMON_BATTLE_END_WIN      = event("compatCobblemonBattleEndWin", ignoreNoDialogueWarning = true)
+        val EV_COMPAT_COBBLEMON_BATTLE_END_LOSE     = event("compatCobblemonBattleEndLose", ignoreNoDialogueWarning = true)
+        val EV_COMPAT_COBBLEMON_ERROR               = event("compatCobblemonError", ignoreNoDialogueWarning = true)
+
         val AGGRESSIVE_DIALOGUE_EVENTS_ALLOWED = listOf(
             BasicDialogueEvents.DEATH,
             BasicDialogueEvents.LOW_HEALTH,
@@ -69,6 +76,9 @@ class ResearcherDialoguesComponent(
         // "angry", "none", or unset (default)
         const val DDATA_SOUND = "sound"
         const val DDATA_SINGLE_ONLY = "singleOnly"
+
+        // mod compat
+        const val DDATA_COBBLEMON_ERROR = "errorId"
 
         val BREAK_BLOCK_BLACKLIST = mutableSetOf<Block>(
             Blocks.WHITE_CARPET,
@@ -255,6 +265,10 @@ class ResearcherDialoguesComponent(
         // To use it properly, make it have higher priority than normal dialogues, but lower than quests etc.
         if (!researcher.angryForMess) {
             filters.add { entry -> entry.data[DDATA_MADE_MESS] != "true" }
+        }
+
+        if (RuinsOfGrowsseth.modCompat.isAllCobblemonDepsLoaded && event == EV_COMPAT_COBBLEMON_ERROR) {
+            filters.add { entry -> entry.data[DDATA_COBBLEMON_ERROR] == eventParam }
         }
     }
 

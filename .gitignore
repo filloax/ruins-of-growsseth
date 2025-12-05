@@ -18,8 +18,7 @@ bin/
 .project
 
 #kotlin
-.kotlin/sessions/
-.kotlin/errors/
+.kotlin
 
 #fabric
 run/
@@ -35,3 +34,4 @@ logs/*
 **/music.key
 tools/egobalego-no-gui/server_data.json
 music-encrypt
+*.salive

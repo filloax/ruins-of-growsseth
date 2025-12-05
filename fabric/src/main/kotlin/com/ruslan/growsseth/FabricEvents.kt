@@ -47,6 +47,10 @@ class FabricEvents : ModEvents() {
         event(handler.player, server)
     }
 
+    override fun onPlayerServerLeave(event: (player: ServerPlayer, MinecraftServer) -> Unit) = ServerPlayConnectionEvents.DISCONNECT.register { handler, server ->
+        event(handler.player, server)
+    }
+
     override fun onPlayerServerTick(event: (player: ServerPlayer) -> Unit) = ServerPlayerTickCallback.EVENT.register { serverPlayer ->
         event(serverPlayer)
     }

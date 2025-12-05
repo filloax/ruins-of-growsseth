@@ -3,6 +3,7 @@ package com.ruslan.growsseth
 import com.filloax.fxlib.api.FxLibServices
 import com.filloax.fxlib.api.platform.ServiceUtil
 import com.ruslan.growsseth.compat.ModCompatChecker
+import com.ruslan.growsseth.compat.cobblemon.CobblemonRCTCompat
 import com.ruslan.growsseth.config.GrowssethConfigHandler
 import com.ruslan.growsseth.dialogues.ResearcherDialogueApiListener
 import com.ruslan.growsseth.entity.researcher.CustomRemoteDiaries
@@ -36,7 +37,8 @@ abstract class RuinsOfGrowsseth {
         val cydoniaProperties = loadPropertiesFile("cydonia.properties")
         val cydoniaMode: Boolean = cydoniaProperties["cydoniaMode"]!!.toBoolean()
 
-        val modCompat = ServiceUtil.findService(ModCompatChecker::class.java)
+        val modCompat: ModCompatChecker = ServiceUtil.findService(ModCompatChecker::class.java)
+        var isNeoforge = false      // set to true in RuinsOfGrowssethNeo for custom logic
     }
 
     final fun initialize() {
@@ -65,6 +67,15 @@ abstract class RuinsOfGrowsseth {
 
         if (cydoniaMode)
             LOGGER.info("Cydonia mode enabled, structures won't spawn and API v1 will be used")
+
+        // Mod compat
+        if (modCompat.isCobblemonLoaded) {
+            if (modCompat.isAllCobblemonDepsLoaded) {
+                CobblemonRCTCompat.onInit()
+            } else {
+                LOGGER.error("Cobblemon loaded but Cobblemon RCT trainer API and Mega Showdown not loaded, researcher as trainer won't work")
+            }
+        }
 
         LOGGER.info("Initialized! :saidogPipo: :saidogRitto: :saidogMax:")
     }
