@@ -328,6 +328,9 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     internal var lastCheckStuckPosition: BlockPos? = blockPosition()
     internal var needsJumpBoost = false
 
+    // Mod compat
+    var isInCobblemonBattle: Boolean = false
+
     //endregion
 
 

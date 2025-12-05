@@ -91,6 +91,7 @@ object CobblemonRCTCompat {
         }
 
         researcher.dialogues!!.triggerDialogue(player, ResearcherDialoguesComponent.EV_COMPAT_COBBLEMON_BATTLE_START)
+        researcher.isInCobblemonBattle = true
 
         return true
     }
@@ -104,6 +105,7 @@ object CobblemonRCTCompat {
         if (researcher != null) {
             if (players.isEmpty()) {
                 RuinsOfGrowsseth.LOGGER.error("RCT battle ended without players!")
+                researcher.isInCobblemonBattle = false
                 return
             }
 
@@ -115,6 +117,7 @@ object CobblemonRCTCompat {
                     researcher.dialogues!!.triggerDialogue(player, ResearcherDialoguesComponent.EV_COMPAT_COBBLEMON_BATTLE_END_WIN)
                 }
             }
+            researcher.isInCobblemonBattle = false
         }
     }
 
