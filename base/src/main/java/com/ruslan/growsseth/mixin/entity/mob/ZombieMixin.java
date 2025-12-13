@@ -2,7 +2,7 @@ package com.ruslan.growsseth.mixin.entity.mob;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.monster.ZombieVillager;
@@ -19,7 +19,7 @@ abstract class ZombieMixin {
     Zombie thisZombie = (Zombie)(Object)this;
 
     @Inject(method = "finalizeSpawn", at = @At("RETURN"))
-    private void onFinalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType reason, SpawnGroupData spawnData, CallbackInfoReturnable<SpawnGroupData> cir) {
+    private void onFinalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason reason, SpawnGroupData spawnData, CallbackInfoReturnable<SpawnGroupData> cir) {
         if (thisZombie instanceof ZombieVillager && thisZombie.getTags().contains("Beekeeper")) {
             thisZombie.setBaby(false);  // The zombie beekeeper sometimes spawns as a child because of a bug
         }

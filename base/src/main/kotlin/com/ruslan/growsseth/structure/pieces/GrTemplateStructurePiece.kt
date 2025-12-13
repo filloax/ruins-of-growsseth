@@ -7,7 +7,7 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.Mob
-import net.minecraft.world.entity.MobSpawnType
+import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.levelgen.structure.TemplateStructurePiece
@@ -39,10 +39,10 @@ abstract class GrTemplateStructurePiece : TemplateStructurePiece {
 
     protected fun <T : Mob> placeEntity(entityType: EntityType<T>, pos: BlockPos, levelAccessor: ServerLevelAccessor, after: (T) -> Unit = {}) {
         try {
-            val mob = entityType.create(levelAccessor.level) ?: return
+            val mob = entityType.create(levelAccessor.level, EntitySpawnReason.MOB_SUMMONED) ?: return
             mob.setPersistenceRequired()
             mob.moveTo(pos.x + .5, pos.y + .0, pos.z + .5, 0.0f, 0.0f)
-            mob.finalizeSpawn(levelAccessor, levelAccessor.getCurrentDifficultyAt(pos), MobSpawnType.STRUCTURE, null)
+            mob.finalizeSpawn(levelAccessor, levelAccessor.getCurrentDifficultyAt(pos), EntitySpawnReason.STRUCTURE, null)
             levelAccessor.addFreshEntityWithPassengers(mob)
             levelAccessor.setBlock(pos, Blocks.AIR.defaultBlockState(), SetBlockFlag.NOTIFY_CLIENTS.flag)
             after(mob)

@@ -249,12 +249,14 @@ idea {
     }
 }
 
-val dokkaJavadocJar = tasks.register<Jar>("dokkaJavadocJar") {
-    dependsOn(tasks.dokkaGenerateModuleJavadoc)
-    from(tasks.dokkaGenerateModuleJavadoc.flatMap { it.outputDirectory })
-    archiveClassifier.set("javadoc")
-}
+// DISABLED FOR TESTING, RE ENABLE WHEN RESUMING NORMAL DEVELOPMENT
 
-tasks.build {
-    dependsOn(dokkaJavadocJar)
-}
+//val dokkaJavadocJar = tasks.register<Jar>("dokkaJavadocJar") {
+//    dependsOn(tasks.dokkaGenerateModuleJavadoc)
+//    from(tasks.dokkaGenerateModuleJavadoc.flatMap { it.outputDirectory })
+//    archiveClassifier.set("javadoc")
+//}
+
+//tasks.build {
+//    dependsOn(dokkaJavadocJar)
+//}

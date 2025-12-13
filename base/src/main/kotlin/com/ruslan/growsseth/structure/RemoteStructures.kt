@@ -32,7 +32,7 @@ object RemoteStructures {
                 newSpawns.forEach {
                     val id = ResourceLocation.parse(it.structureId)
                     if (it.active && id.namespace != Constants.EVENT_NAMESPACE) {
-                        val structureRef = server.registryAccess().registryOrThrow(Registries.STRUCTURE).get(id)
+                        val structureRef = server.registryAccess().lookupOrThrow(Registries.STRUCTURE).get(id)
                         if (structureRef == null) {
                             RuinsOfGrowsseth.LOGGER.error("Cannot queue non-existent structure $id")
                         } else {

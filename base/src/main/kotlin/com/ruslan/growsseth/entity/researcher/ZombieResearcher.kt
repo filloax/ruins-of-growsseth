@@ -19,9 +19,11 @@ import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
+import net.minecraft.world.entity.ConversionParams
+import net.minecraft.world.entity.ConversionType
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.EquipmentSlot
-import net.minecraft.world.entity.MobSpawnType
+import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.SpawnGroupData
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
@@ -71,7 +73,7 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
         }
     private var _spawnTime: Long? = null
 
-    override fun finalizeSpawn(level: ServerLevelAccessor, difficulty: DifficultyInstance, reason: MobSpawnType, spawnData: SpawnGroupData?
+    override fun finalizeSpawn(level: ServerLevelAccessor, difficulty: DifficultyInstance, reason: EntitySpawnReason, spawnData: SpawnGroupData?
     ): SpawnGroupData? {
         villagerData = villagerData.setProfession(VillagerProfession.CARTOGRAPHER).setLevel(5)
         return super.finalizeSpawn(level, difficulty, reason, spawnData)
@@ -105,19 +107,21 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
     }
 
     private fun convertToResearcher(serverLevel: ServerLevel, alsoMove: Boolean = false) {
-        val researcher = convertTo(GrowssethEntities.RESEARCHER, false)
+        val researcher = convertTo(GrowssethEntities.RESEARCHER,
+            ConversionParams(ConversionType.SINGLE, true, true, null)
+        ) {}
         for (equipmentSlot in EquipmentSlot.entries) {
             val itemStack = getItemBySlot(equipmentSlot)
             if (itemStack.isEmpty) continue
             val d = getEquipmentDropChance(equipmentSlot).toDouble()
             if (d <= 1.0) continue
-            this.spawnAtLocation(itemStack)
+            this.spawnAtLocation(serverLevel, itemStack)
         }
         if (isNull(researcher)) {
             RuinsOfGrowsseth.LOGGER.error("Zombie researcher to researcher for $this conversion failed!")
             return
         }
-        researcher.finalizeSpawn(serverLevel, serverLevel.getCurrentDifficultyAt(researcher.blockPosition()), MobSpawnType.CONVERSION, null)
+        researcher.finalizeSpawn(serverLevel, serverLevel.getCurrentDifficultyAt(researcher.blockPosition()), EntitySpawnReason.CONVERSION, null)
 
         val useResData = if (ResearcherConfig.singleResearcher) {
             ResearcherSavedData.getPersistent(serverLevel.server).data
@@ -151,8 +155,8 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
         }
     }
 
-    override fun customServerAiStep() {
-        super.customServerAiStep()
+    override fun customServerAiStep(level: ServerLevel) {
+        super.customServerAiStep(level)
 
         val server = server!!
 

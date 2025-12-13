@@ -29,7 +29,7 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.network.ServerGamePacketListenerImpl
 import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.entity.MobSpawnType
+import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.ChunkPos
@@ -137,7 +137,7 @@ object GrowssethExtraEvents {
             if (namespace != null && path != null && title != null) {
                 val itemId = ResourceLocation.fromNamespaceAndPath(namespace, path)
                 val registryAccess = server.registryAccess()
-                item = registryAccess.registry(Registries.ITEM).getOrNull()?.get(itemId)
+                item = registryAccess.lookup(Registries.ITEM).getOrNull()?.getValue(itemId)
                 if (item == null) {
                     RuinsOfGrowsseth.LOGGER.warn("Custom item toast: couldn't find item with id $itemId")
                 }
@@ -393,12 +393,12 @@ object GrowssethExtraEvents {
                 savedData.alreadyRan.add(id)
                 savedData.setDirty()
 
-                val mob = GrowssethEntities.RESEARCHER.create(level) ?: run {
+                val mob = GrowssethEntities.RESEARCHER.create(level, EntitySpawnReason.MOB_SUMMONED) ?: run {
                     RuinsOfGrowsseth.LOGGER.error("Couldn't spawn researcher through growsseth event!")
                     return@runWhenChunkLoaded
                 }
                 mob.moveTo(pos.x + .5, pos.y + .0, pos.z + .5, 0.0f, 0.0f)
-                mob.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), MobSpawnType.MOB_SUMMONED, null)
+                mob.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), EntitySpawnReason.MOB_SUMMONED, null)
                 level.addFreshEntityWithPassengers(mob)
             }
         }

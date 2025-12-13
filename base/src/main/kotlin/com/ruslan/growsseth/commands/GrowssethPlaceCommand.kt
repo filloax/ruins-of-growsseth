@@ -127,8 +127,8 @@ object GrowssethPlaceCommand {
         ChunkPos.rangeClosed(chunkPos2, chunkPos22).forEach { chunkPos: ChunkPos ->
             structureStart.placeInChunk(
                 serverLevel, serverLevel.structureManager(), chunkGenerator, serverLevel.getRandom(), BoundingBox(
-                    chunkPos.minBlockX, serverLevel.minBuildHeight, chunkPos.minBlockZ,
-                    chunkPos.maxBlockX, serverLevel.maxBuildHeight, chunkPos.maxBlockZ
+                    chunkPos.minBlockX, serverLevel.minY, chunkPos.minBlockZ,
+                    chunkPos.maxBlockX, serverLevel.maxY, chunkPos.maxBlockZ
                 ),
                 chunkPos,
             )

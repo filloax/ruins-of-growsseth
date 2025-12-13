@@ -6,7 +6,7 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.toasts.AdvancementToast
 import net.minecraft.client.gui.components.toasts.RecipeToast
 import net.minecraft.client.gui.components.toasts.Toast
-import net.minecraft.client.gui.components.toasts.ToastComponent
+import net.minecraft.client.gui.components.toasts.ToastManager
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.FormattedCharSequence
@@ -56,7 +56,7 @@ class CustomTextItemToast private constructor(
         return (20 + messageLines.size.coerceAtLeast(1) * LINE_SPACING).coerceAtMost(32 * MAX_SLOTS)
     }
 
-    override fun render(guiGraphics: GuiGraphics, toastComponent: ToastComponent, timeSinceLastVisible: Long): Toast.Visibility {
+    override fun render(guiGraphics: GuiGraphics, font: Font, timeSinceLastVisible: Long): Unit {
         if (changed) {
             lastChanged = timeSinceLastVisible
             changed = false
@@ -77,17 +77,17 @@ class CustomTextItemToast private constructor(
         }
 
         if (messageLines.isEmpty()) {
-            guiGraphics.drawString(toastComponent.minecraft.font, title, 30, LINE_SPACING, -256, false)
+            guiGraphics.drawString(ToastManager.minecraft.font, title, 30, LINE_SPACING, -256, false)
         } else {
-            guiGraphics.drawString(toastComponent.minecraft.font, title, 30, 7, -256, false)
+            guiGraphics.drawString(ToastManager.minecraft.font, title, 30, 7, -256, false)
             for (j in messageLines.indices) {
-                guiGraphics.drawString(toastComponent.minecraft.font, messageLines[j], 30, 18 + j * LINE_SPACING, -1, false)
+                guiGraphics.drawString(ToastManager.minecraft.font, messageLines[j], 30, 18 + j * LINE_SPACING, -1, false)
             }
         }
         guiGraphics.pose().pushPose()
         guiGraphics.renderFakeItem(item, 8, 8)
         guiGraphics.pose().popPose()
-        return if ((timeSinceLastVisible - lastChanged) < DISPLAY_TIME * toastComponent.notificationDisplayTimeMultiplier)
+        return if ((timeSinceLastVisible - lastChanged) < DISPLAY_TIME * ToastManager.notificationDisplayTimeMultiplier)
             Toast.Visibility.SHOW
         else
             Toast.Visibility.HIDE

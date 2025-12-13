@@ -180,7 +180,7 @@ fun ItemStack.updateMapToStruct(
     destinationTag: TagKey<Structure>,
     context: MapLocateContext,
 ): CompletableFuture<LocateResult> {
-    val holderSet = level.registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(destinationTag).orElseThrow()
+    val holderSet = level.registryAccess().lookupOrThrow(Registries.STRUCTURE).get(destinationTag).orElseThrow()
     return updateMapToStructWithHolder(level, holderSet, context)
 }
 
@@ -281,6 +281,6 @@ private fun ItemStack.setMapFailedName() {
 }
 
 private fun getHolderSet(level: ServerLevel, destination: ResourceKey<Structure>): HolderSet<Structure> {
-    val registry = level.registryAccess().registryOrThrow(Registries.STRUCTURE)
-    return HolderSet.direct(registry.getHolderOrThrow(destination))
+    val registry = level.registryAccess().lookupOrThrow(Registries.STRUCTURE)
+    return HolderSet.direct(registry.getOrThrow(destination))
 }

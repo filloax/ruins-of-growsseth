@@ -17,7 +17,7 @@ object ClientPacketHandlers {
 
     fun handleTradeNotification(packet: ResearcherTradesNotifPacket, context: ToClientContext) {
         if (ClientConfig.newTradeNotifications) {
-            context.client.toasts.updateNewTradeToast(packet.newTrades)
+            context.client.toastManager.updateNewTradeToast(packet.newTrades)
             RuinsOfGrowsseth.LOGGER.info("Received trade notification")
         } else {
             RuinsOfGrowsseth.LOGGER.info("Ignoring trade notification as disabled client-side")
@@ -25,7 +25,7 @@ object ClientPacketHandlers {
     }
 
     fun handleCustomToast(packet: CustomToastPacket, context: ToClientContext) {
-        context.client.toasts.updateCustomToast(packet.title, packet.message, packet.item)
+        context.client.toastManager.updateCustomToast(packet.title, packet.message, packet.item)
     }
 
     fun handleStopMusic(packet: StopMusicPacket, context: ToClientContext) {

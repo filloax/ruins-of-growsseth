@@ -41,7 +41,7 @@ object ResearcherTradeUtils {
         val tagOrKey = getStructTagOrKey(tagOrId)
         return tagOrKey.map({ tag ->
             registryAccess
-                .registryOrThrow(Registries.STRUCTURE).getOrCreateTag(tag)
+                .lookupOrThrow(Registries.STRUCTURE).getOrCreateTag(tag)
                 .mapNotNull { h -> h.unwrapKey().map { it.location() }.getOrNull() }
         }, { key ->
             listOf(key.location())

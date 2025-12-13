@@ -34,7 +34,7 @@ class DestinationType private constructor(val type: Holder<MapDecorationType>? =
 
         fun withIcon(type: Holder<MapDecorationType>) = DestinationType(type)
         fun withIcon(typeId: ResourceKey<MapDecorationType>, registryAccess: RegistryAccess) =
-            withIcon(registryAccess.registryOrThrow(Registries.MAP_DECORATION_TYPE).getHolderOrThrow(typeId))
+            withIcon(registryAccess.lookupOrThrow(Registries.MAP_DECORATION_TYPE).getOrThrow(typeId))
 
         fun auto(struct: Holder<Structure>): DestinationType {
             return auto(struct.unwrapKey().get())
@@ -52,7 +52,7 @@ class DestinationType private constructor(val type: Holder<MapDecorationType>? =
             GrowssethMapDecorations.getForStructure(structTag)?.let { type ->
                 return withIcon(type)
             }
-            val tagHolders = registryAccess.registryOrThrow(Registries.STRUCTURE).getTag(structTag).orElseThrow()
+            val tagHolders = registryAccess.lookupOrThrow(Registries.STRUCTURE).get(structTag).orElseThrow()
             VANILLA_STRUCT_ICONS.forEach {
                 tagHolders.forEach { holder ->
                     if (holder.unwrapKey().get().location() == it.key.location()) {

@@ -48,9 +48,9 @@ class ResearcherCombatComponent(val owner: Researcher) {
         get() = owner.health <= owner.maxHealth / 3
 
     fun createWeapon(): ItemStack = ItemStack(GrowssethItems.RESEARCHER_DAGGER).also { dagger ->
-        val registry = level.registryAccess().registryOrThrow(Registries.ENCHANTMENT)
-        dagger.enchant(registry.getHolderOrThrow(Enchantments.UNBREAKING), 3)
-        dagger.enchant(registry.getHolderOrThrow(Enchantments.MENDING), 1)
+        val registry = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT)
+        dagger.enchant(registry.getOrThrow(Enchantments.UNBREAKING), 3)
+        dagger.enchant(registry.getOrThrow(Enchantments.MENDING), 1)
     }
 
     fun hurt(source: DamageSource, amount: Float, superHurt: (DamageSource, Float) -> Boolean): Boolean? {

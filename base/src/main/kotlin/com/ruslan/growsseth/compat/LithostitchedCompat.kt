@@ -41,7 +41,7 @@ object LithostitchedCompat {
         weight: Int
     ) {
         // Get the pool and create the piece
-        val pool = templatePoolRegistry.getHolderOrThrow(ResourceKey.create(Registries.TEMPLATE_POOL, poolId))
+        val pool = templatePoolRegistry.getOrThrow(ResourceKey.create(Registries.TEMPLATE_POOL, poolId))
         val newPiece = LegacySinglePoolElement.legacy(poolPieceId.toString())
             .apply(StructureTemplatePool.Projection.RIGID)
         // Create a HolderSet with just this pool

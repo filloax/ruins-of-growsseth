@@ -89,7 +89,7 @@ object GrowssethLocateCommand {
 
     @Throws(CommandSyntaxException::class)
     private fun locateStructure(source: CommandSourceStack, structure: ResourceOrTagKeyArgument.Result<Structure>, timeout: Int? = null, logProgress: Boolean = false, chatProgress: Boolean = false): Int {
-        val registry = source.level.registryAccess().registryOrThrow(Registries.STRUCTURE)
+        val registry = source.level.registryAccess().lookupOrThrow(Registries.STRUCTURE)
         val holderSet = LocateCommand.getHolders(structure, registry).getOrNull() ?: throw ERROR_STRUCTURE_INVALID.create(structure.asPrintable())
         val blockPos = BlockPos.containing(source.position)
         val serverLevel = source.level
@@ -144,7 +144,7 @@ object GrowssethLocateCommand {
         source: CommandSourceStack, structure: ResourceOrTagKeyArgument.Result<Structure>, jigsawId: ResourceLocation,
         timeout: Int? = null, logProgress: Boolean = false, chatProgress: Boolean = false
     ): Int {
-        val registry = source.level.registryAccess().registryOrThrow(Registries.STRUCTURE)
+        val registry = source.level.registryAccess().lookupOrThrow(Registries.STRUCTURE)
         val holderSet = LocateCommand.getHolders(structure, registry).getOrNull() ?: throw ERROR_STRUCTURE_INVALID.create(structure.asPrintable())
         val blockPos = BlockPos.containing(source.position)
         val serverLevel = source.level

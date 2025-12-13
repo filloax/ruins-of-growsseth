@@ -34,7 +34,10 @@ import net.minecraft.resources.ResourceKey
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.Clearable
+import net.minecraft.world.entity.ConversionParams
+import net.minecraft.world.entity.ConversionType
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.npc.VillagerProfession
 import net.minecraft.world.item.InstrumentItem
@@ -286,7 +289,9 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
             val resStartingPos = entity.startingPos ?: entity.blockPosition()
             val spawnTime = entity.spawnTime
 
-            val zombie = entity.convertTo(GrowssethEntities.ZOMBIE_RESEARCHER, false)
+            val zombie = entity.convertTo(GrowssethEntities.ZOMBIE_RESEARCHER,
+                ConversionParams(ConversionType.SINGLE, true, true, null)
+            ) {}
             if (isNull(zombie)) {
                 RuinsOfGrowsseth.LOGGER.error("Couldn't zombify researcher in quest stage!")
                 entity.moveTo(startingPos)

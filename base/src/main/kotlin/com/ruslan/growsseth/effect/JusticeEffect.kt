@@ -1,5 +1,6 @@
 package com.ruslan.growsseth.effect
 
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.effect.MobEffectCategory
 import net.minecraft.world.entity.LivingEntity
@@ -13,7 +14,7 @@ class JusticeEffect(category: MobEffectCategory, color: Int) : MobEffect(categor
             true
     }
 
-    override fun applyEffectTick(livingEntity: LivingEntity, amplifier: Int): Boolean {
+    override fun applyEffectTick(level: ServerLevel, livingEntity: LivingEntity, amplifier: Int): Boolean {
         if (livingEntity.health < livingEntity.maxHealth)
             livingEntity.heal(1.0f)
         return true

@@ -371,7 +371,7 @@ class ResearcherDiaryComponent(val researcher: Researcher) {
             // Probably not optimized? Oh. well
             // Get only once instead of running for every player
             // Run now for registry access reasons and to run only once
-            val registry = level.registryAccess().registryOrThrow(Registries.STRUCTURE)
+            val registry = level.registryAccess().lookupOrThrow(Registries.STRUCTURE)
 
             // Might include datapack-added things
             val registryTagAssociations = GrowssethTags.StructTags.ALL.flatMap { tag ->

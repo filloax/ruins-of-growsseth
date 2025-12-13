@@ -9,7 +9,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.level.Level;
@@ -62,7 +62,7 @@ public class EasterEggMixin {
             method = "finalizeSpawn",
             at = @At("RETURN")
         )
-        private void onFinalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType reason, SpawnGroupData spawnData, CallbackInfoReturnable<SpawnGroupData> cir) {
+        private void onFinalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason reason, SpawnGroupData spawnData, CallbackInfoReturnable<SpawnGroupData> cir) {
             float value = random.nextFloat();
             if (value < MiscConfig.zombieGuberSpawnChance / 100) {
                 setIsGuber(true);

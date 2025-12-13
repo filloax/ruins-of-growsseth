@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.toasts.Toast
-import net.minecraft.client.gui.components.toasts.ToastComponent
+import net.minecraft.client.gui.components.toasts.ToastManager
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.FormattedCharSequence
@@ -58,7 +58,7 @@ class CustomTextToast private constructor(
         return (20 + messageLines.size.coerceAtLeast(1) * LINE_SPACING).coerceAtMost(32 * MAX_SLOTS)
     }
 
-    override fun render(guiGraphics: GuiGraphics, toastComponent: ToastComponent, timeSinceLastVisible: Long): Toast.Visibility {
+    override fun render(guiGraphics: GuiGraphics, font: Font, timeSinceLastVisible: Long): Unit {
         if (changed) {
             lastChanged = timeSinceLastVisible
             changed = false
@@ -80,14 +80,14 @@ class CustomTextToast private constructor(
         }
 
         if (messageLines.isEmpty()) {
-            guiGraphics.drawString(toastComponent.minecraft.font, title, 18, LINE_SPACING, -256, false)
+            guiGraphics.drawString(ToastManager.minecraft.font, title, 18, LINE_SPACING, -256, false)
         } else {
-            guiGraphics.drawString(toastComponent.minecraft.font, title, 18, 7, -256, false)
+            guiGraphics.drawString(ToastManager.minecraft.font, title, 18, 7, -256, false)
             for (j in messageLines.indices) {
-                guiGraphics.drawString(toastComponent.minecraft.font, messageLines[j], 18, 18 + j * LINE_SPACING, -1, false)
+                guiGraphics.drawString(ToastManager.minecraft.font, messageLines[j], 18, 18 + j * LINE_SPACING, -1, false)
             }
         }
-        return if ((timeSinceLastVisible - lastChanged) < DISPLAY_TIME * toastComponent.notificationDisplayTimeMultiplier)
+        return if ((timeSinceLastVisible - lastChanged) < DISPLAY_TIME * ToastManager.notificationDisplayTimeMultiplier)
             Toast.Visibility.SHOW
         else
             Toast.Visibility.HIDE

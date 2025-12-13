@@ -82,13 +82,13 @@ class ResearcherModel(private val root: ModelPart) : HierarchicalModel<Researche
                 }
                 else {
                     if (!entity.isUsingItem)
-                        AnimationUtils.swingWeaponDown(this.rightArm, this.leftArm, entity, this.attackTime, ageInTicks)
+                        AnimationUtils.swingWeaponDown(this.rightArm, this.leftArm, entity.mainArm, this.attackTime, ageInTicks)
                     else
                         AnimationUtils.animateZombieArms(this.leftArm, this.rightArm, true, this.attackTime, ageInTicks)
                 }
             }
             else if (entity.isUsingItem){
-                AnimationUtils.swingWeaponDown(this.leftArm, this.rightArm, entity, this.attackTime, ageInTicks)
+                AnimationUtils.swingWeaponDown(this.leftArm, this.rightArm, entity.mainArm, this.attackTime, ageInTicks)
             }
         }
     }

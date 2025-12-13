@@ -60,7 +60,7 @@ object StructureAdvancements {
 
     fun playerHasFoundStructure(player: ServerPlayer, structTag: TagKey<Structure>): Boolean {
         val registries = player.serverLevel().registryAccess()
-        val tagHolders = registries.registryOrThrow(Registries.STRUCTURE).getTag(structTag)?.getOrNull()
+        val tagHolders = registries.lookupOrThrow(Registries.STRUCTURE).get(structTag).getOrNull()
         if (tagHolders == null) {
             RuinsOfGrowsseth.LOGGER.warn("Structure tag $structTag doesn't exist")
             return false

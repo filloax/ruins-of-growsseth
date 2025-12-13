@@ -1,11 +1,11 @@
 package com.ruslan.growsseth.client.gui.components
 
 import net.minecraft.client.gui.components.toasts.Toast
-import net.minecraft.client.gui.components.toasts.ToastComponent
+import net.minecraft.client.gui.components.toasts.ToastManager
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemStack
 
-fun ToastComponent.addCustomToast(title: Component, message: Component? = null, item: ItemStack? = null) {
+fun ToastManager.addCustomToast(title: Component, message: Component? = null, item: ItemStack? = null) {
     if (item != null && item != ItemStack.EMPTY) {
         addToast(CustomTextItemToast.multiline(minecraft.font, title, item, message))
     } else {
@@ -13,7 +13,7 @@ fun ToastComponent.addCustomToast(title: Component, message: Component? = null, 
     }
 }
 
-fun ToastComponent.updateCustomToast(title: Component, message: Component? = null, item: ItemStack? = null) {
+fun ToastManager.updateCustomToast(title: Component, message: Component? = null, item: ItemStack? = null) {
     val clazz: Class<out Toast> = if (item != null) CustomTextItemToast::class.java else CustomTextToast::class.java
     val toast = getToast(clazz, Toast.NO_TOKEN)
     if (toast == null) {

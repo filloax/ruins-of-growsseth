@@ -25,7 +25,7 @@ public class MixinHelpers {
     @Nullable public static Structure researcherTent;
 
     public static void serverInit(MinecraftServer server) {
-        Registry<Structure> registry = server.registryAccess().registryOrThrow(Registries.STRUCTURE);
+        Registry<Structure> registry = server.registryAccess().lookupOrThrow(Registries.STRUCTURE);
         researcherTent = registry.getOrThrow(GrowssethStructures.RESEARCHER_TENT);
     }
 

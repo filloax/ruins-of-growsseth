@@ -365,8 +365,8 @@ class LocateTask(
         // meaning the filter needs to work with null structurestart
         val customPlacements = targetSet.unwrap().map<Set<Holder<Structure>>>(
                 {
-                    tag -> level.registryAccess().registryOrThrow(Registries.STRUCTURE)
-                        .getTag(tag)
+                    tag -> level.registryAccess().lookupOrThrow(Registries.STRUCTURE)
+                        .get(tag)
                         .orElseThrow()
                         .toSet()
                 },

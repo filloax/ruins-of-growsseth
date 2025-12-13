@@ -54,6 +54,7 @@ import net.minecraft.tags.DamageTypeTags
 import net.minecraft.tags.TagKey
 import net.minecraft.util.RandomSource
 import net.minecraft.world.*
+import net.minecraft.world.InteractionResult.SwingSource
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.effect.MobEffectInstance
@@ -87,7 +88,7 @@ import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.level.levelgen.structure.Structure
 import net.minecraft.world.level.levelgen.structure.StructureStart
-import net.minecraft.world.level.portal.DimensionTransition
+import net.minecraft.world.level.portal.TeleportTransition
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
@@ -355,25 +356,25 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         // Players get the highest target priority, then mobs depending on the config
         targetSelector.addGoal(0, NearestAttackableTargetGoal(
             this, Player::class.java, 0, true, true)
-            { player -> combat.wantsToKillPlayer((player as Player)) }
+            { player, _ -> combat.wantsToKillPlayer((player as Player)) }
         )
         if (ResearcherConfig.researcherInteractsWithMobs) {
             targetSelector.addGoal(1, NearestAttackableTargetGoal(
                 this, Mob::class.java, 0,false, true)
-                { livingEntity -> combat.shouldApplySelfDefence(livingEntity) }
+                { livingEntity, _ -> combat.shouldApplySelfDefence(livingEntity) }
             )
             targetSelector.addGoal(2, ResearcherHurtByTargetGoal(this))
             if (ResearcherConfig.researcherStrikesFirst) {
                 targetSelector.addGoal(2, NearestAttackableTargetGoal(
                     this, Mob::class.java, 0, true, true)
-                    { livingEntity -> combat.shouldStrikeFirst(livingEntity) }
+                    { livingEntity, _ -> combat.shouldStrikeFirst(livingEntity) }
                 )
             }
         }
     }
 
     // TODO: in neoforge do not call this directly but use EventHook.finalizeSpawn (see javadoc comment on Neoforge version of Mob.java), applies to other ents too
-    override fun finalizeSpawn(level: ServerLevelAccessor, difficulty: DifficultyInstance, mobSpawnType: MobSpawnType, spawnGroupData: SpawnGroupData?): SpawnGroupData? {
+    override fun finalizeSpawn(level: ServerLevelAccessor, difficulty: DifficultyInstance, entitySpawnReason: EntitySpawnReason, spawnGroupData: SpawnGroupData?): SpawnGroupData? {
         val savedData = server?.let{ serv ->
             // Load data from previous researchers
             if (ResearcherConfig.singleResearcher) {
@@ -433,9 +434,9 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             if (!isSilent && itemUsingTime == (offhandItem.getUseDuration(this) / 4)) {    // play sound when item is almost consumed
                 val itemStack = offhandItem
 
-                val sound = when (itemStack.item) {
-                    Items.POTION -> SoundEvents.GENERIC_DRINK
-                    Items.HONEY_BOTTLE -> SoundEvents.HONEY_DRINK
+                val sound: SoundEvent? = when (itemStack.item) {
+                    Items.POTION -> SoundEvents.GENERIC_DRINK.value()
+                    Items.HONEY_BOTTLE -> SoundEvents.HONEY_DRINK.value()
                     Items.ENDER_PEARL -> SoundEvents.ENDERMAN_TELEPORT
                     else -> null
                 }
@@ -476,7 +477,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
                     val targetLevel = server?.getLevel(startingDimension) ?:
                         throw IllegalStateException("Unknown level when researcher teleporting to start dimension $startingDimension")
 
-                    changeDimension(DimensionTransition(targetLevel, startingPos!!.center, Vec3.ZERO, yRot, xRot) { })
+                    teleport(TeleportTransition(targetLevel, startingPos!!.center, Vec3.ZERO, yRot, xRot) { })
                     gameEvent(GameEvent.TELEPORT)
                 }
                 getAttribute(Attributes.MOVEMENT_SPEED)!!.removeModifier(SPEED_MODIFIER_USING_ITEM.id)
@@ -541,8 +542,8 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         }
     }
 
-    override fun customServerAiStep() {
-        super.customServerAiStep()
+    override fun customServerAiStep(level: ServerLevel) {
+        super.customServerAiStep(level)
 
         // Always passes as server code
         val serverLevel = level() as ServerLevel
@@ -692,7 +693,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             unhappyCounter--
     }
 
-    override fun hurt(source: DamageSource, amount: Float): Boolean {
+    override fun hurtServer(level: ServerLevel, source: DamageSource, amount: Float): Boolean {
         if (ResearcherConfig.researcherAntiCheat && source.`is`(DamageTypes.IN_WALL) && health <= maxHealth / 2)
             return false    // mostly to prevent him dying from glitching out
 
@@ -701,9 +702,9 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         if (attacker is Player && ResearcherConfig.immortalResearcher && !attacker.isCreative)
             dialogues?.triggerDialogue(attacker as ServerPlayer, ResearcherDialoguesComponent.EV_HIT_BY_PLAYER_IMMORTAL)
 
-        val combatRet = combat.hurt(source, amount) { s, a -> super.hurt(s, a) }
+        val combatRet = combat.hurt(source, amount) { s, a -> super.hurtServer(level, s, a) }
 
-        return combatRet ?: super.hurt(source, amount)
+        return combatRet ?: super.hurtServer(level, source, amount)
     }
 
     override fun mobInteract(player: Player, interactionHand: InteractionHand): InteractionResult {
@@ -731,7 +732,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
                                 }
                                 else "noTrades"
                             dialogues.triggerDialogue(player, ResearcherDialoguesComponent.EV_REFUSE_TRADE, eventParam = reason)
-                            return InteractionResult.sidedSuccess(level().isClientSide)
+                            return InteractionResult.Success(SwingSource.NONE, InteractionResult.ItemContext(false, null))
                         } else
                             return InteractionResult.FAIL
                     }
@@ -739,7 +740,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
                     openTradingScreen(player, this.displayName ?: Component.empty(), 1)
                 }
             }
-            return InteractionResult.sidedSuccess(level().isClientSide)
+            return InteractionResult.Success(SwingSource.NONE, InteractionResult.ItemContext(false, null))
         }
         return super.mobInteract(player, interactionHand)
     }
@@ -1116,7 +1117,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     override fun getVillagerXp(): Int = 0
     override fun overrideXp(i: Int) { }
     override fun showProgressBar(): Boolean = false
-    override fun getBaseExperienceReward(): Int = RESEARCHER_XP
+    override fun getBaseExperienceReward(level: ServerLevel): Int = RESEARCHER_XP
     override fun canDisableShield(): Boolean = true
 
     override fun getAttackBoundingBox(): AABB {
@@ -1152,11 +1153,11 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     /* region [Objects and Data Classes] */
 
     object Callbacks {
-        fun nameTagRename(target: LivingEntity, name: Component, player: ServerPlayer, stack: ItemStack, usedHand: InteractionHand): InteractionResultHolder<ItemStack> {
+        fun nameTagRename(target: LivingEntity, name: Component, player: ServerPlayer, stack: ItemStack, usedHand: InteractionHand): InteractionResult {
             if (target is Researcher) {
-                return InteractionResultHolder(target.renameCheck(name.string, player), stack)
+                return target.renameCheck(name.string, player)
             }
-            return InteractionResultHolder.pass(stack)
+            return InteractionResult.Pass()
         }
     }
 

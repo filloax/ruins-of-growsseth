@@ -1,9 +1,10 @@
 package com.ruslan.growsseth.client.gui.components
 
 import com.ruslan.growsseth.entity.researcher.trades.ResearcherItemListing
+import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.toasts.Toast
-import net.minecraft.client.gui.components.toasts.ToastComponent
+import net.minecraft.client.gui.components.toasts.ToastManager
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 
@@ -20,7 +21,7 @@ class NewTradeToast(newTrades: List<ResearcherItemListing>) : Toast {
         private val DESCRIPTION_TEXT = Component.translatable("growsseth.notif.researcher_updated.toast.description")
         private val BACKGROUND_SPRITE = ResourceLocation.parse("toast/recipe")
 
-        fun ToastComponent.updateNewTradeToast(trades: List<ResearcherItemListing>) {
+        fun ToastManager.updateNewTradeToast(trades: List<ResearcherItemListing>) {
             val tradeToast = getToast(NewTradeToast::class.java, Toast.NO_TOKEN)
             if (tradeToast == null) {
                 addToast(NewTradeToast(trades))
@@ -30,7 +31,7 @@ class NewTradeToast(newTrades: List<ResearcherItemListing>) : Toast {
         }
     }
 
-    override fun render(guiGraphics: GuiGraphics, toastComponent: ToastComponent, timeSinceLastVisible: Long): Toast.Visibility {
+    override fun render(guiGraphics: GuiGraphics, font: Font, timeSinceLastVisible: Long): Unit {
         if (changed) {
             lastChanged = timeSinceLastVisible
             changed = false
@@ -40,16 +41,16 @@ class NewTradeToast(newTrades: List<ResearcherItemListing>) : Toast {
         } else {
             guiGraphics.blitSprite(BACKGROUND_SPRITE, 0, 0, width(), height())
 
-            guiGraphics.drawString(toastComponent.minecraft.font, TITLE_TEXT, 30, 7, -11534256, false)
-            guiGraphics.drawString(toastComponent.minecraft.font, DESCRIPTION_TEXT, 30, 18, -16777216, false)
+            guiGraphics.drawString(ToastManager.minecraft.font, TITLE_TEXT, 30, 7, -11534256, false)
+            guiGraphics.drawString(ToastManager.minecraft.font, DESCRIPTION_TEXT, 30, 18, -16777216, false)
             val idx = (timeSinceLastVisible
-                    / (DISPLAY_TIME * toastComponent.notificationDisplayTimeMultiplier / trades.size).coerceAtLeast(1.0)
+                    / (DISPLAY_TIME * ToastManager.notificationDisplayTimeMultiplier / trades.size).coerceAtLeast(1.0)
                     % trades.size.toDouble()
                     ).toInt()
             guiGraphics.pose().pushPose()
             guiGraphics.renderFakeItem(tradeItems[idx], 8, 8)
             guiGraphics.pose().popPose()
-            if (timeSinceLastVisible - lastChanged >= DISPLAY_TIME * toastComponent.notificationDisplayTimeMultiplier)
+            if (timeSinceLastVisible - lastChanged >= DISPLAY_TIME * ToastManager.notificationDisplayTimeMultiplier)
                 Toast.Visibility.HIDE
             else
                 Toast.Visibility.SHOW

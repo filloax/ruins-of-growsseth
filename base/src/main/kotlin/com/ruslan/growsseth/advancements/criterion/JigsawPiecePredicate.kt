@@ -59,7 +59,7 @@ data class JigsawPiecePredicate(
         this.biome?.let { if (!level.getBiome(blockPos).`is`(it)) return false }
         if (!level.isLoaded(blockPos)) return false
 
-        val structureObj = level.registryAccess().registryOrThrow(Registries.STRUCTURE).getHolder(structure)
+        val structureObj = level.registryAccess().lookupOrThrow(Registries.STRUCTURE).get(structure)
             .map{it.value()}.or { throw IllegalStateException("Unknown structure $structure") }.orElseThrow()
         val structureStart = level.structureManager().getStructureWithPieceAt(blockPos, structureObj)
         if (!structureStart.isValid) return false
@@ -85,7 +85,7 @@ data class JigsawPiecePredicate(
     private fun checkJigsaw(registryAccess: RegistryAccess) {
         if (checked) return
 
-        val structureVal = registryAccess.registryOrThrow(Registries.STRUCTURE).getOrThrow(structure)
+        val structureVal = registryAccess.lookupOrThrow(Registries.STRUCTURE).getValueOrThrow(structure)
         if (
             structureVal.type() != StructureType.JIGSAW
             && !(RuinsOfGrowsseth.modCompat.isLithostitchedLoaded && LithostitchedCompat.isValidJigsawCheckStructure(structureVal))

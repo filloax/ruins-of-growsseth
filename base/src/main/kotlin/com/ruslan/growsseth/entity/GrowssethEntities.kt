@@ -6,6 +6,8 @@ import com.ruslan.growsseth.entity.researcher.Researcher
 import com.ruslan.growsseth.entity.researcher.ZombieResearcher
 import com.ruslan.growsseth.platform.platform
 import com.ruslan.growsseth.utils.resLoc
+import net.minecraft.core.registries.Registries
+import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
@@ -17,12 +19,12 @@ import org.w3c.dom.Attr
 object GrowssethEntities {
     val all = mutableMapOf<ResourceLocation, () -> EntityType<*>>()
 
-    val RESEARCHER by make(
+    val RESEARCHER: EntityType<Researcher> by make(
         "researcher",
         EntityType.Builder.of(::Researcher, MobCategory.MISC) .sized(0.6f, 1.95f),
         Researcher.createAttributes(),
     )
-    val ZOMBIE_RESEARCHER by make(
+    val ZOMBIE_RESEARCHER: EntityType<ZombieResearcher> by make(
         "zombie_researcher",
         EntityType.Builder.of(::ZombieResearcher, MobCategory.MONSTER) .sized(0.6f, 1.95f),
         ZombieResearcher.createAttributes(),
@@ -34,7 +36,7 @@ object GrowssethEntities {
         attributeSupplier: (() -> AttributeSupplier.Builder)? = null
     ) = registryDelegate(resLoc(name)) {
         all[id] = {
-            val entityType = entityTypeBuilder.build(id.toString())
+            val entityType = entityTypeBuilder.build(ResourceKey.create(Registries.ENTITY_TYPE, id))
             init(entityType)
             attributeSupplier?.let { platform.registerEntDefaultAttribute(entityType, it) }
 

@@ -1,18 +1,20 @@
 package com.ruslan.growsseth.item
 
 import com.filloax.fxlib.api.registration.registryDelegate
+import com.ruslan.growsseth.GrowssethBannerPatterns
 import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.entity.GrowssethEntities
 import com.ruslan.growsseth.sound.GrowssethSounds
 import com.ruslan.growsseth.utils.resLoc
 import net.minecraft.core.Holder
 import net.minecraft.core.registries.Registries
+import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.world.item.*
 import net.minecraft.world.item.Item.Properties
-import net.minecraft.world.item.armortrim.TrimPattern
+import net.minecraft.world.item.equipment.trim.TrimPattern
 import net.minecraft.world.level.block.entity.DecoratedPotPattern
 
 object GrowssethItems {
@@ -39,11 +41,11 @@ object GrowssethItems {
 
 	val GROWSSETH_BANNER_PATTERN by make("growsseth_banner_pattern", {
 		AutoBannerItem(
-			com.ruslan.growsseth.GrowssethBannerPatterns.GROWSSETH.tag, defaultBuilder().rarity(Rarity.RARE)
+			GrowssethBannerPatterns.GROWSSETH.tag, defaultBuilder().rarity(Rarity.RARE)
 		)
 	})
-	val GROWSSETH_ARMOR_TRIM by make("growsseth_trim_template",
-		{ SmithingTemplateItem.createArmorTrimTemplate(TrimPatterns.GROWSSETH) })
+	val GROWSSETH_ARMOR_TRIM: SmithingTemplateItem by make("growsseth_trim_template",
+		{ SmithingTemplateItem.createArmorTrimTemplate(Properties()) })
 	val GROWSSETH_POTTERY_SHERD by make("growsseth_pottery_sherd", { defaultItem() })
 	val FRAGMENT_BALLATA_DEL_RESPAWN by make("fragment_ballata_del_respawn", { DiscFragmentItem(Properties()) })
 
@@ -125,7 +127,7 @@ object GrowssethItems {
 
 	private fun defaultItem(): Item = Item(defaultBuilder())
 
-	private fun defaultBuilder() = Item.Properties()
+	private fun defaultBuilder() = Properties()
 
 	object TrimPatterns {
 		val GROWSSETH: ResourceKey<TrimPattern> = ResourceKey.create(Registries.TRIM_PATTERN, resLoc("growsseth"))
@@ -154,7 +156,7 @@ object GrowssethItems {
 
 		fun make(name: String, sound: Holder<SoundEvent>): Pair<ResourceLocation, Instrument> {
 			val loc = resLoc(name)
-			val item = Instrument(sound, 140, 256.0f)
+			val item = Instrument(sound, 140f, 256.0f, Component.empty())   // Custom description in ResearcherQuestComponent
 			all[loc] = item
 			return Pair(loc, item)
 		}

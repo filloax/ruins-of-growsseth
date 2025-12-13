@@ -14,15 +14,16 @@ import java.util.*
  * To be implemented in loader-specific versions
  * that use their enchantment methods
  */
-abstract class AbstractResearcherDaggerItem() : SwordItem(Tiers.DIAMOND, properties()){
+abstract class AbstractResearcherDaggerItem() : SwordItem(
+    ToolMaterial.DIAMOND, 1f, -1.5F, getProperties()) {
+
     companion object {
         fun create(): AbstractResearcherDaggerItem {
             return ServiceUtil.findService(AbstractResearcherDaggerItem::class.java)
         }
 
-        private fun properties() = Properties()
+        private fun getProperties() = Properties()
             .rarity(Rarity.EPIC)
-            .attributes(SwordItem.createAttributes(Tiers.DIAMOND, 1, -1.5F))
     }
 
     override fun appendHoverText(
@@ -32,7 +33,7 @@ abstract class AbstractResearcherDaggerItem() : SwordItem(Tiers.DIAMOND, propert
         isAdvanced: TooltipFlag
     ) {
         tooltipComponents.add(
-            Component.translatable("${stack.descriptionId}.description")
+            Component.translatable("${stack.itemName}.description")
             .withStyle(
                 Style.EMPTY
                 .applyFormat(ChatFormatting.GOLD)

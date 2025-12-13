@@ -213,7 +213,7 @@ class ProgressResearcherTradesProvider(
         fun alreadyFoundStructure(server: MinecraftServer, structId: ResourceKey<Structure>): Boolean {
             val tags = foundStructures.map { GrowssethStructures.info[it]!!.tag }
             val matchingStructures = tags.flatMap { tag ->
-                server.registryAccess().registryOrThrow(Registries.STRUCTURE).getTagOrEmpty(tag).mapNotNull{it.unwrapKey().getOrNull()}
+                server.registryAccess().lookupOrThrow(Registries.STRUCTURE).getTagOrEmpty(tag).mapNotNull{it.unwrapKey().getOrNull()}
             }
             return matchingStructures.contains(structId)
         }

@@ -41,8 +41,8 @@ object VillageBuildings {
 
         if (!shouldAddBuildings) return
 
-        val templatePools: Registry<StructureTemplatePool> = server.registryAccess().registry(Registries.TEMPLATE_POOL).get()
-        val processorLists: Registry<StructureProcessorList> = server.registryAccess().registry(Registries.PROCESSOR_LIST).get()
+        val templatePools: Registry<StructureTemplatePool> = server.registryAccess().lookup(Registries.TEMPLATE_POOL).get()
+        val processorLists: Registry<StructureProcessorList> = server.registryAccess().lookup(Registries.PROCESSOR_LIST).get()
 
         val addBuildingToPoolFunction = if (isLithostitchedLoaded) LithostitchedCompat::addBuildingToPool else this::addBuildingToPool
 
@@ -59,9 +59,9 @@ object VillageBuildings {
         poolId: ResourceLocation, poolPieceId: ResourceLocation,
         weight: Int,
     ) {
-        val pool: StructureTemplatePool = templatePoolRegistry.getOrThrow(ResourceKey.create(Registries.TEMPLATE_POOL, poolId))
+        val pool: StructureTemplatePool = templatePoolRegistry.getValueOrThrow(ResourceKey.create(Registries.TEMPLATE_POOL, poolId))
         /* val emptyProcessor = ResourceLocation.fromNamespaceAndPath("minecraft", "empty")     // some houses have mossify 10% percent, but for now we keep it simple
-        val processorHolder: Holder<StructureProcessorList> = processorListRegistry.getHolderOrThrow(
+        val processorHolder: Holder<StructureProcessorList> = processorListRegistry.getOrThrow(
             ResourceKey.create(
                 Registries.PROCESSOR_LIST, emptyProcessor
             )
