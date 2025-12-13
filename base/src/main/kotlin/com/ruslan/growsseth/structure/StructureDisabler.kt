@@ -24,7 +24,7 @@ object StructureDisabler {
         fun filterStructureSets(possibleStructureSets: List<Holder<StructureSet>>, biomeSource: BiomeSource) = possibleStructureSets.filter { set ->
             if (GrowssethWorldPreset.shouldDisableStructureSet(set, biomeSource)) return@filter false
             val key = set.unwrapKey().getOrNull() ?: return@filter true
-            structSetToConfigMap[key]?.let { it() } ?: true
+            structSetToConfigMap[key]?.let { it() } != false
         }
     }
 
@@ -39,7 +39,7 @@ object StructureDisabler {
         GrowssethStructures.ENCHANT_TOWER to StructureConfig::enchantTowerEnabled,
         GrowssethStructures.ABANDONED_FORGE to StructureConfig::abandonedForgeEnabled,
         // Doesn't spawn as standalone structure naturally
-//        GrowssethStructures.GOLEM_HOUSE to StructureConfig::golemHouseEnabled,
+        //GrowssethStructures.GOLEM_HOUSE to StructureConfig::golemHouseEnabled,
         GrowssethStructures.NOTEBLOCK_LAB to StructureConfig::noteblockLabEnabled,
         GrowssethStructures.NOTEBLOCK_SHIP to StructureConfig::noteblockShipEnabled,
     )

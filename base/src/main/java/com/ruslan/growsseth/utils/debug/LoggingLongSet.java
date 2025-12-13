@@ -129,9 +129,9 @@ public class LoggingLongSet implements LongSet {
     private void log(String action, @Nullable Object value) {
         if (condition.get()) {
             if (value == null) {
-                RuinsOfGrowsseth.getLOGGER().info("DEBUG LONG SET | {}", action);
+                RuinsOfGrowsseth.LOGGER.info("DEBUG LONG SET | {}", action);
             } else {
-                RuinsOfGrowsseth.getLOGGER().info("DEBUG LONG SET | {} | {}", action, value);
+                RuinsOfGrowsseth.LOGGER.info("DEBUG LONG SET | {} | {}", action, value);
             }
         }
     }

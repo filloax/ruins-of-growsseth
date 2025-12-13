@@ -1,17 +1,19 @@
 package com.ruslan.growsseth.structure.locate
 
+import com.filloax.fxlib.api.FxLibServices
+import com.filloax.fxlib.api.structure.tracking.PlacedStructureData
 import com.mojang.datafixers.util.Pair
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.structure.locate.LocateTask.Phase
 import com.ruslan.growsseth.utils.matchesJigsaw
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap
 import it.unimi.dsi.fastutil.objects.ObjectArraySet
-import java.time.Clock
-import java.time.Instant
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
 import net.minecraft.core.HolderSet
 import net.minecraft.core.SectionPos
+import net.minecraft.core.registries.Registries
+import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.ChunkPos
@@ -24,12 +26,15 @@ import net.minecraft.world.level.levelgen.structure.placement.ConcentricRingsStr
 import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement
 import net.minecraft.world.level.levelgen.structure.placement.StructurePlacement
 import java.time.Duration
+import java.time.Instant
 import java.util.concurrent.*
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.locks.ReentrantLock
+import java.util.function.Function
+import java.util.stream.Stream
 import kotlin.concurrent.thread
 
-typealias StructLocatePredicate = (StructureStart, ChunkPos) -> Boolean
+typealias StructLocatePredicate = (StructureStart?, ChunkPos) -> Boolean
 typealias PositionAdjustFunction = (LocateResult, StructureStart) -> LocateResult?
 
 // Adapted from AsyncLocator, move to kotlin and allow stopping
@@ -97,7 +102,7 @@ object StoppableAsyncLocator {
 
     /**
      * Queues a task to locate a structure with a specific jigsaw piece inside it and returns a
-     * [JigsawLocateTask] that allows monitoring, cancelling it, and running code with futures.
+     * [LocateTask] that allows monitoring, cancelling it, and running code with futures.
      */
     fun locateJigsaw(
         level: ServerLevel, structureSet: HolderSet<Structure>,
@@ -110,9 +115,9 @@ object StoppableAsyncLocator {
         return locate(
             level, structureSet, pos,
             searchRadius, skipKnownStructures,
-            { structureStart, _ -> structureStart.pieces.any { piece ->
+            { structureStart, _ -> structureStart?.pieces?.any { piece ->
                 piece.matchesJigsaw(jigsawIds)
-            } },
+            } ?: true },
             { locateResult, structureStart ->
                 structureStart.pieces.first { piece ->
                     piece.matchesJigsaw(jigsawIds)
@@ -149,7 +154,8 @@ class LocateTask(
     val positionAdjustment: PositionAdjustFunction?,
     val searchRadius: Int,
     val skipKnownStructures: Boolean,
-    private val signalProgress: SignalProgressFun?
+    private val signalProgress: SignalProgressFun?,
+    private val ignoreSearchRadiusForFixedStructs: Boolean = true,
 ) {
     private val server = level.server
     private lateinit var startTime: Instant
@@ -159,6 +165,9 @@ class LocateTask(
     private var isCancelled = false
     private var cancelReason: String? = null
     private var finalTimeMs: Long? = null
+
+    private val fixedStructureGeneration = FxLibServices.fixedStructureGeneration
+    private val customPlacedStructureTracker = FxLibServices.customPlacedStructureTracker(level)
 
     private val cancelLock = ReentrantLock()
 
@@ -228,11 +237,19 @@ class LocateTask(
 
     /**
      * Code analoguous to base [ChunkGenerator.findNearestMapStructure],
-     * but with added checks and signals
+     * but with added checks and signals.
+     * We need to manually check for FxLib [CustomPlacedStructureTracker]
+     * because it would mixin into the vanilla function this replaces.
      */
     private fun findNearestMapStructure(): Pair<Boolean, LocateResult> {
         val structureState = level.chunkSource.generatorState
         val placementsSets: MutableMap<StructurePlacement, MutableSet<Holder<Structure>>> = Object2ObjectArrayMap()
+
+        val customPlacedStructuresResult = findNearestCustomGeneratedStructure()
+        if (customPlacedStructuresResult.first) {
+            RuinsOfGrowsseth.LOGGER.info("Found search structure among custom placed structures!")
+            return customPlacedStructuresResult
+        }
 
         for (holder in targetSet) {
             for (structurePlacement in structureState.getPlacementsForStructure(holder)) {
@@ -342,28 +359,77 @@ class LocateTask(
         return positionAdjustment?.let { it(result, result.structureStart) } ?: result
     }
 
+    private fun findNearestCustomGeneratedStructure(): Pair<Boolean, LocateResult> {
+        // first check custom tracked structures like in fxlib's mixin into Locate, then
+        // check fixed generation structures not yet spawned (which do not have a structureStart associated)
+        // meaning the filter needs to work with null structurestart
+        val customPlacements = targetSet.unwrap().map<Set<Holder<Structure>>>(
+                {
+                    tag -> level.registryAccess().registryOrThrow(Registries.STRUCTURE)
+                        .getTag(tag)
+                        .orElseThrow()
+                        .toSet()
+                },
+                {
+                    structureHolders -> structureHolders.toSet()
+                }
+            ).flatMap { holder ->
+                holder.unwrap().map(
+                    { key -> customPlacedStructureTracker.getByStructure(key) },
+                    { struct -> customPlacedStructureTracker.getByStructure(struct) }
+                )
+            }
+
+        val matchedCustomPlacement = customPlacements.filter { customPlacement ->
+            (ignoreSearchRadiusForFixedStructs || customPlacement.pos.distManhattan(fromPos) < searchRadius)
+                    && targetFilter?.let { it(customPlacement.structureStart, ChunkPos(customPlacement.pos)) } != false
+        }.minByOrNull { it.pos.distManhattan(fromPos) }
+
+        if (matchedCustomPlacement != null) {
+            return Pair(true, LocateResult(matchedCustomPlacement.pos, holder(matchedCustomPlacement.structure), matchedCustomPlacement.structureStart))
+        }
+
+        return fixedStructureGeneration.registeredStructureSpawns.values.filter { spawnData ->
+            // Only search fixed structures NOT spawned (aka not included in previous results)
+            // to avoid running the check again for structures but with a less restrictive filter
+            // (as structureStart is null here)
+            !customPlacements.any { it.pos == spawnData.pos } // simple check via pos
+            && (ignoreSearchRadiusForFixedStructs || spawnData.pos.distManhattan(fromPos) < searchRadius)
+            && targetSet.any { it.`is`(spawnData.structure) }
+            // StructureStart null, less restrictive filter
+            && targetFilter?.let { it(null, ChunkPos(spawnData.pos)) } != false
+        }.map { spawnData ->
+            Pair(true, LocateResult(
+                spawnData.pos,
+                targetSet.find { it.`is`(spawnData.structure) }!!,
+                null
+            ))
+        }.minByOrNull { it.second.pos.distManhattan(fromPos) }
+        ?: Pair(false, null)
+    }
+
     // Same as vanilla code, but can call filter function
     private fun getMatchingNearestGeneratedStructureSpread(
         structureHoldersSet: Set<Holder<Structure>>,
         level: LevelReader,
         structureManager: StructureManager,
         x: Int,
-        y: Int,
         z: Int,
+        searchRadius: Int,
         skipKnownStructures: Boolean,
         seed: Long,
         spreadPlacement: RandomSpreadStructurePlacement
     ): LocateResult? {
         val i = spreadPlacement.spacing()
 
-        for (j in -z..z) {
-            val bl = j == -z || j == z
+        for (j in -searchRadius..searchRadius) {
+            val bl = j == -searchRadius || j == searchRadius
 
-            for (k in -z..z) {
-                val bl2 = k == -z || k == z
+            for (k in -searchRadius..searchRadius) {
+                val bl2 = k == -searchRadius || k == searchRadius
                 if (bl || bl2) {
                     val l = x + i * j
-                    val m = y + i * k
+                    val m = z + i * k
                     val chunkPos = spreadPlacement.getPotentialStructureChunk(seed, l, m)
                     val result = getMatchingStructureGeneratingAt(
                         structureHoldersSet, level, structureManager, skipKnownStructures, spreadPlacement, chunkPos
@@ -410,6 +476,14 @@ class LocateTask(
         }
 
         return null
+    }
+
+    private fun holder(key: ResourceKey<Structure>): Holder<Structure> {
+        return targetSet.find { it.`is`(key) }!!
+    }
+
+    private fun holder(struct: Structure): Holder<Structure> {
+        return targetSet.find { holder -> holder.value() == struct }!!
     }
 
     private fun shouldStop(): Boolean {

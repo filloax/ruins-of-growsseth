@@ -12,12 +12,13 @@ val utils = project.utils(versionCatalogs, ext)
 
 val modid: String by project
 val modVersion: String by project
+val versionType: String? by project
 val minecraftVersion = libs.versions.minecraft.asProvider().get()
-
 val cydoVersion = (property("cydoVersion") as String).toBoolean()
 
+val versionSuffix = if (versionType?.isBlank() == true) "" else "-$versionType"
 
-version = "$modVersion-$minecraftVersion-base"
+version = "$modVersion-$minecraftVersion$versionSuffix-base"
 
 base {
 	archivesName = property("archives_base_name") as String
@@ -54,6 +55,9 @@ dependencies {
 
 	compileOnly(utils.getResourcefulConfig())
 	compileOnly(utils.getFilloaxlib())
+
+	// Mod compatibility
+	compileOnly(libs.lithostitched.neoforge)
 }
 
 sourceSets.main.get().resources.srcDir(project(":base").file("src/generated/resources"))
@@ -98,7 +102,7 @@ val packFormats = mapOf(		// used to set the pack format inside the pack.mcmeta 
 val createDatapackTask = tasks.register("createDatapackMeta") {
 	val packMeta = project.file("build/datapack/pack.mcmeta")
 	packMeta.parentFile.mkdirs()
-	packMeta.writeText("{\"pack\": {\"pack_format\": ${packFormats[minecraftVersion]},\"description\": \"Reference datapack for editing Growsseth data\"}}")
+	packMeta.writeText("{\"pack\": {\"pack_format\": ${packFormats[minecraftVersion]}, \"description\": \"Reference datapack for editing Growsseth data\"} }")
 }
 
 tasks.register<Zip>("makeReferenceDatapack") {
@@ -106,15 +110,18 @@ tasks.register<Zip>("makeReferenceDatapack") {
 
 	val sourceDir = project.file("src/main/")
 
+	// Json files from generated folder
 	from(sourceDir.resolve("generated/data/growsseth")) {
 		into("data/growsseth")
 	}
 	include("growsseth_researcher_trades/**")
 
+	// Json files from resources folder
 	from(sourceDir.resolve("resources/data/growsseth")) {
 		into("data/growsseth")
 	}
-	include("growsseth_places/**", "growsseth_researcher_dialogue/**", "growsseth_researcher_trades/**", "growsseth_templates/**")
+	include("growsseth_places/**", "growsseth_researcher_dialogue/**",
+		"growsseth_researcher_trades/**", "growsseth_templates/**", "lang/**")
 
 	from(project.file("build/datapack/"))
 	include("pack.mcmeta")
@@ -125,5 +132,18 @@ tasks.register<Zip>("makeReferenceDatapack") {
 
 tasks.named("build") {
 	dependsOn("makeReferenceDatapack")
+}
+//endregion
+
+//region Dokka
+// susceptible to changes in dokka v2
+listOf(
+	tasks.named("dokkaGenerateModuleJavadoc"),
+	tasks.named("dokkaGenerate"),
+).forEach { task ->
+	task {
+		mustRunAfter(tasks.named("replaceTransformedSources"))
+		mustRunAfter(tasks.named("restoreSources"))
+	}
 }
 //endregion

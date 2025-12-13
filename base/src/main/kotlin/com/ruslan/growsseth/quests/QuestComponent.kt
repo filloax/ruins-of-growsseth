@@ -46,12 +46,14 @@ open class QuestComponent<E : LivingEntity>(val entity: E, val name: String) {
     private val stagesGraph = QuestNodeImpl(QuestStage.blank<E>(), INIT_STAGE_ID)
     private val stagesMap = mutableMapOf<String, QuestNodeImpl<E>>("init" to stagesGraph)
     private var triggeredFirst = false
-    val server = entity.server ?: throw IllegalStateException("Initialized ResearcherQuestComponent in client!")
+    val server = entity.server ?: throw IllegalStateException("Initialized QuestComponent in client for entity $entity!")
     val serverLevel
         get() = entity.level() as ServerLevel
 
     var data = QuestData()
         private set
+
+    val currentNode get() = current()
 
     // NBT data
     data class QuestData(

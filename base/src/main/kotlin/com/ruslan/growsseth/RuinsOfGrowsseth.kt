@@ -1,6 +1,8 @@
 package com.ruslan.growsseth
 
 import com.filloax.fxlib.api.FxLibServices
+import com.filloax.fxlib.api.platform.ServiceUtil
+import com.ruslan.growsseth.compat.ModCompatChecker
 import com.ruslan.growsseth.config.GrowssethConfigHandler
 import com.ruslan.growsseth.dialogues.ResearcherDialogueApiListener
 import com.ruslan.growsseth.entity.researcher.CustomRemoteDiaries
@@ -11,35 +13,34 @@ import com.ruslan.growsseth.http.GrowssethExtraEvents
 import com.ruslan.growsseth.network.GrowssethPackets
 import com.ruslan.growsseth.resource.MusicCommon
 import com.ruslan.growsseth.structure.*
+import com.ruslan.growsseth.utils.GrowssethLogger
 import com.ruslan.growsseth.utils.loadPropertiesFile
 import org.apache.logging.log4j.Level
 import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
 
 
 abstract class RuinsOfGrowsseth {
     companion object {
-        @JvmStatic
-        val LOGGER: Logger = LogManager.getLogger()
         const val MOD_ID = "growsseth"
         const val MOD_NAME = "Ruins of Growsseth"
 
-        fun log(level: Level, message: String) {
-            LOGGER.log(level, "[$MOD_NAME] $message")
-        }
+        @JvmField
+        val LOGGER = GrowssethLogger(LogManager.getLogger(MOD_NAME))
 
         fun logDev(level: Level, message: String) {
             if (FxLibServices.platform.isDevEnvironment()) {
-                LOGGER.log(level, "[$MOD_NAME] $message")
+                LOGGER.log(level, message)
             }
         }
 
         val cydoniaProperties = loadPropertiesFile("cydonia.properties")
         val cydoniaMode: Boolean = cydoniaProperties["cydoniaMode"]!!.toBoolean()
+
+        val modCompat = ServiceUtil.findService(ModCompatChecker::class.java)
     }
 
     final fun initialize() {
-        log(Level.INFO, "Initializing")
+        LOGGER.info("Initializing")
 
         ModEvents.get().initCallbacks()
 
@@ -63,9 +64,9 @@ abstract class RuinsOfGrowsseth {
         MusicCommon.initCheck()
 
         if (cydoniaMode)
-            log(Level.INFO, "Cydonia mode enabled, structures won't spawn and API v1 will be used")
+            LOGGER.info("Cydonia mode enabled, structures won't spawn and API v1 will be used")
 
-        log(Level.INFO, "Initialized! :saidogPipo: :saidogRitto: :saidogMax:")
+        LOGGER.info("Initialized! :saidogPipo: :saidogRitto: :saidogMax:")
     }
 
     abstract fun initItemGroups()

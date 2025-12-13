@@ -1,9 +1,7 @@
 package com.ruslan.growsseth
 
-import com.filloax.fxlib.FxLib
-import com.ruslan.growsseth.RuinsOfGrowssethNeo.register
-import com.ruslan.growsseth.RuinsOfGrowssethNeo.registerHolder
 import com.ruslan.growsseth.advancements.GrowssethCriterions
+import com.ruslan.growsseth.attachments.GrowssethAttachmentsNeo
 import com.ruslan.growsseth.client.GrowssethItemsClient
 import com.ruslan.growsseth.client.GrowssethRenderers
 import com.ruslan.growsseth.client.resource.EncryptedMusicResources
@@ -32,10 +30,8 @@ import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.CreativeModeTabs
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.Items
-import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.ModContainer
 import net.neoforged.fml.ModLoadingContext
-import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.fml.common.Mod
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent
 import net.neoforged.neoforge.client.event.ClientTickEvent
@@ -45,14 +41,15 @@ import net.neoforged.neoforge.event.AddReloadListenerEvent
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent
 import net.neoforged.neoforge.event.RegisterCommandsEvent
 import net.neoforged.neoforge.registries.RegisterEvent
-import org.apache.logging.log4j.Level
 import thedarkcolour.kotlinforforge.neoforge.forge.FORGE_BUS
 import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
 import thedarkcolour.kotlinforforge.neoforge.forge.runForDist
 
+
 @Mod(RuinsOfGrowsseth.MOD_ID)
 object RuinsOfGrowssethNeo : RuinsOfGrowsseth() {
     init {
+        LOGGER.isNeoforge = true
         initialize()
 
         runForDist(
@@ -122,13 +119,21 @@ object RuinsOfGrowssethNeo : RuinsOfGrowsseth() {
             }
         }
 
+        GrowssethAttachmentsNeo.registerAll(MOD_BUS)
+
         FORGE_BUS.addListener<RegisterCommandsEvent> { ev ->
             GrowssethCommands.register(ev.dispatcher, ev.buildContext, ev.commandSelection)
         }
     }
 
-    fun initializeClient() {
-        log(Level.INFO, "Initializing client...")
+    private fun registerAttachments() {
+        MOD_BUS.addListener<RegisterEvent> { ev ->
+        }
+    }
+
+
+    private fun initializeClient() {
+        LOGGER.info("Initializing client...")
 
         GrowssethRenderers.init()
 
@@ -140,11 +145,11 @@ object RuinsOfGrowssethNeo : RuinsOfGrowsseth() {
             GrowssethWorldPresetClient.Callbacks.onClientTick(Minecraft.getInstance())
         }
 
-        log(Level.INFO, "Initialized Client!")
+        LOGGER.info("Initialized Client!")
     }
 
-    fun setupClient(event: FMLClientSetupEvent) {
-        log(Level.INFO, "Setting up client...")
+    private fun setupClient(event: FMLClientSetupEvent) {
+        LOGGER.info("Setting up client...")
 
         ModLoadingContext.get().registerExtensionPoint(IConfigScreenFactory::class.java) {
             IConfigScreenFactory { _: ModContainer, parent: Screen ->
@@ -154,7 +159,7 @@ object RuinsOfGrowssethNeo : RuinsOfGrowsseth() {
 
         GrowssethItemsClient.init()
 
-        log(Level.INFO, "Setup Client!")
+        LOGGER.info("Setup Client!")
     }
 
     private fun <T : Any> RegisterEvent.register(registryKey: ResourceKey<Registry<T>>, registratorConsumer: (registrator: (ResourceLocation, T) -> Unit) -> Unit) {

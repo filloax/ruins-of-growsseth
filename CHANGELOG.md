@@ -1,15 +1,93 @@
 # Changelog
 
+## CURRENT
+
+## 0.13.3
+
+Fixed
+- Lithostitched compatibility for version 1.5 of the library
+
+## 0.13.2
+
+Added
+- `keep_dialogue_history` argument for `/greset` command, to reset the researcher data except for its dialogue history
+
+Tweaked
+- Tweaked the noteblock structures map icon colors
+
+Fixed
+- Fixed the `removeTentAndResearcher` gamemaster event removing the first donkey it found, even if not owned by the researcher
+- Fixed creepers not exploding inside researcher's tents even when no researcher is present
+- Fixed the logs on Neoforge having two "Ruins of Growsseth" prefixes
+
+## 0.13.1
+
+Tweaked
+- Creepers won't explode inside the Researcher's tent, instead of exploding without dealing damage (configurable)
+- Books and signs templates won't be loaded when placing structures with structure blocks, to allow easier editing in dev
+
+Fixed
+- The Researcher will now stop strolling when players approach him
+- All goodbye dialogues are now immediate, to always trigger even if there is still a delay from a previous message
+- Fixed rare bug that made the researcher think that players stole his work tools (but wasn't true)
+- Fixed some dynamic dialogues triggering at the wrong quest stages
+- `givestructmap` command now works again
+
+## 0.13.0
+
+Added
+- Researcher now keeps diaries even without Single Researcher mode on: each researcher will only
+show diaries for its own structures, and only after you find them *after* he sold the map to you
+(they won't count times you entered the structure before)
+
+Changed
+- Dialogues now are interrupted if you leave the researcher mid-dialogue, with a special
+interruption dialogue
+- Internal change of dialogue structure, dialogue conditions (like quest stages requiring
+dialogues, event counts, etc.) are now triggered at completion of dialogue, and not start
+- Removed immediate property from dialogues, as it now depends on the events
+- Final quest step timer changed to 2 days
+
+## 0.12.1
+
+Added
+- `gquest <researcher|@e> info triggers [(TICK|LOAD)]` command to show the status of the next stage's quest triggers, used internally for debugging
+
+Fixed
+- Golem houses not having maps in Growsseth world preset
+- Researcher dialogue triggers vs dead players (especially the "player returns after getting killed by researcher" dialogue)
+- `glocate` for fixed structure placement (ie Growsseth Preset or Gamemaster mode)
+- Quest: try avoiding a zombie duplication issue
+- Quest: fix final stages not properly triggering
+- structure debug option crashing the game
+
 ## 0.12.0
 
 Added
 - [1.21] Neoforge support! Many changes have been made under the hood, so if you encounter any issues (even in the Fabric version), please let us know!
-- `gdata` command, used to convert dialogue and places files to the new format (see the wiki for details)
+    - Neoforge version has feature parity, only missing thing is the "live connection" part of the Gamemaster mode due to dependency issues
+- `gdata` command, used to convert dialogue and places files to the new format (see below + wiki for details)
 
 Tweaked
 - [1.21] Since the development tools for 1.21.0 are not supported anymore, future versions of the mod (this one included) will only be on version 1.21.1 (or higher)
+- Dialogues now store their text in separate data entries, still server-side to sync the dialogue timing for all players
 - `gquest` command can now list all the quest stages available for the selected entity
 - Growsseth preset locations titles are now localized
+
+
+## 0.11.7
+
+Fixed
+- [1.21] Fixed our village houses not spawning when the Lithostitched library is installed
+- Fixed the "Ruins of Growsseth" prefix not appearing inside logs from our mod
+
+
+## 0.11.6
+
+Fixed
+- [1.21] Fixed crash with mods using the `spawn_condition` feature of the Lithostitched library
+
+Note: the village houses from our mod will stop spawning if Lithostitched is loaded (MC 1.21 only), we are working on a fix
 
 
 ## 0.11.5

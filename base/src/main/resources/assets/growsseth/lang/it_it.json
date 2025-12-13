@@ -7,7 +7,7 @@
 
     "generator.growsseth.growsseth": "Growsseth",
 
-    "growsseth.selectWorld.preset_warning": "Nota: La serie originale è iniziata su Minecraft 1.19.4 ed è continuata su Minecraft 1.20.1, il mondo potrebbe presentare delle differenze dovute a nuovi biomi o strutture della versione in cui stai giocando.",
+    "growsseth.selectWorld.preset_warning": "Nota: La serie originale è iniziata su Minecraft 1.19.4 ed è finita su Minecraft 1.20.1, il mondo potrebbe presentare delle differenze dovute a nuovi biomi o strutture della versione in cui stai giocando.",
 
     "item.growsseth.growsseth_banner_pattern": "Banner Pattern (Rimpiazzato da codice)",
     "item.growsseth.growsseth_banner_pattern.desc": "Egida di un regno perduto",
@@ -121,7 +121,9 @@
     "growsseth.commands.gquest.back.failure": "Non è stato possibile tornare alla fase quest precedente per l'entità selezionata:\n%s",
     "growsseth.commands.gquest.list_stages": "Le fasi quest disponibili per %s sono: %s",
     "growsseth.commands.gquest.info": "Dati della quest di %s:\nFase: '%s', Cronologia: %s",
-    "growsseth.commands.gtemplate.booksuccess": "Ricevuto template libro '%s'",
+    "growsseth.commands.gquest.info.triggers": "Trigger prossimo stage quest per evento %s:",
+    "growsseth.commands.gquest.info.triggers.noent": "Impossibile mostrare trigger quest senza avere stage disponibile",
+   "growsseth.commands.gtemplate.booksuccess": "Ricevuto template libro '%s'",
     "growsseth.commands.gtemplate.invalidbooktemplate": "Template libro invalido: '%s'",
     "growsseth.commands.gtemplate.signsuccess": "Ricevuto template cartello '%s'",
     "growsseth.commands.gtemplate.invalidsigntemplate": "Template cartello invalido: '%s'",
@@ -130,10 +132,11 @@
     "growsseth.commands.glocate.stop.success": "Tutti i tuoi task locate sono stati interrotti",
 
     "growsseth.commands.gdata.extract.not-found": "File %s non trovato",
+    "growsseth.commands.gdata.extract.no-lang": "Nessun testo con traduzione da estrarre trovato nel file specificato",
     "growsseth.commands.gdata.extract.parse-failure": "Il file selezionato non può essere analizzato correttamente",
     "growsseth.commands.gdata.extract.success": "File risultanti salvati nelle directory %s e %s",
-    "growsseth.commands.gdata.dialogue.extract.help": "Converte il file di dialogo specificato (nei dati del mondo) in due file json: un file di dialogo con tutte le righe codificate (campo text all'interno del content del dialogo) convertite in chiavi di lingua, e un file di lingua contenente il testo estratto. Se esiste già un file di lingua denominato dialogue.json nella cartella world generated/lang/<lingua>, verrà unito al risultato.",
-    "growsseth.commands.gdata.places.extract.help": "Converte il file delle location specificato (nei dati del mondo) in due file json: un file dei luoghi con tutte le righe codificate (campo text associato al nome del luogo) convertite in chiavi di lingua, e un file di lingua contenente il testo estratto. Se esiste già un file di lingua denominato places.json nella cartella world generated/lang/<lingua>, verrà unito al risultato.",
+    "growsseth.commands.gdata.dialogue.extract.help": "Converte il file di dialogo specificato (nei dati del mondo) in due file json: un file di dialogo con tutte le righe codificate (campo text all'interno del content del dialogo) convertite in chiavi di lingua, e un file di lingua contenente il testo estratto. Se esiste già un file di lingua con lo stesso nome di output nella cartella world generated/lang/<lingua>, verrà unito al risultato.",
+    "growsseth.commands.gdata.places.extract.help": "Converte il file delle location specificato (nei dati del mondo) in due file json: un file dei luoghi con tutte le righe codificate (campo text associato al nome del luogo) convertite in chiavi di lingua, e un file di lingua contenente il testo estratto. Se esiste già un file di lingua con lo stesso nome di output nella cartella world generated/lang/<lingua>, verrà unito al risultato.",
 
     "entity.growsseth.researcher": "Ricercatore",
     "entity.growsseth.zombie_researcher": "Ricercatore Zombi",
@@ -188,7 +191,7 @@
     "growsseth.config.needsWorldReload.comment": "Se cambiata ingame farà effetto al ricaricamento del mondo.",
 
     "growsseth.config.serverLanguage.name": "Lingua del server",
-    "growsseth.config.serverLanguage.comment": "Scegli tra 'it_it' e 'en_us'. Usata per i dialoghi degli npc, i diari del ricercatore e i libri delle strutture. Strutture già generate non saranno influenziate dall'impostazione. Altre lingue aggiungibili via datapack.",
+    "growsseth.config.serverLanguage.comment": "Scegli tra 'it_it' e 'en_us'. Se impostata a 'client' la lingua verrà resettata quando si tornerà al menu principale.\nViene usata per i dialoghi degli npc, i diari del ricercatore e i libri delle strutture. Le strutture già generate non saranno influenzate dall'impostazione. Altre lingue aggiungibili via datapack.",
 
     "growsseth.config.modLootInVanillaStructures.name": "Genera loot della mod nelle strutture vanilla",
     "growsseth.config.dialogueWordsPerMinute.name": "Frequenza dialoghi npc",
@@ -218,6 +221,8 @@
     "growsseth.config.researcherTeleports.comment": "Il ricercatore si teletrasporta alla sua posizione originale dopo 5 minuti passati lontano da essa (o dopo che passa 3 secondi soffocando dentro un muro), e non interagisce con i portali del Nether e dell'End per impedire cheese.",
     "growsseth.config.researcherAntiCheat.name": "Anti-cheat del ricercatore",
     "growsseth.config.researcherAntiCheat.comment": "Se il giocatore cerca di barare nell'affrontare il ricercatore, egli berrà una pozione del maestro delle tartarughe e attiverà una regen passiva per impedirgli di morire. Inoltre gli impedisce di soffocare quando ha poca vita.",
+    "growsseth.config.noCreeperExplosionsInResearcherTent.name": "I creeper non possono esplodere vicino la tenda",
+    "growsseth.config.noCreeperExplosionsInResearcherTent.comment": "Impedisce ai creeper di esplodere quando sono nei pressi della tenda del Ricercatore (e un ricercatore è nei paraggi), per prevenire danni accidentali e possibili problemi con la quest del Ricercatore.",
     "growsseth.config.researcherInteractsWithMobs.name": "Ricercatore interagisce con altri mob",
     "growsseth.config.researcherInteractsWithMobs.comment": "Zombi, scheletri, raider e vex saranno ostili verso il ricercatore, e lui reagirà a loro e ad altri mob che lo attaccano. Se cambiata ingame farà effetto al ricaricamento del mondo.",
     "growsseth.config.researcherStrikesFirst.name": "Ricercatore attacca per primo",
@@ -266,6 +271,8 @@
     "growsseth.config.researcherTentSimpleEnabled.name": "Abilita spawn della tenda del ricercatore senza scantinato (variante)",
     "growsseth.config.researcherTentSimpleEnabled.comment": "Attenzione: con questa versione la quest finale potrebbe non funzionare correttamente. Inoltre è consigliabile non abilitarla insieme alla variante normale.",
 
+    "growsseth.config.disableTrialChambers.name": "Disabilita spawn delle Trial Chambers",
+    "growsseth.config.disableTrialChambers.comment": "Impedisce la generazione della struttura 'Trial Chambers' nel preset di Growsseth (dato che la serie originale era in 1.20.1 e non esistevano ancora)",
     "growsseth.config.researcherTent.name": "Tenda del ricercatore",
     "growsseth.config.caveCamp.name": "Accampamento nella caverna",
     "growsseth.config.caveCampMarker.name": "Stendardo segnaletico dell'accampamento",

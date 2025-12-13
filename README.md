@@ -2,12 +2,12 @@
 
 <img src="./base/src/main/resources/assets/growsseth/icon.png" alt="Mod icon" width="250" height="250">
 
-## [**README IN ITALIANO QUA!**](docs/README_ITA.md)
+## [**🇮🇹 README IN ITALIANO QUA!**](docs/README_ITA.md)
 
 A highly configurable structures mod, with a smart NPC to sell maps and guide you in discovery, and structures 
 that hint to vanilla features taking inspiration from Broken Nether Portals.
 
-> Feeling brave? You can try the latest in-dev release [here](https://github.com/filloax/ruins-of-growsseth/releases/tag/nightly-release-1.21)!
+> Feeling brave? You can try the latest in-dev release [here](https://github.com/filloax/ruins-of-growsseth/releases/tag/nightly-release-1.21.1)!
 
 Adapted from a mod made for the italian streamer Cydonia, as such also contains discs, trims, and more 
 with content from his community and assorted easter eggs (also configurable). Also, it contains a custom
@@ -65,7 +65,7 @@ Musical artists:
 As this mod wouldn't have been possible without the help of the community, and most mods code being freely available only to be able to look at examples of how things are done, feel free to use this mod to look at examples of how to do the thing it does, as we do various specific and niche things in this mods' features (but do note that this is Filloax and Krozzzt's first minecraft mod). In particular (also to aid google searches that might be needing this), this mod contains examples of:
 - Explorer maps that lead to villages with specific houses
 - Disabling/enabling structures and village houses via config and not only datapack
-- Language settings for structure elements, books, signs (nyi), etc.
+- Language settings for structure elements, books, signs, etc.
 - Locate structure functionality with timeout
 - NPCs with dialogue
 - Detecting if a player has explored a structure
@@ -81,4 +81,4 @@ gets out of pre-release.
 
 ## Source code structure
 
-Uses [Favouriteless's template](https://github.com/Favouriteless/ML-Template), with added kotlin mod stuff.
+Uses [Favouriteless's template](https://github.com/Favouriteless/ML-Template) (now unavailable), with added kotlin mod stuff.

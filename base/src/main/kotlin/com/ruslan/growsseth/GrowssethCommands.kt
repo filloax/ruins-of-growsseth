@@ -32,6 +32,12 @@ object GrowssethCommands {
                 RandomizableRotationArgument::class.java,
                 SingletonArgumentInfo.contextFree { RandomizableRotationArgument() }
             )
+            CommandsRegistrationHelper.registerArgumentType(
+                registry,
+                "growsseth_quest_update_event",
+                QuestCommand.QuestUpdateEventArgument::class.java,
+                SingletonArgumentInfo.contextFree { QuestCommand.QuestUpdateEventArgument.get() }
+            )
         }
     }
 }

@@ -39,6 +39,6 @@ public class RegistryDataLoaderMixin {
 
     @Unique
     private static void registryWrapper(Decoder<?> instance, DynamicOps<?> ops, Object jsonElement, Operation<DataResult<?>> original, WritableRegistry<?> registry) {
-        RuinsOfGrowsseth.getLOGGER().info("Loading registry " + registry.key() + " - " + jsonElement);
+        RuinsOfGrowsseth.LOGGER.info("Loading registry " + registry.key() + " - " + jsonElement);
     }
 }

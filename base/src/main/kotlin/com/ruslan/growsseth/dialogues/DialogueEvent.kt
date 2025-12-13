@@ -9,20 +9,23 @@ object BasicDialogueEvents {
     val GLOBAL = event("global")
     val PLAYER_ARRIVE = event("playerArrive", tag=DialogueEvent.TAG_HELLO)
     val PLAYER_ARRIVE_NIGHT = event("playerArriveNight", tag=DialogueEvent.TAG_HELLO)
-    val PLAYER_LEAVE = event("playerLeave", tag=DialogueEvent.TAG_GOODBYE)
-    val PLAYER_LEAVE_NIGHT = event("playerLeaveNight", tag=DialogueEvent.TAG_GOODBYE)
     val PLAYER_ARRIVE_SOON = event("playerArriveSoon", tag=DialogueEvent.TAG_HELLO)
-    val PLAYER_LEAVE_SOON = event("playerLeaveSoon", tag=DialogueEvent.TAG_GOODBYE)
     val PLAYER_ARRIVE_LONG_TIME = event("playerArriveLongTime", tag=DialogueEvent.TAG_HELLO)
+    /** Needs to be immediate, or it won't trigger when there is a long dialogue with  */
+    val PLAYER_LEAVE = event("playerLeave", immediate = true, tag=DialogueEvent.TAG_GOODBYE)
+    val PLAYER_LEAVE_NIGHT = event("playerLeaveNight", immediate = true, tag=DialogueEvent.TAG_GOODBYE)
+    val PLAYER_LEAVE_SOON = event("playerLeaveSoon", immediate = true, tag=DialogueEvent.TAG_GOODBYE)
+    val PLAYER_LEAVE_INTERRUPTED = event("playerLeaveInterrupted", immediate = true, tag=DialogueEvent.TAG_GOODBYE)
     /** As soon as the dialogue conditions apply and a player is nearby, this triggers;
      * to be used by limited dialogue entries. */
-    val TICK_NEAR_PLAYER = event("tickNearPlayer")
-    val HIT_BY_PLAYER = event("hitByPlayer")
-    val LOW_HEALTH = event("lowHealth")
-    val DEATH = event("death")
+    val TICK_NEAR_PLAYER = event("tickNearPlayer", preventMultiQueue = true)
+    val HIT_BY_PLAYER = event("hitByPlayer", immediate = true)
+    val LOW_HEALTH = event("lowHealth", immediate = true)
+    val DEATH = event("death", immediate = true)
     /** To be triggered on rename, not handled automatically */
     val RENAME = event("rename")
-    val PLAYER_ADVANCEMENT = event("playerAdvancement")
+    val PLAYER_ADVANCEMENT = event("playerAdvancement", immediate = true)
+    val PLAYER_ADVANCEMENT_LAZY = event("playerAdvancementLazy")
     val MANUAL_TRIGGER = event("manualTrigger")
 }
 
@@ -30,6 +33,14 @@ class DialogueEvent private constructor (
     val id: String,
     val ignoreNoDialogueWarning: Boolean = false,
     val count: Boolean = true,
+    /**
+     * Plays dialogues immediately
+     */
+    val immediate: Boolean = false,
+    /**
+     * Prevents queueing if another dialogue of this type is queued.
+     */
+    val preventMultiQueue: Boolean = false,
     val tags: Set<String> = setOf(),
 ) {
     override fun toString(): String {
@@ -55,19 +66,24 @@ class DialogueEvent private constructor (
         const val TAG_HELLO = "hello"
         const val TAG_GOODBYE = "goodbye"
 
-
+        /**
+         * @param immediate Plays dialogues immediately
+         * @param preventMultiQueue Prevents queueing if another dialogue of this type is queued.
+         */
         fun event(
             id: String,
             tags: Set<String> = setOf(),
             tag: String? = null,
             ignoreNoDialogueWarning: Boolean = false,
+            immediate: Boolean = false,
+            preventMultiQueue: Boolean = false,
             count: Boolean = true,
         ): DialogueEvent {
             var tagsHolder = tags;
             if (tag != null) {
                 tagsHolder = tagsHolder.plus(tag)
             }
-            val event = DialogueEvent(id, ignoreNoDialogueWarning, count, tagsHolder)
+            val event = DialogueEvent(id, ignoreNoDialogueWarning, count, immediate, preventMultiQueue, tagsHolder)
             register(event)
             return event
         }

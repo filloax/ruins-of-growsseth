@@ -16,6 +16,7 @@ import net.minecraft.data.CachedOutput
 import net.minecraft.data.DataProvider
 import net.minecraft.data.PackOutput
 import net.minecraft.resources.ResourceKey
+import net.minecraft.tags.TagKey
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.levelgen.structure.Structure
 import java.util.concurrent.CompletableFuture
@@ -99,11 +100,12 @@ class CustomDataProvider(private val output: PackOutput) : DataProvider {
         GrowssethStructures.GOLEM_HOUSE.let { key ->
             out[key.location().path] = makeStructTrades(key) { obj ->
                 val associatedJigsaws = GrowssethStructures.VILLAGE_HOUSE_STRUCTURES[key]!!
+                val tag = GrowssethStructures.info[key]!!.tag
                 val maps = associatedJigsaws.map { (villageKey, houseIds) ->
                     TradeItemMapInfo.JsonDesc(
                         structure = villageKey.location().toString(),
                         name = "structure.${key.location().toLanguageKey()}.map.name",
-                        fixedStructureId = key.location().toString(),
+                        fixedStructureId = "#${tag.location}",
                         overrideMapIcon = GrowssethMapDecorations.GOLEM_HOUSE.unwrapKey().orElseThrow().location(),
                         searchForJigsawIds = houseIds
                     )

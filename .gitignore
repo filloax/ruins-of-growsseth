@@ -18,8 +18,7 @@ bin/
 .project
 
 #kotlin
-.kotlin/sessions/
-.kotlin/errors/
+.kotlin
 
 #fabric
 run/

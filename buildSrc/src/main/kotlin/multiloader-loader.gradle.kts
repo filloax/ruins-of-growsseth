@@ -1,7 +1,6 @@
 package com.ruslan.gradle
 
 import org.jetbrains.dokka.gradle.DokkaTask
-import org.jetbrains.dokka.gradle.formats.DokkaJavadocPlugin
 
 plugins {
     id("com.ruslan.gradle.multiloader-convention")
@@ -60,11 +59,8 @@ tasks.kotlinSourcesJar {
 
 
 // configure dokka to use our tasks
-tasks.withType<DokkaTask>().configureEach {
-    dependsOn(configurations.getByName(COMMON_RESOURCES))
-    dokkaSourceSets {
-        named("main") {
-            sourceRoots.from(configurations.getByName(COMMON_JAVA))
-        }
+dokka {
+    dokkaSourceSets.main {
+        sourceRoots.from(configurations.getByName(COMMON_JAVA))
     }
 }

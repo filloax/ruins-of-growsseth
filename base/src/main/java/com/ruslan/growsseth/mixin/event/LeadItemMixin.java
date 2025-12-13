@@ -39,7 +39,7 @@ public abstract class LeadItemMixin {
         if (player instanceof ServerPlayer serverPlayer) {
             Events.FENCE_LEASH.invoke(new FenceLeashEvent.Leash(mob, pos, serverPlayer));
         } else {
-            RuinsOfGrowsseth.getLOGGER().error("Cannot run leash mixin, not on server side (shouldn't happen)");
+            RuinsOfGrowsseth.LOGGER.error("Cannot run leash mixin, not on server side (shouldn't happen)");
         }
     }
 

@@ -14,6 +14,6 @@ dependencies {
 
     implementation(libs.plugin.kotlin.jvm)
     implementation(libs.plugin.kotlin.serialization)
-    implementation(libs.plugin.dokka)
+    implementation(libs.plugin.dokka.javadoc)
 
 }

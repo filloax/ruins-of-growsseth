@@ -3,16 +3,17 @@ package com.ruslan.growsseth.structure
 import com.ruslan.growsseth.config.StructureConfig
 import com.ruslan.growsseth.utils.resLoc
 import com.ruslan.growsseth.worldgen.worldpreset.GrowssethWorldPreset
-import net.minecraft.core.Holder
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
-import net.minecraft.world.level.levelgen.structure.pools.LegacySinglePoolElement
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList
 import com.mojang.datafixers.util.Pair;
+import com.ruslan.growsseth.RuinsOfGrowsseth
+import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement
+import com.ruslan.growsseth.compat.LithostitchedCompat
 
 typealias BuildingKey = String
 
@@ -29,18 +30,27 @@ object VillageBuildings {
     val SAVANNA_GOLEM   = register("savanna_golem_house", CATEGORY_GOLEM_HOUSE, "savanna", "houses", DEFAULT_GOLEM_WEIGHT)
     val SNOWY_GOLEM     = register("snowy_golem_house", CATEGORY_GOLEM_HOUSE, "snowy", "houses", DEFAULT_GOLEM_WEIGHT)
 
-    fun onServerStarted(server: MinecraftServer) {
+    fun addVillageBuildings(server: MinecraftServer, isLithostitchedLoaded: Boolean = false) {
+        if (isLithostitchedLoaded)
+            RuinsOfGrowsseth.LOGGER.warn("Lithostitched library is loaded, RoG's village houses will also spawn in the Growsseth preset!")
+
+        // We assume that server has not yet started if the Lithostitched library is loaded (necessary for compat);
+        // in that case we can't check the seed for the Growsseth preset or the game will crash
         val shouldAddBuildings = StructureConfig.golemHouseEnabled
-                && !GrowssethWorldPreset.isGrowssethPreset(server)
+                && (isLithostitchedLoaded || !GrowssethWorldPreset.isGrowssethPreset(server))   // check preset only if Lithostitched isn't present
 
         if (!shouldAddBuildings) return
 
         val templatePools: Registry<StructureTemplatePool> = server.registryAccess().registry(Registries.TEMPLATE_POOL).get()
         val processorLists: Registry<StructureProcessorList> = server.registryAccess().registry(Registries.PROCESSOR_LIST).get()
 
+        val addBuildingToPoolFunction = if (isLithostitchedLoaded) LithostitchedCompat::addBuildingToPool else this::addBuildingToPool
+
         houseEntries[CATEGORY_GOLEM_HOUSE]!!.forEach { entry ->
-            addBuildingToPool(templatePools, processorLists, entry.parentPool, entry.normalTemplate, entry.weight)
-            addBuildingToPool(templatePools, processorLists, entry.parentZombiePool, entry.zombieTemplate, entry.weight)
+            if (RuinsOfGrowsseth.modCompat.isImprovedVillagePlacementLoaded)
+                entry.weight *= 2   // Villages are rarer with that mod, we don't want players to travel so much for a house
+            addBuildingToPoolFunction(templatePools, processorLists, entry.parentPool, entry.normalTemplate, entry.weight)
+            addBuildingToPoolFunction(templatePools, processorLists, entry.parentZombiePool, entry.zombieTemplate, entry.weight)
         }
     }
 
@@ -50,13 +60,13 @@ object VillageBuildings {
         weight: Int,
     ) {
         val pool: StructureTemplatePool = templatePoolRegistry.getOrThrow(ResourceKey.create(Registries.TEMPLATE_POOL, poolId))
-        val emptyProcessor = ResourceLocation.fromNamespaceAndPath("minecraft", "empty")     // some houses have mossify 10% percent, but for now we keep it simple
+        /* val emptyProcessor = ResourceLocation.fromNamespaceAndPath("minecraft", "empty")     // some houses have mossify 10% percent, but for now we keep it simple
         val processorHolder: Holder<StructureProcessorList> = processorListRegistry.getHolderOrThrow(
             ResourceKey.create(
                 Registries.PROCESSOR_LIST, emptyProcessor
             )
-        )
-        val piece = LegacySinglePoolElement.legacy(poolPieceId.toString()).apply(StructureTemplatePool.Projection.RIGID)
+        )*/
+        val piece = SinglePoolElement.legacy(poolPieceId.toString()).apply(StructureTemplatePool.Projection.RIGID)
         for (i in 0 until weight) {
             pool.templates.add(piece)
         }
@@ -91,6 +101,6 @@ object VillageBuildings {
         val zombiePool: ResourceLocation,
         val normalTemplate: ResourceLocation,
         val zombieTemplate: ResourceLocation,
-        val weight: Int,
+        var weight: Int,
     )
 }

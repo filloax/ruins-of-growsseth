@@ -16,26 +16,23 @@ import com.ruslan.growsseth.loot.LootTableModifier
 import com.ruslan.growsseth.loot.VanillaStructureLoot
 import com.ruslan.growsseth.quests.QuestComponentEvents
 import com.ruslan.growsseth.structure.RemoteStructureBooks
+import com.ruslan.growsseth.structure.StructureVisitTracker
 import com.ruslan.growsseth.structure.VillageBuildings
 import com.ruslan.growsseth.structure.locate.StoppableAsyncLocator
 import com.ruslan.growsseth.worldgen.worldpreset.GrowssethWorldPreset
 import com.ruslan.growsseth.worldgen.worldpreset.LocationNotifListener
 import net.minecraft.core.BlockPos
-import net.minecraft.core.HolderLookup
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
-import net.minecraft.server.network.ServerGamePacketListenerImpl
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
-import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.chunk.LevelChunk
 import net.minecraft.world.level.levelgen.structure.Structure
-import net.minecraft.world.level.storage.loot.LootTable
 
 
 abstract class ModEvents {
@@ -50,10 +47,13 @@ abstract class ModEvents {
             DataRemoteSync.doSync(WebConfig.dataSyncUrl, server)
             com.ruslan.growsseth.utils.MixinHelpers.serverInit(server)
             LiveUpdatesConnection.serverStart(server)
+            if(RuinsOfGrowsseth.modCompat.isLithostitchedLoaded)
+                VillageBuildings.addVillageBuildings(server, isLithostitchedLoaded = true)
         }
         onServerStarted { server ->
             GrowssethWorldPreset.Callbacks.onServerStarted(server)
-            VillageBuildings.onServerStarted(server)
+            if(!RuinsOfGrowsseth.modCompat.isLithostitchedLoaded)
+                VillageBuildings.addVillageBuildings(server)
             ProgressResearcherTradesProvider.Callbacks.onServerStarted(server)
         }
         onServerStopping { server ->
@@ -105,6 +105,10 @@ abstract class ModEvents {
             GrowssethWorldPreset.Callbacks.onServerPlayerJoin(player, server)
         }
 
+        onPlayerServerTick { player ->
+            StructureVisitTracker.onServerPlayerTick(player)
+        }
+
         // Register singularly because returns
 
         onLootTableModify { key, table ->
@@ -154,5 +158,6 @@ abstract class ModEvents {
     abstract fun onEntityUnload(event: (entity: Entity, level: ServerLevel) -> Unit)
     abstract fun afterPlayerBlockBreak(event: (Level, Player, BlockPos, BlockState) -> Unit)
     abstract fun onPlayerServerJoin(event: (player: ServerPlayer, MinecraftServer) -> Unit)
+    abstract fun onPlayerServerTick(event: (player: ServerPlayer) -> Unit)
     abstract fun onLootTableModify(event: (key: ResourceLocation, table: LootTableModifier) -> Unit)
 }

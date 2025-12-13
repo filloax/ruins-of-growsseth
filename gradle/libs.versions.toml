@@ -12,10 +12,14 @@ parchment = "2024.12.07"
 neoform = "1.21.3-20241023.131943" # vanilla neoforge configuration
 
 # Mod dependencies
-filloaxlib = "0.35.0-1.21"
+filloaxlib = "0.36.0-1.21.1"
 modmenu = "12.0.0"
 rconfig = "3.3.1"
 rconfigMc = "1.21.3"
+
+# Mod compatibility dependencies
+lithostitched-neoforge = "1.5.0-neoforge-1.21.1"
+lithostitched-fabric = "1.5.0-fabric-1.21.1"
 
 # Kotlin
 kotlin = "2.0.21"
@@ -47,7 +51,7 @@ kotlinevents = "v2.0"
 # Plugins
 plugin-dokka = "2.0.0"
 plugin-mixin = "0.7.+"
-plugin-loom = "1.7-SNAPSHOT"
+plugin-loom = "1.10.1"
 plugin-moddev = "2.0.74"
 plugin-idea-ext = "1.1.9"
 
@@ -57,6 +61,11 @@ plugin-idea-ext = "1.1.9"
 modmenu = { group = "com.terraformersmc", name = "modmenu", version.ref = "modmenu" }
 # name depends on mc version, so define in build.gradle
 # rconfig = { group = "com.teamresourceful.resourcefulconfig", name = "resourcefulconfig-common-", version.ref = "modmenu" }
+
+# Mod compatibility
+#lithostitched = { group = "maven.modrinth", name = "lithostitched", version.ref = "lithostitched" }
+lithostitched-neoforge = { group = "maven.modrinth", name = "lithostitched", version.ref = "lithostitched-neoforge" }
+lithostitched-fabric = { group = "maven.modrinth", name = "lithostitched", version.ref = "lithostitched-fabric" }
 
 # Mixin
 mixin = { group = "org.spongepowered", name = "mixin", version.ref = "mixin" }
@@ -85,7 +94,7 @@ kotlinevents = { group = "com.github.stuhlmeier", name = "kotlin-events", versio
 # Plugin dependencies (for buildSrc)
 plugin-kotlin-jvm = { group = "org.jetbrains.kotlin.jvm", name = "org.jetbrains.kotlin.jvm.gradle.plugin", version.ref = "kotlin" }
 plugin-kotlin-serialization = { group = "org.jetbrains.kotlin", name = "kotlin-serialization", version.ref = "kotlin" }
-plugin-dokka = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref = "plugin-dokka" }
+plugin-dokka-javadoc = { group = "org.jetbrains.dokka-javadoc", name = "org.jetbrains.dokka-javadoc.gradle.plugin", version.ref = "plugin-dokka" }
 
 [plugins]
 # Kotlin

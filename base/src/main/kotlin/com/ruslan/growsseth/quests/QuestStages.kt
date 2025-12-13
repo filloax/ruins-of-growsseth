@@ -30,6 +30,8 @@ interface QuestStage<E : LivingEntity> {
     // Non-required action to run every update (second or as set in Quest class)
     fun onUpdate(entity: E) {}
 
+    fun getTriggerStatusTree(entity: E, event: QuestUpdateEvent) = trigger.getActiveTree(entity, event)
+
     companion object {
         fun <E : LivingEntity> blank(): QuestStage<E> {
             return object : QuestStage<E> {

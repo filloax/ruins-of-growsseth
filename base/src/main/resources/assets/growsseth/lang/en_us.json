@@ -7,7 +7,7 @@
 
     "generator.growsseth.growsseth": "Growsseth",
 
-    "growsseth.selectWorld.preset_warning": "Note: The original series started with Minecraft 1.19.4 and continued on Minecraft 1.20.1, the world might have some differences caused by new biomes and structures present in the version you are playing with (also, the locations' names might not make much sense to an english audience).",
+    "growsseth.selectWorld.preset_warning": "Note: The original series started with Minecraft 1.19.4 and ended on Minecraft 1.20.1, the world might have some differences caused by new biomes or structures present in the version you are playing with (also, some locations' names might not make much sense).",
 
     "item.growsseth.growsseth_banner_pattern": "Banner Pattern (Replaced by code)",
     "item.growsseth.growsseth_banner_pattern.desc": "Lost Kingdom's Effigy",
@@ -121,6 +121,8 @@
     "growsseth.commands.gquest.back.failure": "Failed in reverting to previous quest stage for the target entity:\n%s",
     "growsseth.commands.gquest.list_stages": "Available quest stages for %s are: %s",
     "growsseth.commands.gquest.info": "%s quest data:\nStage: '%s', History: %s",
+    "growsseth.commands.gquest.info.triggers": "Next quest stage triggers for event %s:",
+    "growsseth.commands.gquest.info.triggers.noent": "Cannot show stage triggers without the quest entity available",
     "growsseth.commands.gtemplate.booksuccess": "Received book template '%s'",
     "growsseth.commands.gtemplate.invalidbooktemplate": "Invalid book template: '%s'",
     "growsseth.commands.gtemplate.signsuccess": "Received sign template '%s'",
@@ -130,10 +132,11 @@
     "growsseth.commands.glocate.stop.success": "Stopped all your locate tasks",
 
     "growsseth.commands.gdata.extract.not-found": "File %s not found",
+    "growsseth.commands.gdata.extract.no-lang": "No translatable text found in the specified file",
     "growsseth.commands.gdata.extract.parse-failure": "Selected file could not be parsed correctly",
     "growsseth.commands.gdata.extract.success": "Saved resulting files to directories %s and %s",
-    "growsseth.commands.gdata.dialogue.extract.help": "Converts the specified dialogue file (in world data) into two json files: a dialogue file with all hardcoded lines (text field inside dialogue content) converted to keys, and a lang file containing the extracted text. If a lang file named dialogue.json already exists in the world generated/lang/<language> folder, it will be merged with the result.",
-    "growsseth.commands.gdata.places.extract.help": "Converts the specified places file (in world data) into two json files: a places file with all hardcoded lines (text field associated to the location's name) converted to keys, and a lang file containing the extracted text. If a lang file named places.json already exists in the world generated/lang/<language> folder, it will be merged with the result.",
+    "growsseth.commands.gdata.dialogue.extract.help": "Converts the specified dialogue file (in world data) into two json files: a dialogue file with all hardcoded lines (text field inside dialogue content) converted to keys, and a lang file containing the extracted text. If a lang file with the same output name already exists in the world generated/lang/<language> folder, it will be merged with the result.",
+    "growsseth.commands.gdata.places.extract.help": "Converts the specified places file (in world data) into two json files: a places file with all hardcoded lines (text field associated to the location's name) converted to keys, and a lang file containing the extracted text. If a lang with the same output name already exists in the world generated/lang/<language> folder, it will be merged with the result.",
 
     "entity.growsseth.researcher": "Researcher",
     "entity.growsseth.zombie_researcher": "Zombie Researcher",
@@ -189,7 +192,7 @@
     "growsseth.config.needsWorldReload.comment": "If changed ingame, takes effect on world reload.",
 
     "growsseth.config.serverLanguage.name": "Server language",
-    "growsseth.config.serverLanguage.comment": "Choose between 'en_us' and 'it_it'. Used for npc dialogues, researcher diaries and structure books. Will not affect already generated structures. Additional languages can be added by datapack.",
+    "growsseth.config.serverLanguage.comment": "Choose between 'en_us' and 'it_it'. If set to 'client' the language will reset when returning to the main menu.\nUsed for npc dialogues, researcher diaries and structure books. Will not affect already generated structures. Additional languages can be added by datapack.",
 
     "growsseth.config.modLootInVanillaStructures.name": "Generate mod loot in vanilla structures",
     "growsseth.config.dialogueWordsPerMinute.name": "Npc talking frequency",
@@ -219,6 +222,8 @@
     "growsseth.config.researcherTeleports.comment": "The researcher teleports back to his original position after five minutes away from it (or after suffocating for 3 seconds inside a wall), and avoids interacting with Nether and End portals to prevent cheese.",
     "growsseth.config.researcherAntiCheat.name": "Researcher anti-cheat",
     "growsseth.config.researcherAntiCheat.comment": "If the player tries to cheat while fighting the researcher he will drink a turtle master potion and enable a passive regen to prevent him from dying. Also prevents him from suffocating when on low health.",
+    "growsseth.config.noCreeperExplosionsInResearcherTent.name": "Creepers can't explode near tent",
+    "growsseth.config.noCreeperExplosionsInResearcherTent.comment": "Makes creepers unable to explode while near the Researcher's tent (if a researcher is present), to prevent accidental damage and possible issues with the Researcher's quest.",
     "growsseth.config.researcherInteractsWithMobs.name": "Researcher interacts with other mobs",
     "growsseth.config.researcherInteractsWithMobs.comment": "Zombies, skeletons, raiders and vexes will be hostile towards the researcher, and he will react to them and other mobs who attack him. If changed ingame, takes effect on world reload.",
     "growsseth.config.researcherStrikesFirst.name": "Researcher strikes first",
@@ -267,6 +272,8 @@
     "growsseth.config.researcherTentSimpleEnabled.name": "Enable spawn of the researcher's tent with no cellar (variant)",
     "growsseth.config.researcherTentSimpleEnabled.comment": "Warning: with this version the final quest might work incorrectly. It's also recommended to enable only one variant.",
 
+    "growsseth.config.disableTrialChambers.name": "Disable Trial Chambers spawn",
+    "growsseth.config.disableTrialChambers.comment": "Prevents the Trial Chambers structure from spawning in the Growsseth world preset (since the original series was on 1.20.1 and they didn't exist yet)",
     "growsseth.config.researcherTent.name": "Researcher tent",
     "growsseth.config.caveCamp.name": "Cave camp",
     "growsseth.config.caveCampMarker.name": "Cave camp marker",

@@ -14,39 +14,35 @@ import net.minecraft.world.Difficulty
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal
 import net.minecraft.world.entity.boss.wither.WitherBoss
+import net.minecraft.world.entity.monster.AbstractSkeleton
+import net.minecraft.world.entity.monster.Vex
+import net.minecraft.world.entity.monster.Zombie
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.entity.projectile.AbstractArrow
+import net.minecraft.world.entity.raid.Raider
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.enchantment.Enchantments
+import net.minecraft.world.level.Level
 import org.apache.commons.lang3.mutable.MutableInt
 
-/**
- * Split combat-related features to simplify main class
- * (and avoid it being 1.3k lines long)
- */
-class ResearcherCombatComponent(
-    val owner: Researcher,
-) {
-    val level = owner.level()
+/** Researcher combat-related features, split from main class to simplify it */
+class ResearcherCombatComponent(val owner: Researcher) {
+    val level: Level = owner.level()
     val lastKilledPlayers: MutableList<Player> = mutableListOf()
 
     // For player aggro management
+    private var angerBuildupTimer: MutableMap<Player, MutableInt> = mutableMapOf()
     var hitCounter: MutableMap<Player, MutableInt> = mutableMapOf()
-    val timeToCalmDown: Int = 10F.secondsToTicks()
-
-    companion object {
-        // distance for attacking mobs that are not going after him (if option is active)
-        val distanceForUnjustifiedAggression: Int = 10
-    }
+        private set
+    val ticksToCalmDown: Int = 10.secondsToTicks()
+    val maxHitCounter = 3
 
     private val dialogues by owner::dialogues
-
-    // For player aggro management
-    private var angerBuildupTimer: MutableMap<Player, MutableInt> = mutableMapOf()
-    private val maxHitCounter = 3
 
     private val lowHealthCondition: Boolean
         get() = owner.health <= owner.maxHealth / 3
@@ -72,7 +68,7 @@ class ResearcherCombatComponent(
                 hitCounter[attacker] = MutableInt(0)
             if (!wantsToKillPlayer(attacker)) {
                 hitCounter[attacker]?.increment()
-                angerBuildupTimer[attacker] = MutableInt(timeToCalmDown)
+                angerBuildupTimer[attacker] = MutableInt(ticksToCalmDown)
             }
         }
 
@@ -141,7 +137,7 @@ class ResearcherCombatComponent(
             if (value.toInt() == 0) {       // using if (and not else if) since the timer decreases in the tick after the attack
                 hitCounter[key]!!.decrement()
                 angerBuildupTimer[key] =
-                    if (hitCounter[key]!!.toInt() > 0) MutableInt(timeToCalmDown)
+                    if (hitCounter[key]!!.toInt() > 0) MutableInt(ticksToCalmDown)
                     else MutableInt(-1)
             }
         }
@@ -156,6 +152,17 @@ class ResearcherCombatComponent(
         angerBuildupTimer[player]!!.setValue(-1)
         lastKilledPlayers.add(player)
         dialogues?.triggerDialogue(player, ResearcherDialoguesComponent.EV_KILL_PLAYER)
+    }
+
+    fun shouldApplySelfDefence(entity: LivingEntity?): Boolean {
+        return (entity is Mob && entity.target.let { notNull(it) && it == owner })
+    }
+
+    fun shouldStrikeFirst(entity: LivingEntity?): Boolean {
+        // distance for attacking mobs that are not going after him (if option is active)
+        val distanceForUnjustifiedAggression = 10
+        return (entity != null && owner.distanceTo(entity) < distanceForUnjustifiedAggression &&
+                (entity is Raider || entity is Vex || entity is Zombie || entity is AbstractSkeleton))
     }
 
     private fun deflectArrow(source: DamageSource) : Boolean {

@@ -8,20 +8,13 @@ import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.utils.serverLang
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.SerializationException
 import kotlinx.serialization.Transient
-import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.JsonTransformingSerializer
-import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.*
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import kotlin.jvm.optionals.getOrNull
@@ -29,9 +22,13 @@ import kotlin.math.max
 import kotlin.math.min
 
 @Serializable
+/**
+ * Name can be passed as string (will be treated as fxlib server-side lang),
+ * or as object (see LocationName class)
+ */
 data class LocationData(
     @Serializable(with = LocationNameSerializer::class)
-    val name: String,
+    val name: LocationName,
     val x: Double,
     val y: Double,
     val z: Double,
@@ -55,6 +52,19 @@ data class LocationData(
         }
     }
 
+    companion object {
+        // Drops the "isLocalizable" field as not needed for client anyways (should be processed in the meantime)
+        val CODEC: Codec<LocationData> = RecordCodecBuilder.create { builder -> builder.group(
+            Codec.STRING.fieldOf("name").forGetter{ it.name.text },
+            Vec3.CODEC.fieldOf("centerPos").forGetter(LocationData::centerPos),
+            FxCodecs.AABB.optionalFieldOf("boundingBox").forNullableGetter(LocationData::boundingBox),
+            Codec.BOOL.fieldOf("hidden").forGetter(LocationData::hidden),
+        ).apply(builder) { name, centerPos, boundingBox, hidden ->
+            LocationData(name, centerPos, boundingBox.getOrNull(), hidden)
+        } }
+    }
+
+
     @Transient
     val centerPos = Vec3(x, y, z)
     @Transient
@@ -71,27 +81,41 @@ data class LocationData(
         name: String, centerPos: Vec3, boundingBox: AABB? = null,
         hidden: Boolean = false
     ): this(
-        name,
+        LocationName(name),
         centerPos.x, centerPos.y, centerPos.z,
         boundingBox?.minX, boundingBox?.minY, boundingBox?.minZ,
         boundingBox?.maxX, boundingBox?.maxY, boundingBox?.maxZ,
         hidden
     )
 
-    companion object {
-        val CODEC: Codec<LocationData> = RecordCodecBuilder.create { builder -> builder.group(
-                Codec.STRING.fieldOf("name").forGetter(LocationData::name),
-                Vec3.CODEC.fieldOf("centerPos").forGetter(LocationData::centerPos),
-                FxCodecs.AABB.optionalFieldOf("boundingBox").forNullableGetter(LocationData::boundingBox),
-                Codec.BOOL.fieldOf("hidden").forGetter(LocationData::hidden),
-        ).apply(builder) { name, centerPos, boundingBox, hidden ->
-            LocationData(name, centerPos, boundingBox.getOrNull(), hidden)
-        } }
+    /**
+     * Must run before sending packet to client, do not send the object with unlocalised names
+     */
+    fun processLocationName(): LocationData {
+        return this.copy(name = LocationName(processLocationNameStr()))
     }
 
-    fun getProcessedName(): String {
-        val nameAsJElement = Json.parseToJsonElement(name)
-        return LocationNameProcessor.processLocationName(nameAsJElement)
+    private fun processLocationNameStr(): String {
+        return if (name.isLocalizable) {
+            val key = name.text.trim()
+            val prefixedKey = prefixKey(key)
+            return serverLang().getOrDefault(prefixedKey)
+        } else {
+            name.text
+        }
+    }
+
+    private fun prefixKey(key: String): String {
+        assertValidLangKey(key)
+        val newKey = "${Constants.LANG_PLACES_PREFIX}.$key"
+        return newKey
+    }
+
+    private fun assertValidLangKey(key: String) {
+        val pattern = Regex("^(\\w+\\.)*\\w+$")
+        if (!pattern.containsMatchIn(key)) {
+            throw IllegalArgumentException("Wrongly formatted lang key $key")
+        }
     }
 
     object DoubleAsStringSerializer : KSerializer<Double?> {
@@ -112,61 +136,17 @@ data class LocationData(
     }
 }
 
-// Names are converted to strings, in order to postpone the processing to after the loading of the serverLang files
-class LocationNameSerializer : JsonTransformingSerializer<String>(String.serializer()) {
+@Serializable
+data class LocationName(
+    val text: String,
+    val isLocalizable: Boolean = true,
+)
+
+class LocationNameSerializer : JsonTransformingSerializer<LocationName>(LocationName.serializer()) {
     override fun transformDeserialize(element: JsonElement): JsonElement {
-        return JsonPrimitive(element.jsonPrimitive.content)
-    }
-}
-
-// Takes the name parsed as json element and returns the hardcoded name (if the structure is {"text": "name"}) or the localized one
-// Not the cleanest solution, might need a better implementation if we expand on the system
-private object LocationNameProcessor {
-    fun processLocationName(element: JsonElement): String {
-        return if (isHardcodedName(element)) {
-            getHardcodedName(element as JsonObject).content
-        } else {
-            getLocalizedName(element).content
-        }
-    }
-
-    private fun isHardcodedName(element: JsonElement): Boolean {
         return when (element) {
-            is JsonPrimitive ->   // localization key
-                false
-            is JsonObject ->
-                true
-            else ->
-                throw SerializationException("Unrecognized places element $element, was supposed to be a string or JSON object")
-        }
-    }
-
-    private fun getHardcodedName(element: JsonObject): JsonPrimitive {
-        return element["text"]?.let {
-            if (it is JsonPrimitive)
-                JsonPrimitive(it.content)
-            else
-                throw SerializationException("Place name $it is hardcoded but was wrongly formatted, it should be a string")
-        } ?: throw SerializationException("Place name $element is a JSON object, but the 'text' key could not be found")
-    }
-
-    private fun getLocalizedName(element: JsonElement): JsonPrimitive {
-        val key = (element as JsonPrimitive).content.trim()
-        val prefixedKey = prefixKey(key)
-        val localizedName = serverLang().getOrDefault(prefixedKey)
-        return JsonPrimitive(localizedName)
-    }
-
-    private fun prefixKey(key: String): String {
-        assertValidLangKey(key)
-        val newKey = "${Constants.LANG_PLACES_PREFIX}.$key"
-        return newKey
-    }
-
-    private fun assertValidLangKey(key: String) {
-        val pattern = Regex("^(\\w+\\.)*\\w+$")
-        if (!pattern.containsMatchIn(key)) {
-            throw IllegalArgumentException("Wrongly formatted lang key $key")
+            is JsonPrimitive -> JsonObject(mapOf("text" to element))
+            else -> element
         }
     }
 }

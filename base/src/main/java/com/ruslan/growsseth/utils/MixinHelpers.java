@@ -18,6 +18,7 @@ import java.util.Stack;
 public class MixinHelpers {
     private MixinHelpers() {}
 
+    public static boolean loadingFromStructureBlock = false;
     public static boolean placingBlockEntityInStructure = false;
     public static boolean savingPersistentEntities = false;
 
@@ -72,6 +73,6 @@ public class MixinHelpers {
 
             painting.setPos(pos.getCenter());
         }
-        RuinsOfGrowsseth.getLOGGER().info("Fixed painting placement in newly created structure");
+        RuinsOfGrowsseth.LOGGER.info("Fixed painting placement in newly created structure");
     }
 }

@@ -5,16 +5,17 @@ import com.filloax.fxlib.api.networking.sendPacket
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.config.WorldPresetConfig
 import com.ruslan.growsseth.network.PlacesInfoPacket
+import com.ruslan.growsseth.utils.resLocVanilla
 import com.ruslan.growsseth.worldgen.GrowssethModBiomeSources
 import com.ruslan.growsseth.worldgen.GrowssethModWorldPresets
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
 import net.minecraft.core.registries.Registries
 import net.minecraft.data.worldgen.BootstrapContext
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
-import net.minecraft.server.network.ServerGamePacketListenerImpl
 import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.biome.*
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes
@@ -24,6 +25,7 @@ import net.minecraft.world.level.levelgen.NoiseGeneratorSettings
 import net.minecraft.world.level.levelgen.presets.WorldPreset
 import net.minecraft.world.level.levelgen.structure.Structure
 import net.minecraft.world.level.levelgen.structure.StructureSet
+import kotlin.collections.contains
 import kotlin.jvm.optionals.getOrNull
 
 // object as WorldPreset as a class doesn't seem to do much except hold data,
@@ -45,11 +47,9 @@ object GrowssethWorldPreset {
         fun onServerPlayerJoin(player: ServerPlayer, server: MinecraftServer) {
             if (isGrowssethPreset(server)) {
                 if (LocationNotifListener.loaded) {
-                    player.sendPacket(PlacesInfoPacket(LocationNotifListener.PLACES_DATA))
+                    player.sendPacket(PlacesInfoPacket(LocationNotifListener.LOCALISED_PLACES_DATA))
                 } else {
-                    LocationNotifListener.onNextReload {
-                        player.sendPacket(PlacesInfoPacket(it))
-                    }
+                    throw Exception("Location notification listener not loaded!")
                 }
             }
         }
@@ -89,8 +89,10 @@ object GrowssethWorldPreset {
     }
 
     fun shouldDisableStructureSet(structureSet: Holder<StructureSet>, biomeSource: BiomeSource): Boolean {
+        val setLocation = structureSet.unwrapKey().getOrNull()?.location()
         return isGrowssethPresetFromOverworldBiomeSource(biomeSource)
-            && structureSet.unwrapKey().getOrNull()?.location()?.namespace == RuinsOfGrowsseth.MOD_ID
+            && (setLocation?.namespace == RuinsOfGrowsseth.MOD_ID
+            || (WorldPresetConfig.disableTrialChambers && setLocation == resLocVanilla("trial_chambers")))
     }
 
     fun shouldDisableVillagePresets(server: MinecraftServer): Boolean {

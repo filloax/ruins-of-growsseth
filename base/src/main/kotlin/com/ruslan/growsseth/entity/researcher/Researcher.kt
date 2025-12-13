@@ -20,12 +20,12 @@ import com.ruslan.growsseth.dialogues.DialoguesNpc
 import com.ruslan.growsseth.effect.GrowssethEffects
 import com.ruslan.growsseth.entity.RefreshableMerchant
 import com.ruslan.growsseth.entity.SpawnTimeTracker
-import com.ruslan.growsseth.entity.researcher.ResearcherCombatComponent.Companion.distanceForUnjustifiedAggression
 import com.ruslan.growsseth.entity.researcher.ResearcherCombatComponent.ResearcherAttackGoal
 import com.ruslan.growsseth.entity.researcher.trades.ResearcherTradeMode
 import com.ruslan.growsseth.entity.researcher.trades.ResearcherTradeUtils
 import com.ruslan.growsseth.entity.researcher.trades.ResearcherTradesData
 import com.ruslan.growsseth.http.GrowssethExtraEvents
+import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.quests.QuestOwner
 import com.ruslan.growsseth.sound.GrowssethSounds
 import com.ruslan.growsseth.structure.pieces.ResearcherTent
@@ -43,7 +43,6 @@ import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.core.registries.Registries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
-import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.resources.ResourceKey
@@ -71,13 +70,9 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.ai.navigation.PathNavigation
 import net.minecraft.world.entity.ai.navigation.WallClimberNavigation
 import net.minecraft.world.entity.monster.AbstractIllager.IllagerArmPose
-import net.minecraft.world.entity.monster.AbstractSkeleton
-import net.minecraft.world.entity.monster.Vex
-import net.minecraft.world.entity.monster.Zombie
 import net.minecraft.world.entity.npc.InventoryCarrier
 import net.minecraft.world.entity.npc.Npc
 import net.minecraft.world.entity.player.Player
-import net.minecraft.world.entity.raid.Raider
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
@@ -105,24 +100,28 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     Npc, RefreshableMerchant, InventoryCarrier, QuestOwner<Researcher>, DialoguesNpc, SpawnTimeTracker,
     ResearcherDataUser
 {
+    /* region [Companion Object and Instance Properties] */
 
     companion object {
+        const val RESEARCHER_XP = 25
+        const val WALK_LIMIT_DISTANCE = 15
+        const val WALK_LIMIT_DISTANCE_NIGHT = 3
+        const val WALKING_SPEED = 0.6
+        const val BASE_FIGHTING_SPEED = 0.7
+        const val RESEARCHER_ATTACK_REACH = 0.7         // 1.21.1 default attack reach is 0,828
+
         fun createAttributes(): () -> AttributeSupplier.Builder {
-            return { createMobAttributes()
+            return {
+                createMobAttributes()
                 .add(Attributes.MOVEMENT_SPEED, 0.5)    // same of a villager
                 .add(Attributes.MAX_HEALTH, 40.0)       // double of a villager
                 .add(Attributes.ATTACK_DAMAGE, 13.0)    // (+ 5 of dagger = 18 total)
                 .add(Attributes.ARMOR, 10.0)
-                .add(
-                    Attributes.FOLLOW_RANGE, 20.0
-                )     // goodbye range is 17, if lower he would say goodbye even when aggressive
+                .add(Attributes.FOLLOW_RANGE, 20.0)     // Goodbye range is 17, if lower he would say goodbye even when aggressive
             }
         }
-        const val RESEARCHER_XP = 25
-        const val WALK_LIMIT_DISTANCE = 15
-        const val WALK_LIMIT_DISTANCE_NIGHT = 3
-        const val RESEARCHER_ATTACK_REACH = 0.7         // default attack reach is 0,828
 
+        /* Tags names */
         const val DATA_TAG = "ResearcherData"
         const val SPAWN_TIME_TAG = "ResearcherSpawnTime"
         const val STARTING_POS_TAG = "ResearcherStartingPos"
@@ -131,51 +130,64 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         const val MAP_MEMORY_TAG = "ResearcherMapLocations"
         const val OFFERS_TAG = "ResearcherOffers"
 
+        // Words that should trigger refusal dialogue when using on him a name tag with one on it
         val RENAME_BLACKLIST = mutableMapOf(
             // True if it should check word parts
-            "ricercatore" to false,
-            "researcher" to false,
-            "franco" to false,
-            "folgo" to false,
-            "foldo" to false,
-            "palle" to true,
-            "balls" to true,
-            "synergo" to true,
-            "sabaku" to true,
-            "lucio" to true,
-            "lionel" to false,
-            "julius" to false,
-            "nicolaos" to false,
-            "wazo" to true,
-            "efisio" to false,
-            "ruslan" to true,
-            "grumm" to false,
-            "dinnerbone" to false
+            "ricercatore" to false, "researcher" to false,
+            "franco" to false, "folgo" to false,
+            "foldo" to false, "palle" to true,
+            "balls" to true, "synergo" to true,
+            "sabaku" to true, "lucio" to true,
+            "lionel" to false, "julius" to false,
+            "nicolaos" to false, "wazo" to true,
+            "efisio" to false, "ruslan" to true,
+            "grumm" to false, "dinnerbone" to false
         )
 
-        val SPEED_MODIFIER_DRINKING = AttributeModifier(resLoc("researcher_drinking_speed_penalty"), -0.2, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+        // Modifier for slowing down the researcher when consuming items
+        val SPEED_MODIFIER_USING_ITEM = AttributeModifier(
+            resLoc("researcher_item_use_speed_penalty"), -0.2,
+            AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
+        )
         // Used when fighting someone that is not running away (using this instead of sprinting for control over amount):
-        val SPEED_MODIFIER_FIGHTING = AttributeModifier(resLoc("researcher_fight_speed_penalty"), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+        val SPEED_MODIFIER_FIGHTING = AttributeModifier(
+            resLoc("researcher_fight_speed_penalty"), 0.5,
+            AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
+        )
 
-        // Used for drinking potions:
-        private val DATA_USING_ITEM: EntityDataAccessor<Boolean> = SynchedEntityData.defineId(Researcher::class.java, EntityDataSerializers.BOOLEAN)
+        // Used for drinking potions and using ender pearls
+        private val DATA_USING_ITEM =
+            SynchedEntityData.defineId(Researcher::class.java, EntityDataSerializers.BOOLEAN)
+        // Used for trades refusal
+        private val DATA_UNHAPPY_COUNTER =
+            SynchedEntityData.defineId(Researcher::class.java, EntityDataSerializers.INT)
 
-        private val DATA_UNHAPPY_COUNTER = SynchedEntityData.defineId(Researcher::class.java, EntityDataSerializers.INT)
-        // Next three need to be synched due to trade offers being both on client and server:
-        private val DATA_ANGRY_FOR_MESS = SynchedEntityData.defineId(Researcher::class.java, EntityDataSerializers.BOOLEAN)
-        private val DATA_DONKEY_BORROWED = SynchedEntityData.defineId(Researcher::class.java, EntityDataSerializers.BOOLEAN)
-        private val DATA_HEALED = SynchedEntityData.defineId(Researcher::class.java, EntityDataSerializers.BOOLEAN)
+        // These three need to be synched due to trade offers being both on client and server
+        private val DATA_ANGRY_FOR_MESS =
+            SynchedEntityData.defineId(Researcher::class.java, EntityDataSerializers.BOOLEAN)
+        private val DATA_DONKEY_BORROWED =
+            SynchedEntityData.defineId(Researcher::class.java, EntityDataSerializers.BOOLEAN)
+        private val DATA_HEALED =
+            SynchedEntityData.defineId(Researcher::class.java, EntityDataSerializers.BOOLEAN)
 
-        private val DATA_ANGRY_PARTICLES = SynchedEntityData.defineId(Researcher::class.java, EntityDataSerializers.BOOLEAN)
-        private val DATA_DEFLECT_ARROW_PARTICLES = SynchedEntityData.defineId(Researcher::class.java, EntityDataSerializers.BOOLEAN)
-        private val DATA_TELEPORT_PARTICLES = SynchedEntityData.defineId(Researcher::class.java, EntityDataSerializers.BOOLEAN)
+        // Various particles that the researcher can emit, if not saved they disappear on world reload
+        private val DATA_ANGRY_PARTICLES =
+            SynchedEntityData.defineId(Researcher::class.java, EntityDataSerializers.BOOLEAN)
+        private val DATA_DEFLECT_ARROW_PARTICLES =
+            SynchedEntityData.defineId(Researcher::class.java, EntityDataSerializers.BOOLEAN)
+        private val DATA_TELEPORT_PARTICLES =
+            SynchedEntityData.defineId(Researcher::class.java, EntityDataSerializers.BOOLEAN)
 
-        // keep type annotations, kotlin + codecs might be janky otherwise
-        private val MAP_MEMORY_CODEC: Codec<Map<String, MapMemory>> = UnboundedMapCodec(Codec.STRING, RecordCodecBuilder.create<MapMemory> { builder -> builder.group(
-            BlockPos.CODEC.fieldOf("pos").forGetter(MapMemory::pos),
-            Codec.either(TagKey.codec(Registries.STRUCTURE), ResourceKey.codec(Registries.STRUCTURE)).fieldOf("struct").forGetter(MapMemory::struct),
-            Codec.INT.fieldOf("mapId").forGetter(MapMemory::mapId),
-        ).apply(builder, ::MapMemory) })
+        // Codec for the stored maps (keep type annotations, kotlin + codecs might be janky otherwise)
+        private val MAP_MEMORY_CODEC: Codec<Map<String, MapMemory>> =
+            UnboundedMapCodec(Codec.STRING, RecordCodecBuilder.create<MapMemory> { builder ->
+                builder.group(
+                    BlockPos.CODEC.fieldOf("pos").forGetter(MapMemory::pos),
+                    Codec.either(TagKey.codec(Registries.STRUCTURE), ResourceKey.codec(Registries.STRUCTURE))
+                        .fieldOf("struct").forGetter(MapMemory::struct),
+                    Codec.INT.fieldOf("mapId").forGetter(MapMemory::mapId),
+                ).apply(builder, ::MapMemory)
+            })
 
         fun findTent(level: ServerLevel, startingPos: BlockPos, currentPos: BlockPos? = null): StructureStart? {
             val structureManager = level.structureManager()
@@ -187,7 +199,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
                 tentStart = structureManager.getStructureWithPieceAt(pos, GrowssethTags.StructTags.RESEARCHER_TENT)
 
-                // Error in the fixed structures mixin? Just incase, given usecase of mod (streaming)
+                // Error in the fixed structures mixin? Just in case, given use case of mod (streaming)
                 // we have to avoid all avoidable crashes
                 if (tentStart?.isValid == true && tentStart.structure !is ResearcherTentStructure) {
                     RuinsOfGrowsseth.LOGGER.error("Found wrong structure when searching tent, is ${tentStart.structure} in $tentStart")
@@ -212,12 +224,6 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         }
     }
 
-
-    /* VARIABLES SECTION */
-
-    val armPose : IllagerArmPose
-        get() = if (this.isAggressive || this.isUsingItem) IllagerArmPose.ATTACKING else IllagerArmPose.CROSSED
-
     // No lateinit for these three, too many points of failure with Minecraft
     var startingPos: BlockPos? = null
         private set
@@ -225,18 +231,20 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         private set
     var metPlayer: Boolean = false
         private set
+
     // Do not persist, only relevant as long as entity is loaded
     override var lastWorldDataTime: LocalDateTime = LocalDateTime.now()
         private set
-    // Set to false (intentionally public) to prevent the researcher from saving world data
-    // on remove in single researcher mode
+
+    // Set to false (intentionally public) to prevent the researcher from saving world data on remove in single researcher mode
     var saveOnRemove: Boolean = true
     var shouldDespawn: Boolean = false
 
     /* If the donkey was borrowed by any player, do not check for specific player
        as there is only one donkey anyway and atm the penalty is shared
-       (Treat is as if in multiplayer the researcher treats players as a group) */
+       (treat is as if in multiplayer the researcher treats players as a group) */
     var donkeyWasBorrowed: Boolean by entityData.delegate(DATA_DONKEY_BORROWED)
+
     var angryForMess: Boolean by entityData.delegate(DATA_ANGRY_FOR_MESS)
     var unhappyCounter: Int by entityData.delegate(DATA_UNHAPPY_COUNTER)
     var healed: Boolean by entityData.delegate(DATA_HEALED)
@@ -244,18 +252,27 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     var showArrowDeflectParticles: Boolean by entityData.delegate(DATA_DEFLECT_ARROW_PARTICLES)
     var showTeleportParticles: Boolean by entityData.delegate(DATA_TELEPORT_PARTICLES)
 
+    // Arm up when attacking and consuming items
+    val armPose : IllagerArmPose
+        get() = if (this.isAggressive || this.isUsingItem) IllagerArmPose.ATTACKING else IllagerArmPose.CROSSED
+
     val combat = ResearcherCombatComponent(this)
+
     val storedMapLocations = mutableMapOf<String, MapMemory>()
     val diary = if (!this.level().isClientSide()) ResearcherDiaryComponent(this) else null
-    override val dialogues = if (!this.level().isClientSide()) ResearcherDialoguesComponent(this, random, combat) else null
+
+    override val dialogues =
+        if (!this.level().isClientSide())
+            ResearcherDialoguesComponent(this, random, combat)
+        else null
+
     override val quest = if (!this.level().isClientSide()) {
-        // Set to not active, so it doesn't get loaded when the zombie villager loads this in
+        // Set to not active, so it doesn't get loaded when the zombie villager loads this
         // on conversion end, before it applies the data
         ResearcherQuestComponent(this).also { it.data.active = false }
     } else null
 
     // World time the researcher was spawned first at
-    // (used in clearoldresearchers remote command)
     override var spawnTime: Long
         private set(value) { _spawnTime = value }
         get() {
@@ -271,7 +288,6 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             val start = tentCache?.getOrNull()
                 ?: findTent()
             tentCache = Optional.ofNullable(start)
-
             val firstPiece = start?.pieces?.get(0)
             if (firstPiece is ResearcherTent?) {
                 return  firstPiece
@@ -291,6 +307,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     private var syncDataNoPlayersTimer: Int = 0
     private var willReadWorldDataNextSync: Boolean = false
 
+    // Timer used for consuming items such as potions or ender pearls
     private var itemUsingTime = 0
 
     // For teleporting back to tent
@@ -308,8 +325,10 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     internal var lastCheckStuckPosition: BlockPos? = blockPosition()
     internal var needsJumpBoost = false
 
+    //endregion
 
-    /* METHODS SECTION */
+
+    /* region [Methods] */
 
     override fun defineSynchedData(builder: SynchedEntityData.Builder) {
         super.defineSynchedData(builder)
@@ -328,23 +347,28 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         goalSelector.addGoal(0, ClimbOnTopOfPowderSnowGoal(this, level()))
         goalSelector.addGoal(0, ResearcherBreatheAirGoal(this))
         goalSelector.addGoal(1, OpenDoorGoal(this, true))
-        goalSelector.addGoal(2, ResearcherAttackGoal(this, 0.7, true))
-        goalSelector.addGoal(3, MoveTowardsRestrictionGoal(this, 0.6))
-        goalSelector.addGoal(4, ResearcherRandomStrollGoal(this, 0.6))
+        goalSelector.addGoal(2, ResearcherAttackGoal(this, BASE_FIGHTING_SPEED, true))
+        goalSelector.addGoal(3, MoveTowardsRestrictionGoal(this, WALKING_SPEED))
+        goalSelector.addGoal(4, ResearcherRandomStrollGoal(this, WALKING_SPEED))
         goalSelector.addGoal(5, ResearcherLookAtPlayerGoal(this, 8f, 0.1f))
 
-        targetSelector.addGoal(0, NearestAttackableTargetGoal(this, Player::class.java, 0, true, true)
-            { player -> combat.wantsToKillPlayer((player as Player)) })
+        // Players get the highest target priority, then mobs depending on the config
+        targetSelector.addGoal(0, NearestAttackableTargetGoal(
+            this, Player::class.java, 0, true, true)
+            { player -> combat.wantsToKillPlayer((player as Player)) }
+        )
         if (ResearcherConfig.researcherInteractsWithMobs) {
-            targetSelector.addGoal(1, NearestAttackableTargetGoal(this, Mob::class.java, 0, false, true)
-                // notNull + equals to avoid the intellij-only bug showing this as error (likely wonky build)
-                { livingEntity: LivingEntity? -> livingEntity is Mob && livingEntity.target.let { notNull(it) && it.equals(this) } })
+            targetSelector.addGoal(1, NearestAttackableTargetGoal(
+                this, Mob::class.java, 0,false, true)
+                { livingEntity -> combat.shouldApplySelfDefence(livingEntity) }
+            )
             targetSelector.addGoal(2, ResearcherHurtByTargetGoal(this))
-            if (ResearcherConfig.researcherStrikesFirst)
-                targetSelector.addGoal(2, NearestAttackableTargetGoal(this, Mob::class.java, 0, true, true)
-                    { livingEntity: LivingEntity? -> ( (notNull(livingEntity) && this.distanceTo(livingEntity) < distanceForUnjustifiedAggression) &&
-                            (livingEntity is Raider || livingEntity is Vex || livingEntity is Zombie || livingEntity is AbstractSkeleton) ) }
+            if (ResearcherConfig.researcherStrikesFirst) {
+                targetSelector.addGoal(2, NearestAttackableTargetGoal(
+                    this, Mob::class.java, 0, true, true)
+                    { livingEntity -> combat.shouldStrikeFirst(livingEntity) }
                 )
+            }
         }
     }
 
@@ -406,7 +430,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     // Server side only
     private fun handleItems() {
         if (isUsingItem) {
-            if (!isSilent && itemUsingTime == (offhandItem.getUseDuration(this) / 4)) {    // play drinking sound when item is halfway consumed
+            if (!isSilent && itemUsingTime == (offhandItem.getUseDuration(this) / 4)) {    // play sound when item is almost consumed
                 val itemStack = offhandItem
 
                 val sound = when (itemStack.item) {
@@ -422,18 +446,20 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             }
 
             itemUsingTime--
+
             if (itemUsingTime <= 0) {
+                // when item is consumed, remove it and apply its effect
                 isUsingItem = false
                 val itemStack = offhandItem
                 setItemSlot(EquipmentSlot.OFFHAND, ItemStack.EMPTY)
 
                 if (itemStack.`is`(Items.POTION)) {
-                    val list = itemStack[DataComponents.POTION_CONTENTS]?.potion
+                    val potionEffects = itemStack[DataComponents.POTION_CONTENTS]?.potion
                         ?.map{ p -> p.value().effects }
                         ?.orElse(listOf())
-                    if (list != null)
-                        for (mobEffectInstance in list)
-                            addEffect(MobEffectInstance(mobEffectInstance))
+                    if (potionEffects != null)
+                        for (mobEffectInstance in potionEffects)
+                            this.addEffect(MobEffectInstance(mobEffectInstance))
                     gameEvent(GameEvent.DRINK)
                 }
                 else if (itemStack.`is`(Items.HONEY_BOTTLE)) {
@@ -441,26 +467,22 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
                     gameEvent(GameEvent.DRINK)
                 }
                 else if (itemStack.`is`(Items.ENDER_PEARL)) {
-                    stopRiding()
+                    stopRiding()        // prevent getting stuck in boats
                     showTeleportParticles = true
                     needsToTpBack = false
                     secondsAwayFromTent = 0
                     secondsInWall = 0
 
                     val targetLevel = server?.getLevel(startingDimension) ?:
-                        throw IllegalStateException("Unkown level when researcher teleporting to start dimension $startingDimension")
+                        throw IllegalStateException("Unknown level when researcher teleporting to start dimension $startingDimension")
 
-                    changeDimension(DimensionTransition(
-                        targetLevel,
-                        startingPos!!.center, Vec3.ZERO, yRot, xRot,
-                        { }
-                    ))
+                    changeDimension(DimensionTransition(targetLevel, startingPos!!.center, Vec3.ZERO, yRot, xRot) { })
                     gameEvent(GameEvent.TELEPORT)
                 }
-                getAttribute(Attributes.MOVEMENT_SPEED)!!.removeModifier(SPEED_MODIFIER_DRINKING.id)
+                getAttribute(Attributes.MOVEMENT_SPEED)!!.removeModifier(SPEED_MODIFIER_USING_ITEM.id)
             }
         }
-        else {
+        else {  // check if should start using an item
             var potion: Holder<Potion>? = null
             var item: Item? = null
 
@@ -470,9 +492,10 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             if (needsJumpBoost && !hasEffect(MobEffects.JUMP))
                 potion = Potions.STRONG_LEAPING
 
-            else if (       // trying to counter cheese attempts
+            else if (   // trying to counter cheese attempts
                 ResearcherConfig.researcherAntiCheat &&
                 stuckCounter >= maxStuckCounter &&
+                // check if he's stuck and doesn't have the turtle master effect active (or it's wearing off):
                 ((!hasEffect(MobEffects.DAMAGE_RESISTANCE) || !hasEffect(MobEffects.MOVEMENT_SLOWDOWN)) ||
                         (hasEffect(MobEffects.DAMAGE_RESISTANCE) && hasEffect(MobEffects.MOVEMENT_SLOWDOWN)
                                 && getEffect(MobEffects.DAMAGE_RESISTANCE)?.endsWithin(40) == true))
@@ -488,11 +511,11 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             else if (lastDamageSource != null && lastDamageSource!!.`is`(DamageTypeTags.IS_DROWNING) && !hasEffect(MobEffects.WATER_BREATHING))
                 potion = Potions.WATER_BREATHING
 
-            else if ((isOnFire || lastDamageSource != null && lastDamageSource!!.`is`(DamageTypeTags.IS_FIRE)) && !hasEffect(MobEffects.FIRE_RESISTANCE))
+            else if ((isOnFire || (lastDamageSource != null && lastDamageSource!!.`is`(DamageTypeTags.IS_FIRE))) && !hasEffect(MobEffects.FIRE_RESISTANCE))
                 potion = Potions.FIRE_RESISTANCE
 
             else if (health < maxHealth && !hasEffect(MobEffects.REGENERATION) && (isAggressive || hasEffect(MobEffects.POISON) || random.nextFloat() < 0.05f))
-                potion = Potions.STRONG_REGENERATION        // if not aggressive random chance to drink to make it seem natural
+                potion = Potions.STRONG_REGENERATION        // if not aggressive random chance to drink, to make it seem natural
 
             else if (hasEffect(MobEffects.POISON))
                 item = Items.HONEY_BOTTLE
@@ -512,8 +535,8 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
                 isUsingItem = true
 
                 val attributeInstance = getAttribute(Attributes.MOVEMENT_SPEED)
-                attributeInstance!!.removeModifier(SPEED_MODIFIER_DRINKING.id)
-                attributeInstance.addTransientModifier(SPEED_MODIFIER_DRINKING)
+                attributeInstance!!.removeModifier(SPEED_MODIFIER_USING_ITEM.id)
+                attributeInstance.addTransientModifier(SPEED_MODIFIER_USING_ITEM)
             }
         }
     }
@@ -692,10 +715,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             player.getPersistData().putBoolean(Constants.DATA_PLAYER_MET_RESEARCHER, true)
 
             if (player is ServerPlayer) {
-                if (!dialogues!!.isQueueEmpty(player.uuid)){
-                    dialogues.skipCurrentMessage(player.uuid)
-                }
-                else {
+                if (!dialogues!!.skipCurrentMessage(player)) {
                     val offers = getOffers(player)
                     val blockTrades = angryForMess && !healed
                     if (offers.isEmpty() || blockTrades) {
@@ -716,7 +736,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
                             return InteractionResult.FAIL
                     }
                     tradingPlayer = player
-                    openTradingScreen(player, this.displayName ?: this.name, 1)
+                    openTradingScreen(player, this.displayName ?: Component.empty(), 1)
                 }
             }
             return InteractionResult.sidedSuccess(level().isClientSide)
@@ -926,7 +946,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         } ?: MerchantOffers()
     }
 
-    fun getOffers(player: ServerPlayer): MerchantOffers {
+    private fun getOffers(player: ServerPlayer): MerchantOffers {
         val server = player.server
         val currentProvider = ResearcherTradeMode.providerFromSettings(server)
         val tradesData = tradesData()
@@ -936,7 +956,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             tradesData.resetRandomTrades()
         }
 
-        var offers = offersByPlayer.computeIfAbsent(player.uuid) { MerchantOffers() }
+        val offers = offersByPlayer.computeIfAbsent(player.uuid) { MerchantOffers() }
         val updatedOffers = currentProvider.getOffers(this, tradesData, player)
 
         if (
@@ -968,6 +988,17 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     override fun notifyTrade(merchantOffer: MerchantOffer) {
         ambientSoundTime = -this.ambientSoundInterval
         rewardTradeXp(merchantOffer)
+
+        if (merchantOffer.result.`is`(GrowssethItems.RUINS_MAP)) {
+            diary?.let { d ->
+                val tag = ResearcherTradeUtils.getStructureTagFromMapOffer(merchantOffer)
+                if (tag != null) {
+                    d.trackRandomMapStructure(tag)
+                } else {
+                    RuinsOfGrowsseth.LOGGER.warn("Could not track structure for map trade {}, tag not found", merchantOffer)
+                }
+            }
+        }
     }
 
     override fun notifyTradeUpdated(itemStack: ItemStack) {
@@ -988,7 +1019,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     fun scheduleClearingFailedMaps() {
         // In 10 seconds (or if quitting, in the write nbt function), clear
         // failed map offers to be able to retry)
-        clearFailedMapsTime = tickCount + 10f.secondsToTicks()
+        clearFailedMapsTime = tickCount + 20f.secondsToTicks()
     }
 
     private fun clearFailedMaps() {
@@ -1075,7 +1106,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     override fun getHurtSound(damageSource: DamageSource): SoundEvent = GrowssethSounds.RESEARCHER_HURT
     override fun getDeathSound(): SoundEvent = GrowssethSounds.RESEARCHER_DEATH
     override fun getAmbientSoundInterval(): Int = super.getAmbientSoundInterval() * 3
-    override fun getAmbientSound(): SoundEvent? {
+    override fun getAmbientSound(): SoundEvent {
         return if (isTrading()) {
             GrowssethSounds.RESEARCHER_TRADE
         } else GrowssethSounds.RESEARCHER_AMBIENT
@@ -1115,7 +1146,10 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         jumpFromGround()
     }
 
-    /* OBJECTS */
+    //endregion
+
+
+    /* region [Objects and Data Classes] */
 
     object Callbacks {
         fun nameTagRename(target: LivingEntity, name: Component, player: ServerPlayer, stack: ItemStack, usedHand: InteractionHand): InteractionResultHolder<ItemStack> {
@@ -1126,10 +1160,11 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         }
     }
 
-
     data class MapMemory(
         val pos: BlockPos,
         val struct: Either<TagKey<Structure>, ResourceKey<Structure>>,
         val mapId: Int,
     )
+
+    //endregion
 }
