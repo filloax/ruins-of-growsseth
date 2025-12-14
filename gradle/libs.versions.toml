@@ -26,13 +26,13 @@ rctapi-neoforge = "7257753"
 rctapi-fabric = "7257754"
 
 # Kotlin
-kotlin = "2.2.0"                # REVERT TO 2.0.21
+kotlin = "2.0.21"
 kotlin-serialization = "1.9.0"
 kotlin-datetime = "0.7.1"
 
 # Fabric Settings
-fabric = "0.17.2"               # REVERT TO 0.16.9
-fabric-api = "0.116.7+1.21.1"   # REVERT TO 0.110.0+1.21.1
+fabric = "0.16.9"
+fabric-api = "0.110.0+1.21.1"
 fabric-language-kotlin = "1.12.3+kotlin.2.0.21"
 
 # Neoforge Settings
