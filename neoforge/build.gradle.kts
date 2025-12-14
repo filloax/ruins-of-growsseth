@@ -100,6 +100,8 @@ dependencies {
 
     // Mod compat
     compileOnly(libs.lithostitched.neoforge)
+    compileOnly(libs.rctapi.neoforge)
+    compileOnly(libs.cobblemon.neoforge)
 }
 
 

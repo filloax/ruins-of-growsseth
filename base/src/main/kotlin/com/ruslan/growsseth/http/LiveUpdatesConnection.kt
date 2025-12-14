@@ -62,6 +62,11 @@ class LiveUpdatesConnection private constructor(val server: MinecraftServer) : R
         private var activeConnection: LiveUpdatesConnection? = null
 
         fun serverStart(server: MinecraftServer) {
+            // todo: fix Neoforge compatibility
+            if (RuinsOfGrowsseth.isNeoforge) {
+                RuinsOfGrowsseth.LOGGER.warn("LiveUpdatesConnection is currently not supported on Neoforge, will not start!")
+                return
+            }
             if (activeConnection == null && WebConfig.liveUpdateService) {
                 val conn = LiveUpdatesConnection(server)
                 conn.start()

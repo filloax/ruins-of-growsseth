@@ -9,4 +9,13 @@ class ModCompatCheckerNeo : ModCompatChecker {
     override val isImprovedVillagePlacementLoaded: Boolean by lazy {
         ModList.get().isLoaded(ModCompatChecker.ID_IMPROVED_VILLAGE_PLACEMENT)
     }
+    override val isCobblemonLoaded: Boolean by lazy {
+        ModList.get().isLoaded(ModCompatChecker.ID_COBBLEMON)
+    }
+    override val isRCTTrainerApiLoaded: Boolean by lazy {
+        ModList.get().isLoaded(ModCompatChecker.ID_RCT_TRAINER_API)
+    }
+    override val isCobblemonMegaShowdownLoaded: Boolean by lazy {
+        ModList.get().isLoaded(ModCompatChecker.ID_MEGA_SHOWDOWN)
+    }
 }

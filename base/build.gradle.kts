@@ -58,6 +58,8 @@ dependencies {
 
 	// Mod compatibility
 	compileOnly(libs.lithostitched.neoforge)
+    compileOnly(libs.cobblemon.neoforge)
+    compileOnly(libs.rctapi.neoforge)
 }
 
 sourceSets.main.get().resources.srcDir(project(":base").file("src/generated/resources"))
