@@ -29,9 +29,9 @@ fun resLocVanilla(str: String): ResourceLocation {
 fun serverLang() = FxLibServices.serverLanguage.get(GrowssethConfig.serverLanguage)
 
 class GrowssethLogger(private val logger: Logger) {
-    var isNeoforge = false
     private val prefix by lazy {
-        if (isNeoforge || FxLibServices.platform.isDevEnvironment()) ""     // already present on neoforge and fabric dev env
+        // The prefix is already present on Neoforge and Fabric's dev env
+        if (RuinsOfGrowsseth.isNeoforge || FxLibServices.platform.isDevEnvironment()) ""
         else "[$MOD_NAME] "
     }
     fun log(level: Level, msg: String, vararg params: Any?) = logger.log(level, "$prefix$msg", *params)

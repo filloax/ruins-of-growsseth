@@ -75,7 +75,7 @@ class ResearcherDialogueListener : KotlinJsonResourceReloadListener(JSON, Consta
                     BY_ID.putAll(currentEntries.filter { it.id != null }.associateBy { it.id!! })
                 }
             } catch (e: Exception) {
-                RuinsOfGrowsseth.LOGGER.warn("Could not parse dialogue file {}, trying to convert it from old format", fileIdentifier)
+                RuinsOfGrowsseth.LOGGER.warn("Could not parse dialogue file {}, trying to convert it from old format. Error is: {}", fileIdentifier, e)
                 val success = try {
                     convertOldFormat(fileIdentifier, jsonElement)
                 } catch (e2: Exception) {

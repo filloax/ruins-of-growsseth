@@ -55,7 +55,7 @@ class ResearcherBreatheAirGoal(private val researcher: Researcher) : BreathAirGo
 class ResearcherRandomStrollGoal(private val researcher: Researcher, speedModifier: Double) :
     WaterAvoidingRandomStrollGoal(researcher, speedModifier) {
     override fun canUse(): Boolean {
-        if (researcher.isTrading() || researcher.dialogues?.playersStillAround() == true) {
+        if (researcher.isTrading() || researcher.dialogues?.playersStillAround() == true || researcher.isInCobblemonBattle) {
             return false
         }
         return super.canUse()
