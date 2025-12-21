@@ -3,15 +3,15 @@
     "error": {
       "noTeam": "...ma dove le ho messe? Mi dispiace, collega, non ho la mia squadra con me.",
       "noPlayer": "Non posso accettare la tua sfida se non hai una squadra con cui lottare.",
-      "noBattle": "Non posso accettare la tua sfida in questo momento."
+      "noBattle": "Scusa, non posso accettare la tua sfida in questo momento."
     },
     "battleStart": {
       "0": "Vuoi combattere? D'accordo, ho un po' di tempo libero!",
-      "1": "Una lotta Pokémon? Perché no?",
-      "2": "Va bene, posso interrompere un attimo le mie ricerche!"
+      "1": "Una lotta Pokémon? Perché no? Potremmo imparare entrambi qualcosa!",
+      "2": "Va bene, posso prendermi una pausa dalle ricerche di tanto in tanto!"
     },
-    "battleLastPkmn": "Accidenti, mi hai messo alle strette.",
-    "battleEndWin": "Beh, è stato divertente. Non preoccuparti, non ti farò pagare!",
-    "battleEndLose": "Ottimo lavoro collega! Finché è solo un gioco non c'è vergogna a perdere."
+    "battleLastPkmn": "Niente male, mi hai messo alle strette!",
+    "battleEndWin": "Ci hai provato, spero che tu abbia imparato qualcosa... Continua a studiare, quando vuoi avrai la tua rivincita!",
+    "battleEndLose": "Ottimo lavoro collega! È sempre interessante affrontare nuove sfide, anche se non le si supera."
   }
 }
