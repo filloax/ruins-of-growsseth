@@ -70,6 +70,11 @@
     "fabric": "*",
     "minecraft": "${fabric_minecraft_version_range}"
   },
+  "suggests": {
+    "cobblemon": ">=${cobblemon_version}",
+    "rctapi": ">=${rctapi_version}",
+    "mega_showdown": ">=${megashowdown_version}"
+  },
   "custom": {
     "modmenu": {
 

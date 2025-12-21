@@ -132,6 +132,12 @@ val kotlinforgeVersionRange = libs.findVersion("kotlinforge.range").get()
 val filloaxlibVersion = libs.findVersion("filloaxlib").get().toString()
 val rconfigVersion = libs.findVersion("rconfig").get().toString()
 val rconfigMcVersion = libs.findVersion("rconfigMc").get().toString()
+
+// Optional mod synergy
+val cobblemonVersion = libs.findVersion("cobblemon").get().toString()
+val rctApiVersion = libs.findVersion("rctapi").get().toString()
+val megaShowdownVersion = libs.findVersion("megashowdown").get().toString()
+
 //endregion
 
 //region Artifacts
@@ -214,6 +220,10 @@ tasks.withType<ProcessResources>().configureEach {
 
         "filloaxlib_version" to filloaxlibVersion,
         "rconfig_version" to rconfigVersion,
+
+        "cobblemon_version" to cobblemonVersion,
+        "rctapi_version" to rctApiVersion,
+        "megashowdown_version" to megaShowdownVersion,
 
         "mod_name" to modName,
         "author" to author,
