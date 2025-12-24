@@ -5,8 +5,12 @@ import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.toasts.Toast
 import net.minecraft.client.gui.components.toasts.ToastManager
+import net.minecraft.client.renderer.RenderType
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.item.ItemStack
+import java.util.function.Function
+import kotlin.math.max
 
 // Adapted from RecipeToast
 class NewTradeToast(newTrades: List<ResearcherItemListing>) : Toast {
@@ -14,6 +18,8 @@ class NewTradeToast(newTrades: List<ResearcherItemListing>) : Toast {
     private val tradeItems = newTrades.map { it.gives() }.toMutableList()
     private var lastChanged: Long = 0
     private var changed = false
+    private var wantedVisibility = Toast.Visibility.HIDE
+    private var displayedRecipeIndex = 0
 
     companion object {
         private const val DISPLAY_TIME = 5000.0
@@ -31,36 +37,57 @@ class NewTradeToast(newTrades: List<ResearcherItemListing>) : Toast {
         }
     }
 
-    override fun render(guiGraphics: GuiGraphics, font: Font, timeSinceLastVisible: Long): Unit {
-        if (changed) {
-            lastChanged = timeSinceLastVisible
-            changed = false
-        }
-        return if (trades.isEmpty()) {
-            Toast.Visibility.HIDE
-        } else {
-            guiGraphics.blitSprite(BACKGROUND_SPRITE, 0, 0, width(), height())
-
-            guiGraphics.drawString(ToastManager.minecraft.font, TITLE_TEXT, 30, 7, -11534256, false)
-            guiGraphics.drawString(ToastManager.minecraft.font, DESCRIPTION_TEXT, 30, 18, -16777216, false)
-            val idx = (timeSinceLastVisible
-                    / (DISPLAY_TIME * ToastManager.notificationDisplayTimeMultiplier / trades.size).coerceAtLeast(1.0)
-                    % trades.size.toDouble()
-                    ).toInt()
-            guiGraphics.pose().pushPose()
-            guiGraphics.renderFakeItem(tradeItems[idx], 8, 8)
-            guiGraphics.pose().popPose()
-            if (timeSinceLastVisible - lastChanged >= DISPLAY_TIME * ToastManager.notificationDisplayTimeMultiplier)
-                Toast.Visibility.HIDE
-            else
-                Toast.Visibility.SHOW
-        }
-    }
-
     private fun addItems(trades: List<ResearcherItemListing>) {
         this.trades.addAll(trades)
         this.tradeItems.addAll(trades.map{it.gives()})
         changed = true
     }
-}
 
+
+    override fun getWantedVisibility(): Toast.Visibility {
+        return this.wantedVisibility
+    }
+
+    override fun update(toastManager: ToastManager, visibilityTime: Long) {
+        if (this.changed) {
+            this.lastChanged = visibilityTime
+            this.changed = false
+        }
+
+        if (this.tradeItems.isEmpty()) {
+            this.wantedVisibility = Toast.Visibility.HIDE
+        } else {
+            this.wantedVisibility =
+                if ((visibilityTime - this.lastChanged).toDouble() >= 5000.0 * toastManager.notificationDisplayTimeMultiplier)
+                    Toast.Visibility.HIDE
+                else
+                    Toast.Visibility.SHOW
+        }
+
+        this.displayedRecipeIndex = (visibilityTime.toDouble() / max(
+            1.0,
+            5000.0 * toastManager.notificationDisplayTimeMultiplier / this.tradeItems.size.toDouble()
+        )
+                % this.tradeItems.size.toDouble()
+                ).toInt()
+    }
+
+    override fun render(guiGraphics: GuiGraphics, font: Font, visibilityTime: Long) {
+        guiGraphics.blitSprite(
+            Function { location: ResourceLocation? -> RenderType.guiTextured(location) },
+            BACKGROUND_SPRITE,
+            0,
+            0,
+            this.width(),
+            this.height()
+        )
+        guiGraphics.drawString(font, TITLE_TEXT, 30, 7, -11534256, false)
+        guiGraphics.drawString(font, DESCRIPTION_TEXT, 30, 18, -16777216, false)
+        val itemStack = this.tradeItems[this.displayedRecipeIndex]
+        guiGraphics.pose().pushPose()
+        guiGraphics.pose().scale(0.6f, 0.6f, 1.0f)
+        guiGraphics.renderFakeItem(ItemStack.EMPTY, 3, 3)
+        guiGraphics.pose().popPose()
+        guiGraphics.renderFakeItem(itemStack, 8, 8)
+    }
+}
