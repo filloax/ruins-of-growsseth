@@ -57,7 +57,6 @@ import net.minecraft.tags.DamageTypeTags
 import net.minecraft.tags.TagKey
 import net.minecraft.util.RandomSource
 import net.minecraft.world.*
-import net.minecraft.world.InteractionResult.SwingSource
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.effect.MobEffectInstance
@@ -730,7 +729,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
                         if (RuinsOfGrowsseth.modCompat.isAllCobblemonDepsLoaded) {
                             try {
                                 if (CobblemonRCTCompat.tryStartTrainerBattle(player, this)) {
-                                    return InteractionResult.sidedSuccess(level().isClientSide)
+                                    return InteractionResult.SUCCESS
                                 }
                             } catch (t: Throwable) {
                                 // Swallow any compat errors to keep base behavior intact
@@ -756,7 +755,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
                                 }
                                 else "noTrades"
                             dialogues.triggerDialogue(player, ResearcherDialoguesComponent.EV_REFUSE_TRADE, eventParam = reason)
-                            return InteractionResult.Success(SwingSource.NONE, InteractionResult.ItemContext(false, null))
+                            return InteractionResult.SUCCESS
                         } else
                             return InteractionResult.FAIL
                     }
@@ -764,7 +763,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
                     openTradingScreen(player, this.displayName ?: Component.empty(), 1)
                 }
             }
-            return InteractionResult.Success(SwingSource.NONE, InteractionResult.ItemContext(false, null))
+            return InteractionResult.SUCCESS
         }
         return super.mobInteract(player, interactionHand)
     }

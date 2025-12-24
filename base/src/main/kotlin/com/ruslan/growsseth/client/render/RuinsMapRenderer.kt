@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.*
 import com.ruslan.growsseth.config.ClientConfig
 import com.ruslan.growsseth.maps.getMapTargetIcon
 import net.minecraft.client.Minecraft
-import net.minecraft.client.renderer.GameRenderer
+import net.minecraft.client.renderer.CoreShaders
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.texture.TextureAtlasSprite
 import net.minecraft.resources.ResourceLocation
@@ -107,7 +107,7 @@ object RuinsMapRenderer {
         maxV: Float
     ) {
         RenderSystem.setShaderTexture(0, atlasLocation)
-        RenderSystem.setShader { GameRenderer.getPositionTexShader() }
+        RenderSystem.setShader(CoreShaders.POSITION_TEX)
         val matrix4f: Matrix4f = pose.last().pose()
         val bufferBuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX)
         bufferBuilder.addVertex(matrix4f, x1.toFloat(), y1.toFloat(), blitOffset.toFloat()).setUv(minU, minV)
