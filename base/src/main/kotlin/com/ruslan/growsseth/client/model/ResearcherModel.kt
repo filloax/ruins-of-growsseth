@@ -1,18 +1,19 @@
 package com.ruslan.growsseth.client.model
 
 import com.mojang.blaze3d.vertex.PoseStack
+import com.ruslan.growsseth.client.render.ResearcherRendererState
 import com.ruslan.growsseth.entity.researcher.Researcher
 import net.minecraft.client.model.AnimationUtils
 import net.minecraft.client.model.ArmedModel
 import net.minecraft.client.model.HeadedModel
-import net.minecraft.client.model.HierarchicalModel
+import net.minecraft.client.model.EntityModel
 import net.minecraft.client.model.geom.ModelPart
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.HumanoidArm
 import net.minecraft.world.entity.monster.AbstractIllager.IllagerArmPose
 
 // Merges villagers and illagers stuff to render him both ways
-class ResearcherModel(private val root: ModelPart) : HierarchicalModel<Researcher>(), ArmedModel, HeadedModel {
+class ResearcherModel(private val root: ModelPart) : EntityModel<ResearcherRendererState>(root), ArmedModel, HeadedModel {
     private val head: ModelPart = root.getChild("head")
     val hat: ModelPart = head.getChild("hat")
     private val arms: ModelPart
@@ -30,26 +31,15 @@ class ResearcherModel(private val root: ModelPart) : HierarchicalModel<Researche
         this.rightArm = root.getChild("right_arm")
     }
 
-    override fun root(): ModelPart {
-        return this.root
-    }
-
     /**
      * Sets this entity's model rotation angles
      */
-    override fun setupAnim(
-        entity: Researcher,
-        limbSwing: Float,
-        limbSwingAmount: Float,
-        ageInTicks: Float,
-        netHeadYaw: Float,
-        headPitch: Float
-    ) {
+    override fun setupAnim(renderState: ResearcherRendererState) {
         head.yRot = netHeadYaw * (Math.PI / 180.0).toFloat()
         head.xRot = headPitch * (Math.PI / 180.0).toFloat()
 
         // Taken from VillagerModel for the head shaking animation when refusing to trade (except when fighting)
-        val isUnhappy = (entity.unhappyCounter > 0 && !entity.isAggressive)
+        val isUnhappy = (renderState.entity.unhappyCounter > 0 && !renderState.entity.isAggressive)
         if (isUnhappy) {
             head.zRot = 0.3f * Mth.sin(0.45f * ageInTicks)
             head.xRot = 0.4f
@@ -68,7 +58,7 @@ class ResearcherModel(private val root: ModelPart) : HierarchicalModel<Researche
         leftLeg.xRot = Mth.cos(limbSwing * 0.6662f + Math.PI.toFloat()) * 1.4f * limbSwingAmount * 0.5f
         leftLeg.yRot = 0.0f
 
-        val illagerArmPose = entity.armPose
+        val illagerArmPose = renderState.entity.armPose
 
         val bl = illagerArmPose == IllagerArmPose.CROSSED
         arms.visible = bl
@@ -76,19 +66,19 @@ class ResearcherModel(private val root: ModelPart) : HierarchicalModel<Researche
         rightArm.visible = !bl
 
         if (illagerArmPose == IllagerArmPose.ATTACKING) {
-            if (entity.isAggressive) {
-                if (entity.mainHandItem.isEmpty) {
+            if (renderState.entity.isAggressive) {
+                if (renderState.entity.mainHandItem.isEmpty) {
                     AnimationUtils.animateZombieArms(this.leftArm, this.rightArm, true, this.attackTime, ageInTicks)
                 }
                 else {
-                    if (!entity.isUsingItem)
-                        AnimationUtils.swingWeaponDown(this.rightArm, this.leftArm, entity.mainArm, this.attackTime, ageInTicks)
+                    if (!renderState.entity.isUsingItem)
+                        AnimationUtils.swingWeaponDown(this.rightArm, this.leftArm, renderState.entity.mainArm, this.attackTime, ageInTicks)
                     else
                         AnimationUtils.animateZombieArms(this.leftArm, this.rightArm, true, this.attackTime, ageInTicks)
                 }
             }
-            else if (entity.isUsingItem){
-                AnimationUtils.swingWeaponDown(this.leftArm, this.rightArm, entity.mainArm, this.attackTime, ageInTicks)
+            else if (renderState.entity.isUsingItem){
+                AnimationUtils.swingWeaponDown(this.leftArm, this.rightArm, renderState.entity.mainArm, this.attackTime, ageInTicks)
             }
         }
     }

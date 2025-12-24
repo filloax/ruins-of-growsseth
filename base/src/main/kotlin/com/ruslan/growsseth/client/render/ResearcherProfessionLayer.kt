@@ -9,10 +9,9 @@ import net.minecraft.client.renderer.entity.RenderLayerParent
 import net.minecraft.client.renderer.entity.layers.RenderLayer
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.ARGB
-import net.minecraft.world.entity.LivingEntity
 
-// cloned from VillagerProfessionLayer
-open class ResearcherProfessionLayer<T : LivingEntity, M : EntityModel<T>>(
+// Cloned from VillagerProfessionLayer
+open class ResearcherProfessionLayer<T : ResearcherRendererState, M : EntityModel<T>>(
     renderLayerParent: RenderLayerParent<T, M>,
     val typeTextureLocation: ResourceLocation,
     val profClothesLocation: ResourceLocation,
@@ -21,32 +20,34 @@ open class ResearcherProfessionLayer<T : LivingEntity, M : EntityModel<T>>(
     RenderLayer<T, M>(renderLayerParent) {
 
     override fun render(
-        poseStack: PoseStack, multiBufferSource: MultiBufferSource, i: Int,
-        entity: T,
-        f: Float, g: Float, h: Float,
-        j: Float, k: Float, l: Float,
+        poseStack: PoseStack,
+        multiBufferSource: MultiBufferSource,
+        bufferSource: Int,
+        renderState: T,
+        yRot: Float,
+        xRot: Float
     ) {
-        if (entity.isInvisible) {
+        if (renderState.isInvisible) {
             return
         }
 
         renderColoredCutoutModel(
             parentModel, typeTextureLocation, poseStack, multiBufferSource,
-            i, entity,
+            bufferSource, renderState,
             ARGB.colorFromFloat(1f, 1f, 1f, 1f)
         )
 
-        if (entity is Researcher && entity.isAggressive && notNull(profClothesAggressiveLocation)) {
+        if (renderState.entity.isAggressive && notNull(profClothesAggressiveLocation)) {
             renderColoredCutoutModel(
                 parentModel, profClothesAggressiveLocation, poseStack, multiBufferSource,
-                i, entity,
+                bufferSource, renderState,
                 ARGB.colorFromFloat(1f, 1f, 1f, 1f)
             )
         }
         else {
             renderColoredCutoutModel(
                 parentModel, profClothesLocation, poseStack, multiBufferSource,
-                i,entity,
+                bufferSource,renderState,
                 ARGB.colorFromFloat(1f, 1f, 1f, 1f)
             )
         }

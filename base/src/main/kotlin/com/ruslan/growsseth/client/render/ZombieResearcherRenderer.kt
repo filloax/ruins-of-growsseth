@@ -7,16 +7,19 @@ import net.minecraft.client.model.geom.ModelLayers
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer
+import net.minecraft.client.renderer.entity.state.ZombieVillagerRenderState
 import net.minecraft.resources.ResourceLocation
 
-class ZombieResearcherRenderer(context: EntityRendererProvider.Context) :
-    HumanoidMobRenderer<ZombieResearcher, ZombieVillagerModel<ZombieResearcher>>(context, ZombieVillagerModel(context.bakeLayer(ModelLayers.ZOMBIE_VILLAGER)), 0.5f) {
+class ZombieResearcherRenderer(context: EntityRendererProvider.Context, model: ZombieVillagerModel<ZombieResearcherRendererState>, shadowRadius: Float) :
+    HumanoidMobRenderer<ZombieResearcher, ZombieResearcherRendererState, ZombieVillagerModel<ZombieResearcherRendererState>>
+        (context, ZombieVillagerModel(context.bakeLayer(ModelLayers.ZOMBIE_VILLAGER)), 0.5f)
+{
     init {
         addLayer(HumanoidArmorLayer(
             this,
             ZombieVillagerModel(context.bakeLayer(ModelLayers.ZOMBIE_VILLAGER_INNER_ARMOR)),
             ZombieVillagerModel(context.bakeLayer(ModelLayers.ZOMBIE_VILLAGER_OUTER_ARMOR)),
-            context.modelManager,
+            context.equipmentRenderer,
         ))
         addLayer(ResearcherProfessionLayer(this, RESEARCHER_TYPE_SKIN, RESEARCHER_CLOTHES))
 
@@ -31,11 +34,11 @@ class ZombieResearcherRenderer(context: EntityRendererProvider.Context) :
         val RESEARCHER_CLOTHES = resLoc("textures/entity/zombie_villager/profession/researcher_zombie.png")
     }
 
-    override fun getTextureLocation(entity: ZombieResearcher): ResourceLocation {
+    override fun getTextureLocation(renderState: ZombieResearcherRendererState): ResourceLocation {
         return RESEARCHER_BASE_SKIN
     }
 
-    override fun isShaking(entity: ZombieResearcher): Boolean {
-        return super.isShaking(entity) || entity.isConverting
+    override fun isShaking(renderState: ZombieResearcherRendererState): Boolean {
+        return super.isShaking(renderState) || renderState.entity.isConverting
     }
 }
