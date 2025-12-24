@@ -5,4 +5,4 @@ import net.minecraft.world.item.Instrument
 import net.minecraft.world.item.InstrumentItem
 
 class ResearcherHornItem(properties: Properties, instruments: TagKey<Instrument>)
-    : InstrumentItem(properties, instruments)
+    : InstrumentItem(instruments, properties)
