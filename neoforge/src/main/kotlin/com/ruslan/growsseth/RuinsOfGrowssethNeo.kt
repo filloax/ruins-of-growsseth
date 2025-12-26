@@ -18,6 +18,7 @@ import com.ruslan.growsseth.maps.GrowssethMapDecorations
 import com.ruslan.growsseth.structure.GrowssethStructurePieceTypes
 import com.ruslan.growsseth.structure.GrowssethStructures
 import com.ruslan.growsseth.templates.TemplateListener
+import com.ruslan.growsseth.utils.resLoc
 import com.ruslan.growsseth.worldgen.worldpreset.LocationNotifListener
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.Screen
@@ -36,9 +37,9 @@ import net.neoforged.fml.ModLoadingContext
 import net.neoforged.fml.common.Mod
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent
 import net.neoforged.neoforge.client.event.ClientTickEvent
-import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent
+import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory
-import net.neoforged.neoforge.event.AddReloadListenerEvent
+import net.neoforged.neoforge.event.AddServerReloadListenersEvent
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent
 import net.neoforged.neoforge.event.RegisterCommandsEvent
 import net.neoforged.neoforge.registries.RegisterEvent
@@ -95,11 +96,11 @@ object RuinsOfGrowssethNeo : RuinsOfGrowsseth() {
     }
 
     override fun registerResourceListeners() {
-        FORGE_BUS.addListener<AddReloadListenerEvent> { ev ->
-            ev.addListener(TradesListener())
-            ev.addListener(ResearcherDialogueListener())
-            ev.addListener(TemplateListener)
-            ev.addListener(LocationNotifListener())
+        FORGE_BUS.addListener<AddServerReloadListenersEvent> { ev ->
+            ev.addListener(resLoc("trades_listener"), TradesListener())
+            ev.addListener(resLoc("researcher_dialogue_listener"), ResearcherDialogueListener())
+            ev.addListener(resLoc("template_listener"), TemplateListener)
+            ev.addListener(resLoc("location_notif_listener"), LocationNotifListener())
 //            if (modCompat.isAllCobblemonDepsLoaded) {
 //                ev.addListener(CobblemonRCTListener)
 //            }
@@ -141,8 +142,8 @@ object RuinsOfGrowssethNeo : RuinsOfGrowsseth() {
 
         GrowssethRenderers.init()
 
-        MOD_BUS.addListener<RegisterClientReloadListenersEvent> { ev ->
-            ev.registerReloadListener(EncryptedMusicResources.KeyListener())
+        MOD_BUS.addListener<AddClientReloadListenersEvent> { ev ->
+            ev.addListener(resLoc("encrypted_music_resources_key_listener"), EncryptedMusicResources.KeyListener())
         }
 
         FORGE_BUS.addListener<ClientTickEvent.Pre> { ev ->

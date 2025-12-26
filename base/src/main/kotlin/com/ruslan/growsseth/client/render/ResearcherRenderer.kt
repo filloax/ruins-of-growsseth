@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.MobRenderer
 import net.minecraft.client.renderer.entity.layers.CustomHeadLayer
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer
+import net.minecraft.client.renderer.item.ItemStackRenderState
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.client.resources.model.BakedModel
 import net.minecraft.core.component.DataComponents
@@ -31,17 +32,15 @@ class ResearcherRenderer(context: EntityRendererProvider.Context)
     0.5f
 ) {
     init {
-        addLayer(CustomHeadLayer(this, context.modelSet, context.itemRenderer))
+        addLayer(CustomHeadLayer(this, context.modelSet))
         addLayer(ResearcherProfessionLayer<ResearcherRendererState, ResearcherModel>(
             this, RESEARCHER_TYPE_SKIN,
             RESEARCHER_CLOTHES, RESEARCHER_CLOTHES_UNSHEATED_DAGGER
         ))
-        addLayer(object : ItemInHandLayer<ResearcherRendererState, ResearcherModel>(this, context.itemRenderer) {
+        addLayer(object : ItemInHandLayer<ResearcherRendererState, ResearcherModel>(this) {
             override fun renderArmWithItem(
                 renderState: ResearcherRendererState,
-                itemModel: BakedModel?,
-                itemStack: ItemStack,
-                displayContext: ItemDisplayContext,
+                itemStackRenderState: ItemStackRenderState,
                 arm: HumanoidArm,
                 poseStack: PoseStack,
                 buffer: MultiBufferSource,
@@ -49,7 +48,8 @@ class ResearcherRenderer(context: EntityRendererProvider.Context)
             ) {
                 val researcher = renderState.entity
                 researcher as Researcher
-                if (itemStack.item is AbstractResearcherDaggerItem && researcher.isAggressive) {
+                val researcherItem = researcher.mainHandItem
+                if ((researcherItem is AbstractResearcherDaggerItem) && researcher.isAggressive) {
                     poseStack.pushPose()
                     (this.parentModel as ArmedModel).translateToHand(arm, poseStack)
                     poseStack.mulPose(Axis.XP.rotationDegrees(90.0f))     // 90 instead of -90
@@ -57,12 +57,11 @@ class ResearcherRenderer(context: EntityRendererProvider.Context)
                     poseStack.translate(-0.1, 0.0, 0.0)             // centering the dagger inside the hand
                     val bl = arm == HumanoidArm.LEFT
                     poseStack.translate((if (bl) -1 else 1).toFloat() / 16.0f, 0.125f, -0.625f)
-                    context.itemRenderer.render(itemStack, displayContext, bl, poseStack, buffer, packedLight, OverlayTexture.NO_OVERLAY,
-                        itemModel!!)
+                    itemStackRenderState.render(poseStack, buffer, packedLight, OverlayTexture.NO_OVERLAY)
                     poseStack.popPose()
                 }
-                else if (researcher.isAggressive || itemStack.item is PotionItem || itemStack[DataComponents.FOOD] != null || itemStack.`is`(Items.ENDER_PEARL))
-                    super.renderArmWithItem(renderState, null, itemStack, displayContext, arm, poseStack, buffer, packedLight)
+                else if (researcher.isAggressive || researcherItem is PotionItem || researcherItem[DataComponents.FOOD] != null || researcherItem.`is`(Items.ENDER_PEARL))
+                    super.renderArmWithItem(renderState, itemStackRenderState, arm, poseStack, buffer, packedLight)
             }
         })
     }

@@ -10,6 +10,7 @@ import com.ruslan.growsseth.structure.GrowssethStructures
 import com.ruslan.growsseth.utils.resLoc
 import com.ruslan.growsseth.worldgen.GrowssethModWorldPresets
 import com.ruslan.growsseth.worldgen.worldpreset.GrowssethWorldPreset
+import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
@@ -17,14 +18,14 @@ import net.fabricmc.fabric.api.datagen.v1.provider.*
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider.BlockTagProvider
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider.ItemTagProvider
 import net.minecraft.advancements.AdvancementHolder
+import net.minecraft.client.data.models.BlockModelGenerators
+import net.minecraft.client.data.models.ItemModelGenerators
+import net.minecraft.client.data.models.model.ModelLocationUtils
+import net.minecraft.client.data.models.model.ModelTemplates
 import net.minecraft.core.HolderLookup
 import net.minecraft.core.RegistrySetBuilder
 import net.minecraft.core.registries.Registries
 import net.minecraft.data.PackOutput
-import net.minecraft.data.models.BlockModelGenerators
-import net.minecraft.data.models.ItemModelGenerators
-import net.minecraft.data.models.model.ModelLocationUtils
-import net.minecraft.data.models.model.ModelTemplates
 import net.minecraft.data.recipes.RecipeCategory
 import net.minecraft.data.recipes.RecipeOutput
 import net.minecraft.data.recipes.RecipeProvider

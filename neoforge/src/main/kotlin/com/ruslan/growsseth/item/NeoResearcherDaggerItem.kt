@@ -16,8 +16,4 @@ class NeoResearcherDaggerItem : IItemExtension, AbstractResearcherDaggerItem() {
         return this.allowEnchantment(stack, enchantment)
             .orElse(super<IItemExtension>.isPrimaryItemFor(stack, enchantment))
     }
-
-    override fun isRepairable(p0: ItemStack): Boolean {
-        return true
-    }
 }

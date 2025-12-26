@@ -114,6 +114,8 @@ object GrowssethPlaceCommand {
         // Additional functionality done
 
         val structureStart = structure.generate(
+            // todo for transition: check if these two parameters are correct
+            structureHolder, source.server.levelKeys().first(),
             source.registryAccess(), chunkGenerator, chunkGenerator.biomeSource, serverLevel.chunkSource.randomState(),
             serverLevel.structureManager, serverLevel.seed, ChunkPos(pos), 0, serverLevel
         ) {  true }

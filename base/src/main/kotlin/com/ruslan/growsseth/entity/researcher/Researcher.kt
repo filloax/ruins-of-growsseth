@@ -1118,6 +1118,11 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
     override fun isClientSide(): Boolean = level().isClientSide
 
+    override fun stillValid(p0: Player): Boolean {
+        // Todo: see if this method should be used for checking stuff
+        return true
+    }
+
     override fun removeWhenFarAway(d: Double): Boolean = false
     override fun requiresCustomPersistence(): Boolean = true
 

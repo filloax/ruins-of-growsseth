@@ -19,9 +19,9 @@ object GrowssethItems {
 	val noAutogenerateItems = mutableSetOf<Item>()
 
 	val RESEARCHER_SPAWN_EGG by make("researcher_spawn_egg",
-		{ SpawnEggItem(GrowssethEntities.RESEARCHER, 16446952, 14524294, defaultBuilder()) }, autoGenerateJson = false)
+		{ SpawnEggItem(GrowssethEntities.RESEARCHER, defaultBuilder()) }, autoGenerateJson = false)
 	val ZOMBIE_RESEARCHER_SPAWN_EGG by make("zombie_researcher_spawn_egg",
-		{ SpawnEggItem(GrowssethEntities.ZOMBIE_RESEARCHER, 16446952, 7115863, defaultBuilder()) }, autoGenerateJson = false)
+		{ SpawnEggItem(GrowssethEntities.ZOMBIE_RESEARCHER, defaultBuilder()) }, autoGenerateJson = false)
 	val RESEARCHER_HORN by make("researcher_horn", {
 		ResearcherHornItem(
 			defaultBuilder().rarity(Rarity.EPIC).stacksTo(1).fireResistant(), GrowssethTags.RESEARCHER_HORNS
