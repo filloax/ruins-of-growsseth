@@ -34,6 +34,7 @@ import net.minecraft.data.tags.BannerPatternTagsProvider
 import net.minecraft.data.tags.InstrumentTagsProvider
 import net.minecraft.data.tags.StructureTagsProvider
 import net.minecraft.data.tags.WorldPresetTagsProvider
+import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.ItemTags
 import net.minecraft.tags.WorldPresetTags
@@ -93,34 +94,55 @@ class RegistriesProvider(output: FabricDataOutput, registries: CompletableFuture
     }
 }
 
-class RecipesProvider(output: FabricDataOutput, registriesFuture: CompletableFuture<HolderLookup.Provider>) : FabricRecipeProvider(output, registriesFuture) {
-    override fun buildRecipes(exporter: RecipeOutput) {
-        RecipeProvider.copySmithingTemplate(exporter, GrowssethItems.GROWSSETH_ARMOR_TRIM, Items.COBBLED_DEEPSLATE)
-        listOf(
-            GrowssethItems.GROWSSETH_ARMOR_TRIM,
-        ).forEach {
-            val trimTemplate = TrimTemplate(it, ResourceLocation.parse(getItemName(it) + "_smithing_trim"))
-            RecipeProvider.trimSmithing(exporter, trimTemplate.template, trimTemplate.id)
+class RecipesProvider(output: FabricDataOutput, registriesFuture: CompletableFuture<HolderLookup.Provider>)
+    : FabricRecipeProvider(output, registriesFuture) {
+
+    protected override fun createRecipeProvider(
+        registryLookup: HolderLookup.Provider,
+        exporter: RecipeOutput
+    ): RecipeProvider {
+        return object: RecipeProvider(registryLookup, exporter) {
+
+            override fun buildRecipes() {
+                this.copySmithingTemplate(GrowssethItems.GROWSSETH_ARMOR_TRIM, Items.COBBLED_DEEPSLATE)
+                listOf(
+                    GrowssethItems.GROWSSETH_ARMOR_TRIM,
+                ).forEach {
+                    val trimTemplate = TrimTemplate(
+                        it,
+                        ResourceKey.create(
+                            Registries.RECIPE, ResourceLocation.parse(getItemName(it) + "_smithing_trim")
+                        )
+                    )
+                    this.trimSmithing(trimTemplate.template, trimTemplate.id)
+                }
+
+                GrowssethItems.DISCS_TO_VOCALS.forEach { vocalsDiscRecipe(exporter, it.key, it.value) }
+
+                GrowssethItems.FRAGMENTS_TO_DISCS.forEach { fragmentToDiscRecipe(exporter, it.key, it.value) }
+            }
+
+            private fun vocalsDiscRecipe(exporter: RecipeOutput, baseDisc: ItemLike, vocalsDisc: ItemLike) {
+                val items = registries.lookupOrThrow(Registries.ITEM)
+                ShapelessRecipeBuilder.shapeless(items, RecipeCategory.MISC, vocalsDisc)
+                    .requires(Items.AMETHYST_SHARD)
+                    .requires(baseDisc)
+                    .unlockedBy(RecipeProvider.getHasName(baseDisc), this.has(baseDisc))
+                    .save(exporter)
+            }
+
+            private fun fragmentToDiscRecipe (exporter: RecipeOutput, discFragment: ItemLike, disc: ItemLike) {
+                val items = registries.lookupOrThrow(Registries.ITEM)
+                ShapelessRecipeBuilder.shapeless(items, RecipeCategory.MISC, disc)
+                    .requires(discFragment, 9)
+                    .unlockedBy(RecipeProvider.getHasName(discFragment), this.has(discFragment))
+                    .save(exporter)
+            }
         }
-
-        GrowssethItems.DISCS_TO_VOCALS.forEach { vocalsDiscRecipe(exporter, it.key, it.value) }
-
-        GrowssethItems.FRAGMENTS_TO_DISCS.forEach { fragmentToDiscRecipe(exporter, it.key, it.value) }
     }
 
-    private fun vocalsDiscRecipe(exporter: RecipeOutput, baseDisc: ItemLike, vocalsDisc: ItemLike) {
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, vocalsDisc)
-            .requires(Items.AMETHYST_SHARD)
-            .requires(baseDisc)
-            .unlockedBy(RecipeProvider.getHasName(baseDisc), RecipeProvider.has(baseDisc))
-            .save(exporter)
-    }
-
-    private fun fragmentToDiscRecipe (exporter: RecipeOutput, discFragment: ItemLike, disc: ItemLike) {
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, disc)
-            .requires(discFragment, 9)
-            .unlockedBy(RecipeProvider.getHasName(discFragment), RecipeProvider.has(discFragment))
-            .save(exporter)
+    override fun getName(): String {
+        return "GrowssethRecipeProvider"
     }
 }
 
