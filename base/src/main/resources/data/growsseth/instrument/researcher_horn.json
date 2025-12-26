@@ -1,0 +1,8 @@
+{
+  "description": {
+    "translate": "item.growsseth.researcher_horn"
+  },
+  "range": 256.0,
+  "sound_event": "growsseth:researcher_horn_sound",
+  "use_duration": 10.0
+}

@@ -54,7 +54,7 @@ class DataGeneration : DataGeneratorEntrypoint {
         pack.addProvider(::RecipesProvider)
         pack.addProvider(::TagProviderBlocks)
         pack.addProvider(::TagProviderItems)
-        pack.addProvider(::TagProviderInstruments)
+        //pack.addProvider(::TagProviderInstruments)
         pack.addProvider(::TagProviderStructures)
         pack.addProvider(::TagProviderWorldPresets)
         pack.addProvider(::TagProviderBannerPatterns)
@@ -132,12 +132,12 @@ class AdvancementsProvider(output: FabricDataOutput, registryLookup: Completable
     }
 }
 
-class TagProviderInstruments(output: PackOutput, registries: CompletableFuture<HolderLookup.Provider>): InstrumentTagsProvider(output, registries) {
-    override fun addTags(arg: HolderLookup.Provider) {
-        getOrCreateRawBuilder(GrowssethTags.RESEARCHER_HORNS)
-            .addOptionalElement(GrowssethItems.Instruments.RESEARCHER_HORN.first)
-    }
-}
+//class TagProviderInstruments(output: PackOutput, registries: CompletableFuture<HolderLookup.Provider>): InstrumentTagsProvider(output, registries) {
+//    override fun addTags(arg: HolderLookup.Provider) {
+//        getOrCreateRawBuilder(GrowssethTags.RESEARCHER_HORNS)
+//            .addOptionalElement(GrowssethItems.Instruments.RESEARCHER_HORN.first)
+//    }
+//}
 
 class TagProviderBlocks(output: FabricDataOutput, registries: CompletableFuture<HolderLookup.Provider>): BlockTagProvider(output, registries) {
     /**
@@ -248,6 +248,20 @@ class MiscLootTableProvider(output: PackOutput): LootTableProvider(output, setOf
     }, LootContextParamSets.ARCHAEOLOGY)
 ))
 */
+
+// todo: add researcher horn to datagen
+//// For some RegistrySetBuilder builder
+//builder.add(Registries.INSTRUMENT, bootstrap -> {
+//    bootstrap.register(
+//        ResourceKey.create(Registries.INSTRUMENT, ResourceLocation.fromNamespaceAndPath("examplemod", "example_instrument")),
+//        new Instrument(
+//                BuiltInRegistries.SOUND_EVENT.wrapAsHolder(SoundEvents.ARROW_HIT),
+//        7f,
+//        256f,
+//        Component.translatable(Util.makeDescriptionId("instrument", ResourceLocation.fromNamespaceAndPath("examplemod", "example_instrument")))
+//    )
+//    )
+//});
 
 class ModelGenerator constructor(generator: FabricDataOutput) : FabricModelProvider(generator) {
     override fun generateBlockStateModels(blockStateModelGenerator: BlockModelGenerators?) {

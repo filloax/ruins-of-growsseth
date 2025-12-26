@@ -25,6 +25,7 @@ import com.ruslan.growsseth.utils.isNull
 import com.ruslan.growsseth.utils.notNull
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
+import net.minecraft.core.Holder
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
@@ -40,6 +41,7 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.npc.VillagerProfession
+import net.minecraft.world.item.Instrument
 import net.minecraft.world.item.InstrumentItem
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.block.Blocks
@@ -221,9 +223,7 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
                 return
             }
 
-            val resInstrumentHolder = BuiltInRegistries.INSTRUMENT
-                .getHolder(ResourceKey.create(Registries.INSTRUMENT, GrowssethItems.Instruments.RESEARCHER_HORN.first))
-                .orElseThrow()
+            val resInstrumentHolder: Holder<Instrument> = GrowssethItems.RESEARCHER_HORN.builtInRegistryHolder() as Holder<Instrument>
             val hornItem = InstrumentItem.create(GrowssethItems.RESEARCHER_HORN, resInstrumentHolder)
             hornItem.loreLines().add(Component.translatable("item.growsseth.researcher_horn.description1"))
             hornItem.loreLines().add(Component.translatable("item.growsseth.researcher_horn.description2"))

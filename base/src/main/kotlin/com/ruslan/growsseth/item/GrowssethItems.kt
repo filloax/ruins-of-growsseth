@@ -4,14 +4,10 @@ import com.filloax.fxlib.api.registration.registryDelegate
 import com.ruslan.growsseth.GrowssethBannerPatterns
 import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.entity.GrowssethEntities
-import com.ruslan.growsseth.sound.GrowssethSounds
 import com.ruslan.growsseth.utils.resLoc
-import net.minecraft.core.Holder
 import net.minecraft.core.registries.Registries
-import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
-import net.minecraft.sounds.SoundEvent
 import net.minecraft.world.item.*
 import net.minecraft.world.item.Item.Properties
 import net.minecraft.world.item.equipment.trim.TrimPattern
@@ -146,25 +142,6 @@ object GrowssethItems {
 
 		fun registerPotPatterns(registrator: (ResourceLocation, DecoratedPotPattern) -> Unit) {
 			registrator(GROWSSETH.first.location(), GROWSSETH.second)
-		}
-	}
-
-	object Instruments {
-		val all = mutableMapOf<ResourceLocation, Instrument>()
-
-		val RESEARCHER_HORN = make("researcher_horn", GrowssethSounds.RESEARCHER_HORN_SOUND)
-
-		fun make(name: String, sound: Holder<SoundEvent>): Pair<ResourceLocation, Instrument> {
-			val loc = resLoc(name)
-			val item = Instrument(sound, 140f, 256.0f, Component.empty())   // Custom description in ResearcherQuestComponent
-			all[loc] = item
-			return Pair(loc, item)
-		}
-
-		fun registerInstruments(registrator: (ResourceLocation, Instrument) -> Unit) {
-			all.forEach{
-				registrator(it.key, it.value)
-			}
 		}
 	}
 }

@@ -110,7 +110,7 @@ object RuinsOfGrowssethNeo : RuinsOfGrowsseth() {
         MOD_BUS.addListener<RegisterEvent> { ev ->
             ev.register(Registries.CREATIVE_MODE_TAB, GrowssethCreativeModeTabs::registerCreativeModeTabs)
             ev.register(Registries.ITEM, GrowssethItems::registerItems)
-            ev.register(Registries.INSTRUMENT, GrowssethItems.Instruments::registerInstruments)
+            //ev.register(Registries.INSTRUMENT, GrowssethItems.Instruments::registerInstruments)
             ev.register(Registries.DECORATED_POT_PATTERN, GrowssethItems.SherdPatterns::registerPotPatterns)
             ev.registerHolder(Registries.MAP_DECORATION_TYPE, GrowssethMapDecorations::registerMapDecorations)
             ev.registerHolder(Registries.MOB_EFFECT, GrowssethEffects::registerEffects)
