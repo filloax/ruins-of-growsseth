@@ -116,9 +116,9 @@ dependencies {
 	include( libs.kotlinevents )
 
 	// Mod compat
-	modCompileOnly(libs.lithostitched.fabric)
-    modCompileOnly(libs.cobblemon.fabric)
-    modCompileOnly(libs.rctapi.fabric)
+//	  modCompileOnly(libs.lithostitched.fabric)
+//    modCompileOnly(libs.cobblemon.fabric)
+//    modCompileOnly(libs.rctapi.fabric)
 
     if (cobblemonTest) {
         modLocalRuntime("io.wispforest:accessories-fabric:1.1.0-beta.52+1.21.1")

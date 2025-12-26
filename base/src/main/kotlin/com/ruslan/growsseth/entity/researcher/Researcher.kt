@@ -14,8 +14,8 @@ import com.mojang.serialization.codecs.UnboundedMapCodec
 import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.RuinsOfGrowsseth
-import com.ruslan.growsseth.compat.ModCompatChecker
-import com.ruslan.growsseth.compat.cobblemon.CobblemonRCTCompat
+//import com.ruslan.growsseth.compat.ModCompatChecker
+//import com.ruslan.growsseth.compat.cobblemon.CobblemonRCTCompat
 import com.ruslan.growsseth.config.ResearcherConfig
 import com.ruslan.growsseth.dialogues.BasicDialogueEvents
 import com.ruslan.growsseth.dialogues.DialoguesNpc
@@ -722,22 +722,22 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
             if (player is ServerPlayer) {
                 // Optional compat: If right-clicked with an item from the cobblemon namespace, start a trainer battle via RCT Trainer API
-                val stack = player.getItemInHand(interactionHand)
-                if (!stack.isEmpty) {
-                    val itemKey = BuiltInRegistries.ITEM.getKey(stack.item)
-                    if (itemKey.namespace == ModCompatChecker.ID_COBBLEMON) {
-                        if (RuinsOfGrowsseth.modCompat.isAllCobblemonDepsLoaded) {
-                            try {
-                                if (CobblemonRCTCompat.tryStartTrainerBattle(player, this)) {
-                                    return InteractionResult.SUCCESS
-                                }
-                            } catch (t: Throwable) {
-                                // Swallow any compat errors to keep base behavior intact
-                                RuinsOfGrowsseth.LOGGER.debug("Cobblemon/RCT compat failed to start battle: {}", t.message)
-                            }
-                        }
-                    }
-                }
+//                val stack = player.getItemInHand(interactionHand)
+//                if (!stack.isEmpty) {
+//                    val itemKey = BuiltInRegistries.ITEM.getKey(stack.item)
+//                    if (itemKey.namespace == ModCompatChecker.ID_COBBLEMON) {
+//                        if (RuinsOfGrowsseth.modCompat.isAllCobblemonDepsLoaded) {
+//                            try {
+//                                if (CobblemonRCTCompat.tryStartTrainerBattle(player, this)) {
+//                                    return InteractionResult.SUCCESS
+//                                }
+//                            } catch (t: Throwable) {
+//                                // Swallow any compat errors to keep base behavior intact
+//                                RuinsOfGrowsseth.LOGGER.debug("Cobblemon/RCT compat failed to start battle: {}", t.message)
+//                            }
+//                        }
+//                    }
+//                }
 
                 if (!dialogues!!.skipCurrentMessage(player)) {
                     val offers = getOffers(player)

@@ -5,7 +5,7 @@ import com.filloax.fxlib.api.codec.forNullableGetter
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.ruslan.growsseth.RuinsOfGrowsseth
-import com.ruslan.growsseth.compat.LithostitchedCompat
+//import com.ruslan.growsseth.compat.LithostitchedCompat
 import com.ruslan.growsseth.utils.matches
 import net.minecraft.advancements.critereon.BlockPredicate
 import net.minecraft.advancements.critereon.FluidPredicate
@@ -88,7 +88,7 @@ data class JigsawPiecePredicate(
         val structureVal = registryAccess.lookupOrThrow(Registries.STRUCTURE).getValueOrThrow(structure)
         if (
             structureVal.type() != StructureType.JIGSAW
-            && !(RuinsOfGrowsseth.modCompat.isLithostitchedLoaded && LithostitchedCompat.isValidJigsawCheckStructure(structureVal))
+            //&& !(RuinsOfGrowsseth.modCompat.isLithostitchedLoaded && LithostitchedCompat.isValidJigsawCheckStructure(structureVal))
         ) {
             throw IllegalStateException("Structure in JigsawPiecePredicate is not a jigsaw! Is $structure")
         }
