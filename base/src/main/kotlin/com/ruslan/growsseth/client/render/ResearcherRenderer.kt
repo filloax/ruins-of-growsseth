@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.MobRenderer
 import net.minecraft.client.renderer.entity.layers.CustomHeadLayer
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer
+import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.client.resources.model.BakedModel
 import net.minecraft.core.component.DataComponents
 import net.minecraft.resources.ResourceLocation
@@ -23,13 +24,17 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.PotionItem
 
-class ResearcherRenderer(context: EntityRendererProvider.Context) : MobRenderer<Researcher, ResearcherRendererState, ResearcherModel>(
-    context, ResearcherModel(context.bakeLayer(ModelLayers.VINDICATOR)), 0.5f
+class ResearcherRenderer(context: EntityRendererProvider.Context)
+    : MobRenderer<Researcher, ResearcherRendererState, ResearcherModel>(
+    context,
+    ResearcherModel(context.bakeLayer(ModelLayers.VINDICATOR)),
+    0.5f
 ) {
     init {
         addLayer(CustomHeadLayer(this, context.modelSet, context.itemRenderer))
         addLayer(ResearcherProfessionLayer<ResearcherRendererState, ResearcherModel>(
-            this, RESEARCHER_TYPE_SKIN, RESEARCHER_CLOTHES, RESEARCHER_CLOTHES_UNSHEATED_DAGGER
+            this, RESEARCHER_TYPE_SKIN,
+            RESEARCHER_CLOTHES, RESEARCHER_CLOTHES_UNSHEATED_DAGGER
         ))
         addLayer(object : ItemInHandLayer<ResearcherRendererState, ResearcherModel>(this, context.itemRenderer) {
             override fun renderArmWithItem(
@@ -52,7 +57,8 @@ class ResearcherRenderer(context: EntityRendererProvider.Context) : MobRenderer<
                     poseStack.translate(-0.1, 0.0, 0.0)             // centering the dagger inside the hand
                     val bl = arm == HumanoidArm.LEFT
                     poseStack.translate((if (bl) -1 else 1).toFloat() / 16.0f, 0.125f, -0.625f)
-                    context.itemRenderer.render(itemStack, displayContext, bl, poseStack, buffer, packedLight)
+                    context.itemRenderer.render(itemStack, displayContext, bl, poseStack, buffer, packedLight, OverlayTexture.NO_OVERLAY,
+                        itemModel!!)
                     poseStack.popPose()
                 }
                 else if (researcher.isAggressive || itemStack.item is PotionItem || itemStack[DataComponents.FOOD] != null || itemStack.`is`(Items.ENDER_PEARL))
@@ -62,7 +68,7 @@ class ResearcherRenderer(context: EntityRendererProvider.Context) : MobRenderer<
     }
 
     override fun getTextureLocation(renderState: ResearcherRendererState): ResourceLocation {
-        return if (renderState.entity.isAggressive)
+        return if (renderState.entity!!.isAggressive)
             RESEARCHER_SKIN_ANGRY
         else
             RESEARCHER_SKIN
@@ -77,6 +83,12 @@ class ResearcherRenderer(context: EntityRendererProvider.Context) : MobRenderer<
     }
 
     override fun createRenderState(): ResearcherRendererState {
-        TODO("Not yet implemented")
+        return ResearcherRendererState()
+    }
+
+    override fun extractRenderState(entity: Researcher, reusedState: ResearcherRendererState, partialTick: Float) {
+        super.extractRenderState(entity, reusedState, partialTick)
+        reusedState.entity = entity
+        reusedState.attackAnim = entity.getAttackAnim(partialTick)
     }
 }

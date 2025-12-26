@@ -7,11 +7,12 @@ import net.minecraft.client.model.EntityModel
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.entity.RenderLayerParent
 import net.minecraft.client.renderer.entity.layers.RenderLayer
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.ARGB
 
 // Cloned from VillagerProfessionLayer
-open class ResearcherProfessionLayer<T : ResearcherRendererState, M : EntityModel<T>>(
+open class ResearcherProfessionLayer<T : LivingEntityRenderState, M : EntityModel<T>>(
     renderLayerParent: RenderLayerParent<T, M>,
     val typeTextureLocation: ResourceLocation,
     val profClothesLocation: ResourceLocation,
@@ -37,7 +38,7 @@ open class ResearcherProfessionLayer<T : ResearcherRendererState, M : EntityMode
             ARGB.colorFromFloat(1f, 1f, 1f, 1f)
         )
 
-        if (renderState.entity.isAggressive && notNull(profClothesAggressiveLocation)) {
+        if (renderState is ResearcherRendererState && renderState.entity!!.isAggressive && notNull(profClothesAggressiveLocation)) {
             renderColoredCutoutModel(
                 parentModel, profClothesAggressiveLocation, poseStack, multiBufferSource,
                 bufferSource, renderState,

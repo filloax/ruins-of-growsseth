@@ -145,7 +145,7 @@ class ResearcherItemListing(
 
     // In case of jigsaw piece maps (ie village houses), this may include vanilla structure ids;
     // If things were done properly, the fixedstructureid should still lead to a mod structure
-    // which will allow recognition anyways
+    // which will allow recognition anyway
     fun getAllPossibleStructures(registryAccess: RegistryAccess): List<ResourceLocation> {
         val baseStructures = mapPool
             .flatMap { ResearcherTradeUtils.getMatchingStructures(registryAccess, it.structure) }
