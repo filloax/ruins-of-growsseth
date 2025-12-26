@@ -2,20 +2,20 @@
 java = "21"
 
 # Minecraft dependencies
-minecraft-range = "1.21.3"
-minecraft-range-fabric = "1.21.3"
-minecraft = "1.21.3"
+minecraft-range = "1.21.4"
+minecraft-range-fabric = "1.21.4"
+minecraft = "1.21.4"
 # Get versions from https://parchmentmc.org/docs/getting-started
-parchment-minecraft = "1.21.3"
-parchment = "2024.12.07"
+parchment-minecraft = "1.21.4"
+parchment = "2025.03.23"
 # Get versions from https://projects.neoforged.net/neoforged/neoform
-neoform = "1.21.3-20241023.131943" # vanilla neoforge configuration
+neoform = "1.21.4-20241203.161809" # vanilla neoforge configuration
 
 # Mod dependencies
-filloaxlib = "0.36.0-1.21.3"
+filloaxlib = "0.36.0-1.21.4"
 modmenu = "12.0.0"
-rconfig = "3.3.1"
-rconfigMc = "1.21.3"
+rconfig = "3.4.3"
+rconfigMc = "1.21.4"
 
 # Mod compatibility dependencies
 lithostitched-neoforge = "1.5.0-neoforge-1.21.1"
@@ -33,12 +33,12 @@ kotlin-datetime = "0.7.1"
 
 # Fabric Settings
 fabric = "0.18.4"
-fabric-api = "0.114.1+1.21.3"
+fabric-api = "0.119.4+1.21.4"
 fabric-language-kotlin = "1.13.8+kotlin.2.3.0"
 
 # Neoforge Settings
-neoforge = "21.3.95"
-neoforge-range = "[21.3.95,21.4)"
+neoforge = "21.4.156"
+neoforge-range = "[21.4.156,21.4)"
 kotlinforge = "5.10.0"
 kotlinforge-range = "[5.10,)"
 
@@ -56,7 +56,7 @@ kotlinevents = "v2.0"
 # Plugins
 plugin-dokka = "2.0.0"
 plugin-mixin = "0.7.38"
-plugin-loom = "1.13-SNAPSHOT"
+plugin-loom = "1.13.6"
 plugin-moddev = "2.0.120"
 plugin-idea-ext = "1.3"
 
