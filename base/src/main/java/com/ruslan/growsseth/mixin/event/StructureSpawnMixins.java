@@ -8,8 +8,11 @@ import com.ruslan.growsseth.structure.StructureDisabler;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.SectionPos;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.biome.BiomeSource;
@@ -33,22 +36,25 @@ public class StructureSpawnMixins {
     public static class ChunkGeneratorMixin {
         @Inject(method = "tryGenerateStructure", at = @At(value = "HEAD"), cancellable = true)
         void disableStructures(
-                StructureSet.StructureSelectionEntry structureSetEntry,
+                StructureSet.StructureSelectionEntry structureSelectionEntry,
                 StructureManager structureManager,
                 RegistryAccess registryAccess,
-                RandomState randomState,
+                RandomState random,
                 StructureTemplateManager structureTemplateManager,
                 long seed,
-                ChunkAccess chunkAccess,
+                ChunkAccess chunk,
                 ChunkPos chunkPos,
                 SectionPos sectionPos,
+                ResourceKey<Level> level,
                 CallbackInfoReturnable<Boolean> cir
         ) {
-            ServerLevel level = ((ServerLevelAccessor) structureManager).getLevel();
-
-            if (StructureDisabler.Mixins.shouldDisableStructure(structureSetEntry.structure(), level)) {
+            // todo: access transform the level LevelAccessor from StructureManager and use that inside shouldDisableStructure
+            ServerLevel serverLevel = ((ServerLevelAccessor) structureManager).getLevel();
+            if (StructureDisabler.Mixins.shouldDisableStructure(
+                    structureSelectionEntry.structure(), serverLevel)
+            ) {
                 if (FxUtils.isDevEnvironment()) {
-                    RuinsOfGrowsseth.LOGGER.info("Disabled spawn for structure " + structureSetEntry.structure());
+                    RuinsOfGrowsseth.LOGGER.info("Disabled spawn for structure " + structureSelectionEntry.structure());
                 }
                 cir.setReturnValue(false);
             }
