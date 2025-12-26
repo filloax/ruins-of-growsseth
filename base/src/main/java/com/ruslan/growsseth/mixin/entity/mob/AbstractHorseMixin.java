@@ -2,6 +2,7 @@ package com.ruslan.growsseth.mixin.entity.mob;
 
 import com.ruslan.growsseth.Constants;
 import com.ruslan.growsseth.entity.researcher.ResearcherDonkey;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -17,8 +18,8 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 public abstract class AbstractHorseMixin extends Animal {
     protected AbstractHorseMixin(EntityType<? extends Animal> entityType, Level level) { super(entityType, level); }
 
-    @ModifyVariable(method = "hurt", at = @At("HEAD"), ordinal = 0, argsOnly = true)
-    private float injected(float amount, DamageSource source) {
+    @ModifyVariable(method = "hurtServer", at = @At("HEAD"), ordinal = 0, argsOnly = true)
+    private float injected(float amount, ServerLevel level, DamageSource source) {
         if(this.getTags().contains(Constants.TAG_RESEARCHER_DONKEY) &&
                 !source.is(DamageTypeTags.BYPASSES_INVULNERABILITY) &&      // to prevent stopping the kill command
                 ResearcherDonkey.shouldProtectDonkey(level(), this))

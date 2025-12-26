@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(CartographyTableMenu.class)
 public abstract class CartographyTableMenuMixin {
-    // See CustomMapItems.isCustomMapItem doc
+    // See CustomMapItems.checkCustomMapItem doc
     @WrapOperation(
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;is(Lnet/minecraft/world/item/Item;)Z"),
             method = "quickMoveStack(Lnet/minecraft/world/entity/player/Player;I)Lnet/minecraft/world/item/ItemStack;"

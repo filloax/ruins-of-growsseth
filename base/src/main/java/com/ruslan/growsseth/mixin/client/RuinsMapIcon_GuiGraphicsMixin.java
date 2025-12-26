@@ -20,8 +20,9 @@ public abstract class RuinsMapIcon_GuiGraphicsMixin {
     @Shadow
     private PoseStack pose;
 
+    @Final
     @Shadow
-    public abstract MultiBufferSource.BufferSource bufferSource();
+    private MultiBufferSource.BufferSource bufferSource;
 
     @Inject(
         method = "renderItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V",
@@ -33,7 +34,7 @@ public abstract class RuinsMapIcon_GuiGraphicsMixin {
     )
     private void onRenderItemDecorations(Font font, ItemStack stack, int x, int y, String text, CallbackInfo ci) {
         if (stack.is(GrowssethItems.INSTANCE.getRUINS_MAP())) {
-            RuinsMapRenderer.renderRuinsMapIcon(stack, pose, bufferSource(), x, y);
+            RuinsMapRenderer.renderRuinsMapIcon(stack, pose, bufferSource, x, y);
         }
     }
 }

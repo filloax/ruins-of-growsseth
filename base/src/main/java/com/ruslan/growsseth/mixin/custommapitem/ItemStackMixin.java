@@ -11,12 +11,13 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin {
-    // See CustomMapItems.isCustomMapItem doc
-    @WrapOperation(
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;is(Lnet/minecraft/world/item/Item;)Z"),
-            method = "getTooltipLines"
-    )
-    private boolean recognizeMapsFromClass(ItemStack instance, Item item, Operation<Boolean> original) {
-        return CustomMapItems.checkMapItemWrapper(instance, item, original);
-    }
+    // todo: fix
+    // See CustomMapItems.checkCustomMapItem doc
+//    @WrapOperation(
+//            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;is(Lnet/minecraft/world/item/Item;)Z"),
+//            method = "getTooltipLines"
+//    )
+//    private boolean recognizeMapsFromClass(ItemStack instance, Item item, Operation<Boolean> original) {
+//        return CustomMapItems.checkMapItemWrapper(instance, item, original);
+//    }
 }

@@ -26,7 +26,7 @@ public abstract class WitherRoseBlockMixin {
     }
 
     @ModifyExpressionValue(method = "entityInside",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isInvulnerableTo(Lnet/minecraft/world/damagesource/DamageSource;)Z"))
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isInvulnerableTo(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/damagesource/DamageSource;)Z"))
     private boolean researcherDoesNotStepOnRose (boolean original) {
         return original || researcherInside;
     }

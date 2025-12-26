@@ -12,8 +12,11 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(CartographyTableScreen.class)
 public abstract class CartographyTableScreenMixin {
-    // See CustomMapItems.isCustomMapItem doc
-    @WrapOperation(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;is(Lnet/minecraft/world/item/Item;)Z"), method = "renderBg(Lnet/minecraft/client/gui/GuiGraphics;FII)V")
+    // See CustomMapItems.checkCustomMapItem doc
+    @WrapOperation(
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;is(Lnet/minecraft/world/item/Item;)Z"),
+            method = "renderBg(Lnet/minecraft/client/gui/GuiGraphics;FII)V"
+    )
     private boolean recognizeMapsFromClass(ItemStack instance, Item item, Operation<Boolean> original) {
         return CustomMapItems.checkMapItemWrapper(instance, item, original);
     }

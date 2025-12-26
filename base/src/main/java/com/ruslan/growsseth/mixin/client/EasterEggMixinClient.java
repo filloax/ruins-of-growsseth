@@ -3,6 +3,7 @@ package com.ruslan.growsseth.mixin.client;
 import com.ruslan.growsseth.RuinsOfGrowsseth;
 import com.ruslan.growsseth.interfaces.ZombieWithEasterEgg;
 import net.minecraft.client.renderer.entity.AbstractZombieRenderer;
+import net.minecraft.client.renderer.entity.state.ZombieRenderState;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.monster.Zombie;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,15 +19,15 @@ public class EasterEggMixinClient {
         private static final ResourceLocation GUBER_ZOMBIE_PATH = ResourceLocation.fromNamespaceAndPath(RuinsOfGrowsseth.MOD_ID, "textures/entity/zombie/guber_zombie.png");
 
         @Inject(
-            method = "getTextureLocation(Lnet/minecraft/world/entity/monster/Zombie;)Lnet/minecraft/resources/ResourceLocation;",
+            method = "getTextureLocation(Lnet/minecraft/client/renderer/entity/state/ZombieRenderState;)Lnet/minecraft/resources/ResourceLocation;",
             at = @At("HEAD"),
             cancellable = true
         )
-        private void onGetTexture(Zombie zombie, CallbackInfoReturnable<ResourceLocation> ci) {
-            boolean isGuber = ((ZombieWithEasterEgg) zombie).gr$isGuber();
+        private void onGetTexture(ZombieRenderState renderState, CallbackInfoReturnable<ResourceLocation> cir) {
+            boolean isGuber = ((ZombieWithEasterEgg) renderState).gr$isGuber();
 
             if (isGuber) {
-                ci.setReturnValue(GUBER_ZOMBIE_PATH);
+                cir.setReturnValue(GUBER_ZOMBIE_PATH);
             }
         }
     }

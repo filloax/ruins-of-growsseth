@@ -10,17 +10,18 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(VillagerModel.class)
 public abstract class VillagerModelMixin {
+    // todo: fix
     // Errors are normal apparently
-    @ModifyVariable(
-        at = @At(value = "STORE", ordinal = 0),
-        method = "setupAnim", ordinal = 0
-    )
-    private boolean researcherUnhappyCheck(boolean bl, @Local(argsOnly = true) Entity entity) {
-        if (entity instanceof Researcher researcher) {
-            return researcher.getUnhappyCounter() > 0;
-        }
-        return bl;
-    }
+//    @ModifyVariable(
+//        at = @At(value = "STORE", ordinal = 0),
+//        method = "setupAnim", ordinal = 0
+//    )
+//    private boolean researcherUnhappyCheck(boolean bl, @Local(argsOnly = true) Entity entity) {
+//        if (entity instanceof Researcher researcher) {
+//            return researcher.getUnhappyCounter() > 0;
+//        }
+//        return bl;
+//    }
 
     /*****************************************************************************************************************/
     /*         Target Class : net.minecraft.client.model.VillagerModel                                               */

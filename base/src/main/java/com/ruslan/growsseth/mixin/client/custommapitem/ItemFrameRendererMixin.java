@@ -12,9 +12,13 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(ItemFrameRenderer.class)
 public abstract class ItemFrameRendererMixin {
-    // See CustomMapItems.isCustomMapItem doc
-    @WrapOperation(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;is(Lnet/minecraft/world/item/Item;)Z"), method = "getFrameModelResourceLoc(Lnet/minecraft/world/entity/decoration/ItemFrame;Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/client/resources/model/ModelResourceLocation;")
-    private boolean recognizeMapsFromClass(ItemStack instance, Item item, Operation<Boolean> original) {
-        return CustomMapItems.checkMapItemWrapper(instance, item, original);
-    }
+    // todo: fix
+    // See CustomMapItems.checkCustomMapItem doc
+//    @WrapOperation(
+//            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;is(Lnet/minecraft/world/item/Item;)Z"),
+//            method = "Lnet/minecraft/client/renderer/entity/ItemFrameRenderer;getFrameModelResourceLoc(ZLnet/minecraft/world/item/ItemStack;)Lnet/minecraft/client/resources/model/ModelResourceLocation;"
+//    )
+//    private boolean recognizeMapsFromClass(ItemStack instance, Item item, Operation<Boolean> original) {
+//        return CustomMapItems.checkMapItemWrapper(instance, item, original);
+//    }
 }

@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Locale;
+import java.util.function.Function;
 
 @Mixin(AdvancementTab.class)
 public abstract class AdvancementTabMixin {
@@ -25,9 +26,9 @@ public abstract class AdvancementTabMixin {
 
     @WrapWithCondition(
         method = "drawContents",
-        at = @At(value = "INVOKE", ordinal = 0, target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIFFIIII)V")
+        at = @At(value = "INVOKE", ordinal = 0, target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Ljava/util/function/Function;Lnet/minecraft/resources/ResourceLocation;IIFFIIII)V")
     )
-    private boolean drawContentsCancelBackgroundBlit(GuiGraphics instance, ResourceLocation atlasLocation, int x, int y, float uOffset, float vOffset, int width, int height, int textureWidth, int textureHeight) {
+    private boolean drawContentsCancelBackgroundBlit(GuiGraphics instance, Function<ResourceLocation, RenderType> renderTypeGetter, ResourceLocation atlasLocation, int x, int y, float uOffset, float vOffset, int uWidth, int vHeight, int textureWidth, int textureHeight) {
         AdvancementTab th1s = (AdvancementTab) (Object) this;
         return !isNonTiledBackground(th1s);
     }
