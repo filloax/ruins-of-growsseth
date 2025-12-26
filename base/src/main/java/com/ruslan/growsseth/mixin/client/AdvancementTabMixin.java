@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.ruslan.growsseth.advancements.GrowssethAdvancements;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.advancements.AdvancementTab;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -41,7 +42,7 @@ public abstract class AdvancementTabMixin {
         if (isNonTiledBackground(th1s)) {
             int k = 0; //i % 16; ignore scroll
             int l = 0; //j % 16; ignore scroll
-            guiGraphics.blit(resourceLocation, k, l, 0, 0, 240, 120, 240, 120);
+            guiGraphics.blit(RenderType::guiTextured, resourceLocation, k, l, 0, 0, 240, 120, 240, 120);
         }
     }
 }

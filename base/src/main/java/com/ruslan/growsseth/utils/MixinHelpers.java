@@ -26,7 +26,7 @@ public class MixinHelpers {
 
     public static void serverInit(MinecraftServer server) {
         Registry<Structure> registry = server.registryAccess().lookupOrThrow(Registries.STRUCTURE);
-        researcherTent = registry.getOrThrow(GrowssethStructures.RESEARCHER_TENT);
+        researcherTent = registry.getValueOrThrow(GrowssethStructures.RESEARCHER_TENT);
     }
 
     public static final ResourceLoading RESOURCE_LOADING = new ResourceLoading();
@@ -67,7 +67,7 @@ public class MixinHelpers {
             // paintings with an even width seem to be moved in the clockwise direction of their facing direction,
             // if they're west or south.
             if (width % 2 == 0 && (direction == Direction.WEST || direction == Direction.SOUTH)) {
-                var moveTo = direction.getClockWise().getNormal();
+                var moveTo = direction.getClockWise().getUnitVec3i();
                 pos.move(moveTo);
             }
 
