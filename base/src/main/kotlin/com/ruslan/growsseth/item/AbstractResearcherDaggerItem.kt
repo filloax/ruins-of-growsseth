@@ -1,10 +1,13 @@
 package com.ruslan.growsseth.item
 
 import com.filloax.fxlib.api.platform.ServiceUtil
+import com.ruslan.growsseth.utils.resLoc
 import net.minecraft.ChatFormatting
 import net.minecraft.core.Holder
+import net.minecraft.core.registries.Registries
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
+import net.minecraft.resources.ResourceKey
 import net.minecraft.world.item.*
 import net.minecraft.world.item.enchantment.Enchantment
 import net.minecraft.world.item.enchantment.Enchantments
@@ -22,7 +25,9 @@ abstract class AbstractResearcherDaggerItem() : SwordItem(
             return ServiceUtil.findService(AbstractResearcherDaggerItem::class.java)
         }
 
+        // todo: manage in GrowssethItems
         private fun getProperties() = Properties()
+            .setId(ResourceKey.create<Item>(Registries.ITEM, resLoc("researcher_dagger")))   // todo: unify
             .rarity(Rarity.EPIC)
     }
 

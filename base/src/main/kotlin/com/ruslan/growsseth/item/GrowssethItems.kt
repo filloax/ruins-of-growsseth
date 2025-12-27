@@ -18,32 +18,34 @@ object GrowssethItems {
 	private val allInitializers = mutableMapOf<ResourceLocation, () -> Item>()
 	val noAutogenerateItems = mutableSetOf<Item>()
 
+    // TODO: Improve item creation to avoid duplicating the ids
+
 	val RESEARCHER_SPAWN_EGG by make("researcher_spawn_egg",
-		{ SpawnEggItem(GrowssethEntities.RESEARCHER, defaultBuilder()) }, autoGenerateJson = false)
+		{ SpawnEggItem(GrowssethEntities.RESEARCHER, defaultBuilder("researcher_spawn_egg")) }, autoGenerateJson = false)
 	val ZOMBIE_RESEARCHER_SPAWN_EGG by make("zombie_researcher_spawn_egg",
-		{ SpawnEggItem(GrowssethEntities.ZOMBIE_RESEARCHER, defaultBuilder()) }, autoGenerateJson = false)
+		{ SpawnEggItem(GrowssethEntities.ZOMBIE_RESEARCHER, defaultBuilder("zombie_researcher_spawn_egg")) }, autoGenerateJson = false)
 	val RESEARCHER_HORN by make("researcher_horn", {
 		ResearcherHornItem(
-			defaultBuilder().rarity(Rarity.EPIC).stacksTo(1).fireResistant(), GrowssethTags.RESEARCHER_HORNS
+			defaultBuilder("researcher_horn").rarity(Rarity.EPIC).stacksTo(1).fireResistant(), GrowssethTags.RESEARCHER_HORNS
 		)
 	}, autoGenerateJson = false)
 	// 5 attack (2 less than diamond sword), 2,5 attack speed (sword speed + 0,9) (sword modifiers: 3 and -2.4):
 	val RESEARCHER_DAGGER by make(
 		"researcher_dagger",
-		{ AbstractResearcherDaggerItem.create() },
+		{ AbstractResearcherDaggerItem.create() },  // id set inside
 		autoGenerateJson = false,
 	)
-	val RUINS_MAP by make("ruins_map", { MapItem(defaultBuilder().stacksTo(1)) }, autoGenerateJson = false)
+	val RUINS_MAP by make("ruins_map", { MapItem(defaultBuilder("ruins_map").stacksTo(1)) }, autoGenerateJson = false)
 
 	val GROWSSETH_BANNER_PATTERN by make("growsseth_banner_pattern", {
 		AutoBannerItem(
-			GrowssethBannerPatterns.GROWSSETH.tag, defaultBuilder().rarity(Rarity.RARE)
+			GrowssethBannerPatterns.GROWSSETH.tag, defaultBuilder("growsseth_banner_pattern").rarity(Rarity.RARE)
 		)
 	})
 	val GROWSSETH_ARMOR_TRIM: SmithingTemplateItem by make("growsseth_trim_template",
-		{ SmithingTemplateItem.createArmorTrimTemplate(Properties()) })
-	val GROWSSETH_POTTERY_SHERD by make("growsseth_pottery_sherd", { defaultItem() })
-	val FRAGMENT_BALLATA_DEL_RESPAWN by make("fragment_ballata_del_respawn", { DiscFragmentItem(Properties()) })
+		{ SmithingTemplateItem.createArmorTrimTemplate(defaultBuilder("growsseth_trim_template")) })
+	val GROWSSETH_POTTERY_SHERD by make("growsseth_pottery_sherd", { defaultItem("growsseth_pottery_sherd") })
+	val FRAGMENT_BALLATA_DEL_RESPAWN by make("fragment_ballata_del_respawn", { DiscFragmentItem(defaultBuilder("growsseth_pottery_sherd")) })
 
 	// Custom discs
 	val DISC_SEGA_DI_NIENTE 		by makeDisc("disc_sega_di_niente", GrowssethJukeboxSongs.SEGA_DI_NIENTE)
@@ -108,7 +110,7 @@ object GrowssethItems {
 
 	private fun makeDisc(
 		name: String, jukeboxSong: ResourceKey<JukeboxSong>,
-		properties: Properties = Properties(),
+		properties: Properties = defaultBuilder(name),
 	) = make(name, {
 			Item(
 				properties.stacksTo(1).jukeboxPlayable(jukeboxSong),
@@ -121,9 +123,10 @@ object GrowssethItems {
 		}
 	}
 
-	private fun defaultItem(): Item = Item(defaultBuilder())
+	private fun defaultItem(itemId: String): Item = Item(defaultBuilder(itemId))
 
-	private fun defaultBuilder() = Properties()
+	private fun defaultBuilder(itemId: String) =
+        Properties().setId(ResourceKey.create<Item>(Registries.ITEM, resLoc(itemId)))
 
 	object TrimPatterns {
 		val GROWSSETH: ResourceKey<TrimPattern> = ResourceKey.create(Registries.TRIM_PATTERN, resLoc("growsseth"))

@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
 
 class ResearcherRendererState: ArmedEntityRenderState()
 {
+    // todo: change class to not take the entity directly but just what it needs
     var entity: Researcher? = null
     var attackAnim: Float = 0f
 }
