@@ -2,22 +2,22 @@
 java = "21"
 
 # Minecraft dependencies
-minecraft-range = "1.21.4"
-minecraft-range-fabric = "1.21.4"
-minecraft = "1.21.4"
+minecraft-range = "1.21.5"
+minecraft-range-fabric = "1.21.5"
+minecraft = "1.21.5"
 # Get versions from https://parchmentmc.org/docs/getting-started
-parchment-minecraft = "1.21.4"
-parchment = "2025.03.23"
+parchment-minecraft = "1.21.5"
+parchment = "2025.06.15"
 # Get versions from https://projects.neoforged.net/neoforged/neoform
-neoform = "1.21.4-20241203.161809" # vanilla neoforge configuration
+neoform = "1.21.5-20250325.162830" # vanilla neoforge configuration
 
 # Mod dependencies
-filloaxlib = "0.36.0-1.21.4"
+filloaxlib = "0.36.0-1.21.5"
 modmenu = "12.0.0"
 rconfig = "3.4.3"
-rconfigMc = "1.21.4"
+rconfigMc = "1.21.5"
 
-# Mod compatibility dependencies
+# Mod compatibility dependencies (todo: re-enabled if needed after transition)
 lithostitched-neoforge = "1.5.0-neoforge-1.21.1"
 lithostitched-fabric = "1.5.0-fabric-1.21.1"
 cobblemon = "1.7.1+1.21.1"
@@ -32,13 +32,16 @@ kotlin-serialization = "1.9.0"
 kotlin-datetime = "0.7.1"
 
 # Fabric Settings
+# Get versions from https://github.com/FabricMC/fabric-loader/releases
 fabric = "0.18.4"
-fabric-api = "0.119.4+1.21.4"
+# Get versions from https://modrinth.com/mod/fabric-api/versions
+fabric-api = "0.119.4+1.21.5"
 fabric-language-kotlin = "1.13.8+kotlin.2.3.0"
 
 # Neoforge Settings
-neoforge = "21.4.156"
-neoforge-range = "[21.4.156,21.4)"
+# Get versions from https://projects.neoforged.net/neoforged/neoforge
+neoforge = "21.5.96"
+neoforge-range = "[21.5.96,21.6)"
 kotlinforge = "5.10.0"
 kotlinforge-range = "[5.10,)"
 
