@@ -20,7 +20,6 @@ class GrowssethSounds {
         val DISC_PADRE_MAMMONK = registerSoundEventHolder("disc_padre_mammonk")
         val DISC_ABBANDONATI = registerSoundEventHolder("disc_abbandonati")
         val DISC_MISSIVA_NELL_OMBRA = registerSoundEventHolder("disc_missiva_nell_ombra")
-
         val DISC_OURSTEPS = registerSoundEventHolder("disc_oursteps")
         val DISC_ODI_ET_AMO = registerSoundEventHolder("disc_odi_et_amo")
         val DISC_ANCORA_QUI = registerSoundEventHolder("disc_ancora_qui")
@@ -28,8 +27,8 @@ class GrowssethSounds {
         val DISC_CACO_CACO = registerSoundEventHolder("disc_caco_caco")
         val DISC_PESCI_STRANI = registerSoundEventHolder("disc_pesci_strani")
 
-        val DEFLECT_ARROW_SOUND = registerSoundEventHolder("deflect_arrow_sound")
-        val RESEARCHER_HORN_SOUND = registerSoundEventHolder("researcher_horn_sound")
+        val DEFLECT_ARROW_SOUND = registerSoundEvent("deflect_arrow_sound")
+        val RESEARCHER_HORN_SOUND = registerSoundEvent("researcher_horn_sound")
 
         val RESEARCHER_YES = registerSoundEvent("researcher.yes")
         val RESEARCHER_NO = registerSoundEvent("researcher.no")

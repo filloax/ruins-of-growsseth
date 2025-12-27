@@ -75,7 +75,7 @@ class ResearcherCombatComponent(val owner: Researcher) {
         if (owner.isAggressive && source.directEntity is AbstractArrow)
             if (deflectArrow(source)) {
                 owner.showArrowDeflectParticles = true
-                owner.playSound(GrowssethSounds.DEFLECT_ARROW_SOUND.value())
+                owner.playSound(GrowssethSounds.DEFLECT_ARROW_SOUND)
                 return false
             }
 
