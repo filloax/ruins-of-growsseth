@@ -41,7 +41,7 @@ abstract class GrTemplateStructurePiece : TemplateStructurePiece {
         try {
             val mob = entityType.create(levelAccessor.level, EntitySpawnReason.MOB_SUMMONED) ?: return
             mob.setPersistenceRequired()
-            mob.moveTo(pos.x + .5, pos.y + .0, pos.z + .5, 0.0f, 0.0f)
+            mob.snapTo(pos.x + .5, pos.y + .0, pos.z + .5, 0.0f, 0.0f)
             mob.finalizeSpawn(levelAccessor, levelAccessor.getCurrentDifficultyAt(pos), EntitySpawnReason.STRUCTURE, null)
             levelAccessor.addFreshEntityWithPassengers(mob)
             levelAccessor.setBlock(pos, Blocks.AIR.defaultBlockState(), SetBlockFlag.NOTIFY_CLIENTS.flag)

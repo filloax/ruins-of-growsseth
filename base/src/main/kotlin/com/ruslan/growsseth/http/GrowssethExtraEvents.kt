@@ -221,7 +221,7 @@ object GrowssethExtraEvents {
         val savedData = EventsSavedData.get(server)
         if (!savedData.alreadyRan.contains(id)) {
             val teleportPos = level.nearestFreePosition(pos, aboveSolid = true, onlyAbove = true) ?: pos
-            researcher.moveTo(teleportPos.center)
+            researcher.snapTo(teleportPos.center)
             researcher.resetStartingPos(teleportPos)
             RuinsOfGrowsseth.LOGGER.info("Teleported researcher $researcher to $teleportPos[$pos] ($id)")
 
@@ -397,7 +397,7 @@ object GrowssethExtraEvents {
                     RuinsOfGrowsseth.LOGGER.error("Couldn't spawn researcher through growsseth event!")
                     return@runWhenChunkLoaded
                 }
-                mob.moveTo(pos.x + .5, pos.y + .0, pos.z + .5, 0.0f, 0.0f)
+                mob.snapTo(pos.x + .5, pos.y + .0, pos.z + .5, 0.0f, 0.0f)
                 mob.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), EntitySpawnReason.MOB_SUMMONED, null)
                 level.addFreshEntityWithPassengers(mob)
             }

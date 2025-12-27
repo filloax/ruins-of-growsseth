@@ -92,7 +92,7 @@ class ResearcherCombatComponent(val owner: Researcher) {
 
                 // Hardcoded regen when fighting mobs and being cheesed by the player:
                 if ((!ResearcherConfig.immortalResearcher && ResearcherConfig.researcherAntiCheat &&
-                            owner.hasEffect(MobEffects.DAMAGE_RESISTANCE) && owner.hasEffect(MobEffects.MOVEMENT_SLOWDOWN))
+                            owner.hasEffect(MobEffects.RESISTANCE) && owner.hasEffect(MobEffects.SLOWNESS))
                     || (owner.target !is Player && owner.target !is WitherBoss)) {
                     owner.addEffect(MobEffectInstance(GrowssethEffects.JUSTICE, 15, 0, false, false))
                 }

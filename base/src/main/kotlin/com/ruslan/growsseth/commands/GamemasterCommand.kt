@@ -53,7 +53,7 @@ object GamemasterCommand {
         source.sendSuccess({
             val wikiLink = Component.literal("https://github.com/filloax/ruins-of-growsseth/wiki/EN---Gamemaster-Mode").withStyle(ChatFormatting.UNDERLINE)
                 .withStyle { style ->
-                    style.withClickEvent(ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/filloax/ruins-of-growsseth/wiki/EN-%E2%80%90-Gamemaster-Mode"))
+                    style.withClickEvent { ClickEvent.Action.OPEN_URL }
                 }
             Component.translatable("growsseth.commands.gmaster.help").append(wikiLink)
         }, false)

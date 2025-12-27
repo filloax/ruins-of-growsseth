@@ -72,7 +72,8 @@ class ResearcherTent : GrTemplateStructurePiece {
     //(StructurePieceType type, int genDepth, StructureTemplateManager structureManager, ResourceLocation templateLocation, StructurePlaceSettings placeSettings, BlockPos startPosition)
 
     constructor(compoundTag: CompoundTag, ctx: StructurePieceSerializationContext)
-        : super(GrowssethStructurePieceTypes.RESEARCHER_TENT, compoundTag, ctx, makeSettings(Rotation.valueOf(compoundTag.getString("Rot")))) {
+        : super(GrowssethStructurePieceTypes.RESEARCHER_TENT, compoundTag, ctx,
+            makeSettings(Rotation.valueOf(compoundTag.getString("Rot").get()))) {
 
         jailPos = compoundTag.loadField("JailPos", BlockPos.CODEC)
         researcherPos = compoundTag.loadField("ResearcherPos", BlockPos.CODEC)
@@ -114,7 +115,7 @@ class ResearcherTent : GrTemplateStructurePiece {
                         SetBlockFlag.NO_NEIGHBOR_REACTIONS,
                         SetBlockFlag.NO_NEIGHBOR_REACTION_DROPS
                     ))
-                    level.blockUpdated(pos, newBlock.block)
+                    level.updateNeighborsAt(pos, newBlock.block)
                     numRemoved++
                     blockCounts[blockState.block] = blockCounts[blockState.block]!! - 1
                     if (blockCounts[blockState.block]!! <= 0) {

@@ -35,7 +35,7 @@ import kotlin.concurrent.thread
 import kotlin.random.Random
 
 fun ItemStack.createAndStoreMapData(
-    level: Level, x: Int, z: Int, scale: Int,
+    level: ServerLevel, x: Int, z: Int, scale: Int,
     trackingPosition: Boolean, unlimitedTracking: Boolean
 ) {
     val newMapItem = MapItem.create(level, x, z, scale.toByte(), trackingPosition, unlimitedTracking)

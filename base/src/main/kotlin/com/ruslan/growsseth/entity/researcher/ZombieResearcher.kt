@@ -131,10 +131,10 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
         researcher.healed = true
         researcher.dialogues?.resetNearbyPlayers()
         researcherOriginalPos?.let { researcher.resetStartingPos(it) }
-        researcher.addEffect(MobEffectInstance(MobEffects.CONFUSION, 200, 0))
+        researcher.addEffect(MobEffectInstance(MobEffects.NAUSEA, 200, 0))
 
         if (alsoMove) {
-            researcher.startingPos?.let { researcher.moveTo(it, researcher.yRot, researcher.xRot) }
+            researcher.startingPos?.let { researcher.snapTo(it, researcher.yRot, researcher.xRot) }
         }
     }
 
@@ -220,10 +220,10 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
 
     override fun readAdditionalSaveData(compound: CompoundTag) {
         super.readAdditionalSaveData(compound)
-        compound.getCompound("ResearcherData")?.let { researcherData = it }
+        compound.getCompound("ResearcherData").let { researcherData = it.get() }
         researcherOriginalPos = compound.loadField("ResearcherPos", BlockPos.CODEC)
         if (compound.contains(SPAWN_TIME_TAG)) {
-            spawnTime = compound.getLong(SPAWN_TIME_TAG)
+            spawnTime = compound.getLong(SPAWN_TIME_TAG).get()
         }
     }
 

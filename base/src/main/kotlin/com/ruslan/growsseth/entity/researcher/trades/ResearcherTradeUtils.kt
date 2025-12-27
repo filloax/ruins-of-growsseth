@@ -251,7 +251,7 @@ object ResearcherTradeUtils {
             }
         }
         if (data.contains(ResearcherItemListing.BOOK_TEMPLATE_TAG)) {
-            BookTemplates.loadTemplate(result, data.getString(ResearcherItemListing.BOOK_TEMPLATE_TAG), edit = { withAuthor(researcher.name.string) })
+            BookTemplates.loadTemplate(result, data.getString(ResearcherItemListing.BOOK_TEMPLATE_TAG).get(), edit = { withAuthor(researcher.name.string) })
         }
         return offerOut
     }

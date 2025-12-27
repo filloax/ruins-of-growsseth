@@ -132,12 +132,12 @@ open class BasicDialoguesComponent(
      */
     override fun canTriggeredEventRun(player: ServerPlayer, dialogueEvent: DialogueEvent): Boolean {
         return when (dialogueEvent) {
-            Events.PLAYER_ARRIVE_NIGHT -> entity.level().isNight
+            Events.PLAYER_ARRIVE_NIGHT -> entity.level().isDarkOutside
             Events.PLAYER_ARRIVE_SOON -> secondsForArriveSoon > 0
                     && playerData(player)?.lastSeenTimestamp?.let { getSecondsSinceWorldTime(it) < secondsForArriveSoon } == true
             Events.PLAYER_ARRIVE_LONG_TIME ->  secondsForArriveLongTime > 0
                     && playerData(player)?.lastSeenTimestamp?.let { getSecondsSinceWorldTime(it) > secondsForArriveLongTime } == true
-            Events.PLAYER_LEAVE_NIGHT -> entity.level().isNight
+            Events.PLAYER_LEAVE_NIGHT -> entity.level().isDarkOutside
             Events.PLAYER_LEAVE_SOON -> secondsForArriveSoon > 0
                     && playersArrivedSoon[player.uuid] ?: false
             Events.HIT_BY_PLAYER -> secondsForAttackDiagRepeat > 0

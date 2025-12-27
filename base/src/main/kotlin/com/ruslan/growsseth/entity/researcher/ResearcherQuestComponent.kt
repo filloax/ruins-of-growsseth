@@ -111,7 +111,7 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
     }
 
     override fun readCustomNbt(tag: CompoundTag) {
-        alreadyRemovedTent = tag.getBoolean(TAG_ALREADY_REMOVED_TENT)
+        alreadyRemovedTent = tag.getBoolean(TAG_ALREADY_REMOVED_TENT).get()
     }
 
     companion object {
@@ -126,7 +126,9 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
                 RuinsOfGrowsseth.LOGGER.error("Tried getting researcher quest data when not in single researcher mode!")
                 return QuestData()
             }
-            val tag = ResearcherSavedData.getPersistent(server).data.getCompound(QUESTS_TAG_ID).getCompound(QUEST_NAME).getCompoundOrNull(NBT_TAG_PERSIST)
+            val tag = ResearcherSavedData.getPersistent(server).data
+                .getCompound(QUESTS_TAG_ID).get().getCompound(QUEST_NAME).get()
+                .getCompoundOrNull(NBT_TAG_PERSIST)
             return tag?.let { PERSIST_CODEC.decodeNbt(it) .getOrThrow(
                 throwableCodecErr("ResearcherQuestComponent getPersistentData")
             ).first }
@@ -242,7 +244,7 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
 
             blockEntity.setItem(4, endTextItem)
             blockEntity.setItem(13, hornItem)
-            level.blockUpdated(pos, chestState.block)
+            level.updateNeighborsAt(pos, chestState.block)
             RuinsOfGrowsseth.LOGGER.info("Spawned researcher reward chest at $pos")
         }
     }
@@ -294,7 +296,7 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
             ) {}
             if (isNull(zombie)) {
                 RuinsOfGrowsseth.LOGGER.error("Couldn't zombify researcher in quest stage!")
-                entity.moveTo(startingPos)
+                entity.snapTo(startingPos)
                 return@runAtServerTickEnd
             }
             zombie.researcherData = data
@@ -360,7 +362,7 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
             val pos = tent.jailPos
             if (notNull(pos)) {
                 // Move before to hide transition, as this is in parallel with client
-                entity.moveTo(pos, entity.yRot, entity.xRot)
+                entity.snapTo(pos, entity.yRot, entity.xRot)
             } else {
                 RuinsOfGrowsseth.LOGGER.warn("Tent doesn't have a jail position set!")
             }
@@ -395,7 +397,7 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
 
         override fun onActivated(entity: Researcher) {
             entity.healed = true    // for discounts when using gquest
-            entity.startingPos?.let { entity.moveTo(it, entity.yRot, entity.xRot) }
+            entity.startingPos?.let { entity.snapTo(it, entity.yRot, entity.xRot) }
             entity.dialogues?.resetNearbyPlayers()
         }
     }

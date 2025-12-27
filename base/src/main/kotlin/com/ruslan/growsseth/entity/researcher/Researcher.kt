@@ -393,13 +393,13 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         this.startingPos = blockPosition()
         this.startingDimension = level.level.dimension()
 
-        if (savedData != null && savedData.data.allKeys.isNotEmpty()) {
+        if (savedData != null && savedData.data.keySet().isNotEmpty()) {
             readSavedData(savedData)
         }
 
         // Set savedData if it was just created (and so nbt empty)
         if (savedData != null) {
-            if (savedData.data.allKeys.isEmpty())
+            if (savedData.data.keySet().isEmpty())
                 writeSavedData(savedData, force = true)
             lastWorldDataTime = savedData.lastChangeTimestamp
         }
@@ -495,16 +495,16 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             if (needsToTpBack)
                 item = Items.ENDER_PEARL
 
-            if (needsJumpBoost && !hasEffect(MobEffects.JUMP))
+            if (needsJumpBoost && !hasEffect(MobEffects.JUMP_BOOST))
                 potion = Potions.STRONG_LEAPING
 
             else if (   // trying to counter cheese attempts
                 ResearcherConfig.researcherAntiCheat &&
                 stuckCounter >= maxStuckCounter &&
                 // check if he's stuck and doesn't have the turtle master effect active (or it's wearing off):
-                ((!hasEffect(MobEffects.DAMAGE_RESISTANCE) || !hasEffect(MobEffects.MOVEMENT_SLOWDOWN)) ||
-                        (hasEffect(MobEffects.DAMAGE_RESISTANCE) && hasEffect(MobEffects.MOVEMENT_SLOWDOWN)
-                                && getEffect(MobEffects.DAMAGE_RESISTANCE)?.endsWithin(40) == true))
+                ((!hasEffect(MobEffects.RESISTANCE) || !hasEffect(MobEffects.SLOWNESS)) ||
+                        (hasEffect(MobEffects.RESISTANCE) && hasEffect(MobEffects.SLOWNESS)
+                                && getEffect(MobEffects.RESISTANCE)?.endsWithin(40) == true))
             ) {
                 if (target is ServerPlayer) {
                     isStuck = true
@@ -592,7 +592,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         if (!metPlayer && dialogues?.nearbyPlayers()?.isNotEmpty() == true)
             metPlayer = true
 
-        if (level().isNight || !metPlayer)
+        if (level().isDarkOutside || !metPlayer)
             restrictTo(this.startingPos!!, WALK_LIMIT_DISTANCE_NIGHT)
         else
             restrictTo(this.startingPos!!, WALK_LIMIT_DISTANCE)
@@ -628,7 +628,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
         if (this.tickCount % 10 == 0) {
             if (ResearcherConfig.immortalResearcher) {
-                addEffect(MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 15, 4, false, false))
+                addEffect(MobEffectInstance(MobEffects.RESISTANCE, 15, 4, false, false))
                 addEffect(MobEffectInstance(MobEffects.REGENERATION, 15, 4, false, false))
             }
             if (!isAggressive) {
@@ -834,22 +834,22 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     // Only NBT stuff of this class
     fun readResearcherData(researcherData: CompoundTag) {
         if (researcherData.contains("Healed")) {
-            healed = researcherData.getBoolean("Healed")
+            healed = researcherData.getBoolean("Healed").get()
         } else {
             healed = false
         }
         if (researcherData.contains("AngryForMess")) {
-            angryForMess = researcherData.getBoolean("AngryForMess")
+            angryForMess = researcherData.getBoolean("AngryForMess").get()
         } else {
             angryForMess = false
         }
         if (researcherData.contains("DonkeyBorrowed")) {
-            donkeyWasBorrowed = researcherData.getBoolean("DonkeyBorrowed")
+            donkeyWasBorrowed = researcherData.getBoolean("DonkeyBorrowed").get()
         } else {
             donkeyWasBorrowed = false
         }
         if (researcherData.contains("MetPlayer")) {
-            metPlayer = researcherData.getBoolean("MetPlayer")
+            metPlayer = researcherData.getBoolean("MetPlayer").get()
         } else {
             metPlayer = false
         }
@@ -932,7 +932,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             compoundTag.getCompoundOrNull(DATA_TAG)?.let { readResearcherData(it) }
         }
         if (compoundTag.contains(SPAWN_TIME_TAG)) {
-            spawnTime = compoundTag.getLong(SPAWN_TIME_TAG)
+            spawnTime = compoundTag.getLong(SPAWN_TIME_TAG).get()
         }
 
         compoundTag.loadField(TELEPORT_COUNTER_TAG, Codec.INT) { secondsAwayFromTent = it }
@@ -1146,7 +1146,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     override fun overrideXp(i: Int) { }
     override fun showProgressBar(): Boolean = false
     override fun getBaseExperienceReward(level: ServerLevel): Int = RESEARCHER_XP
-    override fun canDisableShield(): Boolean = true
+    //override fun canDisableShield(): Boolean = true   // todo: component in dagger
 
     override fun getAttackBoundingBox(): AABB {
         val aABB3: AABB = super.getAttackBoundingBox()

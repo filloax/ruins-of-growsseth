@@ -26,7 +26,7 @@ object GrowssethItems {
 		{ SpawnEggItem(GrowssethEntities.ZOMBIE_RESEARCHER, defaultBuilder("zombie_researcher_spawn_egg")) }, autoGenerateJson = false)
 	val RESEARCHER_HORN by make("researcher_horn", {
 		ResearcherHornItem(
-			defaultBuilder("researcher_horn").rarity(Rarity.EPIC).stacksTo(1).fireResistant(), GrowssethTags.RESEARCHER_HORNS
+			defaultBuilder("researcher_horn").rarity(Rarity.EPIC).stacksTo(1).fireResistant()
 		)
 	}, autoGenerateJson = false)
 	// 5 attack (2 less than diamond sword), 2,5 attack speed (sword speed + 0,9) (sword modifiers: 3 and -2.4):

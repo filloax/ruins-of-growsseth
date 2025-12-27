@@ -68,7 +68,7 @@ object ResearcherResetCommand {
         val savedData = ResearcherSavedData.getPersistent(server)
         val dialogueData = savedData.data.getCompound("SharedDialogueData")
         savedData.data = CompoundTag()
-        savedData.data.put("SharedDialogueData", dialogueData)
+        savedData.data.put("SharedDialogueData", dialogueData.get())
         savedData.isDead = false
         updateResearcherData(savedData, server, ctx)
     }
