@@ -1,5 +1,6 @@
 accessWidener	v1	named
 #note: not used in this module, but used in fabric-like modules
+#todo: reorder
 
 extendable method net/minecraft/world/entity/monster/ZombieVillager finishConversion (Lnet/minecraft/server/level/ServerLevel;)V
 accessible field net/minecraft/world/entity/monster/ZombieVillager conversionStarter Ljava/util/UUID;
@@ -56,3 +57,5 @@ accessible class net/minecraft/client/sounds/SoundManager$Preparations
 
 # enable when debugging concurrentmodificationexception
 # mutable field net/minecraft/util/ClassInstanceMultiMap allInstances Ljava/util/List;
+
+accessible field net/minecraft/world/level/StructureManager level Lnet/minecraft/world/level/LevelAccessor;

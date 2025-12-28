@@ -9,15 +9,16 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.levelgen.structure.Structure
 import kotlin.jvm.optionals.getOrNull
 import com.ruslan.growsseth.worldgen.worldpreset.GrowssethWorldPreset
+import net.minecraft.world.level.LevelAccessor
 import net.minecraft.world.level.biome.BiomeSource
 import net.minecraft.world.level.levelgen.structure.StructureSet
 
 object StructureDisabler {
     object Mixins {
         @JvmStatic
-        fun shouldDisableStructure(structure: Holder<Structure>, level: ServerLevel): Boolean {
+        fun shouldDisableStructure(structure: Holder<Structure>, levelAcc: LevelAccessor): Boolean {
             return isConfigDisabled(structure)
-                    || GrowssethWorldPreset.shouldDisableStructure(structure, level)
+                    || GrowssethWorldPreset.shouldDisableStructure(structure, levelAcc)
         }
 
         @JvmStatic

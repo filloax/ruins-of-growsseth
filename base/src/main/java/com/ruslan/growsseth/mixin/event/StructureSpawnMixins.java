@@ -1,7 +1,6 @@
 package com.ruslan.growsseth.mixin.event;
 
 import com.filloax.fxlib.api.FxUtils;
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.ruslan.growsseth.RuinsOfGrowsseth;
 import com.ruslan.growsseth.structure.StructureDisabler;
@@ -9,11 +8,8 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.SectionPos;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.chunk.ChunkAccess;
@@ -22,7 +18,6 @@ import net.minecraft.world.level.chunk.ChunkGeneratorStructureState;
 import net.minecraft.world.level.levelgen.RandomState;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
-import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -33,7 +28,7 @@ import java.util.List;
 
 public class StructureSpawnMixins {
     @Mixin(ChunkGenerator.class)
-    public static class ChunkGeneratorMixin {
+    public abstract static class ChunkGeneratorMixin {
         @Inject(method = "tryGenerateStructure", at = @At(value = "HEAD"), cancellable = true)
         void disableStructures(
                 StructureSet.StructureSelectionEntry structureSelectionEntry,
@@ -48,10 +43,8 @@ public class StructureSpawnMixins {
                 ResourceKey<Level> level,
                 CallbackInfoReturnable<Boolean> cir
         ) {
-            // todo: access transform the level LevelAccessor from StructureManager and use that inside shouldDisableStructure
-            ServerLevel serverLevel = ((ServerLevelAccessor) structureManager).getLevel();
             if (StructureDisabler.Mixins.shouldDisableStructure(
-                    structureSelectionEntry.structure(), serverLevel)
+                    structureSelectionEntry.structure(), structureManager.level)
             ) {
                 if (FxUtils.isDevEnvironment()) {
                     RuinsOfGrowsseth.LOGGER.info("Disabled spawn for structure " + structureSelectionEntry.structure());

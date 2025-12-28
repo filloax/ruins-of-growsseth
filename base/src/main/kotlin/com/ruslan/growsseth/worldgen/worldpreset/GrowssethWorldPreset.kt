@@ -12,11 +12,9 @@ import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
 import net.minecraft.core.registries.Registries
 import net.minecraft.data.worldgen.BootstrapContext
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
-import net.minecraft.world.level.ServerLevelAccessor
+import net.minecraft.world.level.LevelAccessor
 import net.minecraft.world.level.biome.*
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes
 import net.minecraft.world.level.dimension.LevelStem
@@ -25,7 +23,6 @@ import net.minecraft.world.level.levelgen.NoiseGeneratorSettings
 import net.minecraft.world.level.levelgen.presets.WorldPreset
 import net.minecraft.world.level.levelgen.structure.Structure
 import net.minecraft.world.level.levelgen.structure.StructureSet
-import kotlin.collections.contains
 import kotlin.jvm.optionals.getOrNull
 
 // object as WorldPreset as a class doesn't seem to do much except hold data,
@@ -79,12 +76,12 @@ object GrowssethWorldPreset {
     }
 
     @JvmStatic
-    fun isGrowssethPreset(levelAcc: ServerLevelAccessor): Boolean {
-        return isGrowssethPreset(levelAcc.level.server)
+    fun isGrowssethPreset(levelAcc: LevelAccessor): Boolean {
+        return isGrowssethPreset(levelAcc.server!!)
     }
 
-    fun shouldDisableStructure(structure: Holder<Structure>, level: ServerLevel): Boolean {
-        return isGrowssethPreset(level)
+    fun shouldDisableStructure(structure: Holder<Structure>, levelAccessor: LevelAccessor): Boolean {
+        return isGrowssethPreset(levelAccessor)
             && structure.unwrapKey().getOrNull()?.location()?.namespace == RuinsOfGrowsseth.MOD_ID
     }
 
