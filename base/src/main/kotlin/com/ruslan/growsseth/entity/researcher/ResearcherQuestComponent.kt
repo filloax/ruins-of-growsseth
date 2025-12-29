@@ -304,7 +304,9 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
             zombie.spawnTime = spawnTime
             zombie.researcherOriginalPos = resStartingPos
             // not visible normally other than with entity info mods
-            zombie.villagerData = zombie.villagerData.setProfession(VillagerProfession.CARTOGRAPHER).setLevel(5)
+            zombie.villagerData = zombie.villagerData.withProfession(
+                BuiltInRegistries.VILLAGER_PROFESSION[VillagerProfession.CARTOGRAPHER].get()
+            ).withLevel(5)
             RuinsOfGrowsseth.LOGGER.info("Spawned researcher zombie {} from quest stage", zombie)
 
             entity.discard()

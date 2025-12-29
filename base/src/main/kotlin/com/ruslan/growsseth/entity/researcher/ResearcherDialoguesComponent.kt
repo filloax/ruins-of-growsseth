@@ -308,8 +308,9 @@ class ResearcherDialoguesComponent(
     // we try to handle this in readExtraNbtData but better safe than sorry
     fun readSharedData(data: CompoundTag) {
         savedPlayersData.clear()
-        data.getCompound("SharedDialogueData").apply {
-            loadField(DataFields.SAVED_PLAYERS_DATA, mutableMapCodec(UUIDUtil.STRING_CODEC, PLAYER_DATA_CODEC)) { savedPlayersData.putAll(it) }
+        data.getCompound("SharedDialogueData").get().apply {
+            loadField(DataFields.SAVED_PLAYERS_DATA, mutableMapCodec(UUIDUtil.STRING_CODEC, PLAYER_DATA_CODEC))
+            { savedPlayersData.putAll(it) }
         }
     }
 

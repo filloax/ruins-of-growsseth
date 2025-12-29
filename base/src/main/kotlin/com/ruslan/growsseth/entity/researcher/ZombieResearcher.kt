@@ -11,6 +11,7 @@ import com.ruslan.growsseth.http.GrowssethExtraEvents
 import com.ruslan.growsseth.sound.GrowssethSounds
 import com.ruslan.growsseth.utils.isNull
 import net.minecraft.core.BlockPos
+import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
@@ -75,7 +76,9 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
 
     override fun finalizeSpawn(level: ServerLevelAccessor, difficulty: DifficultyInstance, reason: EntitySpawnReason, spawnData: SpawnGroupData?
     ): SpawnGroupData? {
-        villagerData = villagerData.setProfession(VillagerProfession.CARTOGRAPHER).setLevel(5)
+        villagerData = villagerData.withProfession(
+            BuiltInRegistries.VILLAGER_PROFESSION[VillagerProfession.CARTOGRAPHER].get()
+        ).withLevel(5)
         return super.finalizeSpawn(level, difficulty, reason, spawnData)
     }
 
