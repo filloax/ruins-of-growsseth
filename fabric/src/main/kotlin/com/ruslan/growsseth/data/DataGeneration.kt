@@ -112,10 +112,13 @@ class RecipesProvider(output: FabricDataOutput, registriesFuture: CompletableFut
                     val trimTemplate = TrimTemplate(
                         it,
                         ResourceKey.create(
+                            Registries.TRIM_PATTERN, ResourceLocation.parse(getItemName(it) + "_smithing_trim")
+                        ),
+                        ResourceKey.create(
                             Registries.RECIPE, ResourceLocation.parse(getItemName(it) + "_smithing_trim")
                         )
                     )
-                    this.trimSmithing(trimTemplate.template, trimTemplate.id)
+                    this.trimSmithing(trimTemplate.template, trimTemplate.patternId, trimTemplate.recipeId)
                 }
 
                 GrowssethItems.DISCS_TO_VOCALS.forEach { vocalsDiscRecipe(exporter, it.key, it.value) }

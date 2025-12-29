@@ -4,7 +4,6 @@ import net.fabricmc.fabric.api.item.v1.EnchantingContext
 import net.fabricmc.fabric.api.item.v1.FabricItem
 import net.minecraft.core.Holder
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.SwordItem
 import net.minecraft.world.item.enchantment.Enchantment
 
 class FabricResearcherDaggerItem : FabricItem, AbstractResearcherDaggerItem() {
@@ -16,10 +15,10 @@ class FabricResearcherDaggerItem : FabricItem, AbstractResearcherDaggerItem() {
         context: EnchantingContext,
     ): Boolean {
         val allow = this.allowEnchantment(stack, enchantment)
-        if (allow.isPresent) {
-            return allow.orElseThrow()
+        return if (allow.isPresent) {
+            allow.orElseThrow()
         } else {
-            return super<FabricItem>.canBeEnchantedWith(stack, enchantment, context)
+            super<FabricItem>.canBeEnchantedWith(stack, enchantment, context)
         }
     }
 }

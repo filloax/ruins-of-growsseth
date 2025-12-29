@@ -6,10 +6,10 @@ import net.minecraft.world.item.enchantment.Enchantment
 import net.neoforged.neoforge.common.extensions.IItemExtension
 
 class NeoResearcherDaggerItem : IItemExtension, AbstractResearcherDaggerItem() {
-    override fun isBookEnchantable(stack: ItemStack, book: ItemStack): Boolean {
+    override fun supportsEnchantment(stack: ItemStack, enchantment: Holder<Enchantment>): Boolean {
         // This could block enchants altogether if they contain the wrong enchantment?
         // for now always allow, better than the opposite, check if better way to do this later
-        return super<IItemExtension>.isBookEnchantable(stack, book)
+        return super<IItemExtension>.supportsEnchantment(stack, enchantment)
     }
 
     override fun isPrimaryItemFor(stack: ItemStack, enchantment: Holder<Enchantment>): Boolean {
