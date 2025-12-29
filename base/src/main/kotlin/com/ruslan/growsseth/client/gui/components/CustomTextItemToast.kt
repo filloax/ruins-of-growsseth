@@ -68,7 +68,7 @@ class CustomTextItemToast private constructor(
         val i = this.width()
         if (i == 160 && this.messageLines.size <= 1) {
             guiGraphics.blitSprite(
-                Function { location: ResourceLocation? -> RenderType.guiTextured(location) },
+                Function { location: ResourceLocation -> RenderType.guiTextured(location) },
                 BACKGROUND_SPRITE,
                 0,
                 0,
@@ -106,7 +106,7 @@ class CustomTextItemToast private constructor(
         val j = min(60, width - i)
         val resourcelocation = BACKGROUND_SPRITE
         guiGraphics.blitSprite(
-            Function { location: ResourceLocation? -> RenderType.guiTextured(location) },
+            Function { location: ResourceLocation -> RenderType.guiTextured(location) },
             resourcelocation,
             160,
             32,
@@ -121,7 +121,7 @@ class CustomTextItemToast private constructor(
         var k = i
         while (k < width - j) {
             guiGraphics.blitSprite(
-                Function { location: ResourceLocation? -> RenderType.guiTextured(location) },
+                Function { location: ResourceLocation -> RenderType.guiTextured(location) },
                 resourcelocation,
                 160,
                 32,
@@ -136,7 +136,7 @@ class CustomTextItemToast private constructor(
         }
 
         guiGraphics.blitSprite(
-            Function { location: ResourceLocation? -> RenderType.guiTextured(location) },
+            { location: ResourceLocation -> RenderType.guiTextured(location) },
             resourcelocation,
             160,
             32,

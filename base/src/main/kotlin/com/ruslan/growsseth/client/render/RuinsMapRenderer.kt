@@ -1,16 +1,17 @@
 package com.ruslan.growsseth.client.render
 
-import com.mojang.blaze3d.systems.RenderSystem
-import com.mojang.blaze3d.vertex.*
+import com.mojang.blaze3d.vertex.PoseStack
+import com.mojang.blaze3d.vertex.VertexConsumer
 import com.ruslan.growsseth.config.ClientConfig
 import com.ruslan.growsseth.maps.getMapTargetIcon
 import net.minecraft.client.Minecraft
-import net.minecraft.client.renderer.CoreShaders
 import net.minecraft.client.renderer.MultiBufferSource
+import net.minecraft.client.renderer.RenderType
 import net.minecraft.client.renderer.texture.TextureAtlasSprite
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
 import org.joml.Matrix4f
+import java.util.function.Function
 
 
 object RuinsMapRenderer {
@@ -35,7 +36,13 @@ object RuinsMapRenderer {
     private const val OFFSET_X = 4
     private const val OFFSET_Y = 4
 
+    private var pose: PoseStack? = null
+    private var bufferSource: MultiBufferSource.BufferSource? = null
+
     private fun renderCornerTexture(texture: TextureAtlasSprite, bufferSource: MultiBufferSource.BufferSource, pose: PoseStack, x: Int, y: Int) {
+        this.pose = pose
+        this.bufferSource = bufferSource
+
         pose.pushPose()
 
         // Items are z 150 at time of writing
@@ -43,15 +50,16 @@ object RuinsMapRenderer {
 //        pose.mulPose(Axis.ZP.rotationDegrees(180f))
         pose.scale(1.0f, 1.0f, 3.0f)
 
-        blitSprite(pose, texture, 8, 8, 0, 0, -4, -4, 0, 8, 8)
+        blitSprite(Function { location: ResourceLocation -> RenderType.guiTextured(location) },
+            texture, 8, 8, 0, 0, -4, -4, 0, 8, 8)
 
         pose.popPose()
     }
 
-    // Adapt base methods because I cannot figure rendering out
+    // Adapt base methods because I cannot figure rendering out [net.minecraft.client.gui.GuiGraphics]
 
     private fun blitSprite(
-        pose: PoseStack,
+        renderTypeGetter: Function<ResourceLocation?, RenderType>,
         sprite: TextureAtlasSprite,
         textureWidth: Int,
         textureHeight: Int,
@@ -59,20 +67,23 @@ object RuinsMapRenderer {
         vPosition: Int,
         x: Int,
         y: Int,
-        blitOffset: Int,
         uWidth: Int,
-        vHeight: Int
+        vHeight: Int,
+        blitOffset: Int
     ) {
         if (uWidth != 0 && vHeight != 0) {
             this.innerBlit(
-                pose, sprite.atlasLocation(),
-                x, x + uWidth,
-                y, y + vHeight,
-                blitOffset,
+                renderTypeGetter,
+                sprite.atlasLocation(),
+                x,
+                x + uWidth,
+                y,
+                y + vHeight,
                 sprite.getU(uPosition.toFloat() / textureWidth),
                 sprite.getU((uPosition + uWidth).toFloat() / textureWidth),
                 sprite.getV(vPosition.toFloat() / textureHeight),
-                sprite.getV((vPosition + vHeight).toFloat() / textureHeight)
+                sprite.getV((vPosition + vHeight).toFloat() / textureHeight),
+                blitOffset
             )
         }
     }
@@ -87,33 +98,30 @@ object RuinsMapRenderer {
      * @param x2 the x-coordinate of the second corner of the blit position.
      * @param y1 the y-coordinate of the first corner of the blit position.
      * @param y2 the y-coordinate of the second corner of the blit position.
-     * @param blitOffset the z-level offset for rendering order.
      * @param minU the minimum horizontal texture coordinate.
      * @param maxU the maximum horizontal texture coordinate.
      * @param minV the minimum vertical texture coordinate.
      * @param maxV the maximum vertical texture coordinate.
      */
-    fun innerBlit(
-        pose: PoseStack,
-        atlasLocation: ResourceLocation,
+    private fun innerBlit(
+        renderTypeGetter: Function<ResourceLocation?, RenderType>,
+        atlasLocation: ResourceLocation?,
         x1: Int,
         x2: Int,
         y1: Int,
         y2: Int,
-        blitOffset: Int,
         minU: Float,
         maxU: Float,
         minV: Float,
-        maxV: Float
+        maxV: Float,
+        color: Int
     ) {
-        RenderSystem.setShaderTexture(0, atlasLocation)
-        RenderSystem.setShader(CoreShaders.POSITION_TEX)
-        val matrix4f: Matrix4f = pose.last().pose()
-        val bufferBuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX)
-        bufferBuilder.addVertex(matrix4f, x1.toFloat(), y1.toFloat(), blitOffset.toFloat()).setUv(minU, minV)
-        bufferBuilder.addVertex(matrix4f, x1.toFloat(), y2.toFloat(), blitOffset.toFloat()).setUv(minU, maxV)
-        bufferBuilder.addVertex(matrix4f, x2.toFloat(), y2.toFloat(), blitOffset.toFloat()).setUv(maxU, maxV)
-        bufferBuilder.addVertex(matrix4f, x2.toFloat(), y1.toFloat(), blitOffset.toFloat()).setUv(maxU, minV)
-        BufferUploader.drawWithShader(bufferBuilder.buildOrThrow())
+        val rendertype = renderTypeGetter.apply(atlasLocation)
+        val matrix4f: Matrix4f = this.pose!!.last().pose()
+        val vertexconsumer: VertexConsumer = this.bufferSource!!.getBuffer(rendertype)
+        vertexconsumer.addVertex(matrix4f, x1.toFloat(), y1.toFloat(), 0.0f).setUv(minU, minV).setColor(color)
+        vertexconsumer.addVertex(matrix4f, x1.toFloat(), y2.toFloat(), 0.0f).setUv(minU, maxV).setColor(color)
+        vertexconsumer.addVertex(matrix4f, x2.toFloat(), y2.toFloat(), 0.0f).setUv(maxU, maxV).setColor(color)
+        vertexconsumer.addVertex(matrix4f, x2.toFloat(), y1.toFloat(), 0.0f).setUv(maxU, minV).setColor(color)
     }
 }

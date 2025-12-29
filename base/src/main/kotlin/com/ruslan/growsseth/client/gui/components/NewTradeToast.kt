@@ -74,7 +74,7 @@ class NewTradeToast(newTrades: List<ResearcherItemListing>) : Toast {
 
     override fun render(guiGraphics: GuiGraphics, font: Font, visibilityTime: Long) {
         guiGraphics.blitSprite(
-            Function { location: ResourceLocation? -> RenderType.guiTextured(location) },
+            { location: ResourceLocation -> RenderType.guiTextured(location) },
             BACKGROUND_SPRITE,
             0,
             0,

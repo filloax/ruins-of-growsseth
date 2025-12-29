@@ -82,7 +82,7 @@ public class EasterEggMixin {
             at = @At("RETURN")
         )
         private void onReadAdditionalSaveData(CompoundTag compound, CallbackInfo ci) {
-            setIsGuber(compound.getBoolean(DATA_TAG_GUBER));
+            setIsGuber(compound.getBoolean(DATA_TAG_GUBER).isPresent());
         }
     }
 }
