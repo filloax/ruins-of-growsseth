@@ -71,7 +71,7 @@ object ResearcherDonkey {
     fun onFenceLeash(mob: Leashable, pos: BlockPos, player: ServerPlayer) {
         if (!(mob is Donkey && !mob.tags.contains(Constants.TAG_RESEARCHER_DONKEY))) return
 
-        val serverLevel = player.serverLevel()
+        val serverLevel = player.level()
 
         val tent = Researcher.findTent(serverLevel, pos) ?: return
         val researchers = serverLevel.getEntitiesOfClass(Researcher::class.java, AABB.of(tent.boundingBox).inflate(80.0))

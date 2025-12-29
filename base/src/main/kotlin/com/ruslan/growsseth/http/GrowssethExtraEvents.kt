@@ -157,7 +157,7 @@ object GrowssethExtraEvents {
 
     private fun handleCustomToastJoin(event: ApiEvent, player: ServerPlayer) {
         val seqId = event.pos?.let { "${it.x}${it.y}${it.z}" } ?: ""
-        val packet = getToastPacket(event, player.server)
+        val packet = getToastPacket(event, player.server!!)
 
         checkAndSendCustomToastEvent(player, packet, seqId)
     }

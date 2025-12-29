@@ -19,7 +19,7 @@ class JigsawPieceTrigger : SimpleCriterionTrigger<JigsawPieceTrigger.Instance>()
 
     fun trigger(player: ServerPlayer) {
         this.trigger(player) { triggerInstance ->
-            triggerInstance.matches(player.serverLevel(), player.position())
+            triggerInstance.matches(player.level(), player.position())
         }
     }
 

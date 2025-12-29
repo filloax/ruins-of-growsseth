@@ -164,7 +164,7 @@ class ProgressResearcherTradesProvider(
 
     private fun genRandomTrades(player: ServerPlayer, researcher: Researcher, possibleTrades: List<ResearcherTradeEntry>, allTrades: Boolean = false): List<ResearcherTradeEntry> {
         val daysOffset = researcher.level().gameTime * 1323
-        val random = Random(player.server.overworld().seed + researcher.uuid.hashCode() * 10 + daysOffset)
+        val random = Random(player.server!!.overworld().seed + researcher.uuid.hashCode() * 10 + daysOffset)
         return if (allTrades) {
             possibleTrades
         } else {
@@ -248,14 +248,14 @@ class ProgressResearcherTradesProvider(
         fun onStructureFound(player: ServerPlayer, structId: ResourceKey<Structure>, isJigsawPart: Boolean) {
             if (structId.location().namespace != RuinsOfGrowsseth.MOD_ID) return
 
-            val server = player.server
+            val server = player.server!!
             val prov = getCurrent(server) ?: return
 
             if (prov.getReferenceStructure(structId) == null) return
             if (!prov.isEnabled(server)) return
 
             val data = ProgressTradesSavedData.get(server)
-            if (data.alreadyFoundStructure(player.server, structId)) return
+            if (data.alreadyFoundStructure(server, structId)) return
 
             data.foundStructures.add(prov.getReferenceStructure(structId)!!)
             ProgressTradesSavedData.setDirty(server)

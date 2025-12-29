@@ -91,6 +91,8 @@ import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.level.levelgen.structure.Structure
 import net.minecraft.world.level.levelgen.structure.StructureStart
 import net.minecraft.world.level.portal.TeleportTransition
+import net.minecraft.world.level.storage.ValueInput
+import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
@@ -593,9 +595,9 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             metPlayer = true
 
         if (level().isDarkOutside || !metPlayer)
-            restrictTo(this.startingPos!!, WALK_LIMIT_DISTANCE_NIGHT)
+            setHomeTo(this.startingPos!!, WALK_LIMIT_DISTANCE_NIGHT)
         else
-            restrictTo(this.startingPos!!, WALK_LIMIT_DISTANCE)
+            setHomeTo(this.startingPos!!, WALK_LIMIT_DISTANCE)
 
         // Every second for lag prevention, check researcher teleport. Wait for chunks to be finished
         // loading before running teleport to avoid a bug (possibly caused by wrong thread == currentThread)
@@ -971,7 +973,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     }
 
     private fun getOffers(player: ServerPlayer): MerchantOffers {
-        val server = player.server
+        val server = player.server!!
         val currentProvider = ResearcherTradeMode.providerFromSettings(server)
         val tradesData = tradesData()
         val time = level().gameTime

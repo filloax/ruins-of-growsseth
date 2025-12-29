@@ -47,8 +47,8 @@ object StructureAdvancements {
 
     fun playerHasFoundStructure(player: ServerPlayer, structKey: ResourceKey<Structure>): Boolean {
         val advancements = listOfNotNull(
-            player.server.advancements.get(getStructureAdvancementId(structKey)),
-        ) + GrowssethStructures.VILLAGE_HOUSE_STRUCTURES.mapNotNull { player.server.advancements.get(
+            player.server!!.advancements.get(getStructureAdvancementId(structKey)),
+        ) + GrowssethStructures.VILLAGE_HOUSE_STRUCTURES.mapNotNull { player.server!!.advancements.get(
             getStructureJigsawAdvancementId(it.key, structKey)
         ) }
         if (advancements.isEmpty()) {
@@ -59,7 +59,7 @@ object StructureAdvancements {
     }
 
     fun playerHasFoundStructure(player: ServerPlayer, structTag: TagKey<Structure>): Boolean {
-        val registries = player.serverLevel().registryAccess()
+        val registries = player.level().registryAccess()
         val tagHolders = registries.lookupOrThrow(Registries.STRUCTURE).get(structTag).getOrNull()
         if (tagHolders == null) {
             RuinsOfGrowsseth.LOGGER.warn("Structure tag $structTag doesn't exist")
@@ -74,7 +74,7 @@ object StructureAdvancements {
         // Use allWithPlaceholders to also track fake structures
         // that represent village houses
         return GrowssethStructures.allWithPlaceholders.filter { key ->
-            val advancements = player.server.advancements
+            val advancements = player.server!!.advancements
             val advancement = advancements.get(getStructureAdvancementId(key))
             val jigsawAdvancements = GrowssethStructures.VILLAGE_HOUSE_STRUCTURES[key]?.mapNotNull { advancements.get(
                 getStructureJigsawAdvancementId(it.key, key)

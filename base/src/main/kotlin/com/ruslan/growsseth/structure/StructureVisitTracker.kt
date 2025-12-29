@@ -32,7 +32,7 @@ object StructureVisitTracker {
     fun onServerPlayerTick(player: ServerPlayer) {
         if (player.tickCount % UPDATE_PERIOD_TICKS != 0) return
 
-        val level = player.serverLevel()
+        val level = player.level()
         val structureManager = level.structureManager()
 
         for (tag in structureTags) {

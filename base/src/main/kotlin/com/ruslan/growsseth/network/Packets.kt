@@ -110,7 +110,7 @@ data class ResearcherTradesNotifPacket(
         val ENTRY = TypeAndCodec(TYPE, CODEC)
 
         private fun write(buf: RegistryFriendlyByteBuf, packet: ResearcherTradesNotifPacket) = buf.writeJsonWithCodec(ResearcherItemListing.LIST_CODEC, packet.newTrades)
-        private fun read(buf: RegistryFriendlyByteBuf) = ResearcherTradesNotifPacket(buf.readJsonWithCodec(ResearcherItemListing.LIST_CODEC))
+        private fun read(buf: RegistryFriendlyByteBuf) = ResearcherTradesNotifPacket(buf.readLenientJsonWithCodec(ResearcherItemListing.LIST_CODEC))
     }
 
     override fun type(): CustomPacketPayload.Type<ResearcherTradesNotifPacket> = TYPE
@@ -158,7 +158,7 @@ open class CustomToastPacket(
 data class PlacesInfoPacket(
     val locationData: List<LocationData>
 ) : CustomPacketPayload {
-    constructor(buf: FriendlyByteBuf) : this(buf.readJsonWithCodec(LocationData.CODEC.listOf()))
+    constructor(buf: FriendlyByteBuf) : this(buf.readLenientJsonWithCodec(LocationData.CODEC.listOf()))
 
     companion object {
         val CODEC: RStreamCodec<PlacesInfoPacket> = StreamCodec.of(::write, ::read)
@@ -166,7 +166,7 @@ data class PlacesInfoPacket(
         val ENTRY = TypeAndCodec(TYPE, CODEC)
 
         private fun write(buf: RegistryFriendlyByteBuf, pak: PlacesInfoPacket) = buf.writeJsonWithCodec(LocationData.CODEC.listOf(), pak.locationData)
-        private fun read(buf: RegistryFriendlyByteBuf) = PlacesInfoPacket(buf.readJsonWithCodec(LocationData.CODEC.listOf()))
+        private fun read(buf: RegistryFriendlyByteBuf) = PlacesInfoPacket(buf.readLenientJsonWithCodec(LocationData.CODEC.listOf()))
     }
 
     override fun type() = TYPE
