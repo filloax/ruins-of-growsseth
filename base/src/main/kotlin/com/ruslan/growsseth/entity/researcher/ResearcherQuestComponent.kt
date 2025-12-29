@@ -209,7 +209,9 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
 
         fun spawnRewardChest(level: ServerLevel, pos: BlockPos, tentRotation: Rotation) {
             val prevBlockEntity = level.getBlockEntity(pos)
-            Clearable.tryClear(prevBlockEntity)
+
+            // todo: remove if not needed:
+            //Clearable.tryClear(prevBlockEntity)
 
             // chest always spawns facing the campfire
             val chestState: BlockState = Blocks.CHEST.defaultBlockState().setValue(ChestBlock.FACING, tentRotation.rotate(Direction.NORTH))

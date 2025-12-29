@@ -116,8 +116,8 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
         for (equipmentSlot in EquipmentSlot.entries) {
             val itemStack = getItemBySlot(equipmentSlot)
             if (itemStack.isEmpty) continue
-            val d = getEquipmentDropChance(equipmentSlot).toDouble()
-            if (d <= 1.0) continue
+            val dc = dropChances.byEquipment(equipmentSlot).toDouble()
+            if (dc <= 1.0) continue
             this.spawnAtLocation(serverLevel, itemStack)
         }
         if (isNull(researcher)) {

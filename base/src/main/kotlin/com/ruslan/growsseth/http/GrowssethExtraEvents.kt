@@ -8,6 +8,7 @@ import com.filloax.fxlib.api.savedata.FxSavedData
 import com.filloax.fxlib.api.networking.sendPacket
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.Constants.EVENTS_DATA
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.entity.GrowssethEntities
@@ -170,8 +171,8 @@ object GrowssethExtraEvents {
 
     private fun checkAndSendCustomToastEvent(player: ServerPlayer, packet: CustomToastPacket, seqId: String) {
         val data = player.getPersistData()
-        data.putIfAbsent("growsseth:customToastMemory", CompoundTag())
-        val memory = data.getCompound("growsseth:customToastMemory")
+        data.putIfAbsent(Constants.CUSTOM_TOAST_MEMORY, CompoundTag())
+        val memory = data.getCompound(Constants.CUSTOM_TOAST_MEMORY).get()
         val id = packet.title.string + seqId
 
         if (!memory.contains(id)) {

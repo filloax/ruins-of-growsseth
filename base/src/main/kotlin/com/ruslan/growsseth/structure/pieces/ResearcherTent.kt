@@ -106,9 +106,10 @@ class ResearcherTent : GrTemplateStructurePiece {
                 if (blockState.block in blockCounts && blockState.`is`(tag)) {
                     val blockEntity = level.getBlockEntity(pos)
                     if (blockEntity is RandomizableContainerBlockEntity) {
-                        blockEntity.unpackLootTable(null)
+                        blockEntity.clearContent()
                     }
-                    Clearable.tryClear(blockEntity)
+                    // todo: remove if not needed:
+                    //Clearable.tryClear(blockEntity)
                     val newBlock = removeReplaceBlocks.getOrDefault(blockState.block, Blocks.AIR).defaultBlockState()
                     level.setBlock(pos, newBlock, SetBlockFlag.or(
                         SetBlockFlag.NOTIFY_CLIENTS,

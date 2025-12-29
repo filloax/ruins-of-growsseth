@@ -1,7 +1,6 @@
 package com.ruslan.growsseth.client.render
 
 import com.mojang.blaze3d.vertex.PoseStack
-import com.ruslan.growsseth.entity.researcher.Researcher
 import com.ruslan.growsseth.utils.notNull
 import net.minecraft.client.model.EntityModel
 import net.minecraft.client.renderer.MultiBufferSource
@@ -38,7 +37,7 @@ open class ResearcherProfessionLayer<T : LivingEntityRenderState, M : EntityMode
             ARGB.colorFromFloat(1f, 1f, 1f, 1f)
         )
 
-        if (renderState is ResearcherRendererState && renderState.entity!!.isAggressive && notNull(profClothesAggressiveLocation)) {
+        if (renderState is ResearcherRendererState && renderState.isAggressive && notNull(profClothesAggressiveLocation)) {
             renderColoredCutoutModel(
                 parentModel, profClothesAggressiveLocation, poseStack, multiBufferSource,
                 bufferSource, renderState,

@@ -32,6 +32,8 @@ object Constants {
 
     const val DAY_TICKS_DURATION = 24000L
 
+    const val CUSTOM_TOAST_MEMORY = "growsseth:customToastMemory"
+
     // For data files stored in world folder
     const val DATA_FOLDER = "growsseth"
     const val RESEARCHER_DATA = "$DATA_FOLDER/researcher_data"
