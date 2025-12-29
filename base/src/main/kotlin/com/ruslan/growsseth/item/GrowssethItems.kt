@@ -38,9 +38,7 @@ object GrowssethItems {
 	val RUINS_MAP by make("ruins_map", { MapItem(defaultBuilder("ruins_map").stacksTo(1)) }, autoGenerateJson = false)
 
 	val GROWSSETH_BANNER_PATTERN by make("growsseth_banner_pattern", {
-		AutoBannerItem(
-			GrowssethBannerPatterns.GROWSSETH.tag, defaultBuilder("growsseth_banner_pattern").rarity(Rarity.RARE)
-		)
+		AutoBannerItem(defaultBuilder("growsseth_banner_pattern").rarity(Rarity.RARE))
 	})
 	val GROWSSETH_ARMOR_TRIM: SmithingTemplateItem by make("growsseth_trim_template",
 		{ SmithingTemplateItem.createArmorTrimTemplate(defaultBuilder("growsseth_trim_template")) })
