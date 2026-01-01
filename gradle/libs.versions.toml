@@ -13,7 +13,7 @@ neoform = "1.21.8-20250717.133445" # vanilla neoforge configuration
 
 # Mod dependencies
 filloaxlib = "0.36.0-1.21.8"
-modmenu = "12.0.0"
+modmenu = "15.0.0"
 rconfig = "3.6.4"
 rconfigMc = "1.21.6"
 
