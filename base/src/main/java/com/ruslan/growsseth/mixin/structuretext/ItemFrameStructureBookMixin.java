@@ -20,24 +20,25 @@ public abstract class ItemFrameStructureBookMixin {
     @Unique
     ItemFrame thisItemFrame = (ItemFrame)(Object)this;
 
-    @WrapOperation(
-        method = "readAdditionalSaveData",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/world/item/ItemStack;parse(Lnet/minecraft/core/HolderLookup$Provider;Lnet/minecraft/nbt/Tag;)Ljava/util/Optional;"
-        )
-    )
-    private Optional<ItemStack> convertDroppedBook(HolderLookup.Provider lookupProvider, Tag tag, Operation<Optional<ItemStack>> original){
-        var itemOpt = original.call(lookupProvider, tag);
-        return itemOpt.map(item -> {
-            if (
-                !MixinHelpers.loadingFromStructureBlock &&
-                (item.is(Items.WRITABLE_BOOK) || item.is(Items.WRITTEN_BOOK))
-                && StructureBooks.bookIsTemplate(item)
-            ) {
-                return StructureBooks.loadTemplate(item);
-            }
-            return item;
-        });
-    }
+    // todo: parse does not exist in itemstack anymore, use new ValueInput and output logic
+//    @WrapOperation(
+//        method = "readAdditionalSaveData",
+//        at = @At(
+//            value = "INVOKE",
+//            target = "Lnet/minecraft/world/item/ItemStack;parse(Lnet/minecraft/core/HolderLookup$Provider;Lnet/minecraft/nbt/Tag;)Ljava/util/Optional;"
+//        )
+//    )
+//    private Optional<ItemStack> convertDroppedBook(HolderLookup.Provider lookupProvider, Tag tag, Operation<Optional<ItemStack>> original){
+//        var itemOpt = original.call(lookupProvider, tag);
+//        return itemOpt.map(item -> {
+//            if (
+//                !MixinHelpers.loadingFromStructureBlock &&
+//                (item.is(Items.WRITABLE_BOOK) || item.is(Items.WRITTEN_BOOK))
+//                && StructureBooks.bookIsTemplate(item)
+//            ) {
+//                return StructureBooks.loadTemplate(item);
+//            }
+//            return item;
+//        });
+//    }
 }

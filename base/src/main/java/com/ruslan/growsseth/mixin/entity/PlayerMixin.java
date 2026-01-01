@@ -3,6 +3,7 @@ package com.ruslan.growsseth.mixin.entity;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.ruslan.growsseth.entity.researcher.Researcher;
 import com.ruslan.growsseth.item.AbstractResearcherDaggerItem;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -27,17 +28,18 @@ public abstract class PlayerMixin {
         return bl4;
     }
 
-    @Inject(method = "blockUsingShield", at = @At("HEAD"))
-    private void getAttacker(LivingEntity attacker, CallbackInfo ci){
-        lastAttackerIsResearcher = attacker instanceof Researcher;
+    @Inject(method = "blockUsingItem", at = @At("HEAD"))
+    private void getAttacker(ServerLevel level, LivingEntity entity, CallbackInfo ci){
+        lastAttackerIsResearcher = entity instanceof Researcher;
     }
 
-    @ModifyConstant(method = "disableShield", constant = @Constant(intValue = 100))
-    private int lessShieldCooldownForResearcher(int constant) {
-        if (lastAttackerIsResearcher)
-            return 30;      // 1.5 seconds of cooldown instead of usual 5
-        return constant;
-    }
+    // todo: fix, new method is in net.minecraft.world.item.component.BlocksAttacks#disable, it was moved from the player to the component
+//    @ModifyConstant(method = "disableShield", constant = @Constant(intValue = 100))
+//    private int lessShieldCooldownForResearcher(int constant) {
+//        if (lastAttackerIsResearcher)
+//            return 30;      // 1.5 seconds of cooldown instead of usual 5
+//        return constant;
+//    }
 
     @ModifyReturnValue(method = "entityInteractionRange", at = @At("RETURN"))
     public double shortRangeForDagger(double original){

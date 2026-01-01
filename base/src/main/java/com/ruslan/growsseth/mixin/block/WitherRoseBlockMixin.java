@@ -5,6 +5,7 @@ import com.ruslan.growsseth.entity.researcher.Researcher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.WitherRoseBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -20,7 +21,7 @@ public abstract class WitherRoseBlockMixin {
     boolean researcherInside = false;
 
     @Inject(method = "entityInside", at = @At("HEAD"))
-    private void checkIfResearcherInside(BlockState state, Level level, BlockPos pos, Entity entity, CallbackInfo ci) {
+    private void checkIfResearcherInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier, CallbackInfo ci) {
         if (!level.isClientSide && level.getDifficulty() != Difficulty.PEACEFUL)
             researcherInside = entity instanceof Researcher;
     }

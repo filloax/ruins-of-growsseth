@@ -14,6 +14,7 @@ import net.minecraft.world.entity.Leashable;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.LeadItem;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -47,16 +48,15 @@ public abstract class LeadItemMixin {
         method = "bindPlayerMobs",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/item/LeadItem;leashableInArea(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Ljava/util/function/Predicate;)Ljava/util/List;"
+            target = "Lnet/minecraft/world/entity/Leashable;leashableInArea(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/phys/Vec3;Ljava/util/function/Predicate;)Ljava/util/List;"
         )
     )
     private static List<Leashable> beforeLeadMob(
-            Level level, BlockPos pos, Predicate<Leashable> predicate, Operation<List<Leashable>> original,
-            @Local(argsOnly = true) Player player
+            Level level, Vec3 pos, Predicate<Leashable> predicate, Operation<List<Leashable>> original, @Local(argsOnly = true) Player player
     ) {
         if (player instanceof ServerPlayer serverPlayer) {
             return original.call(level, pos, predicate.and(mob -> {
-                var event = new FenceLeashEvent.PreLeash(mob, pos, serverPlayer);
+                var event = new FenceLeashEvent.PreLeash(mob, new BlockPos((int) pos.x, (int) pos.y,(int) pos.z), serverPlayer);
                 Events.FENCE_LEASH_PRE.invoke(event);
                 return event.getResult() != TriState.FALSE;
             }));

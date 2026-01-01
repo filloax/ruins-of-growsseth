@@ -14,6 +14,8 @@ import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -73,16 +75,16 @@ public class EasterEggMixin {
             method = "addAdditionalSaveData",
             at = @At("RETURN")
         )
-        private void onAddAdditionalSaveData(CompoundTag compound, CallbackInfo ci) {
-            compound.putBoolean(DATA_TAG_GUBER, getIsGuber());
+        private void onAddAdditionalSaveData(ValueOutput output, CallbackInfo ci) {
+            output.putBoolean(DATA_TAG_GUBER, getIsGuber());
         }
 
         @Inject(
             method = "readAdditionalSaveData",
             at = @At("RETURN")
         )
-        private void onReadAdditionalSaveData(CompoundTag compound, CallbackInfo ci) {
-            setIsGuber(compound.getBoolean(DATA_TAG_GUBER).isPresent());
+        private void onReadAdditionalSaveData(ValueInput input, CallbackInfo ci) {
+            setIsGuber(input.getBooleanOr(DATA_TAG_GUBER, false));
         }
     }
 }

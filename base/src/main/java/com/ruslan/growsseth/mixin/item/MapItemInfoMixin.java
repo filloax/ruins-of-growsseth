@@ -32,18 +32,19 @@ public class MapItemInfoMixin {
             MapDecorationTypes.PLAYER_OFF_LIMITS
         );
 
-    // Adds in detailed mode
-    @Inject(method = "appendHoverText", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 3, shift = At.Shift.AFTER))
-    private void appendTargetHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag, CallbackInfo ci) {
-        var firstDecorationOpt = Optional.ofNullable(stack.get(DataComponents.MAP_DECORATIONS))
-                .map(MapDecorations::decorations)
-                .flatMap(d -> d.values().stream()
-                        .filter(x -> !IGNORE_TYPES.contains(x.type()))
-                        .findFirst()
-                );
-        if (firstDecorationOpt.isPresent()) {
-            var firstDecoration = firstDecorationOpt.get();
-            tooltipComponents.add(Component.translatable("growsseth.filled_map.target", firstDecoration.x(), firstDecoration.z()).withStyle(ChatFormatting.GRAY));
-        }
-    }
+    // todo: see https://docs.neoforged.net/primer/docs/1.21.5/#component-interaction-events
+//    // Adds in detailed mode
+//    @Inject(method = "appendHoverText", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 3, shift = At.Shift.AFTER))
+//    private void appendTargetHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag, CallbackInfo ci) {
+//        var firstDecorationOpt = Optional.ofNullable(stack.get(DataComponents.MAP_DECORATIONS))
+//                .map(MapDecorations::decorations)
+//                .flatMap(d -> d.values().stream()
+//                        .filter(x -> !IGNORE_TYPES.contains(x.type()))
+//                        .findFirst()
+//                );
+//        if (firstDecorationOpt.isPresent()) {
+//            var firstDecoration = firstDecorationOpt.get();
+//            tooltipComponents.add(Component.translatable("growsseth.filled_map.target", firstDecoration.x(), firstDecoration.z()).withStyle(ChatFormatting.GRAY));
+//        }
+//    }
 }
