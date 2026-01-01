@@ -17,6 +17,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
 import net.fabricmc.fabric.api.datagen.v1.provider.*
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider.BlockTagProvider
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider.ItemTagProvider
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags
 import net.minecraft.advancements.AdvancementHolder
 import net.minecraft.client.data.models.BlockModelGenerators
 import net.minecraft.client.data.models.ItemModelGenerators
@@ -25,18 +26,17 @@ import net.minecraft.client.data.models.model.ModelTemplates
 import net.minecraft.core.HolderLookup
 import net.minecraft.core.RegistrySetBuilder
 import net.minecraft.core.registries.Registries
-import net.minecraft.data.PackOutput
 import net.minecraft.data.recipes.RecipeCategory
 import net.minecraft.data.recipes.RecipeOutput
 import net.minecraft.data.recipes.RecipeProvider
 import net.minecraft.data.recipes.ShapelessRecipeBuilder
 import net.minecraft.data.recipes.packs.VanillaRecipeProvider.TrimTemplate
 import net.minecraft.data.tags.BannerPatternTagsProvider
-import net.minecraft.data.tags.InstrumentTagsProvider
 import net.minecraft.data.tags.StructureTagsProvider
 import net.minecraft.data.tags.WorldPresetTagsProvider
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.tags.BlockTags
 import net.minecraft.tags.ItemTags
 import net.minecraft.tags.WorldPresetTags
 import net.minecraft.world.item.Items
@@ -170,21 +170,21 @@ class TagProviderBlocks(output: FabricDataOutput, registries: CompletableFuture<
      * Implement this method and then use [FabricTagProvider.tag] to get and register new tag builders.
      */
     override fun addTags(arg: HolderLookup.Provider) {
-        getOrCreateTagBuilder(GrowssethTags.TENT_MATERIALS_WHITELIST)
-            .addOptionalTag(ResourceLocation.parse("planks"))
-            .addOptionalTag(ResourceLocation.parse("wool"))
-            .addOptionalTag(ResourceLocation.parse("wooden_stairs"))
-            .addOptionalTag(ResourceLocation.parse("wooden_slabs"))
-            .addOptionalTag(ResourceLocation.parse("wooden_pressure_plates"))
-            .addOptionalTag(ResourceLocation.parse("trapdoors"))
-            .addOptionalTag(ResourceLocation.parse("banners"))
-            .addOptionalTag(ResourceLocation.parse("fences"))
-            .addOptionalTag(ResourceLocation.parse("walls"))
-            .addOptionalTag(ResourceLocation.fromNamespaceAndPath("c", "chests"))
-            .addOptionalTag(ResourceLocation.parse("wool_carpets"))
-            .addOptionalTag(ResourceLocation.parse("campfires"))
-            .addOptionalTag(ResourceLocation.fromNamespaceAndPath("c", "villager_job_sites"))
-            .addOptionalTag(ResourceLocation.parse("fence_gates"))
+        valueLookupBuilder(GrowssethTags.TENT_MATERIALS_WHITELIST)
+            .addOptionalTag(BlockTags.PLANKS)
+            .addOptionalTag(BlockTags.WOOL)
+            .addOptionalTag(BlockTags.WOODEN_STAIRS)
+            .addOptionalTag(BlockTags.WOODEN_SLABS)
+            .addOptionalTag(BlockTags.WOODEN_PRESSURE_PLATES)
+            .addOptionalTag(BlockTags.TRAPDOORS)
+            .addOptionalTag(BlockTags.BANNERS)
+            .addOptionalTag(BlockTags.FENCES)
+            .addOptionalTag(BlockTags.WALLS)
+            .addOptionalTag(ConventionalBlockTags.CHESTS)
+            .addOptionalTag(BlockTags.WOOL_CARPETS)
+            .addOptionalTag(BlockTags.CAMPFIRES)
+            .addOptionalTag(ConventionalBlockTags.VILLAGER_JOB_SITES)
+            .addOptionalTag(BlockTags.FENCE_GATES)
             .add(Blocks.STRIPPED_SPRUCE_LOG)
             .add(Blocks.LECTERN)
             .add(Blocks.CARTOGRAPHY_TABLE)
@@ -195,9 +195,9 @@ class TagProviderBlocks(output: FabricDataOutput, registries: CompletableFuture<
             .add(Blocks.TORCH)
             .add(Blocks.CHAIN)
             .add(Blocks.HAY_BLOCK)
-        getOrCreateTagBuilder(GrowssethTags.TENT_CLEAR_ZOMBIE_STAGE_WHITELIST)
+        valueLookupBuilder(GrowssethTags.TENT_CLEAR_ZOMBIE_STAGE_WHITELIST)
             .add(Blocks.WHITE_CARPET)
-        getOrCreateTagBuilder(GrowssethTags.RESEARCHER_MESS_TRIGGER)
+        valueLookupBuilder(GrowssethTags.RESEARCHER_MESS_TRIGGER)
             .add(Blocks.LECTERN)
             .add(Blocks.CARTOGRAPHY_TABLE)
     }
@@ -205,7 +205,7 @@ class TagProviderBlocks(output: FabricDataOutput, registries: CompletableFuture<
 
 class TagProviderItems(output: FabricDataOutput, registries: CompletableFuture<HolderLookup.Provider>): ItemTagProvider(output, registries) {
     override fun addTags(arg: HolderLookup.Provider) {
-        getOrCreateTagBuilder(ItemTags.DECORATED_POT_SHERDS)
+        valueLookupBuilder(ItemTags.DECORATED_POT_SHERDS)
             .add(GrowssethItems.GROWSSETH_POTTERY_SHERD)
     }
 }
@@ -220,7 +220,7 @@ class TagProviderStructures(output: FabricDataOutput, registries: CompletableFut
                     if (arg.lookupOrThrow(Registries.STRUCTURE).get(key).isPresent) {
                         b.add(key)
                     } else {
-                        b.addOptional(key.location())
+                        b.addOptional(key)
                     }
                 }
             }
