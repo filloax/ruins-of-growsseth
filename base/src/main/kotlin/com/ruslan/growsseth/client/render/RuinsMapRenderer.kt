@@ -50,13 +50,15 @@ object RuinsMapRenderer {
 //        pose.mulPose(Axis.ZP.rotationDegrees(180f))
         pose.scale(1.0f, 1.0f, 3.0f)
 
-        blitSprite(Function { location: ResourceLocation -> RenderType.guiTextured(location) },
-            texture, 8, 8, 0, 0, -4, -4, 0, 8, 8)
+        // todo: fix
+//        blitSprite(Function { location: ResourceLocation -> RenderType.guiTextured(location) },
+//            texture, 8, 8, 0, 0, -4, -4, 0, 8, 8)
 
         pose.popPose()
     }
 
     // Adapt base methods because I cannot figure rendering out [net.minecraft.client.gui.GuiGraphics]
+    // TODO: there should be a way in newer versions to do this by data, adapting base methods requires too much work
 
     private fun blitSprite(
         renderTypeGetter: Function<ResourceLocation?, RenderType>,

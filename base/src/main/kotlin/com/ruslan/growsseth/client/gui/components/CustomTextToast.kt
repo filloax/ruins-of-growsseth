@@ -5,11 +5,10 @@ import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.toasts.Toast
 import net.minecraft.client.gui.components.toasts.ToastManager
-import net.minecraft.client.renderer.RenderType
+import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.FormattedCharSequence
-import java.util.function.Function
 import kotlin.math.min
 
 // Edit of SystemToast
@@ -69,7 +68,7 @@ class CustomTextToast private constructor(
         val j = min(60, width - i)
         val resourcelocation = BACKGROUND_SPRITE
         guiGraphics.blitSprite(
-            { location: ResourceLocation -> RenderType.guiTextured(location) },
+            RenderPipelines.GUI_TEXTURED,
             resourcelocation,
             160,
             32,
@@ -84,7 +83,7 @@ class CustomTextToast private constructor(
         var k = i
         while (k < width - j) {
             guiGraphics.blitSprite(
-                { location: ResourceLocation -> RenderType.guiTextured(location) },
+                RenderPipelines.GUI_TEXTURED,
                 resourcelocation,
                 160,
                 32,
@@ -99,7 +98,7 @@ class CustomTextToast private constructor(
         }
 
         guiGraphics.blitSprite(
-            { location: ResourceLocation -> RenderType.guiTextured(location) },
+            RenderPipelines.GUI_TEXTURED,
             resourcelocation,
             160,
             32,
@@ -142,7 +141,7 @@ class CustomTextToast private constructor(
         val i = this.width()
         if (i == 160 && this.messageLines.size <= 1) {
             guiGraphics.blitSprite(
-                { location: ResourceLocation -> RenderType.guiTextured(location) },
+                RenderPipelines.GUI_TEXTURED,
                 BACKGROUND_SPRITE,
                 0,
                 0,

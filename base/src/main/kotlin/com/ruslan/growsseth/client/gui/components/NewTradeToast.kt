@@ -5,11 +5,10 @@ import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.toasts.Toast
 import net.minecraft.client.gui.components.toasts.ToastManager
-import net.minecraft.client.renderer.RenderType
+import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
-import java.util.function.Function
 import kotlin.math.max
 
 // Adapted from RecipeToast
@@ -74,7 +73,7 @@ class NewTradeToast(newTrades: List<ResearcherItemListing>) : Toast {
 
     override fun render(guiGraphics: GuiGraphics, font: Font, visibilityTime: Long) {
         guiGraphics.blitSprite(
-            { location: ResourceLocation -> RenderType.guiTextured(location) },
+            RenderPipelines.GUI_TEXTURED,
             BACKGROUND_SPRITE,
             0,
             0,
@@ -84,10 +83,10 @@ class NewTradeToast(newTrades: List<ResearcherItemListing>) : Toast {
         guiGraphics.drawString(font, TITLE_TEXT, 30, 7, -11534256, false)
         guiGraphics.drawString(font, DESCRIPTION_TEXT, 30, 18, -16777216, false)
         val itemStack = this.tradeItems[this.displayedRecipeIndex]
-        guiGraphics.pose().pushPose()
-        guiGraphics.pose().scale(0.6f, 0.6f, 1.0f)
+        guiGraphics.pose().pushMatrix()
+        guiGraphics.pose().scale(0.6f, 0.6f)
         guiGraphics.renderFakeItem(ItemStack.EMPTY, 3, 3)
-        guiGraphics.pose().popPose()
+        guiGraphics.pose().popMatrix()
         guiGraphics.renderFakeItem(itemStack, 8, 8)
     }
 }

@@ -2,7 +2,6 @@ package com.ruslan.growsseth.entity.researcher
 
 import com.filloax.fxlib.api.entity.delegate
 import com.filloax.fxlib.api.entity.getPersistData
-import com.filloax.fxlib.api.nbt.getCompoundOrNull
 import com.filloax.fxlib.api.nbt.loadField
 import com.filloax.fxlib.api.nbt.saveField
 import com.filloax.fxlib.api.secondsToTicks
@@ -43,7 +42,6 @@ import net.minecraft.core.component.DataComponents
 import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.core.registries.Registries
-import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
 import net.minecraft.network.syncher.EntityDataSerializers
@@ -886,12 +884,12 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         lastWorldDataTime = savedData.lastChangeTimestamp
     }
 
-    override fun addAdditionalSaveData(compoundTag: CompoundTag) {
+    override fun addAdditionalSaveData(output: ValueOutput) {
         clearFailedMaps()
 
-        super.addAdditionalSaveData(compoundTag)
+        super.addAdditionalSaveData(output)
 
-        dialogues?.writeNbt(compoundTag)
+        dialogues?.writeNbt(output)
 
         val data = saveResearcherData()
 
@@ -903,51 +901,56 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         }
 
         // Entity specific data (not shared even in single researcher mode)
-        compoundTag.put(DATA_TAG, data)
-        compoundTag.putLong(SPAWN_TIME_TAG, spawnTime)
+        output.store(DATA_TAG, CompoundTag.CODEC, data)
+        output.putLong(SPAWN_TIME_TAG, spawnTime)
         // Save separately from data as specific to single researcher
-        compoundTag.saveField(TELEPORT_COUNTER_TAG, Codec.INT, ::secondsAwayFromTent)
-        compoundTag.saveField(STARTING_POS_TAG, BlockPos.CODEC, ::startingPos)
-        compoundTag.saveField(STARTING_DIM_TAG, ResourceKey.codec(Registries.DIMENSION), ::startingDimension)
+        output.store(TELEPORT_COUNTER_TAG, Codec.INT, secondsAwayFromTent)
+        output.storeNullable(STARTING_POS_TAG, BlockPos.CODEC, startingPos)
+        output.store(STARTING_DIM_TAG, ResourceKey.codec(Registries.DIMENSION), startingDimension)
 
         synchronized(storedMapLocations) {
-            compoundTag.saveField(MAP_MEMORY_TAG, MAP_MEMORY_CODEC, ::storedMapLocations)
+            output.store(MAP_MEMORY_TAG, MAP_MEMORY_CODEC, storedMapLocations)
         }
 
-        compoundTag.saveField(OFFERS_TAG, Codec.unboundedMap(UUIDUtil.STRING_CODEC, GrowssethCodecs.MERCHANT_OFFERS_CODEC), ::offersByPlayer)
+        output.store(OFFERS_TAG, Codec.unboundedMap(UUIDUtil.STRING_CODEC, GrowssethCodecs.MERCHANT_OFFERS_CODEC), offersByPlayer)
     }
 
-    override fun readAdditionalSaveData(compoundTag: CompoundTag) {
-        super.readAdditionalSaveData(compoundTag)
+    override fun readAdditionalSaveData(input: ValueInput) {
+        super.readAdditionalSaveData(input)
         var read = false
 
-        dialogues?.readNbt(compoundTag)
+        dialogues?.readNbt(input)
+
+        var researcherData: CompoundTag = CompoundTag()
 
         if (ResearcherConfig.singleResearcher) {
             server?.let { serv ->
                 val savedData = ResearcherSavedData.getPersistent(serv)
                 readSavedData(savedData)
+                researcherData = savedData.data
                 read = true
             }
         }
         if (!read) {
-            compoundTag.getCompoundOrNull(DATA_TAG)?.let { readResearcherData(it) }
+            input.read(DATA_TAG, CompoundTag.CODEC).get()
+                .let {
+                    readResearcherData(it)
+                    researcherData = it
+                }
         }
-        if (compoundTag.contains(SPAWN_TIME_TAG)) {
-            spawnTime = compoundTag.getLong(SPAWN_TIME_TAG).get()
-        }
+        spawnTime = input.getLong(SPAWN_TIME_TAG).get()
 
-        compoundTag.loadField(TELEPORT_COUNTER_TAG, Codec.INT) { secondsAwayFromTent = it }
-        compoundTag.loadField(STARTING_POS_TAG, BlockPos.CODEC) { startingPos = it }
-        compoundTag.loadField(STARTING_DIM_TAG, ResourceKey.codec(Registries.DIMENSION)) { startingDimension = it }
+        researcherData.loadField(TELEPORT_COUNTER_TAG, Codec.INT) { secondsAwayFromTent = it }
+        researcherData.loadField(STARTING_POS_TAG, BlockPos.CODEC) { startingPos = it }
+        researcherData.loadField(STARTING_DIM_TAG, ResourceKey.codec(Registries.DIMENSION)) { startingDimension = it }
         synchronized(storedMapLocations) {
             storedMapLocations.clear()
-            compoundTag.loadField(MAP_MEMORY_TAG, MAP_MEMORY_CODEC) {
+            researcherData.loadField(MAP_MEMORY_TAG, MAP_MEMORY_CODEC) {
                 storedMapLocations.putAll(it)
             }
         }
         offersByPlayer.clear()
-        compoundTag.loadField(OFFERS_TAG, Codec.unboundedMap(UUIDUtil.STRING_CODEC, GrowssethCodecs.MERCHANT_OFFERS_CODEC)) { offersByPlayer.putAll(it) }
+        researcherData.loadField(OFFERS_TAG, Codec.unboundedMap(UUIDUtil.STRING_CODEC, GrowssethCodecs.MERCHANT_OFFERS_CODEC)) { offersByPlayer.putAll(it) }
     }
 
     fun saveWorldData(force: Boolean = false) {

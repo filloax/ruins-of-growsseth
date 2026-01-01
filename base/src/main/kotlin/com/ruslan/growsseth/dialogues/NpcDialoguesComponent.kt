@@ -1,12 +1,12 @@
 package com.ruslan.growsseth.dialogues
 
-import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.level.entity.EntityTypeTest
+import net.minecraft.world.level.storage.ValueInput
+import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.AABB
-import java.util.*
 
 /**
  * Interface to represent a component that handles "dialogues" for an NPC,
@@ -81,8 +81,8 @@ interface NpcDialoguesComponent {
      */
     fun triggerDialogueEntry(player: ServerPlayer, dialogueEntry: DialogueEntry, immediate: Boolean = false)
 
-    fun readNbt(tag: CompoundTag) {}
-    fun writeNbt(tag: CompoundTag) {}
+    fun readNbt(input: ValueInput) {}
+    fun writeNbt(output: ValueOutput) {}
 }
 
 interface DialoguesNpc {

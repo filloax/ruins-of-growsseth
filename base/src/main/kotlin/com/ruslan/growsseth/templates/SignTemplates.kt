@@ -1,6 +1,9 @@
 package com.ruslan.growsseth.templates;
 
 import com.filloax.fxlib.api.nbt.putIfAbsent
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.LongSerializationPolicy
 import com.ruslan.growsseth.Constants
 import net.minecraft.core.RegistryAccess
 import net.minecraft.core.component.DataComponents
@@ -12,12 +15,12 @@ import net.minecraft.world.item.DyeColor
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.component.CustomData
 import net.minecraft.world.level.block.entity.SignText
-import kotlin.collections.getOrNull
 
 object SignTemplates {
     private const val LINE_TEMPLATE_PREFIX = "%TEMPLATE%"   // different from books to allow templates in hanging signs
 
     val templates get() = TemplateListener.signs()
+    val gson: Gson = GsonBuilder().setPrettyPrinting().setLongSerializationPolicy(LongSerializationPolicy.DEFAULT).create()
 
     fun templates(lang: String) = TemplateListener.signs(lang)
 
@@ -101,7 +104,8 @@ object SignTemplates {
             var message: String
             for(i in 0..3) {
                 if (signLines.getOrNull(i) != null)
-                    message = Component.Serializer.toJson(signLines[i], registries)
+                    // todo: check if correct
+                    message = gson.toJson(signLines[i])
                 else
                     message = "[\"\"]"
                 messagesList.add(StringTag.valueOf(message))

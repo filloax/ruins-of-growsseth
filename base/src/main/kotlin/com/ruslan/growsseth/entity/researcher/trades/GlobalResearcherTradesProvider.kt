@@ -16,7 +16,6 @@ import com.ruslan.growsseth.entity.researcher.Researcher
 import com.ruslan.growsseth.network.ResearcherTradesNotifPacket
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.Tag
-import net.minecraft.network.PacketSendListener
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.trading.MerchantOffers
@@ -122,9 +121,8 @@ abstract class GlobalResearcherTradesProvider protected constructor(
         val notifiableNewTrades = newTrades.filterNot { it.noNotification }
         if (notifiableNewTrades.isEmpty()) return
 
-        player.sendPacket(ResearcherTradesNotifPacket(notifiableNewTrades), object : PacketSendListener {
-            override fun onSuccess() = after()
-        })
+        player.sendPacket(ResearcherTradesNotifPacket(notifiableNewTrades))
+            { if (it.isSuccess) after() }
     }
 
     private fun onServerStop(server: MinecraftServer) {
@@ -150,7 +148,7 @@ abstract class GlobalResearcherTradesProvider protected constructor(
         val itemListingTrades by lazy { trades.map{ it.itemListing } }
         val dataList by lazy { ResearcherItemListing.LIST_CODEC.encodeNbt(itemListingTrades).resultOrPartial().getOrDefault(ListTag()) }
         if (metResearcher)
-            data.getListOrNull("ResearcherTradeMemory", Tag.TAG_COMPOUND)?.let { dataListKnown ->
+            data.getListOrNull("ResearcherTradeMemory")?.let { dataListKnown ->
                 val savedTrades = ResearcherItemListing.LIST_CODEC.decodeNbtNullable(dataListKnown) ?: listOf()
                 val newTrades = itemListingTrades.filter { savedTrades.none{ it2 -> it.looselyMatches(it2) } }
 

@@ -41,6 +41,8 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.block.LevelEvent
+import net.minecraft.world.level.storage.ValueInput
+import net.minecraft.world.level.storage.ValueOutput
 import java.time.LocalDateTime
 import kotlin.math.min
 
@@ -214,20 +216,18 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
 
     override fun setBaby(baby: Boolean) { }     // do nothing
 
-    override fun addAdditionalSaveData(compound: CompoundTag) {
-        super.addAdditionalSaveData(compound)
-        researcherData?.let { compound.put("ResearcherData", it) }
-        compound.saveField("ResearcherPos", BlockPos.CODEC, ::researcherOriginalPos)
-        compound.putLong(Researcher.SPAWN_TIME_TAG, spawnTime)
+    override fun addAdditionalSaveData(output: ValueOutput) {
+        super.addAdditionalSaveData(output)
+        researcherData?.let { output.store("ResearcherData", CompoundTag.CODEC, it) }
+        output.storeNullable("ResearcherPos", BlockPos.CODEC, researcherOriginalPos)
+        output.putLong(Researcher.SPAWN_TIME_TAG, spawnTime)
     }
 
-    override fun readAdditionalSaveData(compound: CompoundTag) {
-        super.readAdditionalSaveData(compound)
-        compound.getCompound("ResearcherData").let { researcherData = it.get() }
-        researcherOriginalPos = compound.loadField("ResearcherPos", BlockPos.CODEC)
-        if (compound.contains(SPAWN_TIME_TAG)) {
-            spawnTime = compound.getLong(SPAWN_TIME_TAG).get()
-        }
+    override fun readAdditionalSaveData(input: ValueInput) {
+        super.readAdditionalSaveData(input)
+        input.read("ResearcherData", CompoundTag.CODEC).let { researcherData = it.get() }
+        researcherOriginalPos = input.read("ResearcherPos", BlockPos.CODEC).get()
+        spawnTime = input.getLong(SPAWN_TIME_TAG).get()
     }
 
     class ZombieResearcherAttackGoal(zombie: Zombie, speedModifier: Double, followingTargetEvenIfNotSeen: Boolean, val level: Level):

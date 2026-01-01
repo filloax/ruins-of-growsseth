@@ -28,6 +28,8 @@ import net.minecraft.util.RandomSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.targeting.TargetingConditions
+import net.minecraft.world.level.storage.ValueInput
+import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.AABB
 import java.util.*
 import java.util.concurrent.LinkedBlockingDeque
@@ -808,9 +810,9 @@ open class BasicDialoguesComponent(
     protected open fun readExtraNbtData(dialogueData: CompoundTag) {}
     protected open val saveNbtPersistData: Boolean = false
 
-    override fun writeNbt(tag: CompoundTag) {
+    override fun writeNbt(output: ValueOutput) {
         val data = CompoundTag()
-        tag.put("DialogueData", data)
+        output.store("DialogueData", CompoundTag.CODEC, data)
 
         data.saveField(DataFields.CLOSE_PLAYERS, UUIDUtil.STRING_CODEC.mutableSetOf(), ::closePlayers)
         data.saveField(DataFields.LEAVING_PLAYERS, mutableMapCodec(UUIDUtil.STRING_CODEC, Codec.INT), ::leavingPlayers)
@@ -822,11 +824,11 @@ open class BasicDialoguesComponent(
         addExtraNbtData(data)
     }
 
-    override fun readNbt(tag: CompoundTag) {
+    override fun readNbt(input: ValueInput) {
         closePlayers.clear()
         leavingPlayers.clear()
         savedPlayersData.clear()
-        tag.get("DialogueData")?.let { data -> if (data is CompoundTag) {
+        input.read("DialogueData", CompoundTag.CODEC).get().let { data -> {
             data.loadField(DataFields.CLOSE_PLAYERS, UUIDUtil.STRING_CODEC.mutableSetOf()) { closePlayers.addAll(it) }
             data.loadField(DataFields.LEAVING_PLAYERS, mutableMapCodec(UUIDUtil.STRING_CODEC, Codec.INT)) { leavingPlayers.putAll(it) }
             data.loadField(DataFields.PLAYERS_ARRIVED_SOON, mutableMapCodec(UUIDUtil.STRING_CODEC, Codec.BOOL)) { playersArrivedSoon.putAll(it) }
