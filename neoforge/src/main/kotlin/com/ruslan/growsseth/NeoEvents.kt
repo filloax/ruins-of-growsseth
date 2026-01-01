@@ -116,7 +116,7 @@ class NeoEvents : ModEvents() {
         NeoForge.EVENT_BUS.addListener { ev: PlayerLoggedInEvent ->
             val player = ev.entity
             if (player is ServerPlayer) {
-                event(player, player.server)
+                event(player, player.server!!)
             }
         }
     }
@@ -125,7 +125,7 @@ class NeoEvents : ModEvents() {
         NeoForge.EVENT_BUS.addListener { ev: PlayerEvent.PlayerLoggedOutEvent ->
             val player = ev.entity
             if (player is ServerPlayer) {
-                event(player, player.server)
+                event(player, player.server!!)
             }
         }
     }

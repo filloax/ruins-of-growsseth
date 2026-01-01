@@ -8,7 +8,7 @@ import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent
 
 class PlatformAbstractionsNeo : PlatformAbstractions {
-    @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
+    @EventBusSubscriber
     companion object {
         private val queuedRegistrations = mutableMapOf<EntityType<out LivingEntity>, () -> AttributeSupplier.Builder>()
 

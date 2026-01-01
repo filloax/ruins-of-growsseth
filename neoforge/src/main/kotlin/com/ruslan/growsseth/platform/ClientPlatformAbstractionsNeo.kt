@@ -10,7 +10,7 @@ import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.neoforge.client.event.EntityRenderersEvent
 
 class ClientPlatformAbstractionsNeo : ClientPlatformAbstractions {
-    @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
+    @EventBusSubscriber
     companion object {
         private val queuedRegistrations = mutableListOf<(EntityRenderersEvent.RegisterRenderers) -> Unit>()
 
