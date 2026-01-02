@@ -13,7 +13,7 @@ import net.minecraft.world.entity.monster.AbstractIllager.IllagerArmPose
 
 // Merges villagers and illagers stuff to render the Researcher one way or the other depending on the situation
 class ResearcherModel(private val root: ModelPart)
-    : EntityModel<ResearcherRendererState>(root), ArmedModel, HeadedModel
+    : EntityModel<ResearcherRendererState>(root), ArmedModel<ResearcherRendererState>, HeadedModel
 {
     private val head: ModelPart = root.getChild("head")
     val hat: ModelPart = head.getChild("hat")
@@ -91,7 +91,7 @@ class ResearcherModel(private val root: ModelPart)
         return this.head
     }
 
-    override fun translateToHand(side: HumanoidArm, poseStack: PoseStack) {
+    override fun translateToHand(renderState: ResearcherRendererState, side: HumanoidArm, poseStack: PoseStack) {
         getArm(side).translateAndRotate(poseStack)
     }
 }

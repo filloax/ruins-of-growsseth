@@ -55,7 +55,7 @@ abstract class AbstractResearcherTradesProvider : ResearcherTradesProvider {
     }
 
     private fun getPlayer(researcher: Researcher): ServerPlayer? {
-        val server = researcher.server ?: throw IllegalStateException("Used AbstractGameProvider from client thread!")
+        val server = researcher.level().server ?: throw IllegalStateException("Used AbstractGameProvider from client thread!")
         val playerUuid = lastPlayers[researcher.uuid]
         return playerUuid?.let { server.playerList.getPlayer(playerUuid) }
     }

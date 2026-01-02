@@ -35,7 +35,7 @@ import kotlin.jvm.optionals.getOrNull
 object ResearcherTradeUtils {
     private val fixedStructureGeneration = FxLibServices.fixedStructureGeneration
 
-    private fun getServer(researcher: Researcher) = researcher.server ?: throw IllegalStateException("Cannot access TradeProvider from client!")
+    private fun getServer(researcher: Researcher) = researcher.level().server ?: throw IllegalStateException("Cannot access TradeProvider from client!")
 
     fun getMatchingStructures(registryAccess: RegistryAccess, tagOrId: String): List<ResourceLocation> {
         val tagOrKey = getStructTagOrKey(tagOrId)

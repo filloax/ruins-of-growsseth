@@ -163,7 +163,7 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
     override fun customServerAiStep(level: ServerLevel) {
         super.customServerAiStep(level)
 
-        val server = server!!
+        val server = level().server!!
 
         if (ResearcherConfig.singleResearcher) { // && this.tickCount % 5 == 0) {
             // make sure we are up to date in case more researcher entities are loaded
@@ -204,7 +204,7 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
 
     override fun die(damageSource: DamageSource) {
         super.die(damageSource)
-        if (ResearcherConfig.singleResearcher) { server?.let { serv ->
+        if (ResearcherConfig.singleResearcher) { level().server?.let { serv ->
             val savedData = ResearcherSavedData.getPersistent(serv)
             savedData.isDead = true
             savedData.setDirty()

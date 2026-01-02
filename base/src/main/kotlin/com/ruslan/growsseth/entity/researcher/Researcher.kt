@@ -303,7 +303,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     private val inventory = SimpleContainer(8)
     private var tradingPlayer: Player? = null
     private val offersByPlayer = mutableMapOf<UUID, MerchantOffers>()
-    private var tradesData = server?.let { ResearcherTradesData(ResearcherTradeMode.getFromSettings(it)) }
+    private var tradesData = level.server?.let { ResearcherTradesData(ResearcherTradeMode.getFromSettings(it)) }
     private var tentCache: Optional<StructureStart>? = null
     private var lastRefusedTradeTimer: Int = 0
     private var clearFailedMapsTime: Int? = null
@@ -380,7 +380,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
     // TODO: in neoforge do not call this directly but use EventHook.finalizeSpawn (see javadoc comment on Neoforge version of Mob.java), applies to other ents too
     override fun finalizeSpawn(level: ServerLevelAccessor, difficulty: DifficultyInstance, entitySpawnReason: EntitySpawnReason, spawnGroupData: SpawnGroupData?): SpawnGroupData? {
-        val savedData = server?.let{ serv ->
+        val savedData = level.server?.let{ serv ->
             // Load data from previous researchers
             if (ResearcherConfig.singleResearcher) {
                 ResearcherSavedData.getPersistent(serv)
@@ -479,7 +479,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
                     secondsAwayFromTent = 0
                     secondsInWall = 0
 
-                    val targetLevel = server?.getLevel(startingDimension) ?:
+                    val targetLevel = level().server?.getLevel(startingDimension) ?:
                         throw IllegalStateException("Unknown level when researcher teleporting to start dimension $startingDimension")
 
                     teleport(TeleportTransition(targetLevel, startingPos!!.center, Vec3.ZERO, yRot, xRot) { })
@@ -854,7 +854,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
             metPlayer = false
         }
 
-        server?.let { tradesData = ResearcherTradesData(ResearcherTradeMode.getFromSettings(it)) }
+        level().server?.let { tradesData = ResearcherTradesData(ResearcherTradeMode.getFromSettings(it)) }
         researcherData.loadField("TradesData", ResearcherTradesData.CODEC) {tradesData = it}
 
         dialogues?.readSharedData(researcherData)
@@ -894,7 +894,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         val data = saveResearcherData()
 
         if (ResearcherConfig.singleResearcher) {
-            server?.let { serv ->
+            level().server?.let { serv ->
                 val savedData = ResearcherSavedData.getPersistent(serv)
                 writeSavedData(savedData, data)
             }
@@ -924,7 +924,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         var researcherData: CompoundTag = CompoundTag()
 
         if (ResearcherConfig.singleResearcher) {
-            server?.let { serv ->
+            level().server?.let { serv ->
                 val savedData = ResearcherSavedData.getPersistent(serv)
                 readSavedData(savedData)
                 researcherData = savedData.data
@@ -954,7 +954,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     }
 
     fun saveWorldData(force: Boolean = false) {
-        if (ResearcherConfig.singleResearcher) { server?.let { serv ->
+        if (ResearcherConfig.singleResearcher) { level().server?.let { serv ->
             val savedData = ResearcherSavedData.getPersistent(serv)
             val data = saveResearcherData()
             writeSavedData(savedData, data, force)
@@ -968,7 +968,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     private fun tradesData() = tradesData ?: throw IllegalStateException("Accessed tradesData in client!")
 
     override fun getOffers(): MerchantOffers {
-        return server?.let { serv ->
+        return level().server?.let { serv ->
             val provider = ResearcherTradeMode.providerFromSettings(serv)
             val lastPlayerTrade = provider.lastTradePlayerId(this)
             lastPlayerTrade?.let {offersByPlayer[it]}

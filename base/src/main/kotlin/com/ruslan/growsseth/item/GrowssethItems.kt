@@ -21,9 +21,9 @@ object GrowssethItems {
     // TODO: Improve item creation to avoid duplicating the ids
 
 	val RESEARCHER_SPAWN_EGG by make("researcher_spawn_egg",
-		{ SpawnEggItem(GrowssethEntities.RESEARCHER, defaultBuilder("researcher_spawn_egg")) }, autoGenerateJson = false)
+		{ SpawnEggItem(defaultBuilder("researcher_spawn_egg").spawnEgg(GrowssethEntities.RESEARCHER)) }, autoGenerateJson = false)
 	val ZOMBIE_RESEARCHER_SPAWN_EGG by make("zombie_researcher_spawn_egg",
-		{ SpawnEggItem(GrowssethEntities.ZOMBIE_RESEARCHER, defaultBuilder("zombie_researcher_spawn_egg")) }, autoGenerateJson = false)
+		{ SpawnEggItem(defaultBuilder("zombie_researcher_spawn_egg").spawnEgg(GrowssethEntities.ZOMBIE_RESEARCHER)) }, autoGenerateJson = false)
 	val RESEARCHER_HORN by make("researcher_horn", {
 		ResearcherHornItem(
 			defaultBuilder("researcher_horn").rarity(Rarity.EPIC).stacksTo(1).fireResistant()

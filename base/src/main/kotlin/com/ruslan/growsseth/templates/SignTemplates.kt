@@ -97,7 +97,7 @@ object SignTemplates {
 
         sign.set(DataComponents.CUSTOM_NAME, Component.literal(templateId))
 
-        CustomData.update(DataComponents.BLOCK_ENTITY_DATA, sign) { blockEntityDataTag ->
+        CustomData.update(DataComponents.CUSTOM_DATA, sign) { blockEntityDataTag ->
             val frontTextTag = CompoundTag()
 
             val messagesList = ListTag()
