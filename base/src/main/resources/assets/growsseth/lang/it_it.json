@@ -88,6 +88,9 @@
     "item.growsseth.map.loadingFail": "Mappa delle rovine [non trovata]",
     "item.growsseth.map.loadingFailLore": "Temo di averla persa, torna più tardi.",
 
+    "item.growsseth.growsseth_eye": "Occhio di un regno perduto",
+    "item.endrem.growsseth_eye.description": "TODO Description",
+
     "effect.growsseth.serenity": "Serenità",
     "effect.growsseth.fighting_spirit": "Spirito Combattivo",
     "effect.growsseth.justice": "Giustizia",

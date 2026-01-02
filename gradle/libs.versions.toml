@@ -25,6 +25,8 @@ rctapi = "1.21.1-0.14.4" # only used for prop replacement in mod json files
 rctapi-neoforge = "7257753"
 rctapi-fabric = "7257754"
 megashowdown = "1.4.4+1.7.1+1.21.1" # only used for prop replacement in mod json files
+endremastered = "6.0.2"
+endremastered-neoforge = "aqYxfNAS"
 
 # Kotlin
 kotlin = "2.3.0"
@@ -75,6 +77,8 @@ rctapi-fabric = { group = "curse.maven", name = "radical-cobblemon-trainers-api-
 rctapi-neoforge = { group = "curse.maven", name = "radical-cobblemon-trainers-api-1152792", version.ref = "rctapi-neoforge" }
 cobblemon-fabric = { group = "com.cobblemon", name = "fabric", version.ref = "cobblemon" }
 cobblemon-neoforge = { group = "com.cobblemon", name = "neoforge", version.ref = "cobblemon" }
+endremastered = { group = "maven.modrinth", name = "endrem", version.ref = "endremastered" }
+endremastered-neoforge = { group = "maven.modrinth", name = "endrem", version.ref = "endremastered-neoforge" }
 
 # Mixin
 mixin = { group = "org.spongepowered", name = "mixin", version.ref = "mixin" }

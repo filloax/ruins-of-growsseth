@@ -88,6 +88,9 @@
     "item.growsseth.map.loadingFail": "Ruins Map [not found]",
     "item.growsseth.map.loadingFailLore": "I'm afraid I lost that one, come back later.",
 
+    "item.growsseth.growsseth_eye": "Eye of a lost kingdom",
+    "item.endrem.growsseth_eye.description": "TODO Description",
+
     "effect.growsseth.serenity": "Serenity",
     "effect.growsseth.fighting_spirit": "Fighting Spirit",
     "effect.growsseth.justice": "Justice",

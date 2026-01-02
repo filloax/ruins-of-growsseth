@@ -119,6 +119,7 @@ dependencies {
 	modCompileOnly(libs.lithostitched.fabric)
     modCompileOnly(libs.cobblemon.fabric)
     modCompileOnly(libs.rctapi.fabric)
+    modCompileOnly(libs.endremastered)
 
     if (cobblemonTest) {
         modLocalRuntime("io.wispforest:accessories-fabric:1.1.0-beta.52+1.21.1")
