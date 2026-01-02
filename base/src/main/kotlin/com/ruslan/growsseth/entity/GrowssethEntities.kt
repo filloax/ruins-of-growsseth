@@ -21,12 +21,14 @@ object GrowssethEntities {
 
     val RESEARCHER: EntityType<Researcher> by make(
         "researcher",
-        EntityType.Builder.of(::Researcher, MobCategory.MISC) .sized(0.6f, 1.95f),
+        EntityType.Builder.of(::Researcher, MobCategory.MISC)
+            .sized(0.6f, 1.95f),
         Researcher.createAttributes(),
     )
     val ZOMBIE_RESEARCHER: EntityType<ZombieResearcher> by make(
         "zombie_researcher",
-        EntityType.Builder.of(::ZombieResearcher, MobCategory.MONSTER) .sized(0.6f, 1.95f),
+        EntityType.Builder.of(::ZombieResearcher, MobCategory.MONSTER)
+            .sized(0.6f, 1.95f),    // we do not add .notInPeaceful(), in order to not break the quest
         ZombieResearcher.createAttributes(),
     )
 

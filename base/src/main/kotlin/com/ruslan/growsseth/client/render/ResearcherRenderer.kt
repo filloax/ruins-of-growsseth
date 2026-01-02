@@ -8,7 +8,7 @@ import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.utils.resLoc
 import net.minecraft.client.model.ArmedModel
 import net.minecraft.client.model.geom.ModelLayers
-import net.minecraft.client.renderer.MultiBufferSource
+import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.MobRenderer
 import net.minecraft.client.renderer.entity.layers.CustomHeadLayer
@@ -56,7 +56,7 @@ class ResearcherRenderer(context: EntityRendererProvider.Context)
     }
 
     init {
-        addLayer(CustomHeadLayer(this, context.modelSet))
+        addLayer(CustomHeadLayer(this, context.modelSet, context.playerSkinRenderCache))
 
         addLayer(
             ResearcherProfessionLayer<ResearcherRendererState, ResearcherModel>
@@ -67,11 +67,13 @@ class ResearcherRenderer(context: EntityRendererProvider.Context)
         )
 
         addLayer(object : ItemInHandLayer<ResearcherRendererState, ResearcherModel>(this) {
-            override fun renderArmWithItem(
+            override fun submitArmWithItem(
                 researcherRenderState: ResearcherRendererState,
                 itemStackRenderState: ItemStackRenderState,
-                arm: HumanoidArm, poseStack: PoseStack,
-                buffer: MultiBufferSource, packedLight: Int
+                arm: HumanoidArm,
+                poseStack: PoseStack,
+                nodeCollector: SubmitNodeCollector,
+                packedLight: Int
             ) {
                 val heldItem = researcherRenderState.mainHandItem
                 if (
@@ -80,13 +82,13 @@ class ResearcherRenderer(context: EntityRendererProvider.Context)
                 ) {
                     // The dagger is held upside down, differently from other items (original code adapted from Vindicator)
                     poseStack.pushPose()
-                    (this.parentModel as ArmedModel).translateToHand(arm, poseStack)
+                    (this.parentModel as ArmedModel<ResearcherRendererState>).translateToHand(researcherRenderState, arm, poseStack)
                     poseStack.mulPose(Axis.XP.rotationDegrees(90.0f))     // 90° instead of -90°
                     //poseStack.mulPose(Axis.YP.rotationDegrees(180.0f))    // no y rotation
                     poseStack.translate(-0.1, 0.0, 0.0)        // centering the dagger inside the hand
                     val isLeftArm = (arm == HumanoidArm.LEFT)
                     poseStack.translate((if (isLeftArm) -1 else 1).toFloat() / 16.0f, 0.125f, -0.625f)
-                    itemStackRenderState.render(poseStack, buffer, packedLight, OverlayTexture.NO_OVERLAY)
+                    itemStackRenderState.submit(poseStack, nodeCollector, packedLight, OverlayTexture.NO_OVERLAY, 1)
                     poseStack.popPose()
                 }
                 else if (
@@ -96,7 +98,7 @@ class ResearcherRenderer(context: EntityRendererProvider.Context)
                     heldItem.`is`(Items.ENDER_PEARL)
                 ) {
                     // Other cases when he keeps his arm up are rendered normally
-                    super.renderArmWithItem(researcherRenderState, itemStackRenderState, arm, poseStack, buffer, packedLight)
+                    super.submitArmWithItem(researcherRenderState, itemStackRenderState, arm, poseStack, nodeCollector, packedLight)
                 }
             }
         })

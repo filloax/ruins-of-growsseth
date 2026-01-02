@@ -107,10 +107,6 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
         // does not care about turtles
     }
 
-    override fun shouldDespawnInPeaceful(): Boolean {
-        return false        // we don't want the quest to break
-    }
-
     private fun convertToResearcher(serverLevel: ServerLevel, alsoMove: Boolean = false) {
         val researcher = convertTo(GrowssethEntities.RESEARCHER,
             ConversionParams(ConversionType.SINGLE, true, true, null)

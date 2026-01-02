@@ -3,7 +3,7 @@ package com.ruslan.growsseth.client.render
 import com.mojang.blaze3d.vertex.PoseStack
 import com.ruslan.growsseth.utils.notNull
 import net.minecraft.client.model.EntityModel
-import net.minecraft.client.renderer.MultiBufferSource
+import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.RenderLayerParent
 import net.minecraft.client.renderer.entity.layers.RenderLayer
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
@@ -16,13 +16,12 @@ open class ResearcherProfessionLayer<T : LivingEntityRenderState, M : EntityMode
     val typeTextureLocation: ResourceLocation,
     val profClothesLocation: ResourceLocation,
     val profClothesAggressiveLocation: ResourceLocation? = null,
-    ) :
-    RenderLayer<T, M>(renderLayerParent) {
+    ) : RenderLayer<T, M>(renderLayerParent) {
 
-    override fun render(
+    override fun submit(
         poseStack: PoseStack,
-        multiBufferSource: MultiBufferSource,
-        bufferSource: Int,
+        nodeCollector: SubmitNodeCollector,
+        packedLight: Int,
         renderState: T,
         yRot: Float,
         xRot: Float
@@ -32,23 +31,26 @@ open class ResearcherProfessionLayer<T : LivingEntityRenderState, M : EntityMode
         }
 
         renderColoredCutoutModel(
-            parentModel, typeTextureLocation, poseStack, multiBufferSource,
-            bufferSource, renderState,
-            ARGB.colorFromFloat(1f, 1f, 1f, 1f)
+            parentModel, typeTextureLocation, poseStack, nodeCollector,
+            packedLight, renderState,
+            ARGB.colorFromFloat(1f, 1f, 1f, 1f),
+            1
         )
 
         if (renderState is ResearcherRendererState && renderState.isAggressive && notNull(profClothesAggressiveLocation)) {
             renderColoredCutoutModel(
-                parentModel, profClothesAggressiveLocation, poseStack, multiBufferSource,
-                bufferSource, renderState,
-                ARGB.colorFromFloat(1f, 1f, 1f, 1f)
+                parentModel, profClothesAggressiveLocation, poseStack, nodeCollector,
+                packedLight, renderState,
+                ARGB.colorFromFloat(1f, 1f, 1f, 1f),
+                1
             )
         }
         else {
             renderColoredCutoutModel(
-                parentModel, profClothesLocation, poseStack, multiBufferSource,
-                bufferSource,renderState,
-                ARGB.colorFromFloat(1f, 1f, 1f, 1f)
+                parentModel, profClothesLocation, poseStack, nodeCollector,
+                packedLight, renderState,
+                ARGB.colorFromFloat(1f, 1f, 1f, 1f),
+                1
             )
         }
     }

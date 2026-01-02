@@ -441,7 +441,7 @@ object DiaryHelper {
         if (currentItem?.isEmpty == true) currentItem = null
 
         // If item on lectern that is made by events etc, do not place in chest
-        if (currentItem?.let { it[DataComponents.CUSTOM_DATA]?.contains(TAG_REMOVE_DIARIES_ON_PUSH) } == true) {
+        if (currentItem?.let { it.components[DataComponents.CUSTOM_DATA]?.contains(TAG_REMOVE_DIARIES_ON_PUSH) } == true) {
             currentItem = null
         }
 

@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.client.renderer.texture.TextureAtlasSprite
+import net.minecraft.data.AtlasIds
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
 import org.joml.Matrix4f
@@ -15,7 +16,7 @@ import java.util.function.Function
 
 
 object RuinsMapRenderer {
-    private val mapDecorations by lazy { Minecraft.getInstance().mapDecorationTextures }
+    private val mapDecorations by lazy { Minecraft.getInstance().atlasManager }
 
     /**
      * Renders map icons in the corner of the ruins map.
@@ -27,7 +28,8 @@ object RuinsMapRenderer {
         if (!ClientConfig.mapCornerIcons) return
 
         val mapIcon = this.getMapTargetIcon()?.type ?: return
-        val texture = mapDecorations.getSprite(mapIcon.value().assetId)
+        val texture = mapDecorations.getAtlasOrThrow(AtlasIds.MAP_DECORATIONS)
+            .getSprite(mapIcon.value().assetId)
 
         renderCornerTexture(texture, bufferSource, pose, x, y)
     }

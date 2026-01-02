@@ -4,6 +4,7 @@ import com.ruslan.growsseth.entity.researcher.ZombieResearcher
 import com.ruslan.growsseth.utils.resLoc
 import net.minecraft.client.model.ZombieVillagerModel
 import net.minecraft.client.model.geom.ModelLayers
+import net.minecraft.client.renderer.entity.ArmorModelSet
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer
@@ -16,8 +17,7 @@ class ZombieResearcherRenderer(context: EntityRendererProvider.Context) :
     init {
         addLayer(HumanoidArmorLayer(
             this,
-            ZombieVillagerModel(context.bakeLayer(ModelLayers.ZOMBIE_VILLAGER_INNER_ARMOR)),
-            ZombieVillagerModel(context.bakeLayer(ModelLayers.ZOMBIE_VILLAGER_OUTER_ARMOR)),
+            ArmorModelSet.bake(ModelLayers.ZOMBIE_VILLAGER_ARMOR, context.modelSet, ::ZombieVillagerModel),
             context.equipmentRenderer,
         ))
         addLayer(ResearcherProfessionLayer(
