@@ -14,8 +14,8 @@ neoform = "1.21.10-20251010.172816" # vanilla neoforge configuration
 # Mod dependencies
 filloaxlib = "0.36.0-1.21.10"
 modmenu = "16.0.0-rc.2"
-rconfig = "3.6.4"   # higher versions are not found with current settings (todo: fix)
-rconfigMc = "1.21.6"
+rconfig = "3.9.1"   # higher versions are not found with current settings (todo: fix)
+rconfigMc = "1.21.9"
 
 # Mod compatibility dependencies (todo: re-enabled if needed after 26.1 transition)
 lithostitched-neoforge = "1.5.0-neoforge-1.21.1"

@@ -17,7 +17,7 @@ accessible field net/minecraft/world/level/levelgen/structure/structures/JigsawS
 accessible field net/minecraft/world/level/levelgen/structure/structures/JigsawStructure startHeight Lnet/minecraft/world/level/levelgen/heightproviders/HeightProvider;
 accessible field net/minecraft/world/level/levelgen/structure/structures/JigsawStructure useExpansionHack Z
 accessible field net/minecraft/world/level/levelgen/structure/structures/JigsawStructure projectStartToHeightmap Ljava/util/Optional;
-accessible field net/minecraft/world/level/levelgen/structure/structures/JigsawStructure maxDistanceFromCenter I
+#accessible field net/minecraft/world/level/levelgen/structure/structures/JigsawStructure maxDistanceFromCenter I
 accessible method net/minecraft/world/level/levelgen/structure/structures/JigsawStructure verifyRange (Lnet/minecraft/world/level/levelgen/structure/structures/JigsawStructure;)Lcom/mojang/serialization/DataResult;
 
 accessible method net/minecraft/world/level/levelgen/structure/pools/JigsawPlacement getRandomNamedJigsaw (Lnet/minecraft/world/level/levelgen/structure/pools/StructurePoolElement;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/Rotation;Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplateManager;Lnet/minecraft/world/level/levelgen/WorldgenRandom;)Ljava/util/Optional;
@@ -51,7 +51,7 @@ accessible method net/minecraft/world/level/chunk/ChunkGenerator tryAddReference
 
 accessible method net/minecraft/server/commands/LocateCommand getHolders (Lnet/minecraft/commands/arguments/ResourceOrTagKeyArgument$Result;Lnet/minecraft/core/Registry;)Ljava/util/Optional;
 
-accessible method net/minecraft/client/resources/TextureAtlasHolder getSprite (Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;
+#accessible method net/minecraft/client/resources/TextureAtlasHolder getSprite (Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;
 
 accessible class net/minecraft/client/sounds/SoundManager$Preparations
 
@@ -59,3 +59,4 @@ accessible class net/minecraft/client/sounds/SoundManager$Preparations
 # mutable field net/minecraft/util/ClassInstanceMultiMap allInstances Ljava/util/List;
 
 accessible field net/minecraft/world/level/StructureManager level Lnet/minecraft/world/level/LevelAccessor;
+accessible field net/minecraft/server/level/ServerPlayer server Lnet/minecraft/server/MinecraftServer;
