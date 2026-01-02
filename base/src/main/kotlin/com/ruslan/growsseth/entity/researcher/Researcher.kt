@@ -1053,7 +1053,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
     private fun clearFailedMaps() {
         offersByPlayer.forEach { (id, offers) ->
-            offers.removeIf { it.result[DataComponents.CUSTOM_DATA]?.contains(Constants.ITEM_TAG_MAP_FAILED_LOCATE) == true }
+            offers.removeIf { it.result.components[DataComponents.CUSTOM_DATA]?.copyTag()?.contains(Constants.ITEM_TAG_MAP_FAILED_LOCATE) == true }
         }
     }
 

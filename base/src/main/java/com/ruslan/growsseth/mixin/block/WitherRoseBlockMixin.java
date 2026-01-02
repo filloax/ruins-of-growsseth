@@ -21,8 +21,8 @@ public abstract class WitherRoseBlockMixin {
     boolean researcherInside = false;
 
     @Inject(method = "entityInside", at = @At("HEAD"))
-    private void checkIfResearcherInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier, CallbackInfo ci) {
-        if (!level.isClientSide && level.getDifficulty() != Difficulty.PEACEFUL)
+    private void checkIfResearcherInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier, boolean intersects, CallbackInfo ci) {
+        if (!level.isClientSide() && level.getDifficulty() != Difficulty.PEACEFUL)
             researcherInside = entity instanceof Researcher;
     }
 

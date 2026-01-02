@@ -193,7 +193,7 @@ class TagProviderBlocks(output: FabricDataOutput, registries: CompletableFuture<
             .add(Blocks.LADDER)
             .add(Blocks.LANTERN)
             .add(Blocks.TORCH)
-            .add(Blocks.CHAIN)
+            .add(Blocks.IRON_CHAIN)
             .add(Blocks.HAY_BLOCK)
         valueLookupBuilder(GrowssethTags.TENT_CLEAR_ZOMBIE_STAGE_WHITELIST)
             .add(Blocks.WHITE_CARPET)

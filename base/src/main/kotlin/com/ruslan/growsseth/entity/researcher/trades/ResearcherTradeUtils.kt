@@ -245,7 +245,7 @@ object ResearcherTradeUtils {
                 }
             }
 
-            if (!researcher.level().isClientSide && result[DataComponents.CUSTOM_DATA]?.contains(ResearcherItemListing.SET_MAP_TAG) != true) {
+            if (!researcher.level().isClientSide && result.components[DataComponents.CUSTOM_DATA]?.copyTag()?.contains(ResearcherItemListing.SET_MAP_TAG) != true) {
                 CustomData.update(DataComponents.CUSTOM_DATA, result) { it.putBoolean(ResearcherItemListing.SET_MAP_TAG, true) }
                 setTradeMapTarget(researcher, result, mapInfo, offerOut)
             }
