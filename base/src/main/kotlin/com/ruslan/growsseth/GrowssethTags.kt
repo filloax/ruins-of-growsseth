@@ -4,6 +4,7 @@ import com.ruslan.growsseth.utils.resLoc
 import net.minecraft.core.registries.Registries
 import net.minecraft.tags.TagKey
 import net.minecraft.world.item.Instrument
+import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.levelgen.structure.Structure
 
@@ -13,6 +14,7 @@ object GrowssethTags {
     val TENT_CLEAR_ZOMBIE_STAGE_WHITELIST: TagKey<Block> = TagKey.create(Registries.BLOCK, resLoc("tent_zombie_stage_clearable"))
     val RESEARCHER_MESS_TRIGGER: TagKey<Block> = TagKey.create(Registries.BLOCK, resLoc("researcher_mess_trigger"))
     val RESEARCHER_HORNS: TagKey<Instrument> = TagKey.create(Registries.INSTRUMENT, resLoc("researcher_horns"))
+    val NOTEBLOCK_DISCS_TAG: TagKey<Item> = TagKey.create(Registries.ITEM, resLoc("noteblock_discs"))
 
     //json
     object StructTags {

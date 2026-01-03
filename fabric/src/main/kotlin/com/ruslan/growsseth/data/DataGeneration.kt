@@ -1,5 +1,6 @@
 package com.ruslan.growsseth.data
 
+import com.ruslan.growsseth.GrowssethBannerPatterns
 import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.advancements.StructureAdvancements
@@ -59,8 +60,9 @@ class DataGeneration : DataGeneratorEntrypoint {
         pack.addProvider(::TagProviderWorldPresets)
         pack.addProvider(::TagProviderBannerPatterns)
         pack.addProvider(::AdvancementsProvider)
-        //pack.addProvider(::EntityLootTableProvider)
-        //pack.addProvider(::MiscLootTableProvider)
+        pack.addProvider(::EntityLootTableProvider)
+        pack.addProvider(::ArcheologyLootTableProvider)
+        pack.addProvider(::StructureLootTableProvider)
         pack.addProvider(::ModelGenerator)
         pack.addProvider(::CustomDataProvider)
 
@@ -211,43 +213,12 @@ class TagProviderWorldPresets(output: FabricDataOutput, registries: CompletableF
 
 class TagProviderBannerPatterns(output: FabricDataOutput, registries: CompletableFuture<HolderLookup.Provider>): BannerPatternTagsProvider(output, registries) {
     override fun addTags(arg: HolderLookup.Provider) {
-        com.ruslan.growsseth.GrowssethBannerPatterns.all.forEach { banner ->
+        GrowssethBannerPatterns.all.forEach { banner ->
             getOrCreateRawBuilder(banner.tag)
                 .addElement(banner.id().location())
         }
     }
 }
-
-/* // Not needed for now, since it's set in the zombie's class (might be used in the future to allow loot customization)
-class EntityLootTableProvider(output: FabricDataOutput) : SimpleFabricLootTableProvider(output, LootContextParamSets.ENTITY) {
-    override fun generate(consumer: BiConsumer<ResourceLocation, LootTable.Builder>) {
-        consumer.accept(GrowssethEntities.ZOMBIE_RESEARCHER.defaultLootTable, ZombieResearcher.getLootTable())
-    }
-
-    /**
-     * Gets a name for this provider, to use in logging.
-     */
-    override fun getName(): String = "GrowssethEntityLootTable"
-}
-*/
-
-/* // Put aside for now to use manual method, might be used in the future
-class MiscLootTableProvider(output: PackOutput): LootTableProvider(output, setOf(), mutableListOf(
-    SubProviderEntry({
-        LootTableSubProvider { builder ->
-            builder.accept(
-                GrowssethLootTables.CONDUIT_RUINS_ARCHAEOLOGY,
-                LootTable.lootTable()
-                    .withPool(
-                        LootPool.lootPool()
-                            .setRolls(ConstantValue.exactly(1.0f))
-                            .add(LootItem.lootTableItem(GrowssethItems.GROWSSETH_POTTERY_SHERD))
-                    )
-            )
-        }
-    }, LootContextParamSets.ARCHAEOLOGY)
-))
-*/
 
 class ModelGenerator constructor(generator: FabricDataOutput) : FabricModelProvider(generator) {
     override fun generateBlockStateModels(blockStateModelGenerator: BlockModelGenerators?) {
