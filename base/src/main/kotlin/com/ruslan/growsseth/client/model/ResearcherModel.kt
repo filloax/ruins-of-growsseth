@@ -9,7 +9,7 @@ import net.minecraft.client.model.EntityModel
 import net.minecraft.client.model.geom.ModelPart
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.HumanoidArm
-import net.minecraft.world.entity.monster.AbstractIllager.IllagerArmPose
+import net.minecraft.world.entity.monster.illager.AbstractIllager.IllagerArmPose
 
 // Merges villagers and illagers stuff to render the Researcher one way or the other depending on the situation
 class ResearcherModel(private val root: ModelPart)

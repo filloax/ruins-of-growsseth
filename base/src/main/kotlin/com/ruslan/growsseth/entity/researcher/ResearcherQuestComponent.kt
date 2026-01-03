@@ -40,7 +40,7 @@ import net.minecraft.world.entity.ConversionType
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.entity.npc.VillagerProfession
+import net.minecraft.world.entity.npc.villager.VillagerProfession
 import net.minecraft.world.item.Instrument
 import net.minecraft.world.item.InstrumentItem
 import net.minecraft.world.item.Items

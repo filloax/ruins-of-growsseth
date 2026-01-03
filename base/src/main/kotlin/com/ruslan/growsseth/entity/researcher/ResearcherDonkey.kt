@@ -11,7 +11,7 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.Leashable
-import net.minecraft.world.entity.animal.horse.Donkey
+import net.minecraft.world.entity.animal.equine.Donkey
 import net.minecraft.world.entity.decoration.LeashFenceKnotEntity
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.levelgen.structure.BoundingBox

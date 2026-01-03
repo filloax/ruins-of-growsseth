@@ -19,11 +19,11 @@ import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal
 import net.minecraft.world.entity.boss.wither.WitherBoss
-import net.minecraft.world.entity.monster.AbstractSkeleton
+import net.minecraft.world.entity.monster.skeleton.AbstractSkeleton
 import net.minecraft.world.entity.monster.Vex
-import net.minecraft.world.entity.monster.Zombie
+import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.world.entity.player.Player
-import net.minecraft.world.entity.projectile.AbstractArrow
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow
 import net.minecraft.world.entity.raid.Raider
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.enchantment.Enchantments

@@ -1,7 +1,7 @@
 package com.ruslan.growsseth.client.render
 
 import net.minecraft.client.renderer.entity.state.ArmedEntityRenderState
-import net.minecraft.world.entity.monster.AbstractIllager
+import net.minecraft.world.entity.monster.illager.AbstractIllager
 import net.minecraft.world.item.ItemStack
 
 class ResearcherRendererState: ArmedEntityRenderState()

@@ -70,7 +70,7 @@ import net.minecraft.world.entity.ai.goal.OpenDoorGoal
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.ai.navigation.PathNavigation
 import net.minecraft.world.entity.ai.navigation.WallClimberNavigation
-import net.minecraft.world.entity.monster.AbstractIllager.IllagerArmPose
+import net.minecraft.world.entity.monster.illager.AbstractIllager.IllagerArmPose
 import net.minecraft.world.entity.npc.InventoryCarrier
 import net.minecraft.world.entity.npc.Npc
 import net.minecraft.world.entity.player.Player

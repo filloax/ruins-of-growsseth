@@ -6,7 +6,7 @@ import com.mojang.brigadier.exceptions.DynamicCommandExceptionType
 import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.maps.MapLocateContext
 import com.ruslan.growsseth.maps.updateMapToStruct
-import net.minecraft.Util
+import net.minecraft.util.Util
 import net.minecraft.commands.CommandBuildContext
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands.*

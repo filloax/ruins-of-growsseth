@@ -10,7 +10,7 @@ import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.structure.locate.LocateTask
 import com.ruslan.growsseth.structure.locate.SignalProgressFun
 import com.ruslan.growsseth.structure.locate.StoppableAsyncLocator
-import net.minecraft.Util
+import net.minecraft.util.Util
 import net.minecraft.commands.CommandBuildContext
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands.*

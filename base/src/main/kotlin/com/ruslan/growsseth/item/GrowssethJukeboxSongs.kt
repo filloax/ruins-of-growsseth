@@ -4,7 +4,7 @@ import com.filloax.fxlib.api.FxUtils
 import com.ruslan.growsseth.sound.GrowssethSounds
 import com.ruslan.growsseth.utils.resLoc
 import net.minecraft.ChatFormatting
-import net.minecraft.Util
+import net.minecraft.util.Util
 import net.minecraft.core.Holder
 import net.minecraft.core.registries.Registries
 import net.minecraft.data.worldgen.BootstrapContext
