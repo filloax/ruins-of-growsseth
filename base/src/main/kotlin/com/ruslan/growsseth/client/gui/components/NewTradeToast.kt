@@ -7,7 +7,7 @@ import net.minecraft.client.gui.components.toasts.Toast
 import net.minecraft.client.gui.components.toasts.ToastManager
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.network.chat.Component
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.item.ItemStack
 import kotlin.math.max
 
@@ -24,7 +24,7 @@ class NewTradeToast(newTrades: List<ResearcherItemListing>) : Toast {
         private const val DISPLAY_TIME = 5000.0
         private val TITLE_TEXT = Component.translatable("growsseth.notif.researcher_updated.toast.title")
         private val DESCRIPTION_TEXT = Component.translatable("growsseth.notif.researcher_updated.toast.description")
-        private val BACKGROUND_SPRITE = ResourceLocation.parse("toast/recipe")
+        private val BACKGROUND_SPRITE = Identifier.parse("toast/recipe")
 
         fun ToastManager.updateNewTradeToast(trades: List<ResearcherItemListing>) {
             val tradeToast = getToast(NewTradeToast::class.java, Toast.NO_TOKEN)

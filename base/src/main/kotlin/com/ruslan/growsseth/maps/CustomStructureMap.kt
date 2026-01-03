@@ -16,7 +16,7 @@ import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.Registries
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.tags.TagKey
 import net.minecraft.world.item.ItemStack
@@ -132,7 +132,7 @@ data class MapLocateContext(
     val scale: Int = 1,
     val overrideDestinationType: DestinationType? = null,
     val displayName: String? = null,
-    val mustContainJigsawIds: Collection<ResourceLocation>? = null,
+    val mustContainJigsawIds: Collection<Identifier>? = null,
     val searchTimeoutSeconds: Int = 15,
 )
 

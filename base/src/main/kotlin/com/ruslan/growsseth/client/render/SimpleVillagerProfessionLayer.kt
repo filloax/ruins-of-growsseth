@@ -5,7 +5,7 @@
 //import net.minecraft.client.renderer.MultiBufferSource
 //import net.minecraft.client.renderer.entity.RenderLayerParent
 //import net.minecraft.client.renderer.entity.layers.RenderLayer
-//import net.minecraft.resources.ResourceLocation
+//import net.minecraft.resources.Identifier
 //import net.minecraft.util.ARGB
 //import net.minecraft.world.entity.LivingEntity
 //
@@ -13,8 +13,8 @@
 //// Unused, meant for researcher originally
 //class SimpleVillagerProfessionLayer<T : LivingEntity, M : EntityModel<T>>(
 //    renderLayerParent: RenderLayerParent<T, M>,
-//    val typeTextureLocation: ResourceLocation,
-//    val profClothesLocation: ResourceLocation,
+//    val typeTextureLocation: Identifier,
+//    val profClothesLocation: Identifier,
 //) :
 //    RenderLayer<T, M>(renderLayerParent) {
 //

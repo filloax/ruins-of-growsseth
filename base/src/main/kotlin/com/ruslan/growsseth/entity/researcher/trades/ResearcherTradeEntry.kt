@@ -4,7 +4,7 @@ import com.filloax.fxlib.*
 import com.filloax.fxlib.api.nbt.*
 import com.filloax.fxlib.api.codec.*
 import com.filloax.fxlib.api.getStructTagOrKey
-import com.filloax.fxlib.api.json.ResourceLocationSerializer
+import com.filloax.fxlib.api.json.IdentifierSerializer
 import com.google.common.collect.ImmutableList
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
@@ -22,7 +22,7 @@ import net.minecraft.core.RegistryAccess
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.util.RandomSource
 import net.minecraft.world.entity.Entity
@@ -146,7 +146,7 @@ class ResearcherItemListing(
     // In case of jigsaw piece maps (ie village houses), this may include vanilla structure ids;
     // If things were done properly, the fixedstructureid should still lead to a mod structure
     // which will allow recognition anyway
-    fun getAllPossibleStructures(registryAccess: RegistryAccess): List<ResourceLocation> {
+    fun getAllPossibleStructures(registryAccess: RegistryAccess): List<Identifier> {
         val baseStructures = mapPool
             .flatMap { ResearcherTradeUtils.getMatchingStructures(registryAccess, it.structure) }
         val fixedStructures = mapPool
@@ -175,7 +175,7 @@ data class TradeItemMapInfo (
     val z: Int? = null,
     val fixedStructureId: String? = null,
     val scale: Int? = null,
-    val searchForJigsawIds: List<ResourceLocation>? = null,
+    val searchForJigsawIds: List<Identifier>? = null,
     val overrideMapIcon: ResourceKey<MapDecorationType>? = null,
 ) {
     companion object {
@@ -187,7 +187,7 @@ data class TradeItemMapInfo (
             Codec.INT.optionalFieldOf("z").forNullableGetter(TradeItemMapInfo::z),
             Codec.STRING.optionalFieldOf("fixedStructureId").forNullableGetter(TradeItemMapInfo::fixedStructureId),
             Codec.INT.optionalFieldOf("scale").forNullableGetter(TradeItemMapInfo::scale),
-            ResourceLocation.CODEC.listOf().optionalFieldOf("searchForJigsawIds").forNullableGetter(TradeItemMapInfo::searchForJigsawIds),
+            Identifier.CODEC.listOf().optionalFieldOf("searchForJigsawIds").forNullableGetter(TradeItemMapInfo::searchForJigsawIds),
             ResourceKey.codec(Registries.MAP_DECORATION_TYPE).optionalFieldOf("overrideMapIcon").forNullableGetter(TradeItemMapInfo::overrideMapIcon),
         ).apply(b, TradeItemMapInfo::class.constructorWithOptionals()::newInstance) }
     }
@@ -200,11 +200,11 @@ data class TradeItemMapInfo (
         val x: Int? = null,
         val z: Int? = null,
         val fixedStructureId: String? = null,
-        @Serializable(with = ResourceLocationSerializer::class)
-        val overrideMapIcon: ResourceLocation? = null,
+        @Serializable(with = IdentifierSerializer::class)
+        val overrideMapIcon: Identifier? = null,
         val scale: Int = 3,
-        @Serializable(with = ResourceLocationListSerializer::class)
-        val searchForJigsawIds: List<@Serializable(with=ResourceLocationSerializer::class) ResourceLocation>? = null,
+        @Serializable(with = IdentifierListSerializer::class)
+        val searchForJigsawIds: List<@Serializable(with=IdentifierSerializer::class) Identifier>? = null,
     ) {
         fun unwrap(): TradeItemMapInfo {
             return TradeItemMapInfo(
@@ -222,7 +222,7 @@ data class TradeItemMapInfo (
         }
     }
 
-    class ResourceLocationListSerializer : JsonTransformingSerializer<List<ResourceLocation>>(ListSerializer(ResourceLocationSerializer())) {
+    class IdentifierListSerializer : JsonTransformingSerializer<List<Identifier>>(ListSerializer(IdentifierSerializer())) {
         override fun transformDeserialize(element: JsonElement): JsonElement {
             if (element is JsonPrimitive) {
                 return JsonArray(listOf(element))

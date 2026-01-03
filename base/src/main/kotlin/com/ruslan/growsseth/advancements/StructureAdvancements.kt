@@ -11,12 +11,12 @@ import net.minecraft.advancements.Advancement
 import net.minecraft.advancements.AdvancementHolder
 import net.minecraft.advancements.AdvancementRequirements
 import net.minecraft.advancements.AdvancementRewards
-import net.minecraft.advancements.critereon.LocationPredicate
-import net.minecraft.advancements.critereon.PlayerTrigger
+import net.minecraft.advancements.criterion.LocationPredicate
+import net.minecraft.advancements.criterion.PlayerTrigger
 import net.minecraft.core.HolderLookup
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.tags.TagKey
 import net.minecraft.world.level.levelgen.structure.Structure
@@ -84,18 +84,18 @@ object StructureAdvancements {
         }.toSet()
     }
 
-    fun getStructureAdvancementId(structKey: ResourceKey<Structure>): ResourceLocation {
-        return resLoc("growsseth/found_${structKey.location().path}")
+    fun getStructureAdvancementId(structKey: ResourceKey<Structure>): Identifier {
+        return resLoc("growsseth/found_${structKey.identifier().path}")
     }
 
-    fun getStructureJigsawAdvancementId(structKey: ResourceKey<Structure>, target: ResourceKey<Structure>): ResourceLocation {
-        return resLoc("growsseth/found_jigsaw/${structKey.location().namespace}/${structKey.location().path}/${target.location().path}")
+    fun getStructureJigsawAdvancementId(structKey: ResourceKey<Structure>, target: ResourceKey<Structure>): Identifier {
+        return resLoc("growsseth/found_jigsaw/${structKey.identifier().namespace}/${structKey.identifier().path}/${target.identifier().path}")
     }
 
     private val structureKeyAdvancementRegex = Regex("^growsseth/found_(?!jigsaw)(.+)$")
     private val structureJigsawPieceAdvancementRegex = Regex("^growsseth/found_jigsaw/([^/]+)/([^/]+)/(.+)$")
 
-    fun getStructureKeyFromAdvancementId(id: ResourceLocation): ResourceKey<Structure>? {
+    fun getStructureKeyFromAdvancementId(id: Identifier): ResourceKey<Structure>? {
         if (id.namespace != RuinsOfGrowsseth.MOD_ID) return null
 
         return structureKeyAdvancementRegex.matchEntire(id.path)?.groupValues?.get(1)?.let { ResourceKey.create(Registries.STRUCTURE, resLoc(it)) }
@@ -108,17 +108,17 @@ object StructureAdvancements {
      * detection into the same code.
      * @return A pair of reference structure and owner structure of the jigsaw piece
      */
-    fun getReferenceStructureFromJigsawAdvancementId(id: ResourceLocation): Pair<ResourceKey<Structure>, ResourceKey<Structure>>? {
+    fun getReferenceStructureFromJigsawAdvancementId(id: Identifier): Pair<ResourceKey<Structure>, ResourceKey<Structure>>? {
         if (id.namespace != RuinsOfGrowsseth.MOD_ID) return null
 
         val match = structureJigsawPieceAdvancementRegex.matchEntire(id.path)
         return match?.let { m -> Pair(
-            ResourceKey.create(Registries.STRUCTURE, ResourceLocation.fromNamespaceAndPath(m.groupValues[1], m.groupValues[2])),
+            ResourceKey.create(Registries.STRUCTURE, Identifier.fromNamespaceAndPath(m.groupValues[1], m.groupValues[2])),
             ResourceKey.create(Registries.STRUCTURE, resLoc(m.groupValues[3])),
         ) }
     }
 
-    fun getAllStructureAdvancementIds(): List<ResourceLocation> {
+    fun getAllStructureAdvancementIds(): List<Identifier> {
         val structureAdvancements = GrowssethStructures.all
             .map { getStructureAdvancementId(it) }
         val jigsawAdvancements = GrowssethStructures.VILLAGE_HOUSE_STRUCTURES.flatMap { (struct, villageHouses) ->
@@ -155,8 +155,8 @@ object StructureAdvancements {
                 /* not needed if it's not going to be displayed
                 .display(
                     Items.FILLED_MAP,  // The display icon
-                    Component.literal(structKey.location().path),  // The title
-                    Component.literal("hidden adv for structure detection (${structKey.location()})"),  // The description
+                    Component.literal(structKey.identifier().path),  // The title
+                    Component.literal("hidden adv for structure detection (${structKey.identifier()})"),  // The description
                     null,  // Background image used
                     FrameType.TASK,  // Options: TASK, CHALLENGE, GOAL
                     false,  // Show toast top right
@@ -172,7 +172,7 @@ object StructureAdvancements {
         private fun createJigsawDetectionAdvancement(
             consumer: Consumer<AdvancementHolder>,
             structKey: ResourceKey<Structure>,
-            pieceIds: List<ResourceLocation>,
+            pieceIds: List<Identifier>,
             root: AdvancementHolder,
             name: String = pieceIds.joinToString("_") { it.path.replace("/", "_") },
         ): AdvancementHolder {

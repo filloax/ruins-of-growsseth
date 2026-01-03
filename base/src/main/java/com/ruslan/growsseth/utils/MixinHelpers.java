@@ -6,7 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.Painting;
@@ -32,11 +32,11 @@ public class MixinHelpers {
     public static final ResourceLoading RESOURCE_LOADING = new ResourceLoading();
 
     public static class ResourceLoading {
-        @Nullable private static ResourceLocation currentlyDecoding;
-        private static final Stack<ResourceLocation> parentDecoding = new Stack<>(); // just in case
+        @Nullable private static Identifier currentlyDecoding;
+        private static final Stack<Identifier> parentDecoding = new Stack<>(); // just in case
 
 
-        public void startResource(ResourceLocation id) {
+        public void startResource(Identifier id) {
             if (currentlyDecoding != null) parentDecoding.add(currentlyDecoding);
             currentlyDecoding = id;
         }
@@ -45,7 +45,7 @@ public class MixinHelpers {
             currentlyDecoding = parentDecoding.empty() ? null : parentDecoding.pop();
         }
 
-        public @Nullable ResourceLocation getCurrent() { return currentlyDecoding; }
+        public @Nullable Identifier getCurrent() { return currentlyDecoding; }
     }
 
     // Big thanks to Naz Ikhsan from https://bugs.mojang.com/browse/MC-102223 for the painting fix

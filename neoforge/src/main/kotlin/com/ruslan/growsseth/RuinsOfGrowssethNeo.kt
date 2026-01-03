@@ -27,7 +27,7 @@ import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.CreativeModeTabs
 import net.minecraft.world.item.Item
@@ -167,10 +167,10 @@ object RuinsOfGrowssethNeo : RuinsOfGrowsseth() {
         LOGGER.info("Setup Client!")
     }
 
-    private fun <T : Any> RegisterEvent.register(registryKey: ResourceKey<Registry<T>>, registratorConsumer: (registrator: (ResourceLocation, T) -> Unit) -> Unit) {
+    private fun <T : Any> RegisterEvent.register(registryKey: ResourceKey<Registry<T>>, registratorConsumer: (registrator: (Identifier, T) -> Unit) -> Unit) {
         register(registryKey) { registry -> registratorConsumer(registry::register) }
     }
-    private fun <T : Any> RegisterEvent.registerHolder(registryKey: ResourceKey<Registry<T>>, registratorConsumer: (registrator: (ResourceLocation, T) -> Holder<T>) -> Unit) {
+    private fun <T : Any> RegisterEvent.registerHolder(registryKey: ResourceKey<Registry<T>>, registratorConsumer: (registrator: (Identifier, T) -> Holder<T>) -> Unit) {
         register(registryKey) { _ ->
             registratorConsumer { id, value -> Registry.registerForHolder(getRegistry(registryKey)!!, id, value) }
         }

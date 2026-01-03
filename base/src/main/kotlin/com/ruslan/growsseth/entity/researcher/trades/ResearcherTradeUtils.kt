@@ -19,7 +19,7 @@ import net.minecraft.core.RegistryAccess
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.Registries
 import net.minecraft.network.chat.Component
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.tags.TagKey
 import net.minecraft.world.item.ItemStack
@@ -37,14 +37,14 @@ object ResearcherTradeUtils {
 
     private fun getServer(researcher: Researcher) = researcher.level().server ?: throw IllegalStateException("Cannot access TradeProvider from client!")
 
-    fun getMatchingStructures(registryAccess: RegistryAccess, tagOrId: String): List<ResourceLocation> {
+    fun getMatchingStructures(registryAccess: RegistryAccess, tagOrId: String): List<Identifier> {
         val tagOrKey = getStructTagOrKey(tagOrId)
         return tagOrKey.map({ tag ->
             registryAccess
                 .lookupOrThrow(Registries.STRUCTURE).getTagOrEmpty(tag)
-                .mapNotNull { h -> h.unwrapKey().map { it.location() }.getOrNull() }
+                .mapNotNull { h -> h.unwrapKey().map { it.identifier() }.getOrNull() }
         }, { key ->
-            listOf(key.location())
+            listOf(key.identifier())
         })
     }
 

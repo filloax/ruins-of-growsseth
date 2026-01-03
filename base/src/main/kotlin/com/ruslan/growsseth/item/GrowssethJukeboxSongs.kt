@@ -153,7 +153,7 @@ object GrowssethJukeboxSongs {
     ) {
         context.register(
             key, JukeboxSong(
-                soundEvent, Component.translatable(Util.makeDescriptionId("jukebox_song", key.location())),
+                soundEvent, Component.translatable(Util.makeDescriptionId("jukebox_song", key.identifier())),
                 lengthInSeconds.toFloat(), comparatorOutput
             )
         )

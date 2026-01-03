@@ -7,15 +7,15 @@ import com.ruslan.growsseth.entity.GrowssethEntities
 import com.ruslan.growsseth.utils.resLoc
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.item.*
 import net.minecraft.world.item.Item.Properties
 import net.minecraft.world.item.equipment.trim.TrimPattern
 import net.minecraft.world.level.block.entity.DecoratedPotPattern
 
 object GrowssethItems {
-	val all = mutableMapOf<ResourceLocation, Item>()
-	private val allInitializers = mutableMapOf<ResourceLocation, () -> Item>()
+	val all = mutableMapOf<Identifier, Item>()
+	private val allInitializers = mutableMapOf<Identifier, () -> Item>()
 	val noAutogenerateItems = mutableSetOf<Item>()
 
     // TODO: Improve item creation to avoid duplicating the ids
@@ -115,7 +115,7 @@ object GrowssethItems {
 			)
 		})
 
-	fun registerItems(registrator: (ResourceLocation, Item) -> Unit) {
+	fun registerItems(registrator: (Identifier, Item) -> Unit) {
 		allInitializers.forEach{
 			registrator(it.key, it.value())
 		}
@@ -141,8 +141,8 @@ object GrowssethItems {
 			Pair(ResourceKey.create(Registries.DECORATED_POT_PATTERN, resLoc(name)), DecoratedPotPattern(resLoc(name)))
 
 
-		fun registerPotPatterns(registrator: (ResourceLocation, DecoratedPotPattern) -> Unit) {
-			registrator(GROWSSETH.first.location(), GROWSSETH.second)
+		fun registerPotPatterns(registrator: (Identifier, DecoratedPotPattern) -> Unit) {
+			registrator(GROWSSETH.first.identifier(), GROWSSETH.second)
 		}
 	}
 }

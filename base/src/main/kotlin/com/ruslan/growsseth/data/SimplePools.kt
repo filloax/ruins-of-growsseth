@@ -13,7 +13,7 @@ import net.minecraft.data.worldgen.BootstrapContext
 import net.minecraft.data.worldgen.Pools
 import net.minecraft.data.worldgen.ProcessorLists
 import net.minecraft.resources.ResourceKey
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool.Projection
@@ -191,7 +191,7 @@ class SimplePools(private val context: BootstrapContext<StructureTemplatePool>) 
     }
 
     private fun singlePoolElement(
-        id: ResourceLocation,
+        id: Identifier,
         processors: Holder<StructureProcessorList>,
         overrideLiquidSettings: LiquidSettings? = null,
     ) = java.util.function.Function<Projection, SinglePoolElement> { proj ->

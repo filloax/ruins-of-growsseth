@@ -6,7 +6,7 @@ import net.minecraft.client.gui.components.toasts.Toast
 import net.minecraft.client.gui.components.toasts.ToastManager
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.network.chat.Component
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.util.FormattedCharSequence
 import net.minecraft.world.item.ItemStack
 import kotlin.math.min
@@ -17,7 +17,7 @@ class CustomTextItemToast private constructor(
     private var messageLines: List<FormattedCharSequence>,
     private var item: ItemStack,
     private val width: Int,
-    val BACKGROUND_SPRITE: ResourceLocation = ResourceLocation.parse("toast/advancement"),
+    val BACKGROUND_SPRITE: Identifier = Identifier.parse("toast/advancement"),
 ) : Toast {
     private var lastChanged: Long = 0
     private var changed = false
@@ -103,10 +103,10 @@ class CustomTextItemToast private constructor(
     private fun renderBackgroundRow(guiGraphics: GuiGraphics, width: Int, vOffset: Int, y: Int, height: Int) {
         val i = if (vOffset == 0) 20 else 5
         val j = min(60, width - i)
-        val resourcelocation = BACKGROUND_SPRITE
+        val identifier = BACKGROUND_SPRITE
         guiGraphics.blitSprite(
             RenderPipelines.GUI_TEXTURED,
-            resourcelocation,
+            identifier,
             160,
             32,
             0,
@@ -121,7 +121,7 @@ class CustomTextItemToast private constructor(
         while (k < width - j) {
             guiGraphics.blitSprite(
                 RenderPipelines.GUI_TEXTURED,
-                resourcelocation,
+                identifier,
                 160,
                 32,
                 32,
@@ -136,7 +136,7 @@ class CustomTextItemToast private constructor(
 
         guiGraphics.blitSprite(
             RenderPipelines.GUI_TEXTURED,
-            resourcelocation,
+            identifier,
             160,
             32,
             160 - j,

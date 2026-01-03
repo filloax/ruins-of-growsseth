@@ -16,7 +16,7 @@ public abstract class ItemFrameRendererMixin {
     // See CustomMapItems.checkCustomMapItem doc
 //    @WrapOperation(
 //            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;is(Lnet/minecraft/world/item/Item;)Z"),
-//            method = "Lnet/minecraft/client/renderer/entity/ItemFrameRenderer;getFrameModelResourceLoc(ZLnet/minecraft/world/item/ItemStack;)Lnet/minecraft/client/resources/model/ModelResourceLocation;"
+//            method = "Lnet/minecraft/client/renderer/entity/ItemFrameRenderer;getFrameModelResourceLoc(ZLnet/minecraft/world/item/ItemStack;)Lnet/minecraft/client/resources/model/ModelIdentifier;"
 //    )
 //    private boolean recognizeMapsFromClass(ItemStack instance, Item item, Operation<Boolean> original) {
 //        return CustomMapItems.checkMapItemWrapper(instance, item, original);

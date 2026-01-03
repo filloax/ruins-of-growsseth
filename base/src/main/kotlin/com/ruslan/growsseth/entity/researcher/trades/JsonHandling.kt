@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.*
 import net.minecraft.core.registries.BuiltInRegistries
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.util.profiling.ProfilerFiller
 import net.minecraft.world.item.Item
@@ -35,7 +35,7 @@ class TradesListener : KotlinJsonResourceReloadListener(JSON, Constants.TRADES_D
         val TRADES_PROGRESS_AFTER_STRUCTURE_RANDOM = mutableMapOf<String, MutableList<ResearcherTradeEntry>>()
     }
 
-    override fun apply(loader: Map<ResourceLocation, JsonElement>, manager: ResourceManager, profiler: ProfilerFiller) {
+    override fun apply(loader: Map<Identifier, JsonElement>, manager: ResourceManager, profiler: ProfilerFiller) {
         FIXED_TRADES_WHEN_RANDOM.clear()
         WEB_UNLOCKABLE_TRADES_BY_STRUCT.clear()
         WEB_UNLOCKABLE_TRADES_BY_EVENT.clear()
@@ -107,10 +107,10 @@ data class ResearcherTradeObj(
     }
 
     companion object {
-        fun tradeItemEntryObj(id: ResourceLocation, amount: Int = 1, maps: List<TradeItemMapInfo.JsonDesc>, bookId: String? = null) = TradeItemEntryObj(
+        fun tradeItemEntryObj(id: Identifier, amount: Int = 1, maps: List<TradeItemMapInfo.JsonDesc>, bookId: String? = null) = TradeItemEntryObj(
             id.toString(), amount, maps, bookId
         )
-        fun tradeItemEntryObj(id: ResourceLocation, amount: Int = 1, map: TradeItemMapInfo.JsonDesc? = null, bookId: String? = null) = tradeItemEntryObj(
+        fun tradeItemEntryObj(id: Identifier, amount: Int = 1, map: TradeItemMapInfo.JsonDesc? = null, bookId: String? = null) = tradeItemEntryObj(
             id, amount, listOfNotNull(map), bookId
         )
         fun tradeItemEntryObj(item: Item, amount: Int = 1, maps: List<TradeItemMapInfo.JsonDesc>, bookId: String? = null) = tradeItemEntryObj(

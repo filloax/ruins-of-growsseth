@@ -3,12 +3,12 @@ package com.ruslan.growsseth.effect
 import com.filloax.fxlib.api.registration.RegistryHolderDelegate
 import com.ruslan.growsseth.utils.resLoc
 import net.minecraft.core.Holder
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.effect.MobEffectCategory
 
 object GrowssethEffects {
-    val all = mutableMapOf<ResourceLocation, RegistryHolderDelegate<MobEffect>>()
+    val all = mutableMapOf<Identifier, RegistryHolderDelegate<MobEffect>>()
 
     val FIGHTING_SPIRIT by make("fighting_spirit", FightingSpiritEffect(MobEffectCategory.BENEFICIAL, 15630397))
     val JUSTICE         by make("justice", JusticeEffect(MobEffectCategory.BENEFICIAL, 15976537))
@@ -20,7 +20,7 @@ object GrowssethEffects {
         all[id] = this
     }
 
-    fun registerEffects(registrator: (ResourceLocation, MobEffect) -> Holder<MobEffect>) {
+    fun registerEffects(registrator: (Identifier, MobEffect) -> Holder<MobEffect>) {
         all.values.forEach{
             it.initHolder(registrator(it.id, it.value))
         }

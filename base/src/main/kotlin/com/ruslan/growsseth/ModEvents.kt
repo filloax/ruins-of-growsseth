@@ -24,7 +24,7 @@ import com.ruslan.growsseth.worldgen.worldpreset.GrowssethWorldPreset
 import com.ruslan.growsseth.worldgen.worldpreset.LocationNotifListener
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceKey
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
@@ -172,5 +172,5 @@ abstract class ModEvents {
     abstract fun onPlayerServerJoin(event: (player: ServerPlayer, MinecraftServer) -> Unit)
     abstract fun onPlayerServerLeave(event: (player: ServerPlayer, MinecraftServer) -> Unit)
     abstract fun onPlayerServerTick(event: (player: ServerPlayer) -> Unit)
-    abstract fun onLootTableModify(event: (key: ResourceLocation, table: LootTableModifier) -> Unit)
+    abstract fun onLootTableModify(event: (key: Identifier, table: LootTableModifier) -> Unit)
 }

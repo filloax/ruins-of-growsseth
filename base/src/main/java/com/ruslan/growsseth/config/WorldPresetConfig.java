@@ -4,7 +4,7 @@ import com.ruslan.growsseth.structure.GrowssethStructures;
 import com.teamresourceful.resourcefulconfig.api.annotations.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.levelgen.structure.Structure;
 
@@ -109,8 +109,8 @@ public class WorldPresetConfig {
         @ConfigEntry(id = "rotation", translation = T_PREF + "rotation.name")
         public Rotation rotation;
 
-        public ResourceLocation structureId() {
-            return ResourceLocation.parse(structureId);
+        public Identifier structureId() {
+            return Identifier.parse(structureId);
         }
         public ResourceKey<Structure> structureKey() {
             return ResourceKey.create(Registries.STRUCTURE, structureId());
@@ -126,7 +126,7 @@ public class WorldPresetConfig {
         }
 
         public StructureInWorldConfig(ResourceKey<Structure> structureId, boolean enabled, int x, int y, int z, Rotation rotation) {
-            this.structureId = structureId.location().toString();
+            this.structureId = structureId.identifier().toString();
             this.enabled = enabled;
             this.x = x;
             this.y = y;

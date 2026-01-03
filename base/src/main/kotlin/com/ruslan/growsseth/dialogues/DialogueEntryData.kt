@@ -9,7 +9,7 @@ import kotlinx.serialization.SerializationException
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.*
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.util.profiling.ProfilerFiller
 import net.minecraft.world.level.storage.LevelResource
@@ -36,7 +36,7 @@ class ResearcherDialogueListener : KotlinJsonResourceReloadListener(JSON, Consta
         const val SHARED_KEY = "shared"
     }
 
-    override fun apply(loader: Map<ResourceLocation, JsonElement>, manager: ResourceManager, profiler: ProfilerFiller) {
+    override fun apply(loader: Map<Identifier, JsonElement>, manager: ResourceManager, profiler: ProfilerFiller) {
         DIALOGUE_OPTIONS.clear()
         SHARED_DIALOGUES.clear()
         val sharedEntriesReferences = mutableMapOf<String, MutableList<String>>()   // <event names, entry ids>
@@ -95,7 +95,7 @@ class ResearcherDialogueListener : KotlinJsonResourceReloadListener(JSON, Consta
         }
     }
 
-    private fun convertOldFormat(fileIdentifier: ResourceLocation, jsonElement: JsonElement): Boolean {
+    private fun convertOldFormat(fileIdentifier: Identifier, jsonElement: JsonElement): Boolean {
         val converted = try {
             DialogueEntryConversion.transformOldDialogueFile(jsonElement.jsonObject)
         } catch(e: Exception) {

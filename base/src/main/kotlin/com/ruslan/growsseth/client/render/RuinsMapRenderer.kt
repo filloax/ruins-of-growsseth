@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.client.renderer.texture.TextureAtlasSprite
 import net.minecraft.data.AtlasIds
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.item.ItemStack
 import org.joml.Matrix4f
 import java.util.function.Function
@@ -53,7 +53,7 @@ object RuinsMapRenderer {
         pose.scale(1.0f, 1.0f, 3.0f)
 
         // todo: fix
-//        blitSprite(Function { location: ResourceLocation -> RenderType.guiTextured(location) },
+//        blitSprite(Function { location: Identifier -> RenderType.guiTextured(location) },
 //            texture, 8, 8, 0, 0, -4, -4, 0, 8, 8)
 
         pose.popPose()
@@ -63,7 +63,7 @@ object RuinsMapRenderer {
     // TODO: there should be a way in newer versions to do this by data, adapting base methods requires too much work
 
     private fun blitSprite(
-        renderTypeGetter: Function<ResourceLocation?, RenderType>,
+        renderTypeGetter: Function<Identifier?, RenderType>,
         sprite: TextureAtlasSprite,
         textureWidth: Int,
         textureHeight: Int,
@@ -78,7 +78,7 @@ object RuinsMapRenderer {
         if (uWidth != 0 && vHeight != 0) {
             this.innerBlit(
                 renderTypeGetter,
-                sprite.atlasLocation(),
+                sprite.atlasIdentifier(),
                 x,
                 x + uWidth,
                 y,
@@ -108,8 +108,8 @@ object RuinsMapRenderer {
      * @param maxV the maximum vertical texture coordinate.
      */
     private fun innerBlit(
-        renderTypeGetter: Function<ResourceLocation?, RenderType>,
-        atlasLocation: ResourceLocation?,
+        renderTypeGetter: Function<Identifier?, RenderType>,
+        atlasLocation: Identifier?,
         x1: Int,
         x2: Int,
         y1: Int,

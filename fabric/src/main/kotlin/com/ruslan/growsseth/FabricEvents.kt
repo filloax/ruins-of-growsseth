@@ -8,7 +8,7 @@ import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.minecraft.core.BlockPos
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
@@ -55,7 +55,7 @@ class FabricEvents : ModEvents() {
         event(serverPlayer)
     }
 
-    override fun onLootTableModify(event: (key: ResourceLocation, table: LootTableModifier) -> Unit) = LootTableEvents.MODIFY.register { key, tableBuilder, _, registries ->
-        event(key.location(), LootTableModifier.ForLootTableBuilder(tableBuilder))
+    override fun onLootTableModify(event: (key: Identifier, table: LootTableModifier) -> Unit) = LootTableEvents.MODIFY.register { key, tableBuilder, _, registries ->
+        event(key.identifier(), LootTableModifier.ForLootTableBuilder(tableBuilder))
     }
 }

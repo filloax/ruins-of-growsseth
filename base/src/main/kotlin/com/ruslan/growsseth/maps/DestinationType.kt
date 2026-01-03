@@ -55,7 +55,7 @@ class DestinationType private constructor(val type: Holder<MapDecorationType>? =
             val tagHolders = registryAccess.lookupOrThrow(Registries.STRUCTURE).get(structTag).orElseThrow()
             VANILLA_STRUCT_ICONS.forEach {
                 tagHolders.forEach { holder ->
-                    if (holder.unwrapKey().get().location() == it.key.location()) {
+                    if (holder.unwrapKey().get().identifier() == it.key.identifier()) {
                         return withIcon(it.value)
                     }
                 }

@@ -4,7 +4,7 @@ import com.ruslan.growsseth.RuinsOfGrowsseth
 import net.minecraft.core.Holder
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.sounds.SoundEvent
 
 class GrowssethSounds {
@@ -42,12 +42,12 @@ class GrowssethSounds {
         val ZOMBIE_RESEARCHER_DEATH = registerSoundEvent("zombie_researcher.death")
 
         private fun registerSoundEvent(name: String): SoundEvent {
-            val id = ResourceLocation.fromNamespaceAndPath(RuinsOfGrowsseth.MOD_ID, name)
+            val id = Identifier.fromNamespaceAndPath(RuinsOfGrowsseth.MOD_ID, name)
             return Registry.register(BuiltInRegistries.SOUND_EVENT, id, SoundEvent.createVariableRangeEvent(id))
         }
 
         private fun registerSoundEventHolder(name: String): Holder.Reference<SoundEvent> {
-            val id = ResourceLocation.fromNamespaceAndPath(RuinsOfGrowsseth.MOD_ID, name)
+            val id = Identifier.fromNamespaceAndPath(RuinsOfGrowsseth.MOD_ID, name)
             return Registry.registerForHolder(BuiltInRegistries.SOUND_EVENT, id, SoundEvent.createVariableRangeEvent(id))
         }
 

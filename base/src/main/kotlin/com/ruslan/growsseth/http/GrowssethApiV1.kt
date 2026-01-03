@@ -105,7 +105,7 @@ object GrowssethApiV1 : AbstractGrowssethApi() {
     }
 
     /**
-     * Decompose a string into location id and path, like ResourceLocation but
+     * Decompose a string into location id and path, like Identifier but
      * without the format checking (to have more flexibility)
      */
     private fun decomposeId(location: String, separator: Char = ':'): Pair<String, String> {

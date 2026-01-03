@@ -79,7 +79,7 @@ class CustomDataProvider(private val output: PackOutput) : DataProvider {
                 ResearcherTradeObj(
                     ResearcherTradeObj.tradeItemEntryObj(GrowssethItems.RUINS_MAP, map = TradeItemMapInfo.JsonDesc(
                         structure = tagString,
-                        name = "structure.${key.location().toLanguageKey()}.map.name",
+                        name = "structure.${key.identifier().toLanguageKey()}.map.name",
                         fixedStructureId = tagString,
                     )).let { obj -> modify?.let{ it(obj) } ?: obj },
                     listOf(
@@ -96,17 +96,17 @@ class CustomDataProvider(private val output: PackOutput) : DataProvider {
 
         GrowssethStructures.PROGRESS_STRUCTURES
             .minus(GrowssethStructures.GOLEM_HOUSE)
-            .forEach { key -> out[key.location().path] = makeStructTrades(key, null) }
+            .forEach { key -> out[key.identifier().path] = makeStructTrades(key, null) }
         GrowssethStructures.GOLEM_HOUSE.let { key ->
-            out[key.location().path] = makeStructTrades(key) { obj ->
+            out[key.identifier().path] = makeStructTrades(key) { obj ->
                 val associatedJigsaws = GrowssethStructures.VILLAGE_HOUSE_STRUCTURES[key]!!
                 val tag = GrowssethStructures.info[key]!!.tag
                 val maps = associatedJigsaws.map { (villageKey, houseIds) ->
                     TradeItemMapInfo.JsonDesc(
-                        structure = villageKey.location().toString(),
-                        name = "structure.${key.location().toLanguageKey()}.map.name",
+                        structure = villageKey.identifier().toString(),
+                        name = "structure.${key.identifier().toLanguageKey()}.map.name",
                         fixedStructureId = "#${tag.location}",
-                        overrideMapIcon = GrowssethMapDecorations.GOLEM_HOUSE.unwrapKey().orElseThrow().location(),
+                        overrideMapIcon = GrowssethMapDecorations.GOLEM_HOUSE.unwrapKey().orElseThrow().identifier(),
                         searchForJigsawIds = houseIds
                     )
                 }
@@ -132,7 +132,7 @@ class CustomDataProvider(private val output: PackOutput) : DataProvider {
         })
 
         return mapOf(
-            GrowssethStructures.NOTEBLOCK_LAB.location().path to discTrades
+            GrowssethStructures.NOTEBLOCK_LAB.identifier().path to discTrades
         )
     }
 

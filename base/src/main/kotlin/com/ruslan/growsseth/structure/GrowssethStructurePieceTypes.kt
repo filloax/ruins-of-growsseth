@@ -2,12 +2,12 @@ package com.ruslan.growsseth.structure
 
 import com.ruslan.growsseth.utils.resLoc
 import com.ruslan.growsseth.structure.pieces.ResearcherTent
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType
 
 object GrowssethStructurePieceTypes {
     @JvmStatic
-    val all = mutableMapOf<ResourceLocation, StructurePieceType>()
+    val all = mutableMapOf<Identifier, StructurePieceType>()
 
     val RESEARCHER_TENT = registerPieceType("gr_res_tent") { tag, ctx -> ResearcherTent(ctx, tag) }
 
@@ -16,7 +16,7 @@ object GrowssethStructurePieceTypes {
         return structurePieceType
     }
 
-    fun registerStructurePieces(registrator: (ResourceLocation, StructurePieceType) -> Unit) {
+    fun registerStructurePieces(registrator: (Identifier, StructurePieceType) -> Unit) {
         all.forEach{
             registrator(it.key, it.value)
         }

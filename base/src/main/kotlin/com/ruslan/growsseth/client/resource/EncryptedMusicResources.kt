@@ -5,7 +5,7 @@ import com.ruslan.growsseth.resource.MusicCommon
 import com.ruslan.growsseth.utils.DecryptUtil
 import com.ruslan.growsseth.utils.resLoc
 import net.minecraft.resources.FileToIdConverter
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener
 import java.io.IOException
@@ -29,8 +29,8 @@ object EncryptedMusicResources {
     private var key: SecretKey? = null
 
     @JvmStatic
-    fun checkEncryptedSoundStream(resourceLocation: ResourceLocation, inputStream: InputStream): InputStream {
-        return if (resourceLocation.path.startsWith("soundsx")) {
+    fun checkEncryptedSoundStream(identifier: Identifier, inputStream: InputStream): InputStream {
+        return if (identifier.path.startsWith("soundsx")) {
             if (!MusicCommon.hasMusicKey) {
                 throw IOException("Couldn't load encrypted music as no key loaded in mod build!")
             }

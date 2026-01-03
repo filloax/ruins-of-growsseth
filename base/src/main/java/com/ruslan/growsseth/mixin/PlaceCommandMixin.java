@@ -27,7 +27,7 @@ public abstract class PlaceCommandMixin {
             ServerLevel serverLevel, Structure structure2, ChunkGenerator chunkGenerator, StructureStart structureStart,
             BoundingBox boundingBox, ChunkPos chunkPos, ChunkPos chunkPos2, String string
     ) {
-        if (structure.key().location().getNamespace().equals(RuinsOfGrowsseth.MOD_ID)) {
+        if (structure.key().identifier().getNamespace().equals(RuinsOfGrowsseth.MOD_ID)) {
             CustomPlacedStructureTracker.get(serverLevel).registerStructure(structureStart, pos);
         }
     }

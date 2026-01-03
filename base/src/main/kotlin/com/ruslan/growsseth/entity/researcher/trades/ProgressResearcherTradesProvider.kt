@@ -143,7 +143,7 @@ class ProgressResearcherTradesProvider(
         val allTrades = tradesBefore + tradesAfter
         val changedMapPriority = allTrades.map { trade ->
             val matchingStructures = trade.itemListing.getAllPossibleStructures(server.registryAccess())
-            if (!matchingStructures.contains(data.currentStructure?.location())) {
+            if (!matchingStructures.contains(data.currentStructure?.identifier())) {
                 // Increase priority for maps of not current structure to reduce clogging of UI
                 trade.copy(priority = trade.priority + 1000)
             } else {
@@ -246,7 +246,7 @@ class ProgressResearcherTradesProvider(
         }
 
         fun onStructureFound(player: ServerPlayer, structId: ResourceKey<Structure>, isJigsawPart: Boolean) {
-            if (structId.location().namespace != RuinsOfGrowsseth.MOD_ID) return
+            if (structId.identifier().namespace != RuinsOfGrowsseth.MOD_ID) return
 
             val server = player.server!!
             val prov = getCurrent(server) ?: return

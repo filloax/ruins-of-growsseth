@@ -9,7 +9,7 @@ import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.http.GrowssethApi
 import net.minecraft.core.BlockPos
 import net.minecraft.core.registries.Registries
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.level.block.Rotation
 
 object RemoteStructures {
@@ -30,7 +30,7 @@ object RemoteStructures {
                 structsToSpawnById.clear()
 
                 newSpawns.forEach {
-                    val id = ResourceLocation.parse(it.structureId)
+                    val id = Identifier.parse(it.structureId)
                     if (it.active && id.namespace != Constants.EVENT_NAMESPACE) {
                         val structureRef = server.registryAccess().lookupOrThrow(Registries.STRUCTURE).get(id)
                         if (structureRef == null) {
@@ -47,7 +47,7 @@ object RemoteStructures {
 
     data class StructureSpawnData(
         val pos: BlockPos,
-        val structure: ResourceLocation,
+        val structure: Identifier,
         val spawnId: String,
         val rotation: Rotation? = null
     )

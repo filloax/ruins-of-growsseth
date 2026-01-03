@@ -35,7 +35,7 @@ import net.minecraft.data.tags.BannerPatternTagsProvider
 import net.minecraft.data.tags.StructureTagsProvider
 import net.minecraft.data.tags.WorldPresetTagsProvider
 import net.minecraft.resources.ResourceKey
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.tags.BlockTags
 import net.minecraft.tags.ItemTags
 import net.minecraft.tags.WorldPresetTags
@@ -112,10 +112,10 @@ class RecipesProvider(output: FabricDataOutput, registriesFuture: CompletableFut
                     val trimTemplate = TrimTemplate(
                         it,
                         ResourceKey.create(
-                            Registries.TRIM_PATTERN, ResourceLocation.parse(getItemName(it) + "_smithing_trim")
+                            Registries.TRIM_PATTERN, Identifier.parse(getItemName(it) + "_smithing_trim")
                         ),
                         ResourceKey.create(
-                            Registries.RECIPE, ResourceLocation.parse(getItemName(it) + "_smithing_trim")
+                            Registries.RECIPE, Identifier.parse(getItemName(it) + "_smithing_trim")
                         )
                     )
                     this.trimSmithing(trimTemplate.template, trimTemplate.patternId, trimTemplate.recipeId)
@@ -214,7 +214,7 @@ class TagProviderStructures(output: FabricDataOutput, registries: CompletableFut
     override fun addTags(arg: HolderLookup.Provider) {
         GrowssethStructures.info.values.groupBy { it.tag }.forEach { (tag, infos) ->
             tag(tag).also { b ->
-//                infos.forEach { b.addOptional(it.key.location()) }
+//                infos.forEach { b.addOptional(it.key.identifier()) }
                 // uglier version in output: use optionals for non-datagenned structures thus not available here
                 infos.forEach { (key, _) ->
                     if (arg.lookupOrThrow(Registries.STRUCTURE).get(key).isPresent) {
@@ -231,7 +231,7 @@ class TagProviderStructures(output: FabricDataOutput, registries: CompletableFut
 class TagProviderWorldPresets(output: FabricDataOutput, registries: CompletableFuture<HolderLookup.Provider>): WorldPresetTagsProvider(output, registries) {
     override fun addTags(arg: HolderLookup.Provider) {
         getOrCreateRawBuilder(WorldPresetTags.NORMAL)
-            .addElement(GrowssethModWorldPresets.GROWSSETH.location())
+            .addElement(GrowssethModWorldPresets.GROWSSETH.identifier())
     }
 }
 
@@ -239,14 +239,14 @@ class TagProviderBannerPatterns(output: FabricDataOutput, registries: Completabl
     override fun addTags(arg: HolderLookup.Provider) {
         com.ruslan.growsseth.GrowssethBannerPatterns.all.forEach { banner ->
             getOrCreateRawBuilder(banner.tag)
-                .addElement(banner.id().location())
+                .addElement(banner.id().identifier())
         }
     }
 }
 
 /* // Not needed for now, since it's set in the zombie's class (might be used in the future to allow loot customization)
 class EntityLootTableProvider(output: FabricDataOutput) : SimpleFabricLootTableProvider(output, LootContextParamSets.ENTITY) {
-    override fun generate(consumer: BiConsumer<ResourceLocation, LootTable.Builder>) {
+    override fun generate(consumer: BiConsumer<Identifier, LootTable.Builder>) {
         consumer.accept(GrowssethEntities.ZOMBIE_RESEARCHER.defaultLootTable, ZombieResearcher.getLootTable())
     }
 
@@ -279,12 +279,12 @@ class MiscLootTableProvider(output: PackOutput): LootTableProvider(output, setOf
 //// For some RegistrySetBuilder builder
 //builder.add(Registries.INSTRUMENT, bootstrap -> {
 //    bootstrap.register(
-//        ResourceKey.create(Registries.INSTRUMENT, ResourceLocation.fromNamespaceAndPath("examplemod", "example_instrument")),
+//        ResourceKey.create(Registries.INSTRUMENT, Identifier.fromNamespaceAndPath("examplemod", "example_instrument")),
 //        new Instrument(
 //                BuiltInRegistries.SOUND_EVENT.wrapAsHolder(SoundEvents.ARROW_HIT),
 //        7f,
 //        256f,
-//        Component.translatable(Util.makeDescriptionId("instrument", ResourceLocation.fromNamespaceAndPath("examplemod", "example_instrument")))
+//        Component.translatable(Util.makeDescriptionId("instrument", Identifier.fromNamespaceAndPath("examplemod", "example_instrument")))
 //    )
 //    )
 //});
@@ -302,7 +302,7 @@ class ModelGenerator constructor(generator: FabricDataOutput) : FabricModelProvi
                 val discsSongLayer = resLoc("item/music_discs/${key.path}")
                 when (item) {       // if a disc can be crafted (or is Oursteps) it will get the glare
                     GrowssethItems.DISC_OURSTEPS ->
-                        itemModelGenerator.generateLayeredItem(model, ResourceLocation.parse("item/music_disc_pigstep"), discsVocalsLayer)
+                        itemModelGenerator.generateLayeredItem(model, Identifier.parse("item/music_disc_pigstep"), discsVocalsLayer)
                     in GrowssethItems.DISCS_TO_VOCALS.values ->
                         itemModelGenerator.generateLayeredItem(model, discsBaseLayer, discsVocalsLayer, discsSongLayer)
                     in GrowssethItems.DISCS_ORDERED ->

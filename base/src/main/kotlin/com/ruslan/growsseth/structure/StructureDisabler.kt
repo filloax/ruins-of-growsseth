@@ -59,7 +59,7 @@ object StructureDisabler {
 
     private fun isConfigDisabled(structure: Holder<Structure>): Boolean {
         val id = structure.unwrapKey().getOrNull() ?: return false
-        if (id.location().namespace == RuinsOfGrowsseth.MOD_ID && !structToConfigMap.containsKey(id))
+        if (id.identifier().namespace == RuinsOfGrowsseth.MOD_ID && !structToConfigMap.containsKey(id))
             RuinsOfGrowsseth.LOGGER.warn("No enabled config available for structure $id!")
         return structToConfigMap[id]?.let { !it() } ?: false
     }

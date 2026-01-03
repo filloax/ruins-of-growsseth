@@ -8,7 +8,7 @@ import com.ruslan.growsseth.config.GrowssethConfig
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.util.profiling.ProfilerFiller
 
@@ -48,7 +48,7 @@ object TemplateListener : KotlinJsonResourceReloadListener(JSON, Constants.TEMPL
         reloadActions.add(ReloadEntry(kind, action))
     }
 
-    override fun apply(loader: Map<ResourceLocation, JsonElement>, manager: ResourceManager, profiler: ProfilerFiller) {
+    override fun apply(loader: Map<Identifier, JsonElement>, manager: ResourceManager, profiler: ProfilerFiller) {
         val loaderEntriesByKindAndLanguage = loader.toList()
             .groupBy { (fileIdentifier, _) -> kindFromString(fileIdentifier.path.split("/")[0]) }
             .mapValues { (_, entries) -> entries.groupBy { (fileIdentifier, _) -> fileIdentifier.path.split("/")[1] } } // Lang
@@ -59,7 +59,7 @@ object TemplateListener : KotlinJsonResourceReloadListener(JSON, Constants.TEMPL
         }
     }
 
-    private fun <T : TemplateData> reloadTemplateKind(kind: TemplateKind<T>, loaderEntriesByLanguage: Map<String, List<Pair<ResourceLocation, JsonElement>>>)
+    private fun <T : TemplateData> reloadTemplateKind(kind: TemplateKind<T>, loaderEntriesByLanguage: Map<String, List<Pair<Identifier, JsonElement>>>)
         : MutableMap<String, MutableMap<String, T>>
     {
         val langTemplates = mutableMapOf<String, MutableMap<String, T>>()
@@ -92,7 +92,7 @@ object TemplateListener : KotlinJsonResourceReloadListener(JSON, Constants.TEMPL
     }
 
     private fun <T : TemplateData> processKindAndLanguageEntries(
-        entries: List<Pair<ResourceLocation, JsonElement>>,
+        entries: List<Pair<Identifier, JsonElement>>,
         kind: TemplateKind<T>,
         langCode: String,
         langTemplates: MutableMap<String, MutableMap<String, T>>,

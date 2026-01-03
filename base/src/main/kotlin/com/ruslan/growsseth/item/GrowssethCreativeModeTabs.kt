@@ -5,7 +5,7 @@ import com.ruslan.growsseth.utils.resLoc
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
@@ -13,7 +13,7 @@ import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType
 
 
 object GrowssethCreativeModeTabs {
-    private val all = mutableMapOf<ResourceLocation, CreativeModeTab>()
+    private val all = mutableMapOf<Identifier, CreativeModeTab>()
 
     val GROWSSETH_ITEMS = make("growsseth", buildCreativeTab()
         .title(Component.translatable("growsseth.creative_tab"))
@@ -33,7 +33,7 @@ object GrowssethCreativeModeTabs {
         }.build()
     )
 
-    fun registerCreativeModeTabs(registrator: (ResourceLocation, CreativeModeTab) -> Unit) {
+    fun registerCreativeModeTabs(registrator: (Identifier, CreativeModeTab) -> Unit) {
         all.forEach { t, u -> registrator(t, u) }
     }
 

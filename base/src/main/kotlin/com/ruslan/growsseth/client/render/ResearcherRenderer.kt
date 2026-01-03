@@ -16,7 +16,7 @@ import net.minecraft.client.renderer.entity.layers.ItemInHandLayer
 import net.minecraft.client.renderer.item.ItemStackRenderState
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.core.component.DataComponents
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.entity.HumanoidArm
 import net.minecraft.world.item.Items
 
@@ -48,7 +48,7 @@ class ResearcherRenderer(context: EntityRendererProvider.Context)
         reusedState.attackAnim = researcher.getAttackAnim(partialTick)
     }
 
-    override fun getTextureLocation(renderState: ResearcherRendererState): ResourceLocation {
+    override fun getTextureLocation(renderState: ResearcherRendererState): Identifier {
         return if (renderState.isAggressive)
             RESEARCHER_SKIN_ANGRY
         else

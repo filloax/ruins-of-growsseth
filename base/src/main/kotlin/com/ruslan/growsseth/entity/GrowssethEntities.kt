@@ -8,7 +8,7 @@ import com.ruslan.growsseth.platform.platform
 import com.ruslan.growsseth.utils.resLoc
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.MobCategory
@@ -17,7 +17,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes
 import org.w3c.dom.Attr
 
 object GrowssethEntities {
-    val all = mutableMapOf<ResourceLocation, () -> EntityType<*>>()
+    val all = mutableMapOf<Identifier, () -> EntityType<*>>()
 
     val RESEARCHER: EntityType<Researcher> by make(
         "researcher",
@@ -46,7 +46,7 @@ object GrowssethEntities {
         }
     }
 
-    fun registerEntityTypes(registrator: (ResourceLocation, EntityType<*>) -> Unit) {
+    fun registerEntityTypes(registrator: (Identifier, EntityType<*>) -> Unit) {
         all.forEach {
             registrator(it.key, it.value())
         }

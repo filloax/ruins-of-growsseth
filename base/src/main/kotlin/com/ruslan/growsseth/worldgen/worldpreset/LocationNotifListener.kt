@@ -6,7 +6,7 @@ import com.ruslan.growsseth.RuinsOfGrowsseth
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonArray
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.util.profiling.ProfilerFiller
@@ -40,7 +40,7 @@ class LocationNotifListener : KotlinJsonResourceReloadListener(JSON, Constants.P
         }
     }
 
-    override fun apply(loader: Map<ResourceLocation, JsonElement>, manager: ResourceManager, profiler: ProfilerFiller) {
+    override fun apply(loader: Map<Identifier, JsonElement>, manager: ResourceManager, profiler: ProfilerFiller) {
         PLACES_DATA.clear()
         _LOCALISED_PLACES_DATA.clear()
 

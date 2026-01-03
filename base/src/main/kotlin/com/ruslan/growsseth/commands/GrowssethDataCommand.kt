@@ -12,9 +12,9 @@ import kotlinx.serialization.json.*
 import net.minecraft.commands.CommandBuildContext
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands.*
-import net.minecraft.commands.arguments.ResourceLocationArgument
+import net.minecraft.commands.arguments.IdentifierArgument
 import net.minecraft.network.chat.Component
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.packs.resources.Resource
 import net.minecraft.world.level.storage.LevelResource
 import java.nio.file.Path
@@ -82,11 +82,11 @@ object GrowssethDataCommand {
             .then(literal("extract")
                 .then(argument("lang", StringArgumentType.word())
                     .then(argument("prefix", StringArgumentType.word())
-                        .then(argument("filePath", ResourceLocationArgument.id())
+                        .then(argument("filePath", IdentifierArgument.id())
                         .executes {
                             extractText(
                             it.source,
-                            ResourceLocationArgument.getId(it, "filePath"),
+                            IdentifierArgument.getId(it, "filePath"),
                             StringArgumentType.getString(it, "prefix"),
                             StringArgumentType.getString(it, "lang"),
                             dataType
@@ -96,7 +96,7 @@ object GrowssethDataCommand {
             )
     }
 
-    private fun extractText(source: CommandSourceStack, filePath: ResourceLocation, prefix: String, lang: String, dataType: DataType): Int {
+    private fun extractText(source: CommandSourceStack, filePath: Identifier, prefix: String, lang: String, dataType: DataType): Int {
         val params: DataExtractionParams = dataType.params
         val adjustedPath = filePath.withPath("${params.dataRoot}/${filePath.path}")
 

@@ -7,15 +7,15 @@ import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.RenderLayerParent
 import net.minecraft.client.renderer.entity.layers.RenderLayer
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.util.ARGB
 
 // Cloned from VillagerProfessionLayer
 open class ResearcherProfessionLayer<T : LivingEntityRenderState, M : EntityModel<T>>(
     renderLayerParent: RenderLayerParent<T, M>,
-    val typeTextureLocation: ResourceLocation,
-    val profClothesLocation: ResourceLocation,
-    val profClothesAggressiveLocation: ResourceLocation? = null,
+    val typeTextureLocation: Identifier,
+    val profClothesLocation: Identifier,
+    val profClothesAggressiveLocation: Identifier? = null,
     ) : RenderLayer<T, M>(renderLayerParent) {
 
     override fun submit(

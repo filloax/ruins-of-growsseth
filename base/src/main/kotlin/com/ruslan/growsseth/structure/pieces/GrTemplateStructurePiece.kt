@@ -4,7 +4,7 @@ import com.filloax.fxlib.api.enums.SetBlockFlag
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import net.minecraft.core.BlockPos
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.EntitySpawnReason
@@ -28,7 +28,7 @@ abstract class GrTemplateStructurePiece : TemplateStructurePiece {
 
     constructor(
         structurePieceType: StructurePieceType, genDepth: Int, structureManager: StructureTemplateManager,
-        id: ResourceLocation, settings: StructurePlaceSettings, startPosition: BlockPos,
+        id: Identifier, settings: StructurePlaceSettings, startPosition: BlockPos,
     ) : super(
         structurePieceType, genDepth, structureManager,
         id, id.toString(), settings, startPosition,

@@ -6,14 +6,14 @@ import com.ruslan.growsseth.structure.GrowssethStructures
 import com.ruslan.growsseth.utils.resLoc
 import net.minecraft.core.Holder
 import net.minecraft.resources.ResourceKey
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.tags.TagKey
 import net.minecraft.world.level.levelgen.structure.Structure
 import net.minecraft.world.level.saveddata.maps.MapDecorationType
 
 object GrowssethMapDecorations {
-    private val all = mutableMapOf<ResourceLocation, RegistryHolderDelegate<MapDecorationType>>()
-    private val structureMaps = mutableMapOf<TagKey<Structure>, ResourceLocation>()
+    private val all = mutableMapOf<Identifier, RegistryHolderDelegate<MapDecorationType>>()
+    private val structureMaps = mutableMapOf<TagKey<Structure>, Identifier>()
 
     val BEEKEEPER_HOUSE by make(
         "icon_beekeeper_house", "icon_beekeeper_house",
@@ -57,7 +57,7 @@ object GrowssethMapDecorations {
     }
 
     private fun decoration(
-        assetId: ResourceLocation,
+        assetId: Identifier,
         showOnItemFrame: Boolean = true,
         mapColor: Int = -1,
         explorationMapElement: Boolean = true,
@@ -73,7 +73,7 @@ object GrowssethMapDecorations {
     }
     private fun make(name: String, path: String, forStructure: TagKey<Structure>) = make(name, decoration(resLoc(path)), forStructure)
 
-    fun registerMapDecorations(registrator: (ResourceLocation, MapDecorationType) -> Holder<MapDecorationType>) {
+    fun registerMapDecorations(registrator: (Identifier, MapDecorationType) -> Holder<MapDecorationType>) {
         all.values.forEach{
             it.initHolder(registrator(it.id, it.value))
         }

@@ -7,15 +7,15 @@ import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.ruslan.growsseth.RuinsOfGrowsseth
 //import com.ruslan.growsseth.compat.LithostitchedCompat
 import com.ruslan.growsseth.utils.matches
-import net.minecraft.advancements.critereon.BlockPredicate
-import net.minecraft.advancements.critereon.FluidPredicate
-import net.minecraft.advancements.critereon.LightPredicate
-import net.minecraft.advancements.critereon.LocationPredicate.PositionPredicate
+import net.minecraft.advancements.criterion.BlockPredicate
+import net.minecraft.advancements.criterion.FluidPredicate
+import net.minecraft.advancements.criterion.LightPredicate
+import net.minecraft.advancements.criterion.LocationPredicate.PositionPredicate
 import net.minecraft.core.BlockPos
 import net.minecraft.core.RegistryAccess
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.biome.Biome
@@ -24,7 +24,7 @@ import net.minecraft.world.level.levelgen.structure.*
 
 data class JigsawPiecePredicate(
     val structure: ResourceKey<Structure>,
-    val jigsawPieceIds: List<ResourceLocation>,
+    val jigsawPieceIds: List<Identifier>,
     val position: PositionPredicate? = null,
     val biome: ResourceKey<Biome>? = null,
     val dimension: ResourceKey<Level>? = null,
@@ -36,7 +36,7 @@ data class JigsawPiecePredicate(
     companion object {
         val CODEC: Codec<JigsawPiecePredicate> = RecordCodecBuilder.create { builder -> builder.group(
             ResourceKey.codec(Registries.STRUCTURE).fieldOf("structure").forGetter(JigsawPiecePredicate::structure),
-            ResourceLocation.CODEC.listOf().fieldOf("jigsawPieceIds").forGetter(JigsawPiecePredicate::jigsawPieceIds),
+            Identifier.CODEC.listOf().fieldOf("jigsawPieceIds").forGetter(JigsawPiecePredicate::jigsawPieceIds),
             PositionPredicate.CODEC.optionalFieldOf("position").forNullableGetter(JigsawPiecePredicate::position),
             ResourceKey.codec(Registries.BIOME).optionalFieldOf("biome").forNullableGetter(JigsawPiecePredicate::biome),
             ResourceKey.codec(Registries.DIMENSION).optionalFieldOf("dimension").forNullableGetter(

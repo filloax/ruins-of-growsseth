@@ -14,12 +14,12 @@ import net.minecraft.Util
 import net.minecraft.commands.CommandBuildContext
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands.*
-import net.minecraft.commands.arguments.ResourceLocationArgument
+import net.minecraft.commands.arguments.IdentifierArgument
 import net.minecraft.commands.arguments.ResourceOrTagKeyArgument
 import net.minecraft.core.BlockPos
 import net.minecraft.core.registries.Registries
 import net.minecraft.network.chat.*
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.commands.LocateCommand
 import net.minecraft.world.level.levelgen.structure.Structure
 import java.util.*
@@ -58,24 +58,24 @@ object GrowssethLocateCommand {
                 )
             ))
             .then(literal("jigsawStructure").then(argument("structure", ResourceOrTagKeyArgument.resourceOrTagKey(Registries.STRUCTURE))
-                .then(argument("jigsawId", ResourceLocationArgument.id())
+                .then(argument("jigsawId", IdentifierArgument.id())
                     .executes { ctx -> locateJigsawStructure(
                         ctx.source,
                         ResourceOrTagKeyArgument.getResourceOrTagKey(ctx, "structure", Registries.STRUCTURE, ERROR_STRUCTURE_INVALID),
-                        ResourceLocationArgument.getId(ctx, "jigsawId"),
+                        IdentifierArgument.getId(ctx, "jigsawId"),
                     ) }
                     .then(argument("timeout", IntegerArgumentType.integer(1))
                         .executes { ctx -> locateJigsawStructure(
                             ctx.source,
                             ResourceOrTagKeyArgument.getResourceOrTagKey(ctx, "structure", Registries.STRUCTURE, ERROR_STRUCTURE_INVALID),
-                            ResourceLocationArgument.getId(ctx, "jigsawId"),
+                            IdentifierArgument.getId(ctx, "jigsawId"),
                             IntegerArgumentType.getInteger(ctx, "timeout")
                         ) }
                         .then(argument("logProgress", BoolArgumentType.bool())
                             .executes { ctx -> locateJigsawStructure(
                                 ctx.source,
                                 ResourceOrTagKeyArgument.getResourceOrTagKey(ctx, "structure", Registries.STRUCTURE, ERROR_STRUCTURE_INVALID),
-                                ResourceLocationArgument.getId(ctx, "jigsawId"),
+                                IdentifierArgument.getId(ctx, "jigsawId"),
                                 IntegerArgumentType.getInteger(ctx, "timeout"),
                                 BoolArgumentType.getBool(ctx, "logProgress"),
                                 BoolArgumentType.getBool(ctx, "logProgress"),
@@ -141,7 +141,7 @@ object GrowssethLocateCommand {
 
     @Throws(CommandSyntaxException::class)
     private fun locateJigsawStructure(
-        source: CommandSourceStack, structure: ResourceOrTagKeyArgument.Result<Structure>, jigsawId: ResourceLocation,
+        source: CommandSourceStack, structure: ResourceOrTagKeyArgument.Result<Structure>, jigsawId: Identifier,
         timeout: Int? = null, logProgress: Boolean = false, chatProgress: Boolean = false
     ): Int {
         val registry = source.level.registryAccess().lookupOrThrow(Registries.STRUCTURE)

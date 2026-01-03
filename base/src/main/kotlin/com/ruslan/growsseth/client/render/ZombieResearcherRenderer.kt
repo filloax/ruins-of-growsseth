@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.entity.ArmorModelSet
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 
 class ZombieResearcherRenderer(context: EntityRendererProvider.Context) :
     HumanoidMobRenderer<ZombieResearcher, ZombieResearcherRendererState, ZombieVillagerModel<ZombieResearcherRendererState>>
@@ -39,7 +39,7 @@ class ZombieResearcherRenderer(context: EntityRendererProvider.Context) :
         private val RESEARCHER_CLOTHES_UNSHEATED_DAGGER = resLoc("textures/entity/villager/profession/researcher_unsheated.png")
     }
 
-    override fun getTextureLocation(renderState: ZombieResearcherRendererState): ResourceLocation {
+    override fun getTextureLocation(renderState: ZombieResearcherRendererState): Identifier {
         return RESEARCHER_BASE_SKIN
     }
 

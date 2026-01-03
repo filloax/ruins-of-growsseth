@@ -11,7 +11,7 @@ import net.minecraft.core.BlockPos
 import net.minecraft.core.Vec3i
 import net.minecraft.core.registries.Registries
 import net.minecraft.data.worldgen.BootstrapContext
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.tags.TagKey
 import net.minecraft.util.ExtraCodecs
 import net.minecraft.util.RandomSource
@@ -27,7 +27,7 @@ import java.util.*
 
 class ResearcherTentStructure(
     structureSettings: StructureSettings,
-    val templatePath: ResourceLocation = ResearcherTent.DEFAULT_ID,
+    val templatePath: Identifier = ResearcherTent.DEFAULT_ID,
     val offsetY: Int = -BASEMENT_HEIGHT, // centered on floor height
     forcePosUseY: Boolean = true,
 ) : SimpleStructure(structureSettings, forcePosUseY) {
@@ -37,7 +37,7 @@ class ResearcherTentStructure(
                 builder.group(
                     settingsCodec(builder),
                     Codec.BOOL.optionalFieldOf("force_pos_uses_y").forGetter{ Optional.of(it.nextPlaceUseY) },
-                    ResourceLocation.CODEC.optionalFieldOf("templatePath", ResearcherTent.DEFAULT_ID).forGetter{ it.templatePath },
+                    Identifier.CODEC.optionalFieldOf("templatePath", ResearcherTent.DEFAULT_ID).forGetter{ it.templatePath },
                     Codec.INT.optionalFieldOf("offsetY", -BASEMENT_HEIGHT).forGetter{ it.offsetY },
                 ).apply(builder) { structureSettings, forcePosUseY, templatePath, offsetY ->
                     ResearcherTentStructure(
@@ -55,10 +55,10 @@ class ResearcherTentStructure(
         val SIZE = Vec3i(15, 18, 20) // As taken from nbt
         const val BASEMENT_HEIGHT = 10
 
-        fun build(ctx: BootstrapContext<Structure>, templatePath: ResourceLocation = ResearcherTent.DEFAULT_ID, offsetY: Int = -BASEMENT_HEIGHT): ResearcherTentStructure {
-            var biomesTag = ResourceLocation.parse("growsseth:has_structure/researcher_tent")
+        fun build(ctx: BootstrapContext<Structure>, templatePath: Identifier = ResearcherTent.DEFAULT_ID, offsetY: Int = -BASEMENT_HEIGHT): ResearcherTentStructure {
+            var biomesTag = Identifier.parse("growsseth:has_structure/researcher_tent")
             if (templatePath == ResearcherTent.CYDONIA_ID)
-                biomesTag = ResourceLocation.parse("growsseth:has_structure/none")
+                biomesTag = Identifier.parse("growsseth:has_structure/none")
             return ResearcherTentStructure(StructureSettings(
                     ctx.lookup(Registries.BIOME).getOrThrow(TagKey.create(Registries.BIOME, biomesTag)),
                     mapOf(),

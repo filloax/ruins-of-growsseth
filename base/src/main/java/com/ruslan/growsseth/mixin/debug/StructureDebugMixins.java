@@ -41,7 +41,7 @@ public class StructureDebugMixins {
             at = @At("STORE")
         )
         private Predicate<Holder<Biome>> onSetBiomePredicate(Predicate<Holder<Biome>> value, @Local(argsOnly = true) StructureSet.StructureSelectionEntry structureSelectionEntry) {
-            if (!DebugConfig.structuresDebugMode || !structureSelectionEntry.structure().unwrapKey().map(k -> k.location().getNamespace().equals(RuinsOfGrowsseth.MOD_ID)).orElse(false)) {
+            if (!DebugConfig.structuresDebugMode || !structureSelectionEntry.structure().unwrapKey().map(k -> k.identifier().getNamespace().equals(RuinsOfGrowsseth.MOD_ID)).orElse(false)) {
                 return value;
             } else {
                 return (h) -> true;

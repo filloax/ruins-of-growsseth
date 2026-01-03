@@ -24,7 +24,7 @@ import net.minecraft.core.registries.Registries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.IntTag
 import net.minecraft.network.chat.Component
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
@@ -136,7 +136,7 @@ object GrowssethExtraEvents {
             val path = match.groups["path"]?.value
             val title = match.groups["title"]?.value
             if (namespace != null && path != null && title != null) {
-                val itemId = ResourceLocation.fromNamespaceAndPath(namespace, path)
+                val itemId = Identifier.fromNamespaceAndPath(namespace, path)
                 val registryAccess = server.registryAccess()
                 item = registryAccess.lookup(Registries.ITEM).getOrNull()?.getValue(itemId)
                 if (item == null) {

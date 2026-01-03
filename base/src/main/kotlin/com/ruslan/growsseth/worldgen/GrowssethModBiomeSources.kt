@@ -5,13 +5,13 @@ import com.ruslan.growsseth.utils.resLoc
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.level.biome.BiomeSource
 import net.minecraft.world.level.biome.MultiNoiseBiomeSourceParameterList
 import net.minecraft.world.level.biome.TheEndBiomeSource
 
 object GrowssethModBiomeSources {
-    val allSources = mutableMapOf<ResourceLocation, Codec<out BiomeSource>>()
+    val allSources = mutableMapOf<Identifier, Codec<out BiomeSource>>()
 
     @JvmField
     val GROWSSETH_OVERWORLD_SETTINGS = multiNoiseSettings("growsseth_overworld")

@@ -6,7 +6,7 @@ import com.ruslan.growsseth.worldgen.worldpreset.GrowssethWorldPreset
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.MinecraftServer
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList
@@ -57,11 +57,11 @@ object VillageBuildings {
 
     fun addBuildingToPool(
         templatePoolRegistry: Registry<StructureTemplatePool>, processorListRegistry: Registry<StructureProcessorList>,
-        poolId: ResourceLocation, poolPieceId: ResourceLocation,
+        poolId: Identifier, poolPieceId: Identifier,
         weight: Int,
     ) {
         val pool: StructureTemplatePool = templatePoolRegistry.getValueOrThrow(ResourceKey.create(Registries.TEMPLATE_POOL, poolId))
-        /* val emptyProcessor = ResourceLocation.fromNamespaceAndPath("minecraft", "empty")     // some houses have mossify 10% percent, but for now we keep it simple
+        /* val emptyProcessor = Identifier.fromNamespaceAndPath("minecraft", "empty")     // some houses have mossify 10% percent, but for now we keep it simple
         val processorHolder: Holder<StructureProcessorList> = processorListRegistry.getOrThrow(
             ResourceKey.create(
                 Registries.PROCESSOR_LIST, emptyProcessor
@@ -82,8 +82,8 @@ object VillageBuildings {
         val poolNameZombie = "$prefix/${name}_zombie".replace("house", "houses")
         return VillageEntry(
             kind,
-            ResourceLocation.fromNamespaceAndPath("minecraft", "$prefix/$kind/$pool"),
-            ResourceLocation.fromNamespaceAndPath("minecraft", "$prefix/$kind/zombie/$pool"),
+            Identifier.fromNamespaceAndPath("minecraft", "$prefix/$kind/$pool"),
+            Identifier.fromNamespaceAndPath("minecraft", "$prefix/$kind/zombie/$pool"),
             resLoc(poolName),
             resLoc(poolNameZombie),
             resLoc(templateName),
@@ -96,12 +96,12 @@ object VillageBuildings {
 
     data class VillageEntry(
         val kind: String,
-        val parentPool: ResourceLocation,
-        val parentZombiePool: ResourceLocation,
-        val normalPool: ResourceLocation,
-        val zombiePool: ResourceLocation,
-        val normalTemplate: ResourceLocation,
-        val zombieTemplate: ResourceLocation,
+        val parentPool: Identifier,
+        val parentZombiePool: Identifier,
+        val normalPool: Identifier,
+        val zombiePool: Identifier,
+        val normalTemplate: Identifier,
+        val zombieTemplate: Identifier,
         var weight: Int,
     )
 }

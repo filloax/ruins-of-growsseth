@@ -6,7 +6,7 @@ import com.ruslan.growsseth.loot.LootTableModifierNeo
 import net.minecraft.core.BlockPos
 import net.minecraft.core.HolderLookup
 import net.minecraft.resources.ResourceKey
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
@@ -139,7 +139,7 @@ class NeoEvents : ModEvents() {
         }
     }
 
-    override fun onLootTableModify(event: (key: ResourceLocation, table: LootTableModifier) -> Unit) {
+    override fun onLootTableModify(event: (key: Identifier, table: LootTableModifier) -> Unit) {
         NeoForge.EVENT_BUS.addListener { ev: LootTableLoadEvent ->
             event(ev.name, LootTableModifierNeo(ev.table))
         }

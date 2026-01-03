@@ -4,7 +4,7 @@ import com.filloax.fxlib.api.FxLibServices
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.RuinsOfGrowsseth.Companion.MOD_NAME
 import com.ruslan.growsseth.config.GrowssethConfig
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.item.trading.MerchantOffer
 import net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece
 import net.minecraft.world.level.levelgen.structure.StructurePiece
@@ -17,13 +17,13 @@ import java.util.*
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
-
-fun resLoc(str: String): ResourceLocation {
-    return ResourceLocation.fromNamespaceAndPath(RuinsOfGrowsseth.MOD_ID, str)
+// todo: rename to match the change from ResourceLocation to Identifier in 1.21.11
+fun resLoc(str: String): Identifier {
+    return Identifier.fromNamespaceAndPath(RuinsOfGrowsseth.MOD_ID, str)
 }
 
-fun resLocVanilla(str: String): ResourceLocation {
-    return ResourceLocation.fromNamespaceAndPath("minecraft", str)
+fun resLocVanilla(str: String): Identifier {
+    return Identifier.fromNamespaceAndPath("minecraft", str)
 }
 
 fun serverLang() = FxLibServices.serverLanguage.get(GrowssethConfig.serverLanguage)
@@ -60,14 +60,14 @@ fun MerchantOffer.contentEquals(other: Any?): Boolean {
     return true
 }
 
-fun StructurePiece.matchesJigsaw(pieceIds: Collection<ResourceLocation>): Boolean {
+fun StructurePiece.matchesJigsaw(pieceIds: Collection<Identifier>): Boolean {
     if (this is PoolElementStructurePiece) {
         return this.element.matches(pieceIds)
     }
     return false
 }
 
-fun StructurePoolElement.matches(pieceIds: Collection<ResourceLocation>): Boolean {
+fun StructurePoolElement.matches(pieceIds: Collection<Identifier>): Boolean {
     return when (this) {
         // won't work with runtime elements (aka saved without ids)
         is SinglePoolElement -> this.template.left().map{ pieceIds.contains(it) }.orElse(false)
@@ -76,7 +76,7 @@ fun StructurePoolElement.matches(pieceIds: Collection<ResourceLocation>): Boolea
     }
 }
 
-fun StructurePoolElement.getTemplateIds(): Collection<ResourceLocation> {
+fun StructurePoolElement.getTemplateIds(): Collection<Identifier> {
     return when (this) {
         // won't work with runtime elements (aka saved without ids)
         is SinglePoolElement -> this.template.left().map { listOf(it) }.orElse(listOf())

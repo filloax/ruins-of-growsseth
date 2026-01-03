@@ -10,7 +10,7 @@ import net.minecraft.core.Vec3i
 import net.minecraft.core.registries.Registries
 import net.minecraft.data.worldgen.BootstrapContext
 import net.minecraft.resources.ResourceKey
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.tags.BiomeTags
 import net.minecraft.tags.TagKey
 import net.minecraft.world.level.biome.Biome
@@ -158,7 +158,7 @@ object GrowssethStructures {
 
     object Types {
         @JvmStatic
-        val all = mutableMapOf<ResourceLocation, StructureType<*>>()
+        val all = mutableMapOf<Identifier, StructureType<*>>()
 
         val RESEARCHER_TENT = registerType("researcher_tent") { ResearcherTentStructure.CODEC }
 
@@ -169,7 +169,7 @@ object GrowssethStructures {
         }
     }
 
-    fun registerStructureTypes(registrator: (ResourceLocation, StructureType<*>) -> Unit) {
+    fun registerStructureTypes(registrator: (Identifier, StructureType<*>) -> Unit) {
         Types.all.forEach{
             registrator(it.key, it.value)
         }
@@ -178,7 +178,7 @@ object GrowssethStructures {
     // Note: assumes that structures with a structures set have the same id
     fun getStructureSetId(structId: ResourceKey<Structure>): ResourceKey<StructureSet>? {
         return if (SPAWNS_NATURALLY.contains(structId)) {
-            ResourceKey.create(Registries.STRUCTURE_SET, structId.location())
+            ResourceKey.create(Registries.STRUCTURE_SET, structId.identifier())
         } else {
             null
         }
@@ -203,11 +203,11 @@ object GrowssethStructures {
         return key
     }
 
-    private fun getHousesOfVillageCategory(category: BuildingKey): Map<ResourceKey<Structure>, List<ResourceLocation>> {
+    private fun getHousesOfVillageCategory(category: BuildingKey): Map<ResourceKey<Structure>, List<Identifier>> {
         val entries = VillageBuildings.houseEntries[category] ?: throw IllegalArgumentException("Village category $category not found")
         return entries
             .groupBy{ it.kind }
-            .mapKeys { ResourceKey.create(Registries.STRUCTURE, ResourceLocation.fromNamespaceAndPath("minecraft", "village_${it.key}")) }
+            .mapKeys { ResourceKey.create(Registries.STRUCTURE, Identifier.fromNamespaceAndPath("minecraft", "village_${it.key}")) }
             .mapValues { e -> e.value.flatMap { listOf(it.normalTemplate, it.zombieTemplate) } }
     }
 
@@ -332,7 +332,7 @@ object GrowssethStructures {
             liquidSettings: LiquidSettings = LiquidSettings.IGNORE_WATERLOGGING,
         ) {
             val startPoolHolder = templatePoolGetter.getOrThrow(ResourceKey.create(Registries.TEMPLATE_POOL, resLoc(startPool)))
-            val name = key.location().path.split("/").last()
+            val name = key.identifier().path.split("/").last()
             val biomesHolder = biomesGetter.getOrThrow(biomesTag ?: TagKey.create(Registries.BIOME, resLoc("has_structure/$name")))
             ctx.register(key, ForcePosJigsawStructure.build(
                 startPoolHolder, biomesHolder,

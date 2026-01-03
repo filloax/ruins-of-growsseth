@@ -12,7 +12,7 @@
 //import kotlinx.serialization.json.jsonArray
 //import kotlinx.serialization.json.jsonObject
 //import kotlinx.serialization.json.jsonPrimitive
-//import net.minecraft.resources.ResourceLocation
+//import net.minecraft.resources.Identifier
 //import net.minecraft.server.packs.resources.ResourceManager
 //import net.minecraft.util.profiling.ProfilerFiller
 //
@@ -29,7 +29,7 @@
 //
 //    private val TRAINER_FILENAME = "trainer_data"
 //
-//    override fun apply(loader: Map<ResourceLocation, JsonElement>, manager: ResourceManager, profiler: ProfilerFiller) {
+//    override fun apply(loader: Map<Identifier, JsonElement>, manager: ResourceManager, profiler: ProfilerFiller) {
 //        if (RuinsOfGrowsseth.modCompat.isAllCobblemonDepsLoaded) {
 //            RuinsOfGrowsseth.LOGGER.info("Loading Cobblemon RCT trainer data...")
 //        } else {

@@ -9,7 +9,7 @@
 //import com.gitlab.srcmc.rctapi.api.trainer.TrainerNPC
 //import com.ruslan.growsseth.RuinsOfGrowsseth
 //import com.ruslan.growsseth.compat.ModCompatChecker
-//import net.minecraft.resources.ResourceLocation
+//import net.minecraft.resources.Identifier
 //import java.util.*
 //
 //class ResearcherRCTBattleAI : RCTBattleAI {
@@ -36,7 +36,7 @@
 //            }
 //            simpleMoveResponse(pkmn, moveset, moves)
 //        }
-//    ).mapKeys { ResourceLocation.fromNamespaceAndPath(ModCompatChecker.ID_COBBLEMON, it.key) }
+//    ).mapKeys { Identifier.fromNamespaceAndPath(ModCompatChecker.ID_COBBLEMON, it.key) }
 //
 //    override fun choose(
 //        pkmn: ActiveBattlePokemon,

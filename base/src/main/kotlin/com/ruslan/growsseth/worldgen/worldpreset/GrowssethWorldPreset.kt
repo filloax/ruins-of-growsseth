@@ -82,11 +82,11 @@ object GrowssethWorldPreset {
 
     fun shouldDisableStructure(structure: Holder<Structure>, levelAccessor: LevelAccessor): Boolean {
         return isGrowssethPreset(levelAccessor)
-            && structure.unwrapKey().getOrNull()?.location()?.namespace == RuinsOfGrowsseth.MOD_ID
+            && structure.unwrapKey().getOrNull()?.identifier()?.namespace == RuinsOfGrowsseth.MOD_ID
     }
 
     fun shouldDisableStructureSet(structureSet: Holder<StructureSet>, biomeSource: BiomeSource): Boolean {
-        val setLocation = structureSet.unwrapKey().getOrNull()?.location()
+        val setLocation = structureSet.unwrapKey().getOrNull()?.identifier()
         return isGrowssethPresetFromOverworldBiomeSource(biomeSource)
             && (setLocation?.namespace == RuinsOfGrowsseth.MOD_ID
             || (WorldPresetConfig.disableTrialChambers && setLocation == resLocVanilla("trial_chambers")))

@@ -105,7 +105,7 @@ object GrowssethPlaceCommand {
         if (structure is FixablePosition) {
             structure.setNextPlacePosition(pos, fixedPosUsesY)
             val chatType = ChatType.bind(ChatType.MSG_COMMAND_INCOMING, source)
-            val msg = Disguised(Component.translatable("fxlib.commands.placetweak.fixedpos", structureHolder.key().location().toString(), pos.x, pos.y, pos.z))
+            val msg = Disguised(Component.translatable("fxlib.commands.placetweak.fixedpos", structureHolder.key().identifier().toString(), pos.x, pos.y, pos.z))
             source.sendChatMessage(msg, true, chatType)
         }
         if (structure is FixableRotation && rotation != null) {
@@ -140,7 +140,7 @@ object GrowssethPlaceCommand {
         CustomPlacedStructureTracker.get(serverLevel).registerStructure(structureStart, pos)
         // Additional functionality 2 end
 
-        val string = structureHolder.key().location().toString()
+        val string = structureHolder.key().identifier().toString()
         source.sendSuccess({ Component.translatable("commands.place.structure.success", string, pos.x, pos.y, pos.z) }, true )
         return 1
     }

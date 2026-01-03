@@ -17,7 +17,7 @@ import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.core.UUIDUtil
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.tags.TagKey
 import net.minecraft.util.RandomSource
@@ -55,13 +55,13 @@ class ResearcherTent : GrTemplateStructurePiece {
     var cellarTrapdoorPos: BlockPos? = null
     var cellarBoundingBox: BoundingBox? = null
         private set
-    lateinit var templatePath: ResourceLocation
+    lateinit var templatePath: Identifier
         private set
     // Used during initialization
     private var cellarPos1: BlockPos? = null
     private var cellarPos2: BlockPos? = null
 
-    constructor(structureManager: StructureTemplateManager, startPosition: BlockPos, rotation: Rotation = Rotation.NONE, templatePath: ResourceLocation = DEFAULT_ID)
+    constructor(structureManager: StructureTemplateManager, startPosition: BlockPos, rotation: Rotation = Rotation.NONE, templatePath: Identifier = DEFAULT_ID)
         : super(
             GrowssethStructurePieceTypes.RESEARCHER_TENT, GEN_DEPTH, structureManager,
             templatePath, makeSettings(rotation), startPosition,
@@ -69,7 +69,7 @@ class ResearcherTent : GrTemplateStructurePiece {
         this.templatePath = templatePath
     }
 
-    //(StructurePieceType type, int genDepth, StructureTemplateManager structureManager, ResourceLocation templateLocation, StructurePlaceSettings placeSettings, BlockPos startPosition)
+    //(StructurePieceType type, int genDepth, StructureTemplateManager structureManager, Identifier templateLocation, StructurePlaceSettings placeSettings, BlockPos startPosition)
 
     constructor(compoundTag: CompoundTag, ctx: StructurePieceSerializationContext)
         : super(GrowssethStructurePieceTypes.RESEARCHER_TENT, compoundTag, ctx,
@@ -80,7 +80,7 @@ class ResearcherTent : GrTemplateStructurePiece {
         cellarTrapdoorPos = compoundTag.loadField("cellarTrapdoorPos", BlockPos.CODEC)
         initDonkeyUuid = compoundTag.loadField("DonkeyUUID", UUIDUtil.STRING_CODEC)
         cellarBoundingBox = compoundTag.loadField("cellarBoundingBox", BoundingBox.CODEC)
-        templatePath = compoundTag.loadField("templatePath", ResourceLocation.CODEC) ?: DEFAULT_ID
+        templatePath = compoundTag.loadField("templatePath", Identifier.CODEC) ?: DEFAULT_ID
     }
 
     companion object {
@@ -267,6 +267,6 @@ class ResearcherTent : GrTemplateStructurePiece {
         tag.saveField("cellarTrapdoorPos", BlockPos.CODEC, ::cellarTrapdoorPos)
         tag.saveField("DonkeyUUID", UUIDUtil.STRING_CODEC, ::initDonkeyUuid)
         tag.saveField("cellarBoundingBox", BoundingBox.CODEC, ::cellarBoundingBox)
-        tag.saveField("templatePath", ResourceLocation.CODEC, ::templatePath)
+        tag.saveField("templatePath", Identifier.CODEC, ::templatePath)
     }
 }

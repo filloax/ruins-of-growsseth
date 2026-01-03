@@ -12,7 +12,7 @@ import net.minecraft.client.resources.sounds.Sound;
 import net.minecraft.client.resources.sounds.SoundEventRegistrationSerializer;
 import net.minecraft.client.sounds.SoundBufferLibrary;
 import net.minecraft.client.sounds.SoundManager;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceProvider;
@@ -39,7 +39,7 @@ public class EncryptedSounds {
                     target = "Lnet/minecraft/resources/FileToIdConverter;listMatchingResources(Lnet/minecraft/server/packs/resources/ResourceManager;)Ljava/util/Map;"
             )
         )
-        private Map<ResourceLocation, Resource> listResourcesWithExtras(Map<ResourceLocation, Resource> original, @Local(argsOnly = true) ResourceManager resourceManager) {
+        private Map<Identifier, Resource> listResourcesWithExtras(Map<Identifier, Resource> original, @Local(argsOnly = true) ResourceManager resourceManager) {
             var additionalResources = EncryptedMusicResources.LISTER.listMatchingResources(resourceManager);
             original.putAll(additionalResources);
             return original;
@@ -64,7 +64,7 @@ public class EncryptedSounds {
         @Unique
         private boolean encrypted = false;
         @Shadow
-        private @Final ResourceLocation location;
+        private @Final Identifier location;
 
         @Override
         public boolean ruins_of_growsseth$isEncrypted() {
@@ -80,7 +80,7 @@ public class EncryptedSounds {
             method = "getPath",
             at = @At("RETURN")
         )
-        private ResourceLocation onGetPath(ResourceLocation original) {
+        private Identifier onGetPath(Identifier original) {
             if (encrypted) {
                 return EncryptedMusicResources.LISTER.idToFile(this.location);
             }
@@ -101,11 +101,11 @@ public class EncryptedSounds {
                 },
                 at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/server/packs/resources/ResourceProvider;open(Lnet/minecraft/resources/ResourceLocation;)Ljava/io/InputStream;"
+                    target = "Lnet/minecraft/server/packs/resources/ResourceProvider;open(Lnet/minecraft/resources/Identifier;)Ljava/io/InputStream;"
                 )
         )
-        private InputStream wrapSoundReadingStream(ResourceProvider instance, ResourceLocation resourceLocation, Operation<InputStream> original) {
-            return EncryptedMusicResources.checkEncryptedSoundStream(resourceLocation, original.call(instance, resourceLocation));
+        private InputStream wrapSoundReadingStream(ResourceProvider instance, Identifier identifier, Operation<InputStream> original) {
+            return EncryptedMusicResources.checkEncryptedSoundStream(identifier, original.call(instance, identifier));
         }
     }
 }
