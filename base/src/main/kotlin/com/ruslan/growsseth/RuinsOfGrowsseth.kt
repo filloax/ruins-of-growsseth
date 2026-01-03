@@ -13,6 +13,7 @@ import com.ruslan.growsseth.http.GrowssethApi
 import com.ruslan.growsseth.http.GrowssethExtraEvents
 import com.ruslan.growsseth.network.GrowssethPackets
 import com.ruslan.growsseth.resource.MusicCommon
+import com.ruslan.growsseth.sound.GrowssethSounds
 import com.ruslan.growsseth.structure.*
 import com.ruslan.growsseth.utils.GrowssethLogger
 import com.ruslan.growsseth.utils.loadPropertiesFile
@@ -47,6 +48,8 @@ abstract class RuinsOfGrowsseth {
         ModEvents.get().initCallbacks()
 
         GrowssethApi.current.init()
+        //  Must be done before initializing the jukebox songs to avoid frozen registry errors (todo: implement it like the others)
+        GrowssethSounds.initialize()
         initRegistries()
         RemoteStructures.init()
         CustomRemoteDiaries.init()

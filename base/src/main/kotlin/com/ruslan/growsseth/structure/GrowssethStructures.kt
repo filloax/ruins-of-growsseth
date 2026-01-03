@@ -361,6 +361,7 @@ object GrowssethStructures {
             registerGolemVariants()
         }
     }
+
     fun bootstrap(ctx: BootstrapContext<Structure>) = Bootstrapper(ctx).bootstrap()
 
     data class StructureInfo(

@@ -50,5 +50,9 @@ class GrowssethSounds {
             val id = ResourceLocation.fromNamespaceAndPath(RuinsOfGrowsseth.MOD_ID, name)
             return Registry.registerForHolder(BuiltInRegistries.SOUND_EVENT, id, SoundEvent.createVariableRangeEvent(id))
         }
+
+        fun initialize() {
+            // Needed to initialize the static variables when needed
+        }
     }
 }
