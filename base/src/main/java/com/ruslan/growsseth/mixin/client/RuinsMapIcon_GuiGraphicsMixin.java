@@ -16,25 +16,26 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(GuiGraphics.class)
 public abstract class RuinsMapIcon_GuiGraphicsMixin {
-    @Final
-    @Shadow
-    private PoseStack pose;
-
-    @Final
-    @Shadow
-    private MultiBufferSource.BufferSource bufferSource;
-
-    @Inject(
-        method = "renderItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V",
-        at = @At(
-            value = "INVOKE",
-            target = "Lcom/mojang/blaze3d/vertex/PoseStack;pushPose()V",
-            shift = At.Shift.AFTER
-        )
-    )
-    private void onRenderItemDecorations(Font font, ItemStack stack, int x, int y, String text, CallbackInfo ci) {
-        if (stack.is(GrowssethItems.INSTANCE.getRUINS_MAP())) {
-            RuinsMapRenderer.renderRuinsMapIcon(stack, pose, bufferSource, x, y);
-        }
-    }
+    // todo: fix
+//    @Final
+//    @Shadow
+//    private PoseStack pose;
+//
+//    @Final
+//    @Shadow
+//    private MultiBufferSource.BufferSource bufferSource;
+//
+//    @Inject(
+//        method = "renderItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V",
+//        at = @At(
+//            value = "INVOKE",
+//            target = "Lorg/joml/Matrix3x2fStack;popMatrix()Lorg/joml/Matrix3x2fStack;",
+//            shift = At.Shift.AFTER
+//        )
+//    )
+//    private void onRenderItemDecorations(Font font, ItemStack stack, int x, int y, String text, CallbackInfo ci) {
+//        if (stack.is(GrowssethItems.INSTANCE.getRUINS_MAP())) {
+//            RuinsMapRenderer.renderRuinsMapIcon(stack, pose, bufferSource, x, y);
+//        }
+//    }
 }

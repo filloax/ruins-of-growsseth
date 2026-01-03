@@ -20,10 +20,17 @@ public abstract class PaintingFixesStructureTemplateMixin {
     @SuppressWarnings("UnresolvedMixinReference")
     @Inject(
         // placeEntities in vanilla, addEntitiesToWorld in neoforge
-        method = {"method_17917", "lambda$placeEntities$5"},
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;moveTo(DDDFF)V", shift = At.Shift.AFTER)
+        method = {
+                "method_17917",
+                "lambda$placeEntities$5"
+        },
+        at = @At(
+                value = "INVOKE",
+                target = "Lnet/minecraft/world/entity/Entity;snapTo(DDDFF)V",
+                shift = At.Shift.AFTER
+        )
     )
-    private static void fixPaintingPlacementVanilla(Rotation rotation, Mirror mirror, Vec3 vec3, boolean bl, ServerLevelAccessor serverLevelAccessor, Entity entity, CallbackInfo ci) {
+    private static void fixPaintingPlacementVanilla(Rotation rotation, Mirror mirror, Vec3 vec3, boolean finalize, ServerLevelAccessor serverLevelAccessor, Entity entity, CallbackInfo ci) {
         MixinHelpers.fixPaintingPlacement(entity);
     }
 }
