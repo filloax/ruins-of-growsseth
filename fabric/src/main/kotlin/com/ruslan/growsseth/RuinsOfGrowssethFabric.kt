@@ -18,7 +18,7 @@ import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents.ModifyEntries
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper
+import net.fabricmc.fabric.api.resource.v1.ResourceLoader
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.server.packs.PackType
@@ -76,27 +76,37 @@ object RuinsOfGrowssethFabric : ModInitializer, RuinsOfGrowsseth() {
     }
 
     override fun registerResourceListeners() {
-        ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(FabricReloadListener(
-            resLoc(Constants.TRADES_DATA_FOLDER),
-            TradesListener(),
-        ))
-        ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(FabricReloadListener(
-            resLoc(Constants.RESEARCHER_DIALOGUE_DATA_FOLDER),
-            ResearcherDialogueListener(),
-        ))
-        ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(FabricReloadListener(
-            resLoc(Constants.TEMPLATE_FOLDER),
-            TemplateListener,
-        ))
-        ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(FabricReloadListener(
-            resLoc(Constants.PRESET_PLACES_FOLDER),
-            LocationNotifListener(),
-        ))
+        ResourceLoader.get(PackType.SERVER_DATA).registerReloader(resLoc("trades_reloader"),
+            FabricReloadListener(
+                resLoc(Constants.TRADES_DATA_FOLDER),
+                TradesListener(),
+            )
+        )
+        ResourceLoader.get(PackType.SERVER_DATA).registerReloader(resLoc("dialogues_reloader"),
+            FabricReloadListener(
+                resLoc(Constants.RESEARCHER_DIALOGUE_DATA_FOLDER),
+                ResearcherDialogueListener(),
+            )
+        )
+        ResourceLoader.get(PackType.SERVER_DATA).registerReloader(resLoc("templates_reloader"),
+            FabricReloadListener(
+                resLoc(Constants.TEMPLATE_FOLDER),
+                TemplateListener,
+            )
+        )
+        ResourceLoader.get(PackType.SERVER_DATA).registerReloader(resLoc("preset_places_reloader"),
+            FabricReloadListener(
+                resLoc(Constants.PRESET_PLACES_FOLDER),
+                LocationNotifListener(),
+            )
+        )
 //        if (modCompat.isAllCobblemonDepsLoaded) {
-//            ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(FabricReloadListener(
-//                resLoc(Constants.COMPAT_COBBLEMON_FOLDER),
-//                CobblemonRCTListener,
-//            ))
+//            ResourceLoader.get(PackType.SERVER_DATA).registerReloader(resLoc("cobblemon_compat_reloader"),
+//                FabricReloadListener(
+//                    resLoc(Constants.COMPAT_COBBLEMON_FOLDER),
+//                    CobblemonRCTListener,
+//                )
+//            )
 //        }
     }
 }

@@ -290,8 +290,7 @@ class MiscLootTableProvider(output: PackOutput): LootTableProvider(output, setOf
 //});
 
 class ModelGenerator constructor(generator: FabricDataOutput) : FabricModelProvider(generator) {
-    override fun generateBlockStateModels(blockStateModelGenerator: BlockModelGenerators?) {
-    }
+    override fun generateBlockStateModels(blockStateModelGenerator: BlockModelGenerators) { }
 
     override fun generateItemModels(itemModelGenerator: ItemModelGenerators) {
         GrowssethItems.all.forEach { (key, item) ->
