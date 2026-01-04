@@ -9,6 +9,7 @@ import com.ruslan.growsseth.entity.GrowssethEntities
 import com.ruslan.growsseth.entity.SpawnTimeTracker
 import com.ruslan.growsseth.http.GrowssethExtraEvents
 import com.ruslan.growsseth.sound.GrowssethSounds
+import com.ruslan.growsseth.utils.ZombieVillagerFix
 import com.ruslan.growsseth.utils.isNull
 import net.minecraft.core.BlockPos
 import net.minecraft.core.registries.BuiltInRegistries
@@ -48,7 +49,7 @@ import kotlin.math.min
 
 
 class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
-    ZombieVillager(entityType, level), SpawnTimeTracker, ResearcherDataUser {
+    ZombieVillagerFix(entityType, level), SpawnTimeTracker, ResearcherDataUser {
     companion object {
         fun createAttributes(): () -> AttributeSupplier.Builder {
             return {

@@ -32,6 +32,7 @@ import com.ruslan.growsseth.sound.GrowssethSounds
 import com.ruslan.growsseth.structure.pieces.ResearcherTent
 import com.ruslan.growsseth.structure.structure.ResearcherTentStructure
 import com.ruslan.growsseth.utils.GrowssethCodecs
+import com.ruslan.growsseth.utils.PathfinderMobFix
 import com.ruslan.growsseth.utils.isNull
 import com.ruslan.growsseth.utils.notNull
 import com.ruslan.growsseth.utils.resLoc
@@ -99,9 +100,9 @@ import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
 
-class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderMob(entityType, level),
-    Npc, RefreshableMerchant, InventoryCarrier, QuestOwner<Researcher>, DialoguesNpc, SpawnTimeTracker,
-    ResearcherDataUser
+class Researcher(entityType: EntityType<Researcher>, level: Level)
+    : PathfinderMobFix(entityType, level),
+    Npc, RefreshableMerchant, InventoryCarrier, QuestOwner<Researcher>, DialoguesNpc, SpawnTimeTracker, ResearcherDataUser
 {
     /* region [Companion Object and Instance Properties] */
 
