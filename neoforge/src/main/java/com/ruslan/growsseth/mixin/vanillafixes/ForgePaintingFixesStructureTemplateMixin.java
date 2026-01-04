@@ -19,7 +19,7 @@ public abstract class ForgePaintingFixesStructureTemplateMixin {
     @Inject(
         // placeEntities in vanilla, addEntitiesToWorld in neoforge
         method = {"lambda$addEntitiesToWorld$5"},
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;moveTo(DDDFF)V", shift = At.Shift.AFTER)
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;snapTo(DDDFF)V", shift = At.Shift.AFTER)
     )
     private static void fixPaintingPlacementVanilla(StructurePlaceSettings placementIn, Vec3 pos, ServerLevelAccessor level, Entity entity, CallbackInfo ci) {
         MixinHelpers.fixPaintingPlacement(entity);
