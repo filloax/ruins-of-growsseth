@@ -986,7 +986,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         }
 
         val offers = offersByPlayer.computeIfAbsent(player.uuid) { MerchantOffers() }
-        val updatedOffers = currentProvider.getOffers(this, tradesData, player)
+        val updatedOffers = currentProvider.getOffers(level, this, tradesData, player)
 
         if (
             currentProvider.mode != tradesData.mode
@@ -1153,8 +1153,8 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     override fun getBaseExperienceReward(level: ServerLevel): Int = RESEARCHER_XP
     //override fun canDisableShield(): Boolean = true   // todo: component in dagger
 
-    override fun getAttackBoundingBox(): AABB {
-        val aABB3: AABB = super.getAttackBoundingBox()
+    override fun getAttackBoundingBox(range: Double): AABB {
+        val aABB3: AABB = super.getAttackBoundingBox(range)
         aABB3.deflate(0.828, 0.0, 0.828)        // reverting vanilla inflation (approximation)
         return aABB3.inflate(RESEARCHER_ATTACK_REACH, 0.0, RESEARCHER_ATTACK_REACH)
     }

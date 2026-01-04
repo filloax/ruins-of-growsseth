@@ -17,6 +17,7 @@ import com.ruslan.growsseth.network.ResearcherTradesNotifPacket
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.Tag
 import net.minecraft.server.MinecraftServer
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.trading.MerchantOffers
 import kotlin.jvm.optionals.getOrDefault
@@ -49,6 +50,7 @@ abstract class GlobalResearcherTradesProvider protected constructor(
     abstract fun reload(server: MinecraftServer)
 
     final override fun getOffersImpl(
+        level: ServerLevel,
         researcher: Researcher,
         tradesData: ResearcherTradesData,
         player: ServerPlayer
@@ -57,7 +59,7 @@ abstract class GlobalResearcherTradesProvider protected constructor(
         val trades = getAllTrades() + getExtraPlayerTrades(player, researcher, tradesData)
         offers.addAll(processTrades(trades) // reprocess trades after adding extra player trades
             .filter { isValidTradeForPlayer(it.itemListing, player, researcher, tradesData) }
-            .map { it.itemListing.getOffer(researcher, researcher.random) }
+            .map { it.itemListing.getOffer(level, researcher, researcher.random) }
         )
 
         return offers

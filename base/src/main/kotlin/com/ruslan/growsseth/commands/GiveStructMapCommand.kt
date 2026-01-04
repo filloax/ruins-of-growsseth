@@ -31,7 +31,7 @@ object GiveStructMapCommand {
     private val ERROR_MAP_ITEM_INVALID = DynamicCommandExceptionType {  Component.translatable("growsseth.commands.givestructmap.invalidmap", it) }
 
     fun register(dispatcher: CommandDispatcher<CommandSourceStack>, registryAccess: CommandBuildContext, environment: CommandSelection) {
-        dispatcher.register(literal("givestructmap").requires{ it.hasPermission(2) }
+        dispatcher.register(literal("givestructmap").requires(hasPermission(LEVEL_GAMEMASTERS))
             .then(
                 argument("targets", EntityArgument.player())
                 .then(

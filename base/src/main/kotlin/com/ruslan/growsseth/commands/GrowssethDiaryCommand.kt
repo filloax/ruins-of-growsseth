@@ -14,7 +14,7 @@ import net.minecraft.world.phys.AABB
 object GrowssethDiaryCommand {
 
     fun register(dispatcher: CommandDispatcher<CommandSourceStack>, registryAccess: CommandBuildContext, environment: CommandSelection) {
-        dispatcher.register(literal("gdiary").requires{ it.hasPermission(2) }
+        dispatcher.register(literal("gdiary").requires(hasPermission(LEVEL_GAMEMASTERS))
             .then(
                 argument("name", StringArgumentType.string())
                 .then(

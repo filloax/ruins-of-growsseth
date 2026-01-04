@@ -40,7 +40,7 @@ class ResearcherModel(private val root: ModelPart)
         // Taken from VillagerModel for the head shaking animation when refusing to trade (except when fighting)
         val isUnhappy = (renderState.unhappyCounter > 0 && !renderState.isAggressive)
         if (isUnhappy) {
-            head.zRot = 0.3f * Mth.sin(0.45f * renderState.ageInTicks)
+            head.zRot = 0.3f * Mth.sin(0.45 * renderState.ageInTicks)
             head.xRot = 0.4f
         } else
             head.zRot = 0.0f
@@ -67,19 +67,19 @@ class ResearcherModel(private val root: ModelPart)
 
         if (illagerArmPose == IllagerArmPose.ATTACKING) {
             if (renderState.isAggressive) {
-                if (renderState.mainHandItem.isEmpty) {
-                    AnimationUtils.animateZombieArms(this.leftArm, this.rightArm, true, renderState.attackAnim, renderState.ageInTicks)
-                }
-                else {
-                    if (!renderState.isUsingItem)
-                        AnimationUtils.swingWeaponDown(this.rightArm, this.leftArm, renderState.mainArm, renderState.attackAnim, renderState.ageInTicks)
-                    else
-                        AnimationUtils.animateZombieArms(this.leftArm, this.rightArm, true, renderState.attackAnim, renderState.ageInTicks)
-                }
+//                if (renderState.mainHandItem.isEmpty) {
+//                    AnimationUtils.animateZombieArms(this.leftArm, this.rightArm, true, renderState.attackAnim, renderState.ageInTicks)
+//                }
+//                else {
+//                    if (!renderState.isUsingItem)
+            // We don't use animateZombieArms anymore, because it requires an UndeadRenderState
+            AnimationUtils.swingWeaponDown(this.rightArm, this.leftArm, renderState.mainArm, renderState.attackAnim, renderState.ageInTicks)
+//                    else
+//                        AnimationUtils.animateZombieArms(this.leftArm, this.rightArm, true, renderState.attackAnim, renderState.ageInTicks)
             }
-            else if (renderState.isUsingItem){
-                AnimationUtils.swingWeaponDown(this.leftArm, this.rightArm, renderState.mainArm, renderState.attackAnim, renderState.ageInTicks)
-            }
+        }
+        else if (renderState.isUsingItem){
+            AnimationUtils.swingWeaponDown(this.leftArm, this.rightArm, renderState.mainArm, renderState.attackAnim, renderState.ageInTicks)
         }
     }
 
@@ -91,7 +91,7 @@ class ResearcherModel(private val root: ModelPart)
         return this.head
     }
 
-    override fun translateToHand(renderState: ResearcherRendererState, side: HumanoidArm, poseStack: PoseStack) {
-        getArm(side).translateAndRotate(poseStack)
+    override fun translateToHand(renderState: ResearcherRendererState, arm: HumanoidArm, poseStack: PoseStack) {
+        getArm(arm).translateAndRotate(poseStack)
     }
 }

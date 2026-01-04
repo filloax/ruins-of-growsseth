@@ -18,6 +18,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.core.component.DataComponents
 import net.minecraft.resources.Identifier
 import net.minecraft.world.entity.HumanoidArm
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 
 class ResearcherRenderer(context: EntityRendererProvider.Context)
@@ -70,6 +71,7 @@ class ResearcherRenderer(context: EntityRendererProvider.Context)
             override fun submitArmWithItem(
                 researcherRenderState: ResearcherRendererState,
                 itemStackRenderState: ItemStackRenderState,
+                itemStack: ItemStack,
                 arm: HumanoidArm,
                 poseStack: PoseStack,
                 nodeCollector: SubmitNodeCollector,
@@ -98,7 +100,7 @@ class ResearcherRenderer(context: EntityRendererProvider.Context)
                     heldItem.`is`(Items.ENDER_PEARL)
                 ) {
                     // Other cases when he keeps his arm up are rendered normally
-                    super.submitArmWithItem(researcherRenderState, itemStackRenderState, arm, poseStack, nodeCollector, packedLight)
+                    super.submitArmWithItem(researcherRenderState, itemStackRenderState, itemStack, arm, poseStack, nodeCollector, packedLight)
                 }
             }
         })

@@ -2,7 +2,7 @@ package com.ruslan.growsseth.client.render
 
 import com.ruslan.growsseth.entity.researcher.ZombieResearcher
 import com.ruslan.growsseth.utils.resLoc
-import net.minecraft.client.model.ZombieVillagerModel
+import net.minecraft.client.model.monster.zombie.ZombieVillagerModel
 import net.minecraft.client.model.geom.ModelLayers
 import net.minecraft.client.renderer.entity.ArmorModelSet
 import net.minecraft.client.renderer.entity.EntityRendererProvider

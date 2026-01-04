@@ -23,6 +23,7 @@ import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.Identifier
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.util.RandomSource
 import net.minecraft.world.entity.Entity
@@ -104,7 +105,7 @@ class ResearcherItemListing(
         const val BOOK_TEMPLATE_TAG = "ResearcherBookId"
     }
 
-    override fun getOffer(trader: Entity, random: RandomSource): MerchantOffer {
+    override fun getOffer(level: ServerLevel, trader: Entity, random: RandomSource): MerchantOffer {
         var costMultiplier = 1f
         if (trader is Researcher) {
             // No donkey penalty while healed
@@ -115,7 +116,7 @@ class ResearcherItemListing(
         }
         // Do not use priceMultiplier field as that is related to demand updating
 
-        val offer = super.getOffer(trader, random)
+        val offer = super.getOffer(level, trader, random)
 
         offer.addToSpecialPriceDiff((offer.costA.count * (costMultiplier - 1)).roundToInt())
 

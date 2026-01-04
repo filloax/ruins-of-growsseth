@@ -30,7 +30,7 @@ object QuestCommand {
     private const val LANG_PREFIX = "growsseth.commands.gquest"
 
     fun register(dispatcher: CommandDispatcher<CommandSourceStack>, registryAccess: CommandBuildContext, environment: CommandSelection) {
-        dispatcher.register(literal("gquest").requires{ it.hasPermission(2) }
+        dispatcher.register(literal("gquest").requires(hasPermission(LEVEL_GAMEMASTERS))
             .then(
                 literal("ent")
                     .then(argument("entity", EntityArgument.entity()).also {
@@ -81,10 +81,10 @@ object QuestCommand {
 
         return try {
             quest.activateStageId(stage)
-            ctx.source.sendSuccess({ Component.translatable("$LANG_PREFIX.stage.success", stage, targetEntity?.name, quest.toString()) }, true)
+            ctx.source.sendSuccess({ Component.translatable("$LANG_PREFIX.stage.success", stage, targetEntity?.name.toString(), quest.toString()) }, true)
             1
         } catch (_: IllegalArgumentException) {
-            ctx.source.sendFailure(Component.translatable("$LANG_PREFIX.stage.notFound", stage, targetEntity?.name, quest.availableStages.joinToString(", ")))
+            ctx.source.sendFailure(Component.translatable("$LANG_PREFIX.stage.notFound", stage, targetEntity?.name.toString(), quest.availableStages.joinToString(", ")))
             0
         } catch (e: Exception) {
             ctx.source.sendFailure(Component.translatable(e.message ?: "$LANG_PREFIX.stage.failure", stage, targetEntity.toString()))
@@ -96,11 +96,11 @@ object QuestCommand {
         val quest = getQuest(ctx, targetEntity) ?: return 0
 
         return if (quest.data.stageHistory.size <= 1) {
-            ctx.source.sendFailure(Component.translatable("$LANG_PREFIX.back.notAllowed", targetEntity?.name))
+            ctx.source.sendFailure(Component.translatable("$LANG_PREFIX.back.notAllowed", targetEntity?.name.toString()))
             0
         }
         else if (quest.backOneStage(activate)) {
-            ctx.source.sendSuccess({ Component.translatable("$LANG_PREFIX.back.success", quest.data.currentStageId, targetEntity?.name, quest.toString()) }, true)
+            ctx.source.sendSuccess({ Component.translatable("$LANG_PREFIX.back.success", quest.data.currentStageId, targetEntity?.name.toString(), quest.toString()) }, true)
             1
         } else {
             ctx.source.sendFailure(Component.translatable("$LANG_PREFIX.back.failure", targetEntity.toString()))
@@ -111,7 +111,7 @@ object QuestCommand {
     private fun listQuestStages(ctx: CommandContext<CommandSourceStack>, targetEntity: Entity?): Int {
         val quest = getQuest(ctx, targetEntity) ?: return 0
 
-        ctx.source.sendSuccess({ Component.translatable("$LANG_PREFIX.list_stages", targetEntity?.name, quest.availableStages.joinToString(", ")) }, true)
+        ctx.source.sendSuccess({ Component.translatable("$LANG_PREFIX.list_stages", targetEntity?.name.toString(), quest.availableStages.joinToString(", ")) }, true)
         return 1
     }
 

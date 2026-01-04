@@ -18,6 +18,8 @@ import net.minecraft.commands.CommandBuildContext
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands
 import net.minecraft.commands.Commands.CommandSelection
+import net.minecraft.commands.Commands.LEVEL_GAMEMASTERS
+import net.minecraft.commands.Commands.hasPermission
 import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.commands.arguments.ResourceKeyArgument
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument
@@ -48,7 +50,7 @@ object GrowssethPlaceCommand {
     private const val RANDOM_ROTATION = "random"
 
     fun register(dispatcher: CommandDispatcher<CommandSourceStack>, registryAccess: CommandBuildContext, environment: CommandSelection) {
-        dispatcher.register(Commands.literal("gplace").requires { it.hasPermission(2)  }
+        dispatcher.register(Commands.literal("gplace").requires(hasPermission(LEVEL_GAMEMASTERS))
             .then(Commands.argument("structure", ResourceKeyArgument.key(Registries.STRUCTURE))
                 .executes { commandContext ->
                     placeStructure(

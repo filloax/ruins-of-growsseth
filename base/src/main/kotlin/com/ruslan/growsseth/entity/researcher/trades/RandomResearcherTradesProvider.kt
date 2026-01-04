@@ -3,12 +3,14 @@ package com.ruslan.growsseth.entity.researcher.trades
 import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.config.ResearcherConfig
 import com.ruslan.growsseth.entity.researcher.Researcher
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.trading.MerchantOffers
 import kotlin.random.Random
 
 object RandomResearcherTradesProvider : AbstractResearcherTradesProvider() {
     override fun getOffersImpl(
+        level: ServerLevel,
         researcher: Researcher,
         tradesData: ResearcherTradesData,
         player: ServerPlayer,
@@ -29,7 +31,7 @@ object RandomResearcherTradesProvider : AbstractResearcherTradesProvider() {
         val filteredTrades = processTrades(trades)
 
         return MerchantOffers().apply {
-            addAll(filteredTrades.map { it.itemListing.getOffer(researcher, researcher.random) })
+            addAll(filteredTrades.map { it.itemListing.getOffer(level, researcher, researcher.random) })
         }
     }
 

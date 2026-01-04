@@ -99,7 +99,7 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
         goalSelector.addGoal(2, ZombieResearcherAttackGoal(this, 1.0, false, level()))    // special goal to not despawn in peaceful
         // no move through village goal
         goalSelector.addGoal(7, WaterAvoidingRandomStrollGoal(this, 1.0))
-        targetSelector.addGoal(1, HurtByTargetGoal(this, *arrayOfNulls(0)).setAlertOthers(*arrayOf<Class<*>>(ZombifiedPiglin::class.java)))
+        targetSelector.addGoal(1, HurtByTargetGoal(this).setAlertOthers(*arrayOf<Class<*>>(ZombifiedPiglin::class.java)))
         targetSelector.addGoal(2, NearestAttackableTargetGoal(this, Player::class.java, true))
         targetSelector.addGoal(3, NearestAttackableTargetGoal(this, AbstractVillager::class.java, false))
         targetSelector.addGoal(3, NearestAttackableTargetGoal(this, IronGolem::class.java, true))

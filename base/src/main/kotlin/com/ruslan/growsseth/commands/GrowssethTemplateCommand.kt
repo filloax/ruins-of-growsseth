@@ -9,7 +9,9 @@ import com.ruslan.growsseth.templates.SignTemplates
 import net.minecraft.commands.CommandBuildContext
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands.CommandSelection
+import net.minecraft.commands.Commands.LEVEL_GAMEMASTERS
 import net.minecraft.commands.Commands.argument
+import net.minecraft.commands.Commands.hasPermission
 import net.minecraft.commands.Commands.literal
 import net.minecraft.commands.arguments.EntityArgument
 import net.minecraft.network.chat.Component
@@ -27,7 +29,7 @@ object GrowssethTemplateCommand {
     private enum class TemplateType { BOOK, SIGN }
 
     fun register(dispatcher: CommandDispatcher<CommandSourceStack>, registryAccess: CommandBuildContext, environment: CommandSelection) {
-        dispatcher.register(literal("gtemplate").requires{ it.hasPermission(2) }
+        dispatcher.register(literal("gtemplate").requires(hasPermission(LEVEL_GAMEMASTERS))
             .then(
                 literal("book").also { arg -> registerTemplateArgs(arg, TemplateType.BOOK) }
             )

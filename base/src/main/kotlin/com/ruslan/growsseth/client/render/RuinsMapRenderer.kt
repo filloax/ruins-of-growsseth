@@ -6,7 +6,7 @@ import com.ruslan.growsseth.config.ClientConfig
 import com.ruslan.growsseth.maps.getMapTargetIcon
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.MultiBufferSource
-import net.minecraft.client.renderer.RenderType
+import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.renderer.texture.TextureAtlasSprite
 import net.minecraft.data.AtlasIds
 import net.minecraft.resources.Identifier
@@ -78,7 +78,7 @@ object RuinsMapRenderer {
         if (uWidth != 0 && vHeight != 0) {
             this.innerBlit(
                 renderTypeGetter,
-                sprite.atlasIdentifier(),
+                sprite.atlasLocation(),
                 x,
                 x + uWidth,
                 y,

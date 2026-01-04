@@ -12,6 +12,8 @@ import net.minecraft.ChatFormatting
 import net.minecraft.commands.CommandBuildContext
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands.CommandSelection
+import net.minecraft.commands.Commands.LEVEL_GAMEMASTERS
+import net.minecraft.commands.Commands.hasPermission
 import net.minecraft.commands.Commands.literal
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
@@ -20,7 +22,7 @@ import net.minecraft.server.MinecraftServer
 object ResearcherResetCommand {
 
     fun register(dispatcher: CommandDispatcher<CommandSourceStack>, registryAccess: CommandBuildContext, environment: CommandSelection) {
-        dispatcher.register(literal("greset").requires{ it.hasPermission(2) }
+        dispatcher.register(literal("greset").requires(hasPermission(LEVEL_GAMEMASTERS))
             .then(literal("researcher")
                 .then(literal("keep_dialogue_history").executes { ctx ->
                     runResetFunction(ctx, ::resetResearcherDataKeepDialogues)

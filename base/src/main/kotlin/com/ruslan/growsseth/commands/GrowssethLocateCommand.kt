@@ -34,7 +34,7 @@ object GrowssethLocateCommand {
     }
 
     fun register(dispatcher: CommandDispatcher<CommandSourceStack>, registryAccess: CommandBuildContext, environment: CommandSelection) {
-        dispatcher.register(literal("glocate").requires { it.hasPermission(2) }
+        dispatcher.register(literal("glocate").requires(hasPermission(LEVEL_GAMEMASTERS))
             .then(literal("structure").then(argument("structure", ResourceOrTagKeyArgument.resourceOrTagKey(Registries.STRUCTURE))
                 .executes { ctx -> locateStructure(
                     ctx.source,

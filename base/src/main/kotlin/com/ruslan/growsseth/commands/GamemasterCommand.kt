@@ -10,10 +10,12 @@ import com.ruslan.growsseth.http.GrowssethApi
 import net.minecraft.ChatFormatting
 import net.minecraft.commands.CommandBuildContext
 import net.minecraft.commands.CommandSourceStack
+import net.minecraft.commands.Commands
 import net.minecraft.commands.Commands.*
 import net.minecraft.network.chat.ClickEvent
 import net.minecraft.network.chat.Component
 import net.minecraft.server.MinecraftServer
+import net.minecraft.server.permissions.PermissionSet
 import java.net.URI
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -25,7 +27,7 @@ object GamemasterCommand {
 
     fun register(dispatcher: CommandDispatcher<CommandSourceStack>, registryAccess: CommandBuildContext, environment: CommandSelection) {
         dispatcher.register(
-            literal("gmaster").requires{ it.hasPermission(2) }
+            literal("gmaster").requires(hasPermission(LEVEL_GAMEMASTERS))
                 .then(literal("help")
                     .executes { ctx -> printHelp(ctx.source) }
                 )

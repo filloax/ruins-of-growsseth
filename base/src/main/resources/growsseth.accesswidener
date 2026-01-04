@@ -2,9 +2,9 @@ accessWidener	v1	named
 #note: not used in this module, but used in fabric-like modules
 #todo: reorder
 
-#extendable method net/minecraft/world/entity/monster/ZombieVillager finishConversion (Lnet/minecraft/server/level/ServerLevel;)V
-#accessible field net/minecraft/world/entity/monster/ZombieVillager conversionStarter Ljava/util/UUID;
-#accessible field net/minecraft/world/entity/monster/ZombieVillager villagerConversionTime I
+extendable method net/minecraft/world/entity/monster/zombie/ZombieVillager finishConversion (Lnet/minecraft/server/level/ServerLevel;)V
+#accessible field net/minecraft/world/entity/monster/zombie/ZombieVillager conversionStarter Ljava/util/UUID;
+accessible field net/minecraft/world/entity/monster/zombie/ZombieVillager villagerConversionTime I
 accessible field net/minecraft/world/level/levelgen/structure/pieces/StructurePiecesBuilder pieces Ljava/util/List;
 accessible field net/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplate palettes Ljava/util/List;
 accessible method net/minecraft/world/entity/Mob resetAmbientSoundTime ()V

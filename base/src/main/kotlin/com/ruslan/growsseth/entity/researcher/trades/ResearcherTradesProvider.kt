@@ -3,6 +3,7 @@ package com.ruslan.growsseth.entity.researcher.trades
 import com.filloax.fxlib.api.FxLibServices
 import com.ruslan.growsseth.entity.researcher.Researcher
 import net.minecraft.server.MinecraftServer
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.trading.MerchantOffers
@@ -12,7 +13,7 @@ import java.util.*
  * Server-side
  */
 interface ResearcherTradesProvider {
-    fun getOffers(researcher: Researcher, tradesData: ResearcherTradesData, player: ServerPlayer): MerchantOffers
+    fun getOffers(level: ServerLevel, researcher: Researcher, tradesData: ResearcherTradesData, player: ServerPlayer): MerchantOffers
     fun lastTradePlayerId(researcher: Researcher): UUID?
 
     val mode: ResearcherTradeMode
@@ -24,15 +25,16 @@ abstract class AbstractResearcherTradesProvider : ResearcherTradesProvider {
     protected val fixedStructureGeneration = FxLibServices.fixedStructureGeneration
 
     final override fun getOffers(
+        level: ServerLevel,
         researcher: Researcher,
         tradesData: ResearcherTradesData,
         player: ServerPlayer
     ): MerchantOffers {
         lastPlayers[researcher.uuid] = player.uuid
-        return getOffersImpl(researcher, tradesData, player)
+        return getOffersImpl(level, researcher, tradesData, player)
     }
 
-    abstract fun getOffersImpl(researcher: Researcher, tradesData: ResearcherTradesData, player: ServerPlayer): MerchantOffers
+    abstract fun getOffersImpl(level: ServerLevel, researcher: Researcher, tradesData: ResearcherTradesData, player: ServerPlayer): MerchantOffers
 
     protected fun isEnabled(server: MinecraftServer) = ResearcherTradeMode.getFromSettings(server) == mode
 

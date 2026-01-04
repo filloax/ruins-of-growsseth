@@ -67,7 +67,7 @@ object GrowssethDataCommand {
 
     fun register(dispatcher: CommandDispatcher<CommandSourceStack>, registryAccess: CommandBuildContext, environment: CommandSelection) {
         dispatcher.register(
-            literal("gdata").requires{ it.hasPermission(2) }
+            literal("gdata").requires(hasPermission(LEVEL_GAMEMASTERS))
                 .then(
                     literal("dialogue").also { arg -> registerDataArgs(arg, DataType.DIALOGUES) }
                 )

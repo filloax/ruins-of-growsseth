@@ -75,7 +75,7 @@ class ResearcherLookAtPlayerGoal(private val researcher: Researcher, lookDistanc
 }
 
 
-class ResearcherHurtByTargetGoal(private val researcher: PathfinderMob, vararg toIgnoreDamage: Class<*>?) :
+class ResearcherHurtByTargetGoal(private val researcher: PathfinderMob, vararg toIgnoreDamage: Class<*>) :
     HurtByTargetGoal(researcher, *toIgnoreDamage) {
     override fun canUse(): Boolean {
         if (researcher.lastHurtByMob is Player)    // players are treated separately

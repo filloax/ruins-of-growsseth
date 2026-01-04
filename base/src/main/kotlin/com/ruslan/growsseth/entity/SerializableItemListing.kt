@@ -2,6 +2,7 @@ package com.ruslan.growsseth.entity
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.util.RandomSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.npc.villager.VillagerTrades
@@ -35,7 +36,7 @@ open class SerializableItemListing(
         }
     }
 
-    override fun getOffer(trader: Entity, random: RandomSource): MerchantOffer
+    override fun getOffer(level: ServerLevel, trader: Entity, random: RandomSource): MerchantOffer
         = MerchantOffer(wants[0], Optional.ofNullable(wants.getOrNull(1)), gives(), maxUses, xp, priceMul)
 
     // Returns a copy of the specified item, to avoid
