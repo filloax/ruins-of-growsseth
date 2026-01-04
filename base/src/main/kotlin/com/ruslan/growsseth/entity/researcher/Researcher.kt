@@ -976,7 +976,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     }
 
     private fun getOffers(player: ServerPlayer): MerchantOffers {
-        val server = player.server!!
+        val server = player.server
         val currentProvider = ResearcherTradeMode.providerFromSettings(server)
         val tradesData = tradesData()
         val time = level().gameTime
@@ -986,7 +986,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         }
 
         val offers = offersByPlayer.computeIfAbsent(player.uuid) { MerchantOffers() }
-        val updatedOffers = currentProvider.getOffers(level, this, tradesData, player)
+        val updatedOffers = currentProvider.getOffers(player.level(), this, tradesData, player)
 
         if (
             currentProvider.mode != tradesData.mode

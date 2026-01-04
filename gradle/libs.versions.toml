@@ -12,7 +12,7 @@ parchment = "2025.12.20"
 neoform = "1.21.11-20251209.172050" # vanilla neoforge configuration
 
 # Mod dependencies
-filloaxlib = "0.36.0-1.21.10"
+filloaxlib = "0.36.0-1.21.11"
 modmenu = "17.0.0-beta.1"
 rconfig = "3.11.2"   # higher versions are not found with current settings (todo: fix)
 rconfigMc = "1.21.11"
