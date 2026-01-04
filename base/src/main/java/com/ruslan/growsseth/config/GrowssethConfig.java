@@ -15,6 +15,7 @@ import com.teamresourceful.resourcefulconfig.api.annotations.ConfigInfo;
         QuestConfig.class,
         StructureConfig.class,
         WorldPresetConfig.class,
+        ModCompatConfig.class,
         DebugConfig.class
     }
 )

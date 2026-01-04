@@ -85,6 +85,27 @@ class ArcheologyLootTableProvider(output: FabricDataOutput, val registries: Comp
     override fun getName(): String = "GrowssethArcheologyLootTable"
 }
 
+class MiscLootTableProvider(output: FabricDataOutput, val registries: CompletableFuture<HolderLookup.Provider>) : SimpleFabricLootTableProvider(output, registries, LootContextParamSets.EMPTY) {
+
+    override fun generate(output: BiConsumer<ResourceKey<LootTable>, LootTable.Builder>) {
+        output.accept(
+            GrowssethLootTables.COBBLEMON_DEFEAT_RESEARCHER,
+            lootTable()
+                .withPool(lootPoolSingleRoll()
+                    .add(lootTableItem(Items.ENCHANTED_GOLDEN_APPLE))
+                    .add(lootTableItem(Items.NETHERITE_SCRAP).count(between(1f, 4f)))
+                )
+                .withPool(lootPoolSingleRoll()
+                    .add(lootTableItem(GrowssethItems.FRAGMENT_BALLATA_DEL_RESPAWN)
+                        .count(between(0f, 2f))
+                    )
+                )
+        )
+    }
+
+    override fun getName(): String = "GrowssethMiscLootTable"
+}
+
 class StructureLootTableProvider(output: FabricDataOutput, val registries: CompletableFuture<HolderLookup.Provider>) : SimpleFabricLootTableProvider(output, registries, LootContextParamSets.CHEST) {
 
     override fun generate(output: BiConsumer<ResourceKey<LootTable>, LootTable.Builder>) {

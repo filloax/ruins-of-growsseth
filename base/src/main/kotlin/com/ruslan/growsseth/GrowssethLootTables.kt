@@ -28,5 +28,8 @@ object GrowssethLootTables {
     val CHEST_RESEARCHER_TENT_LAB = resKey("chests/researcher_tent/lab")
     val CHEST_RESEARCHER_TENT_TENT = resKey("chests/researcher_tent/tent")
 
+    // Mod compat
+    val COBBLEMON_DEFEAT_RESEARCHER = resKey("cobblemon/defeat_researcher")
+
     private fun resKey(path: String): ResourceKey<LootTable> = ResourceKey.create(Registries.LOOT_TABLE, resLoc(path))
 }

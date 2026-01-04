@@ -62,6 +62,7 @@ class DataGeneration : DataGeneratorEntrypoint {
         pack.addProvider(::AdvancementsProvider)
         pack.addProvider(::EntityLootTableProvider)
         pack.addProvider(::ArcheologyLootTableProvider)
+        pack.addProvider(::MiscLootTableProvider)
         pack.addProvider(::StructureLootTableProvider)
         pack.addProvider(::ModelGenerator)
         pack.addProvider(::CustomDataProvider)
@@ -114,14 +115,14 @@ class RecipesProvider(output: FabricDataOutput, registriesFuture: CompletableFut
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, vocalsDisc)
             .requires(Items.AMETHYST_SHARD)
             .requires(baseDisc)
-            .unlockedBy(RecipeProvider.getHasName(baseDisc), RecipeProvider.has(baseDisc))
+            .unlockedBy(getHasName(baseDisc), RecipeProvider.has(baseDisc))
             .save(exporter)
     }
 
     private fun fragmentToDiscRecipe (exporter: RecipeOutput, discFragment: ItemLike, disc: ItemLike) {
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, disc)
             .requires(discFragment, 9)
-            .unlockedBy(RecipeProvider.getHasName(discFragment), RecipeProvider.has(discFragment))
+            .unlockedBy(getHasName(discFragment), RecipeProvider.has(discFragment))
             .save(exporter)
     }
 }
