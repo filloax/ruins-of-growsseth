@@ -40,8 +40,8 @@ fabric-language-kotlin = "1.13.8+kotlin.2.3.0"
 
 # Neoforge Settings
 # Get versions from https://projects.neoforged.net/neoforged/neoforge
-neoforge = "21.11.19-beta"
-neoforge-range = "[21.11.19-beta,21.12)"
+neoforge = "21.11.24-beta"
+neoforge-range = "[21.11.24-beta,21.12)"
 kotlinforge = "5.10.0"
 kotlinforge-range = "[5.10,)"
 
@@ -59,7 +59,7 @@ kotlinevents = "v2.0"
 # Plugins
 plugin-dokka = "2.0.0"
 plugin-mixin = "0.7.38"
-plugin-loom = "1.13.6"
+plugin-loom = "1.14-SNAPSHOT"
 plugin-moddev = "2.0.120"
 plugin-idea-ext = "1.3"
 
