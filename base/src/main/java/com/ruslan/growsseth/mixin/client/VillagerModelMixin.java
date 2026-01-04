@@ -2,7 +2,7 @@ package com.ruslan.growsseth.mixin.client;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import com.ruslan.growsseth.entity.researcher.Researcher;
-import net.minecraft.client.model.VillagerModel;
+import net.minecraft.client.model.npc.VillagerModel;
 import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
