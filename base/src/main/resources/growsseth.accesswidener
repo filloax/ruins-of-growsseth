@@ -60,3 +60,6 @@ accessible class net/minecraft/client/sounds/SoundManager$Preparations
 
 accessible field net/minecraft/world/level/StructureManager level Lnet/minecraft/world/level/LevelAccessor;
 accessible field net/minecraft/server/level/ServerPlayer server Lnet/minecraft/server/MinecraftServer;
+accessible field net/minecraft/world/entity/Entity tags Ljava/util/Set;
+accessible method net/minecraft/world/item/CreativeModeTab$Output accept (Lnet/minecraft/world/level/ItemLike;)V
+accessible class net/minecraft/world/item/CreativeModeTab$Output

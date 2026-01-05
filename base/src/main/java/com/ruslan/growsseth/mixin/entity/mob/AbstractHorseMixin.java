@@ -20,7 +20,7 @@ public abstract class AbstractHorseMixin extends Animal {
 
     @ModifyVariable(method = "hurtServer", at = @At("HEAD"), ordinal = 0, argsOnly = true)
     private float injected(float amount, ServerLevel level, DamageSource source) {
-        if(this.getTags().contains(Constants.TAG_RESEARCHER_DONKEY) &&
+        if(this.tags.contains(Constants.TAG_RESEARCHER_DONKEY) &&
                 !source.is(DamageTypeTags.BYPASSES_INVULNERABILITY) &&      // to prevent stopping the kill command
                 ResearcherDonkey.shouldProtectDonkey(level(), this))
             return 0f;
