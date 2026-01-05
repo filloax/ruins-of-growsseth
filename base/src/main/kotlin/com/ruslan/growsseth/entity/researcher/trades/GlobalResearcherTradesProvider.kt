@@ -146,7 +146,7 @@ abstract class GlobalResearcherTradesProvider protected constructor(
         }
 
         val data = player.getPersistData()
-        val metResearcher = player.getPersistData().getBoolean(Constants.DATA_PLAYER_MET_RESEARCHER).get()
+        val metResearcher = player.getPersistData().getBoolean(Constants.DATA_PLAYER_MET_RESEARCHER).getOrDefault(false)
         val itemListingTrades by lazy { trades.map{ it.itemListing } }
         val dataList by lazy { ResearcherItemListing.LIST_CODEC.encodeNbt(itemListingTrades).resultOrPartial().getOrDefault(ListTag()) }
         if (metResearcher)
