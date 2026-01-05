@@ -13,8 +13,8 @@ val modid: String by project
 val modVersion: String by project
 val versionType: String? by project
 val minecraftVersion = libs.versions.minecraft.asProvider().get()
-val parchmentMcVersion = libs.versions.parchment.minecraft.get()
-val parchmentVersion = libs.versions.parchment.asProvider().get()
+//val parchmentMcVersion = libs.versions.parchment.minecraft.get()
+//val parchmentVersion = libs.versions.parchment.asProvider().get()
 val includeDeps = (property("includeDeps") as String).toBoolean()
 
 val versionSuffix = if (versionType?.isBlank() == true) "" else "-$versionType"
@@ -79,20 +79,20 @@ if (cobblemonTest) {
 dependencies {
 	minecraft( libs.minecraft )
 	implementation( libs.jsr305 )
-	mappings(loom.layered() {
-		officialMojangMappings()
-		if (parchmentVersion.isNotBlank()) {
-			parchment("org.parchmentmc.data:parchment-${parchmentMcVersion}:${parchmentVersion}@zip")
-		}
-	})
+//	mappings(loom.layered() {
+//		officialMojangMappings()
+//		if (parchmentVersion.isNotBlank()) {
+//			parchment("org.parchmentmc.data:parchment-${parchmentMcVersion}:${parchmentVersion}@zip")
+//		}
+//	})
 
 	socketIoLibs.forEach {
 		implementation(it)
 		include(it)
 	}
 
-	modImplementation( libs.fabric )
-	modImplementation( libs.fabric.api ) {
+	implementation( libs.fabric )
+	implementation( libs.fabric.api ) {
 		exclude(module = "fabric-api-deprecated")
 	}
 
@@ -101,7 +101,7 @@ dependencies {
 		libs.modmenu,
 		utils.getResourcefulConfig("fabric"),
 	).forEach {
-		modImplementation(it)
+		implementation(it)
 		if (includeDeps)
 			include(it)
 	}
@@ -109,41 +109,42 @@ dependencies {
 	implementation( libs.kotlin.serialization ) { exclude(module = "kotlin-stdlib") }
 
 	utils.getFilloaxlib("fabric").let{
-		modImplementation(it) { exclude(module = "kotlin-stdlib") }
+		implementation(it) { exclude(module = "kotlin-stdlib") }
 		include(it)
 	}
 	implementation( libs.kotlinevents )
 	include( libs.kotlinevents )
 
 	// Mod compat
-//	  modCompileOnly(libs.lithostitched.fabric)
-//    modCompileOnly(libs.cobblemon.fabric)
-//    modCompileOnly(libs.rctapi.fabric)
+//	  compileOnly(libs.lithostitched.fabric)
+//    compileOnly(libs.cobblemon.fabric)
+//    compileOnly(libs.rctapi.fabric)
 
     if (cobblemonTest) {
-        modLocalRuntime("io.wispforest:accessories-fabric:1.1.0-beta.52+1.21.1")
-
-        modLocalRuntime("dev.architectury:architectury-fabric:13.0.8")
-
-        modLocalRuntime(libs.cobblemon.fabric)
-        modLocalRuntime(libs.rctapi.fabric)
-
-        modLocalRuntime("maven.modrinth:cobblemon-mega-showdown:FHVQFA5j")
-
-        modLocalRuntime("maven.modrinth:cobblemontools:cvHY7gmJ")
-        modLocalRuntime("maven.modrinth:rib:C4vWmZoB")
-        modLocalRuntime("maven.modrinth:luckperms:l47d4ZWk")
-        modLocalRuntime("maven.modrinth:fabric-permissions-api:62DUD085")
-        modLocalRuntime("net.kyori:adventure-platform-fabric:5.14.0")
-        modLocalRuntime("net.kyori:adventure-text-serializer-gson:4.17.0")
-        modLocalRuntime("net.kyori:adventure-text-serializer-legacy:4.17.0")
-
-        modLocalRuntime("io.wispforest:owo-lib:0.12.15+1.21")
+		// modLocalRuntime is not available in 26.1
+//        modLocalRuntime("io.wispforest:accessories-fabric:1.1.0-beta.52+1.21.1")
+//
+//        modLocalRuntime("dev.architectury:architectury-fabric:13.0.8")
+//
+//        modLocalRuntime(libs.cobblemon.fabric)
+//        modLocalRuntime(libs.rctapi.fabric)
+//
+//        modLocalRuntime("maven.modrinth:cobblemon-mega-showdown:FHVQFA5j")
+//
+//        modLocalRuntime("maven.modrinth:cobblemontools:cvHY7gmJ")
+//        modLocalRuntime("maven.modrinth:rib:C4vWmZoB")
+//        modLocalRuntime("maven.modrinth:luckperms:l47d4ZWk")
+//        modLocalRuntime("maven.modrinth:fabric-permissions-api:62DUD085")
+//        modLocalRuntime("net.kyori:adventure-platform-fabric:5.14.0")
+//        modLocalRuntime("net.kyori:adventure-text-serializer-gson:4.17.0")
+//        modLocalRuntime("net.kyori:adventure-text-serializer-legacy:4.17.0")
+//
+//        modLocalRuntime("io.wispforest:owo-lib:0.12.15+1.21")
     }
 }
 
 // Mod description handling (different in loaders due to formatting)
-val rootDirectory = project.rootDir
+val rootDirectory: File = project.rootDir
 val modDescriptionFile = rootDirectory.resolve("mod-description.txt")
 
 utils.addExtraResourceProp("description",  modDescriptionFile.readText().replace("\r", "").replace("\n", "\\n"))

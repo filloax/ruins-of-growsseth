@@ -6,13 +6,13 @@ pluginManagement {
             name = "Fabric"
             url = uri("https://maven.fabricmc.net/")
         }
-        maven {
-            name = "Parchment"
-            url = uri("https://maven.parchmentmc.org")
-            content {
-                includeGroupAndSubgroups("org.parchmentmc")
-            }
-        }
+//        maven {
+//            name = "Parchment"
+//            url = uri("https://maven.parchmentmc.org")
+//            content {
+//                includeGroupAndSubgroups("org.parchmentmc")
+//            }
+//        }
         maven {
             name = "Sponge"
             url = uri("https://repo.spongepowered.org/repository/maven-public/")
