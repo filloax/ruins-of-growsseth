@@ -1,11 +1,11 @@
 package com.ruslan.growsseth.item
 
 import com.filloax.fxlib.api.registration.registryDelegate
-import com.ruslan.growsseth.GrowssethBannerPatterns
-import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.entity.GrowssethEntities
 import com.ruslan.growsseth.utils.resLoc
 import net.minecraft.core.registries.Registries
+import net.minecraft.data.worldgen.BootstrapContext
+import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.Identifier
 import net.minecraft.world.item.*
@@ -127,7 +127,13 @@ object GrowssethItems {
         Properties().setId(ResourceKey.create<Item>(Registries.ITEM, resLoc(itemId)))
 
 	object TrimPatterns {
-		val GROWSSETH: ResourceKey<TrimPattern> = ResourceKey.create(Registries.TRIM_PATTERN, resLoc("growsseth"))
+		val GROWSSETH_TRIM_PATTERN: ResourceKey<TrimPattern> = ResourceKey.create(Registries.TRIM_PATTERN, resLoc("growsseth_trim_pattern"))
+
+		fun bootstrap(ctx: BootstrapContext<TrimPattern>) {
+			ctx.register(GROWSSETH_TRIM_PATTERN,
+				TrimPattern(GROWSSETH_TRIM_PATTERN.identifier(), Component.translatable("aaaaa"), false)
+			)
+		}
 	}
 
 	object SherdPatterns {

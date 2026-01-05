@@ -75,6 +75,7 @@ class DataGeneration : DataGeneratorEntrypoint {
         registryBuilder.add(Registries.WORLD_PRESET, GrowssethModWorldPresets::bootstrap)
         registryBuilder.add(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST, GrowssethWorldPreset::bootstrapNoiseBiomeSourcesSettings)
         registryBuilder.add(Registries.BANNER_PATTERN, com.ruslan.growsseth.GrowssethBannerPatterns::bootstrap)
+        registryBuilder.add(Registries.TRIM_PATTERN, GrowssethItems.TrimPatterns::bootstrap)
         registryBuilder.add(Registries.JUKEBOX_SONG, GrowssethJukeboxSongs::bootstrap)
     }
 
@@ -111,9 +112,7 @@ class RecipesProvider(output: FabricDataOutput, registriesFuture: CompletableFut
                 ).forEach {
                     val trimTemplate = TrimTemplate(
                         it,
-                        ResourceKey.create(
-                            Registries.TRIM_PATTERN, Identifier.parse(getItemName(it) + "_smithing_trim")
-                        ),
+                        GrowssethItems.TrimPatterns.GROWSSETH_TRIM_PATTERN,
                         ResourceKey.create(
                             Registries.RECIPE, Identifier.parse(getItemName(it) + "_smithing_trim")
                         )

@@ -21,6 +21,7 @@ import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents.ModifyEntries
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.core.registries.Registries
 import net.minecraft.server.packs.PackType
 import net.minecraft.world.item.CreativeModeTabs
 import net.minecraft.world.item.Items
