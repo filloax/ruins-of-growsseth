@@ -27,11 +27,11 @@ class FabricEvents : ModEvents() {
 
     override fun onServerStopped(event: ServerEvent) = ServerLifecycleEvents.SERVER_STOPPED.register(event)
 
-    override fun onServerLevelLoad(event: (MinecraftServer, ServerLevel) -> Unit) = ServerWorldEvents.LOAD.register(event)
+    override fun onServerLevelLoad(event: (MinecraftServer, ServerLevel) -> Unit) = ServerLevelEvents.LOAD.register(event)
 
     override fun onStartServerTick(event: ServerEvent) = ServerTickEvents.START_SERVER_TICK.register(event)
 
-    override fun onEndServerLevelTick(event: (ServerLevel) -> Unit) = ServerTickEvents.END_WORLD_TICK.register(event)
+    override fun onEndServerLevelTick(event: (ServerLevel) -> Unit) = ServerTickEvents.END_LEVEL_TICK.register(event)
 
     override fun onLoadChunk(event: (level: ServerLevel, chunk: LevelChunk) -> Unit) = ServerChunkEvents.CHUNK_LOAD.register(event)
 

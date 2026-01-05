@@ -16,8 +16,8 @@ import com.ruslan.growsseth.utils.resLoc
 import com.ruslan.growsseth.worldgen.worldpreset.LocationNotifListener
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents.ModifyEntries
+import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents
+import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents.ModifyOutput
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
@@ -49,26 +49,26 @@ object RuinsOfGrowssethFabric : ModInitializer, RuinsOfGrowsseth() {
 
     override fun initItemGroups() {
         // More convenient to do this per-loader than AT all the creativeModeTabs entries (which are private by default)
-        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.INGREDIENTS)
-            .register(ModifyEntries {
+        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.INGREDIENTS)
+            .register(ModifyOutput {
                 // Piglin is last pattern
-                it.addAfter(Items.PIGLIN_BANNER_PATTERN, GrowssethItems.GROWSSETH_BANNER_PATTERN)
-                it.addAfter(Items.SPIRE_ARMOR_TRIM_SMITHING_TEMPLATE, GrowssethItems.GROWSSETH_ARMOR_TRIM)
-                it.addAfter(Items.HEART_POTTERY_SHERD, GrowssethItems.GROWSSETH_POTTERY_SHERD)
-                it.addAfter(Items.DISC_FRAGMENT_5, GrowssethItems.FRAGMENT_BALLATA_DEL_RESPAWN)
+                it.insertAfter(Items.PIGLIN_BANNER_PATTERN, GrowssethItems.GROWSSETH_BANNER_PATTERN)
+                it.insertAfter(Items.SPIRE_ARMOR_TRIM_SMITHING_TEMPLATE, GrowssethItems.GROWSSETH_ARMOR_TRIM)
+                it.insertAfter(Items.HEART_POTTERY_SHERD, GrowssethItems.GROWSSETH_POTTERY_SHERD)
+                it.insertAfter(Items.DISC_FRAGMENT_5, GrowssethItems.FRAGMENT_BALLATA_DEL_RESPAWN)
             })
-        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.SPAWN_EGGS)
-            .register(ModifyEntries {
+        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.SPAWN_EGGS)
+            .register(ModifyOutput {
                 it.accept(GrowssethItems.RESEARCHER_SPAWN_EGG)
                 it.accept(GrowssethItems.ZOMBIE_RESEARCHER_SPAWN_EGG)
             })
-        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT)
-            .register(ModifyEntries {
-                it.addAfter(Items.TRIDENT, GrowssethItems.RESEARCHER_DAGGER)
+        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.COMBAT)
+            .register(ModifyOutput {
+                it.insertAfter(Items.TRIDENT, GrowssethItems.RESEARCHER_DAGGER)
             })
-        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES)
-            .register(ModifyEntries {
-                it.addAfter(Items.GOAT_HORN, GrowssethItems.RESEARCHER_HORN)
+        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.TOOLS_AND_UTILITIES)
+            .register(ModifyOutput {
+                it.insertAfter(Items.GOAT_HORN, GrowssethItems.RESEARCHER_HORN)
                 for (disc in GrowssethItems.DISCS_ORDERED) {
                     it.accept(disc)
                 }
@@ -76,25 +76,25 @@ object RuinsOfGrowssethFabric : ModInitializer, RuinsOfGrowsseth() {
     }
 
     override fun registerResourceListeners() {
-        ResourceLoader.get(PackType.SERVER_DATA).registerReloader(resLoc("trades_reloader"),
+        ResourceLoader.get(PackType.SERVER_DATA).registerReloadListener(resLoc("trades_reloader"),
             FabricReloadListener(
                 resLoc(Constants.TRADES_DATA_FOLDER),
                 TradesListener(),
             )
         )
-        ResourceLoader.get(PackType.SERVER_DATA).registerReloader(resLoc("dialogues_reloader"),
+        ResourceLoader.get(PackType.SERVER_DATA).registerReloadListener(resLoc("dialogues_reloader"),
             FabricReloadListener(
                 resLoc(Constants.RESEARCHER_DIALOGUE_DATA_FOLDER),
                 ResearcherDialogueListener(),
             )
         )
-        ResourceLoader.get(PackType.SERVER_DATA).registerReloader(resLoc("templates_reloader"),
+        ResourceLoader.get(PackType.SERVER_DATA).registerReloadListener(resLoc("templates_reloader"),
             FabricReloadListener(
                 resLoc(Constants.TEMPLATE_FOLDER),
                 TemplateListener,
             )
         )
-        ResourceLoader.get(PackType.SERVER_DATA).registerReloader(resLoc("preset_places_reloader"),
+        ResourceLoader.get(PackType.SERVER_DATA).registerReloadListener(resLoc("preset_places_reloader"),
             FabricReloadListener(
                 resLoc(Constants.PRESET_PLACES_FOLDER),
                 LocationNotifListener(),
