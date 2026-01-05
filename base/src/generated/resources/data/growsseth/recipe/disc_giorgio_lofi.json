@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "minecraft:amethyst_shard"
-    },
-    {
-      "item": "growsseth:disc_giorgio_lofi_inst"
-    }
+    "minecraft:amethyst_shard",
+    "growsseth:disc_giorgio_lofi_inst"
   ],
   "result": {
     "count": 1,

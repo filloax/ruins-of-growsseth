@@ -2,33 +2,15 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "growsseth:fragment_ballata_del_respawn"
-    },
-    {
-      "item": "growsseth:fragment_ballata_del_respawn"
-    },
-    {
-      "item": "growsseth:fragment_ballata_del_respawn"
-    },
-    {
-      "item": "growsseth:fragment_ballata_del_respawn"
-    },
-    {
-      "item": "growsseth:fragment_ballata_del_respawn"
-    },
-    {
-      "item": "growsseth:fragment_ballata_del_respawn"
-    },
-    {
-      "item": "growsseth:fragment_ballata_del_respawn"
-    },
-    {
-      "item": "growsseth:fragment_ballata_del_respawn"
-    },
-    {
-      "item": "growsseth:fragment_ballata_del_respawn"
-    }
+    "growsseth:fragment_ballata_del_respawn",
+    "growsseth:fragment_ballata_del_respawn",
+    "growsseth:fragment_ballata_del_respawn",
+    "growsseth:fragment_ballata_del_respawn",
+    "growsseth:fragment_ballata_del_respawn",
+    "growsseth:fragment_ballata_del_respawn",
+    "growsseth:fragment_ballata_del_respawn",
+    "growsseth:fragment_ballata_del_respawn",
+    "growsseth:fragment_ballata_del_respawn"
   ],
   "result": {
     "count": 1,
