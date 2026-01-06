@@ -57,9 +57,12 @@ dependencies {
 	compileOnly(utils.getFilloaxlib())
 
 	// Mod compatibility
-//	  compileOnly(libs.lithostitched.neoforge)
-//    compileOnly(libs.cobblemon.neoforge)
-//    compileOnly(libs.rctapi.neoforge)
+	if (false) {
+		compileOnly(libs.lithostitched.neoforge)
+		compileOnly(libs.cobblemon.neoforge)
+		compileOnly(libs.rctapi.neoforge)
+		compileOnly(libs.endremastered.neoforge)
+	}
 }
 
 sourceSets.main.get().resources.srcDir(project(":base").file("src/generated/resources"))

@@ -35,12 +35,12 @@ neoForge {
     }
 
     runs {
-        create("client") {
+        create("growsseth_client") {
             client()
             jvmArgument("-Dmixin.debug.export=true")
         }
 
-        create("server") {
+        create("growsseth_server") {
             server()
         }
 
@@ -99,9 +99,12 @@ dependencies {
     jarJar( libs.kotlinevents )
 
     // Mod compat
-//    compileOnly(libs.lithostitched.neoforge)
-//    compileOnly(libs.rctapi.neoforge)
-//    compileOnly(libs.cobblemon.neoforge)
+    if(false) {
+        compileOnly(libs.lithostitched.neoforge)
+        compileOnly(libs.rctapi.neoforge)
+        compileOnly(libs.cobblemon.neoforge)
+        compileOnly(libs.endremastered.neoforge)
+    }
 }
 
 

@@ -20,6 +20,7 @@ import com.ruslan.growsseth.structure.GrowssethStructures
 import com.ruslan.growsseth.templates.TemplateListener
 import com.ruslan.growsseth.utils.resLoc
 import com.ruslan.growsseth.worldgen.worldpreset.LocationNotifListener
+//import com.teamremastered.endrem.registry.ERTabs
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.core.Holder
@@ -92,6 +93,10 @@ object RuinsOfGrowssethNeo : RuinsOfGrowsseth() {
                     }
                 }
             }
+
+//            if (modCompat.isEndRemasteredLoaded && ev.tabKey == ERTabs.TABS.registryKey) {
+//                ev.accept(GrowssethItems.ENDREM_GROWSSETH_EYE)
+//            }
         }
     }
 

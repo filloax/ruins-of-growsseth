@@ -245,7 +245,16 @@ class ResearcherQuestComponent(researcher: Researcher) : QuestComponent<Research
                 }
 
             blockEntity.setItem(4, endTextItem)
-            blockEntity.setItem(13, hornItem)
+
+//            if (RuinsOfGrowsseth.modCompat.isEndRemasteredLoaded) {
+//                blockEntity.setItem(12, hornItem)
+//
+//                val endEyeItem = GrowssethItems.ENDREM_GROWSSETH_EYE.defaultInstance
+//                blockEntity.setItem(14, endEyeItem)
+//            } else {
+                blockEntity.setItem(13, hornItem)
+//            }
+
             level.updateNeighborsAt(pos, chestState.block)
             RuinsOfGrowsseth.LOGGER.info("Spawned researcher reward chest at $pos")
         }
