@@ -18,10 +18,13 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCon
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue.exactly
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider
 
-/** Used to give an item a random chance of appearing in a loot table */
-fun randomChance(item: LootPoolSingletonContainer.Builder<*>, chanceToAppear: Float): LootPool.Builder = lootPool()
-    .conditionally(LootItemRandomChanceCondition.randomChance(chanceToAppear).build())
-    .add(item)
+/** Used to give one or more (mutually exclusive and with the same weight) items a random chance to appear in a loot table */
+fun randomChance(chanceToAppear: Float, vararg items: LootPoolSingletonContainer.Builder<*>): LootPool.Builder {
+    val pool = lootPoolSingleRoll()
+        .conditionally(LootItemRandomChanceCondition.randomChance(chanceToAppear).build())
+    items.forEach { pool.add(it) }
+    return pool
+}
 
 fun lootPoolSingleRoll(): LootPool.Builder = lootPool().setRolls(exactly(1f))
 

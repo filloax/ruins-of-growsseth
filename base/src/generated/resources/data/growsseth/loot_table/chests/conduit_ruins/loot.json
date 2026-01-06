@@ -3,6 +3,12 @@
   "pools": [
     {
       "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "chance": 0.33,
+          "condition": "minecraft:random_chance"
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:item",
@@ -11,11 +17,6 @@
         {
           "type": "minecraft:item",
           "name": "growsseth:disc_pesci_strani"
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:air",
-          "weight": 4
         }
       ],
       "rolls": 1.0
