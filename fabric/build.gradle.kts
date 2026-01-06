@@ -118,14 +118,18 @@ dependencies {
 	include( libs.kotlinevents )
 
 	// Mod compat
-//  	modCompileOnly(libs.lithostitched.fabric)
-//    modCompileOnly(libs.cobblemon.fabric)
-//    modCompileOnly(libs.rctapi.fabric)
-//    modCompileOnly(libs.endremastered)
+	if (false) {
+		modCompileOnly(libs.lithostitched.fabric)
+		modCompileOnly(libs.cobblemon.fabric)
+		modCompileOnly(libs.rctapi.fabric)
+		modCompileOnly(libs.endremastered)
+	}
 
     // For datagen
-//    modCompileOnly(libs.megashowdown.fabric)
-//    modCompileOnly(libs.architectury.fabric)
+	if (false) {
+		modCompileOnly(libs.megashowdown.fabric)
+		modCompileOnly(libs.architectury.fabric)
+	}
 
     if (cobblemonTest) {
         modLocalRuntime("io.wispforest:accessories-fabric:1.1.0-beta.52+1.21.1")

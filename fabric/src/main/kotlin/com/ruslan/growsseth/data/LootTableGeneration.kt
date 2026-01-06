@@ -120,7 +120,7 @@ class StructureLootTableProvider(output: FabricDataOutput, val registries: Compl
                           .withEnchantment(enchantment(Enchantments.VANISHING_CURSE), exactly(1f))
                     })
                 )
-                .withPool(itemOrAir(lootTableItem(Items.WITHER_SKELETON_SKULL), 2))
+                .withPool(randomChance(lootTableItem(Items.WITHER_SKELETON_SKULL), 0.33f))
                 //.extendWithLootTable(modCompat.generateForgeSecretLoot())
         )
 
