@@ -1,8 +1,14 @@
 package com.ruslan.growsseth.item
 
+import com.filloax.fxlib.api.registration.RegistryDelegate
 import com.filloax.fxlib.api.registration.registryDelegate
+import com.ruslan.growsseth.GrowssethTags
+import com.ruslan.growsseth.RuinsOfGrowsseth
+import com.ruslan.growsseth.compat.ModCompatChecker
 import com.ruslan.growsseth.entity.GrowssethEntities
 import com.ruslan.growsseth.utils.resLoc
+//import com.teamremastered.endrem.item.EREnderEye
+import net.minecraft.core.Holder
 import net.minecraft.core.registries.Registries
 import net.minecraft.data.worldgen.BootstrapContext
 import net.minecraft.network.chat.Component
@@ -44,6 +50,8 @@ object GrowssethItems {
 		{ SmithingTemplateItem.createArmorTrimTemplate(defaultBuilder("growsseth_trim_template")) })
 	val GROWSSETH_POTTERY_SHERD by make("growsseth_pottery_sherd", { defaultItem("growsseth_pottery_sherd") })
 	val FRAGMENT_BALLATA_DEL_RESPAWN by make("fragment_ballata_del_respawn", { DiscFragmentItem(defaultBuilder("growsseth_pottery_sherd")) })
+
+    //val ENDREM_GROWSSETH_EYE by makeEndRemasteredEye("growsseth_eye", Properties().rarity(Rarity.EPIC))
 
 	// Custom discs
 	val DISC_SEGA_DI_NIENTE 		by makeDisc("disc_sega_di_niente", GrowssethJukeboxSongs.SEGA_DI_NIENTE)
@@ -114,6 +122,21 @@ object GrowssethItems {
 				properties.stacksTo(1).jukeboxPlayable(jukeboxSong),
 			)
 		})
+
+//    private fun makeEndRemasteredEye(
+//        name: String, properties: Properties = Properties(),
+//    ): RegistryDelegate<Item> {
+//        if (RuinsOfGrowsseth.modCompat.isEndRemasteredLoaded) {
+//            try {
+//                RuinsOfGrowsseth.LOGGER.info("Registering End Remastered eye item $name")
+//                return make(name, { EREnderEye(properties) })
+//            } catch (e: Throwable) {
+//                RuinsOfGrowsseth.LOGGER.error("Couldn't register End Remastered eye item $name, falling back to generic item that won't work with portal", e)
+//            }
+//        }
+//        // Blank item so it doesn't get deleted if you already have it
+//        return make(name, { Item(properties) })
+//    }
 
 	fun registerItems(registrator: (Identifier, Item) -> Unit) {
 		allInitializers.forEach{
