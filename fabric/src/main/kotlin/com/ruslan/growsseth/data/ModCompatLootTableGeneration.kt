@@ -357,6 +357,5 @@ class ModCompatStructureLootTableGeneration(val registries: CompletableFuture<Ho
     }
 
     private fun optLootItem(item: ItemLike) = expandTag(optionalLootItemTags.optionalModLootTableItem(item))
-    private fun optLootItem(itemSupplier: RegistrySupplier<Item>)
-        = optLootItem(itemSupplier.get())
+    private fun optLootItem(itemSupplier: RegistrySupplier<Item>) = optLootItem(itemSupplier.get())
 }
