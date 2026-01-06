@@ -18,14 +18,16 @@
     },
     {
       "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "chance": 0.5,
+          "condition": "minecraft:random_chance"
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:item",
           "name": "growsseth:fragment_ballata_del_respawn"
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:air"
         }
       ],
       "rolls": 1.0

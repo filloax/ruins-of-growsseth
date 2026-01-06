@@ -2,12 +2,10 @@ package com.ruslan.growsseth.data
 
 import net.minecraft.core.Holder
 import net.minecraft.core.HolderLookup
-import net.minecraft.world.item.Items
 import net.minecraft.world.item.alchemy.Potion
 import net.minecraft.world.level.storage.loot.LootPool
 import net.minecraft.world.level.storage.loot.LootPool.lootPool
 import net.minecraft.world.level.storage.loot.LootTable
-import net.minecraft.world.level.storage.loot.entries.LootItem.lootTableItem
 import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer
 import net.minecraft.world.level.storage.loot.entries.NestedLootTable.inlineLootTable
 import net.minecraft.world.level.storage.loot.functions.EnchantRandomlyFunction
@@ -16,13 +14,14 @@ import net.minecraft.world.level.storage.loot.functions.SetEnchantmentsFunction
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction
 import net.minecraft.world.level.storage.loot.functions.SetItemDamageFunction
 import net.minecraft.world.level.storage.loot.functions.SetPotionFunction
+import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue.exactly
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider
 
-fun itemOrAir(item: LootPoolSingletonContainer.Builder<*>, airWeight: Int, poolRolls: Float = 1f): LootPool.Builder = lootPool()
-    .setRolls(exactly(poolRolls))
+/** Used to give an item a random chance of appearing in a loot table */
+fun randomChance(item: LootPoolSingletonContainer.Builder<*>, chanceToAppear: Float): LootPool.Builder = lootPool()
+    .conditionally(LootItemRandomChanceCondition.randomChance(chanceToAppear).build())
     .add(item)
-    .add(lootTableItem(Items.AIR).setWeight(airWeight))
 
 fun lootPoolSingleRoll(): LootPool.Builder = lootPool().setRolls(exactly(1f))
 
