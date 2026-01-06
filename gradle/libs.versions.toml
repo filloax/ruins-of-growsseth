@@ -24,7 +24,9 @@ cobblemon = "1.7.1+1.21.1"
 rctapi = "1.21.1-0.14.4" # only used for prop replacement in mod json files
 rctapi-neoforge = "7257753"
 rctapi-fabric = "7257754"
-megashowdown = "1.4.4+1.7.1+1.21.1" # only used for prop replacement in mod json files
+megashowdown = "1.5+1.7.1+1.21.1" # only used for prop replacement in mod json files
+megashowdown-fabric = "xcwqvGEd" # only used for datagen
+architectury-fabric = "13.0.8+fabric" # only used for datagen (for mega showdown)
 endremastered = "6.0.2"
 endremastered-neoforge = "aqYxfNAS"
 
@@ -77,6 +79,10 @@ rctapi-fabric = { group = "curse.maven", name = "radical-cobblemon-trainers-api-
 rctapi-neoforge = { group = "curse.maven", name = "radical-cobblemon-trainers-api-1152792", version.ref = "rctapi-neoforge" }
 cobblemon-fabric = { group = "com.cobblemon", name = "fabric", version.ref = "cobblemon" }
 cobblemon-neoforge = { group = "com.cobblemon", name = "neoforge", version.ref = "cobblemon" }
+# only needed in fabric for datagen
+megashowdown-fabric = { group = "maven.modrinth", name = "cobblemon-mega-showdown", version.ref = "megashowdown-fabric" }
+# only needed in fabric for datagen
+architectury-fabric = { group = "maven.modrinth", name = "architectury-api", version.ref = "architectury-fabric" }
 endremastered = { group = "maven.modrinth", name = "endrem", version.ref = "endremastered" }
 endremastered-neoforge = { group = "maven.modrinth", name = "endrem", version.ref = "endremastered-neoforge" }
 
