@@ -3,29 +3,32 @@
   "pools": [
     {
       "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "chance": 0.33,
+          "condition": "minecraft:random_chance"
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:item",
           "name": "growsseth:disc_abbandonati"
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:air",
-          "weight": 2
         }
       ],
       "rolls": 1.0
     },
     {
       "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "chance": 0.5,
+          "condition": "minecraft:random_chance"
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:item",
           "name": "growsseth:fragment_ballata_del_respawn"
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:air"
         }
       ],
       "rolls": 1.0
