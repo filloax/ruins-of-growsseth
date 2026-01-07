@@ -1,8 +1,10 @@
 package com.ruslan.growsseth.data
 
 import com.cobblemon.mod.common.CobblemonItems
+import com.cobblemon.mod.common.api.tags.CobblemonItemTags
 import com.github.yajatkaul.mega_showdown.item.MegaShowdownItems
 import com.ruslan.growsseth.GrowssethLootTables
+import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.compat.data.OptionalLootItemTags
 import com.ruslan.growsseth.item.GrowssethItems
 import dev.architectury.registry.registries.RegistrySupplier
@@ -10,14 +12,19 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
 import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableProvider
 import net.minecraft.core.HolderLookup
 import net.minecraft.resources.ResourceKey
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.ItemLike
+import net.minecraft.world.level.storage.loot.LootPool
+import net.minecraft.world.level.storage.loot.LootPool.lootPool
 import net.minecraft.world.level.storage.loot.LootTable
 import net.minecraft.world.level.storage.loot.LootTable.lootTable
 import net.minecraft.world.level.storage.loot.entries.LootItem.lootTableItem
 import net.minecraft.world.level.storage.loot.entries.TagEntry.expandTag
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue.exactly
+import net.minecraft.world.level.storage.loot.providers.number.NumberProvider
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator.between
 import java.util.concurrent.CompletableFuture
 import java.util.function.BiConsumer
@@ -45,317 +52,470 @@ class ModCompatMiscLootTableProvider(output: FabricDataOutput, val registries: C
 }
 
 class ModCompatStructureLootTableGeneration(val registries: CompletableFuture<HolderLookup.Provider>, val optionalLootItemTags: OptionalLootItemTags) {
+    companion object {
+        private const val CHANCE_RARE = 1f/2
+        private const val CHANCE_RARER = 1f/3
+        private const val CHANCE_RAREST = 1f/10
+
+        // avoid depending on too many mods
+        private val BOTTLE_CAP_SILVER = ResourceLocation.fromNamespaceAndPath("obc", "bottle_cap")
+        private val BOTTLE_CAP_GOLD = ResourceLocation.fromNamespaceAndPath("obc", "bottle_cap_gold")
+        private val TMCRAFT_BLANK_DISC_COPPER = ResourceLocation.fromNamespaceAndPath("tmcraft", "copper_blank_disc")
+        private val TMCRAFT_BLANK_DISC_IRON = ResourceLocation.fromNamespaceAndPath("tmcraft", "iron_blank_disc")
+        private val TMCRAFT_BLANK_DISC_GOLD = ResourceLocation.fromNamespaceAndPath("tmcraft", "gold_blank_disc")
+        private val TMCRAFT_BLANK_DISC_DIAMOND = ResourceLocation.fromNamespaceAndPath("tmcraft", "diamond_blank_disc")
+        private val TMCRAFT_BLANK_DISC_EMERALD = ResourceLocation.fromNamespaceAndPath("tmcraft", "emerald_blank_disc")
+        private val TMCRAFT_BLANK_DISC_NETHERITE = ResourceLocation.fromNamespaceAndPath("tmcraft", "netherite_blank_disc")
+        private val SIMPLETMS_BLANK_TR = ResourceLocation.fromNamespaceAndPath("simpletms", "tr_blank")
+        private val SIMPLETMS_BLANK_TM = ResourceLocation.fromNamespaceAndPath("simpletms", "tm_blank")
+    }
+
     fun generateForgeLoot(): LootTable {
         return lootTable()
-            .withPool(lootPoolSingleRoll()
-                .add(optLootItem(CobblemonItems.HEAVY_BALL).count(between(5f, 15f)).setWeight(10))
-                .add(optLootItem(CobblemonItems.BLUE_APRICORN).count(between(5f, 20f)).setWeight(10))
-                .add(optLootItem(CobblemonItems.BLACK_APRICORN).count(between(5f, 20f)).setWeight(10))
-                .add(optLootItem(CobblemonItems.METAL_COAT).setWeight(2))
-                .add(optLootItem(CobblemonItems.BLACK_AUGURITE).setWeight(2))
-                .add(optLootItem(CobblemonItems.PROTECTOR).setWeight(2))
-                .add(optLootItem(CobblemonItems.AUSPICIOUS_ARMOR).setWeight(2))
-                .add(optLootItem(CobblemonItems.MALICIOUS_ARMOR).setWeight(2))
-                .add(optLootItem(CobblemonItems.SHELL_HELMET).setWeight(2))
-                .add(optLootItem(CobblemonItems.METAL_ALLOY).setWeight(2))
-                .add(optLootItem(CobblemonItems.STEEL_GEM).count(between(1f, 2f)).setWeight(2))
-                .add(optLootItem(CobblemonItems.UPGRADE).setWeight(10)) // Smithing Template (move upgrade)? assuming Upgrade is what they meant
-//                .add(optLootItem(CobblemonItems.SILVER_BOTTLE_CAP).setWeight(10))
-//                .add(optLootItem(CobblemonItems.GOLD_BOTTLE_CAP).setWeight(2))
+            .withPool(singleItemPool(CobblemonItems.HEAVY_BALL, between(2f, 3f), 2, 5))
+            .withPool(lootPool()
+                .setRolls(between(2f, 6f))
+                .add(optLootItem(CobblemonItems.BLUE_APRICORN).count(between(2f, 4f)))
+                .add(optLootItem(CobblemonItems.BLACK_APRICORN).count(between(2f, 4f)))
             )
+            .withPool(randomChancePool(CHANCE_RARE,
+                optLootItem(CobblemonItems.METAL_COAT),
+                optLootItem(CobblemonItems.METAL_COAT),
+                optLootItem(CobblemonItems.BLACK_AUGURITE),
+                optLootItem(CobblemonItems.PROTECTOR),
+                optLootItem(CobblemonItems.AUSPICIOUS_ARMOR),
+                optLootItem(CobblemonItems.MALICIOUS_ARMOR),
+                optLootItem(CobblemonItems.SHELL_HELMET),
+                optLootItem(CobblemonItems.METAL_ALLOY),
+                ))
+            .withPool(lootPoolSingleRoll().add(optLootItem(BOTTLE_CAP_SILVER)))
+            .withPool(randomChancePool(CHANCE_RARE, optLootItem(BOTTLE_CAP_GOLD)))
+            // TODO: smithing template move upgrade
             .build()
     }
 
     fun generateForgeSecretLoot(): LootTable {
         return lootTable()
-            .withPool(lootPoolSingleRoll()
-                .add(optLootItem(CobblemonItems.RELIC_COIN).setWeight(10))
-//                .add(optLootItem(CobblemonItems.GOLD_GILDED_CHEST).setWeight(2)) // Gold Blank Disk?
-                .add(optLootItem(MegaShowdownItems.WISHING_STAR).setWeight(10))
-            )
-            .withPool(lootPoolSingleRoll()
-                .add(optLootItem(MegaShowdownItems.FLAME_PLATE))
-                .add(optLootItem(MegaShowdownItems.SPLASH_PLATE))
-                .add(optLootItem(MegaShowdownItems.ZAP_PLATE))
-                .add(optLootItem(MegaShowdownItems.MEADOW_PLATE))
-                .add(optLootItem(MegaShowdownItems.ICICLE_PLATE))
-                .add(optLootItem(MegaShowdownItems.FIST_PLATE))
-                .add(optLootItem(MegaShowdownItems.TOXIC_PLATE))
-                .add(optLootItem(MegaShowdownItems.EARTH_PLATE))
-                .add(optLootItem(MegaShowdownItems.SKY_PLATE))
-                .add(optLootItem(MegaShowdownItems.MIND_PLATE))
-                .add(optLootItem(MegaShowdownItems.INSECT_PLATE))
-                .add(optLootItem(MegaShowdownItems.STONE_PLATE))
-                .add(optLootItem(MegaShowdownItems.SPOOKY_PLATE))
-                .add(optLootItem(MegaShowdownItems.DRACO_PLATE))
-                .add(optLootItem(MegaShowdownItems.DREAD_PLATE))
-                .add(optLootItem(MegaShowdownItems.IRON_PLATE))
-                .add(optLootItem(MegaShowdownItems.PIXIE_PLATE))
-            )
+            .withPool(singleItemPool(TMCRAFT_BLANK_DISC_IRON, between(1f, 2f), 1, 2))
+            .withPool(singleItemPool(SIMPLETMS_BLANK_TR, between(1f, 2f), 1, 2))
+            .withPool(singleItemPool(TMCRAFT_BLANK_DISC_GOLD, exactly(1f), 1, 2))
+            .withPool(randomChancePool(CHANCE_RARE, optLootItem(TMCRAFT_BLANK_DISC_DIAMOND)))
+            .withPool(randomChancePool(CHANCE_RARER, optLootItem(TMCRAFT_BLANK_DISC_NETHERITE)))
+            .withPool(randomChancePool(CHANCE_RARER, optLootItem(SIMPLETMS_BLANK_TM)))
+            .withPool(randomArceusPlatePool().setRolls(between(1f, 3f)))
+            .withPool(lootPoolSingleRoll().add(optLootItem(MegaShowdownItems.WISHING_STAR)))
             .build()
     }
 
     fun generateBeekeeperLoot(): LootTable {
         return lootTable()
+            // TODO: Mild Honey Curry 1-2
+            .withPool(singleItemPool(CobblemonItems.NET_BALL, between(2f, 3f), 2, 5))
+            .withPool(lootPoolSingleRoll().add(optLootItem(CobblemonItems.FLOWER_SWEET)))
+            .withPool(randomBerryPool(between(3f, 7f), between(2f, 3f)))
+            // reduced chance from base doc as there are many barrels
             .withPool(lootPoolSingleRoll()
-                .add(optLootItem(CobblemonItems.NET_BALL).count(between(5f, 15f)).setWeight(10))
-                .add(optLootItem(CobblemonItems.FLOWER_SWEET).setWeight(10))
-                .add(optLootItem(CobblemonItems.ORAN_BERRY).count(between(10f, 20f)).setWeight(10))
-                .add(optLootItem(CobblemonItems.SITRUS_BERRY).count(between(10f, 20f)).setWeight(10))
-                .add(optLootItem(CobblemonItems.BUG_GEM).count(between(1f, 2f)).setWeight(2))
-                .add(optLootItem(MegaShowdownItems.MAX_HONEY).setWeight(2))
-                .add(optLootItem(MegaShowdownItems.DYNAMAX_CANDY).count(between(1f, 3f)).setWeight(2))
+                .add(optLootItem(CobblemonItems.BUG_GEM).count(between(1f, 2f)))
+                .withRandomChance(CHANCE_RARER)
+            )
+            .withPool(lootPoolSingleRoll().add(optLootItem(MegaShowdownItems.MAX_HONEY))
+                .withRandomChance(CHANCE_RAREST)
+            )
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(MegaShowdownItems.DYNAMAX_CANDY).count(between(1f, 3f)))
+                .withRandomChance(CHANCE_RAREST)
             )
             .build()
     }
 
     fun generateCaveCampLoot(): LootTable {
         return lootTable()
+            .withPool(singleItemPool(CobblemonItems.BIG_ROOT, between(2f, 3f), 5, 8))
+            .withPool(singleItemPool(CobblemonItems.ENERGY_ROOT, exactly(2f), 2, 5))
+            .withPool(singleItemPool(CobblemonItems.DUSK_BALL, between(2f, 3f), 2, 5))
             .withPool(lootPoolSingleRoll()
-                .add(optLootItem(CobblemonItems.BIG_ROOT).count(between(10f, 20f)).setWeight(10))
-                .add(optLootItem(CobblemonItems.ENERGY_ROOT).count(between(5f, 10f)).setWeight(10))
-                .add(optLootItem(CobblemonItems.DUSK_BALL).count(between(5f, 15f)).setWeight(10))
-                .add(optLootItem(CobblemonItems.ROCK_GEM).count(between(1f, 2f)).setWeight(2))
-                .add(optLootItem(CobblemonItems.HARD_STONE).setWeight(2))
-                .add(optLootItem(CobblemonItems.OVAL_STONE).setWeight(2))
-                .add(optLootItem(CobblemonItems.EVERSTONE).setWeight(2))
-                .add(optLootItem(CobblemonItems.EVIOLITE).setWeight(2))
-                .add(optLootItem(CobblemonItems.HEAT_ROCK).setWeight(2))
-                .add(optLootItem(CobblemonItems.ICY_ROCK).setWeight(2))
-                .add(optLootItem(CobblemonItems.DAMP_ROCK).setWeight(2))
-                .add(optLootItem(CobblemonItems.SMOOTH_ROCK).setWeight(2))
+                .add(optLootItem(CobblemonItems.ROCK_GEM).count(between(1f, 2f)))
+                .withRandomChance(CHANCE_RARE)
             )
+            .withPool(randomChancePool(CHANCE_RARE,
+                optLootItem(CobblemonItems.HARD_STONE),
+                optLootItem(CobblemonItems.OVAL_STONE),
+                optLootItem(CobblemonItems.EVERSTONE),
+                optLootItem(CobblemonItems.EVIOLITE),
+                ))
+            .withPool(randomChancePool(CHANCE_RARE,
+                optLootItem(CobblemonItems.HEAT_ROCK),
+                optLootItem(CobblemonItems.ICY_ROCK),
+                optLootItem(CobblemonItems.DAMP_ROCK),
+                optLootItem(CobblemonItems.SMOOTH_ROCK),
+                ))
             .build()
     }
 
     fun generateConduitChurchTreasureLoot(): LootTable {
         return lootTable()
             .withPool(lootPoolSingleRoll()
-                .add(optLootItem(MegaShowdownItems.SPARKLING_STONE_DARK))
+                .add(optLootItem(CobblemonItems.WATER_GEM).count(between(1f, 2f)))
             )
+            .withPool(lootPoolSingleRoll().add(optLootItem(CobblemonItems.KINGS_ROCK)))
             .withPool(lootPoolSingleRoll()
-                .add(optLootItem(CobblemonItems.WATER_GEM).count(between(1f, 2f)).setWeight(10))
-                .add(optLootItem(CobblemonItems.KINGS_ROCK).setWeight(10))
-                .add(optLootItem(CobblemonItems.EXPERIENCE_CANDY_L).count(between(5f, 10f)).setWeight(10))
-                .add(optLootItem(CobblemonItems.EXPERIENCE_CANDY_XL).count(between(2f, 5f)).setWeight(2))
-                .add(optLootItem(CobblemonItems.POKEROD_SMITHING_TEMPLATE).setWeight(2))
-                .add(optLootItem(CobblemonItems.ABILITY_PATCH).setWeight(1))
-                .add(optLootItem(MegaShowdownItems.BLANK_Z).setWeight(10))
+                .add(optLootItem(CobblemonItems.EXPERIENCE_CANDY_L).count(between(5f, 10f)))
             )
+            .withPool(randomChancePool(CHANCE_RARE,
+                optLootItem(CobblemonItems.EXPERIENCE_CANDY_XL).count(between(2f, 5f))
+            ))
+            .withPool(randomChancePool(CHANCE_RARE, optLootItem(CobblemonItems.POKEROD_SMITHING_TEMPLATE)))
+            .withPool(randomChancePool(CHANCE_RARER, optLootItem(CobblemonItems.ABILITY_PATCH)))
+            .withPool(lootPoolSingleRoll().add(optLootItem(MegaShowdownItems.SPARKLING_STONE_DARK)))
+            .withPool(lootPoolSingleRoll().add(optLootItem(MegaShowdownItems.BLANK_Z)))
             .build()
     }
 
     fun generateConduitChurchLoot(): LootTable {
         return lootTable()
-            .withPool(lootPoolSingleRoll()
-                .add(optLootItem(CobblemonItems.DIVE_BALL).count(between(5f, 15f)).setWeight(10))
-                .add(optLootItem(CobblemonItems.MYSTIC_WATER).setWeight(2))
-                .add(optLootItem(CobblemonItems.WATER_STONE).setWeight(2))
-                .add(optLootItem(CobblemonItems.DRAGON_SCALE).setWeight(2))
-                .add(optLootItem(CobblemonItems.PRISM_SCALE).setWeight(2))
-                .add(optLootItem(CobblemonItems.DEEP_SEA_TOOTH).setWeight(2))
-                .add(optLootItem(CobblemonItems.DEEP_SEA_SCALE).setWeight(2))
-                .add(optLootItem(CobblemonItems.HELIX_FOSSIL).setWeight(1))
-                .add(optLootItem(CobblemonItems.DOME_FOSSIL).setWeight(1))
-                .add(optLootItem(CobblemonItems.COVER_FOSSIL).setWeight(1))
-//                .add(optLootItem(CobblemonItems.SILVER_BOTTLE_CAP).setWeight(2))
-//                .add(optLootItem(CobblemonItems.GOLD_BOTTLE_CAP).setWeight(1))
-            )
+            .withPool(singleItemPool(CobblemonItems.DIVE_BALL, between(2f, 3f), 2, 5))
+            .withPool(randomChancePool(CHANCE_RARE, optLootItem(CobblemonItems.MYSTIC_WATER)))
+            .withPool(randomChancePool(CHANCE_RARE, optLootItem(CobblemonItems.WATER_STONE)))
+            .withPool(randomChancePool(CHANCE_RARE,
+                optLootItem(CobblemonItems.DRAGON_SCALE),
+                optLootItem(CobblemonItems.PRISM_SCALE),
+                optLootItem(CobblemonItems.DEEP_SEA_TOOTH),
+                optLootItem(CobblemonItems.DEEP_SEA_SCALE)
+            ))
+            .withPool(randomChancePool(CHANCE_RARER,
+                optLootItem(CobblemonItems.HELIX_FOSSIL),
+                optLootItem(CobblemonItems.DOME_FOSSIL),
+                optLootItem(CobblemonItems.COVER_FOSSIL)
+            ))
+            .withPool(randomChancePool(CHANCE_RARE, optLootItem(BOTTLE_CAP_SILVER)))
+            .withPool(randomChancePool(CHANCE_RARER, optLootItem(BOTTLE_CAP_GOLD)))
             .build()
     }
 
     fun generateConduitRuinsLoot(): LootTable {
         return lootTable()
             .withPool(lootPoolSingleRoll()
-                .add(optLootItem(CobblemonItems.KINGS_ROCK).setWeight(10))
-                .add(optLootItem(CobblemonItems.SHELL_BELL).setWeight(10))
-                .add(optLootItem(CobblemonItems.EXPERIENCE_CANDY_L).count(between(5f, 10f)).setWeight(10))
-                .add(optLootItem(CobblemonItems.DIVE_BALL).count(between(5f, 15f)).setWeight(10))
-                .add(optLootItem(CobblemonItems.DRAGON_SCALE).setWeight(2))
-                .add(optLootItem(CobblemonItems.PRISM_SCALE).setWeight(2))
-                .add(optLootItem(CobblemonItems.DEEP_SEA_TOOTH).setWeight(2))
-                .add(optLootItem(CobblemonItems.DEEP_SEA_SCALE).setWeight(2))
-                .add(optLootItem(CobblemonItems.POKEROD_SMITHING_TEMPLATE).setWeight(2))
-                .add(optLootItem(CobblemonItems.WATER_GEM).count(between(1f, 2f)).setWeight(2))
-                .add(optLootItem(MegaShowdownItems.BLANK_Z).setWeight(10))
-                .add(optLootItem(MegaShowdownItems.SPARKLING_STONE_LIGHT).setWeight(2))
-//                .add(optLootItem(CobblemonItems.SILVER_BOTTLE_CAP).setWeight(2))
-//                .add(optLootItem(CobblemonItems.GOLD_BOTTLE_CAP).setWeight(1))
+                .add(optLootItem(CobblemonItems.KINGS_ROCK))
+                .add(optLootItem(CobblemonItems.SHELL_BELL))
             )
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(CobblemonItems.EXPERIENCE_CANDY_L).count(between(5f, 10f)))
+            )
+            .withPool(singleItemPool(CobblemonItems.DIVE_BALL, between(2f, 3f), 2, 5))
+            .withPool(randomChancePool(CHANCE_RARE,
+                optLootItem(CobblemonItems.DRAGON_SCALE),
+                optLootItem(CobblemonItems.PRISM_SCALE),
+                optLootItem(CobblemonItems.DEEP_SEA_TOOTH),
+                optLootItem(CobblemonItems.DEEP_SEA_SCALE)
+            ))
+            .withPool(randomChancePool(CHANCE_RARE,
+                optLootItem(CobblemonItems.POKEROD_SMITHING_TEMPLATE)
+            ))
+            .withPool(randomChancePool(CHANCE_RARE,
+                optLootItem(CobblemonItems.WATER_GEM).count(between(1f, 2f))
+            ))
+            .withPool(lootPoolSingleRoll().add(optLootItem(MegaShowdownItems.BLANK_Z)))
+            .withPool(randomChancePool(CHANCE_RARE, optLootItem(MegaShowdownItems.SPARKLING_STONE_LIGHT)))
+            .withPool(randomChancePool(CHANCE_RARE, optLootItem(BOTTLE_CAP_SILVER)))
+            .withPool(randomChancePool(CHANCE_RARER, optLootItem(BOTTLE_CAP_GOLD)))
             .build()
     }
 
     fun generateEnchantTowerTopLoot(): LootTable {
         return lootTable()
             .withPool(lootPoolSingleRoll()
-                .add(optLootItem(CobblemonItems.EXPERIENCE_CANDY_L).count(between(5f, 10f)).setWeight(10))
-                .add(optLootItem(CobblemonItems.EXPERIENCE_CANDY_XL).count(between(2f, 5f)).setWeight(2))
-                .add(optLootItem(CobblemonItems.RELIC_COIN_POUCH).count(between(2f, 5f)).setWeight(10))
-                .add(optLootItem(CobblemonItems.DRAGON_GEM).count(between(1f, 2f)).setWeight(2))
-                .add(optLootItem(CobblemonItems.FAIRY_GEM).count(between(1f, 2f)).setWeight(2))
-                .add(optLootItem(CobblemonItems.COVERT_CLOAK).setWeight(2))
-                .add(optLootItem(CobblemonItems.CLEAR_AMULET).setWeight(2))
-                .add(optLootItem(CobblemonItems.DAWN_STONE).setWeight(2))
-                .add(optLootItem(CobblemonItems.DUSK_STONE).setWeight(2))
-                .add(optLootItem(CobblemonItems.SHINY_STONE).setWeight(2))
-                .add(optLootItem(CobblemonItems.ABILITY_PATCH).setWeight(1))
-                .add(optLootItem(CobblemonItems.SCROLL_OF_DARKNESS).setWeight(1))
-                .add(optLootItem(CobblemonItems.SCROLL_OF_WATERS).setWeight(1))
+                .add(optLootItem(CobblemonItems.EXPERIENCE_CANDY_L).count(between(5f, 10f)))
             )
+            .withPool(randomChancePool(CHANCE_RARE,
+                optLootItem(CobblemonItems.EXPERIENCE_CANDY_XL).count(between(2f, 5f))
+            ))
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(CobblemonItems.RELIC_COIN_POUCH).count(between(2f, 5f)))
+            )
+            .withPool(randomChancePool(CHANCE_RARE,
+                optLootItem(CobblemonItems.DRAGON_GEM).count(between(1f, 2f))
+            ))
+            .withPool(randomChancePool(CHANCE_RARE,
+                optLootItem(CobblemonItems.FAIRY_GEM).count(between(1f, 2f))
+            ))
+            .withPool(randomChancePool(CHANCE_RARE,
+                optLootItem(CobblemonItems.COVERT_CLOAK),
+                optLootItem(CobblemonItems.CLEAR_AMULET)
+            ))
+            .withPool(randomChancePool(CHANCE_RARE,
+                optLootItem(CobblemonItems.DAWN_STONE),
+                optLootItem(CobblemonItems.DUSK_STONE),
+                optLootItem(CobblemonItems.SHINY_STONE)
+            ))
+            .withPool(randomChancePool(CHANCE_RARER,
+                optLootItem(CobblemonItems.ABILITY_PATCH)
+            ))
+            .withPool(randomChancePool(CHANCE_RAREST,
+                optLootItem(CobblemonItems.SCROLL_OF_DARKNESS),
+                optLootItem(CobblemonItems.SCROLL_OF_WATERS)
+            ))
             .build()
     }
 
     fun generateEnchantTowerTowerLoot(): LootTable {
         return lootTable()
+            .withPool(singleItemPool(CobblemonItems.DREAM_BALL, between(2f, 3f), 2, 3))
             .withPool(lootPoolSingleRoll()
-                .add(optLootItem(CobblemonItems.DREAM_BALL).count(between(5f, 10f)).setWeight(10))
-                .add(optLootItem(CobblemonItems.EXPERIENCE_CANDY_XS).count(between(15f, 20f)).setWeight(10))
-                .add(optLootItem(CobblemonItems.EXPERIENCE_CANDY_S).count(between(15f, 20f)).setWeight(10))
-                .add(optLootItem(CobblemonItems.EXPERIENCE_CANDY_M).count(between(10f, 15f)).setWeight(10))
-                .add(optLootItem(CobblemonItems.EXPERIENCE_CANDY_L).count(between(5f, 10f)).setWeight(2))
-                .add(optLootItem(CobblemonItems.OLD_GATEAU).count(between(1f, 2f)).setWeight(10))
-                .add(optLootItem(CobblemonItems.RELIC_COIN).count(between(5f, 10f)).setWeight(10))
-                .add(optLootItem(CobblemonItems.MENTAL_HERB).setWeight(2))
-                .add(optLootItem(CobblemonItems.CRACKED_POT).setWeight(2))
-                .add(optLootItem(CobblemonItems.UNREMARKABLE_TEACUP).setWeight(2))
-                .add(optLootItem(CobblemonItems.CHIPPED_POT).setWeight(1))
-                .add(optLootItem(CobblemonItems.MASTERPIECE_TEACUP).setWeight(1))
-//                .add(optLootItem(CobblemonItems.SILVER_BOTTLE_CAP).setWeight(2))
-//                .add(optLootItem(CobblemonItems.GOLD_BOTTLE_CAP).setWeight(1))
+                .add(optLootItem(CobblemonItems.EXPERIENCE_CANDY_XS).count(between(15f, 20f)))
             )
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(CobblemonItems.EXPERIENCE_CANDY_S).count(between(15f, 20f)))
+            )
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(CobblemonItems.EXPERIENCE_CANDY_M).count(between(10f, 15f)))
+            )
+            .withPool(randomChancePool(CHANCE_RARE,
+                optLootItem(CobblemonItems.EXPERIENCE_CANDY_L).count(between(5f, 10f))
+            ))
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(CobblemonItems.OLD_GATEAU).count(between(1f, 2f)))
+            )
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(CobblemonItems.RELIC_COIN).count(between(5f, 10f)))
+            )
+            .withPool(randomChancePool(CHANCE_RARE, optLootItem(CobblemonItems.MENTAL_HERB)))
+            .withPool(randomChancePool(CHANCE_RARE,
+                optLootItem(CobblemonItems.CRACKED_POT),
+                optLootItem(CobblemonItems.UNREMARKABLE_TEACUP)
+            ))
+            .withPool(randomChancePool(CHANCE_RARER,
+                optLootItem(CobblemonItems.CHIPPED_POT),
+                optLootItem(CobblemonItems.MASTERPIECE_TEACUP)
+            ))
+            .withPool(randomChancePool(CHANCE_RARE, optLootItem(BOTTLE_CAP_SILVER)))
+            .withPool(randomChancePool(CHANCE_RARER, optLootItem(BOTTLE_CAP_GOLD)))
             .build()
     }
 
     fun generateGolemHouseNormalLoot(): LootTable {
         return lootTable()
-            .withPool(lootPoolSingleRoll()
-                .add(optLootItem(CobblemonItems.FRIEND_BALL).count(between(5f, 15f)).setWeight(10))
-                .add(optLootItem(CobblemonItems.METAL_COAT).setWeight(2))
-                .add(optLootItem(CobblemonItems.METAL_ALLOY).setWeight(2))
-                .add(optLootItem(CobblemonItems.HEAVY_DUTY_BOOTS).setWeight(2))
-                .add(optLootItem(CobblemonItems.SAFETY_GOGGLES).setWeight(2))
-                .add(optLootItem(CobblemonItems.SOOTHE_BELL).setWeight(2))
-                .add(optLootItem(CobblemonItems.ROCKY_HELMET).setWeight(2))
-//                .add(optLootItem(CobblemonItems.SILVER_BOTTLE_CAP).setWeight(2))
-            )
+            .withPool(singleItemPool(CobblemonItems.FRIEND_BALL, between(2f, 3f), 2, 5))
+            .withPool(randomChancePool(CHANCE_RARE,
+                optLootItem(CobblemonItems.METAL_COAT),
+                optLootItem(CobblemonItems.METAL_ALLOY)
+            ))
+            .withPool(randomChancePool(CHANCE_RARE,
+                optLootItem(CobblemonItems.HEAVY_DUTY_BOOTS),
+                optLootItem(CobblemonItems.SAFETY_GOGGLES),
+                optLootItem(CobblemonItems.SOOTHE_BELL),
+                optLootItem(CobblemonItems.ROCKY_HELMET)
+            ))
+            .withPool(randomChancePool(CHANCE_RARE, optLootItem(BOTTLE_CAP_SILVER)))
             .build()
     }
 
     fun generateGolemHouseZombieLoot(): LootTable {
         return lootTable()
-            .withPool(lootPoolSingleRoll()
-                .add(optLootItem(CobblemonItems.MOON_BALL).count(between(5f, 15f)).setWeight(10))
-                .add(optLootItem(CobblemonItems.METAL_COAT).setWeight(2))
-                .add(optLootItem(CobblemonItems.METAL_ALLOY).setWeight(2))
-                .add(optLootItem(CobblemonItems.HEAVY_DUTY_BOOTS).setWeight(2))
-                .add(optLootItem(CobblemonItems.BLACK_SLUDGE).setWeight(2))
-                .add(optLootItem(CobblemonItems.SAFETY_GOGGLES).setWeight(2))
-                .add(optLootItem(CobblemonItems.ROCKY_HELMET).setWeight(2))
-//                .add(optLootItem(CobblemonItems.SILVER_BOTTLE_CAP).setWeight(2))
-            )
+            .withPool(singleItemPool(CobblemonItems.MOON_BALL, between(2f, 3f), 2, 5))
+            .withPool(randomChancePool(CHANCE_RARE,
+                optLootItem(CobblemonItems.METAL_COAT),
+                optLootItem(CobblemonItems.METAL_ALLOY)
+            ))
+            .withPool(randomChancePool(CHANCE_RARE,
+                optLootItem(CobblemonItems.HEAVY_DUTY_BOOTS),
+                optLootItem(CobblemonItems.BLACK_SLUDGE),
+                optLootItem(CobblemonItems.SAFETY_GOGGLES),
+                optLootItem(CobblemonItems.ROCKY_HELMET)
+            ))
+            .withPool(randomChancePool(CHANCE_RARE, optLootItem(BOTTLE_CAP_SILVER)))
             .build()
     }
 
     fun generateNoteblockLabBasementLoot(): LootTable {
         return lootTable()
+            .withPool(singleItemPool(CobblemonItems.TIMER_BALL, between(2f, 3f), 2, 3))
             .withPool(lootPoolSingleRoll()
-                .add(optLootItem(CobblemonItems.TIMER_BALL).count(between(5f, 10f)).setWeight(10))
-                .add(optLootItem(CobblemonItems.THROAT_SPRAY).setWeight(10))
-                .add(optLootItem(CobblemonItems.METRONOME).setWeight(10))
-//                .add(optLootItem(CobblemonItems.TUMBLESTONE).count(between(2f, 3f)).setWeight(10)) // Copper Blank Disk? mapping to Tumblestone
-//                .add(optLootItem(CobblemonItems.IRON_TUMBLESTONE).count(between(1f, 2f)).setWeight(10)) // Iron Blank Disk
-                .add(optLootItem(MegaShowdownItems.BLANK_Z).setWeight(2))
+                .add(optLootItem(CobblemonItems.THROAT_SPRAY))
+                .add(optLootItem(CobblemonItems.METRONOME))
             )
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(TMCRAFT_BLANK_DISC_COPPER).count(between(2f, 3f)))
+            )
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(TMCRAFT_BLANK_DISC_IRON).count(between(1f, 2f)))
+                .add(optLootItem(SIMPLETMS_BLANK_TR).count(between(1f, 2f)))
+            )
+            .withPool(randomChancePool(CHANCE_RARE,
+                optLootItem(TMCRAFT_BLANK_DISC_GOLD),
+            ))
+            .withPool(randomChancePool(CHANCE_RARER,
+                optLootItem(TMCRAFT_BLANK_DISC_EMERALD),
+                        optLootItem(SIMPLETMS_BLANK_TM)
+            ))
+            .withPool(randomChancePool(CHANCE_RARER, optLootItem(TMCRAFT_BLANK_DISC_DIAMOND)))
+            .withPool(randomChancePool(CHANCE_RARE, optLootItem(MegaShowdownItems.BLANK_Z)))
             .build()
     }
 
     fun generateNoteblockLabHouseLoot(): LootTable {
         return lootTable()
-            .withPool(lootPoolSingleRoll()
-                .add(optLootItem(CobblemonItems.NORMAL_GEM).count(between(1f, 2f)).setWeight(2))
-                .add(optLootItem(CobblemonItems.FAIRY_GEM).count(between(1f, 2f)).setWeight(2))
-                .add(optLootItem(CobblemonItems.DESTINY_KNOT).setWeight(10))
-                .add(optLootItem(CobblemonItems.CLEAR_AMULET).setWeight(1))
-                .add(optLootItem(CobblemonItems.LUCKY_EGG).setWeight(1))
-//                .add(optLootItem(CobblemonItems.SILVER_BOTTLE_CAP).setWeight(2))
-            )
+            .withPool(randomChancePool(CHANCE_RARE,
+                optLootItem(CobblemonItems.NORMAL_GEM).count(between(1f, 2f))
+            ))
+            .withPool(randomChancePool(CHANCE_RARE,
+                optLootItem(CobblemonItems.FAIRY_GEM).count(between(1f, 2f))
+            ))
+            .withPool(lootPoolSingleRoll().add(optLootItem(CobblemonItems.DESTINY_KNOT)))
+            .withPool(randomChancePool(CHANCE_RARER, optLootItem(CobblemonItems.CLEAR_AMULET)))
+            .withPool(randomChancePool(CHANCE_RARER, optLootItem(CobblemonItems.LUCKY_EGG)))
+            .withPool(randomChancePool(CHANCE_RARE, optLootItem(BOTTLE_CAP_SILVER)))
             .build()
     }
 
     fun generateNoteblockShipBarrelsLoot(): LootTable {
         return lootTable()
+            .withPool(randomBerryPool(between(2f, 3f), between(2f, 5f)))
+            .withPool(randomChancePool(CHANCE_RARE, optLootItem(CobblemonItems.LEFTOVERS)))
             .withPool(lootPoolSingleRoll()
-                .add(optLootItem(CobblemonItems.ORAN_BERRY).count(between(5f, 15f)).setWeight(10))
-                .add(optLootItem(CobblemonItems.SITRUS_BERRY).count(between(5f, 15f)).setWeight(10))
-                .add(optLootItem(CobblemonItems.LEFTOVERS).setWeight(2))
-                .add(optLootItem(CobblemonItems.MEDICINAL_LEEK).count(between(5f, 10f)).setWeight(10))
-                .add(optLootItem(CobblemonItems.REVIVAL_HERB).count(between(5f, 10f)).setWeight(10))
-                .add(optLootItem(CobblemonItems.PEP_UP_FLOWER).count(between(1f, 5f)).setWeight(10))
-                .add(optLootItem(CobblemonItems.HEARTY_GRAINS).count(between(5f, 10f)).setWeight(10))
-                .add(optLootItem(CobblemonItems.ANCIENT_WING_BALL).count(between(1f, 5f)).setWeight(10))
+                .add(optLootItem(CobblemonItems.MEDICINAL_LEEK).count(between(5f, 10f)))
+            )
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(CobblemonItems.REVIVAL_HERB).count(between(5f, 10f)))
+            )
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(CobblemonItems.PEP_UP_FLOWER).count(between(1f, 5f)))
+            )
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(CobblemonItems.HEARTY_GRAINS).count(between(5f, 10f)))
+            )
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(CobblemonItems.ANCIENT_WING_BALL).count(between(1f, 5f)))
             )
             .build()
     }
 
     fun generateNoteblockShipChestLoot(): LootTable {
         return lootTable()
+            .withPool(randomChancePool(CHANCE_RARE,
+                optLootItem(CobblemonItems.FLYING_GEM).count(between(1f, 2f))
+            ))
             .withPool(lootPoolSingleRoll()
-                .add(optLootItem(CobblemonItems.FLYING_GEM).count(between(1f, 2f)).setWeight(2))
-                .add(optLootItem(CobblemonItems.AIR_BALLOON).setWeight(10))
-                .add(optLootItem(CobblemonItems.THROAT_SPRAY).setWeight(10))
-                .add(optLootItem(CobblemonItems.METRONOME).setWeight(10))
-                .add(optLootItem(CobblemonItems.SHARP_BEAK).setWeight(10))
-                .add(optLootItem(MegaShowdownItems.BLANK_Z).setWeight(2))
+                .add(optLootItem(CobblemonItems.AIR_BALLOON))
+                .add(optLootItem(CobblemonItems.THROAT_SPRAY))
+                .add(optLootItem(CobblemonItems.METRONOME))
             )
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(CobblemonItems.SHARP_BEAK))
+            )
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(TMCRAFT_BLANK_DISC_IRON).count(between(1f, 2f)))
+                .add(optLootItem(SIMPLETMS_BLANK_TR).count(between(1f, 2f)))
+            )
+            .withPool(lootPoolSingleRoll().add(optLootItem(TMCRAFT_BLANK_DISC_GOLD)))
+            .withPool(randomChancePool(CHANCE_RARE,
+                optLootItem(TMCRAFT_BLANK_DISC_EMERALD),
+                    optLootItem(SIMPLETMS_BLANK_TM),
+            ))
+            .withPool(randomChancePool(CHANCE_RARE, optLootItem(TMCRAFT_BLANK_DISC_DIAMOND)))
+            .withPool(randomChancePool(CHANCE_RARE, optLootItem(MegaShowdownItems.BLANK_Z)))
             .build()
     }
 
     fun generateResearcherTentLabLoot(): LootTable {
         return lootTable()
+            .withPool(lootPoolSingleRoll().add(optLootItem(MegaShowdownItems.ZYGARDE_CELL)))
             .withPool(lootPoolSingleRoll()
-                .add(optLootItem(MegaShowdownItems.ZYGARDE_CELL).setWeight(10)) // Assured 1 in separate pool later? 
+                .add(optLootItem(CobblemonItems.ANCIENT_POKE_BALL).count(between(5f, 10f)))
             )
             .withPool(lootPoolSingleRoll()
-                .add(optLootItem(CobblemonItems.ANCIENT_POKE_BALL).count(between(5f, 10f)).setWeight(10))
-                .add(optLootItem(CobblemonItems.ANCIENT_GREAT_BALL).count(between(5f, 10f)).setWeight(10))
-                .add(optLootItem(CobblemonItems.ANCIENT_ULTRA_BALL).count(between(1f, 5f)).setWeight(10))
-                .add(optLootItem(MegaShowdownItems.ZYGARDE_CELL).count(between(1f, 2f)).setWeight(10))
-                .add(optLootItem(MegaShowdownItems.ZYGARDE_CORE).setWeight(2))
-                .add(optLootItem(CobblemonItems.FLAME_ORB).setWeight(10))
-                .add(optLootItem(CobblemonItems.TOXIC_ORB).setWeight(10))
-                .add(optLootItem(CobblemonItems.LIFE_ORB).setWeight(2))
-                .add(optLootItem(CobblemonItems.WIDE_LENS).setWeight(10))
-                .add(optLootItem(CobblemonItems.WISE_GLASSES).setWeight(10))
+                .add(optLootItem(CobblemonItems.ANCIENT_GREAT_BALL).count(between(5f, 10f)))
+            )
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(CobblemonItems.ANCIENT_ULTRA_BALL).count(between(1f, 5f)))
+            )
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(MegaShowdownItems.ZYGARDE_CELL).count(between(1f, 2f)))
+            )
+            .withPool(randomChancePool(CHANCE_RARE, optLootItem(MegaShowdownItems.ZYGARDE_CORE)))
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(CobblemonItems.FLAME_ORB))
+                .add(optLootItem(CobblemonItems.TOXIC_ORB))
+            )
+            .withPool(randomChancePool(CHANCE_RARE,
+                optLootItem(CobblemonItems.LIFE_ORB)
+            ))
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(CobblemonItems.WIDE_LENS))
+                .add(optLootItem(CobblemonItems.WISE_GLASSES))
             )
             .build()
     }
 
     fun generateResearcherTentTentLoot(): LootTable {
         return lootTable()
+            .withPool(randomChancePool(CHANCE_RARER,
+                expandTag(CobblemonItemTags.FOSSILS)
+            ))
             .withPool(lootPoolSingleRoll()
-                .add(optLootItem(CobblemonItems.ARMOR_FOSSIL).setWeight(1))
-                .add(optLootItem(CobblemonItems.CLAW_FOSSIL).setWeight(1))
-                .add(optLootItem(CobblemonItems.COVER_FOSSIL).setWeight(1))
-                .add(optLootItem(CobblemonItems.DOME_FOSSIL).setWeight(1))
-                .add(optLootItem(CobblemonItems.HELIX_FOSSIL).setWeight(1))
-                .add(optLootItem(CobblemonItems.JAW_FOSSIL).setWeight(1))
-                .add(optLootItem(CobblemonItems.PLUME_FOSSIL).setWeight(1))
-                .add(optLootItem(CobblemonItems.ROOT_FOSSIL).setWeight(1))
-                .add(optLootItem(CobblemonItems.SAIL_FOSSIL).setWeight(1))
-                .add(optLootItem(CobblemonItems.SKULL_FOSSIL).setWeight(1))
-                .add(optLootItem(CobblemonItems.RELIC_COIN).count(between(5f, 15f)).setWeight(10))
-                .add(optLootItem(CobblemonItems.RELIC_COIN_POUCH).count(between(1f, 2f)).setWeight(2))
-                .add(optLootItem(CobblemonItems.NORMAL_GEM).setWeight(2))
-                .add(optLootItem(CobblemonItems.FIRE_GEM).setWeight(2))
-                .add(optLootItem(CobblemonItems.WATER_GEM).setWeight(2))
-                .add(optLootItem(CobblemonItems.BLUNDER_POLICY).setWeight(2))
-                .add(optLootItem(CobblemonItems.WEAKNESS_POLICY).setWeight(2))
-//                .add(optLootItem(CobblemonItems.SILVER_BOTTLE_CAP).setWeight(2))
-                .add(optLootItem(MegaShowdownItems.TERA_ORB).setWeight(1))
+                .add(optLootItem(CobblemonItems.RELIC_COIN).count(between(5f, 15f)))
             )
+            .withPool(randomChancePool(CHANCE_RARE,
+                optLootItem(CobblemonItems.RELIC_COIN_POUCH).count(between(1f, 2f))
+            ))
+            .withPool(randomChancePool(CHANCE_RARE,
+                expandTag(CobblemonItemTags.TYPE_GEMS)
+            ))
+            .withPool(randomChancePool(CHANCE_RARE,
+                optLootItem(CobblemonItems.BLUNDER_POLICY),
+                optLootItem(CobblemonItems.WEAKNESS_POLICY)
+            ))
+            .withPool(randomChancePool(CHANCE_RARE,
+                optLootItem(BOTTLE_CAP_SILVER)
+            ))
+            .withPool(randomChancePool(CHANCE_RARER,
+                optLootItem(MegaShowdownItems.TERA_ORB)
+            ))
             .build()
+    }
+
+    private fun randomArceusPlatePool() = lootPoolSingleRoll().also { pool ->
+        listOf(
+            MegaShowdownItems.FLAME_PLATE,
+            MegaShowdownItems.SPLASH_PLATE,
+            MegaShowdownItems.ZAP_PLATE,
+            MegaShowdownItems.MEADOW_PLATE,
+            MegaShowdownItems.ICICLE_PLATE,
+            MegaShowdownItems.FIST_PLATE,
+            MegaShowdownItems.TOXIC_PLATE,
+            MegaShowdownItems.EARTH_PLATE,
+            MegaShowdownItems.SKY_PLATE,
+            MegaShowdownItems.MIND_PLATE,
+            MegaShowdownItems.INSECT_PLATE,
+            MegaShowdownItems.STONE_PLATE,
+            MegaShowdownItems.SPOOKY_PLATE,
+            MegaShowdownItems.DRACO_PLATE,
+            MegaShowdownItems.DREAD_PLATE,
+            MegaShowdownItems.IRON_PLATE,
+            MegaShowdownItems.PIXIE_PLATE,
+        ).forEach { pool.add(optLootItem(it)) }
+    }
+
+    private fun randomBerryPool(rolls: NumberProvider, countForRoll: NumberProvider) = lootPool()
+        .setRolls(rolls)
+        .add(expandTag(GrowssethTags.COBBLEMON_BERRIES_EXCEPT_RARE).count(countForRoll))
+
+    private fun singleItemPool(item: ItemLike, rolls: NumberProvider, minForRoll: Int, maxForRoll: Int): LootPool.Builder {
+        return lootPool()
+            .setRolls(rolls)
+            .add(optLootItem(item).count(between(minForRoll.toFloat(), maxForRoll.toFloat())))
+    }
+    private fun singleItemPool(itemSupplier: RegistrySupplier<Item>, rolls: NumberProvider, minForRoll: Int, maxForRoll: Int): LootPool.Builder {
+        return lootPool()
+            .setRolls(rolls)
+            .add(optLootItem(itemSupplier).count(between(minForRoll.toFloat(), maxForRoll.toFloat())))
+    }
+    private fun singleItemPool(id: ResourceLocation, rolls: NumberProvider, minForRoll: Int, maxForRoll: Int): LootPool.Builder {
+        return lootPool()
+            .setRolls(rolls)
+            .add(optLootItem(id).count(between(minForRoll.toFloat(), maxForRoll.toFloat())))
     }
 
     private fun optLootItem(item: ItemLike) = expandTag(optionalLootItemTags.optionalModLootTableItem(item))
     private fun optLootItem(itemSupplier: RegistrySupplier<Item>) = optLootItem(itemSupplier.get())
+    private fun optLootItem(id: ResourceLocation) = expandTag(optionalLootItemTags.optionalModLootTableItem(id))
 }

@@ -103,15 +103,24 @@
                         "add": false,
                         "count": {
                           "type": "minecraft:uniform",
-                          "max": 10.0,
-                          "min": 5.0
+                          "max": 3.0,
+                          "min": 2.0
                         },
                         "function": "minecraft:set_count"
                       }
                     ],
-                    "name": "cobblemon:mod_compat_loot_table_items/dream_ball",
-                    "weight": 10
-                  },
+                    "name": "cobblemon:mod_compat_loot_table_items/dream_ball"
+                  }
+                ],
+                "rolls": {
+                  "type": "minecraft:uniform",
+                  "max": 3.0,
+                  "min": 2.0
+                }
+              },
+              {
+                "bonus_rolls": 0.0,
+                "entries": [
                   {
                     "type": "minecraft:tag",
                     "expand": true,
@@ -126,9 +135,14 @@
                         "function": "minecraft:set_count"
                       }
                     ],
-                    "name": "cobblemon:mod_compat_loot_table_items/exp_candy_xs",
-                    "weight": 10
-                  },
+                    "name": "cobblemon:mod_compat_loot_table_items/exp_candy_xs"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "entries": [
                   {
                     "type": "minecraft:tag",
                     "expand": true,
@@ -143,9 +157,14 @@
                         "function": "minecraft:set_count"
                       }
                     ],
-                    "name": "cobblemon:mod_compat_loot_table_items/exp_candy_s",
-                    "weight": 10
-                  },
+                    "name": "cobblemon:mod_compat_loot_table_items/exp_candy_s"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "entries": [
                   {
                     "type": "minecraft:tag",
                     "expand": true,
@@ -160,9 +179,20 @@
                         "function": "minecraft:set_count"
                       }
                     ],
-                    "name": "cobblemon:mod_compat_loot_table_items/exp_candy_m",
-                    "weight": 10
-                  },
+                    "name": "cobblemon:mod_compat_loot_table_items/exp_candy_m"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.5,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
                   {
                     "type": "minecraft:tag",
                     "expand": true,
@@ -177,9 +207,14 @@
                         "function": "minecraft:set_count"
                       }
                     ],
-                    "name": "cobblemon:mod_compat_loot_table_items/exp_candy_l",
-                    "weight": 2
-                  },
+                    "name": "cobblemon:mod_compat_loot_table_items/exp_candy_l"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "entries": [
                   {
                     "type": "minecraft:tag",
                     "expand": true,
@@ -194,9 +229,14 @@
                         "function": "minecraft:set_count"
                       }
                     ],
-                    "name": "cobblemon:mod_compat_loot_table_items/old_gateau",
-                    "weight": 10
-                  },
+                    "name": "cobblemon:mod_compat_loot_table_items/old_gateau"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "entries": [
                   {
                     "type": "minecraft:tag",
                     "expand": true,
@@ -211,27 +251,59 @@
                         "function": "minecraft:set_count"
                       }
                     ],
-                    "name": "cobblemon:mod_compat_loot_table_items/relic_coin",
-                    "weight": 10
+                    "name": "cobblemon:mod_compat_loot_table_items/relic_coin"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.5,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "name": "cobblemon:mod_compat_loot_table_items/mental_herb"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.5,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "name": "cobblemon:mod_compat_loot_table_items/cracked_pot"
                   },
                   {
                     "type": "minecraft:tag",
                     "expand": true,
-                    "name": "cobblemon:mod_compat_loot_table_items/mental_herb",
-                    "weight": 2
-                  },
+                    "name": "cobblemon:mod_compat_loot_table_items/unremarkable_teacup"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
                   {
-                    "type": "minecraft:tag",
-                    "expand": true,
-                    "name": "cobblemon:mod_compat_loot_table_items/cracked_pot",
-                    "weight": 2
-                  },
-                  {
-                    "type": "minecraft:tag",
-                    "expand": true,
-                    "name": "cobblemon:mod_compat_loot_table_items/unremarkable_teacup",
-                    "weight": 2
-                  },
+                    "chance": 0.33333334,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
                   {
                     "type": "minecraft:tag",
                     "expand": true,
@@ -241,6 +313,40 @@
                     "type": "minecraft:tag",
                     "expand": true,
                     "name": "cobblemon:mod_compat_loot_table_items/masterpiece_teacup"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.5,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "name": "obc:mod_compat_loot_table_items/bottle_cap"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.33333334,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "name": "obc:mod_compat_loot_table_items/bottle_cap_gold"
                   }
                 ],
                 "rolls": 1.0
