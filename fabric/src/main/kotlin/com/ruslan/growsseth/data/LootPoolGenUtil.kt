@@ -8,23 +8,20 @@ import net.minecraft.world.level.storage.loot.LootPool.lootPool
 import net.minecraft.world.level.storage.loot.LootTable
 import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer
 import net.minecraft.world.level.storage.loot.entries.NestedLootTable.inlineLootTable
-import net.minecraft.world.level.storage.loot.functions.EnchantRandomlyFunction
-import net.minecraft.world.level.storage.loot.functions.EnchantWithLevelsFunction
-import net.minecraft.world.level.storage.loot.functions.SetEnchantmentsFunction
-import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction
-import net.minecraft.world.level.storage.loot.functions.SetItemDamageFunction
-import net.minecraft.world.level.storage.loot.functions.SetPotionFunction
+import net.minecraft.world.level.storage.loot.functions.*
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue.exactly
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider
 
 /** Used to give one or more (mutually exclusive and with the same weight) items a random chance to appear in a loot table */
-fun randomChance(chanceToAppear: Float, vararg items: LootPoolSingletonContainer.Builder<*>): LootPool.Builder {
-    val pool = lootPoolSingleRoll()
-        .conditionally(LootItemRandomChanceCondition.randomChance(chanceToAppear).build())
+fun randomChancePool(chanceToAppear: Float, vararg items: LootPoolSingletonContainer.Builder<*>): LootPool.Builder {
+    val pool = lootPoolSingleRoll().withRandomChance(chanceToAppear)
     items.forEach { pool.add(it) }
     return pool
 }
+
+fun LootPool.Builder.withRandomChance(chance: Float)
+        = this.conditionally(LootItemRandomChanceCondition.randomChance(chance).build())
 
 fun lootPoolSingleRoll(): LootPool.Builder = lootPool().setRolls(exactly(1f))
 
