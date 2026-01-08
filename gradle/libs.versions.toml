@@ -27,6 +27,7 @@
     megashowdown = "1.5+1.7.1+1.21.1" # only used for prop replacement in mod json files
     megashowdown-fabric = "xcwqvGEd" # only used for datagen
     architectury-fabric = "13.0.8+fabric" # only used for datagen (for mega showdown)
+    navas-zamega = "1.4.5"
     endremastered = "6.0.2"
     endremastered-neoforge = "aqYxfNAS"
 
@@ -87,6 +88,7 @@
     megashowdown-fabric = { group = "maven.modrinth", name = "cobblemon-mega-showdown", version.ref = "megashowdown-fabric" }
     # only needed in fabric for datagen
     architectury-fabric = { group = "maven.modrinth", name = "architectury-api", version.ref = "architectury-fabric" }
+    navas-zamega = { group = "maven.modrinth", name = "navas-zamega", version.ref = "navas-zamega" }
     endremastered = { group = "maven.modrinth", name = "endrem", version.ref = "endremastered" }
     endremastered-neoforge = { group = "maven.modrinth", name = "endrem", version.ref = "endremastered-neoforge" }
 

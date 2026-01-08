@@ -73,7 +73,8 @@
   "suggests": {
     "cobblemon": ">=${cobblemon_version}",
     "rctapi": ">=${rctapi_version}",
-    "mega_showdown": ">=${megashowdown_version}"
+    "mega_showdown": ">=${megashowdown_version}",
+    "zamega": ">=${zamega_version}"
   },
   "custom": {
     "modmenu": {

@@ -72,6 +72,7 @@ abstract class RuinsOfGrowsseth {
         if (modCompat.isCobblemonLoaded) {
             if (modCompat.isAllCobblemonDepsLoaded) {
                 CobblemonRCTCompat.onInit()
+                LOGGER.info("Cobblemon compatibility loaded")
             } else {
                 LOGGER.error("Cobblemon loaded but Cobblemon RCT trainer API and Mega Showdown not loaded, researcher as trainer won't work")
             }
