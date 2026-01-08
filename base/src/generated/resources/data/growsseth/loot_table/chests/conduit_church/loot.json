@@ -178,6 +178,12 @@
             "pools": [
               {
                 "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
                 "entries": [
                   {
                     "type": "minecraft:tag",
@@ -187,8 +193,8 @@
                         "add": false,
                         "count": {
                           "type": "minecraft:uniform",
-                          "max": 5.0,
-                          "min": 2.0
+                          "max": 15.0,
+                          "min": 5.0
                         },
                         "function": "minecraft:set_count"
                       }
@@ -196,11 +202,7 @@
                     "name": "cobblemon:mod_compat_loot_table_items/dive_ball"
                   }
                 ],
-                "rolls": {
-                  "type": "minecraft:uniform",
-                  "max": 3.0,
-                  "min": 2.0
-                }
+                "rolls": 1.0
               },
               {
                 "bonus_rolls": 0.0,
@@ -214,6 +216,17 @@
                   {
                     "type": "minecraft:tag",
                     "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 1.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
                     "name": "cobblemon:mod_compat_loot_table_items/mystic_water"
                   }
                 ],
@@ -231,6 +244,17 @@
                   {
                     "type": "minecraft:tag",
                     "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 1.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
                     "name": "cobblemon:mod_compat_loot_table_items/water_stone"
                   }
                 ],
@@ -307,6 +331,17 @@
                   {
                     "type": "minecraft:tag",
                     "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 1.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
                     "name": "obc:mod_compat_loot_table_items/bottle_cap"
                   }
                 ],
@@ -324,6 +359,17 @@
                   {
                     "type": "minecraft:tag",
                     "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 1.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
                     "name": "obc:mod_compat_loot_table_items/bottle_cap_gold"
                   }
                 ],

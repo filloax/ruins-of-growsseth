@@ -160,10 +160,27 @@
               },
               {
                 "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
                 "entries": [
                   {
                     "type": "minecraft:tag",
                     "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 1.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
                     "name": "cobblemon:mod_compat_loot_table_items/destiny_knot"
                   }
                 ],
@@ -181,6 +198,17 @@
                   {
                     "type": "minecraft:tag",
                     "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 1.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
                     "name": "cobblemon:mod_compat_loot_table_items/clear_amulet"
                   }
                 ],
@@ -198,6 +226,17 @@
                   {
                     "type": "minecraft:tag",
                     "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 1.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
                     "name": "cobblemon:mod_compat_loot_table_items/lucky_egg"
                   }
                 ],
@@ -215,6 +254,17 @@
                   {
                     "type": "minecraft:tag",
                     "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 1.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
                     "name": "obc:mod_compat_loot_table_items/bottle_cap"
                   }
                 ],

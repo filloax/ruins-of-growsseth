@@ -168,6 +168,12 @@
             "pools": [
               {
                 "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
                 "entries": [
                   {
                     "type": "minecraft:tag",
@@ -177,8 +183,8 @@
                         "add": false,
                         "count": {
                           "type": "minecraft:uniform",
-                          "max": 8.0,
-                          "min": 5.0
+                          "max": 20.0,
+                          "min": 10.0
                         },
                         "function": "minecraft:set_count"
                       }
@@ -186,14 +192,16 @@
                     "name": "cobblemon:mod_compat_loot_table_items/big_root"
                   }
                 ],
-                "rolls": {
-                  "type": "minecraft:uniform",
-                  "max": 3.0,
-                  "min": 2.0
-                }
+                "rolls": 1.0
               },
               {
                 "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
                 "entries": [
                   {
                     "type": "minecraft:tag",
@@ -203,8 +211,8 @@
                         "add": false,
                         "count": {
                           "type": "minecraft:uniform",
-                          "max": 5.0,
-                          "min": 2.0
+                          "max": 10.0,
+                          "min": 5.0
                         },
                         "function": "minecraft:set_count"
                       }
@@ -212,10 +220,16 @@
                     "name": "cobblemon:mod_compat_loot_table_items/energy_root"
                   }
                 ],
-                "rolls": 2.0
+                "rolls": 1.0
               },
               {
                 "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
                 "entries": [
                   {
                     "type": "minecraft:tag",
@@ -225,8 +239,8 @@
                         "add": false,
                         "count": {
                           "type": "minecraft:uniform",
-                          "max": 5.0,
-                          "min": 2.0
+                          "max": 15.0,
+                          "min": 5.0
                         },
                         "function": "minecraft:set_count"
                       }
@@ -234,11 +248,7 @@
                     "name": "cobblemon:mod_compat_loot_table_items/dusk_ball"
                   }
                 ],
-                "rolls": {
-                  "type": "minecraft:uniform",
-                  "max": 3.0,
-                  "min": 2.0
-                }
+                "rolls": 1.0
               },
               {
                 "bonus_rolls": 0.0,

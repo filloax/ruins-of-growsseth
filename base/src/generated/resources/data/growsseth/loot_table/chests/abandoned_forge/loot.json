@@ -108,6 +108,12 @@
             "pools": [
               {
                 "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
                 "entries": [
                   {
                     "type": "minecraft:tag",
@@ -117,8 +123,8 @@
                         "add": false,
                         "count": {
                           "type": "minecraft:uniform",
-                          "max": 5.0,
-                          "min": 2.0
+                          "max": 15.0,
+                          "min": 5.0
                         },
                         "function": "minecraft:set_count"
                       }
@@ -126,14 +132,16 @@
                     "name": "cobblemon:mod_compat_loot_table_items/heavy_ball"
                   }
                 ],
-                "rolls": {
-                  "type": "minecraft:uniform",
-                  "max": 3.0,
-                  "min": 2.0
-                }
+                "rolls": 1.0
               },
               {
                 "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
                 "entries": [
                   {
                     "type": "minecraft:tag",
@@ -191,11 +199,6 @@
                   {
                     "type": "minecraft:tag",
                     "expand": true,
-                    "name": "cobblemon:mod_compat_loot_table_items/metal_coat"
-                  },
-                  {
-                    "type": "minecraft:tag",
-                    "expand": true,
                     "name": "cobblemon:mod_compat_loot_table_items/black_augurite"
                   },
                   {
@@ -228,10 +231,55 @@
               },
               {
                 "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.5,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
                 "entries": [
                   {
                     "type": "minecraft:tag",
                     "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 2.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "cobblemon:mod_compat_loot_table_items/steel_gem"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 1.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
                     "name": "obc:mod_compat_loot_table_items/bottle_cap"
                   }
                 ],
@@ -249,7 +297,46 @@
                   {
                     "type": "minecraft:tag",
                     "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 1.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
                     "name": "obc:mod_compat_loot_table_items/bottle_cap_gold"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 1.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "tmcraft:mod_compat_loot_table_items/move_upgrade_smithing_template"
                   }
                 ],
                 "rolls": 1.0
