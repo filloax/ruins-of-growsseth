@@ -2,18 +2,24 @@ package com.ruslan.growsseth.compat.cobblemon
 
 import com.gitlab.srcmc.rctapi.api.RCTApi
 import com.gitlab.srcmc.rctapi.api.battle.BattleFormat
-import com.gitlab.srcmc.rctapi.api.battle.BattleManager
 import com.gitlab.srcmc.rctapi.api.battle.BattleRules
 import com.gitlab.srcmc.rctapi.api.battle.BattleState
 import com.gitlab.srcmc.rctapi.api.events.Events
 import com.gitlab.srcmc.rctapi.api.trainer.TrainerNPC
 import com.gitlab.srcmc.rctapi.api.trainer.TrainerPlayer
+import com.ruslan.growsseth.Constants
+import com.ruslan.growsseth.GrowssethLootTables
 import com.ruslan.growsseth.RuinsOfGrowsseth
+import com.ruslan.growsseth.config.ModCompatConfig
 import com.ruslan.growsseth.entity.researcher.Researcher
 import com.ruslan.growsseth.entity.researcher.ResearcherDialoguesComponent
 import net.minecraft.server.MinecraftServer
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.entity.player.Player
+import net.minecraft.world.level.storage.loot.LootParams
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets
 
 
 /**
@@ -103,9 +109,10 @@ object CobblemonRCTCompat {
             .mapNotNull { if (it.entity is ServerPlayer) (it.entity as ServerPlayer) else null }
 
         if (researcher != null) {
+            researcher.isInCobblemonBattle = false
+
             if (players.isEmpty()) {
                 RuinsOfGrowsseth.LOGGER.error("RCT battle ended without players!")
-                researcher.isInCobblemonBattle = false
                 return
             }
 
@@ -117,7 +124,48 @@ object CobblemonRCTCompat {
                     researcher.dialogues!!.triggerDialogue(player, ResearcherDialoguesComponent.EV_COMPAT_COBBLEMON_BATTLE_END_WIN)
                 }
             }
-            researcher.isInCobblemonBattle = false
+
+            if (!researcherWon) {
+                spawnBattleReward(researcher)
+            }
+        }
+    }
+
+    private fun spawnBattleReward(researcher: Researcher) {
+        if (!ModCompatConfig.cobblemonResearcherRewardEnabled) return
+
+        val compatData = researcher.compatData()
+
+        val timeSinceLast = researcher.level().gameTime - compatData.cobblemonLastDefeatedDate
+        val minimumTime = ModCompatConfig.cobblemonResearcherRewardCooldownDays * Constants.DAY_TICKS_DURATION
+
+        if (compatData.cobblemonLastDefeatedDate == -1L || timeSinceLast >= minimumTime) {
+            compatData.cobblemonLastDefeatedDate = researcher.level().gameTime
+
+            val serverLevel = researcher.level() as ServerLevel
+            val lootParams = LootParams.Builder(serverLevel).create(LootContextParamSets.EMPTY)
+            // intentionally do not affect with luck
+            val table = serverLevel.server.reloadableRegistries().getLootTable(GrowssethLootTables.COBBLEMON_DEFEAT_RESEARCHER)
+            val list = table.getRandomItems(lootParams)
+
+            list.forEach { item ->
+                val pos = researcher.position()
+                val x = pos.x + 0.5
+                val y = pos.y + 0.5
+                val z = pos.z + 0.5
+
+                val itemEntity = ItemEntity(serverLevel, x, y, z, item)
+
+                itemEntity.setDeltaMovement(
+                    (serverLevel.random.nextDouble() - 0.5) * 0.1,
+                    serverLevel.random.nextDouble() * 0.1 + 0.1,
+                    (serverLevel.random.nextDouble() - 0.5) * 0.1
+                )
+
+                serverLevel.addFreshEntity(itemEntity)
+            }
+        } else {
+            RuinsOfGrowsseth.LOGGER.info("Researcher defeated in cobblemon battle, but not enough time has passed since last defeat (is $timeSinceLast). Skipping reward spawn.")
         }
     }
 

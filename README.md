@@ -20,6 +20,12 @@ quest for the Researcher NPC.
 Finally, the mod includes a web-tool to act as a Gamemaster to another player's run, similarly to Cydonia's
 original run, being able to spawn structures, tweak trades, and send notifications.
 
+**NEW**: Now synergizes with Cobblemon! You can challenge the Researcher NPC. For more information see the [Wiki](https://github.com/filloax/ruins-of-growsseth/wiki/EN-%E2%80%90-Mod-Compatibility---Synergies). For full features the compat requires:
+- Cobblemon
+- Radical Cobblemon Trainers API
+- Mega Showdown
+- Navas' ZAMega (until the base mega showdown addon adds ZA megas)
+
 See the [Modrinth](https://modrinth.com/mod/ruins-of-growsseth) or [Curseforge](https://curseforge.com/minecraft/mc-mods/ruins-of-growsseth) page, and the [**WIKI**](https://github.com/filloax/ruins-of-growsseth/wiki) for more information.
 For bug reports check the [Issues](https://github.com/filloax/ruins-of-growsseth/issues), for ideas and suggestions check the [Discussions](https://github.com/filloax/ruins-of-growsseth/discussions).
 

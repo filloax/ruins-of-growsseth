@@ -46,6 +46,31 @@ issueTrackerURL="https://github.com/filloax/ruins-of-growsseth/issues"
     type="required"
     versionRange="[${rconfig_version},)"
 
+[[dependencies]]
+    modId="cobblemon"
+    type="optional"
+    versionRange="[${cobblemon_version},)"
+
+[[dependencies]]
+    modId="rctapi"
+    type="optional"
+    versionRange="[${rctapi_version},)"
+
+[[dependencies]]
+    modId="mega_showdown"
+    type="optional"
+    versionRange="[${megashowdown_version},)"
+
+[[dependencies]]
+    modId="zamega"
+    type="optional"
+    versionRange="[${zamega_version},)"
+
+[[dependencies]]
+    modId="endrem"
+    type="optional"
+    versionRange="[${endremastered_version},)"
+
 [mc-publish]
     modrinth="476XCS3C"
     curseforge=1017555

@@ -14,6 +14,7 @@ import com.ruslan.growsseth.structure.*
 import com.ruslan.growsseth.templates.TemplateListener
 import com.ruslan.growsseth.utils.resLoc
 import com.ruslan.growsseth.worldgen.worldpreset.LocationNotifListener
+import com.teamremastered.endrem.registry.ERTabs
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents
@@ -73,6 +74,11 @@ object RuinsOfGrowssethFabric : ModInitializer, RuinsOfGrowsseth() {
                     it.accept(disc)
                 }
             })
+
+        if (modCompat.isEndRemasteredLoaded) {
+            ItemGroupEvents.modifyEntriesEvent(ERTabs.ITEM_GROUP)
+                .register { it.accept(GrowssethItems.ENDREM_GROWSSETH_EYE) }
+        }
     }
 
     override fun registerResourceListeners() {

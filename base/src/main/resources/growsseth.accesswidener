@@ -54,5 +54,8 @@ accessible method net/minecraft/client/resources/TextureAtlasHolder getSprite (L
 
 accessible class net/minecraft/client/sounds/SoundManager$Preparations
 
+# datagen
+accessible method net/minecraft/world/level/storage/loot/entries/LootItem <init> (Lnet/minecraft/core/Holder;IILjava/util/List;Ljava/util/List;)V
+
 # enable when debugging concurrentmodificationexception
 # mutable field net/minecraft/util/ClassInstanceMultiMap allInstances Ljava/util/List;

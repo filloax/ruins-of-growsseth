@@ -41,7 +41,7 @@
           "spd": 124
         },
         "gimmicks": {
-//          "tera": "ground"
+          //          "tera": "ground"
         },
         "heldItem": "cobblemon:focus_sash"
       },
@@ -71,7 +71,7 @@
           "spd": 52
         },
         "gimmicks": {
-//          "tera": "fire"
+          //          "tera": "fire"
         },
         "heldItem": "cobblemon:rocky_helmet"
       },
@@ -194,8 +194,10 @@
           "tera": "normal"
         },
         "shiny": true,
-        "heldItem": "cobblemon:choice_specs"
-        // "heldItem": "megashowdown<check namespace>:drampanite"
+        "heldItem": [
+          "mega_showdown:drampanite",
+          "cobblemon:choice_specs"
+        ]
       }
     ]
   }

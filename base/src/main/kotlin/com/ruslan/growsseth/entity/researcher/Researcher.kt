@@ -15,6 +15,7 @@ import com.ruslan.growsseth.Constants
 import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.compat.ModCompatChecker
+import com.ruslan.growsseth.compat.ResearcherCompatData
 import com.ruslan.growsseth.compat.cobblemon.CobblemonRCTCompat
 import com.ruslan.growsseth.config.ResearcherConfig
 import com.ruslan.growsseth.dialogues.BasicDialogueEvents
@@ -329,6 +330,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     internal var needsJumpBoost = false
 
     // Mod compat
+    private var compatData = server?.let { ResearcherCompatData() }
     var isInCobblemonBattle: Boolean = false
 
     //endregion
@@ -824,6 +826,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
         researcherData.putBoolean("DonkeyBorrowed", donkeyWasBorrowed)
         researcherData.putBoolean("MetPlayer", metPlayer)
         researcherData.saveField("TradesData", ResearcherTradesData.CODEC) { tradesData() }
+        researcherData.saveField("CompatData", ResearcherCompatData.CODEC) { compatData() }
 
         dialogues?.saveSharedData(researcherData)
         diary?.writeNbt(researcherData)
@@ -856,6 +859,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
 
         server?.let { tradesData = ResearcherTradesData(ResearcherTradeMode.getFromSettings(it)) }
         researcherData.loadField("TradesData", ResearcherTradesData.CODEC) {tradesData = it}
+        researcherData.loadField("CompatData", ResearcherCompatData.CODEC) {compatData = it}
 
         dialogues?.readSharedData(researcherData)
         diary?.readNbt(researcherData)
@@ -961,6 +965,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level) : PathfinderM
     fun isTrading(): Boolean { return notNull(tradingPlayer) }
 
     private fun tradesData() = tradesData ?: throw IllegalStateException("Accessed tradesData in client!")
+    fun compatData() = compatData ?: throw IllegalStateException("Accessed compatData in client!")
 
     override fun getOffers(): MerchantOffers {
         return server?.let { serv ->
