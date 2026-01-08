@@ -138,6 +138,7 @@ val cobblemonVersion = libs.findVersion("cobblemon").get().toString()
 val rctApiVersion = libs.findVersion("rctapi").get().toString()
 val megaShowdownVersion = libs.findVersion("megashowdown").get().toString()
 val zamegaVersion = libs.findVersion("navas.zamega").get().toString()
+val endRemasteredVersion = libs.findVersion("endremastered").get().toString()
 
 //endregion
 
@@ -226,6 +227,7 @@ tasks.withType<ProcessResources>().configureEach {
         "rctapi_version" to rctApiVersion,
         "megashowdown_version" to megaShowdownVersion,
         "zamega_version" to zamegaVersion,
+        "endremastered_version" to endRemasteredVersion,
 
         "mod_name" to modName,
         "author" to author,

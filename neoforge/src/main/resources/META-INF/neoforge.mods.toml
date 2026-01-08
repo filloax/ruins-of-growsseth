@@ -66,6 +66,11 @@ issueTrackerURL="https://github.com/filloax/ruins-of-growsseth/issues"
     type="optional"
     versionRange="[${zamega_version},)"
 
+[[dependencies]]
+    modId="endrem"
+    type="optional"
+    versionRange="[${endremastered_version},)"
+
 [mc-publish]
     modrinth="476XCS3C"
     curseforge=1017555
