@@ -137,6 +137,7 @@ val rconfigMcVersion = libs.findVersion("rconfigMc").get().toString()
 val cobblemonVersion = libs.findVersion("cobblemon").get().toString()
 val rctApiVersion = libs.findVersion("rctapi").get().toString()
 val megaShowdownVersion = libs.findVersion("megashowdown").get().toString()
+val zamegaVersion = libs.findVersion("navas.zamega").get().toString()
 
 //endregion
 
@@ -224,6 +225,7 @@ tasks.withType<ProcessResources>().configureEach {
         "cobblemon_version" to cobblemonVersion,
         "rctapi_version" to rctApiVersion,
         "megashowdown_version" to megaShowdownVersion,
+        "zamega_version" to zamegaVersion,
 
         "mod_name" to modName,
         "author" to author,
