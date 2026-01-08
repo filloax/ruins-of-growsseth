@@ -4,6 +4,7 @@ import com.ruslan.growsseth.GrowssethBannerPatterns
 import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.advancements.StructureAdvancements
+import com.ruslan.growsseth.compat.data.OptionalLootItemTags
 import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.item.GrowssethJukeboxSongs
 import com.ruslan.growsseth.structure.GrProcessorLists
@@ -48,6 +49,8 @@ import java.util.function.Consumer
 // BIG thanks to https://github.com/Ayutac/fabric-example-worldgen
 // fixed my headache
 class DataGeneration : DataGeneratorEntrypoint {
+    val optionalLootItemTags = OptionalLootItemTags()
+
     override fun onInitializeDataGenerator(fabricDataGenerator: FabricDataGenerator) {
         val pack = fabricDataGenerator.createPack()
 
@@ -55,6 +58,7 @@ class DataGeneration : DataGeneratorEntrypoint {
         pack.addProvider(::RecipesProvider)
         pack.addProvider(::TagProviderBlocks)
         pack.addProvider(::TagProviderItems)
+        pack.addProvider(::ModCompatTagProviderItems)
         pack.addProvider(::TagProviderInstruments)
         pack.addProvider(::TagProviderStructures)
         pack.addProvider(::TagProviderWorldPresets)
@@ -62,7 +66,14 @@ class DataGeneration : DataGeneratorEntrypoint {
         pack.addProvider(::AdvancementsProvider)
         pack.addProvider(::EntityLootTableProvider)
         pack.addProvider(::ArcheologyLootTableProvider)
-        pack.addProvider(::StructureLootTableProvider)
+        pack.addProvider{ output, registries ->
+            StructureLootTableProvider(output, registries, optionalLootItemTags)
+        }
+        // load after so structure look is ok
+        pack.addProvider { output, registries ->
+            TagProviderOptionalLootItems(output, registries, optionalLootItemTags)
+        }
+        pack.addProvider(::ModCompatMiscLootTableProvider)
         pack.addProvider(::ModelGenerator)
         pack.addProvider(::CustomDataProvider)
 
@@ -114,14 +125,14 @@ class RecipesProvider(output: FabricDataOutput, registriesFuture: CompletableFut
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, vocalsDisc)
             .requires(Items.AMETHYST_SHARD)
             .requires(baseDisc)
-            .unlockedBy(RecipeProvider.getHasName(baseDisc), RecipeProvider.has(baseDisc))
+            .unlockedBy(getHasName(baseDisc), RecipeProvider.has(baseDisc))
             .save(exporter)
     }
 
     private fun fragmentToDiscRecipe (exporter: RecipeOutput, discFragment: ItemLike, disc: ItemLike) {
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, disc)
             .requires(discFragment, 9)
-            .unlockedBy(RecipeProvider.getHasName(discFragment), RecipeProvider.has(discFragment))
+            .unlockedBy(getHasName(discFragment), RecipeProvider.has(discFragment))
             .save(exporter)
     }
 }
@@ -184,6 +195,21 @@ class TagProviderItems(output: FabricDataOutput, registries: CompletableFuture<H
         getOrCreateTagBuilder(ItemTags.DECORATED_POT_SHERDS)
             .add(GrowssethItems.GROWSSETH_POTTERY_SHERD)
     }
+}
+
+/**
+ * Generate the single-item tags to allow
+ * optional items from other mods in loot
+ * tables
+ */
+class TagProviderOptionalLootItems(output: FabricDataOutput, registries: CompletableFuture<HolderLookup.Provider>, private val optionalLootItemTags: OptionalLootItemTags): ItemTagProvider(output, registries) {
+    override fun addTags(arg: HolderLookup.Provider) {
+        optionalLootItemTags.itemTags.forEach { (tag, item) ->
+            getOrCreateTagBuilder(tag).addOptional(item)
+        }
+    }
+
+    override fun getName(): String = "GrowssethTagProviderOptionalLootItems"
 }
 
 class TagProviderStructures(output: FabricDataOutput, registries: CompletableFuture<HolderLookup.Provider>): StructureTagsProvider(output, registries) {

@@ -18,14 +18,16 @@
     },
     {
       "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "chance": 0.5,
+          "condition": "minecraft:random_chance"
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:item",
           "name": "growsseth:fragment_ballata_del_respawn"
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:air"
         }
       ],
       "rolls": 1.0
@@ -89,6 +91,187 @@
             }
           ],
           "name": "minecraft:cobweb"
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:loot_table",
+          "value": {
+            "pools": [
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.5,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 2.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "cobblemon:mod_compat_loot_table_items/normal_gem"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.5,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 2.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "cobblemon:mod_compat_loot_table_items/fairy_gem"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 1.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "cobblemon:mod_compat_loot_table_items/destiny_knot"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.33333334,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 1.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "cobblemon:mod_compat_loot_table_items/clear_amulet"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.33333334,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 1.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "cobblemon:mod_compat_loot_table_items/lucky_egg"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.5,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 1.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "obc:mod_compat_loot_table_items/bottle_cap"
+                  }
+                ],
+                "rolls": 1.0
+              }
+            ]
+          }
         }
       ],
       "rolls": 1.0

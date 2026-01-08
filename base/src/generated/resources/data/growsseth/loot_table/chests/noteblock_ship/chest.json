@@ -18,14 +18,16 @@
     },
     {
       "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "chance": 0.5,
+          "condition": "minecraft:random_chance"
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:item",
           "name": "growsseth:fragment_ballata_del_respawn"
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:air"
         }
       ],
       "rolls": 1.0
@@ -78,6 +80,252 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:compass"
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:loot_table",
+          "value": {
+            "pools": [
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.5,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 2.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "cobblemon:mod_compat_loot_table_items/flying_gem"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "name": "cobblemon:mod_compat_loot_table_items/air_balloon"
+                  },
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "name": "cobblemon:mod_compat_loot_table_items/throat_spray"
+                  },
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "name": "cobblemon:mod_compat_loot_table_items/metronome"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 1.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "cobblemon:mod_compat_loot_table_items/sharp_beak"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 2.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "tmcraft:mod_compat_loot_table_items/iron_blank_disc"
+                  },
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 2.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "simpletms:mod_compat_loot_table_items/tr_blank"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 1.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "tmcraft:mod_compat_loot_table_items/gold_blank_disc"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.5,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "name": "tmcraft:mod_compat_loot_table_items/emerald_blank_disc"
+                  },
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "name": "simpletms:mod_compat_loot_table_items/tm_blank"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.5,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 1.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "tmcraft:mod_compat_loot_table_items/diamond_blank_disc"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.5,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 1.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "mega_showdown:mod_compat_loot_table_items/blank_z"
+                  }
+                ],
+                "rolls": 1.0
+              }
+            ]
+          }
         }
       ],
       "rolls": 1.0

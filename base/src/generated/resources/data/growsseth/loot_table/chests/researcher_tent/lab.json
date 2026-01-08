@@ -110,6 +110,253 @@
         }
       ],
       "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:loot_table",
+          "value": {
+            "pools": [
+              {
+                "bonus_rolls": 0.0,
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 1.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "mega_showdown:mod_compat_loot_table_items/zygarde_cell"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 10.0,
+                          "min": 5.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "cobblemon:mod_compat_loot_table_items/ancient_poke_ball"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 10.0,
+                          "min": 5.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "cobblemon:mod_compat_loot_table_items/ancient_great_ball"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 5.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "cobblemon:mod_compat_loot_table_items/ancient_ultra_ball"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 2.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "mega_showdown:mod_compat_loot_table_items/zygarde_cell"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.5,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 1.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "mega_showdown:mod_compat_loot_table_items/zygarde_core"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "name": "cobblemon:mod_compat_loot_table_items/flame_orb"
+                  },
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "name": "cobblemon:mod_compat_loot_table_items/toxic_orb"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.5,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 1.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "cobblemon:mod_compat_loot_table_items/life_orb"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "name": "cobblemon:mod_compat_loot_table_items/wide_lens"
+                  },
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "name": "cobblemon:mod_compat_loot_table_items/wise_glasses"
+                  }
+                ],
+                "rolls": 1.0
+              }
+            ]
+          }
+        }
+      ],
+      "rolls": 1.0
     }
   ]
 }

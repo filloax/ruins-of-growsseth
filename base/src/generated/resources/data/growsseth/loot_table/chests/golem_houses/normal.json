@@ -3,29 +3,32 @@
   "pools": [
     {
       "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "chance": 0.33,
+          "condition": "minecraft:random_chance"
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:item",
           "name": "growsseth:disc_padre_mammonk"
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:air",
-          "weight": 2
         }
       ],
       "rolls": 1.0
     },
     {
       "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "chance": 0.5,
+          "condition": "minecraft:random_chance"
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:item",
           "name": "growsseth:fragment_ballata_del_respawn"
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:air"
         }
       ],
       "rolls": 1.0
@@ -95,6 +98,129 @@
             }
           ],
           "name": "minecraft:pumpkin_pie"
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:loot_table",
+          "value": {
+            "pools": [
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 15.0,
+                          "min": 5.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "cobblemon:mod_compat_loot_table_items/friend_ball"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.5,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "name": "cobblemon:mod_compat_loot_table_items/metal_coat"
+                  },
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "name": "cobblemon:mod_compat_loot_table_items/metal_alloy"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.5,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "name": "cobblemon:mod_compat_loot_table_items/heavy_duty_boots"
+                  },
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "name": "cobblemon:mod_compat_loot_table_items/safety_goggles"
+                  },
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "name": "cobblemon:mod_compat_loot_table_items/soothe_bell"
+                  },
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "name": "cobblemon:mod_compat_loot_table_items/rocky_helmet"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.5,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 1.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "obc:mod_compat_loot_table_items/bottle_cap"
+                  }
+                ],
+                "rolls": 1.0
+              }
+            ]
+          }
         }
       ],
       "rolls": 1.0
