@@ -19,6 +19,7 @@ import com.ruslan.growsseth.structure.GrowssethStructurePieceTypes
 import com.ruslan.growsseth.structure.GrowssethStructures
 import com.ruslan.growsseth.templates.TemplateListener
 import com.ruslan.growsseth.worldgen.worldpreset.LocationNotifListener
+import com.teamremastered.endrem.registry.ERTabs
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.core.Holder
@@ -65,7 +66,7 @@ object RuinsOfGrowssethNeo : RuinsOfGrowsseth() {
 
     override fun initItemGroups() {
         MOD_BUS.addListener<BuildCreativeModeTabContentsEvent> { ev ->
-            val entries = ev.searchEntries.associateBy { it.item }
+         val entries = ev.searchEntries.associateBy { it.item }
             val addAfter = { item: Item, new: Item ->
                 ev.insertAfter(entries[item]!!, new.defaultInstance, CreativeModeTab.TabVisibility.PARENT_TAB_ONLY)
             }
@@ -90,6 +91,10 @@ object RuinsOfGrowssethNeo : RuinsOfGrowsseth() {
                         ev.accept(disc)
                     }
                 }
+            }
+
+            if (modCompat.isEndRemasteredLoaded && ev.tabKey == ERTabs.TABS.registryKey) {
+                ev.accept(GrowssethItems.ENDREM_GROWSSETH_EYE)
             }
         }
     }

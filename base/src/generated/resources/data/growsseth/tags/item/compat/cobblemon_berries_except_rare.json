@@ -1,0 +1,80 @@
+{
+  "values": [
+    {
+      "id": "#cobblemon:berries/damage_reduction",
+      "required": false
+    },
+    {
+      "id": "#cobblemon:berries/damaging",
+      "required": false
+    },
+    {
+      "id": "#cobblemon:berries/friendship",
+      "required": false
+    },
+    {
+      "id": "cobblemon:oran_berry",
+      "required": false
+    },
+    {
+      "id": "cobblemon:sitrus_berry",
+      "required": false
+    },
+    {
+      "id": "#cobblemon:berries/nature_recovery",
+      "required": false
+    },
+    {
+      "id": "#cobblemon:berries/non_battle",
+      "required": false
+    },
+    {
+      "id": "#cobblemon:berries/pp_recovery",
+      "required": false
+    },
+    {
+      "id": "cobblemon:kee_berry",
+      "required": false
+    },
+    {
+      "id": "cobblemon:maranga_berry",
+      "required": false
+    },
+    {
+      "id": "cobblemon:liechi_berry",
+      "required": false
+    },
+    {
+      "id": "cobblemon:ganlon_berry",
+      "required": false
+    },
+    {
+      "id": "cobblemon:salac_berry",
+      "required": false
+    },
+    {
+      "id": "cobblemon:petaya_berry",
+      "required": false
+    },
+    {
+      "id": "cobblemon:apicot_berry",
+      "required": false
+    },
+    {
+      "id": "cobblemon:lansat_berry",
+      "required": false
+    },
+    {
+      "id": "cobblemon:micle_berry",
+      "required": false
+    },
+    {
+      "id": "cobblemon:custap_berry",
+      "required": false
+    },
+    {
+      "id": "#cobblemon:berries/status_recovery",
+      "required": false
+    }
+  ]
+}

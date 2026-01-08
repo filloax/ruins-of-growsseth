@@ -11,7 +11,7 @@
       "2": "Alright, I can pause my research every once in a while!"
     },
     "battleLastPkmn": "Not bad, you've cornered me!",
-    "battleEndWin": "Well, you tried, I hope you've learnt something... Keep studying, when you want I'm here for a rematch!",
-    "battleEndLose": "Great job colleague! It's always interesting to face new challenges, even if you don't overcome them."
+    "battleEndWin": "Great job colleague! It's always interesting to face new challenges, even if you don't overcome them.",
+    "battleEndLose": "Well, you tried, I hope you've learnt something... Keep studying, when you want I'm here for a rematch!"
   }
 }

@@ -19,11 +19,13 @@ val includeDeps = (property("includeDeps") as String).toBoolean()
 
 val versionSuffix = if (versionType?.isBlank() == true) "" else "-$versionType"
 
-val cobblemonTest = (property("cobblemonTest") as String).toBoolean()
+val isDataRun = gradle.startParameter.taskNames.any { it.contains("runData") }
+val cobblemonTest = isDataRun || (property("cobblemonTest") as String).toBoolean()
 
 version = "$modVersion-$minecraftVersion$versionSuffix-fabric"
 
 if (includeDeps) println("Including dependencies for test mode")
+if (cobblemonTest) println("Using cobblemon-related dependencies at runtime")
 
 loom {
 	accessWidenerPath = project(BASE_PROJECT).file("src/main/resources/${modid}.accesswidener")
@@ -119,6 +121,11 @@ dependencies {
 	modCompileOnly(libs.lithostitched.fabric)
     modCompileOnly(libs.cobblemon.fabric)
     modCompileOnly(libs.rctapi.fabric)
+    modCompileOnly(libs.endremastered)
+
+    // For datagen
+    modCompileOnly(libs.megashowdown.fabric)
+    modCompileOnly(libs.architectury.fabric)
 
     if (cobblemonTest) {
         modLocalRuntime("io.wispforest:accessories-fabric:1.1.0-beta.52+1.21.1")
@@ -127,8 +134,7 @@ dependencies {
 
         modLocalRuntime(libs.cobblemon.fabric)
         modLocalRuntime(libs.rctapi.fabric)
-
-        modLocalRuntime("maven.modrinth:cobblemon-mega-showdown:FHVQFA5j")
+        modLocalRuntime(libs.megashowdown.fabric)
 
         modLocalRuntime("maven.modrinth:cobblemontools:cvHY7gmJ")
         modLocalRuntime("maven.modrinth:rib:C4vWmZoB")
