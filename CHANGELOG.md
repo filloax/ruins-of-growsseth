@@ -2,6 +2,25 @@
 
 ## CURRENT
 
+## 0.14.0
+
+_The "We played in a modpack with Cobblemon update"_
+
+Added
+- End Remastered synergy: having the mod installed will add a custom eye
+  to the reward of this mod's main quest end
+- Cobblemon synergy: see [wiki](https://github.com/filloax/ruins-of-growsseth/wiki/EN-%E2%80%90-Mod-Compatibility---Synergies) for more information, in short:
+  - Researcher challengeable when right clicking with cobblemon items, requires to work properly:
+    - Radical Cobblemon Trainers API
+    - Mega Showdown
+    - Navas ZAMega (only needed until mega showdown adds ZA megas)
+  - Loot for cobblemon and assorted addons in structures
+    - Currently slightly bugged, sometimes spawns smaller quantities of items in stacks
+      than intended
+
+Fixed
+- Reduced volume of some comparatively too loud music discs
+
 ## 0.13.3
 
 Fixed
