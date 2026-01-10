@@ -139,6 +139,7 @@ dependencies {
         modLocalRuntime(libs.cobblemon.fabric)
         modLocalRuntime(libs.rctapi.fabric)
         modLocalRuntime(libs.megashowdown.fabric)
+//        modLocalRuntime(libs.navas.zamega) // Test with full jar, does not seem to work here
 
         modLocalRuntime("maven.modrinth:cobblemontools:cvHY7gmJ")
         modLocalRuntime("maven.modrinth:rib:C4vWmZoB")

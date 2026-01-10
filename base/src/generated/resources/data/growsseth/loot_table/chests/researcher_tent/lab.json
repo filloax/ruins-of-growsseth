@@ -124,14 +124,30 @@
                   {
                     "type": "minecraft:tag",
                     "expand": true,
-                    "name": "mega_showdown:mod_compat_loot_table_items/zygarde_cell",
-                    "weight": 10
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 1.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "mega_showdown:mod_compat_loot_table_items/zygarde_cell"
                   }
                 ],
                 "rolls": 1.0
               },
               {
                 "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
                 "entries": [
                   {
                     "type": "minecraft:tag",
@@ -147,9 +163,20 @@
                         "function": "minecraft:set_count"
                       }
                     ],
-                    "name": "cobblemon:mod_compat_loot_table_items/ancient_poke_ball",
-                    "weight": 10
-                  },
+                    "name": "cobblemon:mod_compat_loot_table_items/ancient_poke_ball"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
                   {
                     "type": "minecraft:tag",
                     "expand": true,
@@ -164,9 +191,20 @@
                         "function": "minecraft:set_count"
                       }
                     ],
-                    "name": "cobblemon:mod_compat_loot_table_items/ancient_great_ball",
-                    "weight": 10
-                  },
+                    "name": "cobblemon:mod_compat_loot_table_items/ancient_great_ball"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
                   {
                     "type": "minecraft:tag",
                     "expand": true,
@@ -181,9 +219,20 @@
                         "function": "minecraft:set_count"
                       }
                     ],
-                    "name": "cobblemon:mod_compat_loot_table_items/ancient_ultra_ball",
-                    "weight": 10
-                  },
+                    "name": "cobblemon:mod_compat_loot_table_items/ancient_ultra_ball"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
                   {
                     "type": "minecraft:tag",
                     "expand": true,
@@ -198,44 +247,107 @@
                         "function": "minecraft:set_count"
                       }
                     ],
-                    "name": "mega_showdown:mod_compat_loot_table_items/zygarde_cell",
-                    "weight": 10
+                    "name": "mega_showdown:mod_compat_loot_table_items/zygarde_cell"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.5,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 1.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "mega_showdown:mod_compat_loot_table_items/zygarde_core"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "name": "cobblemon:mod_compat_loot_table_items/flame_orb"
                   },
                   {
                     "type": "minecraft:tag",
                     "expand": true,
-                    "name": "mega_showdown:mod_compat_loot_table_items/zygarde_core",
-                    "weight": 2
+                    "name": "cobblemon:mod_compat_loot_table_items/toxic_orb"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.5,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 1.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "cobblemon:mod_compat_loot_table_items/life_orb"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "name": "cobblemon:mod_compat_loot_table_items/wide_lens"
                   },
                   {
                     "type": "minecraft:tag",
                     "expand": true,
-                    "name": "cobblemon:mod_compat_loot_table_items/flame_orb",
-                    "weight": 10
-                  },
-                  {
-                    "type": "minecraft:tag",
-                    "expand": true,
-                    "name": "cobblemon:mod_compat_loot_table_items/toxic_orb",
-                    "weight": 10
-                  },
-                  {
-                    "type": "minecraft:tag",
-                    "expand": true,
-                    "name": "cobblemon:mod_compat_loot_table_items/life_orb",
-                    "weight": 2
-                  },
-                  {
-                    "type": "minecraft:tag",
-                    "expand": true,
-                    "name": "cobblemon:mod_compat_loot_table_items/wide_lens",
-                    "weight": 10
-                  },
-                  {
-                    "type": "minecraft:tag",
-                    "expand": true,
-                    "name": "cobblemon:mod_compat_loot_table_items/wise_glasses",
-                    "weight": 10
+                    "name": "cobblemon:mod_compat_loot_table_items/wise_glasses"
                   }
                 ],
                 "rolls": 1.0

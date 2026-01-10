@@ -62,6 +62,7 @@ class DataGeneration : DataGeneratorEntrypoint {
         pack.addProvider(::TagProviderBlocks)
         pack.addProvider(::TagProviderItems)
         //pack.addProvider(::TagProviderInstruments)
+        pack.addProvider(::ModCompatTagProviderItems)
         pack.addProvider(::TagProviderStructures)
         pack.addProvider(::TagProviderWorldPresets)
         pack.addProvider(::TagProviderBannerPatterns)

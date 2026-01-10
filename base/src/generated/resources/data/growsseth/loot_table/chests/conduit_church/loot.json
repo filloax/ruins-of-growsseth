@@ -178,6 +178,12 @@
             "pools": [
               {
                 "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
                 "entries": [
                   {
                     "type": "minecraft:tag",
@@ -193,45 +199,108 @@
                         "function": "minecraft:set_count"
                       }
                     ],
-                    "name": "cobblemon:mod_compat_loot_table_items/dive_ball",
-                    "weight": 10
+                    "name": "cobblemon:mod_compat_loot_table_items/dive_ball"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.5,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 1.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "cobblemon:mod_compat_loot_table_items/mystic_water"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.5,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 1.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "cobblemon:mod_compat_loot_table_items/water_stone"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.5,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "name": "cobblemon:mod_compat_loot_table_items/dragon_scale"
                   },
                   {
                     "type": "minecraft:tag",
                     "expand": true,
-                    "name": "cobblemon:mod_compat_loot_table_items/mystic_water",
-                    "weight": 2
+                    "name": "cobblemon:mod_compat_loot_table_items/prism_scale"
                   },
                   {
                     "type": "minecraft:tag",
                     "expand": true,
-                    "name": "cobblemon:mod_compat_loot_table_items/water_stone",
-                    "weight": 2
+                    "name": "cobblemon:mod_compat_loot_table_items/deep_sea_tooth"
                   },
                   {
                     "type": "minecraft:tag",
                     "expand": true,
-                    "name": "cobblemon:mod_compat_loot_table_items/dragon_scale",
-                    "weight": 2
-                  },
+                    "name": "cobblemon:mod_compat_loot_table_items/deep_sea_scale"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
                   {
-                    "type": "minecraft:tag",
-                    "expand": true,
-                    "name": "cobblemon:mod_compat_loot_table_items/prism_scale",
-                    "weight": 2
-                  },
-                  {
-                    "type": "minecraft:tag",
-                    "expand": true,
-                    "name": "cobblemon:mod_compat_loot_table_items/deep_sea_tooth",
-                    "weight": 2
-                  },
-                  {
-                    "type": "minecraft:tag",
-                    "expand": true,
-                    "name": "cobblemon:mod_compat_loot_table_items/deep_sea_scale",
-                    "weight": 2
-                  },
+                    "chance": 0.33333334,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
                   {
                     "type": "minecraft:tag",
                     "expand": true,
@@ -246,6 +315,62 @@
                     "type": "minecraft:tag",
                     "expand": true,
                     "name": "cobblemon:mod_compat_loot_table_items/cover_fossil"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.5,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 1.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "obc:mod_compat_loot_table_items/bottle_cap"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.33333334,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 1.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "obc:mod_compat_loot_table_items/bottle_cap_gold"
                   }
                 ],
                 "rolls": 1.0

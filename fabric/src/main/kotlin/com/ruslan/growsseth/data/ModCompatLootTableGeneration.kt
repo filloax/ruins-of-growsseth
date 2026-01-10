@@ -1,361 +1,473 @@
-//package com.ruslan.growsseth.data
-//
-//import com.cobblemon.mod.common.CobblemonItems
-//import com.github.yajatkaul.mega_showdown.item.MegaShowdownItems
-//import com.ruslan.growsseth.GrowssethLootTables
-//import com.ruslan.growsseth.compat.data.OptionalLootItemTags
-//import com.ruslan.growsseth.item.GrowssethItems
-//import dev.architectury.registry.registries.RegistrySupplier
-//import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
-//import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableProvider
-//import net.minecraft.core.HolderLookup
-//import net.minecraft.resources.ResourceKey
-//import net.minecraft.world.item.Item
-//import net.minecraft.world.item.Items
-//import net.minecraft.world.level.ItemLike
-//import net.minecraft.world.level.storage.loot.LootTable
-//import net.minecraft.world.level.storage.loot.LootTable.lootTable
-//import net.minecraft.world.level.storage.loot.entries.LootItem.lootTableItem
-//import net.minecraft.world.level.storage.loot.entries.TagEntry.expandTag
-//import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets
-//import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator.between
-//import java.util.concurrent.CompletableFuture
-//import java.util.function.BiConsumer
-//
-//
-//class ModCompatMiscLootTableProvider(output: FabricDataOutput, val registries: CompletableFuture<HolderLookup.Provider>) : SimpleFabricLootTableProvider(output, registries, LootContextParamSets.EMPTY) {
-//
-//    override fun generate(output: BiConsumer<ResourceKey<LootTable>, LootTable.Builder>) {
-//        output.accept(
-//            GrowssethLootTables.COBBLEMON_DEFEAT_RESEARCHER,
-//            lootTable()
-//                .withPool(lootPoolSingleRoll()
-//                    .add(lootTableItem(Items.ENCHANTED_GOLDEN_APPLE))
-//                    .add(lootTableItem(Items.NETHERITE_SCRAP).count(between(1f, 4f)))
-//                )
-//                .withPool(lootPoolSingleRoll()
-//                    .add(lootTableItem(GrowssethItems.FRAGMENT_BALLATA_DEL_RESPAWN)
-//                        .count(between(0f, 2f))
-//                    )
-//                )
-//        )
-//    }
-//
-//    override fun getName(): String = "GrowssethModCompatMiscLootTable"
-//}
-//
-//class ModCompatStructureLootTableGeneration(val registries: CompletableFuture<HolderLookup.Provider>, val optionalLootItemTags: OptionalLootItemTags) {
-//    fun generateForgeLoot(): LootTable {
-//        return lootTable()
-//            .withPool(lootPoolSingleRoll()
-//                .add(optLootItem(CobblemonItems.HEAVY_BALL).count(between(5f, 15f)).setWeight(10))
-//                .add(optLootItem(CobblemonItems.BLUE_APRICORN).count(between(5f, 20f)).setWeight(10))
-//                .add(optLootItem(CobblemonItems.BLACK_APRICORN).count(between(5f, 20f)).setWeight(10))
-//                .add(optLootItem(CobblemonItems.METAL_COAT).setWeight(2))
-//                .add(optLootItem(CobblemonItems.BLACK_AUGURITE).setWeight(2))
-//                .add(optLootItem(CobblemonItems.PROTECTOR).setWeight(2))
-//                .add(optLootItem(CobblemonItems.AUSPICIOUS_ARMOR).setWeight(2))
-//                .add(optLootItem(CobblemonItems.MALICIOUS_ARMOR).setWeight(2))
-//                .add(optLootItem(CobblemonItems.SHELL_HELMET).setWeight(2))
-//                .add(optLootItem(CobblemonItems.METAL_ALLOY).setWeight(2))
-//                .add(optLootItem(CobblemonItems.STEEL_GEM).count(between(1f, 2f)).setWeight(2))
-//                .add(optLootItem(CobblemonItems.UPGRADE).setWeight(10)) // Smithing Template (move upgrade)? assuming Upgrade is what they meant
-////                .add(optLootItem(CobblemonItems.SILVER_BOTTLE_CAP).setWeight(10))
-////                .add(optLootItem(CobblemonItems.GOLD_BOTTLE_CAP).setWeight(2))
-//            )
-//            .build()
-//    }
-//
-//    fun generateForgeSecretLoot(): LootTable {
-//        return lootTable()
-//            .withPool(lootPoolSingleRoll()
-//                .add(optLootItem(CobblemonItems.RELIC_COIN).setWeight(10))
-////                .add(optLootItem(CobblemonItems.GOLD_GILDED_CHEST).setWeight(2)) // Gold Blank Disk?
-//                .add(optLootItem(MegaShowdownItems.WISHING_STAR).setWeight(10))
-//            )
-//            .withPool(lootPoolSingleRoll()
-//                .add(optLootItem(MegaShowdownItems.FLAME_PLATE))
-//                .add(optLootItem(MegaShowdownItems.SPLASH_PLATE))
-//                .add(optLootItem(MegaShowdownItems.ZAP_PLATE))
-//                .add(optLootItem(MegaShowdownItems.MEADOW_PLATE))
-//                .add(optLootItem(MegaShowdownItems.ICICLE_PLATE))
-//                .add(optLootItem(MegaShowdownItems.FIST_PLATE))
-//                .add(optLootItem(MegaShowdownItems.TOXIC_PLATE))
-//                .add(optLootItem(MegaShowdownItems.EARTH_PLATE))
-//                .add(optLootItem(MegaShowdownItems.SKY_PLATE))
-//                .add(optLootItem(MegaShowdownItems.MIND_PLATE))
-//                .add(optLootItem(MegaShowdownItems.INSECT_PLATE))
-//                .add(optLootItem(MegaShowdownItems.STONE_PLATE))
-//                .add(optLootItem(MegaShowdownItems.SPOOKY_PLATE))
-//                .add(optLootItem(MegaShowdownItems.DRACO_PLATE))
-//                .add(optLootItem(MegaShowdownItems.DREAD_PLATE))
-//                .add(optLootItem(MegaShowdownItems.IRON_PLATE))
-//                .add(optLootItem(MegaShowdownItems.PIXIE_PLATE))
-//            )
-//            .build()
-//    }
-//
-//    fun generateBeekeeperLoot(): LootTable {
-//        return lootTable()
-//            .withPool(lootPoolSingleRoll()
-//                .add(optLootItem(CobblemonItems.NET_BALL).count(between(5f, 15f)).setWeight(10))
-//                .add(optLootItem(CobblemonItems.FLOWER_SWEET).setWeight(10))
-//                .add(optLootItem(CobblemonItems.ORAN_BERRY).count(between(10f, 20f)).setWeight(10))
-//                .add(optLootItem(CobblemonItems.SITRUS_BERRY).count(between(10f, 20f)).setWeight(10))
-//                .add(optLootItem(CobblemonItems.BUG_GEM).count(between(1f, 2f)).setWeight(2))
-//                .add(optLootItem(MegaShowdownItems.MAX_HONEY).setWeight(2))
-//                .add(optLootItem(MegaShowdownItems.DYNAMAX_CANDY).count(between(1f, 3f)).setWeight(2))
-//            )
-//            .build()
-//    }
-//
-//    fun generateCaveCampLoot(): LootTable {
-//        return lootTable()
-//            .withPool(lootPoolSingleRoll()
-//                .add(optLootItem(CobblemonItems.BIG_ROOT).count(between(10f, 20f)).setWeight(10))
-//                .add(optLootItem(CobblemonItems.ENERGY_ROOT).count(between(5f, 10f)).setWeight(10))
-//                .add(optLootItem(CobblemonItems.DUSK_BALL).count(between(5f, 15f)).setWeight(10))
-//                .add(optLootItem(CobblemonItems.ROCK_GEM).count(between(1f, 2f)).setWeight(2))
-//                .add(optLootItem(CobblemonItems.HARD_STONE).setWeight(2))
-//                .add(optLootItem(CobblemonItems.OVAL_STONE).setWeight(2))
-//                .add(optLootItem(CobblemonItems.EVERSTONE).setWeight(2))
-//                .add(optLootItem(CobblemonItems.EVIOLITE).setWeight(2))
-//                .add(optLootItem(CobblemonItems.HEAT_ROCK).setWeight(2))
-//                .add(optLootItem(CobblemonItems.ICY_ROCK).setWeight(2))
-//                .add(optLootItem(CobblemonItems.DAMP_ROCK).setWeight(2))
-//                .add(optLootItem(CobblemonItems.SMOOTH_ROCK).setWeight(2))
-//            )
-//            .build()
-//    }
-//
-//    fun generateConduitChurchTreasureLoot(): LootTable {
-//        return lootTable()
-//            .withPool(lootPoolSingleRoll()
-//                .add(optLootItem(MegaShowdownItems.SPARKLING_STONE_DARK))
-//            )
-//            .withPool(lootPoolSingleRoll()
-//                .add(optLootItem(CobblemonItems.WATER_GEM).count(between(1f, 2f)).setWeight(10))
-//                .add(optLootItem(CobblemonItems.KINGS_ROCK).setWeight(10))
-//                .add(optLootItem(CobblemonItems.EXPERIENCE_CANDY_L).count(between(5f, 10f)).setWeight(10))
-//                .add(optLootItem(CobblemonItems.EXPERIENCE_CANDY_XL).count(between(2f, 5f)).setWeight(2))
-//                .add(optLootItem(CobblemonItems.POKEROD_SMITHING_TEMPLATE).setWeight(2))
-//                .add(optLootItem(CobblemonItems.ABILITY_PATCH).setWeight(1))
-//                .add(optLootItem(MegaShowdownItems.BLANK_Z).setWeight(10))
-//            )
-//            .build()
-//    }
-//
-//    fun generateConduitChurchLoot(): LootTable {
-//        return lootTable()
-//            .withPool(lootPoolSingleRoll()
-//                .add(optLootItem(CobblemonItems.DIVE_BALL).count(between(5f, 15f)).setWeight(10))
-//                .add(optLootItem(CobblemonItems.MYSTIC_WATER).setWeight(2))
-//                .add(optLootItem(CobblemonItems.WATER_STONE).setWeight(2))
-//                .add(optLootItem(CobblemonItems.DRAGON_SCALE).setWeight(2))
-//                .add(optLootItem(CobblemonItems.PRISM_SCALE).setWeight(2))
-//                .add(optLootItem(CobblemonItems.DEEP_SEA_TOOTH).setWeight(2))
-//                .add(optLootItem(CobblemonItems.DEEP_SEA_SCALE).setWeight(2))
-//                .add(optLootItem(CobblemonItems.HELIX_FOSSIL).setWeight(1))
-//                .add(optLootItem(CobblemonItems.DOME_FOSSIL).setWeight(1))
-//                .add(optLootItem(CobblemonItems.COVER_FOSSIL).setWeight(1))
-////                .add(optLootItem(CobblemonItems.SILVER_BOTTLE_CAP).setWeight(2))
-////                .add(optLootItem(CobblemonItems.GOLD_BOTTLE_CAP).setWeight(1))
-//            )
-//            .build()
-//    }
-//
-//    fun generateConduitRuinsLoot(): LootTable {
-//        return lootTable()
-//            .withPool(lootPoolSingleRoll()
-//                .add(optLootItem(CobblemonItems.KINGS_ROCK).setWeight(10))
-//                .add(optLootItem(CobblemonItems.SHELL_BELL).setWeight(10))
-//                .add(optLootItem(CobblemonItems.EXPERIENCE_CANDY_L).count(between(5f, 10f)).setWeight(10))
-//                .add(optLootItem(CobblemonItems.DIVE_BALL).count(between(5f, 15f)).setWeight(10))
-//                .add(optLootItem(CobblemonItems.DRAGON_SCALE).setWeight(2))
-//                .add(optLootItem(CobblemonItems.PRISM_SCALE).setWeight(2))
-//                .add(optLootItem(CobblemonItems.DEEP_SEA_TOOTH).setWeight(2))
-//                .add(optLootItem(CobblemonItems.DEEP_SEA_SCALE).setWeight(2))
-//                .add(optLootItem(CobblemonItems.POKEROD_SMITHING_TEMPLATE).setWeight(2))
-//                .add(optLootItem(CobblemonItems.WATER_GEM).count(between(1f, 2f)).setWeight(2))
-//                .add(optLootItem(MegaShowdownItems.BLANK_Z).setWeight(10))
-//                .add(optLootItem(MegaShowdownItems.SPARKLING_STONE_LIGHT).setWeight(2))
-////                .add(optLootItem(CobblemonItems.SILVER_BOTTLE_CAP).setWeight(2))
-////                .add(optLootItem(CobblemonItems.GOLD_BOTTLE_CAP).setWeight(1))
-//            )
-//            .build()
-//    }
-//
-//    fun generateEnchantTowerTopLoot(): LootTable {
-//        return lootTable()
-//            .withPool(lootPoolSingleRoll()
-//                .add(optLootItem(CobblemonItems.EXPERIENCE_CANDY_L).count(between(5f, 10f)).setWeight(10))
-//                .add(optLootItem(CobblemonItems.EXPERIENCE_CANDY_XL).count(between(2f, 5f)).setWeight(2))
-//                .add(optLootItem(CobblemonItems.RELIC_COIN_POUCH).count(between(2f, 5f)).setWeight(10))
-//                .add(optLootItem(CobblemonItems.DRAGON_GEM).count(between(1f, 2f)).setWeight(2))
-//                .add(optLootItem(CobblemonItems.FAIRY_GEM).count(between(1f, 2f)).setWeight(2))
-//                .add(optLootItem(CobblemonItems.COVERT_CLOAK).setWeight(2))
-//                .add(optLootItem(CobblemonItems.CLEAR_AMULET).setWeight(2))
-//                .add(optLootItem(CobblemonItems.DAWN_STONE).setWeight(2))
-//                .add(optLootItem(CobblemonItems.DUSK_STONE).setWeight(2))
-//                .add(optLootItem(CobblemonItems.SHINY_STONE).setWeight(2))
-//                .add(optLootItem(CobblemonItems.ABILITY_PATCH).setWeight(1))
-//                .add(optLootItem(CobblemonItems.SCROLL_OF_DARKNESS).setWeight(1))
-//                .add(optLootItem(CobblemonItems.SCROLL_OF_WATERS).setWeight(1))
-//            )
-//            .build()
-//    }
-//
-//    fun generateEnchantTowerTowerLoot(): LootTable {
-//        return lootTable()
-//            .withPool(lootPoolSingleRoll()
-//                .add(optLootItem(CobblemonItems.DREAM_BALL).count(between(5f, 10f)).setWeight(10))
-//                .add(optLootItem(CobblemonItems.EXPERIENCE_CANDY_XS).count(between(15f, 20f)).setWeight(10))
-//                .add(optLootItem(CobblemonItems.EXPERIENCE_CANDY_S).count(between(15f, 20f)).setWeight(10))
-//                .add(optLootItem(CobblemonItems.EXPERIENCE_CANDY_M).count(between(10f, 15f)).setWeight(10))
-//                .add(optLootItem(CobblemonItems.EXPERIENCE_CANDY_L).count(between(5f, 10f)).setWeight(2))
-//                .add(optLootItem(CobblemonItems.OLD_GATEAU).count(between(1f, 2f)).setWeight(10))
-//                .add(optLootItem(CobblemonItems.RELIC_COIN).count(between(5f, 10f)).setWeight(10))
-//                .add(optLootItem(CobblemonItems.MENTAL_HERB).setWeight(2))
-//                .add(optLootItem(CobblemonItems.CRACKED_POT).setWeight(2))
-//                .add(optLootItem(CobblemonItems.UNREMARKABLE_TEACUP).setWeight(2))
-//                .add(optLootItem(CobblemonItems.CHIPPED_POT).setWeight(1))
-//                .add(optLootItem(CobblemonItems.MASTERPIECE_TEACUP).setWeight(1))
-////                .add(optLootItem(CobblemonItems.SILVER_BOTTLE_CAP).setWeight(2))
-////                .add(optLootItem(CobblemonItems.GOLD_BOTTLE_CAP).setWeight(1))
-//            )
-//            .build()
-//    }
-//
-//    fun generateGolemHouseNormalLoot(): LootTable {
-//        return lootTable()
-//            .withPool(lootPoolSingleRoll()
-//                .add(optLootItem(CobblemonItems.FRIEND_BALL).count(between(5f, 15f)).setWeight(10))
-//                .add(optLootItem(CobblemonItems.METAL_COAT).setWeight(2))
-//                .add(optLootItem(CobblemonItems.METAL_ALLOY).setWeight(2))
-//                .add(optLootItem(CobblemonItems.HEAVY_DUTY_BOOTS).setWeight(2))
-//                .add(optLootItem(CobblemonItems.SAFETY_GOGGLES).setWeight(2))
-//                .add(optLootItem(CobblemonItems.SOOTHE_BELL).setWeight(2))
-//                .add(optLootItem(CobblemonItems.ROCKY_HELMET).setWeight(2))
-////                .add(optLootItem(CobblemonItems.SILVER_BOTTLE_CAP).setWeight(2))
-//            )
-//            .build()
-//    }
-//
-//    fun generateGolemHouseZombieLoot(): LootTable {
-//        return lootTable()
-//            .withPool(lootPoolSingleRoll()
-//                .add(optLootItem(CobblemonItems.MOON_BALL).count(between(5f, 15f)).setWeight(10))
-//                .add(optLootItem(CobblemonItems.METAL_COAT).setWeight(2))
-//                .add(optLootItem(CobblemonItems.METAL_ALLOY).setWeight(2))
-//                .add(optLootItem(CobblemonItems.HEAVY_DUTY_BOOTS).setWeight(2))
-//                .add(optLootItem(CobblemonItems.BLACK_SLUDGE).setWeight(2))
-//                .add(optLootItem(CobblemonItems.SAFETY_GOGGLES).setWeight(2))
-//                .add(optLootItem(CobblemonItems.ROCKY_HELMET).setWeight(2))
-////                .add(optLootItem(CobblemonItems.SILVER_BOTTLE_CAP).setWeight(2))
-//            )
-//            .build()
-//    }
-//
-//    fun generateNoteblockLabBasementLoot(): LootTable {
-//        return lootTable()
-//            .withPool(lootPoolSingleRoll()
-//                .add(optLootItem(CobblemonItems.TIMER_BALL).count(between(5f, 10f)).setWeight(10))
-//                .add(optLootItem(CobblemonItems.THROAT_SPRAY).setWeight(10))
-//                .add(optLootItem(CobblemonItems.METRONOME).setWeight(10))
-////                .add(optLootItem(CobblemonItems.TUMBLESTONE).count(between(2f, 3f)).setWeight(10)) // Copper Blank Disk? mapping to Tumblestone
-////                .add(optLootItem(CobblemonItems.IRON_TUMBLESTONE).count(between(1f, 2f)).setWeight(10)) // Iron Blank Disk
-//                .add(optLootItem(MegaShowdownItems.BLANK_Z).setWeight(2))
-//            )
-//            .build()
-//    }
-//
-//    fun generateNoteblockLabHouseLoot(): LootTable {
-//        return lootTable()
-//            .withPool(lootPoolSingleRoll()
-//                .add(optLootItem(CobblemonItems.NORMAL_GEM).count(between(1f, 2f)).setWeight(2))
-//                .add(optLootItem(CobblemonItems.FAIRY_GEM).count(between(1f, 2f)).setWeight(2))
-//                .add(optLootItem(CobblemonItems.DESTINY_KNOT).setWeight(10))
-//                .add(optLootItem(CobblemonItems.CLEAR_AMULET).setWeight(1))
-//                .add(optLootItem(CobblemonItems.LUCKY_EGG).setWeight(1))
-////                .add(optLootItem(CobblemonItems.SILVER_BOTTLE_CAP).setWeight(2))
-//            )
-//            .build()
-//    }
-//
-//    fun generateNoteblockShipBarrelsLoot(): LootTable {
-//        return lootTable()
-//            .withPool(lootPoolSingleRoll()
-//                .add(optLootItem(CobblemonItems.ORAN_BERRY).count(between(5f, 15f)).setWeight(10))
-//                .add(optLootItem(CobblemonItems.SITRUS_BERRY).count(between(5f, 15f)).setWeight(10))
-//                .add(optLootItem(CobblemonItems.LEFTOVERS).setWeight(2))
-//                .add(optLootItem(CobblemonItems.MEDICINAL_LEEK).count(between(5f, 10f)).setWeight(10))
-//                .add(optLootItem(CobblemonItems.REVIVAL_HERB).count(between(5f, 10f)).setWeight(10))
-//                .add(optLootItem(CobblemonItems.PEP_UP_FLOWER).count(between(1f, 5f)).setWeight(10))
-//                .add(optLootItem(CobblemonItems.HEARTY_GRAINS).count(between(5f, 10f)).setWeight(10))
-//                .add(optLootItem(CobblemonItems.ANCIENT_WING_BALL).count(between(1f, 5f)).setWeight(10))
-//            )
-//            .build()
-//    }
-//
-//    fun generateNoteblockShipChestLoot(): LootTable {
-//        return lootTable()
-//            .withPool(lootPoolSingleRoll()
-//                .add(optLootItem(CobblemonItems.FLYING_GEM).count(between(1f, 2f)).setWeight(2))
-//                .add(optLootItem(CobblemonItems.AIR_BALLOON).setWeight(10))
-//                .add(optLootItem(CobblemonItems.THROAT_SPRAY).setWeight(10))
-//                .add(optLootItem(CobblemonItems.METRONOME).setWeight(10))
-//                .add(optLootItem(CobblemonItems.SHARP_BEAK).setWeight(10))
-//                .add(optLootItem(MegaShowdownItems.BLANK_Z).setWeight(2))
-//            )
-//            .build()
-//    }
-//
-//    fun generateResearcherTentLabLoot(): LootTable {
-//        return lootTable()
-//            .withPool(lootPoolSingleRoll()
-//                .add(optLootItem(MegaShowdownItems.ZYGARDE_CELL).setWeight(10)) // Assured 1 in separate pool later?
-//            )
-//            .withPool(lootPoolSingleRoll()
-//                .add(optLootItem(CobblemonItems.ANCIENT_POKE_BALL).count(between(5f, 10f)).setWeight(10))
-//                .add(optLootItem(CobblemonItems.ANCIENT_GREAT_BALL).count(between(5f, 10f)).setWeight(10))
-//                .add(optLootItem(CobblemonItems.ANCIENT_ULTRA_BALL).count(between(1f, 5f)).setWeight(10))
-//                .add(optLootItem(MegaShowdownItems.ZYGARDE_CELL).count(between(1f, 2f)).setWeight(10))
-//                .add(optLootItem(MegaShowdownItems.ZYGARDE_CORE).setWeight(2))
-//                .add(optLootItem(CobblemonItems.FLAME_ORB).setWeight(10))
-//                .add(optLootItem(CobblemonItems.TOXIC_ORB).setWeight(10))
-//                .add(optLootItem(CobblemonItems.LIFE_ORB).setWeight(2))
-//                .add(optLootItem(CobblemonItems.WIDE_LENS).setWeight(10))
-//                .add(optLootItem(CobblemonItems.WISE_GLASSES).setWeight(10))
-//            )
-//            .build()
-//    }
-//
-//    fun generateResearcherTentTentLoot(): LootTable {
-//        return lootTable()
-//            .withPool(lootPoolSingleRoll()
-//                .add(optLootItem(CobblemonItems.ARMOR_FOSSIL).setWeight(1))
-//                .add(optLootItem(CobblemonItems.CLAW_FOSSIL).setWeight(1))
-//                .add(optLootItem(CobblemonItems.COVER_FOSSIL).setWeight(1))
-//                .add(optLootItem(CobblemonItems.DOME_FOSSIL).setWeight(1))
-//                .add(optLootItem(CobblemonItems.HELIX_FOSSIL).setWeight(1))
-//                .add(optLootItem(CobblemonItems.JAW_FOSSIL).setWeight(1))
-//                .add(optLootItem(CobblemonItems.PLUME_FOSSIL).setWeight(1))
-//                .add(optLootItem(CobblemonItems.ROOT_FOSSIL).setWeight(1))
-//                .add(optLootItem(CobblemonItems.SAIL_FOSSIL).setWeight(1))
-//                .add(optLootItem(CobblemonItems.SKULL_FOSSIL).setWeight(1))
-//                .add(optLootItem(CobblemonItems.RELIC_COIN).count(between(5f, 15f)).setWeight(10))
-//                .add(optLootItem(CobblemonItems.RELIC_COIN_POUCH).count(between(1f, 2f)).setWeight(2))
-//                .add(optLootItem(CobblemonItems.NORMAL_GEM).setWeight(2))
-//                .add(optLootItem(CobblemonItems.FIRE_GEM).setWeight(2))
-//                .add(optLootItem(CobblemonItems.WATER_GEM).setWeight(2))
-//                .add(optLootItem(CobblemonItems.BLUNDER_POLICY).setWeight(2))
-//                .add(optLootItem(CobblemonItems.WEAKNESS_POLICY).setWeight(2))
-////                .add(optLootItem(CobblemonItems.SILVER_BOTTLE_CAP).setWeight(2))
-//                .add(optLootItem(MegaShowdownItems.TERA_ORB).setWeight(1))
-//            )
-//            .build()
-//    }
-//
-//    private fun optLootItem(item: ItemLike) = expandTag(optionalLootItemTags.optionalModLootTableItem(item))
-//    private fun optLootItem(itemSupplier: RegistrySupplier<Item>) = optLootItem(itemSupplier.get())
-//}
+package com.ruslan.growsseth.data
+
+import com.cobblemon.mod.common.CobblemonItems
+import com.cobblemon.mod.common.api.tags.CobblemonItemTags
+import com.github.yajatkaul.mega_showdown.item.MegaShowdownItems
+import com.ruslan.growsseth.GrowssethLootTables
+import com.ruslan.growsseth.GrowssethTags
+import com.ruslan.growsseth.compat.data.OptionalLootItemTags
+import com.ruslan.growsseth.item.GrowssethItems
+import dev.architectury.registry.registries.RegistrySupplier
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
+import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableProvider
+import net.minecraft.core.HolderLookup
+import net.minecraft.resources.ResourceKey
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.tags.TagKey
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.Items
+import net.minecraft.world.level.ItemLike
+import net.minecraft.world.level.storage.loot.LootPool
+import net.minecraft.world.level.storage.loot.LootPool.lootPool
+import net.minecraft.world.level.storage.loot.LootTable
+import net.minecraft.world.level.storage.loot.LootTable.lootTable
+import net.minecraft.world.level.storage.loot.entries.LootItem.lootTableItem
+import net.minecraft.world.level.storage.loot.entries.TagEntry.expandTag
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue.exactly
+import net.minecraft.world.level.storage.loot.providers.number.NumberProvider
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator.between
+import java.util.concurrent.CompletableFuture
+import java.util.function.BiConsumer
+
+
+class ModCompatMiscLootTableProvider(output: FabricDataOutput, val registries: CompletableFuture<HolderLookup.Provider>) : SimpleFabricLootTableProvider(output, registries, LootContextParamSets.EMPTY) {
+
+    override fun generate(output: BiConsumer<ResourceKey<LootTable>, LootTable.Builder>) {
+        output.accept(
+            GrowssethLootTables.COBBLEMON_DEFEAT_RESEARCHER,
+            lootTable()
+                .withPool(lootPoolSingleRoll()
+                    .add(lootTableItem(Items.ENCHANTED_GOLDEN_APPLE))
+                    .add(lootTableItem(Items.NETHERITE_SCRAP).count(between(1f, 4f)))
+                )
+                .withPool(lootPoolSingleRoll()
+                    .add(lootTableItem(GrowssethItems.FRAGMENT_BALLATA_DEL_RESPAWN)
+                        .count(between(0f, 2f))
+                    )
+                )
+        )
+    }
+
+    override fun getName(): String = "GrowssethModCompatMiscLootTable"
+}
+
+class ModCompatStructureLootTableGeneration(val registries: CompletableFuture<HolderLookup.Provider>, val optionalLootItemTags: OptionalLootItemTags) {
+    companion object {
+        private const val CHANCE_COMMON = 4f/5
+        private const val CHANCE_RARE = 1f/2
+        private const val CHANCE_RARER = 1f/3
+        private const val CHANCE_RAREST = 1f/10
+
+        // avoid depending on too many mods
+        private val BOTTLE_CAP_SILVER = ResourceLocation.fromNamespaceAndPath("obc", "bottle_cap")
+        private val BOTTLE_CAP_GOLD = ResourceLocation.fromNamespaceAndPath("obc", "bottle_cap_gold")
+        private val TMCRAFT_BLANK_DISC_COPPER = ResourceLocation.fromNamespaceAndPath("tmcraft", "copper_blank_disc")
+        private val TMCRAFT_BLANK_DISC_IRON = ResourceLocation.fromNamespaceAndPath("tmcraft", "iron_blank_disc")
+        private val TMCRAFT_BLANK_DISC_GOLD = ResourceLocation.fromNamespaceAndPath("tmcraft", "gold_blank_disc")
+        private val TMCRAFT_BLANK_DISC_DIAMOND = ResourceLocation.fromNamespaceAndPath("tmcraft", "diamond_blank_disc")
+        private val TMCRAFT_BLANK_DISC_EMERALD = ResourceLocation.fromNamespaceAndPath("tmcraft", "emerald_blank_disc")
+        private val TMCRAFT_BLANK_DISC_NETHERITE = ResourceLocation.fromNamespaceAndPath("tmcraft", "netherite_blank_disc")
+        private val SIMPLETMS_BLANK_TR = ResourceLocation.fromNamespaceAndPath("simpletms", "tr_blank")
+        private val SIMPLETMS_BLANK_TM = ResourceLocation.fromNamespaceAndPath("simpletms", "tm_blank")
+        private val COBBLECUISINE_MILD_HONEY_CURRY = ResourceLocation.fromNamespaceAndPath("cobblecuisine", "mild_honey_curry")
+        private val TMCRAFT_MOVE_UPGRADE_TEMPLATE = ResourceLocation.fromNamespaceAndPath("tmcraft", "move_upgrade_smithing_template")
+    }
+
+    fun generateForgeLoot(): LootTable {
+        return lootTable()
+            .withPool(singleItemPool(CobblemonItems.HEAVY_BALL, 5, 15).common())
+            .withPool(lootPool()
+                .setRolls(between(2f, 6f))
+                .add(optLootItem(CobblemonItems.BLUE_APRICORN).count(between(2f, 4f)))
+                .add(optLootItem(CobblemonItems.BLACK_APRICORN).count(between(2f, 4f)))
+                .common()
+            )
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(CobblemonItems.METAL_COAT))
+                .add(optLootItem(CobblemonItems.BLACK_AUGURITE))
+                .add(optLootItem(CobblemonItems.PROTECTOR))
+                .add(optLootItem(CobblemonItems.AUSPICIOUS_ARMOR))
+                .add(optLootItem(CobblemonItems.MALICIOUS_ARMOR))
+                .add(optLootItem(CobblemonItems.SHELL_HELMET))
+                .add(optLootItem(CobblemonItems.METAL_ALLOY))
+                .rare()
+            )
+            .withPool(singleItemPool(CobblemonItems.STEEL_GEM, 1, 2).rare())
+            .withPool(singleItemPool(BOTTLE_CAP_SILVER, 1, 1).common())
+            .withPool(singleItemPool(BOTTLE_CAP_GOLD, 1, 1).rare())
+            .withPool(singleItemPool(TMCRAFT_MOVE_UPGRADE_TEMPLATE, 1, 1).common())
+            .build()
+    }
+
+    fun generateForgeSecretLoot(): LootTable {
+        return lootTable()
+            .withPool(singleItemPool(TMCRAFT_BLANK_DISC_IRON, 2, 4).common())
+            .withPool(singleItemPool(SIMPLETMS_BLANK_TR, 2, 4).common())
+            .withPool(singleItemPool(TMCRAFT_BLANK_DISC_GOLD, 1, 2).common())
+            .withPool(singleItemPool(TMCRAFT_BLANK_DISC_DIAMOND, 1, 1).rare())
+            .withPool(singleItemPool(TMCRAFT_BLANK_DISC_NETHERITE, 1, 1).rarer())
+            .withPool(singleItemPool(SIMPLETMS_BLANK_TM, 1, 1).rarer())
+            .withPool(randomArceusPlatePool().setRolls(between(1f, 3f)))
+            .withPool(singleItemPool(MegaShowdownItems.WISHING_STAR, 1, 1).common())
+            .build()
+    }
+
+    fun generateBeekeeperLoot(): LootTable {
+        return lootTable()
+            .withPool(singleItemPool(COBBLECUISINE_MILD_HONEY_CURRY, 1, 2).common())
+            .withPool(singleItemPool(CobblemonItems.NET_BALL, 5, 15).common())
+            .withPool(singleItemPool(CobblemonItems.FLOWER_SWEET, 1, 1).common())
+            .withPool(randomBerryPool(between(3f, 7f), between(2f, 3f)).common())
+            .withPool(singleItemPool(CobblemonItems.BUG_GEM, 1, 2).rare())
+            .withPool(singleItemPool(MegaShowdownItems.MAX_HONEY, 1, 1).rare())
+            .withPool(singleItemPool(MegaShowdownItems.DYNAMAX_CANDY, 1, 3).rare())
+            .build()
+    }
+
+    fun generateCaveCampLoot(): LootTable {
+        return lootTable()
+            .withPool(singleItemPool(CobblemonItems.BIG_ROOT, 10, 20).common())
+            .withPool(singleItemPool(CobblemonItems.ENERGY_ROOT, 5, 10).common())
+            .withPool(singleItemPool(CobblemonItems.DUSK_BALL, 5, 15).common())
+            .withPool(singleItemPool(CobblemonItems.ROCK_GEM, 1, 2).rare())
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(CobblemonItems.HARD_STONE))
+                .add(optLootItem(CobblemonItems.OVAL_STONE))
+                .add(optLootItem(CobblemonItems.EVERSTONE))
+                .add(optLootItem(CobblemonItems.EVIOLITE))
+                .rare()
+            )
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(CobblemonItems.HEAT_ROCK))
+                .add(optLootItem(CobblemonItems.ICY_ROCK))
+                .add(optLootItem(CobblemonItems.DAMP_ROCK))
+                .add(optLootItem(CobblemonItems.SMOOTH_ROCK))
+                .rare()
+            )
+            .build()
+    }
+
+    fun generateConduitChurchTreasureLoot(): LootTable {
+        return lootTable()
+            .withPool(singleItemPool(CobblemonItems.WATER_GEM, 1, 2).common())
+            .withPool(singleItemPool(CobblemonItems.KINGS_ROCK, 1, 1).common())
+            .withPool(singleItemPool(CobblemonItems.EXPERIENCE_CANDY_L, 5, 10).common())
+            .withPool(singleItemPool(CobblemonItems.EXPERIENCE_CANDY_XL, 2, 5).rare())
+            .withPool(singleItemPool(CobblemonItems.POKEROD_SMITHING_TEMPLATE, 1, 1).rare())
+            .withPool(singleItemPool(CobblemonItems.ABILITY_PATCH, 1, 1).rarer())
+            .withPool(singleItemPool(MegaShowdownItems.SPARKLING_STONE_DARK, 1, 1))
+            .withPool(singleItemPool(MegaShowdownItems.BLANK_Z, 1, 1).common())
+            .build()
+    }
+
+    fun generateConduitChurchLoot(): LootTable {
+        return lootTable()
+            .withPool(singleItemPool(CobblemonItems.DIVE_BALL, 5, 15).common())
+            .withPool(singleItemPool(CobblemonItems.MYSTIC_WATER, 1, 1).rare())
+            .withPool(singleItemPool(CobblemonItems.WATER_STONE, 1, 1).rare())
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(CobblemonItems.DRAGON_SCALE))
+                .add(optLootItem(CobblemonItems.PRISM_SCALE))
+                .add(optLootItem(CobblemonItems.DEEP_SEA_TOOTH))
+                .add(optLootItem(CobblemonItems.DEEP_SEA_SCALE))
+                .rare()
+            )
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(CobblemonItems.HELIX_FOSSIL))
+                .add(optLootItem(CobblemonItems.DOME_FOSSIL))
+                .add(optLootItem(CobblemonItems.COVER_FOSSIL))
+                .rarer()
+            )
+            .withPool(singleItemPool(BOTTLE_CAP_SILVER, 1, 1).rare())
+            .withPool(singleItemPool(BOTTLE_CAP_GOLD, 1, 1).rarer())
+            .build()
+    }
+
+    fun generateConduitRuinsLoot(): LootTable {
+        return lootTable()
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(CobblemonItems.KINGS_ROCK))
+                .add(optLootItem(CobblemonItems.SHELL_BELL))
+                .common()
+            )
+            .withPool(singleItemPool(CobblemonItems.EXPERIENCE_CANDY_L, 5, 10).common())
+            .withPool(singleItemPool(CobblemonItems.DIVE_BALL, 5, 15).common())
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(CobblemonItems.DRAGON_SCALE))
+                .add(optLootItem(CobblemonItems.PRISM_SCALE))
+                .add(optLootItem(CobblemonItems.DEEP_SEA_TOOTH))
+                .add(optLootItem(CobblemonItems.DEEP_SEA_SCALE))
+                .rare()
+            )
+            .withPool(singleItemPool(CobblemonItems.POKEROD_SMITHING_TEMPLATE, 1, 1).rare())
+            .withPool(singleItemPool(CobblemonItems.WATER_GEM, 1, 2).rare())
+            .withPool(singleItemPool(MegaShowdownItems.BLANK_Z, 1, 1).common())
+            .withPool(singleItemPool(MegaShowdownItems.SPARKLING_STONE_LIGHT, 1, 1).rare())
+            .withPool(singleItemPool(BOTTLE_CAP_SILVER, 1, 1).rare())
+            .withPool(singleItemPool(BOTTLE_CAP_GOLD, 1, 1).rarer())
+            .build()
+    }
+
+    fun generateEnchantTowerTopLoot(): LootTable {
+        return lootTable()
+            .withPool(singleItemPool(CobblemonItems.EXPERIENCE_CANDY_L, 5, 10).common())
+            .withPool(singleItemPool(CobblemonItems.EXPERIENCE_CANDY_XL, 2, 5).rare())
+            .withPool(singleItemPool(CobblemonItems.RELIC_COIN_POUCH, 2, 5))
+            .withPool(singleItemPool(CobblemonItems.DRAGON_GEM, 1, 2).rare())
+            .withPool(singleItemPool(CobblemonItems.FAIRY_GEM, 1, 2).rare())
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(CobblemonItems.COVERT_CLOAK))
+                .add(optLootItem(CobblemonItems.CLEAR_AMULET))
+                .rare()
+            )
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(CobblemonItems.DAWN_STONE))
+                .add(optLootItem(CobblemonItems.DUSK_STONE))
+                .add(optLootItem(CobblemonItems.SHINY_STONE))
+                .rare()
+            )
+            .withPool(singleItemPool(CobblemonItems.ABILITY_PATCH, 1, 1).rarer())
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(CobblemonItems.SCROLL_OF_DARKNESS))
+                .add(optLootItem(CobblemonItems.SCROLL_OF_WATERS))
+                .rarest()
+            )
+            .build()
+    }
+
+    fun generateEnchantTowerTowerLoot(): LootTable {
+        return lootTable()
+            .withPool(singleItemPool(CobblemonItems.DREAM_BALL, 5, 10).common())
+            .withPool(singleItemPool(CobblemonItems.EXPERIENCE_CANDY_XS, 15, 20).common())
+            .withPool(singleItemPool(CobblemonItems.EXPERIENCE_CANDY_S, 15, 20).common())
+            .withPool(singleItemPool(CobblemonItems.EXPERIENCE_CANDY_M, 10, 15).common())
+            .withPool(singleItemPool(CobblemonItems.EXPERIENCE_CANDY_L, 5, 10).rare())
+            .withPool(singleItemPool(CobblemonItems.OLD_GATEAU, 1, 2).common())
+            .withPool(singleItemPool(CobblemonItems.RELIC_COIN, 5, 10).common())
+            .withPool(singleItemPool(CobblemonItems.MENTAL_HERB, 1, 1).rare())
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(CobblemonItems.CRACKED_POT))
+                .add(optLootItem(CobblemonItems.UNREMARKABLE_TEACUP))
+                .rare()
+            )
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(CobblemonItems.CHIPPED_POT))
+                .add(optLootItem(CobblemonItems.MASTERPIECE_TEACUP))
+                .rarer()
+            )
+            .withPool(singleItemPool(BOTTLE_CAP_SILVER, 1, 1).rare())
+            .withPool(singleItemPool(BOTTLE_CAP_GOLD, 1, 1).rarer())
+            .build()
+    }
+
+    fun generateGolemHouseNormalLoot(): LootTable {
+        return lootTable()
+            .withPool(singleItemPool(CobblemonItems.FRIEND_BALL, 5, 15).common())
+            .withPool(
+                lootPoolSingleRoll()
+                    .add(optLootItem(CobblemonItems.METAL_COAT))
+                    .add(optLootItem(CobblemonItems.METAL_ALLOY))
+                    .rare()
+            )
+            .withPool(
+                lootPoolSingleRoll()
+                    .add(optLootItem(CobblemonItems.HEAVY_DUTY_BOOTS))
+                    .add(optLootItem(CobblemonItems.SAFETY_GOGGLES))
+                    .add(optLootItem(CobblemonItems.SOOTHE_BELL))
+                    .add(optLootItem(CobblemonItems.ROCKY_HELMET))
+                    .rare()
+            )
+            .withPool(singleItemPool(BOTTLE_CAP_SILVER, 1, 1).rare())
+            .build()
+    }
+
+    fun generateGolemHouseZombieLoot(): LootTable {
+        return lootTable()
+            .withPool(singleItemPool(CobblemonItems.MOON_BALL, 5, 15).common())
+            .withPool(
+                lootPoolSingleRoll()
+                    .add(optLootItem(CobblemonItems.METAL_COAT))
+                    .add(optLootItem(CobblemonItems.METAL_ALLOY))
+                    .rare()
+            )
+            .withPool(
+                lootPoolSingleRoll()
+                    .add(optLootItem(CobblemonItems.HEAVY_DUTY_BOOTS))
+                    .add(optLootItem(CobblemonItems.BLACK_SLUDGE))
+                    .add(optLootItem(CobblemonItems.SAFETY_GOGGLES))
+                    .add(optLootItem(CobblemonItems.ROCKY_HELMET))
+                    .rare()
+            )
+            .withPool(singleItemPool(BOTTLE_CAP_SILVER, 1, 1).rare())
+            .build()
+    }
+
+    fun generateNoteblockLabBasementLoot(): LootTable {
+        return lootTable()
+            .withPool(singleItemPool(CobblemonItems.TIMER_BALL, 5, 10).common())
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(CobblemonItems.THROAT_SPRAY))
+                .add(optLootItem(CobblemonItems.METRONOME))
+                .common()
+            )
+            .withPool(singleItemPool(TMCRAFT_BLANK_DISC_COPPER, 2, 3).common())
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(TMCRAFT_BLANK_DISC_IRON).count(between(1f, 2f)))
+                .add(optLootItem(SIMPLETMS_BLANK_TR).count(between(1f, 2f)))
+                .common()
+            )
+            .withPool(singleItemPool(TMCRAFT_BLANK_DISC_GOLD, 1, 1).rare())
+            .withPool(
+                lootPoolSingleRoll()
+                    .add(optLootItem(TMCRAFT_BLANK_DISC_EMERALD))
+                    .add(optLootItem(SIMPLETMS_BLANK_TM))
+                    .rarer()
+            )
+            .withPool(singleItemPool(TMCRAFT_BLANK_DISC_DIAMOND, 1, 1).rarer())
+            .withPool(singleItemPool(MegaShowdownItems.BLANK_Z, 1, 1).rare())
+            .build()
+    }
+
+    fun generateNoteblockLabHouseLoot(): LootTable {
+        return lootTable()
+            .withPool(singleItemPool(CobblemonItems.NORMAL_GEM, 1, 2).rare())
+            .withPool(singleItemPool(CobblemonItems.FAIRY_GEM, 1, 2).rare())
+            .withPool(singleItemPool(CobblemonItems.DESTINY_KNOT, 1, 1).common())
+            .withPool(singleItemPool(CobblemonItems.CLEAR_AMULET, 1, 1).rarer())
+            .withPool(singleItemPool(CobblemonItems.LUCKY_EGG, 1, 1).rarer())
+            .withPool(singleItemPool(BOTTLE_CAP_SILVER, 1, 1).rare())
+            .build()
+    }
+
+    fun generateNoteblockShipBarrelsLoot(): LootTable {
+        return lootTable()
+            .withPool(randomBerryPool(between(2f, 3f), between(2f, 5f)).common())
+            .withPool(singleItemPool(CobblemonItems.LEFTOVERS, 1, 1).rare())
+            .withPool(singleItemPool(CobblemonItems.MEDICINAL_LEEK, 5, 10).common())
+            .withPool(singleItemPool(CobblemonItems.REVIVAL_HERB, 5, 10).common())
+            .withPool(singleItemPool(CobblemonItems.PEP_UP_FLOWER, 1, 5).common())
+            .withPool(singleItemPool(CobblemonItems.HEARTY_GRAINS, 5, 10).common())
+            .withPool(singleItemPool(CobblemonItems.ANCIENT_WING_BALL, 1, 5).common())
+            .build()
+    }
+
+    fun generateNoteblockShipChestLoot(): LootTable {
+        return lootTable()
+            .withPool(singleItemPool(CobblemonItems.FLYING_GEM, 1, 2).rare())
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(CobblemonItems.AIR_BALLOON))
+                .add(optLootItem(CobblemonItems.THROAT_SPRAY))
+                .add(optLootItem(CobblemonItems.METRONOME))
+                .common()
+            )
+            .withPool(singleItemPool(CobblemonItems.SHARP_BEAK, 1, 1).common())
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(TMCRAFT_BLANK_DISC_IRON).count(between(1f, 2f)))
+                .add(optLootItem(SIMPLETMS_BLANK_TR).count(between(1f, 2f)))
+                .common()
+            )
+            .withPool(singleItemPool(TMCRAFT_BLANK_DISC_GOLD, 1, 1).common())
+            .withPool(
+                lootPoolSingleRoll()
+                    .add(optLootItem(TMCRAFT_BLANK_DISC_EMERALD))
+                    .add(optLootItem(SIMPLETMS_BLANK_TM))
+                    .rare()
+            )
+            .withPool(singleItemPool(TMCRAFT_BLANK_DISC_DIAMOND, 1, 1).rare())
+            .withPool(singleItemPool(MegaShowdownItems.BLANK_Z, 1, 1).rare())
+            .build()
+    }
+
+    fun generateResearcherTentLabLoot(): LootTable {
+        return lootTable()
+            .withPool(singleItemPool(MegaShowdownItems.ZYGARDE_CELL, 1, 1))
+            .withPool(singleItemPool(CobblemonItems.ANCIENT_POKE_BALL, 5, 10).common())
+            .withPool(singleItemPool(CobblemonItems.ANCIENT_GREAT_BALL, 5, 10).common())
+            .withPool(singleItemPool(CobblemonItems.ANCIENT_ULTRA_BALL, 1, 5).common())
+            .withPool(singleItemPool(MegaShowdownItems.ZYGARDE_CELL, 1, 2).common())
+            .withPool(singleItemPool(MegaShowdownItems.ZYGARDE_CORE, 1, 1).rare())
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(CobblemonItems.FLAME_ORB))
+                .add(optLootItem(CobblemonItems.TOXIC_ORB))
+                .common()
+            )
+            .withPool(singleItemPool(CobblemonItems.LIFE_ORB, 1, 1).rare())
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(CobblemonItems.WIDE_LENS))
+                .add(optLootItem(CobblemonItems.WISE_GLASSES))
+                .common()
+            )
+            .build()
+    }
+
+    fun generateResearcherTentTentLoot(): LootTable {
+        return lootTable()
+            .withPool(lootPoolSingleRoll()
+                .add(expandTag(CobblemonItemTags.FOSSILS))
+                .rarer()
+            )
+            .withPool(singleItemPool(CobblemonItems.RELIC_COIN, 5, 15).common())
+            .withPool(singleItemPool(CobblemonItems.RELIC_COIN_POUCH, 1, 2).rare())
+            .withPool(lootPoolSingleRoll()
+                .add(expandTag(CobblemonItemTags.TYPE_GEMS))
+                .rare()
+            )
+            .withPool(lootPoolSingleRoll()
+                .add(optLootItem(CobblemonItems.BLUNDER_POLICY))
+                .add(optLootItem(CobblemonItems.WEAKNESS_POLICY))
+                .rare()
+            )
+            .withPool(singleItemPool(BOTTLE_CAP_SILVER, 1, 1).rare())
+            .withPool(singleItemPool(MegaShowdownItems.TERA_ORB, 1, 1).rare())
+            .build()
+    }
+
+    private fun randomArceusPlatePool() = lootPoolSingleRoll().also { pool ->
+        listOf(
+            MegaShowdownItems.FLAME_PLATE,
+            MegaShowdownItems.SPLASH_PLATE,
+            MegaShowdownItems.ZAP_PLATE,
+            MegaShowdownItems.MEADOW_PLATE,
+            MegaShowdownItems.ICICLE_PLATE,
+            MegaShowdownItems.FIST_PLATE,
+            MegaShowdownItems.TOXIC_PLATE,
+            MegaShowdownItems.EARTH_PLATE,
+            MegaShowdownItems.SKY_PLATE,
+            MegaShowdownItems.MIND_PLATE,
+            MegaShowdownItems.INSECT_PLATE,
+            MegaShowdownItems.STONE_PLATE,
+            MegaShowdownItems.SPOOKY_PLATE,
+            MegaShowdownItems.DRACO_PLATE,
+            MegaShowdownItems.DREAD_PLATE,
+            MegaShowdownItems.IRON_PLATE,
+            MegaShowdownItems.PIXIE_PLATE,
+        ).forEach { pool.add(optLootItem(it)) }
+    }
+
+    private fun randomBerryPool(rolls: NumberProvider, countForRoll: NumberProvider) = lootPool()
+        .setRolls(rolls)
+        .add(expandTag(GrowssethTags.COBBLEMON_BERRIES_EXCEPT_RARE).count(countForRoll))
+
+    private fun singleItemPool(item: ItemLike, min: Int, max: Int): LootPool.Builder {
+        return lootPoolSingleRoll()
+            .add(optLootItem(item).count(between(min.toFloat(), max.toFloat())))
+    }
+    private fun singleItemPool(itemSupplier: RegistrySupplier<Item>, min: Int, max: Int): LootPool.Builder {
+        return lootPoolSingleRoll()
+            .add(optLootItem(itemSupplier).count(between(min.toFloat(), max.toFloat())))
+    }
+    private fun singleItemPool(id: ResourceLocation, min: Int, max: Int): LootPool.Builder {
+        return lootPoolSingleRoll()
+            .add(optLootItem(id).count(between(min.toFloat(), max.toFloat())))
+   }
+
+    private fun LootPool.Builder.common() = this.withRandomChance(CHANCE_COMMON)
+    private fun LootPool.Builder.rare() = this.withRandomChance(CHANCE_RARE)
+    private fun LootPool.Builder.rarer() = this.withRandomChance(CHANCE_RARER)
+    private fun LootPool.Builder.rarest() = this.withRandomChance(CHANCE_RAREST)
+
+    private fun optLootItem(item: ItemLike) = expandTag(optionalLootItemTags.optionalModLootTableItem(item))
+    private fun optLootItem(itemSupplier: RegistrySupplier<Item>) = optLootItem(itemSupplier.get())
+    private fun optLootItem(id: ResourceLocation) = expandTag(optionalLootItemTags.optionalModLootTableItem(id))
+}

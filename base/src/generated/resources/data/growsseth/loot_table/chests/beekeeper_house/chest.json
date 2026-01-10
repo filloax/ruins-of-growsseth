@@ -146,6 +146,40 @@
             "pools": [
               {
                 "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 2.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "cobblecuisine:mod_compat_loot_table_items/mild_honey_curry"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
                 "entries": [
                   {
                     "type": "minecraft:tag",
@@ -161,32 +195,20 @@
                         "function": "minecraft:set_count"
                       }
                     ],
-                    "name": "cobblemon:mod_compat_loot_table_items/net_ball",
-                    "weight": 10
-                  },
+                    "name": "cobblemon:mod_compat_loot_table_items/net_ball"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
                   {
-                    "type": "minecraft:tag",
-                    "expand": true,
-                    "name": "cobblemon:mod_compat_loot_table_items/flower_sweet",
-                    "weight": 10
-                  },
-                  {
-                    "type": "minecraft:tag",
-                    "expand": true,
-                    "functions": [
-                      {
-                        "add": false,
-                        "count": {
-                          "type": "minecraft:uniform",
-                          "max": 20.0,
-                          "min": 10.0
-                        },
-                        "function": "minecraft:set_count"
-                      }
-                    ],
-                    "name": "cobblemon:mod_compat_loot_table_items/oran_berry",
-                    "weight": 10
-                  },
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
                   {
                     "type": "minecraft:tag",
                     "expand": true,
@@ -195,15 +217,58 @@
                         "add": false,
                         "count": {
                           "type": "minecraft:uniform",
-                          "max": 20.0,
-                          "min": 10.0
+                          "max": 1.0,
+                          "min": 1.0
                         },
                         "function": "minecraft:set_count"
                       }
                     ],
-                    "name": "cobblemon:mod_compat_loot_table_items/sitrus_berry",
-                    "weight": 10
-                  },
+                    "name": "cobblemon:mod_compat_loot_table_items/flower_sweet"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 3.0,
+                          "min": 2.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "growsseth:compat/cobblemon_berries_except_rare"
+                  }
+                ],
+                "rolls": {
+                  "type": "minecraft:uniform",
+                  "max": 7.0,
+                  "min": 3.0
+                }
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.5,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
                   {
                     "type": "minecraft:tag",
                     "expand": true,
@@ -218,15 +283,48 @@
                         "function": "minecraft:set_count"
                       }
                     ],
-                    "name": "cobblemon:mod_compat_loot_table_items/bug_gem",
-                    "weight": 2
-                  },
+                    "name": "cobblemon:mod_compat_loot_table_items/bug_gem"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.5,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
                   {
                     "type": "minecraft:tag",
                     "expand": true,
-                    "name": "mega_showdown:mod_compat_loot_table_items/max_honey",
-                    "weight": 2
-                  },
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 1.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "mega_showdown:mod_compat_loot_table_items/max_honey"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.5,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
                   {
                     "type": "minecraft:tag",
                     "expand": true,
@@ -241,8 +339,7 @@
                         "function": "minecraft:set_count"
                       }
                     ],
-                    "name": "mega_showdown:mod_compat_loot_table_items/dynamax_candy",
-                    "weight": 2
+                    "name": "mega_showdown:mod_compat_loot_table_items/dynamax_candy"
                   }
                 ],
                 "rolls": 1.0

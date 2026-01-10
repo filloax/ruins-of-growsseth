@@ -198,17 +198,12 @@
             "pools": [
               {
                 "bonus_rolls": 0.0,
-                "entries": [
+                "conditions": [
                   {
-                    "type": "minecraft:tag",
-                    "expand": true,
-                    "name": "mega_showdown:mod_compat_loot_table_items/sparkling_stone_dark"
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
                   }
                 ],
-                "rolls": 1.0
-              },
-              {
-                "bonus_rolls": 0.0,
                 "entries": [
                   {
                     "type": "minecraft:tag",
@@ -224,15 +219,48 @@
                         "function": "minecraft:set_count"
                       }
                     ],
-                    "name": "cobblemon:mod_compat_loot_table_items/water_gem",
-                    "weight": 10
-                  },
+                    "name": "cobblemon:mod_compat_loot_table_items/water_gem"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
                   {
                     "type": "minecraft:tag",
                     "expand": true,
-                    "name": "cobblemon:mod_compat_loot_table_items/kings_rock",
-                    "weight": 10
-                  },
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 1.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "cobblemon:mod_compat_loot_table_items/kings_rock"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
                   {
                     "type": "minecraft:tag",
                     "expand": true,
@@ -247,9 +275,20 @@
                         "function": "minecraft:set_count"
                       }
                     ],
-                    "name": "cobblemon:mod_compat_loot_table_items/exp_candy_l",
-                    "weight": 10
-                  },
+                    "name": "cobblemon:mod_compat_loot_table_items/exp_candy_l"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.5,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
                   {
                     "type": "minecraft:tag",
                     "expand": true,
@@ -264,25 +303,113 @@
                         "function": "minecraft:set_count"
                       }
                     ],
-                    "name": "cobblemon:mod_compat_loot_table_items/exp_candy_xl",
-                    "weight": 2
-                  },
+                    "name": "cobblemon:mod_compat_loot_table_items/exp_candy_xl"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.5,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
                   {
                     "type": "minecraft:tag",
                     "expand": true,
-                    "name": "cobblemon:mod_compat_loot_table_items/pokerod_smithing_template",
-                    "weight": 2
-                  },
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 1.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "cobblemon:mod_compat_loot_table_items/pokerod_smithing_template"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.33333334,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
                   {
                     "type": "minecraft:tag",
                     "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 1.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
                     "name": "cobblemon:mod_compat_loot_table_items/ability_patch"
-                  },
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "entries": [
                   {
                     "type": "minecraft:tag",
                     "expand": true,
-                    "name": "mega_showdown:mod_compat_loot_table_items/blank_z",
-                    "weight": 10
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 1.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "mega_showdown:mod_compat_loot_table_items/sparkling_stone_dark"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 1.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "mega_showdown:mod_compat_loot_table_items/blank_z"
                   }
                 ],
                 "rolls": 1.0

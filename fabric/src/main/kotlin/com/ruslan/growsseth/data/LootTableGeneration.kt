@@ -86,14 +86,14 @@ class ArcheologyLootTableProvider(output: FabricDataOutput, val registries: Comp
 class StructureLootTableProvider(output: FabricDataOutput, val registries: CompletableFuture<HolderLookup.Provider>, optionalLootItemTags: OptionalLootItemTags)
     : SimpleFabricLootTableProvider(output, registries, LootContextParamSets.CHEST) {
 
-    //val modCompat = ModCompatStructureLootTableGeneration(registries, optionalLootItemTags)
+    val modCompat = ModCompatStructureLootTableGeneration(registries, optionalLootItemTags)
 
     override fun generate(output: BiConsumer<ResourceKey<LootTable>, LootTable.Builder>) {
         output.accept(
             GrowssethLootTables.CHEST_ABANDONED_FORGE,
             lootTable()
-                .withPool(randomChance(0.33f, lootTableItem(GrowssethItems.DISC_ABBANDONATI)))
-                .withPool(randomChance(0.5f, lootTableItem(GrowssethItems.FRAGMENT_BALLATA_DEL_RESPAWN)))
+                .withPool(randomChancePool(0.33f, lootTableItem(GrowssethItems.DISC_ABBANDONATI)))
+                .withPool(randomChancePool(0.5f, lootTableItem(GrowssethItems.FRAGMENT_BALLATA_DEL_RESPAWN)))
                 .withPool(lootPoolSingleRoll()
                     .add(lootTableItem(GrowssethItems.GROWSSETH_ARMOR_TRIM))
                 )
@@ -108,7 +108,7 @@ class StructureLootTableProvider(output: FabricDataOutput, val registries: Compl
                 .withPool(lootPoolSingleRoll()
                     .add(lootTableItem(Items.IRON_INGOT).count(between(10f, 20f)))
                 )
-                //.extendWithLootTable(modCompat.generateForgeLoot())
+                .extendWithLootTable(modCompat.generateForgeLoot())
         )
 
         output.accept(
@@ -120,8 +120,8 @@ class StructureLootTableProvider(output: FabricDataOutput, val registries: Compl
                           .withEnchantment(enchantment(Enchantments.VANISHING_CURSE), exactly(1f))
                     })
                 )
-                .withPool(randomChance(0.33f, lootTableItem(Items.WITHER_SKELETON_SKULL)))
-                //.extendWithLootTable(modCompat.generateForgeSecretLoot())
+                .withPool(randomChancePool(0.33f, lootTableItem(Items.WITHER_SKELETON_SKULL)))
+                .extendWithLootTable(modCompat.generateForgeSecretLoot())
         )
 
         output.accept(
@@ -133,14 +133,14 @@ class StructureLootTableProvider(output: FabricDataOutput, val registries: Compl
                 .withPool(lootPoolSingleRoll()
                     .add(lootTableItem(Items.HONEYCOMB).count(between(14f, 20f)))
                 )
-                //.extendWithLootTable(modCompat.generateBeekeeperLoot())
+                .extendWithLootTable(modCompat.generateBeekeeperLoot())
         )
 
         output.accept(
             GrowssethLootTables.CHEST_BEEKEEPER_HOUSE_CHEST,
             lootTable()
-                .withPool(randomChance(0.33f, lootTableItem(GrowssethItems.DISC_ODI_ET_AMO)))
-                .withPool(randomChance(0.5f, lootTableItem(GrowssethItems.FRAGMENT_BALLATA_DEL_RESPAWN)))
+                .withPool(randomChancePool(0.33f, lootTableItem(GrowssethItems.DISC_ODI_ET_AMO)))
+                .withPool(randomChancePool(0.5f, lootTableItem(GrowssethItems.FRAGMENT_BALLATA_DEL_RESPAWN)))
                 .withPool(lootPoolSingleRoll()
                     .add(lootTableItem(Items.FLINT_AND_STEEL))
                 )
@@ -159,14 +159,14 @@ class StructureLootTableProvider(output: FabricDataOutput, val registries: Compl
                 .withPool(lootPoolSingleRoll()
                     .add(lootTableItem(Items.STRING).count(between(4f, 8f)))
                 )
-                //.extendWithLootTable(modCompat.generateBeekeeperLoot())
+                .extendWithLootTable(modCompat.generateBeekeeperLoot())
         )
 
         output.accept(
             GrowssethLootTables.CHEST_CAVE_CAMP_CHEST_HINT,
             lootTable()
-                .withPool(randomChance(0.33f, lootTableItem(GrowssethItems.DISC_SEGA_DI_NIENTE)))
-                .withPool(randomChance(0.5f, lootTableItem(GrowssethItems.FRAGMENT_BALLATA_DEL_RESPAWN)))
+                .withPool(randomChancePool(0.33f, lootTableItem(GrowssethItems.DISC_SEGA_DI_NIENTE)))
+                .withPool(randomChancePool(0.5f, lootTableItem(GrowssethItems.FRAGMENT_BALLATA_DEL_RESPAWN)))
                 .withPool(lootPoolSingleRoll()
                     .add(lootTableItem(Items.MUSHROOM_STEW).count(between(1f, 2f)))
                 )
@@ -185,16 +185,16 @@ class StructureLootTableProvider(output: FabricDataOutput, val registries: Compl
                 .withPool(lootPoolSingleRoll()
                     .add(lootTableItem(Items.RAW_COPPER).count(between(3f, 6f)))
                 )
-                //.extendWithLootTable(modCompat.generateCaveCampLoot())
+                .extendWithLootTable(modCompat.generateCaveCampLoot())
         )
 
         output.accept(
             GrowssethLootTables.CHEST_CONDUIT_CHURCH_TREASURE,
             lootTable()
-                .withPool(randomChance(0.33f,
+                .withPool(randomChancePool(0.33f,
                     lootTableItem(GrowssethItems.DISC_CACO_CACO), lootTableItem(GrowssethItems.DISC_PESCI_STRANI))
                 )
-                .withPool(randomChance(0.5f, lootTableItem(GrowssethItems.FRAGMENT_BALLATA_DEL_RESPAWN)))
+                .withPool(randomChancePool(0.5f, lootTableItem(GrowssethItems.FRAGMENT_BALLATA_DEL_RESPAWN)))
                 .withPool(lootPoolSingleRoll().add(lootTableItem(Items.HEART_OF_THE_SEA)))
                 .withPool(lootPoolSingleRoll()
                     .add(lootTableItem(Items.TRIDENT)
@@ -208,7 +208,7 @@ class StructureLootTableProvider(output: FabricDataOutput, val registries: Compl
                 .withPool(lootPool().setRolls(exactly(2f)).add(lootTableItem(Items.GOLD_INGOT).count(between(5f, 10f))))
                 .withPool(lootPoolSingleRoll().add(lootTableItem(Items.PRISMARINE_SHARD).count(between(5f, 10f))))
                 .withPool(lootPoolSingleRoll().add(lootTableItem(Items.PRISMARINE_CRYSTALS).count(between(5f, 10f))))
-                //.extendWithLootTable(modCompat.generateConduitChurchTreasureLoot())
+                .extendWithLootTable(modCompat.generateConduitChurchTreasureLoot())
         )
 
         output.accept(
@@ -222,16 +222,16 @@ class StructureLootTableProvider(output: FabricDataOutput, val registries: Compl
                 .withPool(lootPoolSingleRoll().add(lootTableItem(Items.GOLD_INGOT).count(between(5f, 10f))))
                 .withPool(lootPoolSingleRoll().add(lootTableItem(Items.COD).count(between(5f, 10f))))
                 .withPool(lootPoolSingleRoll().add(lootTableItem(Items.BONE).count(between(5f, 10f))))
-                //.extendWithLootTable(modCompat.generateConduitChurchLoot())
+                .extendWithLootTable(modCompat.generateConduitChurchLoot())
         )
 
         output.accept(
             GrowssethLootTables.CHEST_CONDUIT_RUINS_LOOT,
             lootTable()
-                .withPool(randomChance(0.33f,
+                .withPool(randomChancePool(0.33f,
                     lootTableItem(GrowssethItems.DISC_CACO_CACO), lootTableItem(GrowssethItems.DISC_PESCI_STRANI))
                 )
-                .withPool(randomChance(0.5f, lootTableItem(GrowssethItems.FRAGMENT_BALLATA_DEL_RESPAWN)))
+                .withPool(randomChancePool(0.5f, lootTableItem(GrowssethItems.FRAGMENT_BALLATA_DEL_RESPAWN)))
                 .withPool(lootPoolSingleRoll().add(lootTableItem(Items.NAUTILUS_SHELL).count(between(1f, 2f))))
                 .withPool(lootPoolSingleRoll()
                     .add(lootTableItem(Items.FISHING_ROD).count(between(0f, 1f)).enchantRandomly())
@@ -242,14 +242,14 @@ class StructureLootTableProvider(output: FabricDataOutput, val registries: Compl
                 .withPool(lootPoolSingleRoll().add(lootTableItem(Items.PRISMARINE_CRYSTALS).count(between(3f, 6f))))
                 .withPool(lootPoolSingleRoll().add(lootTableItem(Items.SALMON).count(between(1f, 4f))))
                 .withPool(lootPoolSingleRoll().add(lootTableItem(Items.DRIED_KELP_BLOCK).count(between(1f, 3f))))
-                //.extendWithLootTable(modCompat.generateConduitRuinsLoot())
+                .extendWithLootTable(modCompat.generateConduitRuinsLoot())
         )
 
         output.accept(
             GrowssethLootTables.CHEST_ENCHANT_TOWER_TOP,
             lootTable()
-                .withPool(randomChance(0.33f, lootTableItem(GrowssethItems.DISC_MISSIVA_NELL_OMBRA)))
-                .withPool(randomChance(0.5f, lootTableItem(GrowssethItems.FRAGMENT_BALLATA_DEL_RESPAWN)))
+                .withPool(randomChancePool(0.33f, lootTableItem(GrowssethItems.DISC_MISSIVA_NELL_OMBRA)))
+                .withPool(randomChancePool(0.5f, lootTableItem(GrowssethItems.FRAGMENT_BALLATA_DEL_RESPAWN)))
                 .withPool(lootPoolSingleRoll().add(lootTableItem(Items.DIAMOND).count(exactly(2f))))
                 .withPool(lootPoolSingleRoll()
                     .add(lootTableItem(Items.IRON_SWORD)
@@ -259,7 +259,7 @@ class StructureLootTableProvider(output: FabricDataOutput, val registries: Compl
                 )
                 .withPool(lootPoolSingleRoll().add(lootTableItem(Items.BOOK).count(between(1f, 5f))))
                 .withPool(lootPoolSingleRoll().add(lootTableItem(Items.LAPIS_LAZULI).count(between(6f, 15f))))
-                //.extendWithLootTable(modCompat.generateEnchantTowerTopLoot())
+                .extendWithLootTable(modCompat.generateEnchantTowerTopLoot())
         )
 
         output.accept(
@@ -269,15 +269,15 @@ class StructureLootTableProvider(output: FabricDataOutput, val registries: Compl
                 .withPool(lootPoolSingleRoll().add(lootTableItem(Items.EXPERIENCE_BOTTLE).count(between(0f, 2f))))
                 .withPool(lootPoolSingleRoll().add(lootTableItem(Items.BOOK).count(between(1f, 5f))))
                 .withPool(lootPoolSingleRoll().add(lootTableItem(Items.LAPIS_LAZULI).count(between(6f, 15f))))
-                //.extendWithLootTable(modCompat.generateEnchantTowerTowerLoot())
+                .extendWithLootTable(modCompat.generateEnchantTowerTowerLoot())
         )
 
         output.accept(
             GrowssethLootTables.CHEST_GOLEM_HOUSES_NORMAL,
             lootTable()
-                .withPool(randomChance(0.33f, lootTableItem(GrowssethItems.DISC_PADRE_MAMMONK))
+                .withPool(randomChancePool(0.33f, lootTableItem(GrowssethItems.DISC_PADRE_MAMMONK))
                 )
-                .withPool(randomChance(0.5f, lootTableItem(GrowssethItems.FRAGMENT_BALLATA_DEL_RESPAWN))
+                .withPool(randomChancePool(0.5f, lootTableItem(GrowssethItems.FRAGMENT_BALLATA_DEL_RESPAWN))
                 )
                 .withPool(lootPoolSingleRoll()
                     .add(lootTableItem(Items.SHEARS))
@@ -291,14 +291,14 @@ class StructureLootTableProvider(output: FabricDataOutput, val registries: Compl
                 .withPool(lootPoolSingleRoll()
                     .add(lootTableItem(Items.PUMPKIN_PIE).count(between(1f, 4f)))
                 )
-                //.extendWithLootTable(modCompat.generateGolemHouseNormalLoot())
+                .extendWithLootTable(modCompat.generateGolemHouseNormalLoot())
         )
 
         output.accept(
             GrowssethLootTables.CHEST_GOLEM_HOUSES_ZOMBIE,
             lootTable()
-                .withPool(randomChance(0.33f, lootTableItem(GrowssethItems.DISC_PADRE_MAMMONK)))
-                .withPool(randomChance(0.5f, lootTableItem(GrowssethItems.FRAGMENT_BALLATA_DEL_RESPAWN)))
+                .withPool(randomChancePool(0.33f, lootTableItem(GrowssethItems.DISC_PADRE_MAMMONK)))
+                .withPool(randomChancePool(0.5f, lootTableItem(GrowssethItems.FRAGMENT_BALLATA_DEL_RESPAWN)))
                 .withPool(lootPoolSingleRoll()
                     .add(lootTableItem(Items.SHEARS).count(between(0f, 1f)))
                 )
@@ -308,7 +308,7 @@ class StructureLootTableProvider(output: FabricDataOutput, val registries: Compl
                 .withPool(lootPoolSingleRoll()
                     .add(lootTableItem(Items.PUMPKIN_SEEDS).count(between(0f, 3f)))
                 )
-                //.extendWithLootTable(modCompat.generateGolemHouseZombieLoot())
+                .extendWithLootTable(modCompat.generateGolemHouseZombieLoot())
         )
 
         output.accept(
@@ -322,7 +322,7 @@ class StructureLootTableProvider(output: FabricDataOutput, val registries: Compl
                 .withPool(lootPoolSingleRoll().add(lootTableItem(Items.WHITE_WOOL).count(between(1f, 3f))))
                 .withPool(lootPoolSingleRoll().add(lootTableItem(Items.STRING).count(between(1f, 3f))))
                 .withPool(lootPoolSingleRoll().add(lootTableItem(Items.AMETHYST_SHARD).count(between(5f, 8f))))
-                //.extendWithLootTable(modCompat.generateNoteblockLabBasementLoot())
+                .extendWithLootTable(modCompat.generateNoteblockLabBasementLoot())
         )
 
         output.accept(
@@ -332,11 +332,11 @@ class StructureLootTableProvider(output: FabricDataOutput, val registries: Compl
                     .setRolls(between(1f, 3f))
                     .add(expandTag(GrowssethTags.NOTEBLOCK_DISCS_TAG))
                 )
-                .withPool(randomChance(0.5f, lootTableItem(GrowssethItems.FRAGMENT_BALLATA_DEL_RESPAWN)))
+                .withPool(randomChancePool(0.5f, lootTableItem(GrowssethItems.FRAGMENT_BALLATA_DEL_RESPAWN)))
                 .withPool(lootPoolSingleRoll().add(lootTableItem(Items.ROTTEN_FLESH).count(between(3f, 6f))))
                 .withPool(lootPoolSingleRoll().add(lootTableItem(Items.POISONOUS_POTATO).count(between(2f, 4f))))
                 .withPool(lootPoolSingleRoll().add(lootTableItem(Items.COBWEB).count(between(3f, 6f))))
-                //.extendWithLootTable(modCompat.generateNoteblockLabHouseLoot())
+                .extendWithLootTable(modCompat.generateNoteblockLabHouseLoot())
         )
 
         output.accept(
@@ -348,7 +348,7 @@ class StructureLootTableProvider(output: FabricDataOutput, val registries: Compl
                     .add(lootTableItem(Items.COOKED_BEEF).count(between(0f, 10f)))
                     .add(lootTableItem(Items.COOKED_PORKCHOP).count(between(0f, 10f)))
                 )
-                //.extendWithLootTable(modCompat.generateNoteblockShipBarrelsLoot())
+                .extendWithLootTable(modCompat.generateNoteblockShipBarrelsLoot())
         )
 
         output.accept(
@@ -358,11 +358,11 @@ class StructureLootTableProvider(output: FabricDataOutput, val registries: Compl
                     .setRolls(between(2f, 3f))
                     .add(expandTag(GrowssethTags.NOTEBLOCK_DISCS_TAG))
                 )
-                .withPool(randomChance(0.5f, lootTableItem(GrowssethItems.FRAGMENT_BALLATA_DEL_RESPAWN)))
+                .withPool(randomChancePool(0.5f, lootTableItem(GrowssethItems.FRAGMENT_BALLATA_DEL_RESPAWN)))
                 .withPool(lootPoolSingleRoll().add(lootTableItem(Items.REDSTONE).count(between(10f, 20f))))
                 .withPool(lootPoolSingleRoll().add(lootTableItem(Items.MAP).count(between(1f, 2f))))
                 .withPool(lootPoolSingleRoll().add(lootTableItem(Items.COMPASS)))
-                //.extendWithLootTable(modCompat.generateNoteblockShipChestLoot())
+                .extendWithLootTable(modCompat.generateNoteblockShipChestLoot())
         )
 
         output.accept(
@@ -375,7 +375,7 @@ class StructureLootTableProvider(output: FabricDataOutput, val registries: Compl
                 .withPool(lootPoolSingleRoll().add(lootTableItem(Items.GUNPOWDER).count(between(2f, 4f))))
                 .withPool(lootPoolSingleRoll().add(lootTableItem(Items.REDSTONE).count(between(1f, 2f))))
                 .withPool(lootPoolSingleRoll().add(lootTableItem(Items.GLOWSTONE_DUST).count(between(1f, 2f))))
-                //.extendWithLootTable(modCompat.generateResearcherTentLabLoot())
+                .extendWithLootTable(modCompat.generateResearcherTentLabLoot())
         )
 
         output.accept(
@@ -383,7 +383,7 @@ class StructureLootTableProvider(output: FabricDataOutput, val registries: Compl
             lootTable()
                 .withPool(lootPoolSingleRoll().add(lootTableItem(Items.MAP).count(between(0f, 1f))))
                 .withPool(lootPoolSingleRoll().add(lootTableItem(Items.PAPER).count(between(2f, 6f))))
-                //.extendWithLootTable(modCompat.generateResearcherTentTentLoot())
+                .extendWithLootTable(modCompat.generateResearcherTentTentLoot())
         )
     }
 

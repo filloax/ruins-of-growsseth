@@ -111,6 +111,12 @@
             "pools": [
               {
                 "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
                 "entries": [
                   {
                     "type": "minecraft:tag",
@@ -126,44 +132,89 @@
                         "function": "minecraft:set_count"
                       }
                     ],
-                    "name": "cobblemon:mod_compat_loot_table_items/friend_ball",
-                    "weight": 10
+                    "name": "cobblemon:mod_compat_loot_table_items/friend_ball"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.5,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "name": "cobblemon:mod_compat_loot_table_items/metal_coat"
                   },
                   {
                     "type": "minecraft:tag",
                     "expand": true,
-                    "name": "cobblemon:mod_compat_loot_table_items/metal_coat",
-                    "weight": 2
+                    "name": "cobblemon:mod_compat_loot_table_items/metal_alloy"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.5,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "name": "cobblemon:mod_compat_loot_table_items/heavy_duty_boots"
                   },
                   {
                     "type": "minecraft:tag",
                     "expand": true,
-                    "name": "cobblemon:mod_compat_loot_table_items/metal_alloy",
-                    "weight": 2
+                    "name": "cobblemon:mod_compat_loot_table_items/safety_goggles"
                   },
                   {
                     "type": "minecraft:tag",
                     "expand": true,
-                    "name": "cobblemon:mod_compat_loot_table_items/heavy_duty_boots",
-                    "weight": 2
+                    "name": "cobblemon:mod_compat_loot_table_items/soothe_bell"
                   },
                   {
                     "type": "minecraft:tag",
                     "expand": true,
-                    "name": "cobblemon:mod_compat_loot_table_items/safety_goggles",
-                    "weight": 2
-                  },
+                    "name": "cobblemon:mod_compat_loot_table_items/rocky_helmet"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.5,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
                   {
                     "type": "minecraft:tag",
                     "expand": true,
-                    "name": "cobblemon:mod_compat_loot_table_items/soothe_bell",
-                    "weight": 2
-                  },
-                  {
-                    "type": "minecraft:tag",
-                    "expand": true,
-                    "name": "cobblemon:mod_compat_loot_table_items/rocky_helmet",
-                    "weight": 2
+                    "functions": [
+                      {
+                        "add": false,
+                        "count": {
+                          "type": "minecraft:uniform",
+                          "max": 1.0,
+                          "min": 1.0
+                        },
+                        "function": "minecraft:set_count"
+                      }
+                    ],
+                    "name": "obc:mod_compat_loot_table_items/bottle_cap"
                   }
                 ],
                 "rolls": 1.0

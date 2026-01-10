@@ -168,6 +168,12 @@
             "pools": [
               {
                 "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
                 "entries": [
                   {
                     "type": "minecraft:tag",
@@ -183,9 +189,20 @@
                         "function": "minecraft:set_count"
                       }
                     ],
-                    "name": "cobblemon:mod_compat_loot_table_items/big_root",
-                    "weight": 10
-                  },
+                    "name": "cobblemon:mod_compat_loot_table_items/big_root"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
                   {
                     "type": "minecraft:tag",
                     "expand": true,
@@ -200,9 +217,20 @@
                         "function": "minecraft:set_count"
                       }
                     ],
-                    "name": "cobblemon:mod_compat_loot_table_items/energy_root",
-                    "weight": 10
-                  },
+                    "name": "cobblemon:mod_compat_loot_table_items/energy_root"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.8,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
                   {
                     "type": "minecraft:tag",
                     "expand": true,
@@ -217,9 +245,20 @@
                         "function": "minecraft:set_count"
                       }
                     ],
-                    "name": "cobblemon:mod_compat_loot_table_items/dusk_ball",
-                    "weight": 10
-                  },
+                    "name": "cobblemon:mod_compat_loot_table_items/dusk_ball"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.5,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
                   {
                     "type": "minecraft:tag",
                     "expand": true,
@@ -234,56 +273,71 @@
                         "function": "minecraft:set_count"
                       }
                     ],
-                    "name": "cobblemon:mod_compat_loot_table_items/rock_gem",
-                    "weight": 2
+                    "name": "cobblemon:mod_compat_loot_table_items/rock_gem"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.5,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "name": "cobblemon:mod_compat_loot_table_items/hard_stone"
                   },
                   {
                     "type": "minecraft:tag",
                     "expand": true,
-                    "name": "cobblemon:mod_compat_loot_table_items/hard_stone",
-                    "weight": 2
+                    "name": "cobblemon:mod_compat_loot_table_items/oval_stone"
                   },
                   {
                     "type": "minecraft:tag",
                     "expand": true,
-                    "name": "cobblemon:mod_compat_loot_table_items/oval_stone",
-                    "weight": 2
+                    "name": "cobblemon:mod_compat_loot_table_items/everstone"
                   },
                   {
                     "type": "minecraft:tag",
                     "expand": true,
-                    "name": "cobblemon:mod_compat_loot_table_items/everstone",
-                    "weight": 2
+                    "name": "cobblemon:mod_compat_loot_table_items/eviolite"
+                  }
+                ],
+                "rolls": 1.0
+              },
+              {
+                "bonus_rolls": 0.0,
+                "conditions": [
+                  {
+                    "chance": 0.5,
+                    "condition": "minecraft:random_chance"
+                  }
+                ],
+                "entries": [
+                  {
+                    "type": "minecraft:tag",
+                    "expand": true,
+                    "name": "cobblemon:mod_compat_loot_table_items/heat_rock"
                   },
                   {
                     "type": "minecraft:tag",
                     "expand": true,
-                    "name": "cobblemon:mod_compat_loot_table_items/eviolite",
-                    "weight": 2
+                    "name": "cobblemon:mod_compat_loot_table_items/icy_rock"
                   },
                   {
                     "type": "minecraft:tag",
                     "expand": true,
-                    "name": "cobblemon:mod_compat_loot_table_items/heat_rock",
-                    "weight": 2
+                    "name": "cobblemon:mod_compat_loot_table_items/damp_rock"
                   },
                   {
                     "type": "minecraft:tag",
                     "expand": true,
-                    "name": "cobblemon:mod_compat_loot_table_items/icy_rock",
-                    "weight": 2
-                  },
-                  {
-                    "type": "minecraft:tag",
-                    "expand": true,
-                    "name": "cobblemon:mod_compat_loot_table_items/damp_rock",
-                    "weight": 2
-                  },
-                  {
-                    "type": "minecraft:tag",
-                    "expand": true,
-                    "name": "cobblemon:mod_compat_loot_table_items/smooth_rock",
-                    "weight": 2
+                    "name": "cobblemon:mod_compat_loot_table_items/smooth_rock"
                   }
                 ],
                 "rolls": 1.0

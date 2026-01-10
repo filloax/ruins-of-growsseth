@@ -16,6 +16,9 @@ object GrowssethTags {
     val RESEARCHER_HORNS: TagKey<Instrument> = TagKey.create(Registries.INSTRUMENT, resLoc("researcher_horns"))
     val NOTEBLOCK_DISCS_TAG: TagKey<Item> = TagKey.create(Registries.ITEM, resLoc("noteblock_discs"))
 
+    // mod compat
+    val COBBLEMON_BERRIES_EXCEPT_RARE = TagKey.create(Registries.ITEM, resLoc("compat/cobblemon_berries_except_rare"))
+
     //json
     object StructTags {
         val ALL = mutableListOf<TagKey<Structure>>()
