@@ -1,10 +1,10 @@
-//package com.ruslan.growsseth.compat.cobblemon
-//
-//import kotlinx.serialization.SerialName
-//import kotlinx.serialization.Serializable
-//
-//@Serializable
-//enum class TrainerTeam {
-//    @SerialName("researcherStandard")
-//    RESEARCHER_STANDARD,
-//}
+package com.ruslan.growsseth.compat.cobblemon
+
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+enum class TrainerTeam {
+    @SerialName("researcherStandard")
+    RESEARCHER_STANDARD,
+}

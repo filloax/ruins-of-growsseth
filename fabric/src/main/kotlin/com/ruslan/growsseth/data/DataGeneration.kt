@@ -5,7 +5,6 @@ import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.advancements.StructureAdvancements
 import com.ruslan.growsseth.compat.data.OptionalLootItemTags
-//import com.ruslan.growsseth.compat.data.OptionalLootItemTags
 import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.item.GrowssethJukeboxSongs
 import com.ruslan.growsseth.structure.GrProcessorLists
@@ -76,7 +75,7 @@ class DataGeneration : DataGeneratorEntrypoint {
         pack.addProvider { output, registries ->
             TagProviderOptionalLootItems(output, registries, optionalLootItemTags)
         }
-        //pack.addProvider(::ModCompatMiscLootTableProvider)
+        pack.addProvider(::ModCompatMiscLootTableProvider)
         pack.addProvider(::ModelGenerator)
         pack.addProvider(::CustomDataProvider)
 

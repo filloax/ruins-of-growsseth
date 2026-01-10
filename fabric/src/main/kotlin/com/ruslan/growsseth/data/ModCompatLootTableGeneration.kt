@@ -12,7 +12,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
 import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableProvider
 import net.minecraft.core.HolderLookup
 import net.minecraft.resources.ResourceKey
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.tags.TagKey
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.Items
@@ -60,18 +60,18 @@ class ModCompatStructureLootTableGeneration(val registries: CompletableFuture<Ho
         private const val CHANCE_RAREST = 1f/10
 
         // avoid depending on too many mods
-        private val BOTTLE_CAP_SILVER = ResourceLocation.fromNamespaceAndPath("obc", "bottle_cap")
-        private val BOTTLE_CAP_GOLD = ResourceLocation.fromNamespaceAndPath("obc", "bottle_cap_gold")
-        private val TMCRAFT_BLANK_DISC_COPPER = ResourceLocation.fromNamespaceAndPath("tmcraft", "copper_blank_disc")
-        private val TMCRAFT_BLANK_DISC_IRON = ResourceLocation.fromNamespaceAndPath("tmcraft", "iron_blank_disc")
-        private val TMCRAFT_BLANK_DISC_GOLD = ResourceLocation.fromNamespaceAndPath("tmcraft", "gold_blank_disc")
-        private val TMCRAFT_BLANK_DISC_DIAMOND = ResourceLocation.fromNamespaceAndPath("tmcraft", "diamond_blank_disc")
-        private val TMCRAFT_BLANK_DISC_EMERALD = ResourceLocation.fromNamespaceAndPath("tmcraft", "emerald_blank_disc")
-        private val TMCRAFT_BLANK_DISC_NETHERITE = ResourceLocation.fromNamespaceAndPath("tmcraft", "netherite_blank_disc")
-        private val SIMPLETMS_BLANK_TR = ResourceLocation.fromNamespaceAndPath("simpletms", "tr_blank")
-        private val SIMPLETMS_BLANK_TM = ResourceLocation.fromNamespaceAndPath("simpletms", "tm_blank")
-        private val COBBLECUISINE_MILD_HONEY_CURRY = ResourceLocation.fromNamespaceAndPath("cobblecuisine", "mild_honey_curry")
-        private val TMCRAFT_MOVE_UPGRADE_TEMPLATE = ResourceLocation.fromNamespaceAndPath("tmcraft", "move_upgrade_smithing_template")
+        private val BOTTLE_CAP_SILVER = Identifier.fromNamespaceAndPath("obc", "bottle_cap")
+        private val BOTTLE_CAP_GOLD = Identifier.fromNamespaceAndPath("obc", "bottle_cap_gold")
+        private val TMCRAFT_BLANK_DISC_COPPER = Identifier.fromNamespaceAndPath("tmcraft", "copper_blank_disc")
+        private val TMCRAFT_BLANK_DISC_IRON = Identifier.fromNamespaceAndPath("tmcraft", "iron_blank_disc")
+        private val TMCRAFT_BLANK_DISC_GOLD = Identifier.fromNamespaceAndPath("tmcraft", "gold_blank_disc")
+        private val TMCRAFT_BLANK_DISC_DIAMOND = Identifier.fromNamespaceAndPath("tmcraft", "diamond_blank_disc")
+        private val TMCRAFT_BLANK_DISC_EMERALD = Identifier.fromNamespaceAndPath("tmcraft", "emerald_blank_disc")
+        private val TMCRAFT_BLANK_DISC_NETHERITE = Identifier.fromNamespaceAndPath("tmcraft", "netherite_blank_disc")
+        private val SIMPLETMS_BLANK_TR = Identifier.fromNamespaceAndPath("simpletms", "tr_blank")
+        private val SIMPLETMS_BLANK_TM = Identifier.fromNamespaceAndPath("simpletms", "tm_blank")
+        private val COBBLECUISINE_MILD_HONEY_CURRY = Identifier.fromNamespaceAndPath("cobblecuisine", "mild_honey_curry")
+        private val TMCRAFT_MOVE_UPGRADE_TEMPLATE = Identifier.fromNamespaceAndPath("tmcraft", "move_upgrade_smithing_template")
     }
 
     fun generateForgeLoot(): LootTable {
@@ -79,8 +79,9 @@ class ModCompatStructureLootTableGeneration(val registries: CompletableFuture<Ho
             .withPool(singleItemPool(CobblemonItems.HEAVY_BALL, 5, 15).common())
             .withPool(lootPool()
                 .setRolls(between(2f, 6f))
-                .add(optLootItem(CobblemonItems.BLUE_APRICORN).count(between(2f, 4f)))
-                .add(optLootItem(CobblemonItems.BLACK_APRICORN).count(between(2f, 4f)))
+                // disabled because of compile errors
+//                .add(optLootItem(CobblemonItems.BLUE_APRICORN).count(between(2f, 4f)))
+//                .add(optLootItem(CobblemonItems.BLACK_APRICORN).count(between(2f, 4f)))
                 .common()
             )
             .withPool(lootPoolSingleRoll()
@@ -457,7 +458,7 @@ class ModCompatStructureLootTableGeneration(val registries: CompletableFuture<Ho
         return lootPoolSingleRoll()
             .add(optLootItem(itemSupplier).count(between(min.toFloat(), max.toFloat())))
     }
-    private fun singleItemPool(id: ResourceLocation, min: Int, max: Int): LootPool.Builder {
+    private fun singleItemPool(id: Identifier, min: Int, max: Int): LootPool.Builder {
         return lootPoolSingleRoll()
             .add(optLootItem(id).count(between(min.toFloat(), max.toFloat())))
    }
@@ -469,5 +470,5 @@ class ModCompatStructureLootTableGeneration(val registries: CompletableFuture<Ho
 
     private fun optLootItem(item: ItemLike) = expandTag(optionalLootItemTags.optionalModLootTableItem(item))
     private fun optLootItem(itemSupplier: RegistrySupplier<Item>) = optLootItem(itemSupplier.get())
-    private fun optLootItem(id: ResourceLocation) = expandTag(optionalLootItemTags.optionalModLootTableItem(id))
+    private fun optLootItem(id: Identifier) = expandTag(optionalLootItemTags.optionalModLootTableItem(id))
 }

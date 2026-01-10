@@ -13,7 +13,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProc
 import com.mojang.datafixers.util.Pair;
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement
-//import com.ruslan.growsseth.compat.LithostitchedCompat
+import com.ruslan.growsseth.compat.LithostitchedCompat
 
 typealias BuildingKey = String
 
@@ -44,12 +44,12 @@ object VillageBuildings {
         val templatePools: Registry<StructureTemplatePool> = server.registryAccess().lookup(Registries.TEMPLATE_POOL).get()
         val processorLists: Registry<StructureProcessorList> = server.registryAccess().lookup(Registries.PROCESSOR_LIST).get()
 
-        val addBuildingToPoolFunction = //if (isLithostitchedLoaded) LithostitchedCompat::addBuildingToPool else
+        val addBuildingToPoolFunction = if (isLithostitchedLoaded) LithostitchedCompat::addBuildingToPool else
             this::addBuildingToPool
 
         houseEntries[CATEGORY_GOLEM_HOUSE]!!.forEach { entry ->
-//            if (RuinsOfGrowsseth.modCompat.isImprovedVillagePlacementLoaded)
-//                entry.weight *= 2   // Villages are rarer with that mod, we don't want players to travel so much for a house
+            if (RuinsOfGrowsseth.modCompat.isImprovedVillagePlacementLoaded)
+                entry.weight *= 2   // Villages are rarer with that mod, we don't want players to travel so much for a house
             addBuildingToPoolFunction(templatePools, processorLists, entry.parentPool, entry.normalTemplate, entry.weight)
             addBuildingToPoolFunction(templatePools, processorLists, entry.parentZombiePool, entry.zombieTemplate, entry.weight)
         }

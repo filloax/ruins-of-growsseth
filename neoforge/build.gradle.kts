@@ -99,12 +99,10 @@ dependencies {
     jarJar( libs.kotlinevents )
 
     // Mod compat
-    if(false) {
-        compileOnly(libs.lithostitched.neoforge)
-        compileOnly(libs.rctapi.neoforge)
-        compileOnly(libs.cobblemon.neoforge)
-        compileOnly(libs.endremastered.neoforge)
-    }
+    compileOnly(libs.lithostitched.neoforge)
+    compileOnly(libs.rctapi.neoforge)
+    compileOnly(libs.cobblemon.neoforge)
+    compileOnly(libs.endremastered.neoforge)
 }
 
 

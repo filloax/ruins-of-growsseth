@@ -6,7 +6,7 @@ import com.ruslan.growsseth.client.GrowssethItemsClient
 import com.ruslan.growsseth.client.GrowssethRenderers
 import com.ruslan.growsseth.client.resource.EncryptedMusicResources
 import com.ruslan.growsseth.client.worldpreset.GrowssethWorldPresetClient
-//import com.ruslan.growsseth.compat.cobblemon.CobblemonRCTListener
+import com.ruslan.growsseth.compat.cobblemon.CobblemonRCTListener
 import com.ruslan.growsseth.config.ClientConfigHandler
 import com.ruslan.growsseth.dialogues.ResearcherDialogueListener
 import com.ruslan.growsseth.effect.GrowssethEffects
@@ -20,7 +20,7 @@ import com.ruslan.growsseth.structure.GrowssethStructures
 import com.ruslan.growsseth.templates.TemplateListener
 import com.ruslan.growsseth.utils.resLoc
 import com.ruslan.growsseth.worldgen.worldpreset.LocationNotifListener
-//import com.teamremastered.endrem.registry.ERTabs
+import com.teamremastered.endrem.registry.ERTabs
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.core.Holder
@@ -94,9 +94,9 @@ object RuinsOfGrowssethNeo : RuinsOfGrowsseth() {
                 }
             }
 
-//            if (modCompat.isEndRemasteredLoaded && ev.tabKey == ERTabs.TABS.registryKey) {
-//                ev.accept(GrowssethItems.ENDREM_GROWSSETH_EYE)
-//            }
+            if (modCompat.isEndRemasteredLoaded && ev.tabKey == ERTabs.TABS.registryKey) {
+                ev.accept(GrowssethItems.ENDREM_GROWSSETH_EYE)
+            }
         }
     }
 
@@ -106,9 +106,9 @@ object RuinsOfGrowssethNeo : RuinsOfGrowsseth() {
             ev.addListener(resLoc("researcher_dialogue_listener"), ResearcherDialogueListener())
             ev.addListener(resLoc("template_listener"), TemplateListener)
             ev.addListener(resLoc("location_notif_listener"), LocationNotifListener())
-//            if (modCompat.isAllCobblemonDepsLoaded) {
-//                ev.addListener(CobblemonRCTListener)
-//            }
+            if (modCompat.isAllCobblemonDepsLoaded) {
+                ev.addListener(resLoc("cobblemon_rtc_listener"), CobblemonRCTListener)
+            }
         }
     }
 

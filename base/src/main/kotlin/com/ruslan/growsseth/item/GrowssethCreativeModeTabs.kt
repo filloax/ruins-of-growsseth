@@ -30,9 +30,9 @@ object GrowssethCreativeModeTabs {
             for (disc in GrowssethItems.DISCS_ORDERED) {
                 output.accept(disc)
             }
-//            if (RuinsOfGrowsseth.modCompat.isEndRemasteredLoaded) {
-//                output.accept(GrowssethItems.ENDREM_GROWSSETH_EYE)
-//            }
+            if (RuinsOfGrowsseth.modCompat.isEndRemasteredLoaded) {
+                output.accept(GrowssethItems.ENDREM_GROWSSETH_EYE)
+            }
         }.build()
     )
 

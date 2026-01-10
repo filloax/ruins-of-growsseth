@@ -267,9 +267,9 @@ class ResearcherDialoguesComponent(
             filters.add { entry -> entry.data[DDATA_MADE_MESS] != "true" }
         }
 
-//        if (RuinsOfGrowsseth.modCompat.isAllCobblemonDepsLoaded && event == EV_COMPAT_COBBLEMON_ERROR) {
-//            filters.add { entry -> entry.data[DDATA_COBBLEMON_ERROR] == eventParam }
-//        }
+        if (RuinsOfGrowsseth.modCompat.isAllCobblemonDepsLoaded && event == EV_COMPAT_COBBLEMON_ERROR) {
+            filters.add { entry -> entry.data[DDATA_COBBLEMON_ERROR] == eventParam }
+        }
     }
 
     override val saveNbtPersistData: Boolean = false

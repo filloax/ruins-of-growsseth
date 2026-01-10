@@ -57,12 +57,10 @@ dependencies {
 	compileOnly(utils.getFilloaxlib())
 
 	// Mod compatibility
-	if (false) {
-		compileOnly(libs.lithostitched.neoforge)
-		compileOnly(libs.cobblemon.neoforge)
-		compileOnly(libs.rctapi.neoforge)
-		compileOnly(libs.endremastered.neoforge)
-	}
+	compileOnly(libs.lithostitched.neoforge)
+	compileOnly(libs.cobblemon.neoforge)
+	compileOnly(libs.rctapi.neoforge)
+	compileOnly(libs.endremastered.neoforge)
 }
 
 sourceSets.main.get().resources.srcDir(project(":base").file("src/generated/resources"))
@@ -142,7 +140,7 @@ tasks.named("build") {
 
 //region Dokka
 // susceptible to changes in dokka v2
-// DISABLED FOR TESTING, RE ENABLE WHEN RESUMING NORMAL DEVELOPMENT
+// TODO: DISABLED FOR TESTING, RE ENABLE WHEN RESUMING NORMAL DEVELOPMENT
 //listOf(
 //	tasks.named("dokkaGenerateModuleJavadoc"),
 //	tasks.named("dokkaGenerate"),

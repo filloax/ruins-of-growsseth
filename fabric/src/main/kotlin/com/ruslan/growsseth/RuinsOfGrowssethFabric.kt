@@ -2,7 +2,7 @@ package com.ruslan.growsseth
 
 import com.filloax.fxlib.api.fabric.FabricReloadListener
 import com.ruslan.growsseth.advancements.GrowssethCriterions
-//import com.ruslan.growsseth.compat.cobblemon.CobblemonRCTListener
+import com.ruslan.growsseth.compat.cobblemon.CobblemonRCTListener
 import com.ruslan.growsseth.dialogues.ResearcherDialogueListener
 import com.ruslan.growsseth.effect.GrowssethEffects
 import com.ruslan.growsseth.entity.GrowssethEntities
@@ -14,7 +14,7 @@ import com.ruslan.growsseth.structure.*
 import com.ruslan.growsseth.templates.TemplateListener
 import com.ruslan.growsseth.utils.resLoc
 import com.ruslan.growsseth.worldgen.worldpreset.LocationNotifListener
-//import com.teamremastered.endrem.registry.ERTabs
+import com.teamremastered.endrem.registry.ERTabs
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents
@@ -76,10 +76,10 @@ object RuinsOfGrowssethFabric : ModInitializer, RuinsOfGrowsseth() {
                 }
             })
 
-//        if (modCompat.isEndRemasteredLoaded) {
-//            ItemGroupEvents.modifyEntriesEvent(ERTabs.ITEM_GROUP)
-//                .register { it.accept(GrowssethItems.ENDREM_GROWSSETH_EYE) }
-//        }
+        if (modCompat.isEndRemasteredLoaded) {
+            ItemGroupEvents.modifyEntriesEvent(ERTabs.ITEM_GROUP)
+                .register { it.accept(GrowssethItems.ENDREM_GROWSSETH_EYE) }
+        }
     }
 
     override fun registerResourceListeners() {
@@ -107,13 +107,13 @@ object RuinsOfGrowssethFabric : ModInitializer, RuinsOfGrowsseth() {
                 LocationNotifListener(),
             )
         )
-//        if (modCompat.isAllCobblemonDepsLoaded) {
-//            ResourceLoader.get(PackType.SERVER_DATA).registerReloader(resLoc("cobblemon_compat_reloader"),
-//                FabricReloadListener(
-//                    resLoc(Constants.COMPAT_COBBLEMON_FOLDER),
-//                    CobblemonRCTListener,
-//                )
-//            )
-//        }
+        if (modCompat.isAllCobblemonDepsLoaded) {
+            ResourceLoader.get(PackType.SERVER_DATA).registerReloader(resLoc("cobblemon_compat_reloader"),
+                FabricReloadListener(
+                    resLoc(Constants.COMPAT_COBBLEMON_FOLDER),
+                    CobblemonRCTListener,
+                )
+            )
+        }
     }
 }
