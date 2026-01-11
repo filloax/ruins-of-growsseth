@@ -15,6 +15,7 @@ import com.ruslan.growsseth.entity.researcher.trades.TradesListener
 import com.ruslan.growsseth.item.GrowssethCreativeModeTabs
 import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.maps.GrowssethMapDecorations
+import com.ruslan.growsseth.sound.GrowssethSounds
 import com.ruslan.growsseth.structure.GrowssethStructurePieceTypes
 import com.ruslan.growsseth.structure.GrowssethStructures
 import com.ruslan.growsseth.templates.TemplateListener
@@ -59,7 +60,7 @@ object RuinsOfGrowssethNeo : RuinsOfGrowsseth() {
             clientTarget = {
                 initializeClient()
                 MOD_BUS.addListener(::setupClient)
-                Minecraft.getInstance()
+                //Minecraft.getInstance()
             },
             serverTarget = {}
         )
@@ -114,6 +115,7 @@ object RuinsOfGrowssethNeo : RuinsOfGrowsseth() {
 
     override fun initRegistries() {
         MOD_BUS.addListener<RegisterEvent> { ev ->
+            ev.registerHolder(Registries.SOUND_EVENT, GrowssethSounds::registerSoundEvents)
             ev.register(Registries.CREATIVE_MODE_TAB, GrowssethCreativeModeTabs::registerCreativeModeTabs)
             ev.register(Registries.ITEM, GrowssethItems::registerItems)
             //ev.register(Registries.INSTRUMENT, GrowssethItems.Instruments::registerInstruments)

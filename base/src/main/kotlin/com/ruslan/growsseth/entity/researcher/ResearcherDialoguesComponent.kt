@@ -327,7 +327,7 @@ class ResearcherDialoguesComponent(
         val soundData = line.dialogue.data[DDATA_SOUND]
         if (soundData != "none") {
             when (soundData) {
-                "angry" -> researcher.playSound(GrowssethSounds.RESEARCHER_NO)
+                "angry" -> researcher.playSound(GrowssethSounds.RESEARCHER_NO.value())
                 else -> researcher.playAmbientSound()
             }
             researcher.resetAmbientSoundTime()

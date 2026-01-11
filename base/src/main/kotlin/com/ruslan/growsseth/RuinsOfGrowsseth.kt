@@ -48,8 +48,6 @@ abstract class RuinsOfGrowsseth {
         ModEvents.get().initCallbacks()
 
         GrowssethApi.current.init()
-        //  Must be done before initializing the jukebox songs to avoid frozen registry errors (todo: implement it like the others)
-        GrowssethSounds.initialize()
         initRegistries()
         RemoteStructures.init()
         CustomRemoteDiaries.init()

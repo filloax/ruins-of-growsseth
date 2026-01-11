@@ -10,6 +10,7 @@ import com.ruslan.growsseth.entity.researcher.trades.TradesListener
 import com.ruslan.growsseth.item.GrowssethCreativeModeTabs
 import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.maps.GrowssethMapDecorations
+import com.ruslan.growsseth.sound.GrowssethSounds
 import com.ruslan.growsseth.structure.*
 import com.ruslan.growsseth.templates.TemplateListener
 import com.ruslan.growsseth.utils.resLoc
@@ -34,6 +35,7 @@ object RuinsOfGrowssethFabric : ModInitializer, RuinsOfGrowsseth() {
     }
 
     override fun initRegistries() {
+        GrowssethSounds.registerSoundEvents { id, value -> Registry.registerForHolder(BuiltInRegistries.SOUND_EVENT, id, value) }
         GrowssethCreativeModeTabs.registerCreativeModeTabs { id, value -> Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, id, value) }
         //GrowssethItems.Instruments.registerInstruments{ id, value -> Registry.register(BuiltInRegistries.INSTRUMENT, id, value) }
         GrowssethItems.SherdPatterns.registerPotPatterns { id, value -> Registry.register(BuiltInRegistries.DECORATED_POT_PATTERN, id, value) }

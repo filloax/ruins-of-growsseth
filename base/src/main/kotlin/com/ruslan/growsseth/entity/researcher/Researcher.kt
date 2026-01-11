@@ -1040,7 +1040,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level)
     override fun notifyTradeUpdated(itemStack: ItemStack) {
         if (!this.level().isClientSide && this.ambientSoundTime > -this.ambientSoundInterval + 20) {
             val sound = if (itemStack.isEmpty) GrowssethSounds.RESEARCHER_NO else GrowssethSounds.RESEARCHER_YES
-            this.playSound(sound, this.soundVolume, this.voicePitch)
+            this.playSound(sound.value(), this.soundVolume, this.voicePitch)
             ambientSoundTime = -this.ambientSoundInterval
         }
     }
@@ -1121,7 +1121,7 @@ class Researcher(entityType: EntityType<Researcher>, level: Level)
     fun setUnhappy() {
         unhappyCounter = 40
         if (!level().isClientSide()) {
-            this.playSound(GrowssethSounds.RESEARCHER_NO, this.soundVolume, this.voicePitch)
+            this.playSound(GrowssethSounds.RESEARCHER_NO.value(), this.soundVolume, this.voicePitch)
         }
     }
 
@@ -1143,14 +1143,14 @@ class Researcher(entityType: EntityType<Researcher>, level: Level)
     override fun setTradingPlayer(player: Player?) { tradingPlayer = player }
     override fun getTradingPlayer(): Player? = tradingPlayer
 
-    override fun getNotifyTradeSound(): SoundEvent = GrowssethSounds.RESEARCHER_YES
-    override fun getHurtSound(damageSource: DamageSource): SoundEvent = GrowssethSounds.RESEARCHER_HURT
-    override fun getDeathSound(): SoundEvent = GrowssethSounds.RESEARCHER_DEATH
+    override fun getNotifyTradeSound(): SoundEvent = GrowssethSounds.RESEARCHER_YES.value()
+    override fun getHurtSound(damageSource: DamageSource): SoundEvent = GrowssethSounds.RESEARCHER_HURT.value()
+    override fun getDeathSound(): SoundEvent = GrowssethSounds.RESEARCHER_DEATH.value()
     override fun getAmbientSoundInterval(): Int = super.getAmbientSoundInterval() * 3
     override fun getAmbientSound(): SoundEvent {
         return if (isTrading()) {
-            GrowssethSounds.RESEARCHER_TRADE
-        } else GrowssethSounds.RESEARCHER_AMBIENT
+            GrowssethSounds.RESEARCHER_TRADE.value()
+        } else GrowssethSounds.RESEARCHER_AMBIENT.value()
     }
 
     override fun canBeLeashed(): Boolean = false

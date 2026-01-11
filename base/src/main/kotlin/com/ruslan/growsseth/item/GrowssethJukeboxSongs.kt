@@ -5,7 +5,7 @@ import com.ruslan.growsseth.sound.GrowssethSounds
 import com.ruslan.growsseth.utils.resLoc
 import net.minecraft.ChatFormatting
 import net.minecraft.util.Util
-import net.minecraft.core.Holder
+import net.minecraft.core.Holder.Reference
 import net.minecraft.core.registries.Registries
 import net.minecraft.data.worldgen.BootstrapContext
 import net.minecraft.network.chat.Component
@@ -126,28 +126,28 @@ object GrowssethJukeboxSongs {
 
     // Create data in datagen
     fun bootstrap(ctx: BootstrapContext<JukeboxSong>) {
-        register(ctx, SEGA_DI_NIENTE,       GrowssethSounds.DISC_SEGA_DI_NIENTE, 119)
-        register(ctx, GIORGIO_CUBETTI,      GrowssethSounds.DISC_GIORGIO_CUBETTI, 161)
-        register(ctx, GIORGIO_LOFI,         GrowssethSounds.DISC_GIORGIO_LOFI, 295)
-        register(ctx, GIORGIO_LOFI_INST,    GrowssethSounds.DISC_GIORGIO_LOFI_INST, 295)
-        register(ctx, GIORGIO_FINDING_HOME, GrowssethSounds.DISC_GIORGIO_FINDING_HOME, 186)
-        register(ctx, GIORGIO_8BIT,         GrowssethSounds.DISC_GIORGIO_8BIT, 152)
-        register(ctx, BINOBINOOO,           GrowssethSounds.DISC_BINOBINOOO, 98)
-        register(ctx, PADRE_MAMMONK,        GrowssethSounds.DISC_PADRE_MAMMONK, 74)
-        register(ctx, ABBANDONATI,          GrowssethSounds.DISC_ABBANDONATI, 145)
-        register(ctx, MISSIVA_NELL_OMBRA,   GrowssethSounds.DISC_MISSIVA_NELL_OMBRA, 329)
-        register(ctx, OURSTEPS,             GrowssethSounds.DISC_OURSTEPS, 154)
-        register(ctx, ODI_ET_AMO,           GrowssethSounds.DISC_ODI_ET_AMO, 191)
-        register(ctx, ANCORA_QUI,           GrowssethSounds.DISC_ANCORA_QUI, 107)
-        register(ctx, BALLATA_DEL_RESPAWN,  GrowssethSounds.DISC_BALLATA_DEL_RESPAWN, 263)
-        register(ctx, CACO_CACO,            GrowssethSounds.DISC_CACO_CACO, 145)
-        register(ctx, PESCI_STRANI,         GrowssethSounds.DISC_PESCI_STRANI, 157)
+        register(ctx, SEGA_DI_NIENTE,       GrowssethSounds.DISC_SEGA_DI_NIENTE as Reference<SoundEvent>,        119)
+        register(ctx, GIORGIO_CUBETTI,      GrowssethSounds.DISC_GIORGIO_CUBETTI as Reference<SoundEvent>,       161)
+        register(ctx, GIORGIO_LOFI,         GrowssethSounds.DISC_GIORGIO_LOFI as Reference<SoundEvent>,          295)
+        register(ctx, GIORGIO_LOFI_INST,    GrowssethSounds.DISC_GIORGIO_LOFI_INST as Reference<SoundEvent>,     295)
+        register(ctx, GIORGIO_FINDING_HOME, GrowssethSounds.DISC_GIORGIO_FINDING_HOME as Reference<SoundEvent>,  186)
+        register(ctx, GIORGIO_8BIT,         GrowssethSounds.DISC_GIORGIO_8BIT as Reference<SoundEvent>,          152)
+        register(ctx, BINOBINOOO,           GrowssethSounds.DISC_BINOBINOOO as Reference<SoundEvent>,            98)
+        register(ctx, PADRE_MAMMONK,        GrowssethSounds.DISC_PADRE_MAMMONK as Reference<SoundEvent>,         74)
+        register(ctx, ABBANDONATI,          GrowssethSounds.DISC_ABBANDONATI as Reference<SoundEvent>,           145)
+        register(ctx, MISSIVA_NELL_OMBRA,   GrowssethSounds.DISC_MISSIVA_NELL_OMBRA as Reference<SoundEvent>,    329)
+        register(ctx, OURSTEPS,             GrowssethSounds.DISC_OURSTEPS as Reference<SoundEvent>,              154)
+        register(ctx, ODI_ET_AMO,           GrowssethSounds.DISC_ODI_ET_AMO as Reference<SoundEvent>,            191)
+        register(ctx, ANCORA_QUI,           GrowssethSounds.DISC_ANCORA_QUI as Reference<SoundEvent>,            107)
+        register(ctx, BALLATA_DEL_RESPAWN,  GrowssethSounds.DISC_BALLATA_DEL_RESPAWN as Reference<SoundEvent>,   263)
+        register(ctx, CACO_CACO,            GrowssethSounds.DISC_CACO_CACO as Reference<SoundEvent>,             145)
+        register(ctx, PESCI_STRANI,         GrowssethSounds.DISC_PESCI_STRANI as Reference<SoundEvent>,          157)
     }
 
     private fun register(
         context: BootstrapContext<JukeboxSong>,
         key: ResourceKey<JukeboxSong>,
-        soundEvent: Holder.Reference<SoundEvent>,
+        soundEvent: Reference<SoundEvent>,
         lengthInSeconds: Int,
         comparatorOutput: Int = 7
     ) {

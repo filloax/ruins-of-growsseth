@@ -239,12 +239,12 @@ class ZombieResearcher(entityType: EntityType<ZombieResearcher>, level: Level) :
 
     // No need to also override step sounds (I hope)
     override fun getAmbientSound(): SoundEvent {
-        return GrowssethSounds.ZOMBIE_RESEARCHER_AMBIENT
+        return GrowssethSounds.ZOMBIE_RESEARCHER_AMBIENT.value()
     }
     override fun getHurtSound(damageSource: DamageSource): SoundEvent {
-        return GrowssethSounds.ZOMBIE_RESEARCHER_HURT
+        return GrowssethSounds.ZOMBIE_RESEARCHER_HURT.value()
     }
     override fun getDeathSound(): SoundEvent {
-        return GrowssethSounds.ZOMBIE_RESEARCHER_DEATH
+        return GrowssethSounds.ZOMBIE_RESEARCHER_DEATH.value()
     }
 }
