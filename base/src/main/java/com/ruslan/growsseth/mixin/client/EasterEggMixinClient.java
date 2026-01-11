@@ -23,11 +23,13 @@ public class EasterEggMixinClient {
             cancellable = true
         )
         private void onGetTexture(ZombieRenderState renderState, CallbackInfoReturnable<Identifier> cir) {
+            /* todo: logic must be changed after the introduction of render states in 1.21.2
             boolean isGuber = ((ZombieWithEasterEgg) renderState).gr$isGuber();
 
             if (isGuber) {
                 cir.setReturnValue(GUBER_ZOMBIE_PATH);
             }
+             */
         }
     }
 }

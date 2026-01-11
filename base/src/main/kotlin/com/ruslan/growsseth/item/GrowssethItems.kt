@@ -51,7 +51,7 @@ object GrowssethItems {
 	val GROWSSETH_POTTERY_SHERD by make("growsseth_pottery_sherd", { defaultItem("growsseth_pottery_sherd") })
 	val FRAGMENT_BALLATA_DEL_RESPAWN by make("fragment_ballata_del_respawn", { DiscFragmentItem(defaultBuilder("growsseth_pottery_sherd")) })
 
-    val ENDREM_GROWSSETH_EYE by makeEndRemasteredEye("growsseth_eye", Properties().rarity(Rarity.EPIC))
+    val ENDREM_GROWSSETH_EYE by makeEndRemasteredEye("growsseth_eye", defaultBuilder("growsseth_eye").rarity(Rarity.EPIC))
 
 	// Custom discs
 	val DISC_SEGA_DI_NIENTE 		by makeDisc("disc_sega_di_niente", GrowssethJukeboxSongs.SEGA_DI_NIENTE)
@@ -124,7 +124,7 @@ object GrowssethItems {
 		})
 
     private fun makeEndRemasteredEye(
-        name: String, properties: Properties = Properties(),
+        name: String, properties: Properties = defaultBuilder(name),
     ): RegistryDelegate<Item> {
         if (RuinsOfGrowsseth.modCompat.isEndRemasteredLoaded) {
             try {
