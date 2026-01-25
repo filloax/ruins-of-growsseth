@@ -9,6 +9,8 @@ import net.minecraft.sounds.SoundEvent
 class GrowssethSounds {
 
     companion object {
+        private val all = mutableMapOf<Identifier, RegistryHolderDelegate<SoundEvent>>()
+
         val DISC_SEGA_DI_NIENTE by make("disc_sega_di_niente")
         val DISC_GIORGIO_CUBETTI by make("disc_giorgio_cubetti")
         val DISC_GIORGIO_LOFI by make("disc_giorgio_lofi")
@@ -39,8 +41,6 @@ class GrowssethSounds {
         val ZOMBIE_RESEARCHER_AMBIENT by make("zombie_researcher.ambient")
         val ZOMBIE_RESEARCHER_HURT by make("zombie_researcher.hurt")
         val ZOMBIE_RESEARCHER_DEATH by make("zombie_researcher.death")
-
-        private val all = mutableMapOf<Identifier, RegistryHolderDelegate<SoundEvent>>()
 
         private fun make(name: String) =
             RegistryHolderDelegate(resLoc(name), SoundEvent.createVariableRangeEvent(resLoc(name)))
