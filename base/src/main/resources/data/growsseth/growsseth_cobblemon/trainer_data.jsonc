@@ -196,6 +196,7 @@
         "shiny": true,
         "heldItem": [
           "mega_showdown:drampanite",
+          "zamega:drampanite",
           "lumymon:drampanite",
           "cobblemon:choice_specs"
         ]
