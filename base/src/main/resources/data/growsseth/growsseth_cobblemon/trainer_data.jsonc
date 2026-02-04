@@ -196,6 +196,212 @@
         "shiny": true,
         "heldItem": [
           "mega_showdown:drampanite",
+          "zamega:drampanite",
+          "lumymon:drampanite",
+          "cobblemon:choice_specs"
+        ]
+      }
+    ]
+  },
+  "researcherMaxLevel": {
+    "name": "Researcher",
+    "ai": {
+      // See ResearcherRCTBattleAI[Config].kt
+      "type": "growsseth_researcher_rct",
+      "data": {
+        "switchBias": 0.72
+      }
+    },
+    "bag": [
+      {
+        "item": "cobblemon:full_restore",
+        "quantity": 3
+      }
+    ],
+    "team": [
+      {
+        "species": "cobblemon:vespiquen",
+        "gender": "FEMALE",
+        "level": 99,
+        "nature": "relaxed",
+        "ability": "unnerve",
+        "moveset": [
+          "toxicspikes",
+          "attackorder",
+          "endeavor",
+          "protect"
+        ],
+        "ivs": {
+          "hp": 31,
+          "atk": 31,
+          "def": 31,
+          "spa": 31,
+          "spd": 31,
+          "spe": 31
+        },
+        "evs": {
+          "hp": 252,
+          "def": 132,
+          "spd": 124
+        },
+        "gimmicks": {
+          //          "tera": "ground"
+        },
+        "heldItem": "cobblemon:focus_sash"
+      },
+      {
+        "species": "cobblemon:amoonguss",
+        "level": 99,
+        "nature": "modest",
+        "ability": "regenerator",
+        "moveset": [
+          "spore",
+          "gigadrain",
+          "sludgebomb",
+          "clearsmog"
+        ],
+        "ivs": {
+          "hp": 31,
+          "atk": 0,
+          "def": 31,
+          "spa": 31,
+          "spd": 31,
+          "spe": 31
+        },
+        "evs": {
+          "hp": 252,
+          "def": 56,
+          "spa": 148,
+          "spd": 52
+        },
+        "gimmicks": {
+          //          "tera": "fire"
+        },
+        "heldItem": "cobblemon:rocky_helmet"
+      },
+      {
+        "species": "cobblemon:golurk",
+        "level": 99,
+        "nature": "adamant",
+        "ability": "noguard",
+        "moveset": [
+          "dynamicpunch",
+          "stoneedge",
+          "poltergeist",
+          "earthquake"
+        ],
+        "ivs": {
+          "hp": 31,
+          "atk": 31,
+          "def": 31,
+          "spa": 31,
+          "spd": 31,
+          "spe": 31
+        },
+        "evs": {
+          "hp": 252,
+          "atk": 124,
+          "def": 64,
+          "spd": 64
+        },
+        "gimmicks": {
+          "tera": "fighting"
+        },
+        "shiny": true,
+        "heldItem": "cobblemon:assault_vest"
+      },
+      {
+        "species": "cobblemon:delphox",
+        "level": 99,
+        "nature": "timid",
+        "ability": "blaze",
+        "moveset": [
+          "heatwave",
+          "psychic",
+          "dazzlinggleam",
+          "nastyplot"
+        ],
+        "ivs": {
+          "hp": 31,
+          "atk": 0,
+          "def": 31,
+          "spa": 31,
+          "spd": 31,
+          "spe": 31
+        },
+        "evs": {
+          "def": 92,
+          "spa": 252,
+          "spd": 4,
+          "spe": 160
+        },
+        "gimmicks": {
+          "tera": "fire"
+        },
+        "shiny": true,
+        "heldItem": "cobblemon:life_orb"
+      },
+      {
+        "species": "cobblemon:wishiwashi",
+        "level": 99,
+        "nature": "adamant",
+        "ability": "schooling",
+        "moveset": [
+          "wavecrash",
+          "earthquake",
+          "irontail",
+          "uturn"
+        ],
+        "ivs": {
+          "hp": 31,
+          "atk": 31,
+          "def": 31,
+          "spa": 31,
+          "spd": 31,
+          "spe": 31
+        },
+        "evs": {
+          "hp": 252,
+          "atk": 252,
+          "spd": 4
+        },
+        "gimmicks": {
+          "tera": "water"
+        },
+        "heldItem": "cobblemon:choice_band"
+      },
+      {
+        "species": "cobblemon:drampa",
+        "level": 100,
+        "nature": "modest",
+        "ability": "berserk",
+        "moveset": [
+          "hypervoice",
+          "dragonpulse",
+          "heatwave",
+          "hurricane"
+        ],
+        "ivs": {
+          "hp": 31,
+          "atk": 0,
+          "def": 31,
+          "spa": 31,
+          "spd": 31,
+          "spe": 31
+        },
+        "evs": {
+          "hp": 248,
+          "spa": 252,
+          "spd": 8
+        },
+        "gimmicks": {
+          "tera": "normal"
+        },
+        "shiny": true,
+        "heldItem": [
+          "mega_showdown:drampanite",
+          "zamega:drampanite",
+          "lumymon:drampanite",
           "cobblemon:choice_specs"
         ]
       }

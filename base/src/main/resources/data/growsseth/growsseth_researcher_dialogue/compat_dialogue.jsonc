@@ -22,7 +22,13 @@
   "compatCobblemonBattleStart": [
     "compat.cobblemon.battleStart.0",
     "compat.cobblemon.battleStart.1",
-    "compat.cobblemon.battleStart.2"
+    "compat.cobblemon.battleStart.2",
+    {
+      "content": "compat.cobblemon.battleStartMaxLevel.0",
+      "data": {
+        "maxLevel": "true"
+      }
+    }
   ],
   "compatCobblemonBattleLastPkmn": [
     "compat.cobblemon.battleLastPkmn"

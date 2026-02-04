@@ -79,6 +79,7 @@ class ResearcherDialoguesComponent(
 
         // mod compat
         const val DDATA_COBBLEMON_ERROR = "errorId"
+        const val DDATA_COBBLEMON_MAX_LEVEL = "maxLevel"
 
         val BREAK_BLOCK_BLACKLIST = mutableSetOf<Block>(
             Blocks.WHITE_CARPET,
@@ -267,8 +268,17 @@ class ResearcherDialoguesComponent(
             filters.add { entry -> entry.data[DDATA_MADE_MESS] != "true" }
         }
 
-        if (RuinsOfGrowsseth.modCompat.isAllCobblemonDepsLoaded && event == EV_COMPAT_COBBLEMON_ERROR) {
-            filters.add { entry -> entry.data[DDATA_COBBLEMON_ERROR] == eventParam }
+        if (RuinsOfGrowsseth.modCompat.isAllCobblemonDepsLoaded) {
+            if (event == EV_COMPAT_COBBLEMON_ERROR) {
+                filters.add { entry -> entry.data[DDATA_COBBLEMON_ERROR] == eventParam }
+            }
+            if (event == EV_COMPAT_COBBLEMON_BATTLE_START) {
+                if (eventParam == "forceMaxLevel") {
+                    filters.add { entry -> entry.data[DDATA_COBBLEMON_MAX_LEVEL] == "true" }
+                } else if (eventParam != "maxLevel") {
+                    filters.add { entry -> entry.data[DDATA_COBBLEMON_MAX_LEVEL] != "true" }
+                }
+            }
         }
     }
 
