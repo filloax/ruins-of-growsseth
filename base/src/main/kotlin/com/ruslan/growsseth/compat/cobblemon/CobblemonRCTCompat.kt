@@ -67,16 +67,6 @@ object CobblemonRCTCompat {
      * Attempts to start a trainer battle between the given player and the researcher.
      */
     fun tryStartTrainerBattle(player: ServerPlayer, researcher: Researcher): Boolean {
-        val team = selectResearcherTeam(player, researcher)
-
-        val trainer = RCT.trainerRegistry.getById(team.toString(), TrainerNPC::class.java)
-
-        if (trainer == null) {
-            RuinsOfGrowsseth.LOGGER.error("RCT trainer not found for team {}", team)
-            startBattleErrorDialogue(researcher, player, "no-team")
-            return false
-        }
-
         val playerTrainer = RCT.trainerRegistry.getById(player.name.string, TrainerPlayer::class.java)
 
         if (playerTrainer == null) {
@@ -85,6 +75,15 @@ object CobblemonRCTCompat {
             return false
         }
 
+        val team = selectResearcherTeam(player, playerTrainer, researcher)
+
+        val trainer = RCT.trainerRegistry.getById(team.toString(), TrainerNPC::class.java)
+
+        if (trainer == null) {
+            RuinsOfGrowsseth.LOGGER.error("RCT trainer not found for team {}", team)
+            startBattleErrorDialogue(researcher, player, "no-team")
+            return false
+        }
         trainer.entity = researcher
 
         val battleId = RCT.battleManager.startBattle(listOf(playerTrainer), listOf(trainer), BattleFormat.GEN_9_SINGLES,  BattleRules.Builder()
@@ -96,7 +95,17 @@ object CobblemonRCTCompat {
             return false
         }
 
-        researcher.dialogues!!.triggerDialogue(player, ResearcherDialoguesComponent.EV_COMPAT_COBBLEMON_BATTLE_START)
+        var param: String? = null
+        if (team == TrainerTeam.RESEARCHER_MAX_LEVEL) {
+            param = if (researcher.compatData().cobblemonUsedMaxLevelOnce) {
+                "maxLevel"
+            } else {
+                "forceMaxLevel"
+            }
+            researcher.compatData().cobblemonUsedMaxLevelOnce = true
+        }
+
+        researcher.dialogues!!.triggerDialogue(player, ResearcherDialoguesComponent.EV_COMPAT_COBBLEMON_BATTLE_START, eventParam = param)
         researcher.isInCobblemonBattle = true
 
         return true
@@ -126,6 +135,7 @@ object CobblemonRCTCompat {
             }
 
             if (!researcherWon) {
+                researcher.compatData().cobblemonDefeatedOnce = true
                 spawnBattleReward(researcher)
             }
         }
@@ -173,8 +183,15 @@ object CobblemonRCTCompat {
         researcher.dialogues!!.triggerDialogue(player, ResearcherDialoguesComponent.EV_COMPAT_COBBLEMON_ERROR, eventParam=errorId)
     }
 
-    private fun selectResearcherTeam(playerTeam: ServerPlayer, researcher: Researcher): TrainerTeam {
-        // for now only this
+    private fun selectResearcherTeam(playerTeam: ServerPlayer, playerTrainer: TrainerPlayer, researcher: Researcher): TrainerTeam {
+        // if defeated once and player has pokemon above lvl 81
+        if (researcher.compatData().cobblemonDefeatedOnce) {
+            val playerLevelMax = playerTrainer.team.maxOf { pkmn -> pkmn.level }
+            if (playerLevelMax > 81) {
+                return TrainerTeam.RESEARCHER_MAX_LEVEL
+            }
+        }
+
         return TrainerTeam.RESEARCHER_STANDARD
     }
 }
