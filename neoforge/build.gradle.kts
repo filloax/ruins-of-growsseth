@@ -13,8 +13,8 @@ val modid: String by project
 val modVersion: String by project
 val versionType: String? by project
 val minecraftVersion = libs.versions.minecraft.asProvider().get()
-val parchmentMcVersion = libs.versions.parchment.minecraft.get()
-val parchmentVersion = libs.versions.parchment.asProvider().get()
+//val parchmentMcVersion = libs.versions.parchment.minecraft.get()
+//val parchmentVersion = libs.versions.parchment.asProvider().get()
 val includeDeps = (property("includeDeps") as String).toBoolean()
 
 val versionSuffix = if (versionType?.isBlank() == true) "" else "-$versionType"
@@ -29,10 +29,10 @@ neoForge {
     validateAccessTransformers = true
     accessTransformers.files.setFrom( project(BASE_PROJECT).file("src/main/resources/META-INF/accesstransformer.cfg"))
 
-    parchment {
-        minecraftVersion = parchmentMcVersion
-        mappingsVersion = parchmentVersion
-    }
+//    parchment {
+//        minecraftVersion = parchmentMcVersion
+//        mappingsVersion = parchmentVersion
+//    }
 
     runs {
         create("growsseth_client") {

@@ -2,10 +2,10 @@ package com.ruslan.growsseth.entity
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.util.RandomSource
 import net.minecraft.world.entity.Entity
-import net.minecraft.world.entity.npc.villager.VillagerTrades
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.trading.ItemCost
 import net.minecraft.world.item.trading.MerchantOffer
@@ -18,7 +18,7 @@ open class SerializableItemListing(
     val xp: Int = 0,
     val priceMul: Float = 1f,
     val foo: Float = -1f,
-) : VillagerTrades.ItemListing {
+) {
     companion object {
         val CODEC: Codec<SerializableItemListing> = RecordCodecBuilder.create { b -> b.group(
             ItemStack.CODEC.fieldOf("gives").forGetter { it.gives },
@@ -36,14 +36,14 @@ open class SerializableItemListing(
         }
     }
 
-    override fun getOffer(level: ServerLevel, trader: Entity, random: RandomSource): MerchantOffer
+    open fun getOffer(level: ServerLevel, trader: Entity, random: RandomSource): MerchantOffer
         = MerchantOffer(wants[0], Optional.ofNullable(wants.getOrNull(1)), gives(), maxUses, xp, priceMul)
 
     // Returns a copy of the specified item, to avoid
     // accidentally changing it for all trades by changing its properties
     fun gives(): ItemStack = gives.copy()
     val givesItem get() = gives.item
-    val givesItemHolder get() = gives.itemHolder
+    val givesItemHolder get() = BuiltInRegistries.ITEM.wrapAsHolder(gives.item) // is there a better way? itemHolder was removed in 26.1
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

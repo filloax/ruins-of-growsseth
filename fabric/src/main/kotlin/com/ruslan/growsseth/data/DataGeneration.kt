@@ -15,10 +15,10 @@ import com.ruslan.growsseth.worldgen.worldpreset.GrowssethWorldPreset
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput
 import net.fabricmc.fabric.api.datagen.v1.provider.*
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider.BlockTagProvider
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider.ItemTagProvider
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider.BlockTagsProvider
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider.ItemTagsProvider
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags
 import net.minecraft.advancements.AdvancementHolder
 import net.minecraft.client.data.models.BlockModelGenerators
@@ -95,7 +95,7 @@ class DataGeneration : DataGeneratorEntrypoint {
     override fun getEffectiveModId(): String = RuinsOfGrowsseth.MOD_ID
 }
 
-class RegistriesProvider(output: FabricDataOutput, registries: CompletableFuture<HolderLookup.Provider>) : FabricDynamicRegistryProvider(output, registries) {
+class RegistriesProvider(output: FabricPackOutput, registries: CompletableFuture<HolderLookup.Provider>) : FabricDynamicRegistryProvider(output, registries) {
     override fun getName(): String = "Growsseth Registries"
 
     override fun configure(registries: HolderLookup.Provider, entries: Entries) {
@@ -109,7 +109,7 @@ class RegistriesProvider(output: FabricDataOutput, registries: CompletableFuture
     }
 }
 
-class RecipesProvider(output: FabricDataOutput, registriesFuture: CompletableFuture<HolderLookup.Provider>)
+class RecipesProvider(output: FabricPackOutput, registriesFuture: CompletableFuture<HolderLookup.Provider>)
     : FabricRecipeProvider(output, registriesFuture) {
 
     protected override fun createRecipeProvider(
@@ -162,7 +162,7 @@ class RecipesProvider(output: FabricDataOutput, registriesFuture: CompletableFut
     }
 }
 
-class AdvancementsProvider(output: FabricDataOutput, registryLookup: CompletableFuture<HolderLookup.Provider>) :
+class AdvancementsProvider(output: FabricPackOutput, registryLookup: CompletableFuture<HolderLookup.Provider>) :
     FabricAdvancementProvider(output, registryLookup) {
     override fun generateAdvancement(registryLookup: HolderLookup.Provider, consumer: Consumer<AdvancementHolder>) {
         StructureAdvancements.Bootstrapper(registryLookup).generateForStructureDetection(consumer)
@@ -177,7 +177,7 @@ class AdvancementsProvider(output: FabricDataOutput, registryLookup: Completable
 //    }
 //}
 
-class TagProviderBlocks(output: FabricDataOutput, registries: CompletableFuture<HolderLookup.Provider>): BlockTagProvider(output, registries) {
+class TagProviderBlocks(output: FabricPackOutput, registries: CompletableFuture<HolderLookup.Provider>): BlockTagsProvider(output, registries) {
     /**
      * Implement this method and then use [FabricTagProvider.tag] to get and register new tag builders.
      */
@@ -215,13 +215,14 @@ class TagProviderBlocks(output: FabricDataOutput, registries: CompletableFuture<
     }
 }
 
-class TagProviderItems(output: FabricDataOutput, registries: CompletableFuture<HolderLookup.Provider>): ItemTagProvider(output, registries) {
+class TagProviderItems(output: FabricPackOutput, registries: CompletableFuture<HolderLookup.Provider>): ItemTagsProvider(output, registries) {
     override fun addTags(arg: HolderLookup.Provider) {
         valueLookupBuilder(ItemTags.DECORATED_POT_SHERDS)
             .add(GrowssethItems.GROWSSETH_POTTERY_SHERD)
     }
 }
 
+class TagProviderStructures(output: FabricPackOutput, registries: CompletableFuture<HolderLookup.Provider>): StructureTagsProvider(output, registries) {
 /**
  * Generate the single-item tags to allow
  * optional items from other mods in loot
@@ -255,14 +256,14 @@ class TagProviderStructures(output: FabricDataOutput, registries: CompletableFut
     }
 }
 
-class TagProviderWorldPresets(output: FabricDataOutput, registries: CompletableFuture<HolderLookup.Provider>): WorldPresetTagsProvider(output, registries) {
+class TagProviderWorldPresets(output: FabricPackOutput, registries: CompletableFuture<HolderLookup.Provider>): WorldPresetTagsProvider(output, registries) {
     override fun addTags(arg: HolderLookup.Provider) {
         getOrCreateRawBuilder(WorldPresetTags.NORMAL)
             .addElement(GrowssethModWorldPresets.GROWSSETH.identifier())
     }
 }
 
-class TagProviderBannerPatterns(output: FabricDataOutput, registries: CompletableFuture<HolderLookup.Provider>): BannerPatternTagsProvider(output, registries) {
+class TagProviderBannerPatterns(output: FabricPackOutput, registries: CompletableFuture<HolderLookup.Provider>): BannerPatternTagsProvider(output, registries) {
     override fun addTags(arg: HolderLookup.Provider) {
         GrowssethBannerPatterns.all.forEach { banner ->
             getOrCreateRawBuilder(banner.tag)
@@ -272,6 +273,52 @@ class TagProviderBannerPatterns(output: FabricDataOutput, registries: Completabl
 }
 
 class ModelGenerator constructor(generator: FabricDataOutput) : FabricModelProvider(generator) {
+/* // Not needed for now, since it's set in the zombie's class (might be used in the future to allow loot customization)
+class EntityLootTableProvider(output: FabricPackOutput) : SimpleFabricLootTableProvider(output, LootContextParamSets.ENTITY) {
+    override fun generate(consumer: BiConsumer<Identifier, LootTable.Builder>) {
+        consumer.accept(GrowssethEntities.ZOMBIE_RESEARCHER.defaultLootTable, ZombieResearcher.getLootTable())
+    }
+
+    /**
+     * Gets a name for this provider, to use in logging.
+     */
+    override fun getName(): String = "GrowssethEntityLootTable"
+}
+*/
+
+/* // Put aside for now to use manual method, might be used in the future
+class MiscLootTableProvider(output: PackOutput): LootTableProvider(output, setOf(), mutableListOf(
+    SubProviderEntry({
+        LootTableSubProvider { builder ->
+            builder.accept(
+                GrowssethLootTables.CONDUIT_RUINS_ARCHAEOLOGY,
+                LootTable.lootTable()
+                    .withPool(
+                        LootPool.lootPool()
+                            .setRolls(ConstantValue.exactly(1.0f))
+                            .add(LootItem.lootTableItem(GrowssethItems.GROWSSETH_POTTERY_SHERD))
+                    )
+            )
+        }
+    }, LootContextParamSets.ARCHAEOLOGY)
+))
+*/
+
+// todo: add researcher horn to datagen
+//// For some RegistrySetBuilder builder
+//builder.add(Registries.INSTRUMENT, bootstrap -> {
+//    bootstrap.register(
+//        ResourceKey.create(Registries.INSTRUMENT, Identifier.fromNamespaceAndPath("examplemod", "example_instrument")),
+//        new Instrument(
+//                BuiltInRegistries.SOUND_EVENT.wrapAsHolder(SoundEvents.ARROW_HIT),
+//        7f,
+//        256f,
+//        Component.translatable(Util.makeDescriptionId("instrument", Identifier.fromNamespaceAndPath("examplemod", "example_instrument")))
+//    )
+//    )
+//});
+
+class ModelGenerator constructor(generator: FabricPackOutput) : FabricModelProvider(generator) {
     override fun generateBlockStateModels(blockStateModelGenerator: BlockModelGenerators) { }
 
     override fun generateItemModels(itemModelGenerator: ItemModelGenerators) {

@@ -20,7 +20,7 @@ abstract class ZombieMixin {
 
     @Inject(method = "finalizeSpawn", at = @At("RETURN"))
     private void onFinalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason reason, SpawnGroupData spawnData, CallbackInfoReturnable<SpawnGroupData> cir) {
-        if (thisZombie instanceof ZombieVillager && thisZombie.getTags().contains("Beekeeper")) {
+        if (thisZombie instanceof ZombieVillager && thisZombie.tags.contains("Beekeeper")) {    // todo: rename to GrowssethBeekeeper here and in the struct nbt
             thisZombie.setBaby(false);  // The zombie beekeeper sometimes spawns as a child because of a bug
         }
     }

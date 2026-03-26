@@ -30,10 +30,10 @@ neoForge {
 
 	validateAccessTransformers = true
 
-	parchment {
-		minecraftVersion = libs.versions.parchment.minecraft
-		mappingsVersion = libs.versions.parchment.asProvider()
-	}
+//	parchment {
+//		minecraftVersion = libs.versions.parchment.minecraft
+//		mappingsVersion = libs.versions.parchment.asProvider()
+//	}
 
 	// access transformers use default path so no need to config
 }

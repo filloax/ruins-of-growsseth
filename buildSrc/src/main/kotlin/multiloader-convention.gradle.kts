@@ -44,19 +44,19 @@ repositories {
         filter { includeGroupAndSubgroups("org.spongepowered") }
     }
 
-    exclusiveContent {
-        forRepositories(
-            maven {
-                name = "ParchmentMC"
-                url = uri("https://maven.parchmentmc.org/")
-            },
-            maven {
-                name = "NeoForge"
-                url = uri("https://maven.neoforged.net/releases")
-            }
-        )
-        filter { includeGroup("org.parchmentmc.data") }
-    }
+//    exclusiveContent {
+//        forRepositories(
+//            maven {
+//                name = "ParchmentMC"
+//                url = uri("https://maven.parchmentmc.org/")
+//            },
+//            maven {
+//                name = "NeoForge"
+//                url = uri("https://maven.neoforged.net/releases")
+//            }
+//        )
+//        filter { includeGroup("org.parchmentmc.data") }
+//    }
 
     exclusiveContent {
         forRepository {
