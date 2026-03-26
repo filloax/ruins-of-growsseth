@@ -2,20 +2,20 @@
     java = "25"
 
 # General dependencies
-    minecraft-range = "26.1-snapshot-1"
-    minecraft-range-fabric = "26.1-snapshot-1"
-    minecraft = "26.1-snapshot-1"
+    minecraft-range = "26.1"
+    minecraft-range-fabric = "26.1"
+    minecraft = "26.1"
     # Get versions from https://parchmentmc.org/docs/getting-started
     #parchment-minecraft = "26.1-snapshot-1"
     #parchment = "2025.12.20"
     # Get versions from https://projects.neoforged.net/neoforged/neoform
-    neoform = "26.1-snapshot-1-3" # vanilla neoforge configuration
+    neoform = "26.1-1" # vanilla neoforge configuration
 
 # Mod dependencies
-    filloaxlib = "0.36.0-26.1-snapshot-1"
-    modmenu = "18.0.0-alpha.3"
-    rconfig = "3.11.2"   # higher versions are not found with current settings (todo: fix)
-    rconfigMc = "1.21.11"
+    filloaxlib = "0.36.0-26.1-snapshot-1"   # todo: update filloaxlib
+    modmenu = "18.0.0-alpha.8"
+    rconfig = "4.0.0"   # higher versions are not found with current settings (todo: fix)
+    rconfigMc = "26.1"
 
 # Mod compatibility dependencies (todo: re-enabled if needed after 26.1 transition)
     lithostitched-neoforge = "1.5.0-neoforge-1.21.1"
@@ -24,10 +24,15 @@
     rctapi = "1.21.1-0.14.4" # only used for prop replacement in mod json files
     rctapi-neoforge = "7257753"
     rctapi-fabric = "7257754"
-    megashowdown = "1.4.4+1.7.1+1.21.1" # only used for prop replacement in mod json files
+    megashowdown = "1.5+1.7.1+1.21.1" # only used for prop replacement in mod json files
+    megashowdown-fabric = "xcwqvGEd" # only used for datagen
+    architectury-fabric = "13.0.8+fabric" # only used for datagen (for mega showdown)
+    navas-zamega = "1.4.5"
+    endremastered = "6.0.2"
+    endremastered-neoforge = "aqYxfNAS"
 
 # Kotlin
-    kotlin = "2.3.0"
+    kotlin = "2.3.20"
     kotlin-serialization = "1.9.0"
     kotlin-datetime = "0.7.1"
 
@@ -35,20 +40,20 @@
     # Get versions from https://github.com/FabricMC/fabric-loader/releases
     fabric = "0.18.4"
     # Get versions from https://modrinth.com/mod/fabric-api/versions
-    fabric-api = "0.140.3+26.1"
-    fabric-language-kotlin = "1.13.8+kotlin.2.3.0"
+    fabric-api = "0.144.3+26.1"
+    fabric-language-kotlin = "1.13.10+kotlin.2.3.20"
 
 # Neoforge Settings
     # Get versions from https://projects.neoforged.net/neoforged/neoforge
-    neoforge = "26.1.0.0-alpha.4+snapshot-1"
-    neoforge-range = "[26.1.0.0-alpha.4+snapshot-1,27)"
-    kotlinforge = "6.0.0"
-    kotlinforge-range = "[6.0.0,)"
+    neoforge = "26.1.0.5-beta"
+    neoforge-range = "[26.1.0.5-beta,26.2)"
+    kotlinforge = "6.2.0"
+    kotlinforge-range = "[6.2.0,)"
 
 # Other dependencies
     mixin = "0.8.7"
-    mixinextras = "0.5.0"
-    mixinextras-range = "[0.5.0,)"
+    mixinextras = "0.5.3"
+    mixinextras-range = "[0.5.3,)"
     jsr305 = "3.0.2"
     # Specific log4j version required by neoform
     log4j = "2.22.1"
@@ -61,8 +66,8 @@
     plugin-mixin = "0.7.38"
     plugin-loom = "1.15-SNAPSHOT"
     # Get versions from https://projects.neoforged.net/neoforged/moddevgradle
-    plugin-moddev = "2.0.140"
-    plugin-idea-ext = "1.3"
+    plugin-moddev = "2.0.141"
+    plugin-idea-ext = "1.4.1"
 
 [libraries]
 # Mods
