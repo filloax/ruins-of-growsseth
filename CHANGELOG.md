@@ -2,6 +2,15 @@
 
 ## CURRENT
 
+## 0.14.1
+
+Changed
+- Cobblemon synergy: researcher uses stronger team after first defeat if player
+  has lvl 81+ team
+
+Fixed
+- Cobblemon synergy: mega drampanite used is from zamega after it changed IDs
+
 ## 0.14.0
 
 _The "We played in a modpack with Cobblemon update"_
