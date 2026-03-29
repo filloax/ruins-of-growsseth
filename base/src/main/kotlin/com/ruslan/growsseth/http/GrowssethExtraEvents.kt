@@ -36,6 +36,7 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.ChunkPos
 import net.minecraft.world.level.chunk.LevelChunk
 import net.minecraft.world.level.levelgen.Heightmap
+import java.nio.file.Path
 import kotlin.jvm.optionals.getOrNull
 
 /**
@@ -282,7 +283,7 @@ object GrowssethExtraEvents {
             RuinsOfGrowsseth.LOGGER.error("Remove tent event must have a position and desc! $event")
             return
         }
-        val chunkPos = ChunkPos(pos)
+        val chunkPos = ChunkPos(pos.x, pos.y)
 
         // Run when started so level is loaded
         EventUtil.runWhenServerStarted(server, true) {
@@ -378,7 +379,7 @@ object GrowssethExtraEvents {
             RuinsOfGrowsseth.LOGGER.error("spawn Researcher event must have a position and desc! $event")
             return
         }
-        val chunkPos = ChunkPos(pos)
+        val chunkPos = ChunkPos(pos.x, pos.y)
 
         // Run when started so level is loaded
         EventUtil.runWhenServerStarted(server, true) {
@@ -437,7 +438,8 @@ object GrowssethExtraEvents {
                 Codec.STRING.mutableSetOf().fieldOf("alreadyRan").forGetter(EventsSavedData::alreadyRan),
                 Codec.unboundedMap(Codec.STRING, Codec.LONG).fieldOf("removeResearchersTimes").forGetter(EventsSavedData::removeResearchersTimes),
             ).apply(builder, ::EventsSavedData) }
-            private val DEF = define(EVENTS_DATA, ::EventsSavedData, CODEC, checkDeprecatedFilePaths = listOf("growssethEvents"))
+            private val DEF = define(resLoc(EVENTS_DATA), ::EventsSavedData, CODEC,
+                checkDeprecatedFilePaths = listOf(Path.of("growssethEvents")))
 
             fun get(server: MinecraftServer): EventsSavedData {
                 return server.loadData(DEF)

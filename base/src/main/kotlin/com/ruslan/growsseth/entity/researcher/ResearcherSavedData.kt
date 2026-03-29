@@ -7,6 +7,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.ruslan.growsseth.Constants.RESEARCHER_DATA
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.config.ResearcherConfig
+import com.ruslan.growsseth.utils.resLoc
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.ComponentSerialization
@@ -52,7 +53,8 @@ class ResearcherSavedData private constructor (
             ResearcherSavedData(data, name.getOrNull(), isDead)
         } }
 
-        private val DEF = define(RESEARCHER_DATA, ::ResearcherSavedData, CODEC, checkDeprecatedFilePaths = listOf("researcher_data"))
+        // todo: fix saveddata
+        private val DEF = define(resLoc(RESEARCHER_DATA), ::ResearcherSavedData, CODEC, checkDeprecatedFilePaths = listOf(java.nio.file.Path.of("researcher_data")))
 
         private var instance: ResearcherSavedData? = null
 

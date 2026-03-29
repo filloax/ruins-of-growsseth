@@ -382,7 +382,7 @@ class LocateTask(
 
         val matchedCustomPlacement = customPlacements.filter { customPlacement ->
             (ignoreSearchRadiusForFixedStructs || customPlacement.pos.distManhattan(fromPos) < searchRadius)
-                    && targetFilter?.let { it(customPlacement.structureStart, ChunkPos(customPlacement.pos)) } != false
+                    && targetFilter?.let { it(customPlacement.structureStart, ChunkPos(customPlacement.pos.x, customPlacement.pos.y)) } != false
         }.minByOrNull { it.pos.distManhattan(fromPos) }
 
         if (matchedCustomPlacement != null) {
@@ -397,7 +397,7 @@ class LocateTask(
             && (ignoreSearchRadiusForFixedStructs || spawnData.pos.distManhattan(fromPos) < searchRadius)
             && targetSet.any { it.`is`(spawnData.structure) }
             // StructureStart null, less restrictive filter
-            && targetFilter?.let { it(null, ChunkPos(spawnData.pos)) } != false
+            && targetFilter?.let { it(null, ChunkPos(spawnData.pos.x, spawnData.pos.y)) } != false
         }.map { spawnData ->
             Pair(true, LocateResult(
                 spawnData.pos,

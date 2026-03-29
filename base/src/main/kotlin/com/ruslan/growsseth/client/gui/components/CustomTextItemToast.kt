@@ -1,7 +1,7 @@
 package com.ruslan.growsseth.client.gui.components
 
 import net.minecraft.client.gui.Font
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.toasts.Toast
 import net.minecraft.client.gui.components.toasts.ToastManager
 import net.minecraft.client.renderer.RenderPipelines
@@ -63,7 +63,7 @@ class CustomTextItemToast private constructor(
         changed = true
     }
 
-    override fun render(guiGraphics: GuiGraphics, font: Font, visibilityTime: Long) {
+    override fun extractRenderState(guiGraphics: GuiGraphicsExtractor, font: Font, visibilityTime: Long) {
         val i = this.width()
         if (i == 160 && this.messageLines.size <= 1) {
             guiGraphics.blitSprite(
@@ -90,17 +90,17 @@ class CustomTextItemToast private constructor(
         }
 
         if (this.messageLines.isEmpty()) {
-            guiGraphics.drawString(font, this.title, 18, 12, -256, false)
+            guiGraphics.text(font, this.title, 18, 12, -256, false)
         } else {
-            guiGraphics.drawString(font, this.title, 18, 7, -256, false)
+            guiGraphics.text(font, this.title, 18, 7, -256, false)
 
             for (j1 in this.messageLines.indices) {
-                guiGraphics.drawString(font, this.messageLines.get(j1), 18, 18 + j1 * 12, -1, false)
+                guiGraphics.text(font, this.messageLines.get(j1), 18, 18 + j1 * 12, -1, false)
             }
         }
     }
 
-    private fun renderBackgroundRow(guiGraphics: GuiGraphics, width: Int, vOffset: Int, y: Int, height: Int) {
+    private fun renderBackgroundRow(guiGraphics: GuiGraphicsExtractor, width: Int, vOffset: Int, y: Int, height: Int) {
         val i = if (vOffset == 0) 20 else 5
         val j = min(60, width - i)
         val identifier = BACKGROUND_SPRITE

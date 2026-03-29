@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.ruslan.growsseth.client.render.RuinsMapRenderer;
 import com.ruslan.growsseth.item.GrowssethItems;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Final;
@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(GuiGraphics.class)
+@Mixin(GuiGraphicsExtractor.class)
 public abstract class RuinsMapIcon_GuiGraphicsMixin {
     // todo: fix
 //    @Final

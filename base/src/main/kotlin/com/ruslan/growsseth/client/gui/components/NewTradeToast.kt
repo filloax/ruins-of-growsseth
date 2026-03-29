@@ -2,7 +2,7 @@ package com.ruslan.growsseth.client.gui.components
 
 import com.ruslan.growsseth.entity.researcher.trades.ResearcherItemListing
 import net.minecraft.client.gui.Font
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.toasts.Toast
 import net.minecraft.client.gui.components.toasts.ToastManager
 import net.minecraft.client.renderer.RenderPipelines
@@ -71,7 +71,7 @@ class NewTradeToast(newTrades: List<ResearcherItemListing>) : Toast {
                 ).toInt()
     }
 
-    override fun render(guiGraphics: GuiGraphics, font: Font, visibilityTime: Long) {
+    override fun extractRenderState(guiGraphics: GuiGraphicsExtractor , font: Font, visibilityTime: Long) {
         guiGraphics.blitSprite(
             RenderPipelines.GUI_TEXTURED,
             BACKGROUND_SPRITE,
@@ -80,13 +80,13 @@ class NewTradeToast(newTrades: List<ResearcherItemListing>) : Toast {
             this.width(),
             this.height()
         )
-        guiGraphics.drawString(font, TITLE_TEXT, 30, 7, -11534256, false)
-        guiGraphics.drawString(font, DESCRIPTION_TEXT, 30, 18, -16777216, false)
+        guiGraphics.text(font, TITLE_TEXT, 30, 7, -11534256, false)
+        guiGraphics.text(font, DESCRIPTION_TEXT, 30, 18, -16777216, false)
         val itemStack = this.tradeItems[this.displayedRecipeIndex]
         guiGraphics.pose().pushMatrix()
         guiGraphics.pose().scale(0.6f, 0.6f)
-        guiGraphics.renderFakeItem(ItemStack.EMPTY, 3, 3)
+        guiGraphics.fakeItem(ItemStack.EMPTY, 3, 3)
         guiGraphics.pose().popMatrix()
-        guiGraphics.renderFakeItem(itemStack, 8, 8)
+        guiGraphics.fakeItem(itemStack, 8, 8)
     }
 }

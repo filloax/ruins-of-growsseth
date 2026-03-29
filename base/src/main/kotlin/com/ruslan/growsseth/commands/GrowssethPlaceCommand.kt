@@ -119,7 +119,7 @@ object GrowssethPlaceCommand {
             // todo for transition: check if these two parameters are correct
             structureHolder, source.server.levelKeys().first(),
             source.registryAccess(), chunkGenerator, chunkGenerator.biomeSource, serverLevel.chunkSource.randomState(),
-            serverLevel.structureManager, serverLevel.seed, ChunkPos(pos), 0, serverLevel
+            serverLevel.structureManager, serverLevel.seed, ChunkPos(pos.x, pos.y), 0, serverLevel
         ) {  true }
         if (!structureStart.isValid) {
             throw ERROR_STRUCTURE_FAILED.create()

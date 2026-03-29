@@ -3,7 +3,7 @@ package com.ruslan.growsseth.mixin.client;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.ruslan.growsseth.advancements.GrowssethAdvancements;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.advancements.AdvancementTab;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
@@ -25,25 +25,25 @@ public abstract class AdvancementTabMixin {
     }
 
     @WrapWithCondition(
-        method = "drawContents",
-        at = @At(value = "INVOKE", ordinal = 0, target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIFFIIII)V")
+        method = "extractContents",
+        at = @At(value = "INVOKE", ordinal = 0, target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blit(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIFFIIII)V")
     )
-    private boolean drawContentsCancelBackgroundBlit(GuiGraphics instance, RenderPipeline pipeline, Identifier atlas, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight) {
+    private boolean drawContentsCancelBackgroundBlit(GuiGraphicsExtractor instance, RenderPipeline pipeline, Identifier atlas, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight) {
         AdvancementTab th1s = (AdvancementTab) (Object) this;
         return !isNonTiledBackground(th1s);
     }
 
     @Inject(
-        method = "drawContents",
-        at = @At(value = "INVOKE", ordinal = 0, target = "Lnet/minecraft/client/gui/screens/advancements/AdvancementWidget;drawConnectivity(Lnet/minecraft/client/gui/GuiGraphics;IIZ)V"),
+        method = "extractContents",
+        at = @At(value = "INVOKE", ordinal = 0, target = "Lnet/minecraft/client/gui/screens/advancements/AdvancementWidget;extractConnectivity(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IIZ)V"),
         locals = LocalCapture.CAPTURE_FAILHARD
     )
-    private void drawContentsCustomBackground(GuiGraphics guiGraphics, int x, int y, CallbackInfo ci, Identifier identifier, int i, int j) {
+    private void drawContentsCustomBackground(GuiGraphicsExtractor graphics, int windowLeft, int windowTop, CallbackInfo ci, Identifier identifier, int i, int j) {
         AdvancementTab th1s = (AdvancementTab) (Object) this;
         if (isNonTiledBackground(th1s)) {
             int k = 0; //i % 16; ignore scroll
             int l = 0; //j % 16; ignore scroll
-            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, identifier, k, l, 0, 0, 240, 120, 240, 120);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, identifier, k, l, 0, 0, 240, 120, 240, 120);
         }
     }
 }

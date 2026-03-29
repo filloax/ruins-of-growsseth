@@ -9,6 +9,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.ruslan.growsseth.Constants.DATASYNC_MEMORY_DATA
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.config.WebConfig
+import com.ruslan.growsseth.utils.resLoc
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
@@ -20,6 +21,7 @@ import java.io.InputStreamReader
 import java.lang.reflect.Type
 import java.net.HttpURLConnection
 import java.net.URI
+import java.nio.file.Path
 import java.time.Duration
 import java.time.LocalDateTime
 import java.util.concurrent.*
@@ -343,7 +345,8 @@ class DataSyncMemorySavedData private constructor (
         val CODEC: Codec<DataSyncMemorySavedData> = RecordCodecBuilder.create { builder -> builder.group(
             Codec.unboundedMap(Codec.STRING, Codec.STRING).fieldOf("lastEndpointOutputs").forGetter(DataSyncMemorySavedData::lastEndpointOutputs)
         ).apply(builder, ::DataSyncMemorySavedData) }
-        private val DEF = define(DATASYNC_MEMORY_DATA, ::DataSyncMemorySavedData, CODEC, checkDeprecatedFilePaths = listOf("growsseth_datasync_memory"))
+        private val DEF = define(resLoc(DATASYNC_MEMORY_DATA), ::DataSyncMemorySavedData, CODEC,
+            checkDeprecatedFilePaths = listOf(Path.of("growsseth_datasync_memory")))
 
         @JvmStatic
         fun get(level: ServerLevel): DataSyncMemorySavedData {

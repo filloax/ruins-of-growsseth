@@ -31,12 +31,12 @@ object DialoguesClient {
             RuinsOfGrowsseth.LOGGER.info("[Client] Received NPC dialogue: ${messageComp.string}")
 
         if (!ClientConfig.disableNpcDialogues)
-            client.gui.chat.addMessage(messageComp)
+            client.gui.chat.addClientSystemMessage(messageComp)
     }
 
     private fun handleDialogueSeparator(player: LocalPlayer, packet: DialogueSeparatorPacket) {
         val messageComp = Component.literal("*-------------------").withStyle(ChatFormatting.DARK_GRAY)
         if (!ClientConfig.disableNpcDialogues)
-            client.gui.chat.addMessage(messageComp)
+            client.gui.chat.addClientSystemMessage(messageComp)
     }
 }

@@ -65,7 +65,7 @@ public class DebugMixins {
             at = @At("HEAD")
         )
         private void onLoadStruct(ChunkAccess chunk, CallbackInfo ci) {
-            if (chunk.getPos().toLong() == -1 && !(chunk instanceof ProtoChunk)) {
+            if (chunk.getPos().pack() == -1 && !(chunk instanceof ProtoChunk)) {
                 RuinsOfGrowsseth.LOGGER.error("Loaded chunk with wrong index, server will probably error and crash soon."
                 + "Happens occasionally after purchasing the golem house map, restarting the game should fix this."
                 + "We're looking into a fix!\n"

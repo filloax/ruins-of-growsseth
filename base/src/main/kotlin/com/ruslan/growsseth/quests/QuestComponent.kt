@@ -164,7 +164,7 @@ open class QuestComponent<E : LivingEntity>(val entity: E, val name: String) {
         data.stageHistory.removeLast()
         data.currentStageId = data.stageHistory.last()
         data.currentStageTriggerTime = server.overworld().gameTime
-        data.currentStageTriggerDayTime = server.overworld().dayTime
+        data.currentStageTriggerDayTime = server.overworld().overworldClockTime
         RuinsOfGrowsseth.LOGGER.info("Reverted to quest stage ${data.currentStageId}\n\t$this")
         if (activate) {
             getStageNode(data.currentStageId)?.stage?.onActivated(entity) ?: throw IllegalStateException("No node for previous stage ${data.currentStageId}")

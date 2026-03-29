@@ -128,7 +128,7 @@ class DayTimeTrigger<E : LivingEntity>(
     val requiredTime: Long,
 ) : QuestStageTrigger<E> {
     override fun isActive(entity: E, event: QuestUpdateEvent): Boolean {
-        val time = entity.level().server!!.overworld().dayTime
+        val time = entity.level().server!!.overworld().overworldClockTime
         val timeOff = time - questComponent.data.currentStageTriggerDayTime
         // Time set fuckery, reset trigger time
         if (timeOff < 0 || questComponent.data.currentStageTriggerDayTime < 0) {

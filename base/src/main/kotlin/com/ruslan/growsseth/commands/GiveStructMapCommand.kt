@@ -75,7 +75,7 @@ object GiveStructMapCommand {
             if (it.item !is MapItem) {
                 throw ERROR_MAP_ITEM_INVALID.create(it.item)
             }
-            it.createItemStack(1, false)
+            it.createItemStack(1)
         } ?: ItemStack(GrowssethItems.RUINS_MAP)
 
         val blockPos = BlockPos.containing(commandSourceStack.position)

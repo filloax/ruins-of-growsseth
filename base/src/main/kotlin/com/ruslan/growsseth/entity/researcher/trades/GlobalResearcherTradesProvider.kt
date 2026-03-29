@@ -14,12 +14,14 @@ import com.ruslan.growsseth.Constants.GLOBAL_TRADES_DATA
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.entity.researcher.Researcher
 import com.ruslan.growsseth.network.ResearcherTradesNotifPacket
+import com.ruslan.growsseth.utils.resLoc
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.Tag
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.trading.MerchantOffers
+import java.nio.file.Path
 import kotlin.jvm.optionals.getOrDefault
 
 /**
@@ -183,7 +185,8 @@ abstract class GlobalResearcherTradesProvider protected constructor(
 //                    .fieldOf("trades").forGetter(GlobalTradesSavedData::trades)
             ).apply(builder, ::GlobalTradesSavedData) }
 
-            val DEF = define(GLOBAL_TRADES_DATA, ::GlobalTradesSavedData, CODEC, checkDeprecatedFilePaths = listOf("GlobalTrades"))
+            val DEF = define(resLoc(GLOBAL_TRADES_DATA), ::GlobalTradesSavedData, CODEC,
+                checkDeprecatedFilePaths = listOf(Path.of("GlobalTrades")))
 
             fun getGlobalTrades(server: MinecraftServer) = server.loadData(DEF).trades
             fun setDirty(server: MinecraftServer) = server.loadData(DEF).setDirty()

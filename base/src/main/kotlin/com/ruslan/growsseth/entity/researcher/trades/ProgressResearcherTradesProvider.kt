@@ -23,6 +23,7 @@ import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.levelgen.structure.Structure
+import java.nio.file.Path
 import kotlin.jvm.optionals.getOrNull
 import kotlin.math.min
 import kotlin.random.Random
@@ -203,7 +204,8 @@ class ProgressResearcherTradesProvider(
                 mutableSetCodec(ResourceKey.codec(Registries.STRUCTURE)).fieldOf("foundStructures").forGetter(ProgressTradesSavedData::foundStructures),
                 ResourceKey.codec(Registries.STRUCTURE).optionalFieldOf("currentStructure").forNullableGetter(ProgressTradesSavedData::currentStructure),
             ).apply(builder, ProgressTradesSavedData::class.constructorWithOptionals()::newInstance) }
-            private val DEF = define(PROGRESS_TRADES_DATA, ::ProgressTradesSavedData, CODEC, checkDeprecatedFilePaths = listOf("progressTrades"))
+            private val DEF = define(resLoc(PROGRESS_TRADES_DATA), ::ProgressTradesSavedData, CODEC,
+                checkDeprecatedFilePaths = listOf(Path.of("progressTrades")))
 
             fun get(server: MinecraftServer) = server.loadData(DEF)
             fun setDirty(server: MinecraftServer) = server.loadData(DEF).setDirty()
