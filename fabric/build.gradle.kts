@@ -118,14 +118,14 @@ dependencies {
 	include( libs.kotlinevents )
 
 	// Mod compat
-//	  compileOnly(libs.lithostitched.fabric)
+	  compileOnly(libs.lithostitched.fabric)
 //    compileOnly(libs.cobblemon.fabric)
 //    compileOnly(libs.rctapi.fabric)
 //    modCompileOnly(libs.endremastered)
 
     // For datagen
-//    modCompileOnly(libs.megashowdown.fabric)
-//    modCompileOnly(libs.architectury.fabric)
+//    compileOnly(libs.megashowdown.fabric)
+//    compileOnly(libs.architectury.fabric)
 
     if (cobblemonTest) {
 		// modLocalRuntime is not available in 26.1

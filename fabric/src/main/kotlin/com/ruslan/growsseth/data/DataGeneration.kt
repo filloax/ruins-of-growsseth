@@ -5,6 +5,9 @@ import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.RuinsOfGrowsseth
 import com.ruslan.growsseth.advancements.StructureAdvancements
 import com.ruslan.growsseth.compat.data.OptionalLootItemTags
+import com.ruslan.growsseth.data.TagProviderStructures.ModelGenerator
+import com.ruslan.growsseth.data.TagProviderStructures.TagProviderBannerPatterns
+import com.ruslan.growsseth.data.TagProviderStructures.TagProviderWorldPresets
 import com.ruslan.growsseth.item.GrowssethItems
 import com.ruslan.growsseth.item.GrowssethJukeboxSongs
 import com.ruslan.growsseth.structure.GrProcessorLists
@@ -73,7 +76,7 @@ class DataGeneration : DataGeneratorEntrypoint {
         }
         // load after so structure look is ok
         pack.addProvider { output, registries ->
-            TagProviderOptionalLootItems(output, registries, optionalLootItemTags)
+            TagProviderStructures.TagProviderOptionalLootItems(output, registries, optionalLootItemTags)
         }
         pack.addProvider(::ModCompatMiscLootTableProvider)
         pack.addProvider(::ModelGenerator)
@@ -179,7 +182,7 @@ class AdvancementsProvider(output: FabricPackOutput, registryLookup: Completable
 
 class TagProviderBlocks(output: FabricPackOutput, registries: CompletableFuture<HolderLookup.Provider>): BlockTagsProvider(output, registries) {
     /**
-     * Implement this method and then use [FabricTagProvider.tag] to get and register new tag builders.
+     * Implement this method and then use [FabricTagsProvider.tag] to get and register new tag builders.
      */
     override fun addTags(arg: HolderLookup.Provider) {
         valueLookupBuilder(GrowssethTags.TENT_MATERIALS_WHITELIST)
@@ -223,57 +226,64 @@ class TagProviderItems(output: FabricPackOutput, registries: CompletableFuture<H
 }
 
 class TagProviderStructures(output: FabricPackOutput, registries: CompletableFuture<HolderLookup.Provider>): StructureTagsProvider(output, registries) {
-/**
- * Generate the single-item tags to allow
- * optional items from other mods in loot
- * tables
- */
-class TagProviderOptionalLootItems(output: FabricDataOutput, registries: CompletableFuture<HolderLookup.Provider>, private val optionalLootItemTags: OptionalLootItemTags): ItemTagProvider(output, registries) {
-    override fun addTags(arg: HolderLookup.Provider) {
-        optionalLootItemTags.itemTags.forEach { (tag, item) ->  // todo: improve
-            valueLookupBuilder(tag).addOptional(arg.lookupOrThrow(Registries.ITEM).get(item).get().value())
+    /**
+     * Generate the single-item tags to allow
+     * optional items from other mods in loot
+     * tables
+     */
+    class TagProviderOptionalLootItems(
+        output: FabricPackOutput,
+        registries: CompletableFuture<HolderLookup.Provider>,
+        private val optionalLootItemTags: OptionalLootItemTags
+    ) : ItemTagsProvider(output, registries) {
+        override fun addTags(arg: HolderLookup.Provider) {
+            optionalLootItemTags.itemTags.forEach { (tag, item) ->  // todo: improve
+                valueLookupBuilder(tag).addOptional(arg.lookupOrThrow(Registries.ITEM).get(item).get().value())
+            }
         }
+
+        override fun getName(): String = "GrowssethTagProviderOptionalLootItems"
     }
 
-    override fun getName(): String = "GrowssethTagProviderOptionalLootItems"
-}
-
-class TagProviderStructures(output: FabricDataOutput, registries: CompletableFuture<HolderLookup.Provider>): StructureTagsProvider(output, registries) {
-    override fun addTags(arg: HolderLookup.Provider) {
-        GrowssethStructures.info.values.groupBy { it.tag }.forEach { (tag, infos) ->
-            tag(tag).also { b ->
+    class TagProviderStructures(output: FabricPackOutput, registries: CompletableFuture<HolderLookup.Provider>) :
+        StructureTagsProvider(output, registries) {
+        override fun addTags(arg: HolderLookup.Provider) {
+            GrowssethStructures.info.values.groupBy { it.tag }.forEach { (tag, infos) ->
+                tag(tag).also { b ->
 //                infos.forEach { b.addOptional(it.key.identifier()) }
-                // uglier version in output: use optionals for non-datagenned structures thus not available here
-                infos.forEach { (key, _) ->
-                    if (arg.lookupOrThrow(Registries.STRUCTURE).get(key).isPresent) {
-                        b.add(key)
-                    } else {
-                        b.addOptional(key)
+                    // uglier version in output: use optionals for non-datagenned structures thus not available here
+                    infos.forEach { (key, _) ->
+                        if (arg.lookupOrThrow(Registries.STRUCTURE).get(key).isPresent) {
+                            b.add(key)
+                        } else {
+                            b.addOptional(key)
+                        }
                     }
                 }
             }
         }
     }
-}
 
-class TagProviderWorldPresets(output: FabricPackOutput, registries: CompletableFuture<HolderLookup.Provider>): WorldPresetTagsProvider(output, registries) {
-    override fun addTags(arg: HolderLookup.Provider) {
-        getOrCreateRawBuilder(WorldPresetTags.NORMAL)
-            .addElement(GrowssethModWorldPresets.GROWSSETH.identifier())
+    class TagProviderWorldPresets(output: FabricPackOutput, registries: CompletableFuture<HolderLookup.Provider>) :
+        WorldPresetTagsProvider(output, registries) {
+        override fun addTags(arg: HolderLookup.Provider) {
+            getOrCreateRawBuilder(WorldPresetTags.NORMAL)
+                .addElement(GrowssethModWorldPresets.GROWSSETH.identifier())
+        }
     }
-}
 
-class TagProviderBannerPatterns(output: FabricPackOutput, registries: CompletableFuture<HolderLookup.Provider>): BannerPatternTagsProvider(output, registries) {
-    override fun addTags(arg: HolderLookup.Provider) {
-        GrowssethBannerPatterns.all.forEach { banner ->
-            getOrCreateRawBuilder(banner.tag)
-                .addElement(banner.id().identifier())
+    class TagProviderBannerPatterns(output: FabricPackOutput, registries: CompletableFuture<HolderLookup.Provider>) :
+        BannerPatternTagsProvider(output, registries) {
+        override fun addTags(arg: HolderLookup.Provider) {
+            GrowssethBannerPatterns.all.forEach { banner ->
+                getOrCreateRawBuilder(banner.tag)
+                    .addElement(banner.id().identifier())
+            }
         }
     }
 }
 
-class ModelGenerator constructor(generator: FabricDataOutput) : FabricModelProvider(generator) {
-/* // Not needed for now, since it's set in the zombie's class (might be used in the future to allow loot customization)
+    /* // Not needed for now, since it's set in the zombie's class (might be used in the future to allow loot customization)
 class EntityLootTableProvider(output: FabricPackOutput) : SimpleFabricLootTableProvider(output, LootContextParamSets.ENTITY) {
     override fun generate(consumer: BiConsumer<Identifier, LootTable.Builder>) {
         consumer.accept(GrowssethEntities.ZOMBIE_RESEARCHER.defaultLootTable, ZombieResearcher.getLootTable())
@@ -286,7 +296,7 @@ class EntityLootTableProvider(output: FabricPackOutput) : SimpleFabricLootTableP
 }
 */
 
-/* // Put aside for now to use manual method, might be used in the future
+    /* // Put aside for now to use manual method, might be used in the future
 class MiscLootTableProvider(output: PackOutput): LootTableProvider(output, setOf(), mutableListOf(
     SubProviderEntry({
         LootTableSubProvider { builder ->
@@ -319,7 +329,7 @@ class MiscLootTableProvider(output: PackOutput): LootTableProvider(output, setOf
 //});
 
 class ModelGenerator constructor(generator: FabricPackOutput) : FabricModelProvider(generator) {
-    override fun generateBlockStateModels(blockStateModelGenerator: BlockModelGenerators) { }
+    override fun generateBlockStateModels(blockStateModelGenerator: BlockModelGenerators) {}
 
     override fun generateItemModels(itemModelGenerator: ItemModelGenerators) {
         GrowssethItems.all.forEach { (key, item) ->
@@ -330,11 +340,23 @@ class ModelGenerator constructor(generator: FabricPackOutput) : FabricModelProvi
                 val discsSongLayer = resLoc("item/music_discs/${key.path}")
                 when (item) {       // if a disc can be crafted (or is Oursteps) it will get the glare
                     GrowssethItems.DISC_OURSTEPS ->
-                        itemModelGenerator.generateLayeredItem(model, Identifier.parse("item/music_disc_pigstep"), discsVocalsLayer)
+                        itemModelGenerator.generateLayeredItem(
+                            model,
+                            Identifier.parse("item/music_disc_pigstep"),
+                            discsVocalsLayer
+                        )
+
                     in GrowssethItems.DISCS_TO_VOCALS.values ->
-                        itemModelGenerator.generateLayeredItem(model, discsBaseLayer, discsVocalsLayer, discsSongLayer)
+                        itemModelGenerator.generateLayeredItem(
+                            model,
+                            discsBaseLayer,
+                            discsVocalsLayer,
+                            discsSongLayer
+                        )
+
                     in GrowssethItems.DISCS_ORDERED ->
                         itemModelGenerator.generateLayeredItem(model, discsBaseLayer, discsSongLayer)
+
                     else ->
                         itemModelGenerator.generateFlatItem(item, ModelTemplates.FLAT_ITEM)
                 }

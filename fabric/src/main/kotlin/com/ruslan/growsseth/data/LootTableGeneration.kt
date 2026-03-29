@@ -5,8 +5,8 @@ import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.compat.data.OptionalLootItemTags
 import com.ruslan.growsseth.entity.GrowssethEntities
 import com.ruslan.growsseth.item.GrowssethItems
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
-import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableProvider
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput
+import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableSubProvider
 import net.minecraft.core.HolderLookup
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
@@ -25,8 +25,8 @@ import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator.
 import java.util.concurrent.CompletableFuture
 import java.util.function.BiConsumer
 
-class EntityLootTableProvider(output: FabricDataOutput, val registries: CompletableFuture<HolderLookup.Provider>)
-    : SimpleFabricLootTableProvider(output, registries, LootContextParamSets.ENTITY) {
+class EntityLootTableProvider(output: FabricPackOutput, val registries: CompletableFuture<HolderLookup.Provider>)
+    : SimpleFabricLootTableSubProvider(output, registries, LootContextParamSets.ENTITY) {
     override fun generate(output: BiConsumer<ResourceKey<LootTable>, LootTable.Builder>) {
         listOf(
             GrowssethEntities.RESEARCHER,
@@ -52,8 +52,8 @@ class EntityLootTableProvider(output: FabricDataOutput, val registries: Completa
     private fun enchantment(key: ResourceKey<Enchantment>) = registries.get().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(key)
 }
 
-class ArcheologyLootTableProvider(output: FabricDataOutput, val registries: CompletableFuture<HolderLookup.Provider>)
-    : SimpleFabricLootTableProvider(output, registries, LootContextParamSets.ARCHAEOLOGY) {
+class ArcheologyLootTableProvider(output: FabricPackOutput, val registries: CompletableFuture<HolderLookup.Provider>)
+    : SimpleFabricLootTableSubProvider(output, registries, LootContextParamSets.ARCHAEOLOGY) {
 
     override fun generate(output: BiConsumer<ResourceKey<LootTable>, LootTable.Builder>) {
         output.accept(
@@ -83,8 +83,8 @@ class ArcheologyLootTableProvider(output: FabricDataOutput, val registries: Comp
     override fun getName(): String = "GrowssethArcheologyLootTable"
 }
 
-class StructureLootTableProvider(output: FabricDataOutput, val registries: CompletableFuture<HolderLookup.Provider>, optionalLootItemTags: OptionalLootItemTags)
-    : SimpleFabricLootTableProvider(output, registries, LootContextParamSets.CHEST) {
+class StructureLootTableProvider(output: FabricPackOutput, val registries: CompletableFuture<HolderLookup.Provider>, optionalLootItemTags: OptionalLootItemTags)
+    : SimpleFabricLootTableSubProvider(output, registries, LootContextParamSets.CHEST) {
 
     val modCompat = ModCompatStructureLootTableGeneration(registries, optionalLootItemTags)
 

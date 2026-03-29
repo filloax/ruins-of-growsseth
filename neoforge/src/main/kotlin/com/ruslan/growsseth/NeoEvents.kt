@@ -82,10 +82,10 @@ class NeoEvents : ModEvents() {
         }
     }
 
-    override fun onLoadChunk(event: (level: ServerLevel, chunk: LevelChunk) -> Unit) {
+    override fun onLoadChunk(event: (level: ServerLevel, chunk: LevelChunk, generated: Boolean) -> Unit) {
         NeoForge.EVENT_BUS.addListener { ev: ChunkEvent.Load ->
             if (ev.level is ServerLevel && ev.chunk is LevelChunk) {
-                event(ev.level as ServerLevel, ev.chunk as LevelChunk)
+                event(ev.level as ServerLevel, ev.chunk as LevelChunk, !ev.isNewChunk)  // todo: check (also in filloaxlib) if it's correct
             }
         }
     }

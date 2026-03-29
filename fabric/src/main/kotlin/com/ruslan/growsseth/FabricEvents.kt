@@ -33,7 +33,7 @@ class FabricEvents : ModEvents() {
 
     override fun onEndServerLevelTick(event: (ServerLevel) -> Unit) = ServerTickEvents.END_LEVEL_TICK.register(event)
 
-    override fun onLoadChunk(event: (level: ServerLevel, chunk: LevelChunk) -> Unit) = ServerChunkEvents.CHUNK_LOAD.register(event)
+    override fun onLoadChunk(event: (level: ServerLevel, chunk: LevelChunk, generated: Boolean) -> Unit) = ServerChunkEvents.CHUNK_LOAD.register(event)
 
     override fun onEntityLoad(event: (entity: Entity, level: ServerLevel) -> Unit) = ServerEntityEvents.ENTITY_LOAD.register(event)
 

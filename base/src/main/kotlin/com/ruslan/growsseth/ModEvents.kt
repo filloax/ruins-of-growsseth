@@ -89,8 +89,8 @@ abstract class ModEvents {
             level.players().forEach(::onServerPlayerTick)
         }
 
-        onLoadChunk { level, chunk ->
-            GrowssethExtraEvents.Callbacks.onLoadChunk(level, chunk)
+        onLoadChunk { level, chunk, generated ->
+            GrowssethExtraEvents.Callbacks.onLoadChunk(level, chunk, generated)
         }
 
         onEntityLoad { entity, level ->
@@ -165,7 +165,7 @@ abstract class ModEvents {
     abstract fun onServerLevelLoad(event: (MinecraftServer, ServerLevel) -> Unit)
     abstract fun onStartServerTick(event: ServerEvent)
     abstract fun onEndServerLevelTick(event: (ServerLevel) -> Unit)
-    abstract fun onLoadChunk(event: (level: ServerLevel, chunk: LevelChunk) -> Unit)
+    abstract fun onLoadChunk(event: (level: ServerLevel, chunk: LevelChunk, generated: Boolean) -> Unit)
     abstract fun onEntityLoad(event: (entity: Entity, level: ServerLevel) -> Unit)
     abstract fun onEntityUnload(event: (entity: Entity, level: ServerLevel) -> Unit)
     abstract fun afterPlayerBlockBreak(event: (Level, Player, BlockPos, BlockState) -> Unit)

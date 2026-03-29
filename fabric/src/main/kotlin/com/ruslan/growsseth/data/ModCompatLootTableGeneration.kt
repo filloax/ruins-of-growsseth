@@ -8,8 +8,8 @@ import com.ruslan.growsseth.GrowssethTags
 import com.ruslan.growsseth.compat.data.OptionalLootItemTags
 import com.ruslan.growsseth.item.GrowssethItems
 import dev.architectury.registry.registries.RegistrySupplier
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
-import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableProvider
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput
+import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableSubProvider
 import net.minecraft.core.HolderLookup
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.Identifier
@@ -31,7 +31,7 @@ import java.util.concurrent.CompletableFuture
 import java.util.function.BiConsumer
 
 
-class ModCompatMiscLootTableProvider(output: FabricDataOutput, val registries: CompletableFuture<HolderLookup.Provider>) : SimpleFabricLootTableProvider(output, registries, LootContextParamSets.EMPTY) {
+class ModCompatMiscLootTableProvider(output: FabricPackOutput, val registries: CompletableFuture<HolderLookup.Provider>) : SimpleFabricLootTableSubProvider(output, registries, LootContextParamSets.EMPTY) {
 
     override fun generate(output: BiConsumer<ResourceKey<LootTable>, LootTable.Builder>) {
         output.accept(

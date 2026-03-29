@@ -407,7 +407,7 @@ object GrowssethExtraEvents {
     }
 
     object Callbacks {
-        fun onLoadChunk(level: ServerLevel, chunk: LevelChunk) {
+        fun onLoadChunk(level: ServerLevel, chunk: LevelChunk, generated: Boolean) {
             val savedData: EventsSavedData by lazy {
                 EventsSavedData.get(level.server)
             }

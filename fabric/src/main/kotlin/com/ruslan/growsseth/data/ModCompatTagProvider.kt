@@ -2,9 +2,9 @@ package com.ruslan.growsseth.data
 
 import com.cobblemon.mod.common.CobblemonItems
 import com.ruslan.growsseth.GrowssethTags
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider.ItemTagProvider
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider.ItemTagsProvider
 import net.fabricmc.fabric.impl.datagen.FabricTagBuilder
 import net.minecraft.core.HolderLookup
 import net.minecraft.core.registries.Registries
@@ -14,8 +14,8 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.level.ItemLike
 import java.util.concurrent.CompletableFuture
 
-class ModCompatTagProviderItems(output: FabricDataOutput, val registries: CompletableFuture<HolderLookup.Provider>) :
-    ItemTagProvider(output, registries) {
+class ModCompatTagProviderItems(output: FabricPackOutput, val registries: CompletableFuture<HolderLookup.Provider>) :
+    ItemTagsProvider(output, registries) {
     override fun addTags(arg: HolderLookup.Provider) {
         // everything except enigma and starf
         valueLookupBuilder(GrowssethTags.COBBLEMON_BERRIES_EXCEPT_RARE)
@@ -47,7 +47,7 @@ class ModCompatTagProviderItems(output: FabricDataOutput, val registries: Comple
 
     }
 
-    private fun FabricTagProvider<Item>.addOptional(item: ItemLike): FabricTagBuilder
+    private fun FabricTagsProvider<Item>.addOptional(item: ItemLike): FabricTagBuilder
         = this.addOptional(item)
 
     private fun cobbleTag(id: String) =

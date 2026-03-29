@@ -13,6 +13,7 @@ import net.minecraft.world.level.levelgen.structure.StructureType
 import net.minecraft.world.level.levelgen.structure.pools.LegacySinglePoolElement
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList
+import java.util.Optional
 
 
 /**
@@ -48,10 +49,12 @@ object LithostitchedCompat {
         val poolSet = HolderSet.direct(pool)
         // Create and apply the modifier to the pool set
         val modifier = AddTemplatePoolElementsModifier(
+            Optional.empty(),
             0,
             poolSet,
             listOf(Pair.of(newPiece, weight))
         )
-        modifier.applyModifier()
+        // todo: re enable
+        //modifier.applyModifier(pool.value())
     }
 }

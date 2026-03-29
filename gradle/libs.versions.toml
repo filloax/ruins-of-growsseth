@@ -14,12 +14,12 @@
 # Mod dependencies
     filloaxlib = "0.36.0-26.1"   # todo: update filloaxlib
     modmenu = "18.0.0-alpha.8"
-    rconfig = "4.0.0"   # higher versions are not found with current settings (todo: fix)
+    rconfig = "4.0.0"
     rconfigMc = "26.1"
 
 # Mod compatibility dependencies (todo: re-enabled if needed after 26.1 transition)
-    lithostitched-neoforge = "1.5.0-neoforge-1.21.1"
-    lithostitched-fabric = "1.5.0-fabric-1.21.1"
+    lithostitched-neoforge = "1.6.3-neoforge-26.1"
+    lithostitched-fabric = "1.6.4-fabric-26.1"
     cobblemon = "1.7.1+1.21.1"
     rctapi = "1.21.1-0.14.4" # only used for prop replacement in mod json files
     rctapi-neoforge = "7257753"
