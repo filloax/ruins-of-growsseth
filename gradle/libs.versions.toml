@@ -12,7 +12,7 @@
     neoform = "26.1-1" # vanilla neoforge configuration
 
 # Mod dependencies
-    filloaxlib = "0.36.0-26.1-snapshot-1"   # todo: update filloaxlib
+    filloaxlib = "0.36.0-26.1"   # todo: update filloaxlib
     modmenu = "18.0.0-alpha.8"
     rconfig = "4.0.0"   # higher versions are not found with current settings (todo: fix)
     rconfigMc = "26.1"
@@ -45,8 +45,8 @@
 
 # Neoforge Settings
     # Get versions from https://projects.neoforged.net/neoforged/neoforge
-    neoforge = "26.1.0.5-beta"
-    neoforge-range = "[26.1.0.5-beta,26.2)"
+    neoforge = "26.1.0.8-beta"
+    neoforge-range = "[26.1.0.8-beta,26.2)"
     kotlinforge = "6.2.0"
     kotlinforge-range = "[6.2.0,)"
 
@@ -132,4 +132,4 @@
 
 # Misc
     ideaext = { id = "org.jetbrains.gradle.plugin.idea-ext", version.ref = "plugin-idea-ext" }
-    mixin = { id = "org.spongepowered.mixin", version.ref = "plugin-mixin" }    # todo: rename to plugin-mixin to avoid confusion
+    plugin-mixin = { id = "org.spongepowered.mixin", version.ref = "plugin-mixin" }
