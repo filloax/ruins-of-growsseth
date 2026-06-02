@@ -2,24 +2,24 @@
     java = "25"
 
 # General dependencies
-    minecraft-range = "26.1"
-    minecraft-range-fabric = "26.1"
-    minecraft = "26.1"
+    minecraft-range = "26.1.2"
+    minecraft-range-fabric = "26.1.2"
+    minecraft = "26.1.2"
     # Get versions from https://parchmentmc.org/docs/getting-started
     #parchment-minecraft = "26.1-snapshot-1"
     #parchment = "2025.12.20"
     # Get versions from https://projects.neoforged.net/neoforged/neoform
-    neoform = "26.1-1" # vanilla neoforge configuration
+    neoform = "26.1.2-1" # vanilla neoforge configuration
 
 # Mod dependencies
     filloaxlib = "0.36.0-26.1"   # todo: update filloaxlib
-    modmenu = "18.0.0-alpha.8"
-    rconfig = "4.0.0"
+    modmenu = "18.0.0-beta.1"
+    rconfig = "4.0.1"
     rconfigMc = "26.1"
 
 # Mod compatibility dependencies (todo: re-enabled if needed after 26.1 transition)
-    lithostitched-neoforge = "1.6.3-neoforge-26.1"
-    lithostitched-fabric = "1.6.4-fabric-26.1"
+    lithostitched-neoforge = "1.7.9-neoforge-26.1"
+    lithostitched-fabric = "1.7.9-fabric-26.1"
     cobblemon = "1.7.1+1.21.1"
     rctapi = "1.21.1-0.14.4" # only used for prop replacement in mod json files
     rctapi-neoforge = "7257753"
@@ -32,21 +32,21 @@
     endremastered-neoforge = "aqYxfNAS"
 
 # Kotlin
-    kotlin = "2.3.20"
+    kotlin = "2.3.21"
     kotlin-serialization = "1.9.0"
     kotlin-datetime = "0.7.1"
 
 # Fabric Settings
     # Get versions from https://github.com/FabricMC/fabric-loader/releases
-    fabric = "0.18.4"
+    fabric = "0.18.6"
     # Get versions from https://modrinth.com/mod/fabric-api/versions
-    fabric-api = "0.144.3+26.1"
-    fabric-language-kotlin = "1.13.10+kotlin.2.3.20"
+    fabric-api = "0.149.1+26.1.2"
+    fabric-language-kotlin = "1.13.11+kotlin.2.3.21"
 
 # Neoforge Settings
     # Get versions from https://projects.neoforged.net/neoforged/neoforge
-    neoforge = "26.1.0.8-beta"
-    neoforge-range = "[26.1.0.8-beta,26.2)"
+    neoforge = "26.1.2.71"
+    neoforge-range = "[26.1.2.71,26.2)"
     kotlinforge = "6.2.0"
     kotlinforge-range = "[6.2.0,)"
 
@@ -64,7 +64,7 @@
 # Plugins
     plugin-dokka = "2.0.0"
     plugin-mixin = "0.7.38"
-    plugin-loom = "1.15-SNAPSHOT"
+    plugin-loom = "1.16-SNAPSHOT"
     # Get versions from https://projects.neoforged.net/neoforged/moddevgradle
     plugin-moddev = "2.0.141"
     plugin-idea-ext = "1.4.1"
